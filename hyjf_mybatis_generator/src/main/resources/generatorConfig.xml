@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_market.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -123,9 +123,21 @@
         </table>
 
 
+        <!-- 广告表 -->
+        <table tableName="huiyingdai_ads" domainObjectName="Ads">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="typeid" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_end" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="newuser_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+
         <!-- 配置表 -->
         <table tableName="s_gateway_api_config" domainObjectName="GatewayApiConfig">
         </table>
+
+
 
 
     </context>

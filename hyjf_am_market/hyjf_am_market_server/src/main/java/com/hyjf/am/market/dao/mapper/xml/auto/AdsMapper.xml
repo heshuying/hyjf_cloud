@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.auto.AdsMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.Ads" >
+    <result column="id" property="id" jdbcType="SMALLINT" />
+    <result column="name" property="name" jdbcType="CHAR" />
+    <result column="typeid" property="typeid" jdbcType="TINYINT" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="order" property="order" jdbcType="SMALLINT" />
+    <result column="hits" property="hits" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="share_url" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="share_image" property="shareImage" jdbcType="VARCHAR" />
+    <result column="is_index" property="isIndex" jdbcType="SMALLINT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="is_end" property="isEnd" jdbcType="TINYINT" />
+    <result column="share_title" property="shareTitle" jdbcType="VARCHAR" />
+    <result column="activiti_image" property="activitiImage" jdbcType="VARCHAR" />
+    <result column="activiti_desc" property="activitiDesc" jdbcType="VARCHAR" />
+    <result column="client_type" property="clientType" jdbcType="TINYINT" />
+    <result column="newuser_show" property="newuserShow" jdbcType="TINYINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="share_content" property="shareContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, `name`, typeid, url, code, image, `order`, hits, `status`, share_url, share_image, 
+    is_index, create_time, update_time, start_time, end_time, is_end, share_title, activiti_image, 
+    activiti_desc, client_type, newuser_show
+  </sql>
+  <sql id="Blob_Column_List" >
+    content, share_content
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from huiyingdai_ads
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from huiyingdai_ads
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" >
+    delete from huiyingdai_ads
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" >
+    <selectKey resultType="java.lang.Short" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into huiyingdai_ads (`name`, typeid, url, 
+      code, image, `order`, 
+      hits, `status`, share_url, 
+      share_image, is_index, create_time, 
+      update_time, start_time, end_time, 
+      is_end, share_title, activiti_image, 
+      activiti_desc, client_type, newuser_show, 
+      content, share_content)
+    values (#{name,jdbcType=CHAR}, #{typeid,jdbcType=TINYINT}, #{url,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{order,jdbcType=SMALLINT}, 
+      #{hits,jdbcType=INTEGER}, #{status,jdbcType=SMALLINT}, #{shareUrl,jdbcType=VARCHAR}, 
+      #{shareImage,jdbcType=VARCHAR}, #{isIndex,jdbcType=SMALLINT}, #{createTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, 
+      #{isEnd,jdbcType=TINYINT}, #{shareTitle,jdbcType=VARCHAR}, #{activitiImage,jdbcType=VARCHAR}, 
+      #{activitiDesc,jdbcType=VARCHAR}, #{clientType,jdbcType=TINYINT}, #{newuserShow,jdbcType=TINYINT}, 
+      #{content,jdbcType=LONGVARCHAR}, #{shareContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" >
+    <selectKey resultType="java.lang.Short" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into huiyingdai_ads
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="typeid != null" >
+        typeid,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+      <if test="order != null" >
+        `order`,
+      </if>
+      <if test="hits != null" >
+        hits,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="shareUrl != null" >
+        share_url,
+      </if>
+      <if test="shareImage != null" >
+        share_image,
+      </if>
+      <if test="isIndex != null" >
+        is_index,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="isEnd != null" >
+        is_end,
+      </if>
+      <if test="shareTitle != null" >
+        share_title,
+      </if>
+      <if test="activitiImage != null" >
+        activiti_image,
+      </if>
+      <if test="activitiDesc != null" >
+        activiti_desc,
+      </if>
+      <if test="clientType != null" >
+        client_type,
+      </if>
+      <if test="newuserShow != null" >
+        newuser_show,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="shareContent != null" >
+        share_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=CHAR},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=TINYINT},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="order != null" >
+        #{order,jdbcType=SMALLINT},
+      </if>
+      <if test="hits != null" >
+        #{hits,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="shareUrl != null" >
+        #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shareImage != null" >
+        #{shareImage,jdbcType=VARCHAR},
+      </if>
+      <if test="isIndex != null" >
+        #{isIndex,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnd != null" >
+        #{isEnd,jdbcType=TINYINT},
+      </if>
+      <if test="shareTitle != null" >
+        #{shareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="activitiImage != null" >
+        #{activitiImage,jdbcType=VARCHAR},
+      </if>
+      <if test="activitiDesc != null" >
+        #{activitiDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="clientType != null" >
+        #{clientType,jdbcType=TINYINT},
+      </if>
+      <if test="newuserShow != null" >
+        #{newuserShow,jdbcType=TINYINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="shareContent != null" >
+        #{shareContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" resultType="java.lang.Integer" >
+    select count(*) from huiyingdai_ads
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update huiyingdai_ads
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=SMALLINT},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=CHAR},
+      </if>
+      <if test="record.typeid != null" >
+        typeid = #{record.typeid,jdbcType=TINYINT},
+      </if>
+      <if test="record.url != null" >
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null" >
+        code = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.image != null" >
+        image = #{record.image,jdbcType=VARCHAR},
+      </if>
+      <if test="record.order != null" >
+        `order` = #{record.order,jdbcType=SMALLINT},
+      </if>
+      <if test="record.hits != null" >
+        hits = #{record.hits,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=SMALLINT},
+      </if>
+      <if test="record.shareUrl != null" >
+        share_url = #{record.shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shareImage != null" >
+        share_image = #{record.shareImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isIndex != null" >
+        is_index = #{record.isIndex,jdbcType=SMALLINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.startTime != null" >
+        start_time = #{record.startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.endTime != null" >
+        end_time = #{record.endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isEnd != null" >
+        is_end = #{record.isEnd,jdbcType=TINYINT},
+      </if>
+      <if test="record.shareTitle != null" >
+        share_title = #{record.shareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activitiImage != null" >
+        activiti_image = #{record.activitiImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activitiDesc != null" >
+        activiti_desc = #{record.activitiDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clientType != null" >
+        client_type = #{record.clientType,jdbcType=TINYINT},
+      </if>
+      <if test="record.newuserShow != null" >
+        newuser_show = #{record.newuserShow,jdbcType=TINYINT},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.shareContent != null" >
+        share_content = #{record.shareContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update huiyingdai_ads
+    set id = #{record.id,jdbcType=SMALLINT},
+      `name` = #{record.name,jdbcType=CHAR},
+      typeid = #{record.typeid,jdbcType=TINYINT},
+      url = #{record.url,jdbcType=VARCHAR},
+      code = #{record.code,jdbcType=VARCHAR},
+      image = #{record.image,jdbcType=VARCHAR},
+      `order` = #{record.order,jdbcType=SMALLINT},
+      hits = #{record.hits,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=SMALLINT},
+      share_url = #{record.shareUrl,jdbcType=VARCHAR},
+      share_image = #{record.shareImage,jdbcType=VARCHAR},
+      is_index = #{record.isIndex,jdbcType=SMALLINT},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      start_time = #{record.startTime,jdbcType=VARCHAR},
+      end_time = #{record.endTime,jdbcType=VARCHAR},
+      is_end = #{record.isEnd,jdbcType=TINYINT},
+      share_title = #{record.shareTitle,jdbcType=VARCHAR},
+      activiti_image = #{record.activitiImage,jdbcType=VARCHAR},
+      activiti_desc = #{record.activitiDesc,jdbcType=VARCHAR},
+      client_type = #{record.clientType,jdbcType=TINYINT},
+      newuser_show = #{record.newuserShow,jdbcType=TINYINT},
+      content = #{record.content,jdbcType=LONGVARCHAR},
+      share_content = #{record.shareContent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update huiyingdai_ads
+    set id = #{record.id,jdbcType=SMALLINT},
+      `name` = #{record.name,jdbcType=CHAR},
+      typeid = #{record.typeid,jdbcType=TINYINT},
+      url = #{record.url,jdbcType=VARCHAR},
+      code = #{record.code,jdbcType=VARCHAR},
+      image = #{record.image,jdbcType=VARCHAR},
+      `order` = #{record.order,jdbcType=SMALLINT},
+      hits = #{record.hits,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=SMALLINT},
+      share_url = #{record.shareUrl,jdbcType=VARCHAR},
+      share_image = #{record.shareImage,jdbcType=VARCHAR},
+      is_index = #{record.isIndex,jdbcType=SMALLINT},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      start_time = #{record.startTime,jdbcType=VARCHAR},
+      end_time = #{record.endTime,jdbcType=VARCHAR},
+      is_end = #{record.isEnd,jdbcType=TINYINT},
+      share_title = #{record.shareTitle,jdbcType=VARCHAR},
+      activiti_image = #{record.activitiImage,jdbcType=VARCHAR},
+      activiti_desc = #{record.activitiDesc,jdbcType=VARCHAR},
+      client_type = #{record.clientType,jdbcType=TINYINT},
+      newuser_show = #{record.newuserShow,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
