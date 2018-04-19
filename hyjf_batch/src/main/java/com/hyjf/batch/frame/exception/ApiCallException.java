@@ -1,4 +1,4 @@
-package com.hyjf.batch.exception;
+package com.hyjf.batch.frame.exception;
 
 /**
  * @author xiasq

@@ -9,7 +9,8 @@
     <modules>
         <module>hyjf_am_user_common</module>
 		<module>hyjf_am_user_server</module>
-	</modules>
+        <module>hyjf_am_user_util</module>
+    </modules>
     <packaging>pom</packaging>
 
 	<name>hyjf_am_user</name>

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2017 www.2345.com. All rights reserved.
  */
-package com.hyjf.batch.pojo;
+package com.hyjf.batch.frame.pojo;
 
 import java.io.Serializable;
 

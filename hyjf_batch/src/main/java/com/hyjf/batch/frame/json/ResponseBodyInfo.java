@@ -1,4 +1,4 @@
-package com.hyjf.batch.json;
+package com.hyjf.batch.frame.json;
 
 /**
  * @author xiasq

@@ -1,4 +1,4 @@
-package com.hyjf.batch.config;
+package com.hyjf.batch.frame.config;
 
 import java.io.IOException;
 import java.util.Properties;

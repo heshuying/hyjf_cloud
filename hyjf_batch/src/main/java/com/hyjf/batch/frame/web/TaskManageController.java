@@ -1,13 +1,13 @@
-package com.hyjf.batch.web;
+package com.hyjf.batch.frame.web;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.batch.exception.ServiceException;
-import com.hyjf.batch.json.ResultInfo;
-import com.hyjf.batch.pojo.TaskInfo;
-import com.hyjf.batch.service.TaskService;
+import com.hyjf.batch.frame.exception.ServiceException;
+import com.hyjf.batch.frame.json.ResultInfo;
+import com.hyjf.batch.frame.pojo.TaskInfo;
+import com.hyjf.batch.frame.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
