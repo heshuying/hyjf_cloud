@@ -16,12 +16,12 @@ import java.util.List;
  */
 @Service
 public class ActivityBatchServiceImpl implements ActivityBatchService {
+
     @Autowired
     AdsMapper adsMapper;
 
     @Override
     public void updateActivityEndStatus() {
-        //todo
         // 检索进行中活动列表
         List<Ads> activityList = this.selectActivityList();
 
@@ -33,10 +33,7 @@ public class ActivityBatchServiceImpl implements ActivityBatchService {
                 if (endTime <= GetDate.getMyTimeInMillis()) {
                     // 将活动结束状态更新为:已结束
                     ads.setIsEnd(1);
-//                    boolean isUpdateFlag = (adsMapper.updateByPrimaryKey(ads) > 0 ? true : false);
-//                    if (!isUpdateFlag) {
-//                        throw new Exception("更新活动结束状态失败!");
-//                    }
+                    adsMapper.updateByPrimaryKey(ads);
                 }
             }
         }

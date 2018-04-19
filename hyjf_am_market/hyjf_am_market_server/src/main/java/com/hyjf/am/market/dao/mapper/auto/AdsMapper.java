@@ -11,6 +11,8 @@ public interface AdsMapper {
 
     int deleteByExample(AdsExample example);
 
+    int deleteByPrimaryKey(Short id);
+
     int insert(AdsWithBLOBs record);
 
     int insertSelective(AdsWithBLOBs record);
@@ -19,9 +21,17 @@ public interface AdsMapper {
 
     List<Ads> selectByExample(AdsExample example);
 
+    AdsWithBLOBs selectByPrimaryKey(Short id);
+
     int updateByExampleSelective(@Param("record") AdsWithBLOBs record, @Param("example") AdsExample example);
 
     int updateByExampleWithBLOBs(@Param("record") AdsWithBLOBs record, @Param("example") AdsExample example);
 
     int updateByExample(@Param("record") Ads record, @Param("example") AdsExample example);
+
+    int updateByPrimaryKeySelective(AdsWithBLOBs record);
+
+    int updateByPrimaryKeyWithBLOBs(AdsWithBLOBs record);
+
+    int updateByPrimaryKey(Ads record);
 }
