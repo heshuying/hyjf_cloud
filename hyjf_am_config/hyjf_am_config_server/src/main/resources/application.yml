@@ -3,9 +3,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://47.98.213.94:3306/hyjf_bs
-    username: root
-    password: xiashuqing
+    url: jdbc:mysql://123.56.216.212:7777/hyjf_config
+    username: hyjf_developer
+    password: QD@hyjfdev2000
     #下面为连接池的补充设置，应用到上面所有数据源中
     #初始化大小，最小，最大
     initialSize: 5

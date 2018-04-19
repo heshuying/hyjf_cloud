@@ -1,0 +1,9 @@
+#spring:
+#  security:
+#    user:
+#      name: hyjf
+#      password: hyjf123
+basic:
+  auth:
+    username: hyjf
+    password: hyjf123
