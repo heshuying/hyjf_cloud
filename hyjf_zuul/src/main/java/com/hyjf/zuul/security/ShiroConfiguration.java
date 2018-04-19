@@ -83,7 +83,7 @@ public class ShiroConfiguration {
 	public ShiroFilterFactoryBean getShiroFilterFactoryBean() {
 		ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
 		factoryBean.setSecurityManager(getSecurityManager());
-		filterChainDefinitionMap.put("/api/**", "authcBasic");
+		filterChainDefinitionMap.put("/**", "authcBasic");
 		factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		return factoryBean;
 	}
