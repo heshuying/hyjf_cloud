@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
-import org.springframework.util.StringUtils;
-
 /**
  *
  * 类描述：时间操作定义类
