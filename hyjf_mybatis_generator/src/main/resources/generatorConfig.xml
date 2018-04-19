@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <!-- 引入配置文件 -->
+    <properties resource="init_user.properties"/>
+
+    <classPathEntry location="${classPath}"/>
+
+    <context id="doyumDB" targetRuntime="MyBatis3">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <plugin type="org.hyjf.mybatis.generator.plugins.MysqlPagingPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="${driverClass}"
+                        connectionURL="${connectionURL}"
+                        userId="${userId}"
+                        password="${password}"></jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="${modelTargetPackage}"
+                            targetProject="${targetProject}">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="${xmlTargetPackage}"
+                         targetProject="${targetProject}">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="${mapperTargetPackage}"
+                             targetProject="${targetProject}">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 用戶表 -->
+        <table tableName="huiyingdai_users" domainObjectName="Users">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="open_account" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="send_sms" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="ptype" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="invest_sms" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="recieve_sms" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="invest_sms" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="recharge_sms" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="withdraw_sms" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="reg_esb" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="account_esb" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="investFlag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="user_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="is_set_password" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="bank_open_account" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="is_smtp" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="bank_account_esb" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="is_data_update" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="is_inst_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="is_evaluation_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="is_ca_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <!-- 用戶详情表 -->
+        <table tableName="huiyingdai_users_info" domainObjectName="UsersInfo">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="department_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_staff" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is51" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="truename_isApprove" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="mobile_isApprove" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="email_isApprove" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="borrower_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 用户预注册表 -->
+        <table tableName="hyjf_pre_regist" domainObjectName="PreRegist">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="regist_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 用户账户表 -->
+        <table tableName="huiyingdai_account" domainObjectName="Account">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="isok" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 推荐人关联表 -->
+        <table tableName="huiyingdai_spreads_users" domainObjectName="SpreadsUsers">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- 推广链接注册表 -->
+        <table tableName="huiyingdai_utm_reg" domainObjectName="UtmReg">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="open_account" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="bind_card" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 用户log日志表 -->
+        <table tableName="huiyingdai_users_log" domainObjectName="UsersLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户信息操作履历表 -->
+        <table tableName="huiyingdai_users_modify_log" domainObjectName="UsersModifyLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- 短信发送 -->
+        <table tableName="huiyingdai_smscode" domainObjectName="SmsCode">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+
+        <!-- 配置表 -->
+        <table tableName="s_gateway_api_config" domainObjectName="GatewayApiConfig">
+        </table>
+
+
+    </context>
+</generatorConfiguration>

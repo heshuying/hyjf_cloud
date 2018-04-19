@@ -1,0 +1,33 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://testuser:e2VdOav40i@39.106.9.158:28001/test
+  redis:
+    database: 0  
+    # Redis服务器地址
+    hostName: 101.200.36.143
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: RH06863b3e6
+    # 连接超时时间（毫秒）
+    timeout: 0
+
+
+
+rocketMQ:
+  namesrvAddr: 47.98.213.94:9876
+  #以业务名为consumerGroup名，事件为tag
+  defaultProducerGroup : message
+  defaultConsumerGroup : message
+  group :
+    smsCodeGroup : SMS_CODE_GROUP
+  topic :
+    smsCodeTopic : SMS_CODE_TOPIC
+  tag :
+    defaultTag : message
+
+env.test: false
+hyjf.activity.888.id: 37
+hyjf.activity.regist.tzj.id: 39
+
