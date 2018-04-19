@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hyjf</groupId>
-	<artifactId>zuul</artifactId>
+	<artifactId>hyjf_zuul</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -13,7 +13,7 @@
 
 	<parent>
 		<groupId>com.hyjf</groupId>
-		<artifactId>cloud_server</artifactId>
+		<artifactId>hyjf_cloud_server</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 

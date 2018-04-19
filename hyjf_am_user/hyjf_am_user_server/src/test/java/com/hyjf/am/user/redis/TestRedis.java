@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.hyjf.am.user.AmUserApplication;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author xiasq
  * @version TestDao, v0.1 2018/4/19 9:04
@@ -31,21 +34,32 @@ public class TestRedis {
     private RedisTemplate redisTemplate;
 
     @Test
-    public void testRedisWrite(){
-        redisUtils.set("key","value");
+    public void testStringRedisWrite(){
+        stringRedisUtil.set("key","value");
     }
 
-//    @Test
-//    public String testRedisRead(){
-//        String value = stringRedisUtil.get("key");
-//        return value;
-//    }
-//
-//    @Test
-//    public void testBaseRedisOpertator(){
-//        redisTemplate.opsForValue().set("base","testValue1");
-//        Object value = redisTemplate.opsForValue().get("base");
-//        logger.info("testBaseRedisOpertator value is :{}", value.toString());
-//    }
+    @Test
+    public void testStringRedisRead(){
+        String value = stringRedisUtil.get("key");
+        logger.info("value: {}", value);
+    }
+
+    @Test
+    public void testObjectRedisWrite(){
+        redisUtils.set("key", Arrays.asList("xiasq","xiaom","xiaoh"));
+    }
+
+    @Test
+    public void testObjectRedisRead(){
+        List<String> list = (List<String>) redisUtils.get("key");
+        logger.info("value: {}", list);
+    }
+
+    @Test
+    public void testBaseRedisOpertator(){
+        redisTemplate.opsForValue().set("base","testValue1");
+        Object value = redisTemplate.opsForValue().get("base");
+        logger.info("testBaseRedisOpertator value is :{}", value.toString());
+    }
 
 }

@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hyjf</groupId>
-	<artifactId>cloud_server</artifactId>
+	<artifactId>hyjf_cloud_server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
-	<name>cloud_server</name>
+	<name>hyjf_cloud_server</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>

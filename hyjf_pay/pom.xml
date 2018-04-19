@@ -4,16 +4,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hyjf</groupId>
-	<artifactId>pay</artifactId>
+	<artifactId>hyjf_pay</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>pay</name>
+	<name>hyjf_pay</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
 		<groupId>com.hyjf</groupId>
-		<artifactId>cloud_server</artifactId>
+		<artifactId>hyjf_cloud_server</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 

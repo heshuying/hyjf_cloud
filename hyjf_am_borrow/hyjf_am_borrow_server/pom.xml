@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>am_borrow</artifactId>
+        <artifactId>hyjf_am_borrow</artifactId>
         <groupId>com.hyjf</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.hyjf</groupId>
-    <artifactId>am_borrow_server</artifactId>
+    <artifactId>hyjf_am_borrow_server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
