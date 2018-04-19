@@ -10,6 +10,8 @@ eureka:
     preferIpAddress: true
 server:
   port: 9091
+  jsp-servlet:
+    class-name: org.apache.jasper.servlet.JspServlet
 
 logging:
   file: batch.log
