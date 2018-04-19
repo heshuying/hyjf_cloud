@@ -6,9 +6,7 @@
 	<groupId>com.hyjf</groupId>
 	<artifactId>cloud_server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<modules>
-		<module>hyjf_common</module>
-	</modules>
+
 	<packaging>pom</packaging>
 
 	<name>cloud_server</name>
@@ -31,6 +29,7 @@
 		<druid.version>1.1.1</druid.version>
 		<fastjson.version>1.2.47</fastjson.version>
 		<rocketmq.version>3.6.2.Final</rocketmq.version>
+		<common.pool2.version>2.4.2</common.pool2.version>
 	</properties>
 
 	<dependencyManagement>
@@ -73,6 +72,13 @@
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
 				<version>${fastjson.version}</version>
+			</dependency>
+
+			<!--spring2.0集成redis所需common-pool2-->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-pool2</artifactId>
+				<version>${common.pool2.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
