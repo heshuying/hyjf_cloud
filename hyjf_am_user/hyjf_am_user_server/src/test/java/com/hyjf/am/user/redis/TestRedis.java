@@ -51,8 +51,8 @@ public class TestRedis {
 
     @Test
     public void testObjectRedisRead(){
-        List<String> list = (List<String>) redisUtils.get("key");
-        logger.info("value: {}", list);
+        Object object =  redisUtils.get("key");
+        logger.info("value: {}", object);
     }
 
     @Test
