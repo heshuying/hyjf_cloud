@@ -1,4 +1,4 @@
-package com.hyjf.cs_user;
+package com.hyjf.cs.user;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
