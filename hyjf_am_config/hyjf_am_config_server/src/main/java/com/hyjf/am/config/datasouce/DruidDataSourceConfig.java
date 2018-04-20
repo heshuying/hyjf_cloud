@@ -14,8 +14,8 @@ import com.alibaba.druid.pool.DruidDataSource;
  * @version DruidDataSourceConfig, v0.1 2018/1/21 22:32
  */
 
-//@Configuration
-@MapperScan("com.hyjf.am.config")
+@Configuration
+@MapperScan(basePackages = { "com.hyjf.am.config.dao.mapper" }, sqlSessionFactoryRef = "sqlSessionFactory")
 public class DruidDataSourceConfig {
 
 	@Bean
