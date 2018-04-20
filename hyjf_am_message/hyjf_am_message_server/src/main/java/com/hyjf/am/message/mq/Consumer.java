@@ -2,10 +2,9 @@ package com.hyjf.am.message.mq;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.exception.MQClientException;
 import org.springframework.beans.factory.annotation.Value;
-
-import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.exception.MQClientException;
 
 /**
  * @author xiasq

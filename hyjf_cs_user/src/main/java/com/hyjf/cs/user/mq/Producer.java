@@ -4,17 +4,17 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
-import com.alibaba.rocketmq.client.producer.SendResult;
-import com.alibaba.rocketmq.client.producer.SendStatus;
-import com.alibaba.rocketmq.common.message.Message;
-import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.hyjf.common.exception.MQException;
 
 /**
@@ -69,9 +69,10 @@ public abstract class Producer {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);
+			defaultMQProducer.setCreateTopicKey(String.valueOf(System.currentTimeMillis()));
 			return send(message);
 		} catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {
-			throw new MQException("dynamicCode mq messageSend error", e);
+			throw new MQException("mq send error", e);
 		}
 	}
 

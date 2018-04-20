@@ -32,7 +32,7 @@ public class TestMQ {
 
         // 发送
         smsProducer.messageSend(
-                new Producer.MassageContent("SMS_CODE_TOPIC", "message", "", JSON.toJSONBytes(params)));
+                new Producer.MassageContent("SMS_CODE_TOPIC", "message", "key", JSON.toJSONBytes(params)));
 
     }
 

@@ -36,12 +36,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.alibaba.rocketmq</groupId>
-			<artifactId>rocketmq-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba.rocketmq</groupId>
+			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-common</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-client</artifactId>
 		</dependency>
 
 		<dependency>
