@@ -29,4 +29,4 @@ spring:
     #合并多个DruidDataSource的监控数据
     useGlobalDataSourceStat: true
 mybatis:
-  mapper-locations: classpath:com/hyjf/am/borrow/dao/mapper/xml/auto/*.xml
+  mapper-locations: classpath:com/hyjf/am/borrow/dao/mapper/xml/**/*.xml
