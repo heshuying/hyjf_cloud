@@ -1,4 +1,4 @@
-package com.hyjf.am.user.dao;
+package com.hyjf.am.borrow.dao;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,27 +9,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.AmUserApplication;
-import com.hyjf.am.user.dao.mapper.auto.UsersMapper;
-import com.hyjf.am.user.dao.model.auto.Users;
+import com.hyjf.am.borrow.AmBorrowApplication;
+import com.hyjf.am.borrow.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.borrow.dao.model.auto.Account;
 
 /**
  * @author xiasq
  * @version TestDb, v0.1 2018/4/19 11:31
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = AmUserApplication.class)
+@SpringBootTest(classes = AmBorrowApplication.class)
 public class TestDb {
 	Logger logger = LoggerFactory.getLogger(TestDb.class);
 
 	@Autowired
-	UsersMapper usersMapper;
+	AccountMapper accountMapper;
 
 	@Test
 	public void getUser() {
-		Users users = usersMapper.selectByPrimaryKey(1);
-		if (users != null)
-			logger.info("users is :{}", JSONObject.toJSONString(users));
-		logger.info("none this userId");
+		Account account = accountMapper.selectByPrimaryKey(1);
+		if (account != null)
+			logger.info("account is :{}", JSONObject.toJSONString(account));
+		logger.info("none this account");
 	}
 }

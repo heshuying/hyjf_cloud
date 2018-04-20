@@ -1,4 +1,4 @@
-package com.hyjf.am.user.datasouce;
+package com.hyjf.am.market.datasource;
 
 import javax.sql.DataSource;
 
@@ -15,7 +15,7 @@ import com.alibaba.druid.pool.DruidDataSource;
  */
 
 @Configuration
-@MapperScan(basePackages = { "com.hyjf.am.user.dao.mapper" }, sqlSessionFactoryRef = "sqlSessionFactory")
+@MapperScan(basePackages = { "com.hyjf.am.market.dao.mapper" }, sqlSessionFactoryRef = "sqlSessionFactory")
 public class DruidDataSourceConfig {
 
 	@Bean

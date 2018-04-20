@@ -1,8 +1,9 @@
 spring:
+  #mysql durid data source  
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://123.57.155.17:3306/hyjf_online
+    url: jdbc:mysql://123.56.216.212:7777/hyjf_borrow
     username: hyjf_developer
     password: QD@hyjfdev2000
     #下面为连接池的补充设置，应用到上面所有数据源中
@@ -27,28 +28,5 @@ spring:
     connectionProperties: druid.stat.mergeSql:true;druid.stat.slowSqlMillis:5000
     #合并多个DruidDataSource的监控数据
     useGlobalDataSourceStat: true
-  # Redis 
-#  redis:
-#    #数据库索引
-#    database: 0
-#    # Redis服务器地址
-#    host: 123.57.155.17
-#    # Redis服务器连接端口
-#    port: 6379
-#    # Redis服务器连接密码（默认为空）
-#    password: RH06863b3e6
-#    jedis:
-#      pool:
-#      #最大连接数
-#      max-active: 8
-#      #最大阻塞等待时间(负数表示没限制)
-#      max-wait: -1
-#      #最大空闲
-#      max-idle: 8
-#      #最小空闲
-#      min-idle: 0
-#    # 连接超时时间（毫秒）
-#    timeout: 0
-
 mybatis:
-  mapper-locations: classpath:com/hyjf/am/user/dao/mapper/xml/**/*.xml
+  mapper-locations: classpath:com/hyjf/am/borrow/dao/mapper/xml/auto/*.xml
