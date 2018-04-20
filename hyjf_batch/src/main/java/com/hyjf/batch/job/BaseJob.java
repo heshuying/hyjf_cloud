@@ -1,4 +1,4 @@
-package com.hyjf.batch.job.service;
+package com.hyjf.batch.job;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import com.hyjf.batch.SpringLocator;
  * @author xiasq
  * @version BaseJob, v0.1 2018/1/20 22:22
  */
-public abstract class BaseService {
+public abstract class BaseJob {
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
