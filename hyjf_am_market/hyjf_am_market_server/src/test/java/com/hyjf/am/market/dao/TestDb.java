@@ -1,8 +1,5 @@
 package com.hyjf.am.market.dao;
 
-import com.hyjf.am.market.AmMarketApplication;
-import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
-import com.hyjf.am.market.dao.model.auto.Ads;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.market.AmMarketApplication;
+import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
+import com.hyjf.am.market.dao.model.auto.Ads;
 
 /**
  * @author xiasq
@@ -20,16 +20,16 @@ import com.alibaba.fastjson.JSONObject;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AmMarketApplication.class)
 public class TestDb {
-    Logger logger = LoggerFactory.getLogger(TestDb.class);
+	Logger logger = LoggerFactory.getLogger(TestDb.class);
 
-    @Autowired
-    AdsMapper adsMapper;
+	@Autowired
+	AdsMapper adsMapper;
 
-    @Test
-    public void getUser(){
-        Ads ads = adsMapper.selectByPrimaryKey((short) 1);
-        if(ads !=null)
-        logger.info("ads is :{}", JSONObject.toJSONString(ads));
-        logger.info("none this ads");
-    }
+	@Test
+	public void getUser() {
+		Ads ads = adsMapper.selectByPrimaryKey((short) 1);
+		if (ads != null)
+			logger.info("ads is :{}", JSONObject.toJSONString(ads));
+		logger.info("none this ads");
+	}
 }

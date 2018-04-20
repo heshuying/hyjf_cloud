@@ -1,5 +1,7 @@
 package com.hyjf.am.user.redis;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -8,12 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.hyjf.am.user.AmUserApplication;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author xiasq
@@ -22,44 +20,44 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AmUserApplication.class)
 public class TestRedis {
-    Logger logger = LoggerFactory.getLogger(TestRedis.class);
+	Logger logger = LoggerFactory.getLogger(TestRedis.class);
 
-    @Autowired
-    RedisUtils redisUtils;
+	@Autowired
+	RedisUtils redisUtils;
 
-    @Autowired
-    StringRedisUtil stringRedisUtil;
+	@Autowired
+	StringRedisUtil stringRedisUtil;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
+	@Autowired
+	private RedisTemplate redisTemplate;
 
-    @Test
-    public void testStringRedisWrite(){
-        stringRedisUtil.set("key","value");
-    }
+	@Test
+	public void testStringRedisWrite() {
+		stringRedisUtil.set("key", "value");
+	}
 
-    @Test
-    public void testStringRedisRead(){
-        String value = stringRedisUtil.get("key");
-        logger.info("value: {}", value);
-    }
+	@Test
+	public void testStringRedisRead() {
+		String value = stringRedisUtil.get("key");
+		logger.info("value: {}", value);
+	}
 
-    @Test
-    public void testObjectRedisWrite(){
-        redisUtils.set("key", Arrays.asList("xiasq","xiaom","xiaoh"));
-    }
+	@Test
+	public void testObjectRedisWrite() {
+		redisUtils.set("key", Arrays.asList("xiasq", "xiaom", "xiaoh"));
+	}
 
-    @Test
-    public void testObjectRedisRead(){
-        Object object =  redisUtils.get("key");
-        logger.info("value: {}", object);
-    }
+	@Test
+	public void testObjectRedisRead() {
+		Object object = redisUtils.get("key");
+		logger.info("value: {}", object);
+	}
 
-    @Test
-    public void testBaseRedisOpertator(){
-        redisTemplate.opsForValue().set("base","testValue1");
-        Object value = redisTemplate.opsForValue().get("base");
-        logger.info("testBaseRedisOpertator value is :{}", value.toString());
-    }
+	@Test
+	public void testBaseRedisOpertator() {
+		redisTemplate.opsForValue().set("base", "testValue1");
+		Object value = redisTemplate.opsForValue().get("base");
+		logger.info("testBaseRedisOpertator value is :{}", value.toString());
+	}
 
 }
