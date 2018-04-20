@@ -1,6 +1,6 @@
 rocketMQ:
   #namesrvAddr: ${rocketMQ.namesrvAddr}
-  namesrvAddr: 127.0.0.1:9876
+  namesrvAddr: 123.56.216.212:5555
   #以业务名为consumerGroup名，事件为tag
   defaultProducerGroup : hyjf_cs_user
   defaultConsumerGroup : hyjf_cs_user

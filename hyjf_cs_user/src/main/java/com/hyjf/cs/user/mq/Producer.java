@@ -34,22 +34,11 @@ public abstract class Producer {
 
 	@PostConstruct
 	protected void init() throws MQClientException {
-		defaultMQProducer = new DefaultMQProducer();
+		defaultMQProducer = new DefaultMQProducer(producerGroup);
 		defaultMQProducer.setNamesrvAddr(namesrvAddr);
 		defaultMQProducer.setVipChannelEnabled(false);
-		String group;
-		ProducerFieldsWrapper fieldsWrapper = getFieldsWrapper();
-		if (fieldsWrapper == null) {
-			defaultMQProducer.setProducerGroup(producerGroup);
-			defaultMQProducer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-			group = producerGroup;
-		} else {
-			defaultMQProducer.setProducerGroup(fieldsWrapper.getGroup());
-			defaultMQProducer.setInstanceName(fieldsWrapper.getInstanceName());
-			group = fieldsWrapper.getGroup();
-		}
+		defaultMQProducer.setInstanceName(this.getFieldsWrapper().getInstanceName());
 		defaultMQProducer.start();
-		logger.info("Producer mq group {} init", group);
 	}
 
 	protected abstract ProducerFieldsWrapper getFieldsWrapper();
@@ -69,7 +58,6 @@ public abstract class Producer {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);
-			defaultMQProducer.setCreateTopicKey(String.valueOf(System.currentTimeMillis()));
 			return send(message);
 		} catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {
 			throw new MQException("mq send error", e);

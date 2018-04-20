@@ -20,7 +20,7 @@ hyjf_cloud 模块管理，自动识别pom.xml
 ├── hyjf_zuul -- 网关[端口:8080]
 ├── hyjf_batch -- 批处理[端口:9091]
 ├── hyjf_pay -- 银行接口调用[端口:9092]
-├── hyjf_am_borrow -- 标的、资金、资产微服务
+├── hyjf_am_borrow -- 标的 、资金、资产微服务
 |    ├── hyjf_am_borrow_common -- vo request response 
 |    └── hyjf_am_borrow_server -- 服务端[端口:8093]
 ├── hyjf_am_config -- 配置微服务
