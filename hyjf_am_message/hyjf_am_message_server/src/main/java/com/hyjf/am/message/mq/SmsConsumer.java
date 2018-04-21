@@ -26,10 +26,10 @@ import com.alibaba.fastjson.JSONObject;
 public class SmsConsumer extends Consumer {
 	private static final Logger logger = LoggerFactory.getLogger(SmsConsumer.class);
 
-    @Value("${rocketMQ.group.smsCodeGroup}")
-    private String smsCodeGroup;
-    @Value("${rocketMQ.topic.smsCodeTopic}")
-    private String smsCodeTopic;
+	@Value("${rocketMQ.group.smsCodeGroup}")
+	private String smsCodeGroup;
+	@Value("${rocketMQ.topic.smsCodeTopic}")
+	private String smsCodeTopic;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -51,11 +51,13 @@ public class SmsConsumer extends Consumer {
 	public class MessageListener implements MessageListenerConcurrently {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-            MessageExt msg = msgs.get(0);
-            String body = new String(msg.getBody());
-            JSONObject param = JSONObject.parseObject(body);
+			logger.info("SmsConsumer 收到消息，开始处理....");
+			MessageExt msg = msgs.get(0);
+			String body = new String(msg.getBody());
+			JSONObject param = JSONObject.parseObject(body);
 
-            logger.info("发送短信...param is :{}", param.toString());
+			logger.info("发送短信...param is :{}", param.toString());
+			//todo 具体实现业务
 
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

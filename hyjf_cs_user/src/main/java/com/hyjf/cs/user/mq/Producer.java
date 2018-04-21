@@ -14,6 +14,7 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.Assert;
 
 import com.hyjf.common.exception.MQException;
 
@@ -29,15 +30,15 @@ public abstract class Producer {
 	@Value("${rocketMQ.namesrvAddr}")
 	private String namesrvAddr;
 
-	@Value("${rocketMQ.defaultProducerGroup}")
-	private String producerGroup;
-
 	@PostConstruct
 	protected void init() throws MQClientException {
-		defaultMQProducer = new DefaultMQProducer(producerGroup);
+		ProducerFieldsWrapper wrapper = this.getFieldsWrapper();
+		Assert.notNull(wrapper, "ProducerFieldsWrapper must not be null");
+
+		defaultMQProducer = new DefaultMQProducer(wrapper.getGroup());
 		defaultMQProducer.setNamesrvAddr(namesrvAddr);
 		defaultMQProducer.setVipChannelEnabled(false);
-		defaultMQProducer.setInstanceName(this.getFieldsWrapper().getInstanceName());
+		defaultMQProducer.setInstanceName(wrapper.getInstanceName());
 		defaultMQProducer.start();
 	}
 
@@ -80,6 +81,10 @@ public abstract class Producer {
 			this.tag = tag;
 			this.keys = keys;
 			this.body = body;
+		}
+
+		public MassageContent(String topic, String tag, byte[] body) {
+			this(topic, tag, String.valueOf(System.currentTimeMillis()), body);
 		}
 	}
 

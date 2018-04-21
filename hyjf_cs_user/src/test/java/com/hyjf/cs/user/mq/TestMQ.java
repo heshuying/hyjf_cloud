@@ -1,16 +1,18 @@
 package com.hyjf.cs.user.mq;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.user.CsUserApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.CsUserApplication;
 
 /**
  * @author xiasq
@@ -20,23 +22,28 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CsUserApplication.class)
 public class TestMQ {
-    Logger logger = LoggerFactory.getLogger(TestMQ.class);
-    
-    @Autowired
-    SmsProducer smsProducer;
+	Logger logger = LoggerFactory.getLogger(TestMQ.class);
 
-    @Test
-    public void sendSmscode() throws MQException {
+	@Autowired
+	SmsProducer smsProducer;
 
-        JSONObject params = new JSONObject();
-        params.put("checkCode", "1234");
-        params.put("validCodeType", "aa");
-        params.put("mobile", "15311112222");
+	@Value("${rocketMQ.topic.smsCodeTopic}")
+	private String smsCodeTopic;
 
-        // 发送
-        smsProducer.messageSend(
-                new Producer.MassageContent("SMS_CODE_TOPIC", "message", "key", JSON.toJSONBytes(params)));
+	@Value("${rocketMQ.tag.defaultTag}")
+	private String defaultTag;
 
-    }
+	@Test
+	public void sendSmscode() throws MQException {
+
+		JSONObject params = new JSONObject();
+		params.put("checkCode", "1234");
+		params.put("validCodeType", "aa");
+		params.put("mobile", "15311112222");
+
+		// 发送
+		smsProducer.messageSend(new Producer.MassageContent(smsCodeTopic, defaultTag, JSON.toJSONBytes(params)));
+
+	}
 
 }

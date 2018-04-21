@@ -12,18 +12,18 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public abstract class Consumer {
 
-    protected DefaultMQPushConsumer defaultMQPushConsumer;
-    @Value("${rocketMQ.namesrvAddr}")
-    private String namesrvAddr;
+	protected DefaultMQPushConsumer defaultMQPushConsumer;
+	@Value("${rocketMQ.namesrvAddr}")
+	private String namesrvAddr;
 
-    @PostConstruct
-    public void init() throws MQClientException {
-        defaultMQPushConsumer = new DefaultMQPushConsumer();
-        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
-        defaultMQPushConsumer.setVipChannelEnabled(false);
-        init(defaultMQPushConsumer);
-    }
+	@PostConstruct
+	public void init() throws MQClientException {
+		defaultMQPushConsumer = new DefaultMQPushConsumer();
+		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+		defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
+		defaultMQPushConsumer.setVipChannelEnabled(false);
+		init(defaultMQPushConsumer);
+	}
 
-    public abstract void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException;
+	public abstract void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException;
 }

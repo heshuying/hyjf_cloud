@@ -14,21 +14,21 @@ import com.hyjf.common.exception.MQException;
 
 @Component
 public class SmsProducer extends Producer {
-    private static final Logger logger = LoggerFactory.getLogger(SmsProducer.class);
+	private static final Logger logger = LoggerFactory.getLogger(SmsProducer.class);
 
-    @Value("${rocketMQ.group.smsCodeGroup}")
-    private String smsCodeGroup;
+	@Value("${rocketMQ.group.smsCodeGroup}")
+	private String smsCodeGroup;
 
-    @Override
-    protected ProducerFieldsWrapper getFieldsWrapper() {
-        ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(smsCodeGroup);
-        wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        return wrapper;
-    }
+	@Override
+	protected ProducerFieldsWrapper getFieldsWrapper() {
+		ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
+		wrapper.setGroup(smsCodeGroup);
+		wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
+		return wrapper;
+	}
 
-    @Override
-    public boolean messageSend(MassageContent messageContent) throws MQException {
-        return super.messageSend(messageContent);
-    }
+	@Override
+	public boolean messageSend(MassageContent messageContent) throws MQException {
+		return super.messageSend(messageContent);
+	}
 }

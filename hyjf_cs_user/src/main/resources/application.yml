@@ -1,9 +1,6 @@
 rocketMQ:
   #namesrvAddr: ${rocketMQ.namesrvAddr}
   namesrvAddr: 123.56.216.212:5555
-  #以业务名为consumerGroup名，事件为tag
-  defaultProducerGroup : hyjf_cs_user
-  defaultConsumerGroup : hyjf_cs_user
   group :
     couponGroup : COUPON_GROUP
     smsCodeGroup : SMS_CODE_GROUP
@@ -11,9 +8,5 @@ rocketMQ:
     couponTopic : COUPON_TOPIC
     smsCodeTopic : SMS_CODE_TOPIC
   tag :
-    defaultTag : hyjf_cs_user
-
-env.test: false
-hyjf.activity.888.id: 37
-hyjf.activity.regist.tzj.id: 39
+    defaultTag : HYJF_DEFAULT_TAG
 
