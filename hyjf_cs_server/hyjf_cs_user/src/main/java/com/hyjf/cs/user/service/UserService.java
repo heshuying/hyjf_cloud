@@ -3,7 +3,7 @@ package com.hyjf.cs.user.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hyjf.am.user.util.WebViewUser;
+import com.hyjf.common.web.WebViewUser;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;

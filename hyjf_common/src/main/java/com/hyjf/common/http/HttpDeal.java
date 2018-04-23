@@ -14,8 +14,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.hyjf.common.log.LogUtil;
 import com.hyjf.common.util.StringPool;
 
 /**
@@ -23,8 +24,7 @@ import com.hyjf.common.util.StringPool;
  *
  */
 public class HttpDeal {
-	/** THIS_CLASS */
-	private static final String THIS_CLASS = HttpDeal.class.getName();
+	private static final Logger logger = LoggerFactory.getLogger(HttpDeal.class);
 
 	/**
 	 * 处理get请求.
@@ -33,7 +33,7 @@ public class HttpDeal {
 	 */
 	public static String get(String url) {
 		String methodName = "get";
-		LogUtil.startLog(THIS_CLASS, methodName, "[开始get请求, URL=" + url + "]");
+		logger.info("[开始get请求, URL={}]", url);
 		// 实例化httpclient
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		// 实例化get方法
@@ -48,23 +48,23 @@ public class HttpDeal {
 				content = EntityUtils.toString(response.getEntity(), StringPool.UTF8);
 			}
 		} catch (Exception e) {
-			LogUtil.errorLog(THIS_CLASS, methodName, e);
+			logger.error("调用异常...", e);
 		} finally {
 			if (response != null) {
 				try {
 					response.close();
 				} catch (IOException e) {
-					LogUtil.errorLog(THIS_CLASS, methodName, e);
+					logger.error("调用异常...", e);
 				}
 			}
 			if (httpclient != null) {
 				try {
 					httpclient.close();
 				} catch (IOException e) {
-					LogUtil.errorLog(THIS_CLASS, methodName, e);
+					logger.error("调用异常...", e);
 				}
 			}
-			LogUtil.startLog(THIS_CLASS, methodName, "[结束get请求]");
+			logger.info("[结束get请求]");
 		}
 		return content;
 	}
@@ -78,14 +78,15 @@ public class HttpDeal {
 	 */
 	public static String post(String url, Map<String, String> params) {
 		String methodName = "post";
-		LogUtil.startLog(THIS_CLASS, methodName, "[开始post请求, URL=" + url + ", 参数=" + params + "]");
+		logger.info("[开始post请求, URL={}, 参数={}]", url, params);
 
 		// （1）实例化 一个 客户发请求类httpClient，用来发送下面的post请求
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 
 		// （2）实例化 一个 post方法，用来当做容器存放具体传的参数
 		HttpPost httpPost = new HttpPost(url);
-		// （3）处理参数，将传过来的map类型的键值对，通过循环 做成 NameValuePair 泛型 的 list，也就是实际上最终传的是list
+		// （3）处理参数，将传过来的map类型的键值对，通过循环 做成 NameValuePair 泛型 的
+		// list，也就是实际上最终传的是list
 		List<NameValuePair> nvps = HttpClientHandler.buildNameValuePair(params);
 		// 结果
 		CloseableHttpResponse response = null;
@@ -97,43 +98,45 @@ public class HttpDeal {
 			httpPost.setEntity(uefEntity);
 			// （6）执行post方法
 			response = httpclient.execute(httpPost);
-			if (StringPool.OK.equals(response.getStatusLine().getReasonPhrase()) && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				//（7）最终返回结果是个string返回来，传到上面一层方法中去。
+			if (StringPool.OK.equals(response.getStatusLine().getReasonPhrase())
+					&& response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				// （7）最终返回结果是个string返回来，传到上面一层方法中去。
 				content = EntityUtils.toString(response.getEntity(), StringPool.UTF8);
 			}
 		} catch (Exception e) {
-			LogUtil.errorLog(THIS_CLASS, methodName, e);
+
 		} finally {
 			if (response != null) {
 				try {
 					response.close();
 				} catch (IOException e) {
-					LogUtil.errorLog(THIS_CLASS, methodName, e);
+					logger.error("调用异常...", e);
 				}
 			}
 			if (httpclient != null) {
 				try {
 					httpclient.close();
 				} catch (IOException e) {
-					LogUtil.errorLog(THIS_CLASS, methodName, e);
+					logger.error("调用异常...", e);
 				}
 			}
 
-			LogUtil.endLog(THIS_CLASS, methodName, "[结束post请求]");
+			logger.info("[结束post请求]");
 		}
 		return content;
 	}
-	
+
 	/**
 	 * 处理传入Json参数的post请求.
 	 *
-	 * @param json 参数
+	 * @param json
+	 *            参数
 	 * @return json
 	 * @author liubin
 	 */
 	public static String postJson(String url, String json) {
 		String methodName = "post";
-		LogUtil.startLog(THIS_CLASS, methodName, "[开始post请求, URL=" + url + ", 参数=" + json + "]");
+		logger.info("[开始post请求, URL={}, 参数={}]", url, json);
 
 		// 实例化httpClient
 		CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -146,32 +149,32 @@ public class HttpDeal {
 		try {
 			// 将参数给post方法
 			httpPost.setEntity(new StringEntity(json, StringPool.UTF8));
-			httpPost.addHeader("Content-type","application/json; charset=utf-8");  
-			httpPost.setHeader("Accept", "application/json");  
+			httpPost.addHeader("Content-type", "application/json; charset=utf-8");
+			httpPost.setHeader("Accept", "application/json");
 			// 执行post方法
 			response = httpclient.execute(httpPost);
-			if (StringPool.OK.equals(response.getStatusLine().getReasonPhrase()) && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			if (StringPool.OK.equals(response.getStatusLine().getReasonPhrase())
+					&& response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				content = EntityUtils.toString(response.getEntity(), StringPool.UTF8);
 			}
 		} catch (Exception e) {
-			LogUtil.errorLog(THIS_CLASS, methodName, e);
+			logger.error("调用异常...", e);
 		} finally {
 			if (response != null) {
 				try {
 					response.close();
 				} catch (IOException e) {
-					LogUtil.errorLog(THIS_CLASS, methodName, e);
+					logger.error("调用	异常...", e);
 				}
 			}
 			if (httpclient != null) {
 				try {
 					httpclient.close();
 				} catch (IOException e) {
-					LogUtil.errorLog(THIS_CLASS, methodName, e);
+					logger.error("调用	异常...", e);
 				}
 			}
-
-			LogUtil.endLog(THIS_CLASS, methodName, "[结束post请求]");
+			logger.info("[结束post请求]");
 		}
 		return content;
 	}

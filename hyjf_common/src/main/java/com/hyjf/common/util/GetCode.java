@@ -1,10 +1,6 @@
 package com.hyjf.common.util;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -63,13 +59,13 @@ public class GetCode {
     	String couponCode = StringUtils.EMPTY;
     	if(couponType == 1 ){
     		// 体验金
-    		couponCode = "PT"+GetCode.getRandomCodeCoupon(7);
+    		couponCode = "PT"+ GetCode.getRandomCodeCoupon(7);
     	}else if(couponType == 2 ){
     		// 加息券
-    		couponCode = "PJ"+GetCode.getRandomCodeCoupon(7);
+    		couponCode = "PJ"+ GetCode.getRandomCodeCoupon(7);
     	}else if(couponType == 3 ){
     		// 代金券
-    		couponCode = "PD"+GetCode.getRandomCodeCoupon(7);
+    		couponCode = "PD"+ GetCode.getRandomCodeCoupon(7);
     	}
         return couponCode;
     }
@@ -84,13 +80,13 @@ public class GetCode {
     	String couponUserCode = StringUtils.EMPTY;
     	if(couponType == 1 ){
     		// 体验金
-    		couponUserCode = "YT"+timestamp+GetCode.getRandomCodeCoupon(3);
+    		couponUserCode = "YT"+timestamp+ GetCode.getRandomCodeCoupon(3);
     	}else if(couponType == 2 ){
     		// 加息券
-    		couponUserCode = "YJ"+timestamp+GetCode.getRandomCodeCoupon(3);
+    		couponUserCode = "YJ"+timestamp+ GetCode.getRandomCodeCoupon(3);
     	}else if(couponType == 3 ){
     		// 代金券
-    		couponUserCode = "YD"+timestamp+GetCode.getRandomCodeCoupon(3);
+    		couponUserCode = "YD"+timestamp+ GetCode.getRandomCodeCoupon(3);
     	}
     	return couponUserCode;
     }

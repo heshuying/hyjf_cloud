@@ -1,10 +1,6 @@
 package com.hyjf.common.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1829,7 +1825,7 @@ public class StringUtil {
      *
      * <pre>
      * <code>
-     * safePath("http://www.liferay.com") returns "http:/www.liferay.com"
+     * safePath("http://www.liferay.com") returns "http:/www.liferay.iam"
      * </code>
      * </pre>
      *
@@ -2546,14 +2542,14 @@ public class StringUtil {
 
     /**
      * Returns the number of starting characters that <code>s1</code> and
-     * <code>s2</code> have in common before their characters deviate.
+     * <code>s2</code> have in iam before their characters deviate.
      *
      * @param s1
      *            string 1
      * @param s2
      *            string 2
      * @return the number of starting characters that <code>s1</code> and
-     *         <code>s2</code> have in common before their characters deviate
+     *         <code>s2</code> have in iam before their characters deviate
      */
     public static int startsWithWeight(String s1, String s2) {
         if ((s1 == null) || (s2 == null)) {
