@@ -78,8 +78,9 @@ public class UserController {
 	 * @param mobile
 	 * @return
 	 */
-	@RequestMapping("/findUserByMobile/{mobile}")
+	@RequestMapping("/findByMobile/{mobile}")
 	public UserResponse findUserByMobile(@PathVariable String mobile) {
+		logger.info("findUserByMobile...mobile is :{}", mobile);
 		UserResponse response = new UserResponse();
 		Users user = userService.findUserByMobile(mobile);
 		if (user != null) {
@@ -96,15 +97,16 @@ public class UserController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/updateCheckMobileCode")
-	public int updateCheckMobileCode(SmsCodeRequest request) {
+	@RequestMapping("/checkMobileCode")
+	public int checkMobileCode(@RequestBody @Valid SmsCodeRequest request) {
+		logger.info("checkMobileCode...param is :{}", JSONObject.toJSONString(request));
 		String mobile = request.getMobile();
 		String verificationCode = request.getVerificationCode();
 		String verificationType = request.getVerificationType();
 		String platform = request.getPlatform();
 		Integer status = request.getStatus();
 		Integer updateStatus = request.getUpdateStatus();
-		int result = smsService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, status,
+		int result = smsService.checkMobileCode(mobile, verificationCode, verificationType, platform, status,
 				updateStatus);
 		return result;
 	}

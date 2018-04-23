@@ -37,11 +37,11 @@ public enum RegisterError implements ErrorCode {
 
 	@Override
 	public String getErrCode() {
-		return null;
+		return this.errCode;
 	}
 
 	@Override
 	public String getMessage() {
-		return null;
+		return this.message;
 	}
 }

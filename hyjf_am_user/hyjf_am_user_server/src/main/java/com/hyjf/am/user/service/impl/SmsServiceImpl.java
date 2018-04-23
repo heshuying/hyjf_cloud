@@ -52,7 +52,7 @@ public class SmsServiceImpl implements SmsService {
 	}
 
 	@Override
-	public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus) {
+	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus) {
 		int time = GetDate.getNowTime10();
 		int timeAfter = time - 900;// 15分钟有效 900
 		SmsCodeExample example = new SmsCodeExample();

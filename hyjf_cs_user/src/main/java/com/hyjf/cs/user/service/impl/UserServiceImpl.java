@@ -40,6 +40,7 @@ import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.service.CouponService;
 import com.hyjf.cs.user.service.UserService;
+import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.TreeDESUtils;
 import com.hyjf.cs.user.vo.RegisterVO;
 
@@ -119,6 +120,7 @@ public class UserServiceImpl implements UserService {
 
 		RegisterUserRequest registerUserRequest = new RegisterUserRequest();
 		BeanUtils.copyProperties(registerVO, registerUserRequest);
+		registerUserRequest.setLoginIp(GetCilentIP.getIpAddr(request));
 		UserVO userVO = amUserClient.register(registerUserRequest);
 		if (userVO == null)
 			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
@@ -388,7 +390,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		String verificationType = CustomConstants.PARAM_TPL_ZHUCE;
-		int cnt = amUserClient.updateCheckMobileCode(mobile, smscode, verificationType, CustomConstants.CLIENT_PC,
+		int cnt = amUserClient.checkMobileCode(mobile, smscode, verificationType, CustomConstants.CLIENT_PC,
 				CustomConstants.CKCODE_YIYAN, CustomConstants.CKCODE_USED);
 		if (cnt == 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);

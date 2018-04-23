@@ -10,7 +10,7 @@ public interface SmsService {
     /**
      * 检查短信验证码
      */
-    int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus);
+    int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus);
 
     /**
      * 发送的短信验证码保存到数据库

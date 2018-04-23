@@ -11,7 +11,7 @@ import com.hyjf.am.user.vo.UserVO;
 public interface AmUserClient {
 	UserVO findUserByMobile(String mobile);
 
-	int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 			Integer searchStatus, Integer updateStatus);
 
 	int countUserByRecommendName(String reffer);
