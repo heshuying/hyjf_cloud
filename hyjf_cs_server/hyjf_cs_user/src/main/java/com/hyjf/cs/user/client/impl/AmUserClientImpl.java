@@ -1,17 +1,17 @@
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.am.user.request.RegisterUserRequest;
-import com.hyjf.am.user.request.SmsCodeRequest;
-import com.hyjf.am.user.response.UserInfoResponse;
-import com.hyjf.am.user.response.UserResponse;
-import com.hyjf.am.user.vo.UserInfoVO;
-import com.hyjf.am.user.vo.UserVO;
 import com.hyjf.cs.user.client.AmUserClient;
 
 /**

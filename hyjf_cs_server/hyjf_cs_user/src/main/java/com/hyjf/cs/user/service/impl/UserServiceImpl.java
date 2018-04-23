@@ -12,6 +12,11 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.user.util.WebUtils;
+import com.hyjf.am.user.util.WebViewUser;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +27,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.request.RegisterUserRequest;
-import com.hyjf.am.user.util.WebUtils;
-import com.hyjf.am.user.util.WebViewUser;
-import com.hyjf.am.user.vo.UserInfoVO;
-import com.hyjf.am.user.vo.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
@@ -102,8 +102,7 @@ public class UserServiceImpl implements UserService {
 		params.put("mobile", mobile);
 
 		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, "", JSON.toJSONBytes(params)));
-
+		smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
 	}
 
 	/**

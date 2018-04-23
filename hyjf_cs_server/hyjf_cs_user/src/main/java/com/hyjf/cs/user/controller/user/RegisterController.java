@@ -4,13 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.hyjf.am.vo.user.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.vo.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.BaseResultBean;
