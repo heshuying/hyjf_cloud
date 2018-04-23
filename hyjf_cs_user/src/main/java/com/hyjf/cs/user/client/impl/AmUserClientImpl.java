@@ -36,25 +36,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-			Integer searchStatus, Integer updateStatus) {
-		SmsCodeRequest request = new SmsCodeRequest();
-		request.setMobile(mobile);
-		request.setVerificationCode(verificationCode);
-		request.setVerificationType(verificationType);
-		request.setPlatform(platform);
-		request.setStatus(searchStatus);
-		request.setUpdateStatus(updateStatus);
-
-		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/checkMobileCode/", request, Integer.class).getBody();
-		if (result == null) {
-			return 0;
-		}
-		return result;
-	}
-
 	/**
 	 * 根据推荐人手机号或userId查询推荐人
 	 */
@@ -63,7 +44,7 @@ public class AmUserClientImpl implements AmUserClient {
 		UserResponse response = null;
 
 		response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findUserByRecommendName/" + reffer, UserResponse.class)
+				.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class)
 				.getBody();
 		if (response != null && response.getResult() != null) {
 			return 1;
@@ -96,6 +77,16 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
+	public UserInfoVO findUserInfoById(int userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userInfo/findById" + userId, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
 	public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
@@ -103,7 +94,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setVerificationType(validCodeType);
 		request.setStatus(status);
 		request.setPlatform(platform);
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/sms/saveSmsCode", request, Integer.class)
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/save", request, Integer.class)
 				.getBody();
 		if (result != null) {
 			return 1;
@@ -112,12 +103,21 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public UserInfoVO findUserInfoById(int userId) {
-		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById" + userId, UserInfoResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
+	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+							   Integer searchStatus, Integer updateStatus) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(verificationCode);
+		request.setVerificationType(verificationType);
+		request.setPlatform(platform);
+		request.setStatus(searchStatus);
+		request.setUpdateStatus(updateStatus);
+
+		Integer result = restTemplate
+				.postForEntity("http://AM-USER/am-user/smsCode/check/", request, Integer.class).getBody();
+		if (result == null) {
+			return 0;
 		}
-		return null;
+		return result;
 	}
 }

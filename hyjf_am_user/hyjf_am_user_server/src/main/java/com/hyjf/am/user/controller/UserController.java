@@ -34,9 +34,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private SmsService smsService;
-
 	@RequestMapping("/register")
 	public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {
 		logger.info("user register:" + JSONObject.toJSONString(userRequest));
@@ -92,32 +89,12 @@ public class UserController {
 	}
 
 	/**
-	 * 检查短信验证码
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/checkMobileCode")
-	public int checkMobileCode(@RequestBody @Valid SmsCodeRequest request) {
-		logger.info("checkMobileCode...param is :{}", JSONObject.toJSONString(request));
-		String mobile = request.getMobile();
-		String verificationCode = request.getVerificationCode();
-		String verificationType = request.getVerificationType();
-		String platform = request.getPlatform();
-		Integer status = request.getStatus();
-		Integer updateStatus = request.getUpdateStatus();
-		int result = smsService.checkMobileCode(mobile, verificationCode, verificationType, platform, status,
-				updateStatus);
-		return result;
-	}
-
-	/**
-	 * 根据推荐人手机号或userId查询推荐人
+	 * 根据推荐人手机号或userId 查询推荐人
 	 * 
 	 * @param reffer
 	 * @return
 	 */
-	@RequestMapping("/findUserByRecommendName/{reffer}")
+	@RequestMapping("/findReffer/{reffer}")
 	public UserResponse findUserByRecommendName(@PathVariable String reffer) {
 		UserResponse response = new UserResponse();
 		Users user = userService.findUserByRecommendName(reffer);

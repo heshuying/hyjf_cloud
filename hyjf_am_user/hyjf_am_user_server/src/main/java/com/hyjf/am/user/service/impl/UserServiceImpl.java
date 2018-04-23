@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			// 写入用户信息表
 			Users user = new Users();
-			String userName = getUniqueUsername(mobile);
+			String userName = generateUniqueUsername(mobile);
 			user.setInstCode("10000000");
 			user.setIsInstFlag(0);
 			user.setUsername(userName);
@@ -417,7 +417,7 @@ public class UserServiceImpl implements UserService {
 
 	/** 获取唯一username */
 	@Override
-	public String getUniqueUsername(String mobile) {
+	public String generateUniqueUsername(String mobile) {
 		String username = "hyjf" + mobile.substring(mobile.length() - 6, mobile.length());
 		// 第一规则
 		UsersExample ue = new UsersExample();
@@ -448,17 +448,6 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return username;
-	}
-
-	@Override
-	public Account findAccountByUserId(int userId) {
-		AccountExample example = new AccountExample();
-		example.createCriteria().andUserIdEqualTo(userId);
-		List<Account> accountList = accountMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(accountList)) {
-			return accountList.get(0);
-		}
-		return null;
 	}
 
 	@Override

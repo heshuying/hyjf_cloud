@@ -1,6 +1,5 @@
 package com.hyjf.am.user.service;
 
-import com.hyjf.am.user.dao.model.auto.Account;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.request.RegisterUserRequest;
 import com.hyjf.common.exception.ServiceException;
@@ -15,19 +14,12 @@ public interface UserService {
 	Users findUserByUserId(int userId);
 
 	/**
-	 * 获取唯一用户id
+	 * 生成唯一用户id
 	 * 
 	 * @param mobile
 	 * @return
 	 */
-	String getUniqueUsername(String mobile);
-
-	/**
-	 * 根据userId获取账户信息
-	 * @param userId
-	 * @return
-	 */
-    Account findAccountByUserId(int userId);
+	String generateUniqueUsername(String mobile);
 
 	/**
 	 * 根据手机号查找用户信息
