@@ -31,7 +31,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>com.hyjf</groupId>
-                        <artifactId>mybatis_generator</artifactId>
+                        <artifactId>hyjf_mybatis_generator</artifactId>
                         <version>0.0.1-SNAPSHOT</version>
                     </dependency>
                 </dependencies>

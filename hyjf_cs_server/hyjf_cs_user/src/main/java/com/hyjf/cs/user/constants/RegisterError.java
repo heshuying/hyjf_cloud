@@ -21,6 +21,8 @@ public enum RegisterError implements ErrorCode {
 	MOBILE_NEED_SAME_ERROR("1", "获取验证码手机号与注册手机号不一致!"),
 	MOBILE_MODIFY_ERROR("1", "修改手机号与原手机号不能相同!"),
 	SEND_SMSCODE_TOO_FAST_ERROR("1", "请求验证码操作过快!"),
+	SEND_SMSCODE_TOO_MANNY_ERROR("1", "该设备短信请求次数超限，请明日再试!"),
+	IP_VISIT_TOO_MANNY_ERROR("1", "IP访问次数超限!"),
 
 
 	CODETYPE_INVALID_ERROR("1", "无效的验证码类型!"),

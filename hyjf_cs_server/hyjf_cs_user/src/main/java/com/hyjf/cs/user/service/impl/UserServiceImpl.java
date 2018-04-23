@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
@@ -34,6 +35,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.common.web.RedisUtils;
 import com.hyjf.common.web.WebUtils;
 import com.hyjf.common.web.WebViewUser;
+import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
@@ -56,7 +58,8 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private AmUserClient amUserClient;
-
+	@Autowired
+	private AmConfigClient amConfigClient;
 	@Autowired
 	private CouponService couponService;
 	@Autowired
@@ -279,52 +282,41 @@ public class UserServiceImpl implements UserService {
 			RedisUtils.set(ip + ":MaxIpCount", "0");
 		}
 		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
-		// SmsConfig smsConfig = registService.getSmsConfig();
 
-//		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
-//			if (Integer.valueOf(ipCount) == smsConfig.getMaxIpCount()) {
-//				try {
-//					registService.sendSms(mobile, "IP访问次数超限:" + ip);
-//				} catch (Exception e) {
-//					LogUtil.errorLog(UserRegistDefine.THIS_CLASS, UserRegistDefine.REGIST_SEND_CODE_ACTION, e);
-//				}
-//
-//				RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
-//
-//			}
-//			ret.put(UserRegistDefine.STATUS, UserRegistDefine.STATUS_FALSE);
-//			ret.put(UserRegistDefine.ERROR, "该设备短信请求次数超限，请明日再试");
-//			LogUtil.errorLog(UserRegistDefine.THIS_CLASS, UserRegistDefine.REGIST_SEND_CODE_ACTION, "短信验证码发送失败", null);
-//			return ret;
-//		}
-		//
-		// // 判断最大发送数max_phone_count
-		// String count = RedisUtils.get(mobile + ":MaxPhoneCount");
-		// if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
-		// count = "0";
-		// RedisUtils.set(mobile + ":MaxPhoneCount", "0");
-		// }
-		// System.out.println(mobile + "----------MaxPhoneCount-----------" +
-		// count);
-		// if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
-		// if (Integer.valueOf(count) == smsConfig.getMaxPhoneCount()) {
-		// try {
-		// registService.sendSms(mobile, "手机验证码发送次数超限");
-		// } catch (Exception e) {
-		// LogUtil.errorLog(UserRegistDefine.THIS_CLASS,
-		// UserRegistDefine.REGIST_SEND_CODE_ACTION, e);
-		// }
-		//
-		// RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) +
-		// 1) + "",
-		// 24 * 60 * 60);
-		// }
-		// ret.put(UserRegistDefine.STATUS, UserRegistDefine.STATUS_FALSE);
-		// ret.put(UserRegistDefine.ERROR, "该手机号短信请求次数超限，请明日再试");
-		// LogUtil.errorLog(UserRegistDefine.THIS_CLASS,
-		// UserRegistDefine.REGIST_SEND_CODE_ACTION, "短信验证码发送失败", null);
-		// return ret;
-		// }
+		// SmsConfigVO smsConfig = RedisUtils.get("smsConfig"); todo 这里从redis取
+		SmsConfigVO smsConfig = null;
+
+		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
+			if (Integer.valueOf(ipCount) == smsConfig.getMaxIpCount()) {
+				try {
+					// registService.sendSms(mobile, "IP访问次数超限:" + ip); TODO
+					// 发送短信通知
+				} catch (Exception e) {
+					throw new ReturnMessageException(RegisterError.IP_VISIT_TOO_MANNY_ERROR);
+				}
+				RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
+			}
+			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
+		}
+
+		// 判断最大发送数max_phone_count
+		String count = RedisUtils.get(mobile + ":MaxPhoneCount");
+		if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
+			count = "0";
+			RedisUtils.set(mobile + ":MaxPhoneCount", "0");
+		}
+		logger.info(mobile + "----------MaxPhoneCount-----------" + count);
+		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
+			if (Integer.valueOf(count) == smsConfig.getMaxPhoneCount()) {
+				try {
+					// registService.sendSms(mobile, "手机验证码发送次数超限"); TODO 发送短信通知
+				} catch (Exception e) {
+					throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
+				}
+				RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
+			}
+			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
+		}
 
 	}
 
