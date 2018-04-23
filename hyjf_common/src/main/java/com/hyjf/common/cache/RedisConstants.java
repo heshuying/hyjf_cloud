@@ -1,0 +1,45 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.common.cache;
+
+/**
+ * redis专用常量
+ * @author fp
+ * @version RedisConstants, v0.1 2018/3/27 15:43
+ */
+public class RedisConstants {
+    /**
+     * 记录密码错误次数Redis前缀web端
+     */
+    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app_";
+
+    /**
+     * 记录密码错误次数Redis前缀web端
+     */
+    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web_";
+
+    /**
+     * 用户一秒内的登录次数(ip)
+     */
+    public static final String LOGIN_ONE_COUNT_WEB = "login_one_count_web_";
+
+    /**
+     * 用户一秒内的登录次数(ip)
+     */
+    public static final String LOGIN_ONE_COUNT_APP = "login_one_count_app_";
+
+    /**
+     * 恶意攻击登录ip黑名单
+     */
+    public static final String LOGIN_BLACK_LIST_WEB = "login_black_list_web";
+
+    /**
+     * 恶意攻击登录ip黑名单
+     */
+    public static final String LOGIN_BLACK_LIST_APP = "login_black_list_app";
+
+
+
+
+}

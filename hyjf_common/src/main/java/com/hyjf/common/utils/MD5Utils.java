@@ -12,11 +12,10 @@
 package com.hyjf.common.utils;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-
 /**
  * @author 郭勇
  */
+import java.security.MessageDigest;
 
 public class MD5Utils {
 
