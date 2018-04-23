@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.am.config.vo.GatewayApiConfigVO;
+import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.zuul.client.AmConfigClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

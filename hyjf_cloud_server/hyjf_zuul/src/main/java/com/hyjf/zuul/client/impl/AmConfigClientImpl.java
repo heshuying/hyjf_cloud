@@ -1,7 +1,7 @@
 package com.hyjf.zuul.client.impl;
 
-import com.hyjf.am.config.response.GatewayApiConfigResponse;
-import com.hyjf.am.config.vo.GatewayApiConfigVO;
+import com.hyjf.am.response.config.GatewayApiConfigResponse;
+import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.zuul.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.hyjf.zuul.client;
 
-import com.hyjf.am.config.vo.GatewayApiConfigVO;
+import com.hyjf.am.vo.config.GatewayApiConfigVO;
 
 import java.util.List;
 

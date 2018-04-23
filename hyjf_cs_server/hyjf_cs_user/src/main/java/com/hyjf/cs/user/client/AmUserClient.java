@@ -1,8 +1,8 @@
 package com.hyjf.cs.user.client;
 
-import com.hyjf.am.user.request.RegisterUserRequest;
-import com.hyjf.am.user.vo.UserInfoVO;
-import com.hyjf.am.user.vo.UserVO;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 
 /**
  * @author xiasq
