@@ -1,0 +1,9 @@
+<project name="hyjf-am-config" basedir="." default="main">
+	<target name="main" description="Generate the files">
+		<delete includeEmptyDirs="true">
+			<fileset dir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/xml/auto" includes="**/*.xml" />
+			<fileset dir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/auto" includes="**/*.java" />
+			<fileset dir="${basedir}/src/main/java/com/hyjf/am/config/dao/model/auto" includes="**/*.java" />
+		</delete>
+	</target>
+</project>

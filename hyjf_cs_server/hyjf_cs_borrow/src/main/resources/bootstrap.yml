@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: CS-BORROW
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:1111/eureka/
+  instance:
+    preferIpAddress: true
+server:
+  port: 8082
+
+logging:
+  file: cs-borrow.log
