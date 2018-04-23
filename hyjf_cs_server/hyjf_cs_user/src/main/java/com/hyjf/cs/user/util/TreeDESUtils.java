@@ -4,7 +4,7 @@ import java.net.URLEncoder;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import com.hyjf.common.utils.ThreeDESUtils;
+import com.hyjf.common.util.ThreeDESUtils;
 
 /**
  * @author xiasq

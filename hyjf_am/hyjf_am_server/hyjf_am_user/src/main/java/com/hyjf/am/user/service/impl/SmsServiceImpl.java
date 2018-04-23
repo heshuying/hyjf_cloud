@@ -8,7 +8,7 @@ import com.hyjf.am.user.dao.model.auto.SmsCode;
 import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.SmsService;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.utils.MD5;
+import com.hyjf.common.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright(c) 2012-2016 JD Pharma.Ltd. All Rights Reserved.
  */
-package com.hyjf.am.user.util;
+package com.hyjf.common.web;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;

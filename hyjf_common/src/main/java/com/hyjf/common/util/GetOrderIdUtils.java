@@ -9,13 +9,14 @@
  *           Modified by :
  */
 
-package com.hyjf.am.user.util;
+package com.hyjf.common.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import com.hyjf.common.web.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.hyjf.common.util.GetDate;

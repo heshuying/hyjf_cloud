@@ -9,7 +9,7 @@
  * Modified by : 
  */
 
-package com.hyjf.common.utils;
+package com.hyjf.common.util;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;

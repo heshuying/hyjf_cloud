@@ -1,7 +1,7 @@
 /*
  * Copyright(c) 2012-2016 JD Pharma.Ltd. All Rights Reserved.
  */
-package com.hyjf.am.user.util;
+package com.hyjf.common.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;

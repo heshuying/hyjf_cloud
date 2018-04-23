@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.user.util.WebUtils;
-import com.hyjf.am.user.util.WebViewUser;
+import com.hyjf.common.web.WebUtils;
+import com.hyjf.common.web.WebViewUser;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;

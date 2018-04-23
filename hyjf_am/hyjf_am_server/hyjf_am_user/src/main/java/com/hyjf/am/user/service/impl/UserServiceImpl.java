@@ -21,7 +21,7 @@ import com.hyjf.common.exception.ServiceException;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.utils.MD5Utils;
+import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
 
 /**
