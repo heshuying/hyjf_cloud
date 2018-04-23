@@ -3,7 +3,6 @@ package com.hyjf.am.user.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.hyjf.am.resquest.user.RegisterUserRequest;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.UserService;
@@ -266,78 +266,18 @@ public class UserServiceImpl implements UserService {
 				spreadsUsersMapper.insertSelective(spreadUser);
 			}
 
-			// String version = request.getParameter("version");
-			// if (StringUtils.isNotBlank(version)) {
-			// String[] shuzu = version.split("\\.");
-			// if (shuzu.length >= 4) {
-			// System.out.println(shuzu[3]);
-			// try {
-			// Integer utmplatSourceId = Integer.parseInt(shuzu[3]);// sourceid
-			// // 查询推广渠道
-			// UtmPlatExample example = new UtmPlatExample();
-			// example.createCriteria().andSourceIdEqualTo(utmplatSourceId);
-			// List<UtmPlat> utmPlatList =
-			// utmPlatMapper.selectByExample(example);
-			// if (utmPlatList != null && utmPlatList.size() > 0) {
-			// UtmPlat plat = utmPlatList.get(0);
-			// AppChannelStatisticsDetail detail = new
-			// AppChannelStatisticsDetail();
-			// detail.setSourceId(utmplatSourceId);
-			// detail.setSourceName(plat.getSourceName() != null ?
-			// plat.getSourceName() : "");
-			// detail.setUserId(userId);
-			// detail.setUserName(userName);
-			// detail.setRegisterTime(new Date());
-			// detail.setCumulativeInvest(BigDecimal.ZERO);
-			// appChannelStatisticsDetailMapper.insert(detail);
-			// }
-			// } catch (Exception e) {
-			// // e.printStackTrace();
-			// }
-			// //
-			// }
-			// }
 			// 插入utmReg表
-
-			String utmIdInCookie = utmId;
-
-			/*
-			 * if (request.getSession().getAttribute("utm_id") != null &&
-			 * StringUtils.isNotEmpty(request.getSession().getAttribute("utm_id"
-			 * ).toString())) { if
-			 * (Validator.isNumber(request.getSession().getAttribute("utm_id").
-			 * toString())) { // 从session中取 UtmReg utmReg = new UtmReg();
-			 * utmReg.setCreateTime(GetDate.getNowTime10());
-			 * utmReg.setUtmId(Integer.parseInt(request.getSession().
-			 * getAttribute("utm_id").toString())); utmReg.setUserId(userId);
-			 * utmReg.setOpenAccount(0); utmReg.setBindCard(0);
-			 * saveUtmReg(utmReg); System.out.println(
-			 * "updateRegistUser***********************************预插入utmReg：" +
-			 * JSON.toJSONString(utmReg)); } } else
-			 */ if (StringUtils.isNotEmpty(utmId)) {
+			if (StringUtils.isNotEmpty(utmId)) {
 				if (Validator.isNumber(utmId)) {
-					// 从request中取
 					UtmReg utmReg = new UtmReg();
 					utmReg.setCreateTime(GetDate.getNowTime10());
 					utmReg.setUtmId(Integer.parseInt(utmId));
 					utmReg.setUserId(userId);
 					utmReg.setOpenAccount(0);
 					utmReg.setBindCard(0);
-					// TODO saveUtmReg(utmReg);
-					System.out.println("updateRegistUser***********************************预插入utmReg："
-							+ JSON.toJSONString(utmReg));
-				}
-			} else if (StringUtils.isNotEmpty(utmIdInCookie)) {
-				if (Validator.isNumber(utmIdInCookie)) {
-					UtmReg utmReg = new UtmReg();
-					utmReg.setCreateTime(GetDate.getNowTime10());
-					utmReg.setUtmId(Integer.parseInt(utmIdInCookie));
-					utmReg.setUserId(userId);
-					utmReg.setOpenAccount(0);
-					utmReg.setBindCard(0);
-					// TODO saveUtmReg(utmReg);
-					System.out.println("updateRegistUser***********************************预插入utmReg："
-							+ JSON.toJSONString(utmReg));
+					saveUtmReg(utmReg);
+					logger.info("updateRegistUser***********************************预插入utmReg：{}",
+							JSON.toJSONString(utmReg));
 				}
 			}
 			// 保存用户注册日志
@@ -356,52 +296,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return null;
-	}
-
-	/**
-	 *
-	 * 根据ip地址获取注册所在地
-	 * 
-	 * @author hsy
-	 * @param ip
-	 * @param usersInfo
-	 */
-	public void getAddress(String ip, UsersInfo usersInfo) {
-		if (StringUtils.isEmpty(ip)) {
-			return;
-		}
-
-		try {
-			logger.info("根据ip获取注册地请求url：" + ipInfoUrl + "?ip=" + ip);
-			String result = HttpDeal.get(ipInfoUrl + "?ip=" + ip);
-			logger.info("根据ip获取注册地返回结果：{}", result);
-
-			if (StringUtils.isEmpty(result)) {
-				return;
-			}
-
-			JSONObject resultObj = (JSONObject) JSONObject.parse(result);
-
-			if (resultObj == null) {
-				return;
-			}
-
-			String resultCode = resultObj.getString("code");
-			if (resultCode.equals("0")) { // 查询成功
-				String region = resultObj.getJSONObject("data").getString("region");
-				String city = resultObj.getJSONObject("data").getString("city");
-				String county = resultObj.getJSONObject("data").getString("county");
-
-				usersInfo.setProvince(StringUtils.isEmpty(region) ? "" : region);
-				usersInfo.setCity(StringUtils.isEmpty(city) ? "" : city);
-				usersInfo.setArea(StringUtils.isEmpty(county) ? "" : county);
-			} else {
-				logger.info("根据ip地址获取所在地失败，ip：{}, 返回信息：{}", ip, result);
-			}
-		} catch (Exception e) {
-			logger.error("根据ip地址获取所在地出错，ip：" + ip, e);
-		}
-
 	}
 
 	@Override
@@ -475,6 +369,55 @@ public class UserServiceImpl implements UserService {
 			return usersList.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 *
+	 * 根据ip地址获取注册所在地
+	 *
+	 * @author hsy
+	 * @param ip
+	 * @param usersInfo
+	 */
+	private void getAddress(String ip, UsersInfo usersInfo) {
+		if (StringUtils.isEmpty(ip)) {
+			return;
+		}
+		try {
+			logger.info("根据ip获取注册地请求url：" + ipInfoUrl + "?ip=" + ip);
+			String result = HttpDeal.get(ipInfoUrl + "?ip=" + ip);
+			logger.info("根据ip获取注册地返回结果：{}", result);
+
+			if (StringUtils.isEmpty(result)) {
+				return;
+			}
+			JSONObject resultObj = (JSONObject) JSONObject.parse(result);
+			if (resultObj == null) {
+				return;
+			}
+			String resultCode = resultObj.getString("code");
+			if (resultCode.equals("0")) { // 查询成功
+				String region = resultObj.getJSONObject("data").getString("region");
+				String city = resultObj.getJSONObject("data").getString("city");
+				String county = resultObj.getJSONObject("data").getString("county");
+				usersInfo.setProvince(StringUtils.isEmpty(region) ? "" : region);
+				usersInfo.setCity(StringUtils.isEmpty(city) ? "" : city);
+				usersInfo.setArea(StringUtils.isEmpty(county) ? "" : county);
+			} else {
+				logger.info("根据ip地址获取所在地失败，ip：{}, 返回信息：{}", ip, result);
+			}
+		} catch (Exception e) {
+			logger.error("根据ip地址获取所在地出错，ip：" + ip, e);
+		}
+	}
+
+	/**
+	 * 保存utmReg表
+	 * 
+	 * @param utmReg
+	 */
+	private void saveUtmReg(UtmReg utmReg) {
+		// todo
 	}
 
 }

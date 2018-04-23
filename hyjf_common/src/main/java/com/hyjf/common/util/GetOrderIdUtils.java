@@ -19,8 +19,6 @@ import java.util.Random;
 import com.hyjf.common.web.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.hyjf.common.util.GetDate;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;

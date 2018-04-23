@@ -18,6 +18,9 @@ public enum RegisterError implements ErrorCode {
 	PASSWORD_FORMAT_ERROR("1", "密码必须由数字和字母组成，如abc123"),
 	SMSCODE_INVALID_ERROR("1", "验证码无效"),
 	REFFER_INVALID_ERROR("1", "推荐人无效"),
+	MOBILE_NEED_SAME_ERROR("1", "获取验证码手机号与注册手机号不一致!"),
+	MOBILE_MODIFY_ERROR("1", "修改手机号与原手机号不能相同!"),
+	SEND_SMSCODE_TOO_FAST_ERROR("1", "请求验证码操作过快!"),
 
 
 	CODETYPE_INVALID_ERROR("1", "无效的验证码类型!"),

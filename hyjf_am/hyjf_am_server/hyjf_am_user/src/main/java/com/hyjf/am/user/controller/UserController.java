@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.Users;
@@ -32,7 +29,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping("/register")
+	@PostMapping("/register")
 	public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {
 		logger.info("user register:" + JSONObject.toJSONString(userRequest));
 		UserResponse userResponse = new UserResponse();

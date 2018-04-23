@@ -13,11 +13,22 @@ import java.io.Serializable;
  * @see 14:23:01
  */
 public class BaseResultBean implements Serializable {
-
     /**
      * 此处为属性说明
      */
     private static final long serialVersionUID = -3589570872364671096L;
+
+    public static final String STATUS_SUCCESS = "0";
+    public static final String STATUS_FAIL = "1";
+    public static final String STATUS_SUCCESS_DESC = "成功";
+    public static final String STATUS_FAIL_DESC = "失败";
+
+    private String status;
+
+    private String statusDesc;
+
+    private String request;
+
 
     public BaseResultBean() {
         this("");
@@ -25,7 +36,8 @@ public class BaseResultBean implements Serializable {
 
     public BaseResultBean(String request) {
         super();
-        this.status = "1";
+        this.status = STATUS_SUCCESS;
+        this.statusDesc = STATUS_SUCCESS_DESC;
         this.request = request;
     }
 
@@ -57,11 +69,4 @@ public class BaseResultBean implements Serializable {
     public void setRequest(String request) {
         this.request = request;
     }
-
-    private String status;
-
-    private String statusDesc;
-
-    private String request;
-
 }

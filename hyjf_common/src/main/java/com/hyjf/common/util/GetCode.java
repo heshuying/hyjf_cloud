@@ -1,8 +1,8 @@
 package com.hyjf.common.util;
 
-import java.util.*;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
 
 public class GetCode {
 
