@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
+import org.springframework.util.StringUtils;
+
 /**
  *
  * 类描述：时间操作定义类
@@ -506,7 +508,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date dt = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String nowTime = df.format(dt);
-		java.sql.Timestamp buydate = java.sql.Timestamp.valueOf(nowTime);
+		Timestamp buydate = Timestamp.valueOf(nowTime);
 		return buydate;
 	}
 
@@ -583,7 +585,7 @@ public class GetDate extends PropertyEditorSupport {
      * 获取时间字符串
      */
     public static String getDataString(SimpleDateFormat formatstr, Integer addDay) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(); 
         calendar.add(Calendar.DAY_OF_MONTH, addDay);
         return formatstr.format(calendar.getTime());
     }
@@ -893,7 +895,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * HH:mm:ss“ * @param text String类型的时间值
 	 */
 	public void setAsText(String text) throws IllegalArgumentException {
-		if (text!=null && !"".equals(text)) {
+		if (StringUtils.hasText(text)) {
 			try {
 				if (text.indexOf(":") == -1 && text.length() == 10) {
 					setValue(this.date_sdf.parse(text));
@@ -1010,7 +1012,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @param second
 	 * @return
 	 */
-	public static String get10Time(String date, int second) {
+	public static String get10Time(String date,int second) {
 		if (date == null || "".equals(date)) {
 			return "";
 		}
