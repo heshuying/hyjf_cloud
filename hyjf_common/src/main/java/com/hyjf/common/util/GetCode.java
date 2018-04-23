@@ -2,7 +2,7 @@ package com.hyjf.common.util;
 
 import java.util.*;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class GetCode {
 
