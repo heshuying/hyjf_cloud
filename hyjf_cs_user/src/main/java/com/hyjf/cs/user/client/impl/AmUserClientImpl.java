@@ -1,5 +1,7 @@
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.user.response.UserInfoResponse;
+import com.hyjf.am.user.vo.UserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +85,10 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public UserVO getUserById(int userId) {
+	public UserVO findUserById(int userId) {
 		UserResponse response = null;
 
-		response = restTemplate.getForEntity("http://AM-USER/am-user/user/getUserById" + userId, UserResponse.class)
+		response = restTemplate.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();
@@ -108,5 +110,15 @@ public class AmUserClientImpl implements AmUserClient {
 			return 1;
 		}
 		return 0;
+	}
+
+	@Override
+	public UserInfoVO findUserInfoById(int userId) {
+		UserInfoResponse response = restTemplate.getForEntity("http://AM-USER/am-user/userInfo/findById" + userId, UserInfoResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.user.request.RegisterUserRequest;
+import com.hyjf.am.user.vo.UserInfoVO;
 import com.hyjf.am.user.vo.UserVO;
 
 /**
@@ -17,8 +18,9 @@ public interface AmUserClient {
 
 	UserVO register(RegisterUserRequest request);
 
-	UserVO getUserById(int userId);
+	UserVO findUserById(int userId);
 
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
+	UserInfoVO findUserInfoById(int userId);
 }

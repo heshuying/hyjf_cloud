@@ -82,6 +82,11 @@ public class WebViewUser implements Serializable {
     private String roleId;
 
     /**
+     * 用户紧急联系人
+     */
+    //private UsersContract usersContract;
+
+    /**
      * 充值成功短信 0发送1不发送
      */
     private Integer rechargeSms;
@@ -228,6 +233,14 @@ public class WebViewUser implements Serializable {
     public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
+
+//    public UsersContract getUsersContract() {
+//        return usersContract;
+//    }
+//
+//    public void setUsersContract(UsersContract usersContract) {
+//        this.usersContract = usersContract;
+//    }
 
     public Integer getRechargeSms() {
         return rechargeSms;

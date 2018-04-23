@@ -1,7 +1,5 @@
 package com.hyjf.am.user.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -40,8 +38,7 @@ public class UserController {
 	private SmsService smsService;
 
 	@RequestMapping("/register")
-	public UserResponse register(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody @Valid RegisterUserRequest userRequest) {
+	public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {
 		logger.info("user register:" + JSONObject.toJSONString(userRequest));
 		UserResponse userResponse = new UserResponse();
 		try {
@@ -63,7 +60,7 @@ public class UserController {
 		return userResponse;
 	}
 
-	@RequestMapping("/findUserByUserId/{userId}")
+	@RequestMapping("/findById/{userId}")
 	public UserResponse findUserByUserId(@PathVariable int userId) {
 		UserResponse response = new UserResponse();
 		Users user = userService.findUserByUserId(userId);
