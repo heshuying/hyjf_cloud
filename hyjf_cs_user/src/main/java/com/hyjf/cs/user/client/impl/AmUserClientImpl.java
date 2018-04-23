@@ -41,10 +41,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int countUserByRecommendName(String reffer) {
-		UserResponse response = null;
-
-		response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class)
+		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class)
 				.getBody();
 		if (response != null && response.getResult() != null) {
 			return 1;
@@ -54,10 +51,8 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UserVO register(RegisterUserRequest request) {
-		UserResponse response = null;
-
-		response = restTemplate.postForEntity("http://AM-USER/am-user/user/register", request, UserResponse.class)
-				.getBody();
+		UserResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/register", request, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -66,9 +61,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UserVO findUserById(int userId) {
-		UserResponse response = null;
-
-		response = restTemplate.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class)
+		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();
@@ -104,7 +97,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-							   Integer searchStatus, Integer updateStatus) {
+			Integer searchStatus, Integer updateStatus) {
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
 		request.setVerificationCode(verificationCode);
@@ -113,8 +106,8 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
 
-		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/smsCode/check/", request, Integer.class).getBody();
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", request, Integer.class)
+				.getBody();
 		if (result == null) {
 			return 0;
 		}
