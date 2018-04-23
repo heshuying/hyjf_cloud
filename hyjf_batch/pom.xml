@@ -13,7 +13,7 @@
 
 	<parent>
 		<groupId>com.hyjf</groupId>
-		<artifactId>hyjf_cloud_server</artifactId>
+		<artifactId>hyjf_cloud</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../hyjf_cloud_server</relativePath>
 	</parent>
