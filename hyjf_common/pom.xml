@@ -66,16 +66,6 @@
 			<version>1.4.1</version>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<!-- javax.servlet.end -->
-			<dependency>
-				<groupId>chinapnr</groupId>
-				<artifactId>chinapnr</artifactId>
-				<version>1.0</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<plugins>
