@@ -13,9 +13,9 @@ package com.hyjf.common.validator;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hyjf.common.utils.MsgEnum;
 import org.springframework.web.servlet.support.RequestContext;
 
-import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.GetSessionOrRequestUtils;
 
