@@ -48,7 +48,7 @@
 
 		<dependency>
 			<groupId>com.hyjf</groupId>
-			<artifactId>hyjf_am_common</artifactId>
+			<artifactId>hyjf_am_model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 

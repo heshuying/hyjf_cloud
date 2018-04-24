@@ -19,7 +19,7 @@
 	</parent>
 	
 	<modules>
-        <module>hyjf_am_common</module>
+        <module>hyjf_am_model</module>
         <module>hyjf_am_server</module>
 		<module>hyjf_am_util</module>
 	</modules>

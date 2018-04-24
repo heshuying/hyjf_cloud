@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hyjf_am_common</artifactId>
+    <artifactId>hyjf_am_model</artifactId>
 
 
 </project>
