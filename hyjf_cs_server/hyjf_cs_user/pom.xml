@@ -46,11 +46,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.collections</groupId>
-			<artifactId>google-collections</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>com.hyjf</groupId>
 			<artifactId>hyjf_common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
