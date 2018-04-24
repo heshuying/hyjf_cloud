@@ -23,7 +23,7 @@ public class TestRedis {
 	Logger logger = LoggerFactory.getLogger(TestRedis.class);
 
 	@Autowired
-	RedisUtils redisUtils;
+    RedisUtil redisUtil;
 
 	@Autowired
 	StringRedisUtil stringRedisUtil;
@@ -44,12 +44,12 @@ public class TestRedis {
 
 	@Test
 	public void testObjectRedisWrite() {
-		redisUtils.set("key", Arrays.asList("xiasq", "xiaom", "xiaoh"));
+		redisUtil.set("key", Arrays.asList("xiasq", "xiaom", "xiaoh"));
 	}
 
 	@Test
 	public void testObjectRedisRead() {
-		Object object = redisUtils.get("key");
+		Object object = redisUtil.get("key");
 		logger.info("value: {}", object);
 	}
 

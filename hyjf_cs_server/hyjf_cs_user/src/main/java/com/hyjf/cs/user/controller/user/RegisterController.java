@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.hyjf.common.util.CustomConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.UserService;
+import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
 
 /**
@@ -41,11 +41,13 @@ public class RegisterController {
 	 * @throws MQException
 	 */
 	@RequestMapping(value = "/sendcode")
-	public BaseResultBean sendSmsCode(@RequestParam String validCodeType, @RequestParam String mobile,
-			HttpServletRequest request) throws MQException {
+	public BaseResultBean sendSmsCode(@RequestParam String validCodeType,
+									  @RequestParam String mobile,
+									  @RequestHeader(value = "token", required = true) String token,
+									  HttpServletRequest request) throws MQException {
 		logger.info("sendSmsCode start, validCodeType is :{}, mobile is: {}", validCodeType, mobile);
 		BaseResultBean resultBean = new BaseResultBean();
-		userService.sendSmsCode(validCodeType, mobile, request);
+		userService.sendSmsCode(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}
 

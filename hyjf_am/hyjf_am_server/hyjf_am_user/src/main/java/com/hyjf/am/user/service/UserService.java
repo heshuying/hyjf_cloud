@@ -2,6 +2,7 @@ package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.model.auto.Users;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ServiceException;
 
 /**
@@ -34,4 +35,11 @@ public interface UserService {
 	 * @return
 	 */
 	Users findUserByRecommendName(String reffer);
+
+	/**
+	 * 组装user信息
+	 * @param userVO
+	 * @return
+	 */
+    UserVO assembleUserVO(UserVO userVO);
 }

@@ -1,126 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.hyjf</groupId>
-	<artifactId>hyjf_cloud</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <groupId>com.hyjf</groupId>
+    <artifactId>hyjf_cloud</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-	<packaging>pom</packaging>
+    <packaging>pom</packaging>
 
-	<name>hyjf_cloud</name>
-	<description>Demo project for Spring Boot</description>
-	
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.1.RELEASE</version>
-		<relativePath/>
-	</parent>
+    <name>hyjf_cloud</name>
+    <description>Demo project for Spring Boot</description>
 
-	<modules>
-		<module>hyjf_cloud_server</module>
-		<module>hyjf_cs_server</module>
-		<module>hyjf_am</module>
-		<module>hyjf_admin</module>
-		<module>hyjf_batch</module>
-		<module>hyjf_common</module>
-		<module>hyjf_mybatis_generator</module>
-		<module>hyjf_pay</module>
-	</modules>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.1.RELEASE</version>
+        <relativePath/>
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+    <modules>
+        <module>hyjf_cloud_server</module>
+        <module>hyjf_cs_server</module>
+        <module>hyjf_am</module>
+        <module>hyjf_admin</module>
+        <module>hyjf_batch</module>
+        <module>hyjf_common</module>
+        <module>hyjf_mybatis_generator</module>
+        <module>hyjf_pay</module>
+    </modules>
 
-		<spring.cloud.version>Finchley.M9</spring.cloud.version>
-		<spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
-		<druid.version>1.1.1</druid.version>
-		<fastjson.version>1.2.47</fastjson.version>
-		<rocketmq.version>4.2.0</rocketmq.version>
-		<common.pool2.version>2.4.2</common.pool2.version>
-		<commons.lang3.version>3.7</commons.lang3.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- sping cloud -->
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring.cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+        <spring.cloud.version>Finchley.M9</spring.cloud.version>
+        <spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
+        <druid.version>1.1.1</druid.version>
+        <fastjson.version>1.2.47</fastjson.version>
+        <rocketmq.version>4.2.0</rocketmq.version>
+        <common.pool2.version>2.4.2</common.pool2.version>
+        <commons.lang3.version>3.7</commons.lang3.version>
+        <jwt.version>3.3.0</jwt.version>
+        <google.coll.version>1.0-rc2</google.coll.version>
+        <guava.version>24.1-jre</guava.version>
+    </properties>
 
-			<!-- sping mybatis -->
-			<dependency>
-				<groupId>org.mybatis.spring.boot</groupId>
-				<artifactId>mybatis-spring-boot-starter</artifactId>
-				<version>${spring.mybatis.vesion}</version>
-			</dependency>
+    <dependencyManagement>
+        <dependencies>
+            <!-- sping cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>druid</artifactId>
-				<version>${druid.version}</version>
-			</dependency>
+            <!-- sping mybatis -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${spring.mybatis.vesion}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.apache.rocketmq</groupId>
-				<artifactId>rocketmq-client</artifactId>
-				<version>${rocketmq.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>fastjson</artifactId>
-				<version>${fastjson.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
 
-			<!--spring2.0 need common-pool2-->
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-pool2</artifactId>
-				<version>${common.pool2.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>${commons.lang3.version}</version>
-			</dependency>
+            <!--spring2.0 need common-pool2-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${common.pool2.version}</version>
+            </dependency>
 
-		</dependencies>
-	</dependencyManagement>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>1.3.2</version>
+            </dependency>
 
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/libs-milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>nexus</id>
-			<name>Local Repo</name>
-			<url>http://10.10.2.100:18080/nexus-2.9.0/content/groups/public/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
+            </dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+            <!-- gen token -->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.collections</groupId>
+                <artifactId>google-collections</artifactId>
+                <version>${google.coll.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>nexus</id>
+            <name>Local Repo</name>
+            <url>http://10.10.2.100:18080/nexus-2.9.0/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

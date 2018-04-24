@@ -47,6 +47,7 @@
 			<version>2.9.0</version>
 			<type>jar</type>
 		</dependency>
+
 		<dependency>
 			<groupId>cn.jpush.api</groupId>
 			<artifactId>jpush-client</artifactId>
@@ -78,6 +79,21 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-io</artifactId>
 		</dependency>
 
 	</dependencies>

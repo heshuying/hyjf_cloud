@@ -2,6 +2,7 @@ package com.hyjf.cs.user.service.impl;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,29 +23,29 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.web.RedisUtils;
-import com.hyjf.common.web.WebUtils;
-import com.hyjf.common.web.WebViewUser;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
+import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.service.CouponService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.util.TreeDESUtils;
 import com.hyjf.cs.user.vo.RegisterVO;
 
 /**
@@ -67,6 +68,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private SmsProducer smsProducer;
 
+	@Autowired
+	private RedisUtil redisUtil;
+
 	@Value("${rocketMQ.topic.couponTopic}")
 	private String couponTopic;
 	@Value("${rocketMQ.topic.smsCodeTopic}")
@@ -86,9 +90,9 @@ public class UserServiceImpl implements UserService {
 	 * @param request
 	 */
 	@Override
-	public void sendSmsCode(String validCodeType, String mobile, HttpServletRequest request) throws MQException {
+	public void sendSmsCode(String validCodeType, String mobile, String token, String ip) throws MQException {
 
-		this.sendSmsCodeCheckParam(validCodeType, mobile, request);
+		this.sendSmsCodeCheckParam(validCodeType, mobile, token, ip);
 
 		// 生成验证码
 		String checkCode = GetCode.getRandomSMSCode(6);
@@ -128,7 +132,7 @@ public class UserServiceImpl implements UserService {
 		if (userVO == null)
 			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
 
-		this.afterRegisterHandle(userVO, request, response);
+		this.afterRegisterHandle(userVO);
 
 		return userVO;
 	}
@@ -139,95 +143,7 @@ public class UserServiceImpl implements UserService {
 		return userVO == null ? false : true;
 	}
 
-	@Override
-	public WebViewUser getWebViewUserByUserId(Integer userId) {
-		WebViewUser result = new WebViewUser();
-
-		UserVO userVO = amUserClient.findUserById(userId);
-
-		result.setUserId(userVO.getUserId());
-		result.setUsername(userVO.getUsername());
-		if (StringUtils.isNotBlank(userVO.getMobile())) {
-			result.setMobile(userVO.getMobile());
-		}
-		// 文件上传未实现 todo
-		// if (StringUtils.isNotBlank(userVO.getIconurl())) {
-		// String imghost =
-		// UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.head.url"));
-		// imghost = imghost.substring(0, imghost.length() - 1);
-		// String fileUploadTempPath =
-		// UploadFileUtils.getDoPath(PropUtils.getSystem("file.upload.head.path"));
-		// if (StringUtils.isNotEmpty(user.getIconurl())) {
-		// result.setIconurl(imghost + fileUploadTempPath + user.getIconurl());
-		// }
-		// }
-		if (StringUtils.isNotBlank(userVO.getEmail())) {
-			result.setEmail(userVO.getEmail());
-		}
-		if (userVO.getOpenAccount() != null) {
-			if (userVO.getOpenAccount().intValue() == 1) {
-				result.setOpenAccount(true);
-			} else {
-				result.setOpenAccount(false);
-			}
-		}
-		if (userVO.getBankOpenAccount() != null) {
-			if (userVO.getBankOpenAccount() == 1) {
-				result.setBankOpenAccount(true);
-			} else {
-				result.setBankOpenAccount(false);
-			}
-		}
-		result.setRechargeSms(userVO.getRechargeSms());
-		result.setWithdrawSms(userVO.getWithdrawSms());
-		result.setInvestSms(userVO.getInvestSms());
-		result.setRecieveSms(userVO.getRecieveSms());
-		result.setIsSetPassword(userVO.getIsSetPassword());
-		result.setIsEvaluationFlag(userVO.getIsEvaluationFlag());
-		result.setIsSmtp(userVO.getIsSmtp());
-		result.setUserType(userVO.getUserType());
-
-		UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
-		if (userInfoVO != null) {
-			result.setSex(userInfoVO.getSex());
-			result.setNickname(userInfoVO.getNickname());
-			result.setTruename(userInfoVO.getTruename());
-			result.setIdcard(userInfoVO.getIdcard());
-			result.setBorrowerType(userInfoVO.getBorrowerType());
-		}
-		result.setRoleId(userInfoVO.getRoleId() + "");
-
-		// 汇付开户， 银行开户。 用户紧急联系人未实现 todo
-		// AccountChinapnrExample chinapnrExample = new
-		// AccountChinapnrExample();
-		// chinapnrExample.createCriteria().andUserIdEqualTo(userId);
-		// List<AccountChinapnr> chinapnrList =
-		// accountChinapnrMapper.selectByExample(chinapnrExample);
-		// if (chinapnrList != null && chinapnrList.size() > 0) {
-		// result.setChinapnrUsrid(chinapnrList.get(0).getChinapnrUsrid());
-		// result.setChinapnrUsrcustid(chinapnrList.get(0).getChinapnrUsrcustid());
-		// }
-		//
-		// BankOpenAccount bankOpenAccount = this.getBankOpenAccount(userId);
-		// if (bankOpenAccount != null &&
-		// StringUtils.isNotEmpty(bankOpenAccount.getAccount())) {
-		// if (result.isBankOpenAccount()) {
-		// result.setBankAccount(bankOpenAccount.getAccount());
-		// }
-		// }
-		// // 用户紧急联系人
-		// UsersContractExample usersContractExample = new
-		// UsersContractExample();
-		// usersContractExample.createCriteria().andUserIdEqualTo(userId);
-		// List<UsersContract> UsersContractList =
-		// usersContractMapper.selectByExample(usersContractExample);
-		// if (UsersContractList != null && UsersContractList.size() > 0) {
-		// result.setUsersContract(UsersContractList.get(0));
-		// }
-		return result;
-	}
-
-	private void sendSmsCodeCheckParam(String validCodeType, String mobile, HttpServletRequest request) {
+	private void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
 
 		List<String> codeTypes = Arrays.asList(CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.PARAM_TPL_ZHAOHUIMIMA,
 				CustomConstants.PARAM_TPL_YZYSJH, CustomConstants.PARAM_TPL_BDYSJH);
@@ -245,27 +161,30 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
-		// 验证原手机号校验
-		if (validCodeType.equals(CustomConstants.PARAM_TPL_YZYSJH)) {
-			if (WebUtils.getUser(request) == null || StringUtils.isBlank(WebUtils.getUser(request).getMobile())) {
-				throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
-			}
-			if (!WebUtils.getUser(request).getMobile().equals(mobile)) {
-				throw new ReturnMessageException(RegisterError.MOBILE_NEED_SAME_ERROR);
-			}
-		}
+		if (StringUtils.isNotEmpty(token)) {
+			UserVO userVO = (UserVO) redisUtil.get(token);
+			if (userVO != null) {
+				// 验证原手机号校验
+				if (validCodeType.equals(CustomConstants.PARAM_TPL_YZYSJH)) {
+					if (StringUtils.isBlank(userVO.getMobile())) {
+						throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
+					}
+					if (!userVO.getMobile().equals(mobile)) {
+						throw new ReturnMessageException(RegisterError.MOBILE_NEED_SAME_ERROR);
+					}
+				}
 
-		// 绑定新手机号校验
-		if (validCodeType.equals(CustomConstants.PARAM_TPL_BDYSJH)) {
-			if (WebUtils.getUser(request) == null) {
+				// 绑定新手机号校验
+				if (validCodeType.equals(CustomConstants.PARAM_TPL_BDYSJH)) {
+					if (userVO.equals(mobile)) {
+						throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
+					}
+					if (existUser(mobile)) {
+						throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
+					}
+				}
+			} else
 				throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
-			}
-			if (WebUtils.getUser(request).getMobile().equals(mobile)) {
-				throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
-			}
-			if (existUser(mobile)) {
-				throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
-			}
 		}
 
 		// 判断发送间隔时间
@@ -275,7 +194,6 @@ public class UserServiceImpl implements UserService {
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_FAST_ERROR);
 		}
 
-		String ip = GetCilentIP.getIpAddr(request);
 		String ipCount = RedisUtils.get(ip + ":MaxIpCount");
 		if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
 			ipCount = "0";
@@ -377,26 +295,15 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private void afterRegisterHandle(UserVO userVO, HttpServletRequest request, HttpServletResponse response) {
+	private void afterRegisterHandle(UserVO userVO) {
 		int userId = userVO.getUserId();
 
-		int timestamp = GetDate.getMyTimeInMillis();
-
-		String userIdStr = TreeDESUtils.getEncrypt(String.valueOf(timestamp), String.valueOf(userId));
-		// todo 用户登陆之后缓存
-		// ret.put("connection", useridStr);
-		// ret.put("timestamp", timestamp);
-		// ret.put("userid", userid);
-		// ret.put("couponSendCount", 0);
-		// ret.put(UserRegistDefine.STATUS, UserRegistDefine.STATUS_TRUE);
-		// ret.put(UserRegistDefine.INFO, "注册成功");
-
-		try {
-			WebViewUser webUser = this.getWebViewUserByUserId(userId);
-			WebUtils.sessionLogin(request, response, webUser);
-		} catch (Exception e) {
-			logger.error("用户不存在，有可能读写数据库不同步....", e);
-		}
+		// 注册成功之后登录 单点登录
+		Map map = ImmutableMap.of("userId", userId, "username", userVO.getUsername(), "ts",
+				Instant.now().getEpochSecond() + "");
+		String token = JwtHelper.genToken(map);
+		userVO.setToken(token);
+		redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
 
 		// 投之家用户注册送券活动
 		// 活动有效期校验
@@ -419,9 +326,7 @@ public class UserServiceImpl implements UserService {
 				} catch (MQException e) {
 					logger.error("注册送券失败....userId is :" + userId, e);
 				}
-
 			}
-
 			if (!couponService.checkActivityIfAvailable(activityId)) {
 				try {
 					JSONObject params = new JSONObject();
@@ -443,8 +348,6 @@ public class UserServiceImpl implements UserService {
 				} catch (MQException e) {
 					logger.error("短信发送失败...", e);
 				}
-
-				// ret.put("couponSendCount", 8);
 			}
 		}
 	}
