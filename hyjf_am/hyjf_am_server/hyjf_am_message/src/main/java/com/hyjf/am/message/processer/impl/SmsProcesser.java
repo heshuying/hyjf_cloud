@@ -7,7 +7,6 @@ import com.hyjf.am.message.processer.Message;
 import com.hyjf.am.message.processer.MessageDefine;
 import com.hyjf.am.message.processer.MessageProcesser;
 import com.hyjf.am.message.processer.SmsMessage;
-import com.hyjf.common.web.RedisUtils;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
@@ -69,7 +68,9 @@ public class SmsProcesser implements MessageProcesser {
         if (null != message) {
             SmsMessage smsMessage = (SmsMessage) message;
             System.err.println("sms gather++++++++++++++++++++++++++" + JSON.toJSONString(smsMessage));
-            return Integer.parseInt(RedisUtils.lpush(MessageDefine.SMSQUENEM, JSON.toJSONString(smsMessage)) + "");
+            return 0;
+            //todo 采用mq
+            //return Integer.parseInt(RedisUtils.lpush(MessageDefine.SMSQUENEM, JSON.toJSONString(smsMessage)) + "");
         } else {
             return 0;
         }

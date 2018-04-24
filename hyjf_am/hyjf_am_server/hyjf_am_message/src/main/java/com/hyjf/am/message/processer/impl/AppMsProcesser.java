@@ -5,7 +5,6 @@ import com.hyjf.am.message.processer.Message;
 import com.hyjf.am.message.processer.MessageDefine;
 import com.hyjf.am.message.processer.MessageProcesser;
 import com.hyjf.am.message.util.MsgPushUtil;
-import com.hyjf.common.web.RedisUtils;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
@@ -57,7 +56,9 @@ public class AppMsProcesser implements MessageProcesser {
     public Integer gather(Message message) {
         if (null != message) {
             AppMsMessage appMsMessage = (AppMsMessage) message;
-            return Integer.parseInt(RedisUtils.lpush(MessageDefine.APPMSQUENEM, JSON.toJSONString(appMsMessage)) + "");
+            //todo 使用mq
+            return 0;
+            //return Integer.parseInt(RedisUtils.lpush(MessageDefine.APPMSQUENEM, JSON.toJSONString(appMsMessage)) + "");
         } else {
             return 0;
         }

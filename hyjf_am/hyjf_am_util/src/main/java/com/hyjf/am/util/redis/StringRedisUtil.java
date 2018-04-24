@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.redis;
+package com.hyjf.am.util.redis;
 
 import java.util.concurrent.TimeUnit;
 
@@ -56,8 +56,8 @@ public class StringRedisUtil {
 	/**
 	 * @param key
 	 * @param value
-	 * @param timeout 时间
-	 * @param timeUnit  单位 TimeUnit.SECONDS 秒
+	 * @param timeout
+	 * @param timeUnit
 	 */
 	public void setEx(String key, String value, long timeout, TimeUnit timeUnit) {
 		ValueOperations<String, String> valueOper = stringRedisTemplate.opsForValue();

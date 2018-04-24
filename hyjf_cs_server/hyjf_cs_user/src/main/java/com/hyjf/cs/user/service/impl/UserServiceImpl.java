@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +27,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.config.SmsConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
@@ -35,7 +35,6 @@ import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.common.web.RedisUtils;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.RegisterError;
@@ -43,6 +42,7 @@ import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.redis.RedisUtil;
+import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.service.CouponService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -70,6 +70,8 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private StringRedisUtil stringRedisUtil;
 
 	@Value("${rocketMQ.topic.couponTopic}")
 	private String couponTopic;
@@ -188,16 +190,16 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 判断发送间隔时间
-		String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
+		String intervalTime = stringRedisUtil.get(mobile + ":" + validCodeType + ":IntervalTime");
 		logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
 		if (StringUtils.isNotBlank(intervalTime)) {
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_FAST_ERROR);
 		}
 
-		String ipCount = RedisUtils.get(ip + ":MaxIpCount");
+		String ipCount = stringRedisUtil.get(ip + ":MaxIpCount");
 		if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
 			ipCount = "0";
-			RedisUtils.set(ip + ":MaxIpCount", "0");
+			stringRedisUtil.set(ip + ":MaxIpCount", "0");
 		}
 		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
 
@@ -212,16 +214,17 @@ public class UserServiceImpl implements UserService {
 				} catch (Exception e) {
 					throw new ReturnMessageException(RegisterError.IP_VISIT_TOO_MANNY_ERROR);
 				}
-				RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
+				stringRedisUtil.setEx(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60,
+						TimeUnit.SECONDS);
 			}
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 		}
 
 		// 判断最大发送数max_phone_count
-		String count = RedisUtils.get(mobile + ":MaxPhoneCount");
+		String count = stringRedisUtil.get(mobile + ":MaxPhoneCount");
 		if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
 			count = "0";
-			RedisUtils.set(mobile + ":MaxPhoneCount", "0");
+			stringRedisUtil.set(mobile + ":MaxPhoneCount", "0");
 		}
 		logger.info(mobile + "----------MaxPhoneCount-----------" + count);
 		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
@@ -231,7 +234,8 @@ public class UserServiceImpl implements UserService {
 				} catch (Exception e) {
 					throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 				}
-				RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
+				stringRedisUtil.setEx(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60,
+						TimeUnit.SECONDS);
 			}
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 		}

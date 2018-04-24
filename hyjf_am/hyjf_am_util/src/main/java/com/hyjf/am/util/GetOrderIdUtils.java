@@ -9,23 +9,23 @@
  *           Modified by :
  */
 
-package com.hyjf.common.util;
+package com.hyjf.am.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
-import com.hyjf.common.web.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
+import com.hyjf.am.util.redis.StringRedisUtil;
+import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.util.GetDate;
 
 public class GetOrderIdUtils {
 
-	public static JedisPool pool = RedisUtils.getPool();
+	@Autowired
+	private static StringRedisUtil redisUtil;
 
 	/**
 	 * 根据用户id获取订单id 规则：用户id加1000000,拼接yyMMddHHmmss再拼接0-9一位随机数
@@ -239,8 +239,8 @@ public class GetOrderIdUtils {
 	 */
 	public static String getSeqNo(int len) {
 		Double randomValue = Math.random();
-        String randomValueS = randomValue.toString();
-        return randomValueS.substring(randomValueS.indexOf(".")+1, 8);
+		String randomValueS = randomValue.toString();
+		return randomValueS.substring(randomValueS.indexOf(".") + 1, 8);
 	}
 
 	/**
@@ -249,80 +249,31 @@ public class GetOrderIdUtils {
 	 * @return
 	 */
 	public static synchronized String getBatchNo() {
-
 		int batchNo = 100000;
-		Jedis jedis = pool.getResource();
-		String batchNoStr = RedisUtils.get("batchNo");
+		String batchNoStr = redisUtil.get(RedisKey.BATCH_NO);
 		if (StringUtils.isNotBlank(batchNoStr)) {
-			// 操作redis
-			while ("OK".equals(jedis.watch(batchNoStr))) {
-				batchNoStr = RedisUtils.get("batchNo");
-				if (StringUtils.isNotBlank(batchNoStr)) {
-					if (Integer.parseInt(batchNoStr) < 999999) {
-						batchNo = Integer.parseInt(batchNoStr) + 1;
-					}
-					Transaction transaction = jedis.multi();
-					transaction.set("batchNo", String.valueOf(batchNo));
-					List<Object> result = transaction.exec();
-					if (result == null || result.isEmpty()) {
-						jedis.unwatch();
-					} else {
-						String ret = (String) result.get(0);
-						if (ret != null && ret.equals("OK")) {
-							break;
-						} else {
-							jedis.unwatch();
-						}
-					}
-				} else {
-					break;
-				}
-			}
+			long result = redisUtil.incr(RedisKey.BATCH_NO);
+			return result + "";
 		} else {
-			jedis.set("batchNo", String.valueOf(batchNo));
+			redisUtil.set(RedisKey.BATCH_NO, String.valueOf(batchNo));
 			batchNoStr = String.valueOf(batchNo);
 		}
 		return batchNoStr;
 	}
-	
-	
+
 	/**
 	 * 获取数据迁移批次号
 	 *
 	 * @return
 	 */
 	public static synchronized String getDataBatchNo() {
-
 		int batchNo = 100000;
-		Jedis jedis = pool.getResource();
-		String batchNoStr = RedisUtils.get("dataBatchNo");
+		String batchNoStr = redisUtil.get(RedisKey.DATA_BATCH_NO);
 		if (StringUtils.isNotBlank(batchNoStr)) {
-			// 操作redis
-			while ("OK".equals(jedis.watch(batchNoStr))) {
-				batchNoStr = RedisUtils.get("dataBatchNo");
-				if (StringUtils.isNotBlank(batchNoStr)) {
-					if (Integer.parseInt(batchNoStr) < 999999) {
-						batchNo = Integer.parseInt(batchNoStr) + 1;
-					}
-					Transaction transaction = jedis.multi();
-					transaction.set("dataBatchNo", String.valueOf(batchNo));
-					List<Object> result = transaction.exec();
-					if (result == null || result.isEmpty()) {
-						jedis.unwatch();
-					} else {
-						String ret = (String) result.get(0);
-						if (ret != null && ret.equals("OK")) {
-							break;
-						} else {
-							jedis.unwatch();
-						}
-					}
-				} else {
-					break;
-				}
-			}
+			long result = redisUtil.incr(RedisKey.DATA_BATCH_NO);
+			return result + "";
 		} else {
-			jedis.set("dataBatchNo", String.valueOf(batchNo));
+			redisUtil.set(RedisKey.DATA_BATCH_NO, String.valueOf(batchNo));
 			batchNoStr = String.valueOf(batchNo);
 		}
 		return batchNoStr;
@@ -335,10 +286,10 @@ public class GetOrderIdUtils {
 	 * @return
 	 */
 	public static String getCurrentBatchId() {
-		
-		int batchNoStr = Integer.valueOf(RedisUtils.get("dataBatchNo")) - 1;
+
+		int batchNoStr = Integer.valueOf(redisUtil.get("dataBatchNo")) - 1;
 
 		return String.valueOf(batchNoStr);
 	}
-	
+
 }
