@@ -21,7 +21,7 @@ import com.hyjf.am.config.service.GatewayApiConfigService;
  * @version GatewayApiConfigController, v0.1 2018/4/18 20:25
  */
 @RestController
-@RequestMapping("/am/config/gateConfig")
+@RequestMapping("/am-config/gateConfig")
 public class GatewayApiConfigController {
     Logger logger = LoggerFactory.getLogger(GatewayApiConfigController.class);
 

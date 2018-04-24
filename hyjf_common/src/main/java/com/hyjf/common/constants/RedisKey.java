@@ -11,9 +11,15 @@ public interface RedisKey {
     String USER_TOKEN_REDIS = "user_token_";
 
     /**
-     * 放款批次号
+     * 放款批次号key
      */
     String BATCH_NO = "batchNo";
-
+    /**
+     *
+     */
     String DATA_BATCH_NO = "dataBatchNo";
+    /**
+     * 短信配置key
+     */
+    String SMS_CONFIG = "smsConfig";
 }

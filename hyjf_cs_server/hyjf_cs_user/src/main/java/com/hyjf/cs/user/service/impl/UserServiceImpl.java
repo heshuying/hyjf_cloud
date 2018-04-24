@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MessagePushConstant;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -56,11 +57,10 @@ import com.hyjf.cs.user.vo.RegisterVO;
 @Service
 public class UserServiceImpl implements UserService {
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
-	@Autowired
-	private AmUserClient amUserClient;
 	@Autowired
 	private AmConfigClient amConfigClient;
+	@Autowired
+	private AmUserClient amUserClient;
 	@Autowired
 	private CouponService couponService;
 	@Autowired
@@ -124,16 +124,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserVO register(RegisterVO registerVO, HttpServletRequest request, HttpServletResponse response)
 			throws ReturnMessageException {
-
+		// 1. 参数检查
 		this.registerCheckParam(registerVO);
 
 		RegisterUserRequest registerUserRequest = new RegisterUserRequest();
 		BeanUtils.copyProperties(registerVO, registerUserRequest);
 		registerUserRequest.setLoginIp(GetCilentIP.getIpAddr(request));
+		// 2.注册
 		UserVO userVO = amUserClient.register(registerUserRequest);
 		if (userVO == null)
 			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
 
+		// 3.注册后处理
 		this.afterRegisterHandle(userVO);
 
 		return userVO;
@@ -203,14 +205,24 @@ public class UserServiceImpl implements UserService {
 		}
 		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
 
-		// SmsConfigVO smsConfig = RedisUtils.get("smsConfig"); todo 这里从redis取
-		SmsConfigVO smsConfig = null;
+		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
+		if (smsConfig == null)
+			throw new ReturnMessageException(RegisterError.FIND_SMSCONFIG_ERROR);
 
 		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
 			if (Integer.valueOf(ipCount) == smsConfig.getMaxIpCount()) {
 				try {
-					// registService.sendSms(mobile, "IP访问次数超限:" + ip); TODO
 					// 发送短信通知
+					JSONObject params = new JSONObject();
+					params.put("var_phonenu", mobile);
+					params.put("val_reason", "IP访问次数超限");
+					params.put("templateCode", MessagePushConstant.SMSSENDFORMANAGER);
+					try {
+						smsProducer.messageSend(
+								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
+					} catch (MQException e) {
+						logger.error("短信发送失败...", e);
+					}
 				} catch (Exception e) {
 					throw new ReturnMessageException(RegisterError.IP_VISIT_TOO_MANNY_ERROR);
 				}
@@ -230,7 +242,17 @@ public class UserServiceImpl implements UserService {
 		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
 			if (Integer.valueOf(count) == smsConfig.getMaxPhoneCount()) {
 				try {
-					// registService.sendSms(mobile, "手机验证码发送次数超限"); TODO 发送短信通知
+					// 发送短信通知
+					JSONObject params = new JSONObject();
+					params.put("var_phonenu", mobile);
+					params.put("val_reason", "手机验证码发送次数超限");
+					params.put("templateCode", MessagePushConstant.SMSSENDFORMANAGER);
+					try {
+						smsProducer.messageSend(
+								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
+					} catch (MQException e) {
+						logger.error("短信发送失败...", e);
+					}
 				} catch (Exception e) {
 					throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 				}
@@ -299,17 +321,22 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	/**
+	 * 注册后处理: 1. 单点登录 2. 判断投之家着陆页送券 3. 注册送188红包
+	 * 
+	 * @param userVO
+	 */
 	private void afterRegisterHandle(UserVO userVO) {
 		int userId = userVO.getUserId();
 
-		// 注册成功之后登录 单点登录
+		// 1. 注册成功之后登录 单点登录
 		Map map = ImmutableMap.of("userId", userId, "username", userVO.getUsername(), "ts",
 				Instant.now().getEpochSecond() + "");
 		String token = JwtHelper.genToken(map);
 		userVO.setToken(token);
 		redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
 
-		// 投之家用户注册送券活动
+		// 2. 投之家用户注册送券活动
 		// 活动有效期校验
 		if (!couponService.checkActivityIfAvailable(activityIdTzj)) {
 			// 投之家用户额外发两张加息券
@@ -328,30 +355,33 @@ public class UserServiceImpl implements UserService {
 					couponProducer.messageSend(new Producer.MassageContent(couponTopic, defaultTag, "coupon_" + userId,
 							JSON.toJSONBytes(json)));
 				} catch (MQException e) {
-					logger.error("注册送券失败....userId is :" + userId, e);
+					logger.error("投之家用户注册送券失败....userId is :" + userId, e);
 				}
 			}
-			if (!couponService.checkActivityIfAvailable(activityId)) {
-				try {
-					JSONObject params = new JSONObject();
-					params.put("mqMsgId", GetCode.getRandomCode(10));
-					params.put("userId", String.valueOf(userId));
-					params.put("sendFlg", "11");
-					couponProducer.messageSend(new Producer.MassageContent(couponTopic, defaultTag, "coupon_" + userId,
-							JSON.toJSONBytes(params)));
-				} catch (Exception e) {
-					logger.error("注册发放888红包失败...", e);
-				}
+		}
 
-				// 短信通知用户发券成功
+		// 3. 注册送188元新手红包
+		if (!couponService.checkActivityIfAvailable(activityId)) {
+			try {
 				JSONObject params = new JSONObject();
-				params.put("mobile", userVO.getMobile());
-				try {
-					smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag,
-							"sms_" + userVO.getMobile(), JSON.toJSONBytes(params)));
-				} catch (MQException e) {
-					logger.error("短信发送失败...", e);
-				}
+				params.put("mqMsgId", GetCode.getRandomCode(10));
+				params.put("userId", String.valueOf(userId));
+				params.put("sendFlg", "11");
+				couponProducer.messageSend(new Producer.MassageContent(couponTopic, defaultTag, "coupon_" + userId,
+						JSON.toJSONBytes(params)));
+			} catch (Exception e) {
+				logger.error("注册发放888红包失败...", e);
+			}
+
+			// 短信通知用户发券成功
+			JSONObject params = new JSONObject();
+			params.put("mobile", userVO.getMobile());
+			params.put("templateCode", MessagePushConstant.SMSSENDFORMOBILE);
+			try {
+				smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, "sms_" + userVO.getMobile(),
+						JSON.toJSONBytes(params)));
+			} catch (MQException e) {
+				logger.error("短信发送失败...", e);
 			}
 		}
 	}
