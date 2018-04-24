@@ -44,7 +44,6 @@
         <commons.lang3.version>3.7</commons.lang3.version>
         <jwt.version>3.3.0</jwt.version>
         <google.coll.version>1.0-rc2</google.coll.version>
-        <guava.version>24.1-jre</guava.version>
     </properties>
 
     <dependencyManagement>
@@ -107,12 +106,6 @@
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>${jwt.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
             </dependency>
 
             <dependency>
