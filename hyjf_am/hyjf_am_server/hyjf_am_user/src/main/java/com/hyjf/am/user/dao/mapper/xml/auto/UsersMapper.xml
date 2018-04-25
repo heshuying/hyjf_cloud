@@ -22,7 +22,6 @@
     <result column="borrow_sms" property="borrowSms" jdbcType="INTEGER" />
     <result column="recharge_sms" property="rechargeSms" jdbcType="TINYINT" />
     <result column="withdraw_sms" property="withdrawSms" jdbcType="TINYINT" />
-    <result column="is_smtp" property="isSmtp" jdbcType="TINYINT" />
     <result column="if_receive_notice" property="ifReceiveNotice" jdbcType="INTEGER" />
     <result column="iconUrl" property="iconurl" jdbcType="VARCHAR" />
     <result column="version" property="version" jdbcType="DECIMAL" />
@@ -42,7 +41,6 @@
     <result column="user_type" property="userType" jdbcType="TINYINT" />
     <result column="auth_type" property="authType" jdbcType="INTEGER" />
     <result column="auth_status" property="authStatus" jdbcType="INTEGER" />
-    <result column="payment_auth_status" property="paymentAuthStatus" jdbcType="BIT" />
     <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
     <result column="recod_total" property="recodTotal" jdbcType="INTEGER" />
     <result column="recod_time" property="recodTime" jdbcType="TIMESTAMP" />
@@ -53,6 +51,7 @@
     <result column="is_data_update" property="isDataUpdate" jdbcType="TINYINT" />
     <result column="is_evaluation_flag" property="isEvaluationFlag" jdbcType="TINYINT" />
     <result column="is_ca_flag" property="isCaFlag" jdbcType="TINYINT" />
+    <result column="is_smtp" property="isSmtp" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -115,12 +114,11 @@
   <sql id="Base_Column_List" >
     user_id, username, mobile, email, `password`, paypassword, referrer, salt, logintime, 
     reg_ip, reg_time, login_ip, login_time, last_ip, last_time, `status`, open_account, 
-    borrow_sms, recharge_sms, withdraw_sms, is_smtp, if_receive_notice, iconUrl, version, 
-    invest_sms, recieve_sms, reg_esb, eprovince, send_sms, pid, usernamep, is_inst_flag, 
-    inst_code, ptype, account_esb, referrer_user_name, investFlag, user_type, auth_type, 
-    auth_status, payment_auth_status, auth_time, recod_total, recod_time, recod_truncate_time, 
-    is_set_password, bank_open_account, bank_account_esb, is_data_update, is_evaluation_flag, 
-    is_ca_flag
+    borrow_sms, recharge_sms, withdraw_sms, if_receive_notice, iconUrl, version, invest_sms, 
+    recieve_sms, reg_esb, eprovince, send_sms, pid, usernamep, is_inst_flag, inst_code, 
+    ptype, account_esb, referrer_user_name, investFlag, user_type, auth_type, auth_status, 
+    auth_time, recod_total, recod_time, recod_truncate_time, is_set_password, bank_open_account, 
+    bank_account_esb, is_data_update, is_evaluation_flag, is_ca_flag, is_smtp
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UsersExample" >
     select
@@ -165,34 +163,34 @@
       login_ip, login_time, last_ip, 
       last_time, `status`, open_account, 
       borrow_sms, recharge_sms, withdraw_sms, 
-      is_smtp, if_receive_notice, iconUrl, 
-      version, invest_sms, recieve_sms, 
-      reg_esb, eprovince, send_sms, 
-      pid, usernamep, is_inst_flag, 
-      inst_code, ptype, account_esb, 
-      referrer_user_name, investFlag, user_type, 
-      auth_type, auth_status, payment_auth_status, 
-      auth_time, recod_total, recod_time, 
-      recod_truncate_time, is_set_password, bank_open_account, 
-      bank_account_esb, is_data_update, is_evaluation_flag, 
-      is_ca_flag)
+      if_receive_notice, iconUrl, version, 
+      invest_sms, recieve_sms, reg_esb, 
+      eprovince, send_sms, pid, 
+      usernamep, is_inst_flag, inst_code, 
+      ptype, account_esb, referrer_user_name, 
+      investFlag, user_type, auth_type, 
+      auth_status, auth_time, recod_total, 
+      recod_time, recod_truncate_time, is_set_password, 
+      bank_open_account, bank_account_esb, is_data_update, 
+      is_evaluation_flag, is_ca_flag, is_smtp
+      )
     values (#{username,jdbcType=CHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=CHAR}, 
       #{password,jdbcType=CHAR}, #{paypassword,jdbcType=CHAR}, #{referrer,jdbcType=INTEGER}, 
       #{salt,jdbcType=CHAR}, #{logintime,jdbcType=INTEGER}, #{regIp,jdbcType=CHAR}, #{regTime,jdbcType=INTEGER}, 
       #{loginIp,jdbcType=CHAR}, #{loginTime,jdbcType=INTEGER}, #{lastIp,jdbcType=CHAR}, 
       #{lastTime,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{openAccount,jdbcType=TINYINT}, 
       #{borrowSms,jdbcType=INTEGER}, #{rechargeSms,jdbcType=TINYINT}, #{withdrawSms,jdbcType=TINYINT}, 
-      #{isSmtp,jdbcType=TINYINT}, #{ifReceiveNotice,jdbcType=INTEGER}, #{iconurl,jdbcType=VARCHAR}, 
-      #{version,jdbcType=DECIMAL}, #{investSms,jdbcType=TINYINT}, #{recieveSms,jdbcType=TINYINT}, 
-      #{regEsb,jdbcType=TINYINT}, #{eprovince,jdbcType=VARCHAR}, #{sendSms,jdbcType=TINYINT}, 
-      #{pid,jdbcType=INTEGER}, #{usernamep,jdbcType=VARCHAR}, #{isInstFlag,jdbcType=TINYINT}, 
-      #{instCode,jdbcType=VARCHAR}, #{ptype,jdbcType=TINYINT}, #{accountEsb,jdbcType=TINYINT}, 
-      #{referrerUserName,jdbcType=VARCHAR}, #{investflag,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
-      #{authType,jdbcType=INTEGER}, #{authStatus,jdbcType=INTEGER}, #{paymentAuthStatus,jdbcType=BIT}, 
-      #{authTime,jdbcType=TIMESTAMP}, #{recodTotal,jdbcType=INTEGER}, #{recodTime,jdbcType=TIMESTAMP}, 
-      #{recodTruncateTime,jdbcType=TIMESTAMP}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, 
-      #{bankAccountEsb,jdbcType=TINYINT}, #{isDataUpdate,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, 
-      #{isCaFlag,jdbcType=TINYINT})
+      #{ifReceiveNotice,jdbcType=INTEGER}, #{iconurl,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, 
+      #{investSms,jdbcType=TINYINT}, #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, 
+      #{eprovince,jdbcType=VARCHAR}, #{sendSms,jdbcType=TINYINT}, #{pid,jdbcType=INTEGER}, 
+      #{usernamep,jdbcType=VARCHAR}, #{isInstFlag,jdbcType=TINYINT}, #{instCode,jdbcType=VARCHAR}, 
+      #{ptype,jdbcType=TINYINT}, #{accountEsb,jdbcType=TINYINT}, #{referrerUserName,jdbcType=VARCHAR}, 
+      #{investflag,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, #{authType,jdbcType=INTEGER}, 
+      #{authStatus,jdbcType=INTEGER}, #{authTime,jdbcType=TIMESTAMP}, #{recodTotal,jdbcType=INTEGER}, 
+      #{recodTime,jdbcType=TIMESTAMP}, #{recodTruncateTime,jdbcType=TIMESTAMP}, #{isSetPassword,jdbcType=TINYINT}, 
+      #{bankOpenAccount,jdbcType=TINYINT}, #{bankAccountEsb,jdbcType=TINYINT}, #{isDataUpdate,jdbcType=TINYINT}, 
+      #{isEvaluationFlag,jdbcType=TINYINT}, #{isCaFlag,jdbcType=TINYINT}, #{isSmtp,jdbcType=TINYINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.Users" >
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
@@ -257,9 +255,6 @@
       <if test="withdrawSms != null" >
         withdraw_sms,
       </if>
-      <if test="isSmtp != null" >
-        is_smtp,
-      </if>
       <if test="ifReceiveNotice != null" >
         if_receive_notice,
       </if>
@@ -317,9 +312,6 @@
       <if test="authStatus != null" >
         auth_status,
       </if>
-      <if test="paymentAuthStatus != null" >
-        payment_auth_status,
-      </if>
       <if test="authTime != null" >
         auth_time,
       </if>
@@ -349,6 +341,9 @@
       </if>
       <if test="isCaFlag != null" >
         is_ca_flag,
+      </if>
+      <if test="isSmtp != null" >
+        is_smtp,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -409,9 +404,6 @@
       <if test="withdrawSms != null" >
         #{withdrawSms,jdbcType=TINYINT},
       </if>
-      <if test="isSmtp != null" >
-        #{isSmtp,jdbcType=TINYINT},
-      </if>
       <if test="ifReceiveNotice != null" >
         #{ifReceiveNotice,jdbcType=INTEGER},
       </if>
@@ -469,9 +461,6 @@
       <if test="authStatus != null" >
         #{authStatus,jdbcType=INTEGER},
       </if>
-      <if test="paymentAuthStatus != null" >
-        #{paymentAuthStatus,jdbcType=BIT},
-      </if>
       <if test="authTime != null" >
         #{authTime,jdbcType=TIMESTAMP},
       </if>
@@ -501,6 +490,9 @@
       </if>
       <if test="isCaFlag != null" >
         #{isCaFlag,jdbcType=TINYINT},
+      </if>
+      <if test="isSmtp != null" >
+        #{isSmtp,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -573,9 +565,6 @@
       <if test="record.withdrawSms != null" >
         withdraw_sms = #{record.withdrawSms,jdbcType=TINYINT},
       </if>
-      <if test="record.isSmtp != null" >
-        is_smtp = #{record.isSmtp,jdbcType=TINYINT},
-      </if>
       <if test="record.ifReceiveNotice != null" >
         if_receive_notice = #{record.ifReceiveNotice,jdbcType=INTEGER},
       </if>
@@ -633,9 +622,6 @@
       <if test="record.authStatus != null" >
         auth_status = #{record.authStatus,jdbcType=INTEGER},
       </if>
-      <if test="record.paymentAuthStatus != null" >
-        payment_auth_status = #{record.paymentAuthStatus,jdbcType=BIT},
-      </if>
       <if test="record.authTime != null" >
         auth_time = #{record.authTime,jdbcType=TIMESTAMP},
       </if>
@@ -666,6 +652,9 @@
       <if test="record.isCaFlag != null" >
         is_ca_flag = #{record.isCaFlag,jdbcType=TINYINT},
       </if>
+      <if test="record.isSmtp != null" >
+        is_smtp = #{record.isSmtp,jdbcType=TINYINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -693,7 +682,6 @@
       borrow_sms = #{record.borrowSms,jdbcType=INTEGER},
       recharge_sms = #{record.rechargeSms,jdbcType=TINYINT},
       withdraw_sms = #{record.withdrawSms,jdbcType=TINYINT},
-      is_smtp = #{record.isSmtp,jdbcType=TINYINT},
       if_receive_notice = #{record.ifReceiveNotice,jdbcType=INTEGER},
       iconUrl = #{record.iconurl,jdbcType=VARCHAR},
       version = #{record.version,jdbcType=DECIMAL},
@@ -713,7 +701,6 @@
       user_type = #{record.userType,jdbcType=TINYINT},
       auth_type = #{record.authType,jdbcType=INTEGER},
       auth_status = #{record.authStatus,jdbcType=INTEGER},
-      payment_auth_status = #{record.paymentAuthStatus,jdbcType=BIT},
       auth_time = #{record.authTime,jdbcType=TIMESTAMP},
       recod_total = #{record.recodTotal,jdbcType=INTEGER},
       recod_time = #{record.recodTime,jdbcType=TIMESTAMP},
@@ -723,7 +710,8 @@
       bank_account_esb = #{record.bankAccountEsb,jdbcType=TINYINT},
       is_data_update = #{record.isDataUpdate,jdbcType=TINYINT},
       is_evaluation_flag = #{record.isEvaluationFlag,jdbcType=TINYINT},
-      is_ca_flag = #{record.isCaFlag,jdbcType=TINYINT}
+      is_ca_flag = #{record.isCaFlag,jdbcType=TINYINT},
+      is_smtp = #{record.isSmtp,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -788,9 +776,6 @@
       <if test="withdrawSms != null" >
         withdraw_sms = #{withdrawSms,jdbcType=TINYINT},
       </if>
-      <if test="isSmtp != null" >
-        is_smtp = #{isSmtp,jdbcType=TINYINT},
-      </if>
       <if test="ifReceiveNotice != null" >
         if_receive_notice = #{ifReceiveNotice,jdbcType=INTEGER},
       </if>
@@ -848,9 +833,6 @@
       <if test="authStatus != null" >
         auth_status = #{authStatus,jdbcType=INTEGER},
       </if>
-      <if test="paymentAuthStatus != null" >
-        payment_auth_status = #{paymentAuthStatus,jdbcType=BIT},
-      </if>
       <if test="authTime != null" >
         auth_time = #{authTime,jdbcType=TIMESTAMP},
       </if>
@@ -881,6 +863,9 @@
       <if test="isCaFlag != null" >
         is_ca_flag = #{isCaFlag,jdbcType=TINYINT},
       </if>
+      <if test="isSmtp != null" >
+        is_smtp = #{isSmtp,jdbcType=TINYINT},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -905,7 +890,6 @@
       borrow_sms = #{borrowSms,jdbcType=INTEGER},
       recharge_sms = #{rechargeSms,jdbcType=TINYINT},
       withdraw_sms = #{withdrawSms,jdbcType=TINYINT},
-      is_smtp = #{isSmtp,jdbcType=TINYINT},
       if_receive_notice = #{ifReceiveNotice,jdbcType=INTEGER},
       iconUrl = #{iconurl,jdbcType=VARCHAR},
       version = #{version,jdbcType=DECIMAL},
@@ -925,7 +909,6 @@
       user_type = #{userType,jdbcType=TINYINT},
       auth_type = #{authType,jdbcType=INTEGER},
       auth_status = #{authStatus,jdbcType=INTEGER},
-      payment_auth_status = #{paymentAuthStatus,jdbcType=BIT},
       auth_time = #{authTime,jdbcType=TIMESTAMP},
       recod_total = #{recodTotal,jdbcType=INTEGER},
       recod_time = #{recodTime,jdbcType=TIMESTAMP},
@@ -935,7 +918,8 @@
       bank_account_esb = #{bankAccountEsb,jdbcType=TINYINT},
       is_data_update = #{isDataUpdate,jdbcType=TINYINT},
       is_evaluation_flag = #{isEvaluationFlag,jdbcType=TINYINT},
-      is_ca_flag = #{isCaFlag,jdbcType=TINYINT}
+      is_ca_flag = #{isCaFlag,jdbcType=TINYINT},
+      is_smtp = #{isSmtp,jdbcType=TINYINT}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -1416,66 +1416,6 @@ public class UsersExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsSmtpIsNull() {
-            addCriterion("is_smtp is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpIsNotNull() {
-            addCriterion("is_smtp is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpEqualTo(Integer value) {
-            addCriterion("is_smtp =", value, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpNotEqualTo(Integer value) {
-            addCriterion("is_smtp <>", value, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpGreaterThan(Integer value) {
-            addCriterion("is_smtp >", value, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_smtp >=", value, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpLessThan(Integer value) {
-            addCriterion("is_smtp <", value, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpLessThanOrEqualTo(Integer value) {
-            addCriterion("is_smtp <=", value, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpIn(List<Integer> values) {
-            addCriterion("is_smtp in", values, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpNotIn(List<Integer> values) {
-            addCriterion("is_smtp not in", values, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpBetween(Integer value1, Integer value2) {
-            addCriterion("is_smtp between", value1, value2, "isSmtp");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsSmtpNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_smtp not between", value1, value2, "isSmtp");
-            return (Criteria) this;
-        }
-
         public Criteria andIfReceiveNoticeIsNull() {
             addCriterion("if_receive_notice is null");
             return (Criteria) this;
@@ -2666,66 +2606,6 @@ public class UsersExample {
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusIsNull() {
-            addCriterion("payment_auth_status is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusIsNotNull() {
-            addCriterion("payment_auth_status is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusEqualTo(Boolean value) {
-            addCriterion("payment_auth_status =", value, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusNotEqualTo(Boolean value) {
-            addCriterion("payment_auth_status <>", value, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusGreaterThan(Boolean value) {
-            addCriterion("payment_auth_status >", value, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("payment_auth_status >=", value, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusLessThan(Boolean value) {
-            addCriterion("payment_auth_status <", value, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusLessThanOrEqualTo(Boolean value) {
-            addCriterion("payment_auth_status <=", value, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusIn(List<Boolean> values) {
-            addCriterion("payment_auth_status in", values, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusNotIn(List<Boolean> values) {
-            addCriterion("payment_auth_status not in", values, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusBetween(Boolean value1, Boolean value2) {
-            addCriterion("payment_auth_status between", value1, value2, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPaymentAuthStatusNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("payment_auth_status not between", value1, value2, "paymentAuthStatus");
-            return (Criteria) this;
-        }
-
         public Criteria andAuthTimeIsNull() {
             addCriterion("auth_time is null");
             return (Criteria) this;
@@ -3323,6 +3203,66 @@ public class UsersExample {
 
         public Criteria andIsCaFlagNotBetween(Integer value1, Integer value2) {
             addCriterion("is_ca_flag not between", value1, value2, "isCaFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpIsNull() {
+            addCriterion("is_smtp is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpIsNotNull() {
+            addCriterion("is_smtp is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpEqualTo(Integer value) {
+            addCriterion("is_smtp =", value, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpNotEqualTo(Integer value) {
+            addCriterion("is_smtp <>", value, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpGreaterThan(Integer value) {
+            addCriterion("is_smtp >", value, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_smtp >=", value, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpLessThan(Integer value) {
+            addCriterion("is_smtp <", value, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpLessThanOrEqualTo(Integer value) {
+            addCriterion("is_smtp <=", value, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpIn(List<Integer> values) {
+            addCriterion("is_smtp in", values, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpNotIn(List<Integer> values) {
+            addCriterion("is_smtp not in", values, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpBetween(Integer value1, Integer value2) {
+            addCriterion("is_smtp between", value1, value2, "isSmtp");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSmtpNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_smtp not between", value1, value2, "isSmtp");
             return (Criteria) this;
         }
     }
