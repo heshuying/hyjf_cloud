@@ -45,8 +45,6 @@ public class Users implements Serializable {
 
     private Integer withdrawSms;
 
-    private Integer isSmtp;
-
     private Integer ifReceiveNotice;
 
     private String iconurl;
@@ -85,8 +83,6 @@ public class Users implements Serializable {
 
     private Integer authStatus;
 
-    private Boolean paymentAuthStatus;
-
     private Date authTime;
 
     private Integer recodTotal;
@@ -106,6 +102,8 @@ public class Users implements Serializable {
     private Integer isEvaluationFlag;
 
     private Integer isCaFlag;
+
+    private Integer isSmtp;
 
     private static final long serialVersionUID = 1L;
 
@@ -269,14 +267,6 @@ public class Users implements Serializable {
         this.withdrawSms = withdrawSms;
     }
 
-    public Integer getIsSmtp() {
-        return isSmtp;
-    }
-
-    public void setIsSmtp(Integer isSmtp) {
-        this.isSmtp = isSmtp;
-    }
-
     public Integer getIfReceiveNotice() {
         return ifReceiveNotice;
     }
@@ -429,14 +419,6 @@ public class Users implements Serializable {
         this.authStatus = authStatus;
     }
 
-    public Boolean getPaymentAuthStatus() {
-        return paymentAuthStatus;
-    }
-
-    public void setPaymentAuthStatus(Boolean paymentAuthStatus) {
-        this.paymentAuthStatus = paymentAuthStatus;
-    }
-
     public Date getAuthTime() {
         return authTime;
     }
@@ -515,5 +497,13 @@ public class Users implements Serializable {
 
     public void setIsCaFlag(Integer isCaFlag) {
         this.isCaFlag = isCaFlag;
+    }
+
+    public Integer getIsSmtp() {
+        return isSmtp;
+    }
+
+    public void setIsSmtp(Integer isSmtp) {
+        this.isSmtp = isSmtp;
     }
 }
