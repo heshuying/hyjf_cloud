@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+<title>Thymeleaf 表单示例</title>
+</head>
+<body>
+    <h2>Thymeleaf 表单示例</h2>
+    <form th:action="@{/openBankAccount}" th:object="${bankOpenVO}" method="POST">
+          <label for="firstName">身份证号码:</label>
+          <input type="text" th:field="*{idNo}" value="" /><br/>
+
+          <label for="firstName">用户银行卡号:</label>
+          <input type="text" th:field="*{cardNo}" value="2018-03-28" /> <br/>        
+
+          <label for="price">手机号码:</label>
+          <input type="text" th:field="*{mobile}" size="10" value="198" /><br/>
+
+          <input type="submit" value="提交"/>
+    </form>
+</body>
+</html>
