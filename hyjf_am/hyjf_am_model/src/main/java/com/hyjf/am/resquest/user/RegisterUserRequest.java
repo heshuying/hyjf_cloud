@@ -9,7 +9,7 @@ public class RegisterUserRequest {
 	private String smscode;
 	private String reffer;
 	private String password;
-	private String utm_id;
+	private String utmId;
 	private String loginIp;
 	private String platform;
 
@@ -45,12 +45,12 @@ public class RegisterUserRequest {
 		this.password = password;
 	}
 
-	public String getUtm_id() {
-		return utm_id;
+	public String getUtmId() {
+		return utmId;
 	}
 
-	public void setUtm_id(String utm_id) {
-		this.utm_id = utm_id;
+	public void setUtmId(String utmId) {
+		this.utmId = utmId;
 	}
 
 	public String getLoginIp() {

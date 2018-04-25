@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 		String reffer = userRequest.getReffer();
 		String platform = userRequest.getPlatform();
 		String password = userRequest.getPassword();
-		String utmId = userRequest.getUtm_id();
+		String utmId = userRequest.getUtmId();
 		try {
 			Integer refferUserId = null;
 			String refferUserName = null;
