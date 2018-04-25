@@ -2,6 +2,7 @@ package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.model.auto.Users;
+import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ServiceException;
 
@@ -10,9 +11,27 @@ import com.hyjf.common.exception.ServiceException;
  * @version UserService, v0.1 2018/1/21 22:42
  */
 public interface UserService {
+	/**
+	 * 注册
+	 * @param userRequest
+	 * @return
+	 * @throws ServiceException
+	 */
 	Users register(RegisterUserRequest userRequest) throws ServiceException;
 
+	/**
+	 * 获取用户
+	 * @param userId
+	 * @return
+	 */
 	Users findUserByUserId(int userId);
+
+	/**
+	 * 获取用户
+	 * @param userId
+	 * @return
+	 */
+	UsersInfo findUsersInfo(int userId);
 
 	/**
 	 * 生成唯一用户id
@@ -24,6 +43,7 @@ public interface UserService {
 
 	/**
 	 * 根据手机号查找用户信息
+	 * 
 	 * @param mobile
 	 * @return
 	 */
@@ -31,6 +51,7 @@ public interface UserService {
 
 	/**
 	 * 根据推荐人手机号或userId查询推荐人
+	 * 
 	 * @param reffer
 	 * @return
 	 */
@@ -38,8 +59,9 @@ public interface UserService {
 
 	/**
 	 * 组装user信息
+	 * 
 	 * @param userVO
 	 * @return
 	 */
-    UserVO assembleUserVO(UserVO userVO);
+	UserVO assembleUserVO(UserVO userVO);
 }

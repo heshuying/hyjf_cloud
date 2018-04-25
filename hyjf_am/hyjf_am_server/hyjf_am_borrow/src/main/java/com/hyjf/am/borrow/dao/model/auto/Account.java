@@ -42,17 +42,17 @@ public class Account implements Serializable {
 
     private BigDecimal version;
 
-    private BigDecimal planAccedeTotal;
+    private BigDecimal planRepayInterest;
 
     private BigDecimal planBalance;
 
     private BigDecimal planFrost;
 
+    private BigDecimal planAccedeTotal;
+
     private BigDecimal planAccedeBalance;
 
     private BigDecimal planAccedeFrost;
-
-    private BigDecimal planRepayInterest;
 
     private BigDecimal planAccountWait;
 
@@ -244,12 +244,12 @@ public class Account implements Serializable {
         this.version = version;
     }
 
-    public BigDecimal getPlanAccedeTotal() {
-        return planAccedeTotal;
+    public BigDecimal getPlanRepayInterest() {
+        return planRepayInterest;
     }
 
-    public void setPlanAccedeTotal(BigDecimal planAccedeTotal) {
-        this.planAccedeTotal = planAccedeTotal;
+    public void setPlanRepayInterest(BigDecimal planRepayInterest) {
+        this.planRepayInterest = planRepayInterest;
     }
 
     public BigDecimal getPlanBalance() {
@@ -268,6 +268,14 @@ public class Account implements Serializable {
         this.planFrost = planFrost;
     }
 
+    public BigDecimal getPlanAccedeTotal() {
+        return planAccedeTotal;
+    }
+
+    public void setPlanAccedeTotal(BigDecimal planAccedeTotal) {
+        this.planAccedeTotal = planAccedeTotal;
+    }
+
     public BigDecimal getPlanAccedeBalance() {
         return planAccedeBalance;
     }
@@ -282,14 +290,6 @@ public class Account implements Serializable {
 
     public void setPlanAccedeFrost(BigDecimal planAccedeFrost) {
         this.planAccedeFrost = planAccedeFrost;
-    }
-
-    public BigDecimal getPlanRepayInterest() {
-        return planRepayInterest;
-    }
-
-    public void setPlanRepayInterest(BigDecimal planRepayInterest) {
-        this.planRepayInterest = planRepayInterest;
     }
 
     public BigDecimal getPlanAccountWait() {

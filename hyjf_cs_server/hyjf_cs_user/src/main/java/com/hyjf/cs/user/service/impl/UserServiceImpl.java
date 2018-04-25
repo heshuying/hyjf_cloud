@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RedisUtil redisUtil;
 
-
 	@Value("${rocketMQ.topic.couponTopic}")
 	private String couponTopic;
 	@Value("${rocketMQ.topic.smsCodeTopic}")
@@ -108,6 +107,7 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 注册参数校验
+	 * 
 	 * @param registerVO
 	 */
 	private void registerCheckParam(RegisterVO registerVO) {
@@ -198,8 +198,8 @@ public class UserServiceImpl implements UserService {
 				json.put("remark", "投之家用户注册送加息券");
 				json.put("sendFlg", 0);
 				try {
-					couponProducer.messageSend(new Producer.MassageContent(couponTopic, defaultTag, "coupon_" + userId,
-							JSON.toJSONBytes(json)));
+					couponProducer.messageSend(
+							new Producer.MassageContent(couponTopic, defaultTag, "coupon_" + userId, json));
 				} catch (MQException e) {
 					logger.error("投之家用户注册送券失败....userId is :" + userId, e);
 				}
@@ -224,8 +224,8 @@ public class UserServiceImpl implements UserService {
 			params.put("mobile", userVO.getMobile());
 			params.put("templateCode", MessagePushConstant.SMSSENDFORMOBILE);
 			try {
-				smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, "sms_" + userVO.getMobile(),
-						JSON.toJSONBytes(params)));
+				smsProducer.messageSend(
+						new Producer.MassageContent(smsTopic, defaultTag, "sms_" + userVO.getMobile(), params));
 			} catch (MQException e) {
 				logger.error("短信发送失败...", e);
 			}

@@ -2,7 +2,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://123.57.155.17:3306/hyjf_online
+    url: jdbc:mysql://123.56.216.212:7777/hyjf_user
     username: hyjf_developer
     password: QD@hyjfdev2000
     #下面为连接池的补充设置，应用到上面所有数据源中
@@ -49,6 +49,17 @@ spring:
         min-idle: 0
     # 连接超时时间（毫秒）
     timeout: 5000
+
+rocketMQ:
+  #namesrvAddr: ${rocketMQ.namesrvAddr}
+  namesrvAddr: 123.56.216.212:5555
+  group :
+    accountGroup : ACCOUNT_GROUP
+  topic :
+    accountTopic : ACCOUNT_TOPIC
+  tag :
+    defaultTag : HYJF_DEFAULT_TAG
+
 
 mybatis:
   mapper-locations: classpath:com/hyjf/am/user/dao/mapper/xml/**/*.xml

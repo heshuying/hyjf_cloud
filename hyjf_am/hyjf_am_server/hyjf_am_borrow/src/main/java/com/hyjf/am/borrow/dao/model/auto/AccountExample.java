@@ -1265,63 +1265,63 @@ public class AccountExample {
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalIsNull() {
-            addCriterion("plan_accede_total is null");
+        public Criteria andPlanRepayInterestIsNull() {
+            addCriterion("plan_repay_interest is null");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalIsNotNull() {
-            addCriterion("plan_accede_total is not null");
+        public Criteria andPlanRepayInterestIsNotNull() {
+            addCriterion("plan_repay_interest is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalEqualTo(BigDecimal value) {
-            addCriterion("plan_accede_total =", value, "planAccedeTotal");
+        public Criteria andPlanRepayInterestEqualTo(BigDecimal value) {
+            addCriterion("plan_repay_interest =", value, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalNotEqualTo(BigDecimal value) {
-            addCriterion("plan_accede_total <>", value, "planAccedeTotal");
+        public Criteria andPlanRepayInterestNotEqualTo(BigDecimal value) {
+            addCriterion("plan_repay_interest <>", value, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalGreaterThan(BigDecimal value) {
-            addCriterion("plan_accede_total >", value, "planAccedeTotal");
+        public Criteria andPlanRepayInterestGreaterThan(BigDecimal value) {
+            addCriterion("plan_repay_interest >", value, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("plan_accede_total >=", value, "planAccedeTotal");
+        public Criteria andPlanRepayInterestGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("plan_repay_interest >=", value, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalLessThan(BigDecimal value) {
-            addCriterion("plan_accede_total <", value, "planAccedeTotal");
+        public Criteria andPlanRepayInterestLessThan(BigDecimal value) {
+            addCriterion("plan_repay_interest <", value, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("plan_accede_total <=", value, "planAccedeTotal");
+        public Criteria andPlanRepayInterestLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("plan_repay_interest <=", value, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalIn(List<BigDecimal> values) {
-            addCriterion("plan_accede_total in", values, "planAccedeTotal");
+        public Criteria andPlanRepayInterestIn(List<BigDecimal> values) {
+            addCriterion("plan_repay_interest in", values, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalNotIn(List<BigDecimal> values) {
-            addCriterion("plan_accede_total not in", values, "planAccedeTotal");
+        public Criteria andPlanRepayInterestNotIn(List<BigDecimal> values) {
+            addCriterion("plan_repay_interest not in", values, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("plan_accede_total between", value1, value2, "planAccedeTotal");
+        public Criteria andPlanRepayInterestBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("plan_repay_interest between", value1, value2, "planRepayInterest");
             return (Criteria) this;
         }
 
-        public Criteria andPlanAccedeTotalNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("plan_accede_total not between", value1, value2, "planAccedeTotal");
+        public Criteria andPlanRepayInterestNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("plan_repay_interest not between", value1, value2, "planRepayInterest");
             return (Criteria) this;
         }
 
@@ -1445,6 +1445,66 @@ public class AccountExample {
             return (Criteria) this;
         }
 
+        public Criteria andPlanAccedeTotalIsNull() {
+            addCriterion("plan_accede_total is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalIsNotNull() {
+            addCriterion("plan_accede_total is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalEqualTo(BigDecimal value) {
+            addCriterion("plan_accede_total =", value, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalNotEqualTo(BigDecimal value) {
+            addCriterion("plan_accede_total <>", value, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalGreaterThan(BigDecimal value) {
+            addCriterion("plan_accede_total >", value, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("plan_accede_total >=", value, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalLessThan(BigDecimal value) {
+            addCriterion("plan_accede_total <", value, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("plan_accede_total <=", value, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalIn(List<BigDecimal> values) {
+            addCriterion("plan_accede_total in", values, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalNotIn(List<BigDecimal> values) {
+            addCriterion("plan_accede_total not in", values, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("plan_accede_total between", value1, value2, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanAccedeTotalNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("plan_accede_total not between", value1, value2, "planAccedeTotal");
+            return (Criteria) this;
+        }
+
         public Criteria andPlanAccedeBalanceIsNull() {
             addCriterion("plan_accede_balance is null");
             return (Criteria) this;
@@ -1562,66 +1622,6 @@ public class AccountExample {
 
         public Criteria andPlanAccedeFrostNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("plan_accede_frost not between", value1, value2, "planAccedeFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestIsNull() {
-            addCriterion("plan_repay_interest is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestIsNotNull() {
-            addCriterion("plan_repay_interest is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestEqualTo(BigDecimal value) {
-            addCriterion("plan_repay_interest =", value, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestNotEqualTo(BigDecimal value) {
-            addCriterion("plan_repay_interest <>", value, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestGreaterThan(BigDecimal value) {
-            addCriterion("plan_repay_interest >", value, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("plan_repay_interest >=", value, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestLessThan(BigDecimal value) {
-            addCriterion("plan_repay_interest <", value, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("plan_repay_interest <=", value, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestIn(List<BigDecimal> values) {
-            addCriterion("plan_repay_interest in", values, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestNotIn(List<BigDecimal> values) {
-            addCriterion("plan_repay_interest not in", values, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("plan_repay_interest between", value1, value2, "planRepayInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andPlanRepayInterestNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("plan_repay_interest not between", value1, value2, "planRepayInterest");
             return (Criteria) this;
         }
 
