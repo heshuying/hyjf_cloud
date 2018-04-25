@@ -1,0 +1,124 @@
+package com.hyjf.am.resquest.user;
+
+import com.hyjf.am.vo.BaseVO;
+
+/**
+ * 
+ * @author Administrator
+ *
+ */
+public class BankOpenRequest extends BaseVO {
+
+	private Integer userId;
+	
+	private String username;
+	
+	private String mobile;
+	
+	private String orderId;
+	
+	private String channel;
+	
+	private String trueName;
+	
+	private String idNo;
+	
+	private String cardNo;
+	
+	private Integer status;
+	
+	private String accountId;
+	
+	private Integer bankAccountEsb;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public String getTrueName() {
+		return trueName;
+	}
+
+	public void setTrueName(String trueName) {
+		this.trueName = trueName;
+	}
+
+	public String getIdNo() {
+		return idNo;
+	}
+
+	public void setIdNo(String idNo) {
+		this.idNo = idNo;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	public Integer getBankAccountEsb() {
+		return bankAccountEsb;
+	}
+
+	public void setBankAccountEsb(Integer bankAccountEsb) {
+		this.bankAccountEsb = bankAccountEsb;
+	}
+	
+	
+	
+}
