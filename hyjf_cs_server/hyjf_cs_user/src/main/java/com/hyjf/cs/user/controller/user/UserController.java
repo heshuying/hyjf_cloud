@@ -20,36 +20,16 @@ import com.hyjf.cs.user.vo.RegisterVO;
 
 /**
  * @author xiasq
- * @version RegisterController, v0.1 2018/4/21 15:06
+ * @version UserController, v0.1 2018/4/21 15:06
  */
 
 @RestController
 @RequestMapping("/api/user")
-public class RegisterController {
-	private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
+public class UserController {
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserService userService;
-
-	/**
-	 * 发送短信
-	 * 
-	 * @param validCodeType
-	 * @param mobile
-	 * @param request
-	 * @return
-	 * @throws MQException
-	 */
-	@RequestMapping(value = "/sendcode")
-	public BaseResultBean sendSmsCode(@RequestParam String validCodeType,
-									  @RequestParam String mobile,
-									  @RequestHeader(value = "token", required = true) String token,
-									  HttpServletRequest request) throws MQException {
-		logger.info("sendSmsCode start, validCodeType is :{}, mobile is: {}", validCodeType, mobile);
-		BaseResultBean resultBean = new BaseResultBean();
-		userService.sendSmsCode(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
-		return resultBean;
-	}
 
 	/**
 	 * 注册

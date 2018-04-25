@@ -3,11 +3,7 @@ package com.hyjf.cs.user.service.impl;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +22,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MessagePushConstant;
 import com.hyjf.common.constants.RedisKey;
@@ -36,14 +31,12 @@ import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.redis.RedisUtil;
-import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.service.CouponService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -57,8 +50,7 @@ import com.hyjf.cs.user.vo.RegisterVO;
 @Service
 public class UserServiceImpl implements UserService {
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-	@Autowired
-	private AmConfigClient amConfigClient;
+
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
@@ -67,11 +59,9 @@ public class UserServiceImpl implements UserService {
 	private CouponProducer couponProducer;
 	@Autowired
 	private SmsProducer smsProducer;
-
 	@Autowired
 	private RedisUtil redisUtil;
-	@Autowired
-	private StringRedisUtil stringRedisUtil;
+
 
 	@Value("${rocketMQ.topic.couponTopic}")
 	private String couponTopic;
@@ -83,37 +73,6 @@ public class UserServiceImpl implements UserService {
 	private String activityIdTzj;
 	@Value("${hyjf.activity.888.id}")
 	private String activityId;
-
-	/**
-	 * 1. 验证码发送前校验 2. 生成验证码 3. 保存验证码 4. 发送短信
-	 *
-	 * @param validCodeType
-	 * @param mobile
-	 * @param request
-	 */
-	@Override
-	public void sendSmsCode(String validCodeType, String mobile, String token, String ip) throws MQException {
-
-		this.sendSmsCodeCheckParam(validCodeType, mobile, token, ip);
-
-		// 生成验证码
-		String checkCode = GetCode.getRandomSMSCode(6);
-		logger.info("手机号: {}, 短信验证码: {}", mobile, checkCode);
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("val_code", checkCode);
-
-		// 保存短信验证码
-		amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CustomConstants.CKCODE_NEW,
-				CustomConstants.CLIENT_PC);
-
-		JSONObject params = new JSONObject();
-		params.put("checkCode", checkCode);
-		params.put("validCodeType", validCodeType);
-		params.put("mobile", mobile);
-
-		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
-	}
 
 	/**
 	 * 1. 必要参数检查 2. 注册 3. 注册后处理
@@ -147,123 +106,10 @@ public class UserServiceImpl implements UserService {
 		return userVO == null ? false : true;
 	}
 
-	private void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
-
-		List<String> codeTypes = Arrays.asList(CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.PARAM_TPL_ZHAOHUIMIMA,
-				CustomConstants.PARAM_TPL_YZYSJH, CustomConstants.PARAM_TPL_BDYSJH);
-		if (Validator.isNull(validCodeType) || !codeTypes.contains(validCodeType)) {
-			throw new ReturnMessageException(RegisterError.CODETYPE_INVALID_ERROR);
-		}
-		if (Validator.isNull(mobile) || !Validator.isMobile(mobile)) {
-			throw new ReturnMessageException(RegisterError.MOBILE_FORMAT_ERROR);
-		}
-
-		if (validCodeType.equals(CustomConstants.PARAM_TPL_ZHUCE)) {
-			// 注册时要判断不能重复
-			if (existUser(mobile)) {
-				throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
-			}
-		}
-
-		if (StringUtils.isNotEmpty(token)) {
-			UserVO userVO = (UserVO) redisUtil.get(token);
-			if (userVO != null) {
-				// 验证原手机号校验
-				if (validCodeType.equals(CustomConstants.PARAM_TPL_YZYSJH)) {
-					if (StringUtils.isBlank(userVO.getMobile())) {
-						throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
-					}
-					if (!userVO.getMobile().equals(mobile)) {
-						throw new ReturnMessageException(RegisterError.MOBILE_NEED_SAME_ERROR);
-					}
-				}
-
-				// 绑定新手机号校验
-				if (validCodeType.equals(CustomConstants.PARAM_TPL_BDYSJH)) {
-					if (userVO.equals(mobile)) {
-						throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
-					}
-					if (existUser(mobile)) {
-						throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
-					}
-				}
-			} else
-				throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
-		}
-
-		// 判断发送间隔时间
-		String intervalTime = stringRedisUtil.get(mobile + ":" + validCodeType + ":IntervalTime");
-		logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
-		if (StringUtils.isNotBlank(intervalTime)) {
-			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_FAST_ERROR);
-		}
-
-		String ipCount = stringRedisUtil.get(ip + ":MaxIpCount");
-		if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
-			ipCount = "0";
-			stringRedisUtil.set(ip + ":MaxIpCount", "0");
-		}
-		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
-
-		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
-		if (smsConfig == null)
-			throw new ReturnMessageException(RegisterError.FIND_SMSCONFIG_ERROR);
-
-		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
-			if (Integer.valueOf(ipCount) == smsConfig.getMaxIpCount()) {
-				try {
-					// 发送短信通知
-					JSONObject params = new JSONObject();
-					params.put("var_phonenu", mobile);
-					params.put("val_reason", "IP访问次数超限");
-					params.put("templateCode", MessagePushConstant.SMSSENDFORMANAGER);
-					try {
-						smsProducer.messageSend(
-								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
-					} catch (MQException e) {
-						logger.error("短信发送失败...", e);
-					}
-				} catch (Exception e) {
-					throw new ReturnMessageException(RegisterError.IP_VISIT_TOO_MANNY_ERROR);
-				}
-				stringRedisUtil.setEx(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60,
-						TimeUnit.SECONDS);
-			}
-			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
-		}
-
-		// 判断最大发送数max_phone_count
-		String count = stringRedisUtil.get(mobile + ":MaxPhoneCount");
-		if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
-			count = "0";
-			stringRedisUtil.set(mobile + ":MaxPhoneCount", "0");
-		}
-		logger.info(mobile + "----------MaxPhoneCount-----------" + count);
-		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
-			if (Integer.valueOf(count) == smsConfig.getMaxPhoneCount()) {
-				try {
-					// 发送短信通知
-					JSONObject params = new JSONObject();
-					params.put("var_phonenu", mobile);
-					params.put("val_reason", "手机验证码发送次数超限");
-					params.put("templateCode", MessagePushConstant.SMSSENDFORMANAGER);
-					try {
-						smsProducer.messageSend(
-								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
-					} catch (MQException e) {
-						logger.error("短信发送失败...", e);
-					}
-				} catch (Exception e) {
-					throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
-				}
-				stringRedisUtil.setEx(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60,
-						TimeUnit.SECONDS);
-			}
-			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
-		}
-
-	}
-
+	/**
+	 * 注册参数校验
+	 * @param registerVO
+	 */
 	private void registerCheckParam(RegisterVO registerVO) {
 		if (registerVO == null)
 			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
