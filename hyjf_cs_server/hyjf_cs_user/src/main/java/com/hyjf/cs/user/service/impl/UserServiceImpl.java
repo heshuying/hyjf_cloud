@@ -202,8 +202,8 @@ public class UserServiceImpl implements UserService {
 		if (Validator.isNull(mobile))
 			throw new ReturnMessageException(RegisterError.MOBILE_IS_NOT_NULL_ERROR);
 
-		String smscode = registerVO.getSmscode();
-		if (Validator.isNull(smscode))
+		String smsCode = registerVO.getSmsCode();
+		if (Validator.isNull(smsCode))
 			throw new ReturnMessageException(RegisterError.SMSCODE_IS_NOT_NULL_ERROR);
 
 		String password = registerVO.getPassword();
@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		String verificationType = CustomConstants.PARAM_TPL_ZHUCE;
-		int cnt = amUserClient.checkMobileCode(mobile, smscode, verificationType, CustomConstants.CLIENT_PC,
+		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CustomConstants.CLIENT_PC,
 				CustomConstants.CKCODE_YIYAN, CustomConstants.CKCODE_USED);
 		if (cnt == 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
