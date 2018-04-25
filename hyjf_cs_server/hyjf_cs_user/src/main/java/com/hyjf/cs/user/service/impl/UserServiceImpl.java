@@ -30,13 +30,16 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.redis.RedisUtil;
+import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.service.CouponService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -61,6 +64,8 @@ public class UserServiceImpl implements UserService {
 	private SmsProducer smsProducer;
 	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private StringRedisUtil stringRedisUtil;
 
 	@Value("${rocketMQ.topic.couponTopic}")
 	private String couponTopic;
@@ -103,6 +108,97 @@ public class UserServiceImpl implements UserService {
 	public boolean existUser(String mobile) {
 		UserVO userVO = amUserClient.findUserByMobile(mobile);
 		return userVO == null ? false : true;
+	}
+
+	/**
+	 *
+	 * @param loginUserName
+	 *            可以是手机号或者用户名
+	 * @param loginPassword
+	 * @param ip
+	 */
+	@Override
+	public void login(String loginUserName, String loginPassword, String ip) {
+		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginUserName, 32))
+			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
+
+		// 获取密码错误次数
+		String errCount = stringRedisUtil.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+		if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
+			throw new ReturnMessageException(LoginError.PWD_ERROR_TOO_MANEY_ERROR);
+		}
+
+		UserVO userVO = this.doLogin(loginUserName, loginPassword, ip);
+
+		this.afterLoginHandle(userVO);
+	}
+
+	/**
+	 * 登录后处理
+	 * 
+	 * @param userVO
+	 */
+	private void afterLoginHandle(UserVO userVO) {
+		// 1. 登录成功缓存
+		String token = generatorToken(userVO.getUserId(), userVO.getUsername());
+		userVO.setToken(token);
+		redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
+
+		// 2. todo 登录时自动同步线下充值记录
+
+	}
+
+	/**
+	 * 登录处理
+	 * 
+	 * @param loginUserName
+	 * @param loginPassword
+	 * @return
+	 */
+	private UserVO doLogin(String loginUserName, String loginPassword, String ip) {
+		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
+
+		if (userVO == null) {
+			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
+		}
+
+		int userId = userVO.getUserId();
+		String codeSalt = userVO.getSalt();
+		String passwordDb = userVO.getPassword();
+		// 页面传来的密码
+		String password = MD5Utils.MD5(loginPassword + codeSalt);
+
+		if (password.equals(passwordDb)) {
+			// 是否禁用
+			if (userVO.getStatus() == 1)
+				throw new ReturnMessageException(LoginError.USER_INVALID_ERROR);
+
+			// 更新登录信息
+			amUserClient.updateLoginUser(userId, ip);
+
+			// 登录成功将登陆密码错误次数的key删除
+			stringRedisUtil.delete(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+			return userVO;
+		} else {
+			// 密码错误，增加错误次数
+			stringRedisUtil.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
+		}
+	}
+
+	/**
+	 * 字符串长度检查
+	 * 
+	 * @param value
+	 * @param max
+	 * @return
+	 */
+	private boolean checkMaxLength(String value, int max) {
+		if (StringUtils.isEmpty(value))
+			return true;
+		if (value.length() > max)
+			return true;
+		return false;
 	}
 
 	/**
@@ -176,9 +272,7 @@ public class UserServiceImpl implements UserService {
 		int userId = userVO.getUserId();
 
 		// 1. 注册成功之后登录 单点登录
-		Map map = ImmutableMap.of("userId", userId, "username", userVO.getUsername(), "ts",
-				Instant.now().getEpochSecond() + "");
-		String token = JwtHelper.genToken(map);
+		String token = generatorToken(userId, userVO.getUsername());
 		userVO.setToken(token);
 		redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
 
@@ -230,5 +324,18 @@ public class UserServiceImpl implements UserService {
 				logger.error("短信发送失败...", e);
 			}
 		}
+	}
+
+	/**
+	 * jwt生成token
+	 * 
+	 * @param userId
+	 * @param username
+	 * @return
+	 */
+	private String generatorToken(int userId, String username) {
+		Map map = ImmutableMap.of("userId", userId, "username", username, "ts", Instant.now().getEpochSecond() + "");
+		String token = JwtHelper.genToken(map);
+		return token;
 	}
 }

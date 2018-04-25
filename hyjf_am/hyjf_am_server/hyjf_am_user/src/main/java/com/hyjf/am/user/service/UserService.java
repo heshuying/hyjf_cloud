@@ -50,6 +50,13 @@ public interface UserService {
 	Users findUserByMobile(String mobile);
 
 	/**
+	 * 根据username或者mobiel查询用户
+	 * @param condition
+	 * @return
+	 */
+	Users findUserByUsernameOrMobile(String condition);
+
+	/**
 	 * 根据推荐人手机号或userId查询推荐人
 	 * 
 	 * @param reffer
@@ -64,4 +71,6 @@ public interface UserService {
 	 * @return
 	 */
 	UserVO assembleUserVO(UserVO userVO);
+
+	void updateLoginUser(int userId, String ip);
 }

@@ -1,17 +1,17 @@
 package com.hyjf.cs.user.client.impl;
 
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.client.AmUserClient;
 
 /**
@@ -41,8 +41,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int countUserByRecommendName(String reffer) {
-		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class)
-				.getBody();
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class).getBody();
 		if (response != null && response.getResult() != null) {
 			return 1;
 		}
@@ -61,8 +61,8 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UserVO findUserById(int userId) {
-		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class)
-				.getBody();
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -112,5 +112,22 @@ public class AmUserClientImpl implements AmUserClient {
 			return 0;
 		}
 		return result;
+	}
+
+	@Override
+	public UserVO findUserByUserNameOrMobile(String loginUserName) {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/findByCondition/" + loginUserName, UserResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateLoginUser(int userId, String ip) {
+		restTemplate.getForEntity("http://AM-USER/am-user/user/updateLoginUser?" + "userId=" + userId + "&ip=" + ip,
+				String.class);
 	}
 }

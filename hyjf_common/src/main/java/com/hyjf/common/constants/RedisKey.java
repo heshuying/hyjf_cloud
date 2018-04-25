@@ -22,4 +22,9 @@ public interface RedisKey {
      * 短信配置key
      */
     String SMS_CONFIG = "smsConfig";
+
+    /**
+     * 记录密码错误次数Redis前缀
+     */
+    String PASSWORD_ERR_COUNT = "password_err_count_";
 }

@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 注册
+	 * 
 	 * @param userRequest
 	 * @return
 	 * @throws ServiceException
@@ -215,6 +216,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public Users findUserByUsernameOrMobile(String condition) {
+		UsersExample mobileExample = new UsersExample();
+		mobileExample.createCriteria().andMobileEqualTo(condition);
+		List<Users> usersList1 = usersMapper.selectByExample(mobileExample);
+		if (!CollectionUtils.isEmpty(usersList1)) {
+			return usersList1.get(0);
+		}
+
+		UsersExample usernameExample = new UsersExample();
+		usernameExample.createCriteria().andUsernameEqualTo(condition);
+		List<Users> usersList2 = usersMapper.selectByExample(usernameExample);
+		if (!CollectionUtils.isEmpty(usersList2)) {
+			return usersList2.get(0);
+		}
+		return null;
+	}
+
+	@Override
 	public Users findUserByRecommendName(String reffer) {
 		UsersExample usersExample = new UsersExample();
 		UsersExample.Criteria criteria = usersExample.createCriteria();
@@ -247,6 +266,21 @@ public class UserServiceImpl implements UserService {
 		userVO.setOpenAccount(null);
 		userVO.setBankOpenAccount(null);
 		return userVO;
+	}
+
+	@Override
+	public void updateLoginUser(int userId, String ip) {
+		Users user = findUserByUserId(userId);
+		if (user.getLoginIp() != null) {
+			user.setLastIp(user.getLoginIp());
+		}
+		if (user.getLoginTime() != null) {
+			user.setLastTime(user.getLoginTime());
+		}
+		user.setLoginIp(ip);
+		user.setLoginTime(GetDate.getNowTime10());
+		user.setLogintime(user.getLogintime() + 1);// 登录次数
+		usersMapper.updateByPrimaryKeySelective(user);
 	}
 
 	/**
@@ -358,6 +392,7 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 注册写用户表
+	 * 
 	 * @param mobile
 	 * @param password
 	 * @param loginIp
@@ -416,6 +451,7 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 注册写用户信息表
+	 * 
 	 * @param userId
 	 * @param loginIp
 	 * @param attribute
@@ -544,7 +580,7 @@ public class UserServiceImpl implements UserService {
 		utmReg.setUserId(userId);
 		utmReg.setOpenAccount(0);
 		utmReg.setBindCard(0);
-		//todo save reg
+		// todo save reg
 		logger.info("注册插入utmReg：{}", JSON.toJSONString(utmReg));
 	}
 

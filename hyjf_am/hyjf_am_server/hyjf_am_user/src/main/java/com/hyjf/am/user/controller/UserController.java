@@ -51,8 +51,15 @@ public class UserController {
 		return userResponse;
 	}
 
+	/**
+	 * 根据userId查询
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	@RequestMapping("/findById/{userId}")
 	public UserResponse findUserByUserId(@PathVariable int userId) {
+		logger.info("findUserByUserId run...userId is :{}", userId);
 		UserResponse response = new UserResponse();
 		Users user = userService.findUserByUserId(userId);
 		if (user != null) {
@@ -83,6 +90,25 @@ public class UserController {
 	}
 
 	/**
+	 * 根据username 或者 mobile查询用户
+	 * 
+	 * @param condition
+	 * @return
+	 */
+	@RequestMapping("/findByCondition/{condition}")
+	public UserResponse findUserByCondition(@PathVariable String condition) {
+		logger.info("findUserByCondition run...condition is :{}", condition);
+		UserResponse response = new UserResponse();
+		Users user = userService.findUserByUsernameOrMobile(condition);
+		if (user != null) {
+			UserVO userVO = new UserVO();
+			BeanUtils.copyProperties(user, userVO);
+			response.setResult(userService.assembleUserVO(userVO));
+		}
+		return response;
+	}
+
+	/**
 	 * 根据推荐人手机号或userId 查询推荐人
 	 * 
 	 * @param reffer
@@ -90,6 +116,7 @@ public class UserController {
 	 */
 	@RequestMapping("/findReffer/{reffer}")
 	public UserResponse findUserByRecommendName(@PathVariable String reffer) {
+		logger.info("findUserByRecommendName run...reffer is :{}", reffer);
 		UserResponse response = new UserResponse();
 		Users user = userService.findUserByRecommendName(reffer);
 		if (user != null) {
@@ -99,4 +126,11 @@ public class UserController {
 		}
 		return response;
 	}
+
+	@RequestMapping("/updateLoginUser/}")
+	public void updateLoginUser(@RequestParam int userId, @RequestParam String ip) {
+		logger.info("updateLoginUser run...userId is :{}, ip is :{}", userId, ip);
+		userService.updateLoginUser(userId, ip);
+	}
+
 }

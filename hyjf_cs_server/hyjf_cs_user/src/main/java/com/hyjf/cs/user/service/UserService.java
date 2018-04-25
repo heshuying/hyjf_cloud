@@ -14,18 +14,30 @@ import com.hyjf.cs.user.vo.RegisterVO;
 public interface UserService {
 	/**
 	 * 注册
+	 * 
 	 * @param registerVO
 	 * @param request
 	 * @param response
 	 * @return
 	 * @throws ReturnMessageException
 	 */
-	UserVO register(RegisterVO registerVO, HttpServletRequest request, HttpServletResponse response) throws ReturnMessageException;
+	UserVO register(RegisterVO registerVO, HttpServletRequest request, HttpServletResponse response)
+			throws ReturnMessageException;
 
 	/**
 	 * 用户存在检查
+	 * 
 	 * @param mobile
 	 * @return
 	 */
 	boolean existUser(String mobile);
+
+	/**
+	 *
+	 * @param loginUserName
+	 *            可以是手机号或者用户名
+	 * @param loginPassword
+	 * @param ip
+	 */
+	void login(String loginUserName, String loginPassword, String ip);
 }

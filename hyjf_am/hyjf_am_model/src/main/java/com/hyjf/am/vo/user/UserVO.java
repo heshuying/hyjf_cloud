@@ -95,6 +95,37 @@ public class UserVO extends BaseVO {
 	private Integer isEvaluationFlag;
 
 
+	/**
+	 * 登录验证
+	 */
+	private String salt;
+	private String password;
+	private Integer status;
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public String getToken() {
 		return token;
 	}

@@ -24,4 +24,8 @@ public interface AmUserClient {
 
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 						Integer searchStatus, Integer updateStatus);
+
+    UserVO findUserByUserNameOrMobile(String loginUserName);
+
+	void updateLoginUser(int userId, String ip);
 }

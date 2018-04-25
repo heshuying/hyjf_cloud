@@ -54,4 +54,21 @@ public class UserController {
 		}
 		return resultBean;
 	}
+
+	/**
+	 * 登录
+	 * @param loginUserName
+	 * @param loginPassword
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = "/login", produces = "application/json; charset=utf-8")
+	public BaseResultBean login(@RequestParam String loginUserName,
+								@RequestParam String loginPassword,
+								HttpServletRequest request) {
+		BaseResultBean resultBean = new BaseResultBean();
+		userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+		return resultBean;
+	}
+
 }
