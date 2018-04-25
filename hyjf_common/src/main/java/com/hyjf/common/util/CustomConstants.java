@@ -1389,4 +1389,15 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final String TENDER_FROM_TAG = "wrb";
     /** 缴费授权状态  */
     public static final String PAYMENT_AUTH_STATUS = "paymentAuthStatus";
+
+
+
+    /** 短信验证码状态,新验证码 */
+    public static final Integer CKCODE_NEW = 0;
+    /** 短信验证码状态,失效 */
+    public static final Integer CKCODE_FAILED = 7;
+    /** 短信验证码状态,已验 */
+    public static final Integer CKCODE_YIYAN = 8;
+    /** 短信验证码状态,已用 */
+    public static final Integer CKCODE_USED = 9;
 }
