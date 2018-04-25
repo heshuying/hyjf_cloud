@@ -9,6 +9,7 @@ import com.hyjf.common.constants.ErrorCode;
 public enum LoginError implements ErrorCode {
     USER_LOGIN_ERROR("1", "登录失败,账号或密码错误"),
     USER_INVALID_ERROR("1", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
+    CHECK_NULL_ERROR("1", "用户名或密码不能为空！"),
     PWD_ERROR_TOO_MANEY_ERROR("1", "登录失败,当日密码错误已打上限，请明日再试！");
 
 

@@ -30,7 +30,7 @@ import com.hyjf.cs.user.vo.BankOpenVO;
  */
 
 @Controller
-@RequestMapping("/api/open")
+@RequestMapping("/api/secure/open")
 public class BankOpenController {
 	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
 

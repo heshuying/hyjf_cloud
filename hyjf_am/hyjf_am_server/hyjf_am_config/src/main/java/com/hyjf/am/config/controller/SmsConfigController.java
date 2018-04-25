@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.SmsConfig;
 import com.hyjf.am.config.service.SmsConfigService;
 import com.hyjf.am.response.config.SmsConfigResponse;
@@ -27,6 +28,7 @@ public class SmsConfigController {
 
 	@RequestMapping("/findOne")
 	public SmsConfigResponse findOne() {
+		logger.info("查找短信配置...");
 		SmsConfigResponse response = new SmsConfigResponse();
 		SmsConfig smsConfig = smsConfigService.findOne();
 		SmsConfigVO smsConfigVO = null;
@@ -34,6 +36,7 @@ public class SmsConfigController {
 			smsConfigVO = new SmsConfigVO();
 			BeanUtils.copyProperties(smsConfig, smsConfigVO);
 		}
+		logger.info("smsConfigVO is : {}", JSONObject.toJSONString(smsConfigVO));
 		response.setResult(smsConfigVO);
 		return response;
 	}

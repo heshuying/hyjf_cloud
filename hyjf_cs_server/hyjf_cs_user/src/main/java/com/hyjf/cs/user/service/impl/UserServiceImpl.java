@@ -127,25 +127,7 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
 			throw new ReturnMessageException(LoginError.PWD_ERROR_TOO_MANEY_ERROR);
 		}
-
-		UserVO userVO = this.doLogin(loginUserName, loginPassword, ip);
-
-		this.afterLoginHandle(userVO);
-	}
-
-	/**
-	 * 登录后处理
-	 * 
-	 * @param userVO
-	 */
-	private void afterLoginHandle(UserVO userVO) {
-		// 1. 登录成功缓存
-		String token = generatorToken(userVO.getUserId(), userVO.getUsername());
-		userVO.setToken(token);
-		redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
-
-		// 2. todo 登录时自动同步线下充值记录
-
+		this.doLogin(loginUserName, loginPassword, ip);
 	}
 
 	/**
@@ -155,7 +137,7 @@ public class UserServiceImpl implements UserService {
 	 * @param loginPassword
 	 * @return
 	 */
-	private UserVO doLogin(String loginUserName, String loginPassword, String ip) {
+	private void doLogin(String loginUserName, String loginPassword, String ip) {
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
 
 		if (userVO == null) {
@@ -176,9 +158,15 @@ public class UserServiceImpl implements UserService {
 			// 更新登录信息
 			amUserClient.updateLoginUser(userId, ip);
 
-			// 登录成功将登陆密码错误次数的key删除
+			// 1. 登录成功将登陆密码错误次数的key删除
 			stringRedisUtil.delete(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
-			return userVO;
+
+			// 2. 缓存
+			String token = generatorToken(userVO.getUserId(), userVO.getUsername());
+			userVO.setToken(token);
+			redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
+
+			// 3. todo 登录时自动同步线下充值记录
 		} else {
 			// 密码错误，增加错误次数
 			stringRedisUtil.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
