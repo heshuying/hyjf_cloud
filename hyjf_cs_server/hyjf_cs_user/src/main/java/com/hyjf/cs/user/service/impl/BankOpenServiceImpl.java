@@ -41,6 +41,7 @@ import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
+import com.hyjf.cs.user.service.BankOpenService;
 import com.hyjf.cs.user.service.CouponService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -53,8 +54,8 @@ import com.hyjf.cs.user.vo.RegisterVO;
  */
 
 @Service
-public class UserServiceImpl implements UserService {
-	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+public class BankOpenServiceImpl implements BankOpenService {
+	private static final Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 
 	@Autowired
 	private AmUserClient amUserClient;
