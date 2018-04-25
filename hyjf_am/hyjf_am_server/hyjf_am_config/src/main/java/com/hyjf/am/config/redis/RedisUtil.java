@@ -1,4 +1,4 @@
-package com.hyjf.am.user.redis;
+package com.hyjf.am.config.redis;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author xiasq
- * @version RedisUtils, v0.1 2018/1/21 22:35
+ * @version RedisUtil, v0.1 2018/1/21 22:35
  */
 
 @Component
-public class RedisUtils {
+public class RedisUtil {
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
 

@@ -2,9 +2,6 @@ package com.hyjf.am.user.controller;
 
 import javax.validation.Valid;
 
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.vo.user.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -12,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.service.UserService;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ServiceException;
 
 /**
@@ -25,7 +25,6 @@ import com.hyjf.common.exception.ServiceException;
 @RequestMapping("/am-user/user")
 public class UserController {
 	private static Logger logger = LoggerFactory.getLogger(UserController.class);
-
 	@Autowired
 	private UserService userService;
 
@@ -42,7 +41,7 @@ public class UserController {
 			} else {
 				UserVO userVO = new UserVO();
 				BeanUtils.copyProperties(user, userVO);
-				userResponse.setResult(userVO);
+				userResponse.setResult(userService.assembleUserVO(userVO));
 			}
 		} catch (ServiceException e) {
 			userResponse.setRtn(UserResponse.FAIL);

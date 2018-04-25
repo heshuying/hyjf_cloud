@@ -14,6 +14,7 @@ import com.hyjf.cs.user.vo.RegisterVO;
  * @author Administrator
  *
  */
+
 public interface BankOpenService {
 	
 	UserVO register(RegisterVO registerVO, HttpServletRequest request, HttpServletResponse response) throws ReturnMessageException;

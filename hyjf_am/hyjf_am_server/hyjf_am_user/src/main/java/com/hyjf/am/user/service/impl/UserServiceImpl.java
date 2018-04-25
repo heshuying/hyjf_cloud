@@ -3,6 +3,9 @@ package com.hyjf.am.user.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.hyjf.am.user.service.UserInfoService;
+import com.hyjf.am.user.util.UploadFileUtils;
+import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +53,13 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UsersLogMapper usersLogMapper;
 
+	@Autowired
+	UserInfoService userInfoService;
+
+	@Value("${file.domain.head.url}")
+	private String fileHeadUrl;
+	@Value("${file.upload.head.path}")
+	private String fileHeadPath;
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
 
@@ -367,6 +377,42 @@ public class UserServiceImpl implements UserService {
 		List<Users> usersList = usersMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public UserVO assembleUserVO(UserVO userVO) {
+		UsersInfo usersInfo = userInfoService.findUserInfoById(userVO.getUserId());
+		if (usersInfo != null) {
+			userVO.setSex(usersInfo.getSex());
+			userVO.setNickname(usersInfo.getNickname());
+			userVO.setTruename(usersInfo.getTruename());
+			userVO.setIdcard(usersInfo.getIdcard());
+			userVO.setRoleId(usersInfo.getRoleId() + "");
+			userVO.setBorrowerType(usersInfo.getBorrowerType());
+		}
+		userVO.setIconurl(this.assembleIconUrl(userVO));
+
+		// todo 银行 汇付开户账号 紧急联系人 usersContract
+		userVO.setOpenAccount(null);
+		userVO.setBankOpenAccount(null);
+		return userVO;
+	}
+
+	/**
+	 * 组装图像url
+	 *
+	 * @param userVO
+	 * @return
+	 */
+	private String assembleIconUrl(UserVO userVO) {
+		String iconUrl = userVO.getIconurl();
+		if (org.apache.commons.lang3.StringUtils.isNotBlank(iconUrl)) {
+			String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
+			imghost = imghost.substring(0, imghost.length() - 1);
+			String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
+			return imghost + fileUploadTempPath + iconUrl;
 		}
 		return null;
 	}

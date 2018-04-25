@@ -5,15 +5,13 @@ package com.hyjf.am.message.processer.impl;
 
 import java.io.File;
 
+import org.springframework.stereotype.Component;
+
 import com.hyjf.am.message.processer.MailMessage;
 import com.hyjf.am.message.processer.Message;
 import com.hyjf.am.message.processer.MessageDefine;
 import com.hyjf.am.message.processer.MessageProcesser;
 import com.hyjf.am.message.util.MailUtil;
-import com.hyjf.common.web.RedisUtils;
-import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSON;
 
 /**
  * 邮件处理器
@@ -71,7 +69,8 @@ public class MailProcesser implements MessageProcesser {
     public Integer gather(Message message) {
         if (null != message) {
             MailMessage mailMessage = (MailMessage) message;
-            return Integer.parseInt(RedisUtils.lpush(MessageDefine.MAILQUENEM, JSON.toJSONString(mailMessage)) + "");
+            return 0;
+            //return Integer.parseInt(RedisUtils.lpush(MessageDefine.MAILQUENEM, JSON.toJSONString(mailMessage)) + "");
         } else {
             return 0;
         }

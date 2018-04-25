@@ -2,110 +2,106 @@ package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 /**
  * @author xiasq
  * @version UserVO, v0.1 2018/1/21 22:39
  */
 public class UserVO extends BaseVO {
 
+	/**
+	 * token 登录生成令牌
+	 */
+	private String token;
+
 	private Integer userId;
-
 	private String username;
-
 	private String mobile;
-
 	private String email;
-
-	private String password;
-
-	private String referrerUserName;
-
-	private Integer logintime;
-
-	private String regIp;
-
-	private Integer regTime;
-
-	private String loginIp;
-
-	private Integer loginTime;
-
-	private String lastIp;
-
-	private Integer lastTime;
-
-	private Integer status;
-
+	/**
+	 * 汇付开户账号
+	 */
 	private Integer openAccount;
+	/**
+	 * 银行开户账号
+	 */
+	private Integer bankOpenAccount;
+	private Integer isCaFlag;
 
-	private Integer borrowSms;
-
-	private Integer rechargeSms;
-
-	private Integer withdrawSms;
-
-	private Integer isSmtp;
-
-	private Integer ifReceiveNotice;
-
+	private Integer sex;
+	private Integer borrowerType;
+	/**
+	 * 图像url
+	 */
 	private String iconurl;
 
-	private BigDecimal version;
 
+	/**
+	 * 推荐人
+	 */
+	private String referrerUserName;
+
+
+	/**
+	 * 昵称
+	 */
+	private String nickname;
+	/**
+	 * 真实姓名
+	 */
+	private String truename;
+	/**
+	 * 身份证
+	 */
+	private String idcard;
+	/**
+	 * 用户角色
+	 */
+	private String roleId;
+	/**
+	 * 充值成功短信 0发送1不发送
+	 */
+	private Integer rechargeSms;
+
+	/**
+	 * 提现成功短线 0发送1不发送
+	 */
+	private Integer withdrawSms;
+
+	/**
+	 * 投资成功短信 0发送1不发送
+	 */
 	private Integer investSms;
 
+	/**
+	 * 是否发送投资协议邮件 0发送 1不发送
+	 */
+	private Integer isSmtp;
+	/**
+	 * 回收成功短信 0发送1不发送
+	 */
 	private Integer recieveSms;
-
-	private Integer regEsb;
-
-	private String eprovince;
-
-	private Integer sendSms;
-
-	private Integer pid;
-
-	private String usernamep;
-
-	private Integer isInstFlag;
-
-	private String instCode;
-
-	private Integer ptype;
-
-	private Integer accountEsb;
-
-	private Integer investflag;
-
+	/**
+	 * 是否设置过交易密码 0未设置 1已设置
+	 */
+	private Integer isSetPassword;
+	/**
+	 * 用户类型  0普通用户 1企业账户
+	 */
 	private Integer userType;
 
-	private Integer authType;
-
-	private Integer authStatus;
-
-	private Boolean paymentAuthStatus;
-
-	private Date authTime;
-
-	private Integer recodTotal;
-
-	private Date recodTime;
-
-	private Date recodTruncateTime;
-
-	private Integer isSetPassword;
-
-	private Integer bankOpenAccount;
-
-	private Integer bankAccountEsb;
-
-	private Integer isDataUpdate;
-
+	/**
+	 * 是否测评:0:未测评,1:已测评
+	 */
 	private Integer isEvaluationFlag;
 
-	private Integer isCaFlag;
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	public Integer getUserId() {
 		return userId;
@@ -139,12 +135,60 @@ public class UserVO extends BaseVO {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public Integer getOpenAccount() {
+		return openAccount;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setOpenAccount(Integer openAccount) {
+		this.openAccount = openAccount;
+	}
+
+	public Integer getIsSetPassword() {
+		return isSetPassword;
+	}
+
+	public void setIsSetPassword(Integer isSetPassword) {
+		this.isSetPassword = isSetPassword;
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
+
+	public Integer getBankOpenAccount() {
+		return bankOpenAccount;
+	}
+
+	public void setBankOpenAccount(Integer bankOpenAccount) {
+		this.bankOpenAccount = bankOpenAccount;
+	}
+
+	public Integer getIsEvaluationFlag() {
+		return isEvaluationFlag;
+	}
+
+	public void setIsEvaluationFlag(Integer isEvaluationFlag) {
+		this.isEvaluationFlag = isEvaluationFlag;
+	}
+
+	public Integer getIsCaFlag() {
+		return isCaFlag;
+	}
+
+	public void setIsCaFlag(Integer isCaFlag) {
+		this.isCaFlag = isCaFlag;
+	}
+
+	public String getIconurl() {
+		return iconurl;
+	}
+
+	public void setIconurl(String iconurl) {
+		this.iconurl = iconurl;
 	}
 
 	public String getReferrerUserName() {
@@ -155,84 +199,36 @@ public class UserVO extends BaseVO {
 		this.referrerUserName = referrerUserName;
 	}
 
-	public Integer getLogintime() {
-		return logintime;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setLogintime(Integer logintime) {
-		this.logintime = logintime;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
-	public String getRegIp() {
-		return regIp;
+	public String getTruename() {
+		return truename;
 	}
 
-	public void setRegIp(String regIp) {
-		this.regIp = regIp;
+	public void setTruename(String truename) {
+		this.truename = truename;
 	}
 
-	public Integer getRegTime() {
-		return regTime;
+	public String getIdcard() {
+		return idcard;
 	}
 
-	public void setRegTime(Integer regTime) {
-		this.regTime = regTime;
+	public void setIdcard(String idcard) {
+		this.idcard = idcard;
 	}
 
-	public String getLoginIp() {
-		return loginIp;
+	public String getRoleId() {
+		return roleId;
 	}
 
-	public void setLoginIp(String loginIp) {
-		this.loginIp = loginIp;
-	}
-
-	public Integer getLoginTime() {
-		return loginTime;
-	}
-
-	public void setLoginTime(Integer loginTime) {
-		this.loginTime = loginTime;
-	}
-
-	public String getLastIp() {
-		return lastIp;
-	}
-
-	public void setLastIp(String lastIp) {
-		this.lastIp = lastIp;
-	}
-
-	public Integer getLastTime() {
-		return lastTime;
-	}
-
-	public void setLastTime(Integer lastTime) {
-		this.lastTime = lastTime;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public Integer getOpenAccount() {
-		return openAccount;
-	}
-
-	public void setOpenAccount(Integer openAccount) {
-		this.openAccount = openAccount;
-	}
-
-	public Integer getBorrowSms() {
-		return borrowSms;
-	}
-
-	public void setBorrowSms(Integer borrowSms) {
-		this.borrowSms = borrowSms;
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 
 	public Integer getRechargeSms() {
@@ -251,44 +247,20 @@ public class UserVO extends BaseVO {
 		this.withdrawSms = withdrawSms;
 	}
 
-	public Integer getIsSmtp() {
-		return isSmtp;
-	}
-
-	public void setIsSmtp(Integer isSmtp) {
-		this.isSmtp = isSmtp;
-	}
-
-	public Integer getIfReceiveNotice() {
-		return ifReceiveNotice;
-	}
-
-	public void setIfReceiveNotice(Integer ifReceiveNotice) {
-		this.ifReceiveNotice = ifReceiveNotice;
-	}
-
-	public String getIconurl() {
-		return iconurl;
-	}
-
-	public void setIconurl(String iconurl) {
-		this.iconurl = iconurl;
-	}
-
-	public BigDecimal getVersion() {
-		return version;
-	}
-
-	public void setVersion(BigDecimal version) {
-		this.version = version;
-	}
-
 	public Integer getInvestSms() {
 		return investSms;
 	}
 
 	public void setInvestSms(Integer investSms) {
 		this.investSms = investSms;
+	}
+
+	public Integer getIsSmtp() {
+		return isSmtp;
+	}
+
+	public void setIsSmtp(Integer isSmtp) {
+		this.isSmtp = isSmtp;
 	}
 
 	public Integer getRecieveSms() {
@@ -299,195 +271,19 @@ public class UserVO extends BaseVO {
 		this.recieveSms = recieveSms;
 	}
 
-	public Integer getRegEsb() {
-		return regEsb;
+	public Integer getSex() {
+		return sex;
 	}
 
-	public void setRegEsb(Integer regEsb) {
-		this.regEsb = regEsb;
+	public void setSex(Integer sex) {
+		this.sex = sex;
 	}
 
-	public String getEprovince() {
-		return eprovince;
+	public Integer getBorrowerType() {
+		return borrowerType;
 	}
 
-	public void setEprovince(String eprovince) {
-		this.eprovince = eprovince;
-	}
-
-	public Integer getSendSms() {
-		return sendSms;
-	}
-
-	public void setSendSms(Integer sendSms) {
-		this.sendSms = sendSms;
-	}
-
-	public Integer getPid() {
-		return pid;
-	}
-
-	public void setPid(Integer pid) {
-		this.pid = pid;
-	}
-
-	public String getUsernamep() {
-		return usernamep;
-	}
-
-	public void setUsernamep(String usernamep) {
-		this.usernamep = usernamep;
-	}
-
-	public Integer getIsInstFlag() {
-		return isInstFlag;
-	}
-
-	public void setIsInstFlag(Integer isInstFlag) {
-		this.isInstFlag = isInstFlag;
-	}
-
-	public String getInstCode() {
-		return instCode;
-	}
-
-	public void setInstCode(String instCode) {
-		this.instCode = instCode;
-	}
-
-	public Integer getPtype() {
-		return ptype;
-	}
-
-	public void setPtype(Integer ptype) {
-		this.ptype = ptype;
-	}
-
-	public Integer getAccountEsb() {
-		return accountEsb;
-	}
-
-	public void setAccountEsb(Integer accountEsb) {
-		this.accountEsb = accountEsb;
-	}
-
-	public Integer getInvestflag() {
-		return investflag;
-	}
-
-	public void setInvestflag(Integer investflag) {
-		this.investflag = investflag;
-	}
-
-	public Integer getUserType() {
-		return userType;
-	}
-
-	public void setUserType(Integer userType) {
-		this.userType = userType;
-	}
-
-	public Integer getAuthType() {
-		return authType;
-	}
-
-	public void setAuthType(Integer authType) {
-		this.authType = authType;
-	}
-
-	public Integer getAuthStatus() {
-		return authStatus;
-	}
-
-	public void setAuthStatus(Integer authStatus) {
-		this.authStatus = authStatus;
-	}
-
-	public Boolean getPaymentAuthStatus() {
-		return paymentAuthStatus;
-	}
-
-	public void setPaymentAuthStatus(Boolean paymentAuthStatus) {
-		this.paymentAuthStatus = paymentAuthStatus;
-	}
-
-	public Date getAuthTime() {
-		return authTime;
-	}
-
-	public void setAuthTime(Date authTime) {
-		this.authTime = authTime;
-	}
-
-	public Integer getRecodTotal() {
-		return recodTotal;
-	}
-
-	public void setRecodTotal(Integer recodTotal) {
-		this.recodTotal = recodTotal;
-	}
-
-	public Date getRecodTime() {
-		return recodTime;
-	}
-
-	public void setRecodTime(Date recodTime) {
-		this.recodTime = recodTime;
-	}
-
-	public Date getRecodTruncateTime() {
-		return recodTruncateTime;
-	}
-
-	public void setRecodTruncateTime(Date recodTruncateTime) {
-		this.recodTruncateTime = recodTruncateTime;
-	}
-
-	public Integer getIsSetPassword() {
-		return isSetPassword;
-	}
-
-	public void setIsSetPassword(Integer isSetPassword) {
-		this.isSetPassword = isSetPassword;
-	}
-
-	public Integer getBankOpenAccount() {
-		return bankOpenAccount;
-	}
-
-	public void setBankOpenAccount(Integer bankOpenAccount) {
-		this.bankOpenAccount = bankOpenAccount;
-	}
-
-	public Integer getBankAccountEsb() {
-		return bankAccountEsb;
-	}
-
-	public void setBankAccountEsb(Integer bankAccountEsb) {
-		this.bankAccountEsb = bankAccountEsb;
-	}
-
-	public Integer getIsDataUpdate() {
-		return isDataUpdate;
-	}
-
-	public void setIsDataUpdate(Integer isDataUpdate) {
-		this.isDataUpdate = isDataUpdate;
-	}
-
-	public Integer getIsEvaluationFlag() {
-		return isEvaluationFlag;
-	}
-
-	public void setIsEvaluationFlag(Integer isEvaluationFlag) {
-		this.isEvaluationFlag = isEvaluationFlag;
-	}
-
-	public Integer getIsCaFlag() {
-		return isCaFlag;
-	}
-
-	public void setIsCaFlag(Integer isCaFlag) {
-		this.isCaFlag = isCaFlag;
+	public void setBorrowerType(Integer borrowerType) {
+		this.borrowerType = borrowerType;
 	}
 }

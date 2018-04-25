@@ -21,7 +21,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<GatewayApiConfigVO> findGatewayConfigs() {
         GatewayApiConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am/config/gateConfig/findAll", GatewayApiConfigResponse.class).getBody();
+                .getForEntity("http://AM-CONFIG/am-config/gateConfig/findAll", GatewayApiConfigResponse.class).getBody();
         return response.getResultList();
     }
 }
