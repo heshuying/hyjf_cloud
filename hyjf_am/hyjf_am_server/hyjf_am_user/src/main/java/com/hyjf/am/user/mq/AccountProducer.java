@@ -16,13 +16,13 @@ import com.hyjf.common.exception.MQException;
 public class AccountProducer extends Producer {
 	private static final Logger logger = LoggerFactory.getLogger(AccountProducer.class);
 
-	@Value("${rocketMQ.group.accuontGroup}")
-	private String accuontGroup;
+	@Value("${rocketMQ.group.accountGroup}")
+	private String accountGroup;
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {
 		ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-		wrapper.setGroup(accuontGroup);
+		wrapper.setGroup(accountGroup);
 		wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		return wrapper;
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.mapper.auto.BankOpenAccount" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -75,7 +75,7 @@
     id, user_id, user_name, account, create_time, create_user_id, create_user_name, update_time, 
     update_user_id, update_user_name
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.BankOpenAccountExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountExample" >
     select
     <if test="distinct" >
       distinct
@@ -102,13 +102,13 @@
     delete from hyjf_bank_open_account
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.BankOpenAccountExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountExample" >
     delete from hyjf_bank_open_account
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.BankOpenAccount" >
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -121,7 +121,7 @@
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.BankOpenAccount" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -185,7 +185,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.BankOpenAccountExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountExample" resultType="java.lang.Integer" >
     select count(*) from hyjf_bank_open_account
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -245,7 +245,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.BankOpenAccount" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
     update hyjf_bank_open_account
     <set >
       <if test="userId != null" >
@@ -278,7 +278,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.BankOpenAccount" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
     update hyjf_bank_open_account
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},

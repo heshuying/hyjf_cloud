@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BankOpenAccountLogMapper {
     int countByExample(BankOpenAccountLogExample example);
