@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.hyjf.am.user.service.UserInfoService;
+import com.hyjf.am.user.util.UploadFileUtils;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.file.UploadFileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
