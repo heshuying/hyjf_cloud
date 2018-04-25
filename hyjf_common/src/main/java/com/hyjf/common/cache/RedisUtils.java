@@ -37,9 +37,9 @@ public class RedisUtils {
     public static JedisPool getPool() {
         if (pool == null) {
             JedisPoolConfig config = new JedisPoolConfig();
-            config.setMaxActive(Integer.valueOf(PropUtils.getRedisValue("redis.pool.maxActive")));
+            config.setMaxTotal(Integer.valueOf(PropUtils.getRedisValue("redis.pool.maxActive")));
             config.setMaxIdle(Integer.valueOf(PropUtils.getRedisValue("redis.pool.maxIdle")));
-            config.setMaxWait(Long.valueOf(PropUtils.getRedisValue("redis.pool.maxWait")));
+            config.setMaxWaitMillis(Long.valueOf(PropUtils.getRedisValue("redis.pool.maxWait")));
             config.setTestOnBorrow(Boolean.valueOf(PropUtils.getRedisValue("redis.pool.testOnBorrow")));
             config.setTestOnReturn(Boolean.valueOf(PropUtils.getRedisValue("redis.pool.testOnReturn")));
             // 测试环境
@@ -72,7 +72,11 @@ public class RedisUtils {
      */
     public static void returnResource(JedisPool pool, Jedis redis) {
         if (redis != null) {
-            pool.returnResource(redis);
+            try {
+            	redis.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         }
     }
 
@@ -95,7 +99,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -122,7 +126,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -149,7 +153,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -176,7 +180,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -203,7 +207,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -230,7 +234,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -259,7 +263,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -286,7 +290,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -312,7 +316,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -338,7 +342,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -364,7 +368,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -390,7 +394,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -416,7 +420,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -444,7 +448,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -470,7 +474,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -496,7 +500,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -524,7 +528,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -550,7 +554,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -597,7 +601,7 @@ public class RedisUtils {
                 return false;
             } finally {
                 // 释放redis对象
-                pool.returnBrokenResource(jedis);
+                // 释放
                 // 返还到连接池
                 returnResource(pool, jedis);
             }
@@ -636,7 +640,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -662,7 +666,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -687,7 +691,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
@@ -733,7 +737,7 @@ public class RedisUtils {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+            // 释放
             // 返还到连接池
             returnResource(pool, jedis);
         }
