@@ -1,9 +1,15 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.vo.borrow;
 
-import java.io.Serializable;
+import com.hyjf.am.vo.BaseVO;
+
 import java.math.BigDecimal;
 
-public class Account implements Serializable {
+/**
+ * @author xiasq
+ * @version AccountVO, v0.1 2018/4/25 10:42
+ */
+public class AccountVO extends BaseVO {
+
     private Integer id;
 
     private Integer userId;
@@ -13,36 +19,6 @@ public class Account implements Serializable {
     private BigDecimal income;
 
     private BigDecimal expend;
-
-    private BigDecimal bankTotal;
-
-    private BigDecimal bankBalance;
-
-    private BigDecimal bankFrost;
-
-    private BigDecimal bankWaitRepay;
-
-    private BigDecimal bankBalanceCash;
-
-    private BigDecimal bankFrostCash;
-
-    private BigDecimal bankWaitCapital;
-
-    private BigDecimal bankWaitInterest;
-
-    private BigDecimal bankWaitRepayOrg;
-
-    private BigDecimal bankAwaitCapital;
-
-    private BigDecimal bankAwaitInterest;
-
-    private BigDecimal bankAwaitOrg;
-
-    private BigDecimal bankInterestSum;
-
-    private BigDecimal bankInvestSum;
-
-    private BigDecimal bankAwait;
 
     private BigDecimal balance;
 
@@ -72,6 +48,8 @@ public class Account implements Serializable {
 
     private BigDecimal version;
 
+    private BigDecimal planRepayInterest;
+
     private BigDecimal planBalance;
 
     private BigDecimal planFrost;
@@ -88,9 +66,35 @@ public class Account implements Serializable {
 
     private BigDecimal planInterestWait;
 
-    private BigDecimal planRepayInterest;
+    private BigDecimal bankTotal;
 
-    private static final long serialVersionUID = 1L;
+    private BigDecimal bankBalance;
+
+    private BigDecimal bankFrost;
+
+    private BigDecimal bankWaitRepay;
+
+    private BigDecimal bankWaitCapital;
+
+    private BigDecimal bankWaitInterest;
+
+    private BigDecimal bankWaitRepayOrg;
+
+    private BigDecimal bankInterestSum;
+
+    private BigDecimal bankInvestSum;
+
+    private BigDecimal bankAwait;
+
+    private BigDecimal bankAwaitCapital;
+
+    private BigDecimal bankAwaitInterest;
+
+    private BigDecimal bankAwaitOrg;
+
+    private BigDecimal bankBalanceCash;
+
+    private BigDecimal bankFrostCash;
 
     public Integer getId() {
         return id;
@@ -130,126 +134,6 @@ public class Account implements Serializable {
 
     public void setExpend(BigDecimal expend) {
         this.expend = expend;
-    }
-
-    public BigDecimal getBankTotal() {
-        return bankTotal;
-    }
-
-    public void setBankTotal(BigDecimal bankTotal) {
-        this.bankTotal = bankTotal;
-    }
-
-    public BigDecimal getBankBalance() {
-        return bankBalance;
-    }
-
-    public void setBankBalance(BigDecimal bankBalance) {
-        this.bankBalance = bankBalance;
-    }
-
-    public BigDecimal getBankFrost() {
-        return bankFrost;
-    }
-
-    public void setBankFrost(BigDecimal bankFrost) {
-        this.bankFrost = bankFrost;
-    }
-
-    public BigDecimal getBankWaitRepay() {
-        return bankWaitRepay;
-    }
-
-    public void setBankWaitRepay(BigDecimal bankWaitRepay) {
-        this.bankWaitRepay = bankWaitRepay;
-    }
-
-    public BigDecimal getBankBalanceCash() {
-        return bankBalanceCash;
-    }
-
-    public void setBankBalanceCash(BigDecimal bankBalanceCash) {
-        this.bankBalanceCash = bankBalanceCash;
-    }
-
-    public BigDecimal getBankFrostCash() {
-        return bankFrostCash;
-    }
-
-    public void setBankFrostCash(BigDecimal bankFrostCash) {
-        this.bankFrostCash = bankFrostCash;
-    }
-
-    public BigDecimal getBankWaitCapital() {
-        return bankWaitCapital;
-    }
-
-    public void setBankWaitCapital(BigDecimal bankWaitCapital) {
-        this.bankWaitCapital = bankWaitCapital;
-    }
-
-    public BigDecimal getBankWaitInterest() {
-        return bankWaitInterest;
-    }
-
-    public void setBankWaitInterest(BigDecimal bankWaitInterest) {
-        this.bankWaitInterest = bankWaitInterest;
-    }
-
-    public BigDecimal getBankWaitRepayOrg() {
-        return bankWaitRepayOrg;
-    }
-
-    public void setBankWaitRepayOrg(BigDecimal bankWaitRepayOrg) {
-        this.bankWaitRepayOrg = bankWaitRepayOrg;
-    }
-
-    public BigDecimal getBankAwaitCapital() {
-        return bankAwaitCapital;
-    }
-
-    public void setBankAwaitCapital(BigDecimal bankAwaitCapital) {
-        this.bankAwaitCapital = bankAwaitCapital;
-    }
-
-    public BigDecimal getBankAwaitInterest() {
-        return bankAwaitInterest;
-    }
-
-    public void setBankAwaitInterest(BigDecimal bankAwaitInterest) {
-        this.bankAwaitInterest = bankAwaitInterest;
-    }
-
-    public BigDecimal getBankAwaitOrg() {
-        return bankAwaitOrg;
-    }
-
-    public void setBankAwaitOrg(BigDecimal bankAwaitOrg) {
-        this.bankAwaitOrg = bankAwaitOrg;
-    }
-
-    public BigDecimal getBankInterestSum() {
-        return bankInterestSum;
-    }
-
-    public void setBankInterestSum(BigDecimal bankInterestSum) {
-        this.bankInterestSum = bankInterestSum;
-    }
-
-    public BigDecimal getBankInvestSum() {
-        return bankInvestSum;
-    }
-
-    public void setBankInvestSum(BigDecimal bankInvestSum) {
-        this.bankInvestSum = bankInvestSum;
-    }
-
-    public BigDecimal getBankAwait() {
-        return bankAwait;
-    }
-
-    public void setBankAwait(BigDecimal bankAwait) {
-        this.bankAwait = bankAwait;
     }
 
     public BigDecimal getBalance() {
@@ -364,6 +248,14 @@ public class Account implements Serializable {
         this.version = version;
     }
 
+    public BigDecimal getPlanRepayInterest() {
+        return planRepayInterest;
+    }
+
+    public void setPlanRepayInterest(BigDecimal planRepayInterest) {
+        this.planRepayInterest = planRepayInterest;
+    }
+
     public BigDecimal getPlanBalance() {
         return planBalance;
     }
@@ -428,11 +320,123 @@ public class Account implements Serializable {
         this.planInterestWait = planInterestWait;
     }
 
-    public BigDecimal getPlanRepayInterest() {
-        return planRepayInterest;
+    public BigDecimal getBankTotal() {
+        return bankTotal;
     }
 
-    public void setPlanRepayInterest(BigDecimal planRepayInterest) {
-        this.planRepayInterest = planRepayInterest;
+    public void setBankTotal(BigDecimal bankTotal) {
+        this.bankTotal = bankTotal;
+    }
+
+    public BigDecimal getBankBalance() {
+        return bankBalance;
+    }
+
+    public void setBankBalance(BigDecimal bankBalance) {
+        this.bankBalance = bankBalance;
+    }
+
+    public BigDecimal getBankFrost() {
+        return bankFrost;
+    }
+
+    public void setBankFrost(BigDecimal bankFrost) {
+        this.bankFrost = bankFrost;
+    }
+
+    public BigDecimal getBankWaitRepay() {
+        return bankWaitRepay;
+    }
+
+    public void setBankWaitRepay(BigDecimal bankWaitRepay) {
+        this.bankWaitRepay = bankWaitRepay;
+    }
+
+    public BigDecimal getBankWaitCapital() {
+        return bankWaitCapital;
+    }
+
+    public void setBankWaitCapital(BigDecimal bankWaitCapital) {
+        this.bankWaitCapital = bankWaitCapital;
+    }
+
+    public BigDecimal getBankWaitInterest() {
+        return bankWaitInterest;
+    }
+
+    public void setBankWaitInterest(BigDecimal bankWaitInterest) {
+        this.bankWaitInterest = bankWaitInterest;
+    }
+
+    public BigDecimal getBankWaitRepayOrg() {
+        return bankWaitRepayOrg;
+    }
+
+    public void setBankWaitRepayOrg(BigDecimal bankWaitRepayOrg) {
+        this.bankWaitRepayOrg = bankWaitRepayOrg;
+    }
+
+    public BigDecimal getBankInterestSum() {
+        return bankInterestSum;
+    }
+
+    public void setBankInterestSum(BigDecimal bankInterestSum) {
+        this.bankInterestSum = bankInterestSum;
+    }
+
+    public BigDecimal getBankInvestSum() {
+        return bankInvestSum;
+    }
+
+    public void setBankInvestSum(BigDecimal bankInvestSum) {
+        this.bankInvestSum = bankInvestSum;
+    }
+
+    public BigDecimal getBankAwait() {
+        return bankAwait;
+    }
+
+    public void setBankAwait(BigDecimal bankAwait) {
+        this.bankAwait = bankAwait;
+    }
+
+    public BigDecimal getBankAwaitCapital() {
+        return bankAwaitCapital;
+    }
+
+    public void setBankAwaitCapital(BigDecimal bankAwaitCapital) {
+        this.bankAwaitCapital = bankAwaitCapital;
+    }
+
+    public BigDecimal getBankAwaitInterest() {
+        return bankAwaitInterest;
+    }
+
+    public void setBankAwaitInterest(BigDecimal bankAwaitInterest) {
+        this.bankAwaitInterest = bankAwaitInterest;
+    }
+
+    public BigDecimal getBankAwaitOrg() {
+        return bankAwaitOrg;
+    }
+
+    public void setBankAwaitOrg(BigDecimal bankAwaitOrg) {
+        this.bankAwaitOrg = bankAwaitOrg;
+    }
+
+    public BigDecimal getBankBalanceCash() {
+        return bankBalanceCash;
+    }
+
+    public void setBankBalanceCash(BigDecimal bankBalanceCash) {
+        this.bankBalanceCash = bankBalanceCash;
+    }
+
+    public BigDecimal getBankFrostCash() {
+        return bankFrostCash;
+    }
+
+    public void setBankFrostCash(BigDecimal bankFrostCash) {
+        this.bankFrostCash = bankFrostCash;
     }
 }

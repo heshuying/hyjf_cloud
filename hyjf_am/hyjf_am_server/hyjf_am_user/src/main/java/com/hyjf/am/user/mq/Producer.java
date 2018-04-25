@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.mq;
+package com.hyjf.am.user.mq;
 
 import java.io.Serializable;
 

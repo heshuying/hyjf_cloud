@@ -89,7 +89,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		params.put("mobile", mobile);
 
 		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
+		smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, params));
 	}
 
     /**

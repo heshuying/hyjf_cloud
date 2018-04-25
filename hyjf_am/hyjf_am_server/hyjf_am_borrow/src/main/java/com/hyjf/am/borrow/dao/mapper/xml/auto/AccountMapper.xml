@@ -21,12 +21,12 @@
     <result column="in_money" property="inMoney" jdbcType="DECIMAL" />
     <result column="in_money_flag" property="inMoneyFlag" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="DECIMAL" />
-    <result column="plan_accede_total" property="planAccedeTotal" jdbcType="DECIMAL" />
+    <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
     <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
     <result column="plan_frost" property="planFrost" jdbcType="DECIMAL" />
+    <result column="plan_accede_total" property="planAccedeTotal" jdbcType="DECIMAL" />
     <result column="plan_accede_balance" property="planAccedeBalance" jdbcType="DECIMAL" />
     <result column="plan_accede_frost" property="planAccedeFrost" jdbcType="DECIMAL" />
-    <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
     <result column="plan_account_wait" property="planAccountWait" jdbcType="DECIMAL" />
     <result column="plan_capital_wait" property="planCapitalWait" jdbcType="DECIMAL" />
     <result column="plan_interest_wait" property="planInterestWait" jdbcType="DECIMAL" />
@@ -107,8 +107,8 @@
   <sql id="Base_Column_List" >
     id, user_id, total, income, expend, balance, balance_cash, balance_frost, frost, 
     await, repay, frost_cash, is_update, isok, rec_money, fee, in_money, in_money_flag, 
-    version, plan_accede_total, plan_balance, plan_frost, plan_accede_balance, plan_accede_frost, 
-    plan_repay_interest, plan_account_wait, plan_capital_wait, plan_interest_wait, bank_total, 
+    version, plan_repay_interest, plan_balance, plan_frost, plan_accede_total, plan_accede_balance, 
+    plan_accede_frost, plan_account_wait, plan_capital_wait, plan_interest_wait, bank_total, 
     bank_balance, bank_frost, bank_wait_repay, bank_wait_capital, bank_wait_interest, 
     bank_wait_repay_org, bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, 
     bank_await_interest, bank_await_org, bank_balance_cash, bank_frost_cash
@@ -156,8 +156,8 @@
       repay, frost_cash, is_update, 
       isok, rec_money, fee, 
       in_money, in_money_flag, version, 
-      plan_accede_total, plan_balance, plan_frost, 
-      plan_accede_balance, plan_accede_frost, plan_repay_interest, 
+      plan_repay_interest, plan_balance, plan_frost, 
+      plan_accede_total, plan_accede_balance, plan_accede_frost, 
       plan_account_wait, plan_capital_wait, plan_interest_wait, 
       bank_total, bank_balance, bank_frost, 
       bank_wait_repay, bank_wait_capital, bank_wait_interest, 
@@ -171,8 +171,8 @@
       #{repay,jdbcType=DECIMAL}, #{frostCash,jdbcType=DECIMAL}, #{isUpdate,jdbcType=INTEGER}, 
       #{isok,jdbcType=TINYINT}, #{recMoney,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
       #{inMoney,jdbcType=DECIMAL}, #{inMoneyFlag,jdbcType=INTEGER}, #{version,jdbcType=DECIMAL}, 
-      #{planAccedeTotal,jdbcType=DECIMAL}, #{planBalance,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, 
-      #{planAccedeBalance,jdbcType=DECIMAL}, #{planAccedeFrost,jdbcType=DECIMAL}, #{planRepayInterest,jdbcType=DECIMAL}, 
+      #{planRepayInterest,jdbcType=DECIMAL}, #{planBalance,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, 
+      #{planAccedeTotal,jdbcType=DECIMAL}, #{planAccedeBalance,jdbcType=DECIMAL}, #{planAccedeFrost,jdbcType=DECIMAL}, 
       #{planAccountWait,jdbcType=DECIMAL}, #{planCapitalWait,jdbcType=DECIMAL}, #{planInterestWait,jdbcType=DECIMAL}, 
       #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, #{bankFrost,jdbcType=DECIMAL}, 
       #{bankWaitRepay,jdbcType=DECIMAL}, #{bankWaitCapital,jdbcType=DECIMAL}, #{bankWaitInterest,jdbcType=DECIMAL}, 
@@ -241,8 +241,8 @@
       <if test="version != null" >
         version,
       </if>
-      <if test="planAccedeTotal != null" >
-        plan_accede_total,
+      <if test="planRepayInterest != null" >
+        plan_repay_interest,
       </if>
       <if test="planBalance != null" >
         plan_balance,
@@ -250,14 +250,14 @@
       <if test="planFrost != null" >
         plan_frost,
       </if>
+      <if test="planAccedeTotal != null" >
+        plan_accede_total,
+      </if>
       <if test="planAccedeBalance != null" >
         plan_accede_balance,
       </if>
       <if test="planAccedeFrost != null" >
         plan_accede_frost,
-      </if>
-      <if test="planRepayInterest != null" >
-        plan_repay_interest,
       </if>
       <if test="planAccountWait != null" >
         plan_account_wait,
@@ -369,8 +369,8 @@
       <if test="version != null" >
         #{version,jdbcType=DECIMAL},
       </if>
-      <if test="planAccedeTotal != null" >
-        #{planAccedeTotal,jdbcType=DECIMAL},
+      <if test="planRepayInterest != null" >
+        #{planRepayInterest,jdbcType=DECIMAL},
       </if>
       <if test="planBalance != null" >
         #{planBalance,jdbcType=DECIMAL},
@@ -378,14 +378,14 @@
       <if test="planFrost != null" >
         #{planFrost,jdbcType=DECIMAL},
       </if>
+      <if test="planAccedeTotal != null" >
+        #{planAccedeTotal,jdbcType=DECIMAL},
+      </if>
       <if test="planAccedeBalance != null" >
         #{planAccedeBalance,jdbcType=DECIMAL},
       </if>
       <if test="planAccedeFrost != null" >
         #{planAccedeFrost,jdbcType=DECIMAL},
-      </if>
-      <if test="planRepayInterest != null" >
-        #{planRepayInterest,jdbcType=DECIMAL},
       </if>
       <if test="planAccountWait != null" >
         #{planAccountWait,jdbcType=DECIMAL},
@@ -509,8 +509,8 @@
       <if test="record.version != null" >
         version = #{record.version,jdbcType=DECIMAL},
       </if>
-      <if test="record.planAccedeTotal != null" >
-        plan_accede_total = #{record.planAccedeTotal,jdbcType=DECIMAL},
+      <if test="record.planRepayInterest != null" >
+        plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       </if>
       <if test="record.planBalance != null" >
         plan_balance = #{record.planBalance,jdbcType=DECIMAL},
@@ -518,14 +518,14 @@
       <if test="record.planFrost != null" >
         plan_frost = #{record.planFrost,jdbcType=DECIMAL},
       </if>
+      <if test="record.planAccedeTotal != null" >
+        plan_accede_total = #{record.planAccedeTotal,jdbcType=DECIMAL},
+      </if>
       <if test="record.planAccedeBalance != null" >
         plan_accede_balance = #{record.planAccedeBalance,jdbcType=DECIMAL},
       </if>
       <if test="record.planAccedeFrost != null" >
         plan_accede_frost = #{record.planAccedeFrost,jdbcType=DECIMAL},
-      </if>
-      <if test="record.planRepayInterest != null" >
-        plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       </if>
       <if test="record.planAccountWait != null" >
         plan_account_wait = #{record.planAccountWait,jdbcType=DECIMAL},
@@ -607,12 +607,12 @@
       in_money = #{record.inMoney,jdbcType=DECIMAL},
       in_money_flag = #{record.inMoneyFlag,jdbcType=INTEGER},
       version = #{record.version,jdbcType=DECIMAL},
-      plan_accede_total = #{record.planAccedeTotal,jdbcType=DECIMAL},
+      plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       plan_balance = #{record.planBalance,jdbcType=DECIMAL},
       plan_frost = #{record.planFrost,jdbcType=DECIMAL},
+      plan_accede_total = #{record.planAccedeTotal,jdbcType=DECIMAL},
       plan_accede_balance = #{record.planAccedeBalance,jdbcType=DECIMAL},
       plan_accede_frost = #{record.planAccedeFrost,jdbcType=DECIMAL},
-      plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       plan_account_wait = #{record.planAccountWait,jdbcType=DECIMAL},
       plan_capital_wait = #{record.planCapitalWait,jdbcType=DECIMAL},
       plan_interest_wait = #{record.planInterestWait,jdbcType=DECIMAL},
@@ -692,8 +692,8 @@
       <if test="version != null" >
         version = #{version,jdbcType=DECIMAL},
       </if>
-      <if test="planAccedeTotal != null" >
-        plan_accede_total = #{planAccedeTotal,jdbcType=DECIMAL},
+      <if test="planRepayInterest != null" >
+        plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       </if>
       <if test="planBalance != null" >
         plan_balance = #{planBalance,jdbcType=DECIMAL},
@@ -701,14 +701,14 @@
       <if test="planFrost != null" >
         plan_frost = #{planFrost,jdbcType=DECIMAL},
       </if>
+      <if test="planAccedeTotal != null" >
+        plan_accede_total = #{planAccedeTotal,jdbcType=DECIMAL},
+      </if>
       <if test="planAccedeBalance != null" >
         plan_accede_balance = #{planAccedeBalance,jdbcType=DECIMAL},
       </if>
       <if test="planAccedeFrost != null" >
         plan_accede_frost = #{planAccedeFrost,jdbcType=DECIMAL},
-      </if>
-      <if test="planRepayInterest != null" >
-        plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       </if>
       <if test="planAccountWait != null" >
         plan_account_wait = #{planAccountWait,jdbcType=DECIMAL},
@@ -787,12 +787,12 @@
       in_money = #{inMoney,jdbcType=DECIMAL},
       in_money_flag = #{inMoneyFlag,jdbcType=INTEGER},
       version = #{version,jdbcType=DECIMAL},
-      plan_accede_total = #{planAccedeTotal,jdbcType=DECIMAL},
+      plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       plan_balance = #{planBalance,jdbcType=DECIMAL},
       plan_frost = #{planFrost,jdbcType=DECIMAL},
+      plan_accede_total = #{planAccedeTotal,jdbcType=DECIMAL},
       plan_accede_balance = #{planAccedeBalance,jdbcType=DECIMAL},
       plan_accede_frost = #{planAccedeFrost,jdbcType=DECIMAL},
-      plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       plan_account_wait = #{planAccountWait,jdbcType=DECIMAL},
       plan_capital_wait = #{planCapitalWait,jdbcType=DECIMAL},
       plan_interest_wait = #{planInterestWait,jdbcType=DECIMAL},

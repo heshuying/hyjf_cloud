@@ -28,5 +28,16 @@ spring:
     connectionProperties: druid.stat.mergeSql:true;druid.stat.slowSqlMillis:5000
     #合并多个DruidDataSource的监控数据
     useGlobalDataSourceStat: true
+
+rocketMQ:
+  #namesrvAddr: ${rocketMQ.namesrvAddr}
+  namesrvAddr: 123.56.216.212:5555
+  group :
+    accountGroup : ACCOUNT_GROUP
+  topic :
+    accountTopic : ACCOUNT_TOPIC
+  tag :
+    defaultTag : HYJF_DEFAULT_TAG
+
 mybatis:
   mapper-locations: classpath:com/hyjf/am/borrow/dao/mapper/xml/**/*.xml
