@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="fm" name="fm" action='${bankForm.action }' method="post">
+    <th:if test='${!empty bankForm.allParams }'>
+        <div th:each="record:${bankForm.allParams }" >
+            <input  th:name='${record.key }' th:id='${record.key }' th:text='${record.value}' />
+        </div>
+    </th:if>
+</form>
+<!--<script>
+    document.getElementById("fm").submit();
+</script>-->
+</body>
+</html>
