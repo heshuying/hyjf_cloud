@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_borrow.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -120,6 +120,22 @@
         <table tableName="huiyingdai_smscode" domainObjectName="SmsCode">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 用户江西银行开户日志表 -->
+        <table tableName="hyjf_bank_open_account_log" domainObjectName="BankOpenAccountLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="client" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 用户江西银行开户表 -->
+        <table tableName="hyjf_bank_open_account" domainObjectName="BankOpenAccount">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- APP渠道统计详情表 -->
+        <table tableName="hyjf_app_channel_statistics_detail" domainObjectName="AppChannelStatisticsDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
 

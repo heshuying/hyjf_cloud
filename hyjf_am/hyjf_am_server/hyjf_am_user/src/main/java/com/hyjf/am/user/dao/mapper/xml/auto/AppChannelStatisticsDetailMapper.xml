@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.auto.AppChannelStatisticsDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.mapper.auto.AppChannelStatisticsDetail" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetail" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="source_id" property="sourceId" jdbcType="INTEGER" />
     <result column="source_name" property="sourceName" jdbcType="VARCHAR" />
@@ -77,7 +77,7 @@
     id, source_id, source_name, user_id, user_name, register_time, open_account_time, 
     first_invest_time, invest_amount, invest_project_type, invest_project_period, cumulative_invest
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.AppChannelStatisticsDetailExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetailExample" >
     select
     <if test="distinct" >
       distinct
@@ -104,13 +104,13 @@
     delete from hyjf_app_channel_statistics_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.AppChannelStatisticsDetailExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetailExample" >
     delete from hyjf_app_channel_statistics_detail
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.AppChannelStatisticsDetail" >
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetail" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -123,7 +123,7 @@
       #{firstInvestTime,jdbcType=INTEGER}, #{investAmount,jdbcType=DECIMAL}, #{investProjectType,jdbcType=VARCHAR}, 
       #{investProjectPeriod,jdbcType=VARCHAR}, #{cumulativeInvest,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.AppChannelStatisticsDetail" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetail" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -199,7 +199,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.AppChannelStatisticsDetailExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetailExample" resultType="java.lang.Integer" >
     select count(*) from hyjf_app_channel_statistics_detail
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -267,7 +267,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.AppChannelStatisticsDetail" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetail" >
     update hyjf_app_channel_statistics_detail
     <set >
       <if test="sourceId != null" >
@@ -306,7 +306,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.AppChannelStatisticsDetail" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetail" >
     update hyjf_app_channel_statistics_detail
     set source_id = #{sourceId,jdbcType=INTEGER},
       source_name = #{sourceName,jdbcType=VARCHAR},
