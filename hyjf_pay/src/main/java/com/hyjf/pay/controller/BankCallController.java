@@ -50,8 +50,6 @@ public class BankCallController extends BaseController {
 
     @Autowired
     BankPayLogService payLogService;
-
-    @Autowired
     private BankCallApi api;
 
     /**
