@@ -274,4 +274,20 @@ public class BankOpenServiceImpl implements BankOpenService {
         return null;
     }
 
+
+	@Override
+	public UsersInfo findUserInfoByCradId(String cardNo) {
+		UsersInfoExample example = new UsersInfoExample();
+		UsersInfoExample.Criteria cra = example.createCriteria();
+		cra.andIdcardEqualTo(cardNo);
+
+		List<UsersInfo> list = usersInfoMapper.selectByExample(example);
+
+		if (list != null && list.size() == 1) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
 }
