@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.BankCallDefine;
+import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.entity.ChinapnrExclusiveLog;
 import com.hyjf.pay.service.BankPayLogService;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -18,11 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -44,13 +41,16 @@ import com.hyjf.lib.bank.util.BankCallConstant;
 import com.hyjf.lib.bank.util.BankCallUtils;
 
 @Controller
-@RequestMapping(BankCallDefine.CONTROLLOR_REQUEST_MAPPING)
+@RequestMapping(value = "/bankcall")
 public class BankCallController extends BaseController {
     Logger _log = LoggerFactory.getLogger(BankCallController.class);
 
     @Autowired
     BankPayLogService payLogService;
+
     private BankCallApi api;
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 调用接口(页面)
@@ -59,7 +59,7 @@ public class BankCallController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = BankCallDefine.CALL_API_PAGE)
+    @PostMapping(value = "callApiPage")
     public ModelAndView callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
         String methodName = "callPageApi";
@@ -81,25 +81,25 @@ public class BankCallController extends BaseController {
             }
             // 设置返回URL
             if (Validator.isNotNull(bean.getRetUrl())) {
-                String retUrl = BankCallUtils.getPageRetUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String retUrl =  systemConfig.getReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setRetUrl(retUrl);
                 bean.set(BankCallConstant.PARAM_RETURL, retUrl);
             }
             if (Validator.isNotNull(bean.getNotifyUrl())) {
-                String notifyUrl = BankCallUtils.getPageNotifyUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String notifyUrl = systemConfig.callbackUrl + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setNotifyUrl(notifyUrl);
                 bean.set(BankCallConstant.PARAM_NOTIFYURL, notifyUrl);
             }
             if (Validator.isNotNull(bean.getSuccessfulUrl())) {
-                String successfulUrl = BankCallUtils.getPageRetUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String successfulUrl = systemConfig.getReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId()+ StringPool.AMPERSAND + BankCallConstant.PARAM_ISSUCCESS + StringPool.EQUAL+"1";
                 bean.setSuccessfulUrl(successfulUrl);
                 bean.set(BankCallConstant.PARAM_SUCCESSFUL_URL, successfulUrl);
             }
             if (Validator.isNotNull(bean.getForgotPwdUrl())) {
-                String forgotPwdUrl = BankCallUtils.getForgotPwdUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String forgotPwdUrl = systemConfig.getForgotpwdUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setForgotPwdUrl(forgotPwdUrl);
                 bean.set(BankCallConstant.PARAM_FORGOTPWDURL, forgotPwdUrl);
@@ -113,7 +113,7 @@ public class BankCallController extends BaseController {
                 String sendLogFlag = payLogService.insertChinapnrSendLog(bean, bean);
                 if (StringUtils.isNotBlank(sendLogFlag)) {
                     // 跳转到汇付天下画面
-                    bean.setAction(PropUtils.getSystem(BankCallConstant.BANK_PAGE_URL) + bean.getLogBankDetailUrl());
+                    bean.setAction(PropUtils.getApplication(BankCallConstant.BANK_PAGE_URL) + bean.getLogBankDetailUrl());
                     modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
                 } else {
                     throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
@@ -133,7 +133,7 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = BankCallDefine.CALL_PAGE_RETURN)
+    @PostMapping(value = "callPageReturn")
     public ModelAndView callPageReturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
 
         String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
@@ -313,7 +313,7 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST, value = BankCallDefine.CALL_PAGE_BACK)
+    @PostMapping(value = "callPageBack")
     public void callPageBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
 
         String methodName = "callPageBack";
@@ -469,7 +469,7 @@ public class BankCallController extends BaseController {
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = BankCallDefine.CALL_API_BG)
+    @PostMapping(value = "callApiBg")
     public String callApiBg(HttpServletRequest request, @ModelAttribute BankCallBean bean) throws Exception {
 
         String methodName = "callApiBg";
@@ -490,14 +490,14 @@ public class BankCallController extends BaseController {
             // 发送前插入状态记录
             this.payLogService.insertChinapnrExclusiveLog(bean);
             if (Validator.isNotNull(bean.getNotifyURL())) {
-                String notifyURL = BankCallUtils.getApiNotifyURL() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String notifyURL = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
                         + BankCallConstant.PARAM_LOGNOTIFYURL;
                 bean.setNotifyURL(notifyURL);
                 bean.set(BankCallConstant.PARAM_NOTIFY_URL, notifyURL);
             }
             if (Validator.isNotNull(bean.getRetNotifyURL())) {
-                String retNotifyURL = BankCallUtils.getApiNotifyURL() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String retNotifyURL = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
                         + BankCallConstant.PARAM_LOGRETNOTIFYURL;
                 bean.setRetNotifyURL(retNotifyURL);
@@ -587,7 +587,7 @@ public class BankCallController extends BaseController {
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = BankCallDefine.CALL_API_AJAX)
+    @PostMapping(value = "callApiAjax")
     public String callApiAjax(@RequestBody BankCallBean bean) throws Exception {
         String methodName = "callApiAjax";
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
@@ -643,7 +643,7 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST, value = BankCallDefine.CALL_API_RETURN)
+    @PostMapping(value = "callApiReturn")
     public void callBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
 
         String methodName = "callBack";
@@ -788,7 +788,7 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = BankCallDefine.PAGE_FORGOTPWD)
+    @PostMapping(value = "pageForgotPWD")
     public ModelAndView pageForgotPWD(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
 
         String methodName = "pageForgotPWD";
@@ -841,7 +841,7 @@ public class BankCallController extends BaseController {
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = BankCallDefine.CALL_API_BG_FORQUERY)
+    @RequestMapping(method = RequestMethod.POST, value = "callApiBgForQuery")
     public String callApiBgForQuery(HttpServletRequest request, @ModelAttribute BankCallBean bean) throws Exception {
 
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "] 订单号: " + bean.getLogOrderId());

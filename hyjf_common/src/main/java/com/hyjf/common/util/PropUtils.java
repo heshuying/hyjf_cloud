@@ -22,6 +22,8 @@ public class PropUtils {
 	
 	protected static final String JDBC_RESOURCES_PROPERTIES_FILE_NAME = "properties/jdbc.properties";
 
+	protected static final String APPLICATION_RESOURCES_PROPERTIES_FILE_NAME = "properties/application.properties";
+
 	/**
 	 * 取得所有属性值
 	 * 
@@ -83,6 +85,21 @@ public class PropUtils {
 		return null;
 	}
 
+
+	/**
+	 * 取得System文件
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	public static Properties getApplicationResourcesProperties() {
+		try {
+			return getProperties(APPLICATION_RESOURCES_PROPERTIES_FILE_NAME);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		return null;
+	}
 	/**
 	 * 取得redis文件
 	 *
@@ -106,6 +123,16 @@ public class PropUtils {
 	 */
 	public static String getSystem(String key) {
 		Properties properties = getSystemResourcesProperties();
+		return properties.getProperty(key);
+	}
+	/**
+	 * 取得Application文件的属性值
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	public static String getApplication(String key) {
+		Properties properties = getApplicationResourcesProperties();
 		return properties.getProperty(key);
 	}
 
