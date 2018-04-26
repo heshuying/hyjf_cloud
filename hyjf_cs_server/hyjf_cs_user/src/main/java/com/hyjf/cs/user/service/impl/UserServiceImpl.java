@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hyjf.common.constants.CommonConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstants;
 import com.hyjf.common.constants.MessagePushConstant;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
@@ -322,7 +322,8 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 	private String generatorToken(int userId, String username) {
-		Map map = ImmutableMap.of("userId", userId, "username", username, "ts", Instant.now().getEpochSecond() + "");
+		Map map = ImmutableMap.of("userId", String.valueOf(userId), "username", username, "ts",
+				String.valueOf(Instant.now().getEpochSecond()));
 		String token = JwtHelper.genToken(map);
 		return token;
 	}

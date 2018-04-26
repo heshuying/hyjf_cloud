@@ -111,7 +111,8 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 1. 写入用户信息表
-		int userId = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
+		Users users = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
+		int userId = users.getUserId();
 
 		// 2. 写入用户详情表
 		this.insertUsersInfo(userId, loginIp, attribute);
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
 		// 6. 保存用户注册日志
 		this.insertRegLog(userId, loginIp);
 
-		return null;
+		return users;
 	}
 
 	@Override
@@ -396,7 +397,7 @@ public class UserServiceImpl implements UserService {
 	 * @param refferUsername
 	 * @return
 	 */
-	private int insertUsers(String mobile, String password, String loginIp, String platform, Integer refferUserId,
+	private Users insertUsers(String mobile, String password, String loginIp, String platform, Integer refferUserId,
 			String refferUsername) {
 		Users user = new Users();
 		String userName = generateUniqueUsername(mobile);
@@ -441,7 +442,7 @@ public class UserServiceImpl implements UserService {
 														// 3IOS 4其他
 		}
 		usersMapper.insertSelective(user);
-		return user.getUserId();
+		return user;
 	}
 
 	/**
