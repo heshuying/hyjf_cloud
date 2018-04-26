@@ -62,128 +62,128 @@ public class BankOpenController {
 		
 		ModelAndView reuslt = new ModelAndView("bankopen/error");
 
-        // 获取登陆用户userId
-        Integer userId = bankOpenVO.getUserId();
-        // 验证请求参数
-        if (userId != null) {
-        	model.addAttribute("message", "用户未登陆，请先登陆！");
-            return reuslt;
-        }
-        
-        Users user = this.bankOpenService.getUsers(userId);
-        
-        if (StringUtils.isEmpty(user)) {
-        	model.addAttribute("message", "获取用户信息失败！");
-            return reuslt;
-        }
-        
-        // 手机号
-        if (StringUtils.isEmpty(bankOpenVO.getMobile())) {
-            model.addAttribute("message", "手机号不能为空！");
-            return reuslt;
-        }
-        if (StringUtils.isEmpty(bankOpenVO.getCardNo())) {
-            model.addAttribute("message", "银行卡号不能为空！");
-            return reuslt;
-        }
-        // 姓名
-        if (StringUtils.isEmpty(bankOpenVO.getTrueName())) {
-            model.addAttribute("message", "真实姓名不能为空！");
-            return reuslt;
-        }else{
-            //判断真实姓名是否包含空格
-            if (!ValidatorCheckUtil.verfiyChinaFormat(bankOpenVO.getTrueName())) {
-                model.addAttribute("message", "真实姓名不能包含空格！");
-                return reuslt;
-            }
-            //判断真实姓名的长度,不能超过10位
-            if (bankOpenVO.getTrueName().length() > 10) {
-                model.addAttribute("message", "真实姓名不能超过10位！");
-                return reuslt;
-            }
-        }
-        // 身份证号
-        if (StringUtils.isEmpty(bankOpenVO.getIdNo())) {
-            model.addAttribute("message", "身份证号不能为空！");
-            return reuslt;
-        }
-
-        if (bankOpenVO.getIdNo().length() != 18) {
-            model.addAttribute("message", "身份证号格式不正确！");
-            return reuslt;
-        }
-        String idNo = bankOpenVO.getIdNo().toUpperCase().trim();
-        bankOpenVO.setIdNo(idNo);
-        //增加身份证唯一性校验
-        boolean isOnly = bankOpenService.checkIdNo(idNo);
-        if (!isOnly) {
-            model.addAttribute("message", "身份证已存在！");
-            return reuslt;
-        }
-        if(!Validator.isMobile(bankOpenVO.getMobile())){
-            model.addAttribute("message", "手机号格式错误！");
-            return reuslt;
-        }
-        String mobile = this.bankOpenService.getUsersMobile(userId);
-        if (StringUtils.isBlank(mobile)) {
-            if (StringUtils.isNotBlank(bankOpenVO.getMobile())) {
-                if(!bankOpenService.existMobile(bankOpenVO.getMobile())){
-                    mobile = bankOpenVO.getMobile();
-                }else{
-                    model.addAttribute("message", "用户信息错误，手机号码重复！");
-                    return reuslt;
-                }
-            } else {
-                model.addAttribute("message", "用户信息错误，未获取到用户的手机号码！");
-                return reuslt;
-            }
-        } else {
-            if (StringUtils.isNotBlank(bankOpenVO.getMobile()) && !mobile.equals(bankOpenVO.getMobile())) {
-                model.addAttribute("message", "用户信息错误，用户的手机号码错误！");
-                return reuslt;
-            }
-        }
-        // 拼装参数 调用江西银行
-        // 同步调用路径
-        String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BankOpenDefine.REQUEST_MAPPING
-                + BankOpenDefine.RETURL_SYN_ACTION + ".do";
-        // 异步调用路
-        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BankOpenDefine.REQUEST_MAPPING
-                + BankOpenDefine.RETURL_ASY_ACTION + ".do?phone="+bankOpenVO.getMobile();
-
-        OpenAccountPageBean openBean = new OpenAccountPageBean();
-        
-        PropertyUtils.copyProperties(openBean, bankOpenVO);
-        
-        openBean.setChannel(BankCallConstant.CHANNEL_PC);
-        openBean.setUserId(userId);
-        openBean.setIp(CustomUtil.getIpAddr(request));
-        // 同步 异步
-        openBean.setRetUrl(retUrl);
-        openBean.setNotifyUrl(bgRetUrl);
-        openBean.setCoinstName("汇盈金服");
-        openBean.setPlatform("0");
-        // 账户用途 写死
-        /*00000-普通账户
-        10000-红包账户（只能有一个）
-        01000-手续费账户（只能有一个）
-        00100-担保账户*/
-        openBean.setAcctUse("00000");
-        /**
-         *  1：出借角色
-            2：借款角色
-            3：代偿角色
-         */
-        openBean.setIdentity("1");
-        reuslt = getCallbankMV(openBean);
-        //保存开户日志
-        boolean isUpdateFlag = this.bankOpenService.updateUserAccountLog(userId, user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
-        if (!isUpdateFlag) {
-            _log.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + userId + "]");
-            model.addAttribute("message", "操作失败！");
-            return reuslt;
-        }
-        _log.info("开户end");
+//        // 获取登陆用户userId
+//        Integer userId = bankOpenVO.getUserId();
+//        // 验证请求参数
+//        if (userId != null) {
+//        	model.addAttribute("message", "用户未登陆，请先登陆！");
+//            return reuslt;
+//        }
+//
+//        Users user = this.bankOpenService.getUsers(userId);
+//
+//        if (StringUtils.isEmpty(user)) {
+//        	model.addAttribute("message", "获取用户信息失败！");
+//            return reuslt;
+//        }
+//
+//        // 手机号
+//        if (StringUtils.isEmpty(bankOpenVO.getMobile())) {
+//            model.addAttribute("message", "手机号不能为空！");
+//            return reuslt;
+//        }
+//        if (StringUtils.isEmpty(bankOpenVO.getCardNo())) {
+//            model.addAttribute("message", "银行卡号不能为空！");
+//            return reuslt;
+//        }
+//        // 姓名
+//        if (StringUtils.isEmpty(bankOpenVO.getTrueName())) {
+//            model.addAttribute("message", "真实姓名不能为空！");
+//            return reuslt;
+//        }else{
+//            //判断真实姓名是否包含空格
+//            if (!ValidatorCheckUtil.verfiyChinaFormat(bankOpenVO.getTrueName())) {
+//                model.addAttribute("message", "真实姓名不能包含空格！");
+//                return reuslt;
+//            }
+//            //判断真实姓名的长度,不能超过10位
+//            if (bankOpenVO.getTrueName().length() > 10) {
+//                model.addAttribute("message", "真实姓名不能超过10位！");
+//                return reuslt;
+//            }
+//        }
+//        // 身份证号
+//        if (StringUtils.isEmpty(bankOpenVO.getIdNo())) {
+//            model.addAttribute("message", "身份证号不能为空！");
+//            return reuslt;
+//        }
+//
+//        if (bankOpenVO.getIdNo().length() != 18) {
+//            model.addAttribute("message", "身份证号格式不正确！");
+//            return reuslt;
+//        }
+//        String idNo = bankOpenVO.getIdNo().toUpperCase().trim();
+//        bankOpenVO.setIdNo(idNo);
+//        //增加身份证唯一性校验
+//        boolean isOnly = bankOpenService.checkIdNo(idNo);
+//        if (!isOnly) {
+//            model.addAttribute("message", "身份证已存在！");
+//            return reuslt;
+//        }
+//        if(!Validator.isMobile(bankOpenVO.getMobile())){
+//            model.addAttribute("message", "手机号格式错误！");
+//            return reuslt;
+//        }
+//        String mobile = this.bankOpenService.getUsersMobile(userId);
+//        if (StringUtils.isBlank(mobile)) {
+//            if (StringUtils.isNotBlank(bankOpenVO.getMobile())) {
+//                if(!bankOpenService.existMobile(bankOpenVO.getMobile())){
+//                    mobile = bankOpenVO.getMobile();
+//                }else{
+//                    model.addAttribute("message", "用户信息错误，手机号码重复！");
+//                    return reuslt;
+//                }
+//            } else {
+//                model.addAttribute("message", "用户信息错误，未获取到用户的手机号码！");
+//                return reuslt;
+//            }
+//        } else {
+//            if (StringUtils.isNotBlank(bankOpenVO.getMobile()) && !mobile.equals(bankOpenVO.getMobile())) {
+//                model.addAttribute("message", "用户信息错误，用户的手机号码错误！");
+//                return reuslt;
+//            }
+//        }
+//        // 拼装参数 调用江西银行
+//        // 同步调用路径
+//        String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BankOpenDefine.REQUEST_MAPPING
+//                + BankOpenDefine.RETURL_SYN_ACTION + ".do";
+//        // 异步调用路
+//        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BankOpenDefine.REQUEST_MAPPING
+//                + BankOpenDefine.RETURL_ASY_ACTION + ".do?phone="+bankOpenVO.getMobile();
+//
+//        OpenAccountPageBean openBean = new OpenAccountPageBean();
+//
+//        PropertyUtils.copyProperties(openBean, bankOpenVO);
+//
+//        openBean.setChannel(BankCallConstant.CHANNEL_PC);
+//        openBean.setUserId(userId);
+//        openBean.setIp(CustomUtil.getIpAddr(request));
+//        // 同步 异步
+//        openBean.setRetUrl(retUrl);
+//        openBean.setNotifyUrl(bgRetUrl);
+//        openBean.setCoinstName("汇盈金服");
+//        openBean.setPlatform("0");
+//        // 账户用途 写死
+//        /*00000-普通账户
+//        10000-红包账户（只能有一个）
+//        01000-手续费账户（只能有一个）
+//        00100-担保账户*/
+//        openBean.setAcctUse("00000");
+//        /**
+//         *  1：出借角色
+//            2：借款角色
+//            3：代偿角色
+//         */
+//        openBean.setIdentity("1");
+//        reuslt = getCallbankMV(openBean);
+//        //保存开户日志
+//        boolean isUpdateFlag = this.bankOpenService.updateUserAccountLog(userId, user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
+//        if (!isUpdateFlag) {
+//            _log.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + userId + "]");
+//            model.addAttribute("message", "操作失败！");
+//            return reuslt;
+//        }
+//        _log.info("开户end");
     
 
 		return reuslt;
