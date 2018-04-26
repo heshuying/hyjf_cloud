@@ -28,6 +28,7 @@
         <module>hyjf_common</module>
         <module>hyjf_mybatis_generator</module>
         <module>hyjf_pay</module>
+        <module>hyjf_pay_lib</module>
     </modules>
 
     <properties>
