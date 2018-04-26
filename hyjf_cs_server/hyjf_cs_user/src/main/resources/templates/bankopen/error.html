@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>开通失败 - 汇盈金服官网</title>
+</head>
+<body>
+	<article class="main-content">
+        <div class="container result">
+            <div class="result-content">
+            	<div class="result-top">
+            		<img src="${ctx}/dist/images/result/kaihu-failure.png" alt="" />
+            	</div>
+            	<div class="result-mid">
+            		<h3>很遗憾开户失败！</h3>
+            		<p></p>
+            	</div>
+            	<div class="result-add">
+            		<p>失败原因</p>
+            		<p class="failure-reason">${message}</p>
+            	</div>
+            	<div class="result-btn">
+            		<a href="${ctx}/bank/web/user/bankopen/init.do" class="register-btn import" itemid="bt1">返回重试</a>
+            	</div>
+            </div>
+        </div>
+    </article>
+</body>
+</html>
