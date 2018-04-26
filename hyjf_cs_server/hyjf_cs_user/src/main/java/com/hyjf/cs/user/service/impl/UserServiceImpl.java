@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.common.constants.CommonConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
@@ -238,9 +238,9 @@ public class UserServiceImpl implements UserService {
 			throw new ReturnMessageException(RegisterError.PASSWORD_FORMAT_ERROR);
 		}
 
-		String verificationType = CustomConstants.PARAM_TPL_ZHUCE;
-		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CustomConstants.CLIENT_PC,
-				CustomConstants.CKCODE_YIYAN, CustomConstants.CKCODE_USED);
+		String verificationType = CommonConstants.PARAM_TPL_ZHUCE;
+		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstants.CLIENT_PC,
+				CommonConstants.CKCODE_YIYAN, CommonConstants.CKCODE_USED);
 		if (cnt == 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
 		}

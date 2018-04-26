@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -25,7 +26,6 @@ import com.hyjf.am.user.util.UploadFileUtils;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ServiceException;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.DataUtil;
 import com.hyjf.common.util.GetCode;
@@ -75,13 +75,13 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 注册
-	 * 
 	 * @param userRequest
 	 * @return
-	 * @throws ServiceException
+	 * @throws MQException
 	 */
 	@Override
-	public Users register(RegisterUserRequest userRequest) throws ServiceException {
+	@Transactional(rollbackFor = Exception.class)
+	public Users register(RegisterUserRequest userRequest) throws MQException {
 
 		String mobile = userRequest.getMobilephone();
 		String loginIp = userRequest.getLoginIp();
@@ -89,53 +89,48 @@ public class UserServiceImpl implements UserService {
 		String platform = userRequest.getPlatform();
 		String password = userRequest.getPassword();
 		String utmId = userRequest.getUtmId();
-		try {
-			Integer refferUserId = null;
-			String refferUserName = null;
-			Integer attribute = null;
-			// 获取推荐人表
-			Users refferUser = getRefferUsers(mobile, reffer);
-			if (refferUser != null) {
-				UsersInfo refferUserInfo = findUsersInfo(refferUser.getUserId());
-				if (refferUserInfo != null) {
-					// 如果该用户的上级不为空
-					if (Validator.isNotNull(refferUserInfo.getAttribute())) {
-						refferUserId = refferUser.getUserId();
-						refferUserName = refferUser.getUsername();
-						if (Arrays.asList(2, 3).contains(refferUserInfo.getAttribute())) {
-							// 有推荐人且推荐人为员工(Attribute=2或3)时才设置为有主单
-							attribute = 1;
-						}
+
+		Integer refferUserId = null;
+		String refferUserName = null;
+		Integer attribute = null;
+		// 获取推荐人表
+		Users refferUser = getRefferUsers(mobile, reffer);
+		if (refferUser != null) {
+			UsersInfo refferUserInfo = findUsersInfo(refferUser.getUserId());
+			if (refferUserInfo != null) {
+				// 如果该用户的上级不为空
+				if (Validator.isNotNull(refferUserInfo.getAttribute())) {
+					refferUserId = refferUser.getUserId();
+					refferUserName = refferUser.getUsername();
+					if (Arrays.asList(2, 3).contains(refferUserInfo.getAttribute())) {
+						// 有推荐人且推荐人为员工(Attribute=2或3)时才设置为有主单
+						attribute = 1;
 					}
 				}
 			}
-
-			// 1. 写入用户信息表
-			int userId = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
-
-			// 2. 写入用户详情表
-			this.insertUsersInfo(userId, loginIp, attribute);
-
-			// 3. 写入用户账户表
-			this.insertAccount(userId);
-
-			// 4. 有推荐人，保存推荐人信息
-			if (refferUser != null) {
-				this.insertSpreadsUser(userId, refferUser.getUserId(), loginIp);
-			}
-
-			// 5. 有推广，插入utmReg表
-			if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)) {
-				this.insertUtmReg(userId, utmId);
-			}
-
-			// 6. 保存用户注册日志
-			this.insertRegLog(userId, loginIp);
-		} catch (
-
-		Exception e) {
-			logger.error("注册失败...", e);
 		}
+
+		// 1. 写入用户信息表
+		int userId = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
+
+		// 2. 写入用户详情表
+		this.insertUsersInfo(userId, loginIp, attribute);
+
+		// 3. 写入用户账户表
+		this.insertAccount(userId);
+
+		// 4. 有推荐人，保存推荐人信息
+		if (refferUser != null) {
+			this.insertSpreadsUser(userId, refferUser.getUserId(), loginIp);
+		}
+
+		// 5. 有推广，插入utmReg表
+		if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)) {
+			this.insertUtmReg(userId, utmId);
+		}
+
+		// 6. 保存用户注册日志
+		this.insertRegLog(userId, loginIp);
 
 		return null;
 	}

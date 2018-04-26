@@ -2,11 +2,13 @@ package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version UserVO, v0.1 2018/1/21 22:39
  */
-public class UserInfoVO extends BaseVO {
+public class UserInfoVO extends BaseVO implements Serializable {
 	private Integer id;
 
 	private Integer userId;

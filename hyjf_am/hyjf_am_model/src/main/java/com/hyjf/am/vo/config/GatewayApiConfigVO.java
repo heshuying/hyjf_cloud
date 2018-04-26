@@ -2,11 +2,13 @@ package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version GatewayApiConfigVO, v0.1 2018/4/13 9:56
  */
-public class GatewayApiConfigVO extends BaseVO {
+public class GatewayApiConfigVO extends BaseVO implements Serializable {
 
 	private String id;
 
