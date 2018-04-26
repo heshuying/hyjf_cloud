@@ -23,12 +23,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstants;
 import com.hyjf.common.constants.MessagePushConstant;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
@@ -238,9 +238,9 @@ public class UserServiceImpl implements UserService {
 			throw new ReturnMessageException(RegisterError.PASSWORD_FORMAT_ERROR);
 		}
 
-		String verificationType = CustomConstants.PARAM_TPL_ZHUCE;
-		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CustomConstants.CLIENT_PC,
-				CustomConstants.CKCODE_YIYAN, CustomConstants.CKCODE_USED);
+		String verificationType = CommonConstants.PARAM_TPL_ZHUCE;
+		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstants.CLIENT_PC,
+				CommonConstants.CKCODE_YIYAN, CommonConstants.CKCODE_USED);
 		if (cnt == 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
 		}
@@ -322,7 +322,8 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 	private String generatorToken(int userId, String username) {
-		Map map = ImmutableMap.of("userId", userId, "username", username, "ts", Instant.now().getEpochSecond() + "");
+		Map map = ImmutableMap.of("userId", String.valueOf(userId), "username", username, "ts",
+				String.valueOf(Instant.now().getEpochSecond()));
 		String token = JwtHelper.genToken(map);
 		return token;
 	}

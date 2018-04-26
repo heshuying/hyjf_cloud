@@ -92,13 +92,14 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, params));
 	}
 
-    /**
-     * 参数检查
-     * @param validCodeType
-     * @param mobile
-     * @param token
-     * @param ip
-     */
+	/**
+	 * 参数检查
+	 * 
+	 * @param validCodeType
+	 * @param mobile
+	 * @param token
+	 * @param ip
+	 */
 	private void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
 
 		List<String> codeTypes = Arrays.asList(CommonConstants.PARAM_TPL_ZHUCE, CommonConstants.PARAM_TPL_ZHAOHUIMIMA,
@@ -214,6 +215,9 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 		}
 
+		// 发送checkCode最大时间间隔，默认60秒
+		stringRedisUtil.setEx(mobile + ":" + validCodeType + ":IntervalTime", mobile,
+				smsConfig.getMaxIntervalTime() == null ? 60 : smsConfig.getMaxIntervalTime(), TimeUnit.SECONDS);
 	}
 
 }

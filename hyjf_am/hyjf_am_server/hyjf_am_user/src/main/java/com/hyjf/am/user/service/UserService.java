@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
 /**
@@ -17,7 +18,7 @@ public interface UserService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	Users register(RegisterUserRequest userRequest) throws ServiceException;
+	Users register(RegisterUserRequest userRequest) throws MQException;
 
 	/**
 	 * 获取用户

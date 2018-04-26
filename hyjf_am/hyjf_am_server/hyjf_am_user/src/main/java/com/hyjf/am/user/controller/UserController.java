@@ -2,6 +2,7 @@ package com.hyjf.am.user.controller;
 
 import javax.validation.Valid;
 
+import com.hyjf.common.exception.MQException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -9,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.exception.ServiceException;
 
 /**
  * @author xiasq
@@ -32,22 +33,25 @@ public class UserController {
 	public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {
 		logger.info("user register:" + JSONObject.toJSONString(userRequest));
 		UserResponse userResponse = new UserResponse();
+		Users user = null;
 		try {
-			Users user = userService.register(userRequest);
+			user = userService.register(userRequest);
+
 			if (user == null) {
-				userResponse.setRtn(UserResponse.USER_EXISTS);
-				userResponse.setMessage(UserResponse.USER_EXISTS_MSG);
-				logger.info("user register ,user " + userRequest.getMobilephone() + " has exists");
+				userResponse.setRtn(Response.FAIL);
+				userResponse.setMessage(Response.FAIL_MSG);
+				logger.error("user register error,user " + userRequest.getMobilephone());
 			} else {
 				UserVO userVO = new UserVO();
 				BeanUtils.copyProperties(user, userVO);
 				userResponse.setResult(userService.assembleUserVO(userVO));
 			}
-		} catch (ServiceException e) {
-			userResponse.setRtn(UserResponse.FAIL);
-			userResponse.setMessage(UserResponse.FAIL_MSG);
-			logger.error("user register error", e);
+		} catch (MQException e) {
+			logger.error("user register error...", e);
+			userResponse.setRtn(Response.FAIL);
+			userResponse.setMessage(Response.FAIL_MSG);
 		}
+
 		return userResponse;
 	}
 

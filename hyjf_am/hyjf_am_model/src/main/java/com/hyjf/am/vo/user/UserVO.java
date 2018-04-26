@@ -2,11 +2,13 @@ package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version UserVO, v0.1 2018/1/21 22:39
  */
-public class UserVO extends BaseVO {
+public class UserVO extends BaseVO implements Serializable {
 
 	/**
 	 * token 登录生成令牌

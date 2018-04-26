@@ -4,14 +4,19 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankOpenRequest;
+import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.am.user.service.BankOpenService;
+import com.hyjf.am.vo.user.UserInfoVO;
 
 @RestController
 @RequestMapping("/am-user/bankopen")
@@ -111,6 +116,18 @@ public class BankOpenController {
 //		boolean result = this.bankOpenService.updateCardNoToBank(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile);
         
 		return 1;
+	}
+
+	@RequestMapping("/findByCardId/{cardId}")
+	public UserInfoResponse findByCardId(@PathVariable String cardId) {
+		UserInfoResponse response = new UserInfoResponse();
+		UsersInfo usersInfo = bankOpenService.findUserInfoByCradId(cardId);
+		if (usersInfo != null) {
+			UserInfoVO userInfoVO = new UserInfoVO();
+			BeanUtils.copyProperties(usersInfo, userInfoVO);
+			response.setResult(userInfoVO);
+		}
+		return response;
 	}
 	
 	

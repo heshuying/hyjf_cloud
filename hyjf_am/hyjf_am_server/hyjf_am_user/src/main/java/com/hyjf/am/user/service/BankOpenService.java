@@ -1,5 +1,7 @@
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.user.dao.model.auto.UsersInfo;
+
 public interface BankOpenService {
 	
 	/**
@@ -26,5 +28,9 @@ public interface BankOpenService {
 
 
     boolean updateUserAccount(Integer userId,String trueName,  String orderId, String accountId, String idNo,Integer bankAccountEsb,String mobile);
+
+
+
+	UsersInfo findUserInfoByCradId(String cardNo);
     
 }

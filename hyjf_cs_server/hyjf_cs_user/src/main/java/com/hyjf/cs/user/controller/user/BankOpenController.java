@@ -1,5 +1,7 @@
 package com.hyjf.cs.user.controller.user;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -70,9 +74,9 @@ public class BankOpenController {
             return reuslt;
         }
         
-        Users user = this.bankOpenService.getUsers(userId);
+        UserVO user = this.bankOpenService.getUsers(userId);
         
-        if (StringUtils.isEmpty(user)) {
+        if (user == null) {
         	model.addAttribute("message", "获取用户信息失败！");
             return reuslt;
         }
@@ -124,10 +128,10 @@ public class BankOpenController {
             model.addAttribute("message", "手机号格式错误！");
             return reuslt;
         }
-        String mobile = this.bankOpenService.getUsersMobile(userId);
+        String mobile = user.getMobile();
         if (StringUtils.isBlank(mobile)) {
             if (StringUtils.isNotBlank(bankOpenVO.getMobile())) {
-                if(!bankOpenService.existMobile(bankOpenVO.getMobile())){
+                if(!bankOpenService.existUser(bankOpenVO.getMobile())){
                     mobile = bankOpenVO.getMobile();
                 }else{
                     model.addAttribute("message", "用户信息错误，手机号码重复！");
@@ -145,15 +149,24 @@ public class BankOpenController {
         }
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BankOpenDefine.REQUEST_MAPPING
-                + BankOpenDefine.RETURL_SYN_ACTION + ".do";
+        String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + "/api/secure/open/";
         // 异步调用路
-        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BankOpenDefine.REQUEST_MAPPING
-                + BankOpenDefine.RETURL_ASY_ACTION + ".do?phone="+bankOpenVO.getMobile();
+        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + "/api/secure/open/" + ".do?phone="+bankOpenVO.getMobile();
 
         OpenAccountPageBean openBean = new OpenAccountPageBean();
         
-        PropertyUtils.copyProperties(openBean, bankOpenVO);
+        try {
+			PropertyUtils.copyProperties(openBean, bankOpenVO);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
         openBean.setUserId(userId);
@@ -177,8 +190,8 @@ public class BankOpenController {
         openBean.setIdentity("1");
         reuslt = getCallbankMV(openBean);
         //保存开户日志
-        boolean isUpdateFlag = this.bankOpenService.updateUserAccountLog(userId, user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
-        if (!isUpdateFlag) {
+        int uflag = this.bankOpenService.updateUserAccountLog(userId, user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
+        if (uflag == 0) {
             _log.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + userId + "]");
             model.addAttribute("message", "操作失败！");
             return reuslt;
