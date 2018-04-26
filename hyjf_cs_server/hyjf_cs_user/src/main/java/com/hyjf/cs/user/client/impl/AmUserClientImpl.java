@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.hyjf.am.response.user.SmsCodeResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
@@ -87,10 +88,10 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setVerificationType(validCodeType);
 		request.setStatus(status);
 		request.setPlatform(platform);
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/save", request, Integer.class)
-				.getBody();
-		if (result != null) {
-			return 1;
+		SmsCodeResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/smsCode/save", request, SmsCodeResponse.class).getBody();
+		if (response != null) {
+			return response.getCnt();
 		}
 		return 0;
 	}

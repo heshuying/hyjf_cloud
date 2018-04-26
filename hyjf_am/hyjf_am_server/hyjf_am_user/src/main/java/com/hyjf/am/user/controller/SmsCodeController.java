@@ -2,7 +2,6 @@ package com.hyjf.am.user.controller;
 
 import javax.validation.Valid;
 
-import com.hyjf.am.resquest.user.SmsCodeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.SmsCodeResponse;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.user.service.SmsService;
 
 /**
@@ -29,13 +30,17 @@ public class SmsCodeController {
 
 	/**
 	 * 短信验证码保存
+	 * 
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public Integer saveSmsCode(@RequestBody @Valid SmsCodeRequest request) {
-		return smsService.save(request.getMobile(), request.getVerificationType(), request.getVerificationCode(),
+	public SmsCodeResponse saveSmsCode(@RequestBody @Valid SmsCodeRequest request) {
+		SmsCodeResponse response = new SmsCodeResponse();
+		int cnt = smsService.save(request.getMobile(), request.getVerificationType(), request.getVerificationCode(),
 				request.getPlatform(), request.getStatus());
+		response.setCnt(cnt);
+		return response;
 	}
 
 	/**

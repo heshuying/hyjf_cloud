@@ -7,11 +7,10 @@ package com.hyjf.cs.user.vo;
 public class RegisterVO {
 
 	private String mobilephone;
-	private String smscode;
+	private String smsCode;
 	private String reffer;
 	private String password;
-	private String utm_id;
-
+	private String utmId;
 
     public String getMobilephone() {
         return mobilephone;
@@ -19,14 +18,6 @@ public class RegisterVO {
 
     public void setMobilephone(String mobilephone) {
         this.mobilephone = mobilephone;
-    }
-
-    public String getSmscode() {
-        return smscode;
-    }
-
-    public void setSmscode(String smscode) {
-        this.smscode = smscode;
     }
 
     public String getReffer() {
@@ -45,12 +36,19 @@ public class RegisterVO {
         this.password = password;
     }
 
-    public String getUtm_id() {
-        return utm_id;
+    public String getSmsCode() {
+        return smsCode;
     }
 
-    public void setUtm_id(String utm_id) {
-        this.utm_id = utm_id;
+    public void setSmsCode(String smsCode) {
+        this.smsCode = smsCode;
     }
 
+    public String getUtmId() {
+        return utmId;
+    }
+
+    public void setUtmId(String utmId) {
+        this.utmId = utmId;
+    }
 }

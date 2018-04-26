@@ -3,16 +3,16 @@ package com.hyjf.am.user.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.user.dao.mapper.auto.SmsCodeMapper;
 import com.hyjf.am.user.dao.model.auto.SmsCode;
 import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.SmsService;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.MD5;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.hyjf.common.constants.CommonConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5;
 
 /**
  * @author xiasq
@@ -30,13 +30,13 @@ public class SmsServiceImpl implements SmsService {
 		SmsCodeExample.Criteria cra = example.createCriteria();
 		cra.andMobileEqualTo(mobile);
 		List<Integer> statusList = new ArrayList<Integer>();
-		statusList.add(CustomConstants.CKCODE_NEW);
-		statusList.add(CustomConstants.CKCODE_YIYAN);
+		statusList.add(CommonConstants.CKCODE_NEW);
+		statusList.add(CommonConstants.CKCODE_YIYAN);
 		cra.andStatusIn(statusList);
 		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
 			for (SmsCode smsCode : codeList) {
-				smsCode.setStatus(CustomConstants.CKCODE_FAILED);// 失效7
+				smsCode.setStatus(CommonConstants.CKCODE_FAILED);// 失效7
 				smsCodeMapper.updateByPrimaryKey(smsCode);
 			}
 		}

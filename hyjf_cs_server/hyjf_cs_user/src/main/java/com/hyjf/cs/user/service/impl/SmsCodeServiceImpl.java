@@ -17,10 +17,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstants;
 import com.hyjf.common.constants.MessagePushConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
@@ -80,8 +80,8 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		param.put("val_code", checkCode);
 
 		// 保存短信验证码
-		amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CustomConstants.CKCODE_NEW,
-				CustomConstants.CLIENT_PC);
+		amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CommonConstants.CKCODE_NEW,
+				CommonConstants.CLIENT_PC);
 
 		JSONObject params = new JSONObject();
 		params.put("checkCode", checkCode);
@@ -101,8 +101,8 @@ public class SmsCodeServiceImpl implements SmsCodeService {
      */
 	private void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
 
-		List<String> codeTypes = Arrays.asList(CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.PARAM_TPL_ZHAOHUIMIMA,
-				CustomConstants.PARAM_TPL_YZYSJH, CustomConstants.PARAM_TPL_BDYSJH);
+		List<String> codeTypes = Arrays.asList(CommonConstants.PARAM_TPL_ZHUCE, CommonConstants.PARAM_TPL_ZHAOHUIMIMA,
+				CommonConstants.PARAM_TPL_YZYSJH, CommonConstants.PARAM_TPL_BDYSJH);
 		if (Validator.isNull(validCodeType) || !codeTypes.contains(validCodeType)) {
 			throw new ReturnMessageException(RegisterError.CODETYPE_INVALID_ERROR);
 		}
@@ -110,7 +110,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			throw new ReturnMessageException(RegisterError.MOBILE_FORMAT_ERROR);
 		}
 
-		if (validCodeType.equals(CustomConstants.PARAM_TPL_ZHUCE)) {
+		if (validCodeType.equals(CommonConstants.PARAM_TPL_ZHUCE)) {
 			// 注册时要判断不能重复
 			if (userService.existUser(mobile)) {
 				throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
@@ -121,7 +121,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			UserVO userVO = (UserVO) redisUtil.get(token);
 			if (userVO != null) {
 				// 验证原手机号校验
-				if (validCodeType.equals(CustomConstants.PARAM_TPL_YZYSJH)) {
+				if (validCodeType.equals(CommonConstants.PARAM_TPL_YZYSJH)) {
 					if (StringUtils.isBlank(userVO.getMobile())) {
 						throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
 					}
@@ -131,7 +131,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 				}
 
 				// 绑定新手机号校验
-				if (validCodeType.equals(CustomConstants.PARAM_TPL_BDYSJH)) {
+				if (validCodeType.equals(CommonConstants.PARAM_TPL_BDYSJH)) {
 					if (userVO.equals(mobile)) {
 						throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
 					}
