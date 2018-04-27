@@ -6,7 +6,7 @@
 </head>
 <body>
 <form id="fm" name="fm" th:action='${bankForm.action }' method="post">
-    <span th:if test="${bankForm.allParams}!=null">
+    <span th:if ="${bankForm.allParams}!=null">
         <div th:each="record:${bankForm.allParams }" >
             <input  th:name='${record.key }' th:id='${record.key }' th:text='${record.value}' />
         </div>
