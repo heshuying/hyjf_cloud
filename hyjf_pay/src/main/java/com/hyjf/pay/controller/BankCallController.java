@@ -5,13 +5,10 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.hyjf.pay.base.BaseController;
-import com.hyjf.pay.bean.BankCallDefine;
-import com.hyjf.pay.config.SystemConfig;
-import com.hyjf.pay.entity.ChinapnrExclusiveLog;
-import com.hyjf.pay.service.BankPayLogService;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.StringUtil;
@@ -19,8 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,14 +34,19 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.lib.PnrApiBean;
-import com.hyjf.lib.bank.bean.BankCallBean;
-import com.hyjf.lib.bank.bean.BankCallPnrApiBean;
-import com.hyjf.lib.bank.bean.BankCallResult;
-import com.hyjf.lib.bank.call.BankCallApi;
-import com.hyjf.lib.bank.call.impl.BankCallApiImpl;
-import com.hyjf.lib.bank.util.BankCallConstant;
-import com.hyjf.lib.bank.util.BankCallUtils;
+import com.hyjf.pay.base.BaseController;
+import com.hyjf.pay.bean.BankCallDefine;
+import com.hyjf.pay.config.SystemConfig;
+import com.hyjf.pay.entity.ChinapnrExclusiveLog;
+import com.hyjf.pay.lib.PnrApiBean;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.call.BankCallApi;
+import com.hyjf.pay.lib.bank.call.impl.BankCallApiImpl;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.hyjf.pay.service.BankPayLogService;
 
 @Controller
 @RequestMapping(value = "/bankcall")
@@ -48,7 +56,9 @@ public class BankCallController extends BaseController {
     @Autowired
     BankPayLogService payLogService;
 
+    @Autowired
     private BankCallApi api;
+    
     @Autowired
     SystemConfig systemConfig;
 
@@ -59,7 +69,7 @@ public class BankCallController extends BaseController {
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "callApiPage")
+    @PostMapping(value = "callApiPage.json")
     public ModelAndView callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
         String methodName = "callPageApi";
@@ -113,7 +123,7 @@ public class BankCallController extends BaseController {
                 String sendLogFlag = payLogService.insertChinapnrSendLog(bean, bean);
                 if (StringUtils.isNotBlank(sendLogFlag)) {
                     // 跳转到汇付天下画面
-                    bean.setAction(PropUtils.getApplication(BankCallConstant.BANK_PAGE_URL) + bean.getLogBankDetailUrl());
+                    bean.setAction(PropUtils.getSystem(BankCallConstant.BANK_PAGE_URL) + bean.getLogBankDetailUrl());
                     modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
                 } else {
                     throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
@@ -469,7 +479,7 @@ public class BankCallController extends BaseController {
      * @throws Exception
      */
     @ResponseBody
-    @PostMapping(value = "callApiBg")
+    @PostMapping(value = "callApiBg.json")
     public String callApiBg(HttpServletRequest request, @ModelAttribute BankCallBean bean) throws Exception {
 
         String methodName = "callApiBg";
