@@ -8,8 +8,6 @@ eureka:
       defaultZone: http://127.0.0.1:1111/eureka/
   instance:
     preferIpAddress: true
-server:
-  port: 9092
 
 logging:
   file: pay.log

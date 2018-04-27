@@ -28,9 +28,9 @@ import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
 import com.hyjf.cs.user.service.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
-import com.hyjf.lib.bank.bean.BankCallBean;
-import com.hyjf.lib.bank.util.BankCallConstant;
-import com.hyjf.lib.bank.util.BankCallUtils;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 
 /**
  * 

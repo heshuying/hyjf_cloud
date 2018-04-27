@@ -1,8 +1,8 @@
 package com.hyjf.pay.service;
 
-import com.hyjf.lib.bank.bean.BankCallBean;
-import com.hyjf.lib.bank.bean.BankCallPnrApiBean;
 import com.hyjf.pay.entity.ChinapnrExclusiveLog;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
 
 import java.util.Map;
 
