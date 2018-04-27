@@ -4,12 +4,14 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +120,7 @@ public class UserServiceImpl implements UserService {
 	 * @param ip
 	 */
 	@Override
-	public void login(String loginUserName, String loginPassword, String ip) {
+	public UserVO login(String loginUserName, String loginPassword, String ip) {
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginUserName, 32))
 			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
 
@@ -127,7 +129,7 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
 			throw new ReturnMessageException(LoginError.PWD_ERROR_TOO_MANEY_ERROR);
 		}
-		this.doLogin(loginUserName, loginPassword, ip);
+		return this.doLogin(loginUserName, loginPassword, ip);
 	}
 
 	/**
@@ -137,7 +139,7 @@ public class UserServiceImpl implements UserService {
 	 * @param loginPassword
 	 * @return
 	 */
-	private void doLogin(String loginUserName, String loginPassword, String ip) {
+	private UserVO doLogin(String loginUserName, String loginPassword, String ip) {
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
 
 		if (userVO == null) {
@@ -164,9 +166,11 @@ public class UserServiceImpl implements UserService {
 			// 2. 缓存
 			String token = generatorToken(userVO.getUserId(), userVO.getUsername());
 			userVO.setToken(token);
-			redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
+			redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, userVO, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
 
 			// 3. todo 登录时自动同步线下充值记录
+
+			return  userVO;
 		} else {
 			// 密码错误，增加错误次数
 			stringRedisUtil.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
@@ -262,7 +266,7 @@ public class UserServiceImpl implements UserService {
 		// 1. 注册成功之后登录 单点登录
 		String token = generatorToken(userId, userVO.getUsername());
 		userVO.setToken(token);
-		redisUtil.set(RedisKey.USER_TOKEN_REDIS + token, userVO);
+		redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, userVO, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
 
 		// 2. 投之家用户注册送券活动
 		// 活动有效期校验

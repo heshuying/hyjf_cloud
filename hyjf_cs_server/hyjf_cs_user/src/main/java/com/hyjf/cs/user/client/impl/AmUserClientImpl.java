@@ -128,7 +128,8 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public void updateLoginUser(int userId, String ip) {
-		restTemplate.getForEntity("http://AM-USER/am-user/user/updateLoginUser?" + "userId=" + userId + "&ip=" + ip,
+		String url = "http://AM-USER/am-user/user/updateLoginUser?" + "userId=" + userId + "&ip=" + "ip";
+		restTemplate.getForEntity(url,
 				String.class);
 	}
 }
