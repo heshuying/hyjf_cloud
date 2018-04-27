@@ -8,7 +8,7 @@
 <form id="fm" name="fm" th:action='${bankForm.action }' method="post">
     <span th:if ="${bankForm.allParams}!=null">
         <div th:each="record:${bankForm.allParams }" >
-            <input  th:name='${record.key }' th:id='${record.key }' th:text='${record.value}' />
+            <input  th:name='${record.key }' th:id='${record.key }' th:value='${record.value}' />
         </div>
     </span>
 </form>
