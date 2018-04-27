@@ -1,5 +1,9 @@
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.Response;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.ServiceException;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.client.AmUserClient;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author xiasq
@@ -128,8 +134,18 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public void updateLoginUser(int userId, String ip) {
-		String url = "http://AM-USER/am-user/user/updateLoginUser?" + "userId=" + userId + "&ip=" + "ip";
-		restTemplate.getForEntity(url,
-				String.class);
+		/**
+		 * ip version等作为请求一部分的时候，用base64转码
+		 */
+		String args = "";
+		try {
+			args = new String(Base64.encodeBase64(ip.getBytes()), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
+			throw new ReturnMessageException(Response.FAIL_MSG);
+		}
+		String url = "http://AM-USER/am-user/user/updateLoginUser/" + userId + "/" + args;
+		logger.info("url:{}", url);
+		restTemplate.getForEntity(url, String.class);
 	}
 }

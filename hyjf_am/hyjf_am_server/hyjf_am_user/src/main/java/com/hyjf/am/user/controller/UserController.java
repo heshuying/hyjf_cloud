@@ -1,8 +1,10 @@
 package com.hyjf.am.user.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.validation.Valid;
 
-import com.hyjf.common.exception.MQException;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +18,8 @@ import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
 
 /**
  * @author xiasq
@@ -131,10 +135,21 @@ public class UserController {
 		return response;
 	}
 
-	@RequestMapping("/updateLoginUser/}")
-	public void updateLoginUser(@RequestParam int userId, @RequestParam String ip) {
-		logger.info("updateLoginUser run...userId is :{}, ip is :{}", userId, ip);
-		userService.updateLoginUser(userId, ip);
+	@RequestMapping("/updateLoginUser/{userId}/{ip}")
+	public void updateLoginUser(@PathVariable int userId, @PathVariable String ip) {
+		/**
+		 * ip version等作为请求一部分的时候，用base64解码
+		 */
+		String args = "";
+		try {
+			args = new String(Base64.decodeBase64(ip.getBytes()), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
+			throw new ReturnMessageException(Response.FAIL_MSG);
+		}
+
+		logger.info("updateLoginUser run...userId is :{}, ip is :{}", userId, args);
+		userService.updateLoginUser(userId, args);
 	}
 
 }
