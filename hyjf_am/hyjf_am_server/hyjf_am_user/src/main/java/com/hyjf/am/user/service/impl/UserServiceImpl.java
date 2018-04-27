@@ -417,7 +417,7 @@ public class UserServiceImpl implements UserService {
 
 		int time = GetDate.getNowTime10();
 		String codeSalt = GetCode.getRandomCode(6);
-		user.setPassword(MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt));
+		user.setPassword(MD5Utils.MD5(password + codeSalt));
 		user.setRegIp(loginIp);
 		user.setRegTime(time);
 		user.setLoginIp(loginIp);

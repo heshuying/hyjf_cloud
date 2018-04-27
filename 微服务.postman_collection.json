@@ -1,0 +1,209 @@
+{
+	"info": {
+		"name": "微服务",
+		"_postman_id": "76a35832-3403-e51f-15e9-1065743e50ce",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "发送验证码-支持注册，修改手机号等",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hyjf",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "hyjf123",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "codeType",
+						"value": "TPL_ZHUCE"
+					},
+					{
+						"key": "mobile",
+						"value": "111111"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "validCodeType",
+							"value": "TPL_ZHUCE",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "mobile",
+							"value": "15011110001",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/smsCode/send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"smsCode",
+						"send"
+					]
+				},
+				"description": "发送注册验证码"
+			},
+			"response": []
+		},
+		{
+			"name": "注册",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hyjf",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "hyjf123",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"mobilephone\":\"15011110001\",\"smsCode\":\"111387\",\"password\":\"a123456\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"register"
+					]
+				},
+				"description": "注册"
+			},
+			"response": []
+		},
+		{
+			"name": "登录",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hyjf",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "hyjf123",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"type": "any"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "loginUserName",
+							"value": "15011110001",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "loginPassword",
+							"value": "a123456",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				},
+				"description": "登录"
+			},
+			"response": []
+		}
+	]
+}

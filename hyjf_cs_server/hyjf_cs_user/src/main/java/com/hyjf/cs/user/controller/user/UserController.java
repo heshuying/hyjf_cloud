@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
-import com.hyjf.cs.user.result.BaseResultBean;
+import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
@@ -33,26 +33,28 @@ public class UserController {
 
 	/**
 	 * 注册
-	 *
 	 * @param registerVO
+	 * @param request
+	 * @param response
 	 * @return
 	 */
 	@PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-	public BaseResultBean register(@RequestBody @Valid RegisterVO registerVO, HttpServletRequest request,
+	public ApiResult<UserVO> register(@RequestBody @Valid RegisterVO registerVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		logger.info("register start, registerVO is :{}", JSONObject.toJSONString(registerVO));
-		BaseResultBean resultBean = new BaseResultBean();
+		ApiResult<UserVO> result = new ApiResult<UserVO>();
 
 		UserVO userVO = userService.register(registerVO, request, response);
 
 		if (userVO != null) {
 			logger.info("register success, userId is :{}", userVO.getUserId());
+			result.setResult(userVO);
 		} else {
 			logger.error("register failed...");
-			resultBean.setStatus("1");
-			resultBean.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
 		}
-		return resultBean;
+		return result;
 	}
 
 	/**
@@ -63,12 +65,23 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-	public BaseResultBean login(@RequestParam String loginUserName,
-								@RequestParam String loginPassword,
-								HttpServletRequest request) {
-		BaseResultBean resultBean = new BaseResultBean();
-		userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
-		return resultBean;
+	public ApiResult<UserVO> login(@RequestParam String loginUserName,
+								   @RequestParam String loginPassword,
+			HttpServletRequest request) {
+		logger.info("login start, loginUserName is :{}", loginUserName);
+		ApiResult<UserVO> result = new ApiResult<UserVO>();
+		UserVO userVO = userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+
+		if (userVO != null) {
+			logger.info("login success, userId is :{}", userVO.getUserId());
+			result.setResult(userVO);
+		} else {
+			logger.error("login failed...");
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
+		}
+
+		return result;
 	}
 
 }

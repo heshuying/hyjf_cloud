@@ -39,5 +39,5 @@ public interface UserService {
 	 * @param loginPassword
 	 * @param ip
 	 */
-	void login(String loginUserName, String loginPassword, String ip);
+	UserVO login(String loginUserName, String loginPassword, String ip);
 }
