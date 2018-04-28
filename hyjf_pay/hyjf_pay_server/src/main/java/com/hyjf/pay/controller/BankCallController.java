@@ -32,7 +32,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
@@ -72,11 +71,11 @@ public class BankCallController extends BaseController {
      */
     @PostMapping(value = "callApiPage.json")
     @ResponseBody
-    public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
+    public ModelAndView callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
         String methodName = "callPageApi";
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-//        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
+        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         Map<String,Object> resultMap = new HashMap<String,Object>();
         try {
             // 参数转换成Map
@@ -126,8 +125,9 @@ public class BankCallController extends BaseController {
                 String sendLogFlag = payLogService.insertChinapnrSendLog(bean, bean);
                 if (StringUtils.isNotBlank(sendLogFlag)) {
                     // 跳转到汇付天下画面
-                    bean.setAction(PropUtils.getSystem(BankCallConstant.BANK_PAGE_URL) + bean.getLogBankDetailUrl());
+                    bean.setAction(systemConfig.getBankPageUrl() + bean.getLogBankDetailUrl());
                     resultMap.put(BankCallDefine.BANK_FORM, bean);
+                    modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
                 } else {
                     throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
                 }
@@ -138,7 +138,7 @@ public class BankCallController extends BaseController {
         } finally {
            _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         }
-        return resultMap;
+        return modelAndView;
     }
 
     /**

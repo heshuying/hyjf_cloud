@@ -5,6 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,7 +41,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @author Administrator
  *
  */
-
+@Api(value = "用户开户接口")
 @Controller
 @RequestMapping("/api/secure/open")
 public class BankOpenController {
@@ -60,6 +64,10 @@ public class BankOpenController {
 	 * @param response
 	 * @return
 	 */
+    @ApiOperation(value = "开户", notes = "用户开户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "bankOpenVO", value = "用户信息", required = true, dataType = "BankOpenVO")
+    })
 	@PostMapping(value = "/openBankAccount")
 	public ModelAndView openBankAccount(@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
 		_log.info("openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));

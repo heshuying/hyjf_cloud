@@ -14,6 +14,16 @@ public class SystemConfig {
     public String callbackUrl;
     @Value("${hyjf.bank.page.forgotpwd.url}")
     public String forgotpwdUrl;
+    @Value("hyjf.bank.page.url=https://test.credit2go.cn/escrow")
+    public String bankPageUrl;
+
+    public String getBankPageUrl() {
+        return bankPageUrl;
+    }
+
+    public void setBankPageUrl(String bankPageUrl) {
+        this.bankPageUrl = bankPageUrl;
+    }
 
     public String getPageUrl() {
         return pageUrl;

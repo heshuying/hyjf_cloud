@@ -10,11 +10,9 @@
 
 	<parent>
 		<groupId>com.hyjf</groupId>
-		<artifactId>hyjf_cloud</artifactId>
+		<artifactId>hyjf_pay</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../hyjf_cloud</relativePath>
 	</parent>
-
 	<name>hyjf_pay_lib</name>
 	<description>Demo project for Spring Boot</description>
 
