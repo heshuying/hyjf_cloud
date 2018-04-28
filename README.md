@@ -27,7 +27,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 |   |   ├── hyjf_am_borrow -- 标的 、资金、资产微服务[端口:8093]
 |   |   ├── hyjf_am_config -- 公用配置微服务[端口:8091]
 |   |   ├── hyjf_am_market -- 市场微服务[端口:8094] 包含活动、券等
-|   |   ├── hyjf_am_market -- 消息微服务[端口:8095] 
+|   |   ├── hyjf_am_message -- 消息微服务[端口:8095] 
 |   |   └── hyjf_am_user   -- 用户微服务[端口:8092]
 ├── hyjf_cs_server
 |   ├── hyjf_cs_borrow  -- 核心组合微服务 [端口:8082] 
@@ -51,30 +51,3 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 ### 调用链
    ![调用链](pic1.png)
    
-   
-   
-   
-   
-### 测试
-####1. 发送注册验证码 
-    启动 EurekaApplication
-    启动 AmConfigApplication
-    启动 AmUserApplication
-    启动 AmBorrowApplication
-    启动 CsUserApplication
-    启动 ZuulApplication
-    
-    postman导入 "微服务.postman_collection.json" ， 发送请求
-    
-    查看zuul日志，发现执行了过滤器和映射
-    查看cs-user日志，打印出验证码请求日志， 并数据库 hyjf_user.huiyingdai_smscode插入
-
-####2. 注册 
-    修改参数moble和验证码，发送请求。
-    
-    查看am_user日志已经注册成功， am_borrow收到消息通知，保存account
-    返回的result包含了token（登录令牌认证）,用户的主要信息等。
-
-####3. 多点登录
-    同上，每一次登录返回一个token,实现多点登录， 如果要单点登录销毁其他的token即可
-    

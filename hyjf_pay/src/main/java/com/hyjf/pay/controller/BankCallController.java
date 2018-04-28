@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,11 +71,13 @@ public class BankCallController extends BaseController {
      * @throws Exception
      */
     @PostMapping(value = "callApiPage.json")
-    public ModelAndView callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
+    @ResponseBody
+    public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
         String methodName = "callPageApi";
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
+//        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
+        Map<String,Object> resultMap = new HashMap<String,Object>();
         try {
             // 参数转换成Map
             bean.convert();
@@ -124,7 +127,7 @@ public class BankCallController extends BaseController {
                 if (StringUtils.isNotBlank(sendLogFlag)) {
                     // 跳转到汇付天下画面
                     bean.setAction(PropUtils.getSystem(BankCallConstant.BANK_PAGE_URL) + bean.getLogBankDetailUrl());
-                    modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
+                    resultMap.put(BankCallDefine.BANK_FORM, bean);
                 } else {
                     throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
                 }
@@ -135,7 +138,7 @@ public class BankCallController extends BaseController {
         } finally {
            _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         }
-        return modelAndView;
+        return resultMap;
     }
 
     /**
@@ -143,7 +146,7 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @PostMapping(value = "callPageReturn")
+    @RequestMapping(value = "callPageReturn")
     public ModelAndView callPageReturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
 
         String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
