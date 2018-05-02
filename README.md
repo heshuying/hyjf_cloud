@@ -19,7 +19,9 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 ├── hyjf-common -- 公共模块 被依赖
 ├── hyjf_mybatis_generator -- mybatis自动生成工具
 ├── hyjf_batch -- 批处理[端口:9091]
-├── hyjf_pay -- 银行接口调用[端口:9092]
+├── hyjf_pay -- 银行接口模块
+|   ├── hyjf_pay_server  -- 银行接口服务工程[端口:9092]
+|   ├── hyjf_pay_lib     -- 接口调用工具类
 ├── hyjf_am -- 原子服务层
 |   ├── hyjf_am_model  -- 原子层统一数据模型 request vo response
 |   ├── hyjf_am_util   -- 原子层工具
