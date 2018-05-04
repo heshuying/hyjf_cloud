@@ -5,10 +5,7 @@ import com.hyjf.am.response.borrow.*;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.am.vo.borrow.*;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -134,8 +131,6 @@ public class RechargeClientImpl implements RechargeClient {
         return 0;
     }
 
-
-
     @Override
     public void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge) {
         restTemplate.put("http://AM-BORROW/am-borrow/recharge/updateByPrimaryKeySelective",accountRecharge);
@@ -144,7 +139,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public AccountVO selectByExample(AccountExample example) {
         AccountResponse response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/selectByExample",example,AccountResponse.class).getBody();
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/selectAccountByExample",example,AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

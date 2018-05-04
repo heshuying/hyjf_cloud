@@ -4,11 +4,7 @@ import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.AccountService;
 import com.hyjf.am.borrow.service.RechargeService;
 import com.hyjf.am.response.borrow.*;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.dao.model.auto.UsersInfoExample;
 import com.hyjf.am.vo.borrow.*;
-import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +79,8 @@ public class RechargeController {
         }
         return response;
     }
-    @RequestMapping("/selectByExample")
+
+    @RequestMapping("/selectAccountByExample")
     public AccountResponse selectByExample(@RequestBody AccountExample example){
         AccountResponse response = new AccountResponse();
         Account account = accountService.selectByExample(example);
@@ -94,7 +91,6 @@ public class RechargeController {
         }
         return response;
     }
-
 
     /**
      * 根据用户ID查询企业用户信息
@@ -186,18 +182,5 @@ public class RechargeController {
             response.setResult(bankReturnCodeConfigVO);
         }
         return response;
-    }
-
-    @RequestMapping("/selectByExample")
-    public UserInfoResponse selectByExample(UsersInfoExample example) {
-        UserInfoResponse response = new UserInfoResponse();
-        UsersInfo usersInfo = this.rechargeService.selectByExample(example);
-        if (null != usersInfo){
-            UserInfoVO userInfoVO = new UserInfoVO();
-            BeanUtils.copyProperties(usersInfo,userInfoVO);
-            response.setResult(userInfoVO);
-        }
-        return response;
-
     }
 }

@@ -51,81 +51,11 @@ public interface RechargeService {
 	 int updateBankRechargeSuccess(Account newAccount);
 
 	 int insertSelective(AccountList accountList);
-	 Users selectByPrimaryKey(Integer userId);
 
 	 void updateByPrimaryKeySelective(AccountRecharge accountRecharge);
 
 	BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
+
 	UsersInfo selectByExample(UsersInfoExample example);
-	/**
-	 * 根据用户Id检索用户的身份证号
-	 * 
-	 * @param userId
-	 * @return
-	 *//*
-	public String getUserIdcard(Integer userId);
-
-	*//**
-	 * 冲值后,回调处理
-	 * 
-	 * @param bean
-	 * @param params
-	 * @return
-	 */
-	/*public JSONObject handleRechargeInfo(BankCallBean bean, Map<String, String> params);
-*/
-
-	/**
-	 * 根据用户ID查询企业用户信息
-	 * 
-	 * @param userId
-	 * @return
-	 *//*
-	public CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
-	
-	*//**
-	 * 发送验证码
-	 *
-	 * @param request
-	 * @param form
-	 * @return Map<String, Object> {success: 1,message:调用验证码接口成功,srvAuthCode:
-	 *         srvAuthCode}
-	 *//*
-	public BankCallBean sendRechargeOnlineSms(Integer userId, String cardNo, String mobile, String client);
-	
-	*//**
-	 * 初始化充值信息
-	 * @param bean
-	 * @return
-	 *//*
-	public int insertRechargeOnlineInfo(BankCallBean bean);
-	
-	*//**
-	 * 短信充值处理
-	 * 
-	 * @param bean
-	 * @param params
-	 * @return
-	 *//*
-	public JSONObject handleRechargeOnlineInfo(BankCallBean bean, Map<String, String> params);
-
-	*//**
-	 * 查询用户的短信序列号
-	 * 
-	 * @param userId
-	 * @param srvTxCode
-	 * @param srvAuthCode
-	 * @return
-	 *//*
-	public String selectBankSmsSeq(Integer userId, String srvTxCode);
-
-	*//**
-	 * 查询充值是否成功
-	 * @param userId
-	 * @param nid
-	 * @return
-	 *//*
-	AccountRecharge selectRechargeInfo(int userId, String nid);
-*/
 
 }
