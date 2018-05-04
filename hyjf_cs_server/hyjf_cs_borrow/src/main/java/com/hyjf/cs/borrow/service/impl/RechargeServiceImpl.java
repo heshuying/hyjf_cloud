@@ -1,15 +1,22 @@
 package com.hyjf.cs.borrow.service.impl;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.borrow.dao.model.auto.*;
-import com.hyjf.am.message.processer.AppMsMessage;
-import com.hyjf.am.message.processer.MessageDefine;
-import com.hyjf.am.message.processer.MessageProcesser;
-import com.hyjf.am.message.processer.SmsMessage;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
@@ -22,18 +29,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 用户充值Service实现类
@@ -62,14 +57,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	private static final int RECHARGE_STATUS_FAIL = 3;
 	// 充值状态:成功
 	private static final int RECHARGE_STATUS_SUCCESS = 2;
-
-	@Autowired
-    @Qualifier("smsProcesser")
-    private MessageProcesser smsProcesser;
-
-    @Autowired
-    @Qualifier("appMsProcesser")
-    private MessageProcesser appMsProcesser;
 
 	@Override
 	public BankCard selectBankCardByUserId(Integer userId) {
@@ -253,11 +240,13 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 								UsersInfo info = getUsersInfoByUserId(userId);
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
-								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
-										CustomConstants.CHANNEL_TYPE_NORMAL);
-								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								smsProcesser.gather(smsMessage);
-								appMsProcesser.gather(appMsMessage);
+
+//								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
+//										CustomConstants.CHANNEL_TYPE_NORMAL);
+//								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
+//								smsProcesser.gather(smsMessage);
+//								appMsProcesser.gather(appMsMessage);
+								// todo 短信生产消息
 							}else{
 								// 替换参数
 								Map<String, String> replaceMap = new HashMap<String, String>();
@@ -266,8 +255,9 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 								UsersInfo info = getUsersInfoByUserId(userId);
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
-								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								appMsProcesser.gather(appMsMessage);
+//								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
+//								appMsProcesser.gather(appMsMessage);
+								// todo 短信生产消息
 							}
 							return jsonMessage("充值成功!", "0");
 						} else {

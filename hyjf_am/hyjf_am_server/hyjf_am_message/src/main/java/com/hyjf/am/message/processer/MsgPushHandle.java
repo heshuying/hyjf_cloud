@@ -1,24 +1,34 @@
 package com.hyjf.am.message.processer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.hyjf.am.message.bean.MessagePushMsg;
+import com.hyjf.am.message.bean.MessagePushMsgHistory;
+import com.hyjf.am.message.client.AmConfigClient;
+import com.hyjf.am.message.client.AmUserClient;
+import com.hyjf.am.message.jpush.*;
+import com.hyjf.am.message.mongo.MessagePushMsgDao;
+import com.hyjf.am.message.mongo.MessagePushMsgHistoryDao;
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.http.HtmlUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 
 import cn.jpush.api.common.resp.APIConnectionException;
 import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.PushPayload;
-import com.hyjf.am.message.bean.MessagePushMsgHistory;
-import com.hyjf.am.message.client.AmConfigClient;
-import com.hyjf.am.message.client.AmUserClient;
-import com.hyjf.am.message.mongo.MessagePushMsgHistoryDao;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class MsgPushHandle {
 	private final static Logger logger = LoggerFactory.getLogger(MsgPushHandle.class);
@@ -32,27 +42,8 @@ public class MsgPushHandle {
 	@Autowired
 	private static MessagePushMsgHistoryDao messagePushMsgHistoryDao;
 
-	/**
-	 * 通过手机获取设备唯一编码
-	 */
-	// private static MsgPushCommonCustomizeMapper msgPushCommonCustomizeMapper =
-	// SpringContextHolder.getBean(MsgPushCommonCustomizeMapper.class);
-	/**
-	 * 消息 Mapper
-	 */
-	// private static MessagePushMsgMapper messagePushMsgMapper =
-	// SpringContextHolder.getBean(MessagePushMsgMapper.class);
-	/**
-	 * 发送历史Mapper
-	 */
-	// private static MessagePushMsgHistoryMapper messagePushMsgHistoryMapper =
-	// SpringContextHolder.getBean(MessagePushMsgHistoryMapper.class);
-
-	/**
-	 * 设备唯一编码 Mapper
-	 */
-	// private static MobileCodeMapper mobileCodeMapper =
-	// SpringContextHolder.getBean(MobileCodeMapper.class);
+	@Autowired
+	private static MessagePushMsgDao messagePushMsgDao;
 
 	/**
 	 * 
@@ -65,21 +56,18 @@ public class MsgPushHandle {
 	 */
 	public static Integer sendMessages(Integer msgId) {
 
-		// MessagePushMsg message = messagePushMsgMapper.selectByPrimaryKey(msgId);
-		//
-		// List<Integer> msgIdList = addMessageHistoryRecord(message);
-		// for (int i = 0; i < msgIdList.size(); i++) {
-		// if (msgIdList.get(i) > 0) {
-		// MessagePushMsgHistory msgHistory =
-		// messagePushMsgHistoryMapper.selectByPrimaryKey(msgIdList.get(i));
-		// // 发送
-		// try {
-		// send(msgHistory);
-		// } catch (Exception e) {
-		// return -1;
-		// }
-		// }
-		// }
+		MessagePushMsg message = messagePushMsgDao.findById(msgId);
+
+		List<MessagePushMsgHistory> histories = addMessageHistoryRecord(message);
+		for (MessagePushMsgHistory history : histories) {
+			// 发送
+			try {
+				send(history);
+			} catch (Exception e) {
+				logger.error("发送失败...", e);
+				return -1;
+			}
+		}
 		return 0;
 	}
 
@@ -92,19 +80,14 @@ public class MsgPushHandle {
 	 * @return
 	 */
 	public static Integer sendMessages(String tplCode, Map<String, String> replaceStrs, Integer usersId) {
-		// if (usersId == null || usersId == 0) {
-		// return -1;
-		// }
-		// UsersExample example = new UsersExample();
-		// example.createCriteria().andUserIdEqualTo(usersId);
-		// UsersMapper usersMapper = SpringContextHolder.getBean(UsersMapper.class);
-		// List<Users> list = usersMapper.selectByExample(example);
-		// if (list == null || list.size() != 1 ||
-		// StringUtils.isEmpty(list.get(0).getMobile())) {
-		// return -1;
-		// }
-		// return sendMessages(tplCode, replaceStrs, list.get(0).getMobile());
-		return 0;
+		if (usersId == null || usersId == 0) {
+			return -1;
+		}
+		UserVO userVO = amUserClient.findUserById(usersId);
+		if (userVO == null) {
+			return -1;
+		}
+		return sendMessages(tplCode, replaceStrs, userVO.getMobile());
 	}
 
 	/**
@@ -143,23 +126,23 @@ public class MsgPushHandle {
 				}
 			}
 			// 推送消息
-			int msgHisId = addMessageHistoryRecord(mobile, messageStr, messagePushTemplate);
-			if (msgHisId > 0) {
-				MessagePushMsgHistory msgHistory = messagePushMsgHistoryMapper.selectByPrimaryKey(msgHisId);
-				// 发送
+			MessagePushMsgHistory msgHistory = addMessageHistoryRecord(mobile, messageStr, messagePushTemplate);
+
+			if (msgHistory != null) {
 				send(msgHistory);
+				return 0;
 			}
-			return 0;
 		} catch (Exception e) {
-			LogUtil.errorLog(MsgPushHandle.class.toString(), "sendMessages", "消息推送失败", e);
+			logger.error("消息推送失败...", e);
 			return -4;
 		}
 		return 0;
 	}
 
+	//
 	/**
 	 * 添加发送记录（模板消息）
-	 * 
+	 *
 	 * @param mobile
 	 *            手机号
 	 * @param message
@@ -167,10 +150,10 @@ public class MsgPushHandle {
 	 * @param messagePushTemplate
 	 *            模板
 	 */
-	public static int addMessageHistoryRecord(String mobile, String message,
+	public static MessagePushMsgHistory addMessageHistoryRecord(String mobile, String message,
 			MessagePushTemplateVO messagePushTemplate) {
 
-		UserAliasVO userAliasVO = amUserClient.getAliasByMobile(mobile);
+		UserAliasVO userAliasVO = amUserClient.findAliasByMobile(mobile);
 		// 存储历史记录
 		if (userAliasVO != null) {
 			int msgId = 0;
@@ -210,129 +193,111 @@ public class MsgPushHandle {
 			}
 			messagePushMsgHistoryDao.save(history);
 
-			if (history.getId() > 0)
-				return history.getId();
-			return -1;
+			return history;
 		} else {
-			return -2;
+			logger.error("推送失败，未找到目标用户.....");
+			throw new RuntimeException("推送失败，未找到目标用户.....");
 		}
 	}
-	//
-	// /**
-	// * 添加发送记录（手动添加消息）
-	// *
-	// * @param messagePushMsg
-	// * 消息
-	// */
-	// public static List<Integer> addMessageHistoryRecord(MessagePushMsg message) {
-	// List<Integer> msgIds = new ArrayList<Integer>();
-	// if (message.getMsgDestinationType().intValue() ==
-	// CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
-	// // 发给所有人
-	// MessagePushMsgHistory history = new MessagePushMsgHistory();
-	// history.setCreateTime(message.getCreateTime());
-	// history.setCreateUserId(message.getCreateUserId());
-	// history.setCreateUserName(message.getCreateUserName());
-	// history.setLastupdateTime(GetDate.getNowTime10());
-	// history.setLastupdateUserId(message.getCreateUserId());
-	// history.setLastupdateUserName(message.getCreateUserName());
-	// history.setMsgAction(message.getMsgAction());
-	// history.setMsgActionUrl(message.getMsgActionUrl());
-	// history.setMsgCode(message.getMsgCode());
-	// history.setMsgContent(message.getMsgContent());
-	// history.setMsgDestination(message.getMsgDestination());
-	// history.setMsgDestinationType(message.getMsgDestinationType());
-	// history.setMsgFirstreadPlat(null);
-	// history.setMsgImageUrl(message.getMsgImageUrl());
-	// history.setMsgJpushId(null);
-	// history.setMsgJpushProId(null);
-	// history.setMsgReadCountAndroid(0);
-	// history.setMsgReadCountIos(0);
-	// history.setMsgRemark("");
-	// history.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_0);
-	// history.setMsgTerminal(message.getMsgTerminal());
-	// history.setMsgTitle(message.getMsgTitle());
-	// history.setMsgUserId(null);
-	// history.setSendTime(null);
-	// history.setTagCode(message.getTagCode());
-	// history.setTagId(message.getTagId());
-	// MobileCodeExample example2 = new MobileCodeExample();
-	// example2.createCriteria().andClientEqualTo(CustomConstants.CLIENT_ANDROID);
-	// int size2 = mobileCodeMapper.countByExample(example2);
-	// MobileCodeExample example3 = new MobileCodeExample();
-	// example3.createCriteria().andClientEqualTo(CustomConstants.CLIENT_IOS);
-	// int size3 = mobileCodeMapper.countByExample(example3);
-	// history.setMsgDestinationCountAndroid(size2);// 安卓目标推送数
-	// history.setMsgDestinationCountIos(size3);// IOS目标推送数
-	// // 插入数据库
-	// int msgid = messagePushMsgHistoryMapper.insertSelective(history);
-	// if (msgid > 0) {
-	// msgIds.add(history.getId());
-	// }
-	// }
-	// if (message.getMsgDestinationType().intValue() ==
-	// CustomConstants.MSG_PUSH_DESTINATION_TYPE_1) {
-	// // 发给固定人群
-	// String[] mobiles = message.getMsgDestination().split(",");
-	// // 获取设备唯一编码
-	// if (mobiles != null && mobiles.length != 0) {
-	// MsgPushCommonCustomize msgPushCommonCustomize = new MsgPushCommonCustomize();
-	// msgPushCommonCustomize.setMobiles(mobiles);
-	// List<MsgPushCommonCustomize> msgPushCommonList =
-	// msgPushCommonCustomizeMapper.getMobileCodeByMobiles(msgPushCommonCustomize);
-	// // 存储历史记录
-	// if (msgPushCommonList != null && msgPushCommonList.size() != 0) {
-	// for (int i = 0; i < msgPushCommonList.size(); i++) {
-	// MessagePushMsgHistory history = new MessagePushMsgHistory();
-	// history.setCreateTime(message.getCreateTime());
-	// history.setCreateUserId(message.getCreateUserId());
-	// history.setCreateUserName(message.getCreateUserName());
-	// history.setLastupdateTime(GetDate.getNowTime10());
-	// history.setLastupdateUserId(message.getCreateUserId());
-	// history.setLastupdateUserName(message.getCreateUserName());
-	// history.setMsgAction(message.getMsgAction());
-	// history.setMsgActionUrl(message.getMsgActionUrl());
-	// history.setMsgCode(message.getMsgCode());
-	// history.setMsgContent(message.getMsgContent());
-	// history.setMsgDestination(msgPushCommonList.get(i).getMobile());
-	// history.setMsgDestinationType(message.getMsgDestinationType());
-	// history.setMsgFirstreadPlat(null);
-	// history.setMsgImageUrl(message.getMsgImageUrl());
-	// history.setMsgJpushId(null);
-	// history.setMsgJpushProId(null);
-	// history.setMsgReadCountAndroid(0);
-	// history.setMsgReadCountIos(0);
-	// history.setMsgRemark("");
-	// history.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_0);
-	// history.setMsgTerminal(message.getMsgTerminal());
-	// history.setMsgTitle(message.getMsgTitle());
-	// history.setMsgUserId(null);
-	// history.setSendTime(null);
-	// history.setTagCode(message.getTagCode());
-	// history.setTagId(message.getTagId());
-	// if
-	// (msgPushCommonList.get(i).getClient().equals(CustomConstants.CLIENT_ANDROID))
-	// {
-	// history.setMsgDestinationCountAndroid(1);// 安卓目标推送数
-	// history.setMsgDestinationCountIos(0);// IOS目标推送数
-	// } else if
-	// (msgPushCommonList.get(i).getClient().equals(CustomConstants.CLIENT_IOS)) {
-	// history.setMsgDestinationCountAndroid(0);// 安卓目标推送数
-	// history.setMsgDestinationCountIos(1);// IOS目标推送数
-	// }
-	// int msgid = messagePushMsgHistoryMapper.insertSelective(history);
-	// if (msgid > 0) {
-	// msgIds.add(history.getId());
-	// }
-	// }
-	// }
-	// }
-	// }
-	// message.setMsgSendStatus(CustomConstants.MSG_PUSH_MSG_STATUS_1);
-	// message.setSendTime(GetDate.getNowTime10());
-	// messagePushMsgMapper.updateByPrimaryKeyWithBLOBs(message);
-	// return msgIds;
-	// }
+
+	/**
+	 * 添加发送记录（手动添加消息）
+	 *
+	 * @param messagePushMsg
+	 *            消息
+	 */
+	public static List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePushMsg message) {
+		List<MessagePushMsgHistory> histories = new ArrayList<MessagePushMsgHistory>();
+		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
+			// 发给所有人
+			MessagePushMsgHistory history = new MessagePushMsgHistory();
+			history.setCreateTime(message.getCreateTime());
+			history.setCreateUserId(message.getCreateUserId());
+			history.setCreateUserName(message.getCreateUserName());
+			history.setLastupdateTime(GetDate.getNowTime10());
+			history.setLastupdateUserId(message.getCreateUserId());
+			history.setLastupdateUserName(message.getCreateUserName());
+			history.setMsgAction(message.getMsgAction());
+			history.setMsgActionUrl(message.getMsgActionUrl());
+			history.setMsgCode(message.getMsgCode());
+			history.setMsgContent(message.getMsgContent());
+			history.setMsgDestination(message.getMsgDestination());
+			history.setMsgDestinationType(message.getMsgDestinationType());
+			history.setMsgFirstreadPlat(null);
+			history.setMsgImageUrl(message.getMsgImageUrl());
+			history.setMsgJpushId(null);
+			history.setMsgJpushProId(null);
+			history.setMsgReadCountAndroid(0);
+			history.setMsgReadCountIos(0);
+			history.setMsgRemark("");
+			history.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_0);
+			history.setMsgTerminal(message.getMsgTerminal());
+			history.setMsgTitle(message.getMsgTitle());
+			history.setMsgUserId(null);
+			history.setSendTime(null);
+			history.setTagCode(message.getTagCode());
+			history.setTagId(message.getTagId());
+			history.setMsgDestinationCountAndroid(amUserClient.countAliasByClient(CustomConstants.CLIENT_ANDROID));// 安卓目标推送数
+			history.setMsgDestinationCountIos(amUserClient.countAliasByClient(CustomConstants.CLIENT_IOS));// IOS目标推送数
+			// 插入数据库
+			messagePushMsgHistoryDao.insert(history);
+			histories.add(history);
+		}
+		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_1) {
+			// 发给固定人群
+			String[] mobiles = message.getMsgDestination().split(",");
+			// 获取设备唯一编码
+			if (mobiles != null && mobiles.length != 0) {
+				List<UserAliasVO> msgPushCommonList = amUserClient.findAliasesByMobiles(Arrays.asList(mobiles));
+				// 存储历史记录
+				if (msgPushCommonList != null && msgPushCommonList.size() != 0) {
+					for (int i = 0; i < msgPushCommonList.size(); i++) {
+						MessagePushMsgHistory history = new MessagePushMsgHistory();
+						history.setCreateTime(message.getCreateTime());
+						history.setCreateUserId(message.getCreateUserId());
+						history.setCreateUserName(message.getCreateUserName());
+						history.setLastupdateTime(GetDate.getNowTime10());
+						history.setLastupdateUserId(message.getCreateUserId());
+						history.setLastupdateUserName(message.getCreateUserName());
+						history.setMsgAction(message.getMsgAction());
+						history.setMsgActionUrl(message.getMsgActionUrl());
+						history.setMsgCode(message.getMsgCode());
+						history.setMsgContent(message.getMsgContent());
+						history.setMsgDestination(msgPushCommonList.get(i).getMobile());
+						history.setMsgDestinationType(message.getMsgDestinationType());
+						history.setMsgFirstreadPlat(null);
+						history.setMsgImageUrl(message.getMsgImageUrl());
+						history.setMsgJpushId(null);
+						history.setMsgJpushProId(null);
+						history.setMsgReadCountAndroid(0);
+						history.setMsgReadCountIos(0);
+						history.setMsgRemark("");
+						history.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_0);
+						history.setMsgTerminal(message.getMsgTerminal());
+						history.setMsgTitle(message.getMsgTitle());
+						history.setMsgUserId(null);
+						history.setSendTime(null);
+						history.setTagCode(message.getTagCode());
+						history.setTagId(message.getTagId());
+						if (msgPushCommonList.get(i).getClient().equals(CustomConstants.CLIENT_ANDROID)) {
+							history.setMsgDestinationCountAndroid(1);// 安卓目标推送数
+							history.setMsgDestinationCountIos(0);// IOS目标推送数
+						} else if (msgPushCommonList.get(i).getClient().equals(CustomConstants.CLIENT_IOS)) {
+							history.setMsgDestinationCountAndroid(0);// 安卓目标推送数
+							history.setMsgDestinationCountIos(1);// IOS目标推送数
+						}
+						// 插入数据库
+						messagePushMsgHistoryDao.insert(history);
+						histories.add(history);
+					}
+				}
+			}
+		}
+		message.setMsgSendStatus(CustomConstants.MSG_PUSH_MSG_STATUS_1);
+		message.setSendTime(GetDate.getNowTime10());
+		messagePushMsgDao.save(message);
+		return histories;
+	}
 
 	/**
 	 * 极光推送及更新发送状态
@@ -375,8 +340,7 @@ public class MsgPushHandle {
 			}
 			// 个人用户推送
 		} else if (msg.getMsgDestinationType() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_1) {
-			MsgPushCommonCustomize commonBean = msgPushCommonCustomizeMapper
-					.getMobileCodeByNumber(msg.getMsgDestination());
+			UserAliasVO commonBean = amUserClient.findAliasByMobile(msg.getMsgDestination());
 			if (commonBean != null) {
 				userId = commonBean.getUserId();
 				pcode = commonBean.getPackageCode();
@@ -530,8 +494,7 @@ public class MsgPushHandle {
 		if (userId != null) {
 			msg.setMsgUserId(userId);
 		}
-		// 更新操作
-		messagePushMsgHistoryMapper.updateByPrimaryKeySelective(msg);
+		messagePushMsgHistoryDao.save(msg);
 	}
 
 }

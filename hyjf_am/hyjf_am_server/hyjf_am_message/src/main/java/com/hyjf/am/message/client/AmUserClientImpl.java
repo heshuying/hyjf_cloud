@@ -12,6 +12,8 @@ import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 
+import java.util.List;
+
 /**
  * @author xiasq
  * @version AmUserClientImpl, v0.1 2018/4/19 12:44
@@ -55,7 +57,17 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public UserAliasVO getAliasByMobile(String mobile) {
+	public UserAliasVO findAliasByMobile(String mobile) {
 		return null;
+	}
+
+	@Override
+	public List<UserAliasVO> findAliasesByMobiles(List<String> mobiles) {
+		return null;
+	}
+
+	@Override
+	public int countAliasByClient(String clientAndroid) {
+		return 0;
 	}
 }
