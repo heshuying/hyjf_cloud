@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.AccountListMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.model.auto.AccountList" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.AccountList" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="nid" property="nid" jdbcType="VARCHAR" />
     <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
@@ -116,7 +116,7 @@
     check_status, trade_status, tx_date, tx_time, bank_seq_no, check_date, check_balance, 
     account_date
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.AccountListExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountListExample" >
     select
     <if test="distinct" >
       distinct
@@ -143,13 +143,13 @@
     delete from huiyingdai_account_list
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.AccountListExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountListExample" >
     delete from huiyingdai_account_list
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.AccountList" >
+  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountList" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -186,7 +186,7 @@
       #{checkDate,jdbcType=INTEGER}, #{checkBalance,jdbcType=DECIMAL}, #{accountDate,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.AccountList" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountList" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -466,7 +466,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.AccountListExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountListExample" resultType="java.lang.Integer" >
     select count(*) from huiyingdai_account_list
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -670,7 +670,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.AccountList" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountList" >
     update huiyingdai_account_list
     <set >
       <if test="nid != null" >
@@ -811,7 +811,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.AccountList" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountList" >
     update huiyingdai_account_list
     set nid = #{nid,jdbcType=VARCHAR},
       accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},

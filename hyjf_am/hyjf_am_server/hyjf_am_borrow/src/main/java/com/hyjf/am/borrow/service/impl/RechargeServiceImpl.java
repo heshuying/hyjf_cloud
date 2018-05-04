@@ -59,18 +59,6 @@ public class RechargeServiceImpl implements RechargeService {
 	@Autowired
 	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
-
-/*
-
-	@Autowired
-	@Qualifier("smsProcesser")
-	private MessageProcesser smsProcesser;
-
-	@Autowired
-	@Qualifier("appMsProcesser")
-	private MessageProcesser appMsProcesser;
-*/
-
 	/**
 	 * 根据用户Id检索用户银行卡信息
 	 * 

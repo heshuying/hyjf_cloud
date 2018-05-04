@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.CorpOpenAccountRecordMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.model.auto.CorpOpenAccountRecord" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
@@ -81,7 +81,7 @@
     id, user_id, username, busi_code, busi_name, guar_type, open_bank_id, card_id, `status`, 
     is_bank, add_time, update_time, remark, card_type, tax_registration_code, buse_no
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.CorpOpenAccountRecordExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecordExample" >
     select
     <if test="distinct" >
       distinct
@@ -99,7 +99,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from hyjf_corp_open_account_record
     where id = #{id,jdbcType=INTEGER}
@@ -108,30 +108,30 @@
     delete from hyjf_corp_open_account_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.CorpOpenAccountRecordExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecordExample" >
     delete from hyjf_corp_open_account_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.CorpOpenAccountRecord" >
+  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_corp_open_account_record (user_id, username, busi_code, 
-      busi_name, guar_type, open_bank_id, 
-      card_id, `status`, is_bank, 
-      add_time, update_time, remark, 
-      card_type, tax_registration_code, buse_no
-      )
-    values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{busiCode,jdbcType=CHAR}, 
-      #{busiName,jdbcType=VARCHAR}, #{guarType,jdbcType=CHAR}, #{openBankId,jdbcType=CHAR}, 
-      #{cardId,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{isBank,jdbcType=TINYINT}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
-      #{cardType,jdbcType=INTEGER}, #{taxRegistrationCode,jdbcType=CHAR}, #{buseNo,jdbcType=CHAR}
-      )
+    insert into hyjf_corp_open_account_record (user_id, username, busi_code,
+    busi_name, guar_type, open_bank_id,
+    card_id, `status`, is_bank,
+    add_time, update_time, remark,
+    card_type, tax_registration_code, buse_no
+    )
+    values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{busiCode,jdbcType=CHAR},
+    #{busiName,jdbcType=VARCHAR}, #{guarType,jdbcType=CHAR}, #{openBankId,jdbcType=CHAR},
+    #{cardId,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{isBank,jdbcType=TINYINT},
+    #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+    #{cardType,jdbcType=INTEGER}, #{taxRegistrationCode,jdbcType=CHAR}, #{buseNo,jdbcType=CHAR}
+    )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.CorpOpenAccountRecord" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -231,7 +231,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.CorpOpenAccountRecordExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecordExample" resultType="java.lang.Integer" >
     select count(*) from hyjf_corp_open_account_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -296,26 +296,26 @@
   <update id="updateByExample" parameterType="map" >
     update hyjf_corp_open_account_record
     set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
-      username = #{record.username,jdbcType=VARCHAR},
-      busi_code = #{record.busiCode,jdbcType=CHAR},
-      busi_name = #{record.busiName,jdbcType=VARCHAR},
-      guar_type = #{record.guarType,jdbcType=CHAR},
-      open_bank_id = #{record.openBankId,jdbcType=CHAR},
-      card_id = #{record.cardId,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=TINYINT},
-      is_bank = #{record.isBank,jdbcType=TINYINT},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      remark = #{record.remark,jdbcType=VARCHAR},
-      card_type = #{record.cardType,jdbcType=INTEGER},
-      tax_registration_code = #{record.taxRegistrationCode,jdbcType=CHAR},
-      buse_no = #{record.buseNo,jdbcType=CHAR}
+    user_id = #{record.userId,jdbcType=INTEGER},
+    username = #{record.username,jdbcType=VARCHAR},
+    busi_code = #{record.busiCode,jdbcType=CHAR},
+    busi_name = #{record.busiName,jdbcType=VARCHAR},
+    guar_type = #{record.guarType,jdbcType=CHAR},
+    open_bank_id = #{record.openBankId,jdbcType=CHAR},
+    card_id = #{record.cardId,jdbcType=VARCHAR},
+    `status` = #{record.status,jdbcType=TINYINT},
+    is_bank = #{record.isBank,jdbcType=TINYINT},
+    add_time = #{record.addTime,jdbcType=TIMESTAMP},
+    update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    card_type = #{record.cardType,jdbcType=INTEGER},
+    tax_registration_code = #{record.taxRegistrationCode,jdbcType=CHAR},
+    buse_no = #{record.buseNo,jdbcType=CHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.CorpOpenAccountRecord" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord" >
     update hyjf_corp_open_account_record
     <set >
       <if test="userId != null" >
@@ -366,7 +366,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.CorpOpenAccountRecord" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord" >
     update hyjf_corp_open_account_record
     set user_id = #{userId,jdbcType=INTEGER},
       username = #{username,jdbcType=VARCHAR},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BankCardMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.model.auto.BankCard" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BankCard" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -80,7 +80,7 @@
     id, user_id, user_name, card_no, bank_id, mobile, pay_alliance_code, bank, `status`, 
     create_time, create_user_id, create_user_name, update_time, update_user_id, update_user_name
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.BankCardExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.BankCardExample" >
     select
     <if test="distinct" >
       distinct
@@ -98,7 +98,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from hyjf_bank_card
     where id = #{id,jdbcType=INTEGER}
@@ -107,28 +107,28 @@
     delete from hyjf_bank_card
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.BankCardExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BankCardExample" >
     delete from hyjf_bank_card
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.BankCard" >
+  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BankCard" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_bank_card (user_id, user_name, card_no, 
-      bank_id, mobile, pay_alliance_code, 
-      bank, `status`, create_time, 
-      create_user_id, create_user_name, update_time, 
-      update_user_id, update_user_name)
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, 
-      #{bankId,jdbcType=INTEGER}, #{mobile,jdbcType=CHAR}, #{payAllianceCode,jdbcType=VARCHAR}, 
-      #{bank,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR})
+    insert into hyjf_bank_card (user_id, user_name, card_no,
+    bank_id, mobile, pay_alliance_code,
+    bank, `status`, create_time,
+    create_user_id, create_user_name, update_time,
+    update_user_id, update_user_name)
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR},
+    #{bankId,jdbcType=INTEGER}, #{mobile,jdbcType=CHAR}, #{payAllianceCode,jdbcType=VARCHAR},
+    #{bank,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
+    #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+    #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.BankCard" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BankCard" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -222,7 +222,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.BankCardExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BankCardExample" resultType="java.lang.Integer" >
     select count(*) from hyjf_bank_card
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -284,25 +284,25 @@
   <update id="updateByExample" parameterType="map" >
     update hyjf_bank_card
     set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
-      user_name = #{record.userName,jdbcType=VARCHAR},
-      card_no = #{record.cardNo,jdbcType=VARCHAR},
-      bank_id = #{record.bankId,jdbcType=INTEGER},
-      mobile = #{record.mobile,jdbcType=CHAR},
-      pay_alliance_code = #{record.payAllianceCode,jdbcType=VARCHAR},
-      bank = #{record.bank,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+    user_id = #{record.userId,jdbcType=INTEGER},
+    user_name = #{record.userName,jdbcType=VARCHAR},
+    card_no = #{record.cardNo,jdbcType=VARCHAR},
+    bank_id = #{record.bankId,jdbcType=INTEGER},
+    mobile = #{record.mobile,jdbcType=CHAR},
+    pay_alliance_code = #{record.payAllianceCode,jdbcType=VARCHAR},
+    bank = #{record.bank,jdbcType=VARCHAR},
+    `status` = #{record.status,jdbcType=TINYINT},
+    create_time = #{record.createTime,jdbcType=TIMESTAMP},
+    create_user_id = #{record.createUserId,jdbcType=INTEGER},
+    create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+    update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+    update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+    update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.BankCard" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BankCard" >
     update hyjf_bank_card
     <set >
       <if test="userId != null" >
@@ -350,7 +350,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.BankCard" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BankCard" >
     update hyjf_bank_card
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
