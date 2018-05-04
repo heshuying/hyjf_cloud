@@ -21,6 +21,7 @@
 	
 	<modules>
 		<module>hyjf_cs_user</module>
+		<module>hyjf_cs_message</module>
 		<module>hyjf_cs_market</module>
 		<module>hyjf_cs_borrow</module>
 	</modules>

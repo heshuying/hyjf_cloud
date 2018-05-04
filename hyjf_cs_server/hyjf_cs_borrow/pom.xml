@@ -34,6 +34,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-client</artifactId>
+		</dependency>
+
         <dependency>
             <groupId>com.hyjf</groupId>
             <artifactId>hyjf_pay_lib</artifactId>
