@@ -1,16 +1,15 @@
 package com.hyjf.cs.borrow.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.borrow.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
+import com.hyjf.am.vo.borrow.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.cs.borrow.bean.WebViewUser;
+import com.hyjf.cs.borrow.config.SystemConfig;
 import com.hyjf.cs.borrow.service.RechargeService;
 import com.hyjf.cs.borrow.util.UserDirectRechargeDefine;
 import com.hyjf.cs.borrow.util.WebUtils;
@@ -42,7 +41,7 @@ import java.util.Map;
  *
  */
 @Controller
-@RequestMapping(value = "/bank/web/user/recharge")
+@RequestMapping(value = "/recharge")
 public class RechargeController{
 	
 	Logger Logger = LoggerFactory.getLogger(RechargeController.class);
@@ -50,6 +49,8 @@ public class RechargeController{
 	@Autowired
 	private RechargeService userRechargeService;
 
+	@Autowired
+	SystemConfig systemConfig;
 	/**
 	 *
 	 * 页面充值
@@ -71,14 +72,14 @@ public class RechargeController{
 			modelAndView.addObject("message", "登录失效，请重新登陆！");
 			return modelAndView;
 		}
-		Users users=userRechargeService.getUsers(user.getUserId());
+		UserVO users=userRechargeService.getUsers(user.getUserId());
 		if (users.getBankOpenAccount()==0) {// 未开户
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "用户未开户！");
 			return modelAndView;
 		}
 
-		BankOpenAccount account = this.userRechargeService.getBankOpenAccount(user.getUserId());
+        BankOpenAccountVO account = this.userRechargeService.getBankOpenAccount(user.getUserId());
 
 		// 判断用户是否设置过交易密码
 		if (users.getIsSetPassword() == 0) {// 未设置交易密码
@@ -87,23 +88,15 @@ public class RechargeController{
 			return modelAndView;
 		}
 
-		// 判断用户是否缴费授权
-		//update by jijun 2018/04/09 合规接口改造一期
-       /* if (users.getPaymentAuthStatus() != 1) {
-            modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
-            modelAndView.addObject("message", "用户未进行缴费授权！");
-            return modelAndView;
-        }*/
-
 		// 根据用户ID查询用户平台银行卡信息
-		BankCard bankCard = this.userRechargeService.selectBankCardByUserId(user.getUserId());
+		BankCardVO bankCard = this.userRechargeService.selectBankCardByUserId(user.getUserId());
 		if (bankCard == null) {
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "查询银行卡信息失败！");
 			return modelAndView;
 		}
 
-		if (Validator.isNull(money)) {
+		if (StringUtils.isEmpty(money)) {
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "充值金额不能为空！");
 			return modelAndView;
@@ -127,16 +120,16 @@ public class RechargeController{
 		}
 
 		String cardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
-		UsersInfo userInfo = this.userRechargeService.getUsersInfoByUserId(user.getUserId());
+		UserInfoVO userInfo = this.userRechargeService.getUsersInfoByUserId(user.getUserId());
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
 
 		// 拼装参数 调用江西银行
 		// 同步调用路径
-		String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +
+		String retUrl = systemConfig.getWebHost() +
 				UserDirectRechargeDefine.REQUEST_MAPPING + UserDirectRechargeDefine.RETURL_SYN_ACTION + ".do?txAmount="+money;
 		// 异步调用路
-		String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +
+		String bgRetUrl = systemConfig.getWebHost() +
 				UserDirectRechargeDefine.REQUEST_MAPPING + UserDirectRechargeDefine.RETURL_ASY_ACTION + ".do?phone="+mobile;
 
 		// 用户ID
@@ -168,7 +161,6 @@ public class RechargeController{
 			modelAndView.addObject("message", "调用银行接口失败！");
 			//LogUtil.errorLog(UserDirectRechargeController.class.toString(), UserDirectRechargeDefine.USER_DIRECT_RECHARGE_PAGE_ACTION, e);
 		}
-
 		return modelAndView;
 	}
 
@@ -243,7 +235,7 @@ public class RechargeController{
 		bean.convert();
 		Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
 		// 查询用户开户状态
-		Users user = this.userRechargeService.getUsers(userId);
+		UserVO user = this.userRechargeService.getUsers(userId);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
 		params.put("mobile",bean.getMobile());

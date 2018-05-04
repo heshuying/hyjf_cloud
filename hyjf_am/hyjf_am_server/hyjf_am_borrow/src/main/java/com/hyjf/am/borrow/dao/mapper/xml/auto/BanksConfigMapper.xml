@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BanksConfigMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.model.auto.BanksConfig" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BanksConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="bank_id" property="bankId" jdbcType="INTEGER" />
     <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
@@ -85,7 +85,7 @@
     single_quota, single_card_quota, fee_withdraw, sort_id, remark, create_user, create_time, 
     update_user, update_time, del_flg, month_card_quota
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.BanksConfigExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.BanksConfigExample" >
     select
     <if test="distinct" >
       distinct
@@ -103,7 +103,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from hyjf_banks_config
     where id = #{id,jdbcType=INTEGER}
@@ -112,32 +112,32 @@
     delete from hyjf_banks_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.BanksConfigExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BanksConfigExample" >
     delete from hyjf_banks_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.BanksConfig" >
+  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BanksConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_banks_config (bank_id, bank_name, pay_alliance_code, 
-      bank_code, bank_icon, bank_logo, 
-      quick_payment, single_quota, single_card_quota, 
-      fee_withdraw, sort_id, remark, 
-      create_user, create_time, update_user, 
-      update_time, del_flg, month_card_quota
-      )
-    values (#{bankId,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, #{payAllianceCode,jdbcType=VARCHAR}, 
-      #{bankCode,jdbcType=VARCHAR}, #{bankIcon,jdbcType=VARCHAR}, #{bankLogo,jdbcType=VARCHAR}, 
-      #{quickPayment,jdbcType=TINYINT}, #{singleQuota,jdbcType=DECIMAL}, #{singleCardQuota,jdbcType=DECIMAL}, 
-      #{feeWithdraw,jdbcType=DECIMAL}, #{sortId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}
-      )
+    insert into hyjf_banks_config (bank_id, bank_name, pay_alliance_code,
+    bank_code, bank_icon, bank_logo,
+    quick_payment, single_quota, single_card_quota,
+    fee_withdraw, sort_id, remark,
+    create_user, create_time, update_user,
+    update_time, del_flg, month_card_quota
+    )
+    values (#{bankId,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, #{payAllianceCode,jdbcType=VARCHAR},
+    #{bankCode,jdbcType=VARCHAR}, #{bankIcon,jdbcType=VARCHAR}, #{bankLogo,jdbcType=VARCHAR},
+    #{quickPayment,jdbcType=TINYINT}, #{singleQuota,jdbcType=DECIMAL}, #{singleCardQuota,jdbcType=DECIMAL},
+    #{feeWithdraw,jdbcType=DECIMAL}, #{sortId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},
+    #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER},
+    #{updateTime,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}
+    )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.BanksConfig" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BanksConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -255,7 +255,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.BanksConfigExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BanksConfigExample" resultType="java.lang.Integer" >
     select count(*) from hyjf_banks_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -329,29 +329,29 @@
   <update id="updateByExample" parameterType="map" >
     update hyjf_banks_config
     set id = #{record.id,jdbcType=INTEGER},
-      bank_id = #{record.bankId,jdbcType=INTEGER},
-      bank_name = #{record.bankName,jdbcType=VARCHAR},
-      pay_alliance_code = #{record.payAllianceCode,jdbcType=VARCHAR},
-      bank_code = #{record.bankCode,jdbcType=VARCHAR},
-      bank_icon = #{record.bankIcon,jdbcType=VARCHAR},
-      bank_logo = #{record.bankLogo,jdbcType=VARCHAR},
-      quick_payment = #{record.quickPayment,jdbcType=TINYINT},
-      single_quota = #{record.singleQuota,jdbcType=DECIMAL},
-      single_card_quota = #{record.singleCardQuota,jdbcType=DECIMAL},
-      fee_withdraw = #{record.feeWithdraw,jdbcType=DECIMAL},
-      sort_id = #{record.sortId,jdbcType=INTEGER},
-      remark = #{record.remark,jdbcType=VARCHAR},
-      create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_user = #{record.updateUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT},
-      month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL}
+    bank_id = #{record.bankId,jdbcType=INTEGER},
+    bank_name = #{record.bankName,jdbcType=VARCHAR},
+    pay_alliance_code = #{record.payAllianceCode,jdbcType=VARCHAR},
+    bank_code = #{record.bankCode,jdbcType=VARCHAR},
+    bank_icon = #{record.bankIcon,jdbcType=VARCHAR},
+    bank_logo = #{record.bankLogo,jdbcType=VARCHAR},
+    quick_payment = #{record.quickPayment,jdbcType=TINYINT},
+    single_quota = #{record.singleQuota,jdbcType=DECIMAL},
+    single_card_quota = #{record.singleCardQuota,jdbcType=DECIMAL},
+    fee_withdraw = #{record.feeWithdraw,jdbcType=DECIMAL},
+    sort_id = #{record.sortId,jdbcType=INTEGER},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    create_user = #{record.createUser,jdbcType=INTEGER},
+    create_time = #{record.createTime,jdbcType=INTEGER},
+    update_user = #{record.updateUser,jdbcType=INTEGER},
+    update_time = #{record.updateTime,jdbcType=INTEGER},
+    del_flg = #{record.delFlg,jdbcType=TINYINT},
+    month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.BanksConfig" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BanksConfig" >
     update hyjf_banks_config
     <set >
       <if test="bankId != null" >
@@ -411,7 +411,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.BanksConfig" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BanksConfig" >
     update hyjf_banks_config
     set bank_id = #{bankId,jdbcType=INTEGER},
       bank_name = #{bankName,jdbcType=VARCHAR},

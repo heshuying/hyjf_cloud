@@ -3,17 +3,16 @@ package com.hyjf.am.borrow.controller;
 import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.AccountService;
 import com.hyjf.am.borrow.service.RechargeService;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.dao.model.auto.UsersInfoExample;
+import com.hyjf.am.response.borrow.*;
+import com.hyjf.am.vo.borrow.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,13 +31,16 @@ public class RechargeController {
      * @param userId
      * @return
      */
-    @RequestMapping("/selectByUserId/{userId}")
-    public BankCard selectByUserId (@PathVariable Integer userId){
+    @GetMapping("/selectByUserId/{userId}")
+    public BankCardResponse selectByUserId (@PathVariable Integer userId){
+        BankCardResponse response = new BankCardResponse();
         BankCard bankCard = rechargeService.selectBankCardByUserId(userId);
-        if(null == bankCard){
-            bankCard = new BankCard();
+        if(null != bankCard){
+            BankCardVO bankCardVO = new BankCardVO();
+            BeanUtils.copyProperties(bankCard, bankCardVO);
+            response.setResult(bankCardVO);
         }
-        return bankCard;
+        return response;
     }
 
     /**
@@ -46,13 +48,16 @@ public class RechargeController {
      * @param bankId
      * @return
      */
-    @RequestMapping("/getBanksConfigByBankId/{bankId}")
-    public BanksConfig getBanksConfigByBankId(@PathVariable Integer bankId){
+    @GetMapping("/getBanksConfigByBankId/{bankId}")
+    public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
+        BanksConfigResponse response = new BanksConfigResponse();
         BanksConfig bankConfig = rechargeService.getBanksConfigByBankId(bankId);
-        if(null == bankConfig){
-            bankConfig = new BanksConfig();
+        if(null != bankConfig){
+            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BeanUtils.copyProperties(bankConfig,banksConfigVO);
+            response.setResult(banksConfigVO);
         }
-        return bankConfig;
+        return response;
     }
 
     /**
@@ -60,36 +65,45 @@ public class RechargeController {
      * @param userId
      * @return
      */
-    @RequestMapping("/getAccount/{userId}")
-    public Account getAccount(@PathVariable Integer userId){
+    @GetMapping("/getAccount/{userId}")
+    public AccountResponse getAccount(@PathVariable Integer userId){
+        AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(userId);
-        if(null == account){
-            account = new Account();
+        if(null != account){
+            AccountVO accountVO = new AccountVO();
+            BeanUtils.copyProperties(account,accountVO);
+            response.setResult(accountVO);
         }
-        return account;
-    }
-    @RequestMapping("/selectByExample")
-    public Account selectByExample(@RequestBody AccountExample example){
-        Account account = accountService.selectByExample(example);
-        if(null == account){
-            account = new Account();
-        }
-        return account;
+        return response;
     }
 
+    @PostMapping("/selectAccountByExample")
+    public AccountResponse selectByExample(@RequestBody AccountExample example){
+        AccountResponse response = new AccountResponse();
+        Account account = accountService.selectByExample(example);
+        if(null != account){
+            AccountVO accountVO = new AccountVO();
+            BeanUtils.copyProperties(account,accountVO);
+            response.setResult(accountVO);
+        }
+        return response;
+    }
 
     /**
      * 根据用户ID查询企业用户信息
      * @param userId
      * @return
      */
-    @RequestMapping("/getCorpOpenAccountRecord/{userId}")
-    public CorpOpenAccountRecord getCorpOpenAccountRecord(@PathVariable Integer userId){
+    @GetMapping("/getCorpOpenAccountRecord/{userId}")
+    public CorpOpenAccountRecordResponse getCorpOpenAccountRecord(@PathVariable Integer userId){
+        CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
         CorpOpenAccountRecord corpOpenAccountRecord= rechargeService.getCorpOpenAccountRecord(userId);
-        if(null == corpOpenAccountRecord){
-            corpOpenAccountRecord = new CorpOpenAccountRecord();
+        if(null != corpOpenAccountRecord){
+            CorpOpenAccountRecordVO corpOpenAccountRecordVO = new CorpOpenAccountRecordVO();
+            BeanUtils.copyProperties(corpOpenAccountRecord,corpOpenAccountRecordVO);
+            response.setResult(corpOpenAccountRecordVO);
         }
-        return corpOpenAccountRecord;
+        return response;
     }
 
     /**
@@ -97,7 +111,7 @@ public class RechargeController {
      * @param bean
      * @return
      */
-    @RequestMapping("/insertRechargeInfo")
+    @PostMapping("/insertRechargeInfo")
     public int insertRechargeInfo(@RequestBody @Valid BankCallBean bean){
        Integer response = rechargeService.insertRechargeInfo(bean);
        if (response != null){
@@ -111,13 +125,19 @@ public class RechargeController {
      * @param example
      * @return
      */
-    @RequestMapping("/selectByExample")
-    public AccountRecharge selectByExample(@RequestBody AccountRechargeExample example){
+    @PostMapping("/selectByExample")
+    public AccountRechargeResponse selectByExample(@RequestBody AccountRechargeExample example){
+        AccountRechargeResponse response = new AccountRechargeResponse();
         AccountRecharge accountRecharge = rechargeService.selectByExample(example);
-        return accountRecharge;
+        if (accountRecharge != null){
+            AccountRechargeVO accountRechargeVO = new AccountRechargeVO();
+            BeanUtils.copyProperties(accountRecharge,accountRechargeVO);
+            response.setResult(accountRechargeVO);
+        }
+        return response;
     }
 
-    @RequestMapping("/updateByExampleSelective")
+    @PostMapping("/updateByExampleSelective")
     public int updateByExampleSelective(@RequestBody Map<String,Object> paramMap){
 
         AccountRecharge accountRecharge = (AccountRecharge) paramMap.get("accountRecharge");
@@ -126,7 +146,7 @@ public class RechargeController {
         return count;
     }
 
-    @RequestMapping("/updateBankRechargeSuccess")
+    @PostMapping("/updateBankRechargeSuccess")
     public int updateBankRechargeSuccess(@RequestBody Account newAccount){
         int isAccountUpdateFlag = rechargeService.updateBankRechargeSuccess(newAccount);
         return isAccountUpdateFlag;
@@ -137,33 +157,27 @@ public class RechargeController {
      * @param accountList
      * @return
      */
-    @RequestMapping("/insertSelective")
+    @PostMapping("/insertSelective")
     public int insertSelective(@RequestBody AccountList accountList){
         int isAccountListUpdateFlag = rechargeService.insertSelective(accountList);
         return isAccountListUpdateFlag;
     }
 
-    @RequestMapping("/selectByPrimaryKey")
-    public Users selectByPrimaryKey(@RequestBody Integer userId){
-        Users users = rechargeService.selectByPrimaryKey(userId);
-        return users;
-    }
 
-    @RequestMapping("/updateByPrimaryKeySelective")
+    @PutMapping("/updateByPrimaryKeySelective")
     public void updateByPrimaryKeySelective(@RequestBody AccountRecharge accountRecharge){
         this.rechargeService.updateByPrimaryKeySelective(accountRecharge);
     }
 
-    @RequestMapping("/getBankReturnCodeConfig")
-    public BankReturnCodeConfig getBankReturnCodeConfig(BankReturnCodeConfigExample example){
+    @PostMapping("/getBankReturnCodeConfig")
+    public BankReturnCodeConfigResponse getBankReturnCodeConfig(BankReturnCodeConfigExample example){
+        BankReturnCodeConfigResponse response = new BankReturnCodeConfigResponse();
         BankReturnCodeConfig retCodes = this.rechargeService.selectByExample(example);
-        return retCodes;
-    }
-
-    @RequestMapping("/selectByExample")
-    public UsersInfo selectByExample(UsersInfoExample example) {
-        UsersInfo usersInfo = this.rechargeService.selectByExample(example);
-        return usersInfo;
-
+        if(null != retCodes){
+            BankReturnCodeConfigVO bankReturnCodeConfigVO = new BankReturnCodeConfigVO();
+            BeanUtils.copyProperties(retCodes,bankReturnCodeConfigVO);
+            response.setResult(bankReturnCodeConfigVO);
+        }
+        return response;
     }
 }
