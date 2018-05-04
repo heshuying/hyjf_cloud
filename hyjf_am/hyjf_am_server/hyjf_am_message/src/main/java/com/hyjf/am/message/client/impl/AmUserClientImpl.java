@@ -1,5 +1,6 @@
-package com.hyjf.am.message.client;
+package com.hyjf.am.message.client.impl;
 
+import com.hyjf.am.message.client.AmUserClient;
 import com.hyjf.am.vo.user.UserAliasVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

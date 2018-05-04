@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hyjf.am.message.bean.MessagePushMsg;
+import com.hyjf.am.message.bean.MessagePush;
 import com.hyjf.am.message.bean.MessagePushMsgHistory;
 import com.hyjf.am.message.client.AmConfigClient;
 import com.hyjf.am.message.client.AmUserClient;
@@ -56,7 +56,7 @@ public class MsgPushHandle {
 	 */
 	public static Integer sendMessages(Integer msgId) {
 
-		MessagePushMsg message = messagePushMsgDao.findById(msgId);
+		MessagePush message = messagePushMsgDao.findById(msgId);
 
 		List<MessagePushMsgHistory> histories = addMessageHistoryRecord(message);
 		for (MessagePushMsgHistory history : histories) {
@@ -206,7 +206,7 @@ public class MsgPushHandle {
 	 * @param messagePushMsg
 	 *            消息
 	 */
-	public static List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePushMsg message) {
+	public static List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePush message) {
 		List<MessagePushMsgHistory> histories = new ArrayList<MessagePushMsgHistory>();
 		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 			// 发给所有人

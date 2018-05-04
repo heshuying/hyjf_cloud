@@ -48,10 +48,9 @@ public class SmsConsumer extends Consumer {
 	public class MessageListener implements MessageListenerConcurrently {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.info("SmsConsumer 收到消息，开始处理....");
 			MessageExt msg = msgs.get(0);
 			SmsMessage smsMessage = JSONObject.parseObject(msg.getBody(), SmsMessage.class);
-
+			logger.info("SmsConsumer 收到消息，开始处理....smsMessage is :{}", smsMessage);
 			if (null != smsMessage) {
 				switch (smsMessage.getServiceType()) {
 				case MessageConstant.SMSSENDFORMANAGER:// 通知配置,根据模版给指定管理员手机号发送消息（满标，标到期等）

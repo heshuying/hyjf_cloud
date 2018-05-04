@@ -1,9 +1,10 @@
 package com.hyjf.am.message.handle;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hyjf.am.message.bean.SmsLogWithBLOBs;
+import com.hyjf.am.message.bean.SmsLog;
 import com.hyjf.am.message.client.AmConfigClient;
 import com.hyjf.am.message.client.AmUserClient;
 import com.hyjf.am.message.mongo.SmsLogDao;
@@ -154,7 +155,7 @@ public class SmsHandle {
 		xStream.alias("response", SmsResponse.class);
 		int status = ((SmsResponse) xStream.fromXML(HttpDeal.post(url, parmMap).trim())).getError();
 
-		SmsLogWithBLOBs smsLog = new SmsLogWithBLOBs();
+		SmsLog smsLog = new SmsLog();
 		smsLog.setType(type);
 		smsLog.setContent(messageStr);// 短信内容
 		smsLog.setPosttime(GetDate.getNowTime10());
@@ -182,32 +183,28 @@ public class SmsHandle {
 	 */
 	public static Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String channelType) {
 		int status = -1;
-		// try {
-		// // 获取模板信息
-		// try {
-		// SmsNoticeConfigWithBLOBs smsNoticeConfig = getNoticeConfig(tplCode);
-		// String mobile = smsNoticeConfig.getValue();
-		// String messageStr = smsNoticeConfig.getContent();
-		// if (Validator.isNotNull(messageStr)) {
-		// if (replaceStrs != null && replaceStrs.size() > 0) {
-		// for (String s : replaceStrs.keySet()) {
-		// messageStr = StringUtils.replace(messageStr, "[" + s + "]",
-		// replaceStrs.get(s));
-		// }
-		// }
-		// }
-		//
-		// // 发送短信
-		// status = sendMessage(mobile, messageStr, smsNoticeConfig.getTitle(),
-		// null, channelType);
-		// } catch (Exception e) {
-		// LogUtil.errorLog(SmsHandle.class.toString(), "sendMessages", "短信发送失败",
-		// e);
-		// }
-		// } catch (Exception e) {
-		// LogUtil.errorLog(SmsHandle.class.toString(), "sendMessages", "短信发送失败",
-		// e);
-		// }
+		try {
+			// 获取模板信息
+			try {
+				SmsNoticeConfigVO smsNoticeConfig = amConfigClient.findSmsNoticeByCode(tplCode);
+				String mobile = smsNoticeConfig.getValue();
+				String messageStr = smsNoticeConfig.getContent();
+				if (Validator.isNotNull(messageStr)) {
+					if (replaceStrs != null && replaceStrs.size() > 0) {
+						for (String s : replaceStrs.keySet()) {
+							messageStr = StringUtils.replace(messageStr, "[" + s + "]", replaceStrs.get(s));
+						}
+					}
+				}
+				// 发送短信
+				status = sendMessage(mobile, messageStr, smsNoticeConfig.getTitle(), null, channelType);
+			} catch (Exception e) {
+				logger.error("短信发送失败...", e);
+
+			}
+		} catch (Exception e) {
+			logger.error("短信发送失败...", e);
+		}
 		return status;
 	}
 
@@ -342,5 +339,37 @@ public class SmsHandle {
 			logger.error("短信发送失败...", e);
 		}
 		return status;
+	}
+
+	/**
+	 * 短信调用返回
+	 */
+	private class SmsResponse implements Serializable {
+
+		/**
+		 * 此处为属性说明
+		 */
+		private static final long serialVersionUID = -3195210420206026269L;
+
+		public Integer getError() {
+			return error;
+		}
+
+		public void setError(Integer error) {
+			this.error = error;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		private Integer error;
+
+		private String message;
+
 	}
 }

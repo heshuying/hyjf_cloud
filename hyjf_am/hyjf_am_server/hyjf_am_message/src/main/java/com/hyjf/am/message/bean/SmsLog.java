@@ -1,6 +1,7 @@
 package com.hyjf.am.message.bean;
 
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
@@ -8,30 +9,36 @@ import java.io.Serializable;
  * @author xiasq
  * @version SmsLog, v0.1 2018/5/4 9:31
  */
+
+@Document(collection = "t_sms_log")
 public class SmsLog implements Serializable {
 
-    protected Integer id;
+    private Integer id;
 
-    protected String type;
+    private String type;
 
-    protected String ip;
+    private String ip;
 
     @Indexed
-    protected Integer posttime;
+    private Integer posttime;
 
-    protected Integer status;
+    private Integer status;
 
-    protected Integer backend;
+    private Integer backend;
 
-    protected String browser;
+    private String browser;
 
-    protected String machine;
+    private String machine;
 
-    protected Integer userId;
+    private Integer userId;
 
-    protected Integer loadStatus;
+    private Integer loadStatus;
 
-    protected String sender;
+    private String sender;
+
+    private String mobile;
+
+    private String content;
 
     private static final long serialVersionUID = 1L;
 
@@ -121,6 +128,22 @@ public class SmsLog implements Serializable {
 
     public void setSender(String sender) {
         this.sender = sender == null ? null : sender.trim();
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 
 }

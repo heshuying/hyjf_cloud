@@ -82,6 +82,18 @@ public class SmsMessage extends HyjfMessage {
         this.channelType = channelType;
     }
 
+    @Override
+    public String toString() {
+        return "SmsMessage{" +
+                "mobile='" + mobile + '\'' +
+                ", message='" + message + '\'' +
+                ", serviceType='" + serviceType + '\'' +
+                ", sender='" + sender + '\'' +
+                ", tplCode='" + tplCode + '\'' +
+                ", channelType='" + channelType + '\'' +
+                '}';
+    }
+
     private String mobile;
 
     private String message;
