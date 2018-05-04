@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.mq;
+package com.hyjf.cs.borrow.mq;
 
 import com.hyjf.common.constants.MQConstant;
 import org.slf4j.Logger;
@@ -15,6 +15,7 @@ import com.hyjf.common.exception.MQException;
 
 @Component
 public class SmsProducer extends Producer {
+	private static final Logger logger = LoggerFactory.getLogger(SmsProducer.class);
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {

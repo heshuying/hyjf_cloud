@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.CommonConstants;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.*;
 import com.hyjf.cs.user.result.ServerResultBean;
 
@@ -45,10 +45,10 @@ public class ServerController {
 
 		String appKey = "";
 
-		if (CommonConstants.CLIENT_ANDROID.equals(platform)) {
+		if (CommonConstant.CLIENT_ANDROID.equals(platform)) {
 			// 取得appKey
 			appKey = "f5lnl3lN";
-		} else if (CommonConstants.CLIENT_IOS.equals(platform)) {
+		} else if (CommonConstant.CLIENT_IOS.equals(platform)) {
 			// 取得appKey
 			appKey = "tN83YxYY";
 		} else {

@@ -2,11 +2,13 @@ package com.hyjf.am.message.mq;
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.HyjfMessage;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.am.message.processer.SmsHandle;
-import com.hyjf.common.util.DataUtil;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -15,6 +17,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.jsoup.helper.DataUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,17 +32,12 @@ import org.springframework.stereotype.Component;
 public class SmsConsumer extends Consumer {
 	private static final Logger logger = LoggerFactory.getLogger(SmsConsumer.class);
 
-	@Value("${rocketMQ.group.smsCodeGroup}")
-	private String smsCodeGroup;
-	@Value("${rocketMQ.topic.smsCodeTopic}")
-	private String smsCodeTopic;
-
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-		defaultMQPushConsumer.setConsumerGroup(smsCodeGroup);
+		defaultMQPushConsumer.setConsumerGroup(MQConstant.SMS_CODE_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
-		defaultMQPushConsumer.subscribe(smsCodeTopic, "*");
+		defaultMQPushConsumer.subscribe(MQConstant.SMS_CODE_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -56,10 +54,9 @@ public class SmsConsumer extends Consumer {
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			logger.info("SmsConsumer 收到消息，开始处理....");
 			MessageExt msg = msgs.get(0);
-			HyjfMessage message = (HyjfMessage) DataUtil.ByteToObject(msg.getBody());
+			SmsMessage smsMessage = JSONObject.parseObject(msg.getBody(), SmsMessage.class);
 
-			if (null != message) {
-				SmsMessage smsMessage = (SmsMessage) message;
+			if (null != smsMessage) {
 				switch (smsMessage.getServiceType()) {
 				case MessageConstant.SMSSENDFORMANAGER:// 通知配置,根据模版给指定管理员手机号发送消息（满标，标到期等）
 					SmsHandle.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),

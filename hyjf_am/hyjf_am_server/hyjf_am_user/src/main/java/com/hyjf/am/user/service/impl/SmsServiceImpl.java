@@ -10,7 +10,7 @@ import com.hyjf.am.user.dao.mapper.auto.SmsCodeMapper;
 import com.hyjf.am.user.dao.model.auto.SmsCode;
 import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.SmsService;
-import com.hyjf.common.constants.CommonConstants;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
 
@@ -30,13 +30,13 @@ public class SmsServiceImpl implements SmsService {
 		SmsCodeExample.Criteria cra = example.createCriteria();
 		cra.andMobileEqualTo(mobile);
 		List<Integer> statusList = new ArrayList<Integer>();
-		statusList.add(CommonConstants.CKCODE_NEW);
-		statusList.add(CommonConstants.CKCODE_YIYAN);
+		statusList.add(CommonConstant.CKCODE_NEW);
+		statusList.add(CommonConstant.CKCODE_YIYAN);
 		cra.andStatusIn(statusList);
 		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
 			for (SmsCode smsCode : codeList) {
-				smsCode.setStatus(CommonConstants.CKCODE_FAILED);// 失效7
+				smsCode.setStatus(CommonConstant.CKCODE_FAILED);// 失效7
 				smsCodeMapper.updateByPrimaryKey(smsCode);
 			}
 		}

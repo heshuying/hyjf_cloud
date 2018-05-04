@@ -11,7 +11,11 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +29,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.constants.CommonConstants;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -68,12 +71,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private StringRedisUtil stringRedisUtil;
 
-	@Value("${rocketMQ.topic.couponTopic}")
-	private String couponTopic;
-	@Value("${rocketMQ.topic.smsCodeTopic}")
-	private String smsTopic;
-	@Value("${rocketMQ.tag.defaultTag}")
-	private String defaultTag;
 	@Value("${hyjf.activity.regist.tzj.id}")
 	private String activityIdTzj;
 	@Value("${hyjf.activity.888.id}")
@@ -169,7 +166,7 @@ public class UserServiceImpl implements UserService {
 
 			// 3. todo 登录时自动同步线下充值记录
 
-			return  userVO;
+			return userVO;
 		} else {
 			// 密码错误，增加错误次数
 			stringRedisUtil.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
@@ -241,9 +238,9 @@ public class UserServiceImpl implements UserService {
 			throw new ReturnMessageException(RegisterError.PASSWORD_FORMAT_ERROR);
 		}
 
-		String verificationType = CommonConstants.PARAM_TPL_ZHUCE;
-		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstants.CLIENT_PC,
-				CommonConstants.CKCODE_YIYAN, CommonConstants.CKCODE_USED);
+		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+				CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
 		if (cnt == 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
 		}
@@ -283,8 +280,7 @@ public class UserServiceImpl implements UserService {
 				json.put("remark", "投之家用户注册送加息券");
 				json.put("sendFlg", 0);
 				try {
-					couponProducer.messageSend(
-							new Producer.MassageContent(couponTopic, defaultTag, "coupon_" + userId, json));
+					couponProducer.messageSend(new Producer.MassageContent(MQConstant.TZJ_REGISTER_INTEREST_TOPIC, JSON.toJSONBytes(json)));
 				} catch (MQException e) {
 					logger.error("投之家用户注册送券失败....userId is :" + userId, e);
 				}
@@ -298,19 +294,19 @@ public class UserServiceImpl implements UserService {
 				params.put("mqMsgId", GetCode.getRandomCode(10));
 				params.put("userId", String.valueOf(userId));
 				params.put("sendFlg", "11");
-				couponProducer.messageSend(new Producer.MassageContent(couponTopic, defaultTag, "coupon_" + userId,
-						JSON.toJSONBytes(params)));
+				couponProducer
+						.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC, JSON.toJSONBytes(params)));
 			} catch (Exception e) {
 				logger.error("注册发放888红包失败...", e);
 			}
 
 			// 短信通知用户发券成功
-			JSONObject params = new JSONObject();
-			params.put("mobile", userVO.getMobile());
-			params.put("templateCode", MessageConstant.SMSSENDFORMOBILE);
+			SmsMessage smsMessage = new SmsMessage(userId, null, userVO.getMobile(), null,
+					MessageConstant.SMSSENDFORMOBILE, null, CustomConstants.PARAM_TPL_TZJ_188HB,
+					CustomConstants.CHANNEL_TYPE_NORMAL);
 			try {
 				smsProducer.messageSend(
-						new Producer.MassageContent(smsTopic, defaultTag, "sms_" + userVO.getMobile(), params));
+						new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
 			} catch (MQException e) {
 				logger.error("短信发送失败...", e);
 			}

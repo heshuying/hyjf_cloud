@@ -1,25 +1,22 @@
-package com.hyjf.cs.user.mq;
+package com.hyjf.cs.borrow.mq;
 
-import com.hyjf.common.constants.MQConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
 /**
  * @author xiasq
- * @version SmsProducer, v0.1 2018/4/12 15:09
+ * @version AppMessageProducer, v0.1 2018/4/12 15:09
  */
 
 @Component
-public class SmsProducer extends Producer {
+public class AppMessageProducer extends Producer {
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {
 		ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-		wrapper.setGroup(MQConstant.SMS_CODE_GROUP);
+		wrapper.setGroup(MQConstant.APP_MESSAGE_GROUP);
 		wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		return wrapper;
 	}

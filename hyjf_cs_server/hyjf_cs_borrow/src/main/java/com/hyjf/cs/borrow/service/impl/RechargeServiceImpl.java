@@ -4,6 +4,15 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.borrow.mq.AppMessageProducer;
+import com.hyjf.cs.borrow.mq.Producer;
+import com.hyjf.cs.borrow.mq.SmsProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +59,11 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 	@Autowired
 	SystemConfig systemConfig;
+
+	@Autowired
+	AppMessageProducer appMessageProducer;
+	@Autowired
+	SmsProducer smsProducer;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -241,12 +255,17 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
 
-//								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
-//										CustomConstants.CHANNEL_TYPE_NORMAL);
-//								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-//								smsProcesser.gather(smsMessage);
-//								appMsProcesser.gather(appMsMessage);
-								// todo 短信生产消息
+								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null,
+										MessageConstant.SMSSENDFORUSER, null,
+										CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
+										CustomConstants.CHANNEL_TYPE_NORMAL);
+								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
+										MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
+
+								smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+										JSON.toJSONBytes(smsMessage)));
+								appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+										JSON.toJSONBytes(appMsMessage)));
 							}else{
 								// 替换参数
 								Map<String, String> replaceMap = new HashMap<String, String>();
@@ -255,9 +274,10 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 								UsersInfo info = getUsersInfoByUserId(userId);
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
-//								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-//								appMsProcesser.gather(appMsMessage);
-								// todo 短信生产消息
+								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
+										MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
+								appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+										JSON.toJSONBytes(appMsMessage)));
 							}
 							return jsonMessage("充值成功!", "0");
 						} else {

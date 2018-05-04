@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 
+import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -90,11 +91,19 @@ public abstract class Producer {
 		}
 
 		public MassageContent(String topic, String tag, byte[] body) {
-			this(topic, tag, String.valueOf(System.currentTimeMillis()), body);
+			this(topic, tag, MQConstant.HYJF_DEFAULT_KEY, body);
+		}
+
+		public MassageContent(String topic, byte[] body) {
+			this(topic, MQConstant.HYJF_DEFAULT_TAG, MQConstant.HYJF_DEFAULT_KEY, body);
 		}
 
 		public MassageContent(String topic, String tag, JSONObject body) {
-			this(topic, tag, String.valueOf(System.currentTimeMillis()), body);
+			this(topic, tag, MQConstant.HYJF_DEFAULT_KEY, body);
+		}
+
+		public MassageContent(String topic, JSONObject body) {
+			this(topic, MQConstant.HYJF_DEFAULT_TAG, MQConstant.HYJF_DEFAULT_KEY, body);
 		}
 	}
 

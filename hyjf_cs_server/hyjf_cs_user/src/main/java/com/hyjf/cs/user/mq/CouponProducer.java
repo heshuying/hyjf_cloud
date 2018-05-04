@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.mq;
 
+import com.hyjf.common.constants.MQConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,15 +14,11 @@ import com.hyjf.common.exception.MQException;
  */
 @Component
 public class CouponProducer extends Producer {
-	private static final Logger logger = LoggerFactory.getLogger(CouponProducer.class);
-
-	@Value("${rocketMQ.group.couponGroup}")
-	private String couponGroup;
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {
 		ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-		wrapper.setGroup(couponGroup);
+		wrapper.setGroup(MQConstant.GRANT_COUPON_GROUP);
 		wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		return wrapper;
 	}

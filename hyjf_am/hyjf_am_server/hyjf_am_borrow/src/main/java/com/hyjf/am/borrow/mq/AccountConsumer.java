@@ -2,6 +2,8 @@ package com.hyjf.am.borrow.mq;
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Component;
 import com.hyjf.am.borrow.dao.model.auto.Account;
 import com.hyjf.am.borrow.service.AccountService;
 import com.hyjf.am.vo.borrow.AccountVO;
-import com.hyjf.common.util.DataUtil;
 
 /**
  * @author xiasq
@@ -30,20 +31,15 @@ import com.hyjf.common.util.DataUtil;
 @Component
 public class AccountConsumer extends Consumer {
 	private static final Logger logger = LoggerFactory.getLogger(AccountConsumer.class);
-
-	@Value("${rocketMQ.group.accountGroup}")
-	private String accountGroup;
-	@Value("${rocketMQ.topic.accountTopic}")
-	private String accountTopic;
 	@Autowired
 	private AccountService accountService;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-		defaultMQPushConsumer.setConsumerGroup(accountGroup);
+		defaultMQPushConsumer.setConsumerGroup(MQConstant.ACCOUNT_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
-		defaultMQPushConsumer.subscribe(accountTopic, "*");
+		defaultMQPushConsumer.subscribe(MQConstant.ACCOUNT_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -60,7 +56,7 @@ public class AccountConsumer extends Consumer {
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			logger.info("AccountConsumer 收到消息，开始处理....");
 			MessageExt msg = msgs.get(0);
-			AccountVO accountVO = (AccountVO) DataUtil.ByteToObject(msg.getBody());
+			AccountVO accountVO = JSONObject.parseObject(msg.getBody(), AccountVO.class);
 
 			if (accountVO != null) {
 				logger.info("注册保存账户表...");

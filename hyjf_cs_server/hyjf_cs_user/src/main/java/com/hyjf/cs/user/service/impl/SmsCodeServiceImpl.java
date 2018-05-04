@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +22,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.constants.CommonConstants;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetCode;
@@ -54,13 +57,6 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 	@Autowired
 	private UserService userService;
 
-	@Value("${rocketMQ.topic.couponTopic}")
-	private String couponTopic;
-	@Value("${rocketMQ.topic.smsCodeTopic}")
-	private String smsTopic;
-	@Value("${rocketMQ.tag.defaultTag}")
-	private String defaultTag;
-
 	/**
 	 * 1. 验证码发送前校验 2. 生成验证码 3. 保存验证码 4. 发送短信
 	 *
@@ -80,16 +76,13 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		param.put("val_code", checkCode);
 
 		// 保存短信验证码
-		amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CommonConstants.CKCODE_NEW,
-				CommonConstants.CLIENT_PC);
+		amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CommonConstant.CKCODE_NEW, CommonConstant.CLIENT_PC);
 
-		JSONObject params = new JSONObject();
-		params.put("checkCode", checkCode);
-		params.put("validCodeType", validCodeType);
-		params.put("mobile", mobile);
+		SmsMessage smsMessage = new SmsMessage(null, param, mobile, null, MessageConstant.SMSSENDFORMOBILE, null,
+				validCodeType, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(smsTopic, defaultTag, params));
+		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
 	}
 
 	/**
@@ -102,8 +95,8 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 	 */
 	private void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
 
-		List<String> codeTypes = Arrays.asList(CommonConstants.PARAM_TPL_ZHUCE, CommonConstants.PARAM_TPL_ZHAOHUIMIMA,
-				CommonConstants.PARAM_TPL_YZYSJH, CommonConstants.PARAM_TPL_BDYSJH);
+		List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
+				CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
 		if (Validator.isNull(validCodeType) || !codeTypes.contains(validCodeType)) {
 			throw new ReturnMessageException(RegisterError.CODETYPE_INVALID_ERROR);
 		}
@@ -111,7 +104,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			throw new ReturnMessageException(RegisterError.MOBILE_FORMAT_ERROR);
 		}
 
-		if (validCodeType.equals(CommonConstants.PARAM_TPL_ZHUCE)) {
+		if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
 			// 注册时要判断不能重复
 			if (userService.existUser(mobile)) {
 				throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
@@ -122,7 +115,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			UserVO userVO = (UserVO) redisUtil.get(token);
 			if (userVO != null) {
 				// 验证原手机号校验
-				if (validCodeType.equals(CommonConstants.PARAM_TPL_YZYSJH)) {
+				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
 					if (StringUtils.isBlank(userVO.getMobile())) {
 						throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
 					}
@@ -132,7 +125,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 				}
 
 				// 绑定新手机号校验
-				if (validCodeType.equals(CommonConstants.PARAM_TPL_BDYSJH)) {
+				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
 					if (userVO.equals(mobile)) {
 						throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
 					}
@@ -166,13 +159,15 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			if (Integer.valueOf(ipCount) == smsConfig.getMaxIpCount()) {
 				try {
 					// 发送短信通知
-					JSONObject params = new JSONObject();
-					params.put("var_phonenu", mobile);
-					params.put("val_reason", "IP访问次数超限");
-					params.put("templateCode", MessageConstant.SMSSENDFORMANAGER);
+					Map<String, String> replaceStrs = new HashMap<String, String>();
+					replaceStrs.put("var_phonenu", mobile);
+					replaceStrs.put("val_reason", "IP访问次数超限");
+					SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null,
+							MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
+							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(
-								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
+								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
 					} catch (MQException e) {
 						logger.error("短信发送失败...", e);
 					}
@@ -196,13 +191,15 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			if (Integer.valueOf(count) == smsConfig.getMaxPhoneCount()) {
 				try {
 					// 发送短信通知
-					JSONObject params = new JSONObject();
-					params.put("var_phonenu", mobile);
-					params.put("val_reason", "手机验证码发送次数超限");
-					params.put("templateCode", MessageConstant.SMSSENDFORMANAGER);
+					Map<String, String> replaceStrs = new HashMap<String, String>();
+					replaceStrs.put("var_phonenu", mobile);
+					replaceStrs.put("val_reason", "手机验证码发送次数超限");
+					SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null,
+							MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
+							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(
-								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
+								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
 					} catch (MQException e) {
 						logger.error("短信发送失败...", e);
 					}

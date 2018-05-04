@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.mq;
 
+import com.hyjf.common.constants.MQConstant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -22,16 +23,8 @@ import com.hyjf.cs.user.CsUserApplication;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CsUserApplication.class)
 public class TestMQ {
-	Logger logger = LoggerFactory.getLogger(TestMQ.class);
-
 	@Autowired
 	SmsProducer smsProducer;
-
-	@Value("${rocketMQ.topic.smsCodeTopic}")
-	private String smsCodeTopic;
-
-	@Value("${rocketMQ.tag.defaultTag}")
-	private String defaultTag;
 
 	@Test
 	public void sendSmscode() throws MQException {
@@ -42,7 +35,7 @@ public class TestMQ {
 		params.put("mobile", "15311112222");
 
 		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(smsCodeTopic, defaultTag, JSON.toJSONBytes(params)));
+		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, MQConstant.HYJF_DEFAULT_TAG, JSON.toJSONBytes(params)));
 
 	}
 

@@ -2,9 +2,9 @@ package com.hyjf.common.constants;
 
 /**
  * @author xiasq
- * @version CommonConstants, v0.1 2018/4/25 17:09
+ * @version CommonConstant, v0.1 2018/4/25 17:09
  */
-public class CommonConstants {
+public class CommonConstant {
     // PC
     public static final String CLIENT_PC = "0";
 

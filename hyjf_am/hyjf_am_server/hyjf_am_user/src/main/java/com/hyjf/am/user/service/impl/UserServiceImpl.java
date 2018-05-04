@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hyjf.common.constants.MQConstant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,6 @@ import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.DataUtil;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5Utils;
@@ -68,13 +68,10 @@ public class UserServiceImpl implements UserService {
 	private String fileHeadPath;
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
-	@Value("${rocketMQ.topic.accountTopic}")
-	private String accountTopic;
-	@Value("${rocketMQ.tag.defaultTag}")
-	private String defaultTag;
 
 	/**
 	 * 注册
+	 * 
 	 * @param userRequest
 	 * @return
 	 * @throws MQException
@@ -537,8 +534,7 @@ public class UserServiceImpl implements UserService {
 		account.setPlanRepayInterest(BigDecimal.ZERO);
 		account.setVersion(BigDecimal.ZERO);
 		logger.info("注册插入account：{}", JSON.toJSONString(account));
-		accountProducer
-				.messageSend(new Producer.MassageContent(accountTopic, defaultTag, DataUtil.toByteArray(account)));
+		accountProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_TOPIC, JSON.toJSONBytes(account)));
 	}
 
 	/**

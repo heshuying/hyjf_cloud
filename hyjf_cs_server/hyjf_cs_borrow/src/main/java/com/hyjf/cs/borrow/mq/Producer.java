@@ -1,4 +1,4 @@
-package com.hyjf.am.user.mq;
+package com.hyjf.cs.borrow.mq;
 
 import java.io.Serializable;
 
