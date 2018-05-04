@@ -2,6 +2,11 @@ package com.hyjf.am.message.mq;
 
 import java.util.List;
 
+import com.hyjf.am.vo.message.HyjfMessage;
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.am.message.processer.SmsHandle;
+import com.hyjf.common.util.DataUtil;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -14,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author xiasq
@@ -53,11 +56,37 @@ public class SmsConsumer extends Consumer {
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			logger.info("SmsConsumer 收到消息，开始处理....");
 			MessageExt msg = msgs.get(0);
-			String body = new String(msg.getBody());
-			JSONObject param = JSONObject.parseObject(body);
+			HyjfMessage message = (HyjfMessage) DataUtil.ByteToObject(msg.getBody());
 
-			logger.info("发送短信...param is :{}", param.toString());
-			//todo 具体实现业务
+			if (null != message) {
+				SmsMessage smsMessage = (SmsMessage) message;
+				switch (smsMessage.getServiceType()) {
+				case MessageConstant.SMSSENDFORMANAGER:// 通知配置,根据模版给指定管理员手机号发送消息（满标，标到期等）
+					SmsHandle.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),
+							smsMessage.getChannelType());
+					break;
+				case MessageConstant.SMSSENDFORMOBILE: // 根据电话号码和模版号给某电话发短信
+					SmsHandle.sendMessages(smsMessage.getMobile(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
+							smsMessage.getChannelType());
+					break;
+				case MessageConstant.SMSSENDFORUSER:// 根据用户ID和模版号给某用户发短信
+					SmsHandle.sendMessages(smsMessage.getUserId(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
+							smsMessage.getChannelType());
+					break;
+				case MessageConstant.SMSSENDFORUSERSNOTPL:// 根据电话号码和消息内容给某电话发短信
+					try {
+						SmsHandle.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
+								smsMessage.getServiceType(), null, smsMessage.getChannelType());
+					} catch (Exception e) {
+						logger.error("send sms error....");
+						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+					}
+					break;
+				default:
+					logger.error("error sms type...");
+					return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+				}
+			}
 
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

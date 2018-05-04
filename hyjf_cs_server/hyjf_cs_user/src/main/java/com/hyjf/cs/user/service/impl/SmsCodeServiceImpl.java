@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.hyjf.common.constants.MessageConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstants;
-import com.hyjf.common.constants.MessagePushConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetCode;
@@ -169,7 +169,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 					JSONObject params = new JSONObject();
 					params.put("var_phonenu", mobile);
 					params.put("val_reason", "IP访问次数超限");
-					params.put("templateCode", MessagePushConstant.SMSSENDFORMANAGER);
+					params.put("templateCode", MessageConstant.SMSSENDFORMANAGER);
 					try {
 						smsProducer.messageSend(
 								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));
@@ -199,7 +199,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 					JSONObject params = new JSONObject();
 					params.put("var_phonenu", mobile);
 					params.put("val_reason", "手机验证码发送次数超限");
-					params.put("templateCode", MessagePushConstant.SMSSENDFORMANAGER);
+					params.put("templateCode", MessageConstant.SMSSENDFORMANAGER);
 					try {
 						smsProducer.messageSend(
 								new Producer.MassageContent(smsTopic, defaultTag, JSON.toJSONBytes(params)));

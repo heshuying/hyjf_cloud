@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
+import com.hyjf.common.constants.MessageConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstants;
-import com.hyjf.common.constants.MessagePushConstant;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -308,7 +307,7 @@ public class UserServiceImpl implements UserService {
 			// 短信通知用户发券成功
 			JSONObject params = new JSONObject();
 			params.put("mobile", userVO.getMobile());
-			params.put("templateCode", MessagePushConstant.SMSSENDFORMOBILE);
+			params.put("templateCode", MessageConstant.SMSSENDFORMOBILE);
 			try {
 				smsProducer.messageSend(
 						new Producer.MassageContent(smsTopic, defaultTag, "sms_" + userVO.getMobile(), params));
