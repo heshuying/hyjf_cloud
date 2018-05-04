@@ -4,7 +4,9 @@ import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.dao.model.auto.UsersExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface UsersMapper {
     int countByExample(UsersExample example);
 

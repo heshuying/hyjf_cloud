@@ -66,7 +66,7 @@ public class BankOpenController {
 	 */
     @ApiOperation(value = "开户", notes = "用户开户")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "bankOpenVO", value = "用户信息", required = true, dataType = "BankOpenVO")
+            @ApiImplicitParam(name = "bankOpenVO", value = "用户信息", required = true, dataType = "BankOpenAccountVO")
     })
 	@PostMapping(value = "/openBankAccount")
 	public ModelAndView openBankAccount(@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {

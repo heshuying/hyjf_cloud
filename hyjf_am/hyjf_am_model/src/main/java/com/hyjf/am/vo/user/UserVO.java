@@ -23,6 +23,7 @@ public class UserVO extends BaseVO implements Serializable {
 	 * 汇付开户账号
 	 */
 	private Integer openAccount;
+	
 	/**
 	 * 银行开户账号
 	 */

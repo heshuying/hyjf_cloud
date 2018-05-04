@@ -1,6 +1,10 @@
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.UsersInfo;
+
+import java.util.List;
 
 public interface BankOpenService {
 	
@@ -32,5 +36,7 @@ public interface BankOpenService {
 
 
 	UsersInfo findUserInfoByCradId(String cardNo);
+
+	BankOpenAccount selectByExample(BankOpenAccountExample example);
     
 }
