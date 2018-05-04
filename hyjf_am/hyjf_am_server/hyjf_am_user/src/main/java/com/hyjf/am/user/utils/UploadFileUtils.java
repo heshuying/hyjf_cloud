@@ -1,4 +1,4 @@
-package com.hyjf.am.user.util;
+package com.hyjf.am.user.utils;
 
 import java.io.*;
 import java.text.SimpleDateFormat;

@@ -22,7 +22,7 @@ import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
 import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
-import com.hyjf.am.user.util.UploadFileUtils;
+import com.hyjf.am.user.utils.UploadFileUtils;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;

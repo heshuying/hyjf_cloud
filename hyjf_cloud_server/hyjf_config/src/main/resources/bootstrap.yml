@@ -1,6 +1,14 @@
 spring:
   application:
-    name: CONFIG
+    name: CONFIG_SERVER
+  cloud:
+    config:
+      server:
+        git:
+          uri: http://10.10.2.12/java_new/config_files.git
+          ##searchPaths: config_files
+          username: xiashuqing@shizitegong.com
+          password: xsq123456
 
 eureka:
   client:
@@ -8,6 +16,7 @@ eureka:
       defaultZone: http://127.0.0.1:1111/eureka/
   instance:
     preferIpAddress: true
+
 server:
   port: 2222
 
