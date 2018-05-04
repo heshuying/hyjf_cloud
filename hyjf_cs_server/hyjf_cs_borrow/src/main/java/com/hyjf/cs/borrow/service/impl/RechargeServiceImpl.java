@@ -8,6 +8,9 @@ import com.hyjf.am.message.processer.MessageProcesser;
 import com.hyjf.am.message.processer.SmsMessage;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.dao.model.auto.UsersInfo;
+import com.hyjf.am.vo.borrow.*;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -72,32 +75,32 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
     private MessageProcesser appMsProcesser;
 
 	@Override
-	public BankCard selectBankCardByUserId(Integer userId) {
-		BankCard  bankCard = rechargeClient.selectBankCardByUserId(userId);
+	public BankCardVO selectBankCardByUserId(Integer userId) {
+		BankCardVO bankCard = rechargeClient.selectBankCardByUserId(userId);
 		return bankCard;
 	}
 
 	@Override
-	public BanksConfig getBanksConfigByBankId(Integer bankId) {
-		BanksConfig banksConfig = rechargeClient.getBanksConfigByBankId(bankId);
+	public BanksConfigVO getBanksConfigByBankId(Integer bankId) {
+		BanksConfigVO banksConfig = rechargeClient.getBanksConfigByBankId(bankId);
 		return banksConfig;
 	}
 
 	@Override
-	public CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId) {
-		CorpOpenAccountRecord corpOpenAccountRecord =  rechargeClient.getCorpOpenAccountRecord(userId);
+	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
+		CorpOpenAccountRecordVO corpOpenAccountRecord =  rechargeClient.getCorpOpenAccountRecord(userId);
 		return corpOpenAccountRecord;
 	}
 
 	@Override
-	public Account getAccount(Integer userId) {
-		Account account = rechargeClient.getAccount(userId);
+	public AccountVO getAccount(Integer userId) {
+		AccountVO account = rechargeClient.getAccount(userId);
 		return account;
 	}
 
 	@Override
-	public Users getUsers(Integer userId) {
-		Users users = rechargeClient.getUsers(userId);
+	public UserVO getUsers(Integer userId) {
+		UserVO users = rechargeClient.getUsers(userId);
 		return users;
 	}
 
@@ -140,11 +143,11 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 			AccountExample accountExample = new AccountExample();
 			AccountExample.Criteria accountCriteria = accountExample.createCriteria();
 			accountCriteria.andUserIdEqualTo(userId);
-			Account account = rechargeClient.selectByExample(accountExample);
+			AccountVO account = rechargeClient.selectByExample(accountExample);
 			// 查询充值记录
 			AccountRechargeExample example = new AccountRechargeExample();
 			example.createCriteria().andNidEqualTo(orderId);
-			AccountRecharge accountRecharge = rechargeClient.selectByExample(example);// 查询充值记录
+			AccountRechargeVO accountRecharge = rechargeClient.selectByExample(example);// 查询充值记录
 
 			// 如果没有充值记录
 			if (accountRecharge != null) {
@@ -243,14 +246,14 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 							// 提交事务
 							this.transactionManager.commit(txStatus);
 							// 如果需要短信
-							Users users = rechargeClient.selectByPrimaryKey(userId);
+							UserVO users = rechargeClient.getUsers(userId);
 							// 可以发送充值短信时
 							if (users != null && users.getRechargeSms() != null && users.getRechargeSms() == 0) {
 								// 替换参数
 								Map<String, String> replaceMap = new HashMap<String, String>();
 								replaceMap.put("val_amount", txAmount.toString());
 								replaceMap.put("val_fee", "0");
-								UsersInfo info = getUsersInfoByUserId(userId);
+								UserInfoVO info = getUsersInfoByUserId(userId);
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
 								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
@@ -263,7 +266,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 								Map<String, String> replaceMap = new HashMap<String, String>();
 								replaceMap.put("val_amount", txAmount.toString());
 								replaceMap.put("val_fee", "0");
-								UsersInfo info = getUsersInfoByUserId(userId);
+								UserInfoVO info = getUsersInfoByUserId(userId);
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
@@ -296,7 +299,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 			// 更新订单信息
 			AccountRechargeExample example = new AccountRechargeExample();
 			example.createCriteria().andNidEqualTo(orderId);
-            AccountRecharge accountRecharge =this.rechargeClient.selectByExample(example);
+			AccountRechargeVO accountRecharge =this.rechargeClient.selectByExample(example);
 			if (accountRecharge != null ) {
 				if (RECHARGE_STATUS_WAIT == accountRecharge.getStatus()) {
 					// 更新处理状态
@@ -358,9 +361,9 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	 * @param userId
 	 * @return
 	 */
-	public UsersInfo getUsersInfoByUserId(Integer userId) {
+	public UserInfoVO getUsersInfoByUserId(Integer userId) {
 		if (userId != null) {
-			UsersInfo usersInfo = this.rechargeClient.findUsersInfoById(userId);
+			UserInfoVO usersInfo = this.rechargeClient.findUsersInfoById(userId);
 			return usersInfo;
 		}
 		return null;

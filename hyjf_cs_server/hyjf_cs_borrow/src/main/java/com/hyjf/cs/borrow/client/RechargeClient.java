@@ -6,6 +6,10 @@ import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.dao.model.auto.UsersInfo;
+import com.hyjf.am.vo.borrow.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -17,24 +21,24 @@ public interface RechargeClient {
      * @param cardNo
      * @return
      */
-    BankCard selectBankCardByUserId(Integer userId);
+    BankCardVO selectBankCardByUserId(Integer userId);
     /**
      * 获取银行卡配置信息
      * @param bankId
      * @return
      */
-    BanksConfig getBanksConfigByBankId(Integer bankId);
+    BanksConfigVO getBanksConfigByBankId(Integer bankId);
 
     /**
      * 根据用户ID查询企业用户信息
      * @param userId
      * @return
      */
-    CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
+    CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
-    Account getAccount(Integer userId);
+    AccountVO getAccount(Integer userId);
 
-    Users getUsers(Integer userId);
+    UserVO getUsers(Integer userId);
 
     /**
      * 插入充值记录
@@ -45,23 +49,21 @@ public interface RechargeClient {
      */
     int insertRechargeInfo(BankCallBean bean);
 
-    AccountRecharge selectByExample(AccountRechargeExample example);
+    AccountRechargeVO selectByExample(AccountRechargeExample example);
 
-    int updateByExampleSelective(AccountRecharge accountRecharge,AccountRechargeExample accountRechargeExample);
+    int updateByExampleSelective(AccountRechargeVO accountRecharge,AccountRechargeExample accountRechargeExample);
 
     int updateBankRechargeSuccess(Account newAccount);
 
     int insertSelective(AccountList accountList);
 
-    Users selectByPrimaryKey(Integer userId);
+    void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge);
 
-    void updateByPrimaryKeySelective(AccountRecharge accountRecharge);
-
-    Account selectByExample(@RequestBody AccountExample example);
+    AccountVO selectByExample(@RequestBody AccountExample example);
 
     BankReturnCodeConfig getBankReturnCodeConfig(BankReturnCodeConfigExample example);
 
-    BankOpenAccount selectByExample(BankOpenAccountExample example);
+    BankOpenAccountVO selectByExample(BankOpenAccountExample example);
 
-    UsersInfo findUsersInfoById(int userId);
+    UserInfoVO findUsersInfoById(int userId);
 }

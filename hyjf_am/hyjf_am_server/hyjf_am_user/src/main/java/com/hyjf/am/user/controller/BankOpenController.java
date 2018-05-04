@@ -1,12 +1,14 @@
 package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.am.user.service.BankOpenService;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,15 +134,15 @@ public class BankOpenController {
 	}
 
 	@RequestMapping("/selectByExample")
-	public BankOpenAccount selectByExample(BankOpenAccountExample example) {
-		//BankOpenAccountResponse response = new BankOpenAccountResponse();
+	public BankOpenAccountResponse selectByExample(BankOpenAccountExample example) {
+		BankOpenAccountResponse response = new BankOpenAccountResponse();
 		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(example);
-		/*if(bankOpenAccount != null){
+		if(bankOpenAccount != null){
 			BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
 			BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
 			response.setResult(bankOpenAccountVO);
-		}*/
-		return bankOpenAccount;
+		}
+		return response;
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.hyjf.cs.borrow.service.impl;
 
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.borrow.client.RechargeClient;
 import com.hyjf.cs.borrow.service.BaseService;
 import org.slf4j.Logger;
@@ -554,11 +555,11 @@ public class BaseServiceImpl  implements BaseService {
 	 * 获取用户在银行的开户信息
 	 */
 	@Override
-	public BankOpenAccount getBankOpenAccount(Integer userId) {
+	public  BankOpenAccountVO getBankOpenAccount(Integer userId) {
 		BankOpenAccountExample accountExample = new BankOpenAccountExample();
 		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
 		crt.andUserIdEqualTo(userId);
-		BankOpenAccount bankAccount = this.rechargeClient.selectByExample(accountExample);
+		BankOpenAccountVO bankAccount = this.rechargeClient.selectByExample(accountExample);
 		return bankAccount;
 	}
 

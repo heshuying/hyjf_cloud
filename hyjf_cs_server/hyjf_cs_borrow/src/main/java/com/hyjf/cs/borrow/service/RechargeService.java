@@ -7,6 +7,12 @@ import com.hyjf.am.borrow.dao.model.auto.BanksConfig;
 import com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord;
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.dao.model.auto.UsersInfo;
+import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.borrow.BankCardVO;
+import com.hyjf.am.vo.borrow.BanksConfigVO;
+import com.hyjf.am.vo.borrow.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,25 +32,25 @@ public interface RechargeService extends BaseService{
 	 * @param cardNo
 	 * @return
 	 */
-	 BankCard selectBankCardByUserId(Integer userId);
+	BankCardVO selectBankCardByUserId(Integer userId);
 
 	/**
 	 * 获取银行卡配置信息
 	 * @param bankId
 	 * @return
 	 */
-	BanksConfig getBanksConfigByBankId(Integer bankId);
+	BanksConfigVO getBanksConfigByBankId(Integer bankId);
 
 	/**
 	 * 根据用户ID查询企业用户信息
 	 * @param userId
 	 * @return
 	 */
-	 CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
+    CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
-	Account getAccount(Integer userId);
+	AccountVO getAccount(Integer userId);
 
-	Users getUsers(Integer userId);
+	UserVO getUsers(Integer userId);
     String getBankRetMsg(String retCode);
 
 	/**
@@ -73,7 +79,7 @@ public interface RechargeService extends BaseService{
 	 */
 	 JSONObject handleRechargeInfo(BankCallBean bean, Map<String, String> params);
 
-	 UsersInfo getUsersInfoByUserId(Integer userId);
+	UserInfoVO getUsersInfoByUserId(Integer userId);
 
 	/**
 	 *

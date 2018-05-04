@@ -1,10 +1,10 @@
 package com.hyjf.cs.borrow.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.borrow.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
+import com.hyjf.am.vo.borrow.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.PropUtils;
@@ -71,14 +71,14 @@ public class RechargeController{
 			modelAndView.addObject("message", "登录失效，请重新登陆！");
 			return modelAndView;
 		}
-		Users users=userRechargeService.getUsers(user.getUserId());
+		UserVO users=userRechargeService.getUsers(user.getUserId());
 		if (users.getBankOpenAccount()==0) {// 未开户
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "用户未开户！");
 			return modelAndView;
 		}
 
-		BankOpenAccount account = this.userRechargeService.getBankOpenAccount(user.getUserId());
+        BankOpenAccountVO account = this.userRechargeService.getBankOpenAccount(user.getUserId());
 
 		// 判断用户是否设置过交易密码
 		if (users.getIsSetPassword() == 0) {// 未设置交易密码
@@ -96,7 +96,7 @@ public class RechargeController{
         }*/
 
 		// 根据用户ID查询用户平台银行卡信息
-		BankCard bankCard = this.userRechargeService.selectBankCardByUserId(user.getUserId());
+		BankCardVO bankCard = this.userRechargeService.selectBankCardByUserId(user.getUserId());
 		if (bankCard == null) {
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "查询银行卡信息失败！");
@@ -127,7 +127,7 @@ public class RechargeController{
 		}
 
 		String cardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
-		UsersInfo userInfo = this.userRechargeService.getUsersInfoByUserId(user.getUserId());
+		UserInfoVO userInfo = this.userRechargeService.getUsersInfoByUserId(user.getUserId());
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
 
@@ -243,7 +243,7 @@ public class RechargeController{
 		bean.convert();
 		Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
 		// 查询用户开户状态
-		Users user = this.userRechargeService.getUsers(userId);
+		UserVO user = this.userRechargeService.getUsers(userId);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
 		params.put("mobile",bean.getMobile());

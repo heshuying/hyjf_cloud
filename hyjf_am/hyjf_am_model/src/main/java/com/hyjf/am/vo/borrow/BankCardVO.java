@@ -1,18 +1,28 @@
-package com.hyjf.am.vo.user;
+package com.hyjf.am.vo.borrow;
 
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class BankOpenAccountVO extends BaseVO implements Serializable {
+public class BankCardVO extends BaseVO implements Serializable{
     private Integer id;
 
     private Integer userId;
 
     private String userName;
 
-    private String account;
+    private String cardNo;
+
+    private Integer bankId;
+
+    private String mobile;
+
+    private String payAllianceCode;
+
+    private String bank;
+
+    private Integer status;
 
     private Date createTime;
 
@@ -52,12 +62,52 @@ public class BankOpenAccountVO extends BaseVO implements Serializable {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getAccount() {
-        return account;
+    public String getCardNo() {
+        return cardNo;
     }
 
-    public void setAccount(String account) {
-        this.account = account == null ? null : account.trim();
+    public void setCardNo(String cardNo) {
+        this.cardNo = cardNo == null ? null : cardNo.trim();
+    }
+
+    public Integer getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(Integer bankId) {
+        this.bankId = bankId;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
+    }
+
+    public String getPayAllianceCode() {
+        return payAllianceCode;
+    }
+
+    public void setPayAllianceCode(String payAllianceCode) {
+        this.payAllianceCode = payAllianceCode == null ? null : payAllianceCode.trim();
+    }
+
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank == null ? null : bank.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getCreateTime() {
