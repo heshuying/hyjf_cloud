@@ -23,7 +23,7 @@
  * 佛祖保佑 永无BUG
  */
 
-package com.hyjf.am.message.processer;
+package com.hyjf.am.message.handle;
 
 import java.io.Serializable;
 

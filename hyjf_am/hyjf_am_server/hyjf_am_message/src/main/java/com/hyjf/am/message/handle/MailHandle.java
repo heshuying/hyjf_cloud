@@ -1,9 +1,8 @@
-package com.hyjf.am.message.processer;
+package com.hyjf.am.message.handle;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -14,8 +13,12 @@ import javax.mail.internet.*;
 
 import com.hyjf.am.message.client.AmConfigClient;
 import com.hyjf.am.message.client.AmUserClient;
+import com.hyjf.am.message.util.MyAuthenticator;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.PropUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamSource;
 
 import com.hyjf.common.validator.Validator;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 /**
  * <p>
@@ -214,24 +219,18 @@ public class MailHandle {
 	 */
 	public static void sendMailToSelf(String mailKbn, Map<String, String> replaceMap, String[] fileNames)
 			throws Exception {
-		// String methodName = "sendMailToSelf";
-		//
-		// LogUtil.startLog(MailHandle.class.getName(), methodName);
-		// try {
-		// // 取得模板
-		// SmsMailTemplate template = getMailContent(mailKbn);
-		// String body = replaceAllParameter(template.getMailContent(),
-		// replaceMap);
-		// String subject = template.getMailName();
-		// String[] toMailArray = new String[1];
-		// toMailArray[0] = fromMail;
-		// // 开始送信
-		// send(toMailArray, subject, body, fileNames);
-		// } catch (Exception e) {
-		// LogUtil.errorLog(MailHandle.class.getName(), methodName, "发送邮件失败!", e);
-		// } finally {
-		// LogUtil.endLog(MailHandle.class.getName(), methodName);
-		// }
+		try {
+			// 取得模板
+			SmsMailTemplateVO template = amConfigClient.findSmsMailTemplateByCode(mailKbn);
+			String body = replaceAllParameter(template.getMailContent(), replaceMap);
+			String subject = template.getMailName();
+			String[] toMailArray = new String[1];
+			toMailArray[0] = fromMail;
+			// 开始送信
+			send(toMailArray, subject, body, fileNames);
+		} catch (Exception e) {
+			logger.error("发送邮件失败...", e);
+		}
 	}
 
 	/**
@@ -253,88 +252,6 @@ public class MailHandle {
 	}
 
 	/**
-	 * 送信
-	 *
-	 * @param toMails
-	 * @param fMail
-	 * @param fMailNm
-	 * @param subject
-	 * @param content
-	 * @throws Exception
-	 */
-	private static void send(String[] toMailArray, String subject, String content, String[] fileNames)
-			throws Exception {
-		init();
-
-		// if (StringUtils.isBlank(sendHost) || StringUtils.isBlank(sendHost) ||
-		// StringUtils.isBlank(sendHost)
-		// || StringUtils.isBlank(sendHost)) {
-		// throw new Exception(PropUtils.getMessage(CustomConstants.ECOMS001));
-		// }
-		//
-		// JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
-		//
-		// // 邮件服务器地址
-		// senderImpl.setHost(sendHost);
-		//
-		// MimeMessage mailMessage = senderImpl.createMimeMessage();
-		//
-		// MimeMessageHelper messageHelper = null;
-		// messageHelper = new MimeMessageHelper(mailMessage, true,
-		// CustomConstants.MAIL_SEND_DEFAULTENCODING);
-		// // 发件人
-		// messageHelper.setFrom(new InternetAddress(fromMail, fromMailName));
-		// // 收件人
-		// List<String> toMailList = new ArrayList<String>();
-		// if (null == toMailArray || toMailArray.length == 0) {
-		// throw new Exception("收件人不能为空");
-		// } else {
-		// for (String toMail : toMailArray) {
-		// if (StringUtils.isNoneBlank(toMail)) {
-		// toMailList.add(toMail);
-		// }
-		// }
-		// if (null == toMailList || toMailList.size() <= 0) {
-		// throw new RuntimeException("收件人不能为空");
-		// } else {
-		// toMailArray = new String[toMailList.size()];
-		// for (int i = 0; i < toMailList.size(); i++) {
-		// toMailArray[i] = toMailList.get(i);
-		// }
-		// }
-		// }
-		// messageHelper.setTo(toMailArray);
-		// // 标题
-		// messageHelper.setSubject(subject);
-		// // 内容
-		// messageHelper.setText(content, true);
-		// // 发送时间
-		// messageHelper.setSentDate(GetDate.getDate());
-		// // 附件
-		// if (fileNames != null && fileNames.length > 0) {
-		// // 向邮件添加附件
-		// for (String filename : fileNames) {
-		// if (StringUtils.isNotEmpty(filename)) {
-		// File file = new File(filename);
-		// if (file.exists()) {
-		// messageHelper.addAttachment(file.getName(), file);
-		// }
-		// }
-		// }
-		// }
-		//
-		// Properties prop = new Properties();
-		// prop.put(CustomConstants.MAIL_SMTP_AUTH, smtpAuth);
-		// prop.put(CustomConstants.MAIL_SMTP_TIMEOUT, smtpTimeout);
-		// prop.put(CustomConstants.MAIL_SMTP_STARTTLS_ENABLE, smtpSsl);
-		// MyAuthenticator auth = new MyAuthenticator(sendUsername,
-		// sendPassword);
-		// Session session = Session.getDefaultInstance(prop, auth);
-		// senderImpl.setSession(session);
-		// senderImpl.send(mailMessage);
-	}
-
-	/**
 	 * 替换模板变量
 	 *
 	 * @param replace
@@ -351,26 +268,84 @@ public class MailHandle {
 	}
 
 	/**
-	 * 取得邮件内容
+	 * 送信
 	 *
-	 * @param mailKbn
-	 * @return
+	 * @param toMails
+	 * @param fMail
+	 * @param fMailNm
+	 * @param subject
+	 * @param content
 	 * @throws Exception
 	 */
-	// private static SmsMailTemplate getMailContent(String mailKbn) throws
-	// Exception {
-	//// // 取得模板
-	//// SmsMailTemplateExample example = new SmsMailTemplateExample();
-	//// example.createCriteria().andMailValueEqualTo(mailKbn).andMailStatusEqualTo(1);
-	//// SmsMailTemplateMapper mailTemplateMapper =
-	// SpringContextHolder.getBean(SmsMailTemplateMapper.class);
-	//// List<SmsMailTemplate> templateList =
-	// mailTemplateMapper.selectByExampleWithBLOBs(example);
-	//// if (templateList == null || templateList.size() == 0) {
-	//// throw new Exception("邮件模板不存在");
-	//// }
-	//// return templateList.get(0);
-	// }
+	private static void send(String[] toMailArray, String subject, String content, String[] fileNames)
+			throws Exception {
+		init();
+
+		if (StringUtils.isBlank(sendHost) || StringUtils.isBlank(sendHost) || StringUtils.isBlank(sendHost)
+				|| StringUtils.isBlank(sendHost)) {
+			throw new Exception(PropUtils.getMessage(CustomConstants.ECOMS001));
+		}
+
+		JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
+
+		// 邮件服务器地址
+		senderImpl.setHost(sendHost);
+
+		MimeMessage mailMessage = senderImpl.createMimeMessage();
+
+		MimeMessageHelper messageHelper = null;
+		messageHelper = new MimeMessageHelper(mailMessage, true, CustomConstants.MAIL_SEND_DEFAULTENCODING);
+		// 发件人
+		messageHelper.setFrom(new InternetAddress(fromMail, fromMailName));
+		// 收件人
+		List<String> toMailList = new ArrayList<String>();
+		if (null == toMailArray || toMailArray.length == 0) {
+			throw new Exception("收件人不能为空");
+		} else {
+			for (String toMail : toMailArray) {
+				if (StringUtils.isNoneBlank(toMail)) {
+					toMailList.add(toMail);
+				}
+			}
+			if (null == toMailList || toMailList.size() <= 0) {
+				throw new RuntimeException("收件人不能为空");
+			} else {
+				toMailArray = new String[toMailList.size()];
+				for (int i = 0; i < toMailList.size(); i++) {
+					toMailArray[i] = toMailList.get(i);
+				}
+			}
+		}
+		messageHelper.setTo(toMailArray);
+		// 标题
+		messageHelper.setSubject(subject);
+		// 内容
+		messageHelper.setText(content, true);
+		// 发送时间
+		messageHelper.setSentDate(GetDate.getDate());
+		// 附件
+		if (fileNames != null && fileNames.length > 0) {
+			// 向邮件添加附件
+			for (String filename : fileNames) {
+				if (StringUtils.isNotEmpty(filename)) {
+					File file = new File(filename);
+					if (file.exists()) {
+						messageHelper.addAttachment(file.getName(), file);
+					}
+				}
+			}
+		}
+
+		Properties prop = new Properties();
+		prop.put(CustomConstants.MAIL_SMTP_AUTH, smtpAuth);
+		prop.put(CustomConstants.MAIL_SMTP_TIMEOUT, smtpTimeout);
+		prop.put(CustomConstants.MAIL_SMTP_STARTTLS_ENABLE, smtpSsl);
+		MyAuthenticator auth = new MyAuthenticator(sendUsername, sendPassword);
+		Session session = Session.getDefaultInstance(prop, auth);
+		senderImpl.setSession(session);
+		senderImpl.send(mailMessage);
+	}
+
 
 	/**
 	 * 根据用户ID取得用户邮箱

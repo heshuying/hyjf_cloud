@@ -1,4 +1,4 @@
-package com.hyjf.am.message.processer;
+package com.hyjf.am.message.handle;
 
 import java.util.HashMap;
 import java.util.Map;
