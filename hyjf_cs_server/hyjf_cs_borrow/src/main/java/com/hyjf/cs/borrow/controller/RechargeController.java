@@ -41,7 +41,7 @@ import java.util.Map;
  *
  */
 @Controller
-@RequestMapping(value = "/bank/web/user/recharge")
+@RequestMapping(value = "/recharge")
 public class RechargeController{
 	
 	Logger Logger = LoggerFactory.getLogger(RechargeController.class);
