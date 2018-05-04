@@ -11,16 +11,38 @@ import java.util.List;
  * @version AmUserClient, v0.1 2018/4/19 12:44
  */
 public interface AmUserClient {
-
+	/**
+	 * 根据手机号查询用户
+	 * @param mobile
+	 * @return
+	 */
 	UserVO findUserByMobile(String mobile);
 
+	/**
+	 * 根据userId查询用户
+	 * @param mobile
+	 * @return
+	 */
 	UserVO findUserById(int userId);
 
-	UserInfoVO findUserInfoById(int userId);
-
+	/**
+	 * 根据手机号查询推送别名
+	 * @param mobile
+	 * @return
+	 */
 	UserAliasVO findAliasByMobile(String mobile);
 
+	/**
+	 * 根据手机号查询推送别名 - 批量
+	 * @param mobile
+	 * @return
+	 */
 	List<UserAliasVO> findAliasesByMobiles(List<String> mobiles);
 
+	/**
+	 * 根据设备类型统计用户人数
+	 * @param clientAndroid
+	 * @return
+	 */
 	int countAliasByClient(String clientAndroid);
 }

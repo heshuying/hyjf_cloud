@@ -1,9 +1,8 @@
 package com.hyjf.am.message.client;
 
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
-import com.hyjf.am.vo.config.SmsMailTemplateVO;
-import com.hyjf.am.vo.config.SmsNoticeConfigVO;
-import com.hyjf.am.vo.config.SmsTemplateVO;
+import com.hyjf.am.vo.config.*;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -17,9 +16,30 @@ public interface AmConfigClient {
      */
     SmsTemplateVO findSmsTemplateByCode(String tplCode);
 
+    /**
+     * 查询短信模板
+     * @param tplCode
+     * @return
+     */
     SmsNoticeConfigVO findSmsNoticeByCode(String tplCode);
 
+    /**
+     * 查询邮件模板
+     * @param mailCode
+     * @return
+     */
     SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);
 
+    /**
+     * 查询app消息模板
+     * @param tplCode
+     * @return
+     */
     MessagePushTemplateVO findMessagePushTemplateByCode(String tplCode);
+
+    /**
+     * 查询邮件配置
+     * @return
+     */
+    SiteSettingVO findSiteSetting();
 }

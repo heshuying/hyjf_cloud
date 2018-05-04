@@ -91,8 +91,17 @@ public class AppMsMessage extends HyjfMessage {
 	public void setMsgId(Integer msgId) {
 		this.msgId = msgId;
 	}
-	
-	
+
+    @Override
+    public String toString() {
+        return "AppMsMessage{" +
+                "mobile='" + mobile + '\'' +
+                ", serviceType='" + serviceType + '\'' +
+                ", tplCode='" + tplCode + '\'' +
+                ", msgId=" + msgId +
+                '}';
+    }
+
     private String mobile;
 
     private String serviceType;// 业务类型

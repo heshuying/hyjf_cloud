@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.vo.message;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -80,6 +81,18 @@ public class MailMessage extends HyjfMessage {
 
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
+    }
+
+    @Override
+    public String toString() {
+        return "MailMessage{" +
+                "subject='" + subject + '\'' +
+                ", body='" + body + '\'' +
+                ", fileNames=" + Arrays.toString(fileNames) +
+                ", toMailArray=" + Arrays.toString(toMailArray) +
+                ", mailKbn='" + mailKbn + '\'' +
+                ", serviceType='" + serviceType + '\'' +
+                '}';
     }
 
     private String subject;

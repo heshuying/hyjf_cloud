@@ -48,10 +48,9 @@ public class AppMessageConsumer extends Consumer {
 	public class MessageListener implements MessageListenerConcurrently {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.info("AppMessageConsumer 收到请求，开始推送app消息....");
 			MessageExt msg = msgs.get(0);
-
 			AppMsMessage appMsMessage = JSONObject.parseObject(msg.getBody(), AppMsMessage.class);
+			logger.info("AppMessageConsumer 收到请求，开始推送app消息....appMsMessage is：{}", appMsMessage);
 			if (null != appMsMessage) {
 				switch (appMsMessage.getServiceType()) {
 				case MessageConstant.APPMSSENDFORMOBILE:// 根据电话号码和模版给指定手机号推送app消息

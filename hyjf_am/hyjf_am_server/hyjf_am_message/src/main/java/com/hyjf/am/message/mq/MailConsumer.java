@@ -49,11 +49,9 @@ public class MailConsumer extends Consumer {
 	public class MessageListener implements MessageListenerConcurrently {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.info("MailConsumer 收到消息，开始处理....");
 			MessageExt msg = msgs.get(0);
-
 			MailMessage mailMessage = JSONObject.parseObject(msg.getBody(), MailMessage.class);
-
+			logger.info("MailConsumer 收到消息，开始处理....mailMessage is :{}", mailMessage);
 			if (null != mailMessage) {
 				switch (mailMessage.getServiceType()) {
 				case MessageConstant.MAILSENDFORUSER:// 给指定用户发送邮件

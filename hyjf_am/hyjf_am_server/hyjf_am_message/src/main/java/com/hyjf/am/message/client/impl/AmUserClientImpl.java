@@ -27,6 +27,11 @@ public class AmUserClientImpl implements AmUserClient {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	/**
+	 * 根据手机号查询用户
+	 * @param mobile
+	 * @return
+	 */
 	@Override
 	public UserVO findUserByMobile(String mobile) {
 		UserResponse response = restTemplate
@@ -37,6 +42,11 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 根据userId查询用户
+	 * @param mobile
+	 * @return
+	 */
 	@Override
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
@@ -47,28 +57,36 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public UserInfoVO findUserInfoById(int userId) {
-		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById" + userId, UserInfoResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
+	/**
+	 * 根据手机号查询推送别名
+	 * @param mobile
+	 * @return
+	 */
 	@Override
 	public UserAliasVO findAliasByMobile(String mobile) {
+		//todo xiashuqing
 		return null;
 	}
 
+	/**
+	 * 根据手机号查询推送别名 - 批量
+	 * @param mobile
+	 * @return
+	 */
 	@Override
 	public List<UserAliasVO> findAliasesByMobiles(List<String> mobiles) {
+		//todo xiashuqing
 		return null;
 	}
 
+	/**
+	 * 根据设备类型统计用户人数
+	 * @param clientAndroid
+	 * @return
+	 */
 	@Override
 	public int countAliasByClient(String clientAndroid) {
+		//todo xiashuqing
 		return 0;
 	}
 }
