@@ -3,10 +3,6 @@ package com.hyjf.am.borrow.service.impl;
 import com.hyjf.am.borrow.dao.mapper.auto.*;
 import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.RechargeService;
-import com.hyjf.am.user.dao.mapper.auto.UsersMapper;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.dao.model.auto.UsersInfoExample;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +16,7 @@ import java.util.List;
 /**
  * 用户充值Service实现类
  * 
- * @author liuyang
+ * @author
  *
  */
 @Service
@@ -52,9 +48,6 @@ public class RechargeServiceImpl implements RechargeService {
 
 	@Autowired
 	protected  AccountListMapper accountListMapper;
-
-	@Autowired
-	UsersInfoMapper usersInfoMapper;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -238,11 +231,4 @@ public class RechargeServiceImpl implements RechargeService {
 		return null;
 	}
 
-	public UsersInfo selectByExample(UsersInfoExample example) {
-		List<UsersInfo> usersInfoList = this.usersInfoMapper.selectByExample(example);
-		if (usersInfoList != null && usersInfoList.size() > 0) {
-			return usersInfoList.get(0);
-		}
-		return null;
-	}
 }

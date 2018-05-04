@@ -80,7 +80,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public int insertRechargeInfo(BankCallBean bean) {
         Integer response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/insertRechargeInfo/",bean, Integer.class).getBody();
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/insertRechargeInfo",bean, Integer.class).getBody();
         if (response != null) {
             return response;
         }
@@ -104,7 +104,7 @@ public class RechargeClientImpl implements RechargeClient {
         paramMap.put("accountRecharge",accountRecharge);
         paramMap.put("accountRechargeExample",accountRechargeExample);
         Integer response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/updateByExampleSelective/",paramMap, Integer.class).getBody();
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/updateByExampleSelective",paramMap, Integer.class).getBody();
         if (response != null) {
             return response;
         }
@@ -114,7 +114,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public int updateBankRechargeSuccess(Account newAccount) {
         Integer response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/updateBankRechargeSuccess/",newAccount, Integer.class).getBody();
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/updateBankRechargeSuccess",newAccount, Integer.class).getBody();
         if (response != null) {
             return response;
         }
@@ -124,7 +124,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public int insertSelective(AccountList accountList) {
         Integer response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/insertSelective/",accountList, Integer.class).getBody();
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/insertSelective",accountList, Integer.class).getBody();
         if (response != null) {
             return response;
         }

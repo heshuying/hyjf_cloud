@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -34,7 +31,7 @@ public class RechargeController {
      * @param userId
      * @return
      */
-    @RequestMapping("/selectByUserId/{userId}")
+    @GetMapping("/selectByUserId/{userId}")
     public BankCardResponse selectByUserId (@PathVariable Integer userId){
         BankCardResponse response = new BankCardResponse();
         BankCard bankCard = rechargeService.selectBankCardByUserId(userId);
@@ -51,7 +48,7 @@ public class RechargeController {
      * @param bankId
      * @return
      */
-    @RequestMapping("/getBanksConfigByBankId/{bankId}")
+    @GetMapping("/getBanksConfigByBankId/{bankId}")
     public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
         BanksConfigResponse response = new BanksConfigResponse();
         BanksConfig bankConfig = rechargeService.getBanksConfigByBankId(bankId);
@@ -68,7 +65,7 @@ public class RechargeController {
      * @param userId
      * @return
      */
-    @RequestMapping("/getAccount/{userId}")
+    @GetMapping("/getAccount/{userId}")
     public AccountResponse getAccount(@PathVariable Integer userId){
         AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(userId);
@@ -80,7 +77,7 @@ public class RechargeController {
         return response;
     }
 
-    @RequestMapping("/selectAccountByExample")
+    @PostMapping("/selectAccountByExample")
     public AccountResponse selectByExample(@RequestBody AccountExample example){
         AccountResponse response = new AccountResponse();
         Account account = accountService.selectByExample(example);
@@ -97,7 +94,7 @@ public class RechargeController {
      * @param userId
      * @return
      */
-    @RequestMapping("/getCorpOpenAccountRecord/{userId}")
+    @GetMapping("/getCorpOpenAccountRecord/{userId}")
     public CorpOpenAccountRecordResponse getCorpOpenAccountRecord(@PathVariable Integer userId){
         CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
         CorpOpenAccountRecord corpOpenAccountRecord= rechargeService.getCorpOpenAccountRecord(userId);
@@ -114,7 +111,7 @@ public class RechargeController {
      * @param bean
      * @return
      */
-    @RequestMapping("/insertRechargeInfo")
+    @PostMapping("/insertRechargeInfo")
     public int insertRechargeInfo(@RequestBody @Valid BankCallBean bean){
        Integer response = rechargeService.insertRechargeInfo(bean);
        if (response != null){
@@ -128,7 +125,7 @@ public class RechargeController {
      * @param example
      * @return
      */
-    @RequestMapping("/selectByExample")
+    @PostMapping("/selectByExample")
     public AccountRechargeResponse selectByExample(@RequestBody AccountRechargeExample example){
         AccountRechargeResponse response = new AccountRechargeResponse();
         AccountRecharge accountRecharge = rechargeService.selectByExample(example);
@@ -140,7 +137,7 @@ public class RechargeController {
         return response;
     }
 
-    @RequestMapping("/updateByExampleSelective")
+    @PostMapping("/updateByExampleSelective")
     public int updateByExampleSelective(@RequestBody Map<String,Object> paramMap){
 
         AccountRecharge accountRecharge = (AccountRecharge) paramMap.get("accountRecharge");
@@ -149,7 +146,7 @@ public class RechargeController {
         return count;
     }
 
-    @RequestMapping("/updateBankRechargeSuccess")
+    @PostMapping("/updateBankRechargeSuccess")
     public int updateBankRechargeSuccess(@RequestBody Account newAccount){
         int isAccountUpdateFlag = rechargeService.updateBankRechargeSuccess(newAccount);
         return isAccountUpdateFlag;
@@ -160,19 +157,19 @@ public class RechargeController {
      * @param accountList
      * @return
      */
-    @RequestMapping("/insertSelective")
+    @PostMapping("/insertSelective")
     public int insertSelective(@RequestBody AccountList accountList){
         int isAccountListUpdateFlag = rechargeService.insertSelective(accountList);
         return isAccountListUpdateFlag;
     }
 
 
-    @RequestMapping("/updateByPrimaryKeySelective")
+    @PutMapping("/updateByPrimaryKeySelective")
     public void updateByPrimaryKeySelective(@RequestBody AccountRecharge accountRecharge){
         this.rechargeService.updateByPrimaryKeySelective(accountRecharge);
     }
 
-    @RequestMapping("/getBankReturnCodeConfig")
+    @PostMapping("/getBankReturnCodeConfig")
     public BankReturnCodeConfigResponse getBankReturnCodeConfig(BankReturnCodeConfigExample example){
         BankReturnCodeConfigResponse response = new BankReturnCodeConfigResponse();
         BankReturnCodeConfig retCodes = this.rechargeService.selectByExample(example);

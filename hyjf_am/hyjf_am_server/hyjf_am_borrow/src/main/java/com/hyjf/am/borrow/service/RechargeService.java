@@ -56,6 +56,4 @@ public interface RechargeService {
 
 	BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
 
-	UsersInfo selectByExample(UsersInfoExample example);
-
 }
