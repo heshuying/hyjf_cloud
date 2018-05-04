@@ -322,7 +322,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		if (StringUtils.isNotBlank(retCode)) {
 			BankReturnCodeConfigExample example = new BankReturnCodeConfigExample();
 			example.createCriteria().andRetCodeEqualTo(retCode);
-			BankReturnCodeConfig codeConfig = this.rechargeClient.getBankReturnCodeConfig(example);
+			BankReturnCodeConfigVO codeConfig = this.rechargeClient.getBankReturnCodeConfig(example);
 			if (codeConfig != null ) {
 				String retMsg = codeConfig.getErrorMsg();
 				if (StringUtils.isNotBlank(retMsg)) {

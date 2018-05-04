@@ -61,7 +61,7 @@ public interface RechargeClient {
 
     AccountVO selectByExample(@RequestBody AccountExample example);
 
-    BankReturnCodeConfig getBankReturnCodeConfig(BankReturnCodeConfigExample example);
+    BankReturnCodeConfigVO getBankReturnCodeConfig(BankReturnCodeConfigExample example);
 
     BankOpenAccountVO selectByExample(BankOpenAccountExample example);
 

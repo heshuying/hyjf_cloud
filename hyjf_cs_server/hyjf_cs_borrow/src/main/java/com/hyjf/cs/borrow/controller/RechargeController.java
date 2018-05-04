@@ -7,10 +7,9 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.cs.borrow.bean.WebViewUser;
+import com.hyjf.cs.borrow.config.SystemConfig;
 import com.hyjf.cs.borrow.service.RechargeService;
 import com.hyjf.cs.borrow.util.UserDirectRechargeDefine;
 import com.hyjf.cs.borrow.util.WebUtils;
@@ -50,6 +49,8 @@ public class RechargeController{
 	@Autowired
 	private RechargeService userRechargeService;
 
+	@Autowired
+	SystemConfig systemConfig;
 	/**
 	 *
 	 * 页面充值
@@ -87,14 +88,6 @@ public class RechargeController{
 			return modelAndView;
 		}
 
-		// 判断用户是否缴费授权
-		//update by jijun 2018/04/09 合规接口改造一期
-       /* if (users.getPaymentAuthStatus() != 1) {
-            modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
-            modelAndView.addObject("message", "用户未进行缴费授权！");
-            return modelAndView;
-        }*/
-
 		// 根据用户ID查询用户平台银行卡信息
 		BankCardVO bankCard = this.userRechargeService.selectBankCardByUserId(user.getUserId());
 		if (bankCard == null) {
@@ -103,7 +96,7 @@ public class RechargeController{
 			return modelAndView;
 		}
 
-		if (Validator.isNull(money)) {
+		if (StringUtils.isEmpty(money)) {
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "充值金额不能为空！");
 			return modelAndView;
@@ -133,10 +126,10 @@ public class RechargeController{
 
 		// 拼装参数 调用江西银行
 		// 同步调用路径
-		String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +
+		String retUrl = systemConfig.getWebHost() +
 				UserDirectRechargeDefine.REQUEST_MAPPING + UserDirectRechargeDefine.RETURL_SYN_ACTION + ".do?txAmount="+money;
 		// 异步调用路
-		String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +
+		String bgRetUrl = systemConfig.getWebHost() +
 				UserDirectRechargeDefine.REQUEST_MAPPING + UserDirectRechargeDefine.RETURL_ASY_ACTION + ".do?phone="+mobile;
 
 		// 用户ID
@@ -168,7 +161,6 @@ public class RechargeController{
 			modelAndView.addObject("message", "调用银行接口失败！");
 			//LogUtil.errorLog(UserDirectRechargeController.class.toString(), UserDirectRechargeDefine.USER_DIRECT_RECHARGE_PAGE_ACTION, e);
 		}
-
 		return modelAndView;
 	}
 

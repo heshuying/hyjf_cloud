@@ -152,11 +152,11 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public BankReturnCodeConfig getBankReturnCodeConfig(BankReturnCodeConfigExample example) {
-       BankReturnCodeConfig response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/getBankReturnCodeConfig",example,BankReturnCodeConfig.class).getBody();
+    public BankReturnCodeConfigVO getBankReturnCodeConfig(BankReturnCodeConfigExample example) {
+        BankReturnCodeConfigResponse response = restTemplate
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/getBankReturnCodeConfig",example,BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getResult();
         }
         return null;
     }
