@@ -1,0 +1,925 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.UsersMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.model.auto.Users" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="CHAR" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="email" property="email" jdbcType="CHAR" />
+    <result column="password" property="password" jdbcType="CHAR" />
+    <result column="paypassword" property="paypassword" jdbcType="CHAR" />
+    <result column="referrer" property="referrer" jdbcType="INTEGER" />
+    <result column="salt" property="salt" jdbcType="CHAR" />
+    <result column="logintime" property="logintime" jdbcType="INTEGER" />
+    <result column="reg_ip" property="regIp" jdbcType="CHAR" />
+    <result column="reg_time" property="regTime" jdbcType="INTEGER" />
+    <result column="login_ip" property="loginIp" jdbcType="CHAR" />
+    <result column="login_time" property="loginTime" jdbcType="INTEGER" />
+    <result column="last_ip" property="lastIp" jdbcType="CHAR" />
+    <result column="last_time" property="lastTime" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="open_account" property="openAccount" jdbcType="TINYINT" />
+    <result column="borrow_sms" property="borrowSms" jdbcType="INTEGER" />
+    <result column="recharge_sms" property="rechargeSms" jdbcType="TINYINT" />
+    <result column="withdraw_sms" property="withdrawSms" jdbcType="TINYINT" />
+    <result column="is_smtp" property="isSmtp" jdbcType="TINYINT" />
+    <result column="if_receive_notice" property="ifReceiveNotice" jdbcType="INTEGER" />
+    <result column="iconUrl" property="iconurl" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="DECIMAL" />
+    <result column="invest_sms" property="investSms" jdbcType="TINYINT" />
+    <result column="recieve_sms" property="recieveSms" jdbcType="TINYINT" />
+    <result column="reg_esb" property="regEsb" jdbcType="TINYINT" />
+    <result column="eprovince" property="eprovince" jdbcType="VARCHAR" />
+    <result column="send_sms" property="sendSms" jdbcType="TINYINT" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="usernamep" property="usernamep" jdbcType="VARCHAR" />
+    <result column="is_inst_flag" property="isInstFlag" jdbcType="TINYINT" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="ptype" property="ptype" jdbcType="TINYINT" />
+    <result column="account_esb" property="accountEsb" jdbcType="TINYINT" />
+    <result column="referrer_user_name" property="referrerUserName" jdbcType="VARCHAR" />
+    <result column="investFlag" property="investflag" jdbcType="TINYINT" />
+    <result column="user_type" property="userType" jdbcType="TINYINT" />
+    <result column="auth_type" property="authType" jdbcType="INTEGER" />
+    <result column="auth_status" property="authStatus" jdbcType="INTEGER" />
+    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
+    <result column="recod_total" property="recodTotal" jdbcType="INTEGER" />
+    <result column="recod_time" property="recodTime" jdbcType="TIMESTAMP" />
+    <result column="recod_truncate_time" property="recodTruncateTime" jdbcType="TIMESTAMP" />
+    <result column="is_set_password" property="isSetPassword" jdbcType="TINYINT" />
+    <result column="bank_open_account" property="bankOpenAccount" jdbcType="TINYINT" />
+    <result column="bank_account_esb" property="bankAccountEsb" jdbcType="TINYINT" />
+    <result column="is_data_update" property="isDataUpdate" jdbcType="TINYINT" />
+    <result column="is_evaluation_flag" property="isEvaluationFlag" jdbcType="TINYINT" />
+    <result column="is_ca_flag" property="isCaFlag" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, username, mobile, email, `password`, paypassword, referrer, salt, logintime, 
+    reg_ip, reg_time, login_ip, login_time, last_ip, last_time, `status`, open_account, 
+    borrow_sms, recharge_sms, withdraw_sms, is_smtp, if_receive_notice, iconUrl, version, 
+    invest_sms, recieve_sms, reg_esb, eprovince, send_sms, pid, usernamep, is_inst_flag, 
+    inst_code, ptype, account_esb, referrer_user_name, investFlag, user_type, auth_type, 
+    auth_status, auth_time, recod_total, recod_time, recod_truncate_time, is_set_password, 
+    bank_open_account, bank_account_esb, is_data_update, is_evaluation_flag, is_ca_flag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.UsersExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from huiyingdai_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from huiyingdai_users
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from huiyingdai_users
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.UsersExample" >
+    delete from huiyingdai_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.Users" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into huiyingdai_users (username, mobile, email, 
+      `password`, paypassword, referrer, 
+      salt, logintime, reg_ip, reg_time, 
+      login_ip, login_time, last_ip, 
+      last_time, `status`, open_account, 
+      borrow_sms, recharge_sms, withdraw_sms, 
+      is_smtp, if_receive_notice, iconUrl, 
+      version, invest_sms, recieve_sms, 
+      reg_esb, eprovince, send_sms, 
+      pid, usernamep, is_inst_flag, 
+      inst_code, ptype, account_esb, 
+      referrer_user_name, investFlag, user_type, 
+      auth_type, auth_status, auth_time, 
+      recod_total, recod_time, recod_truncate_time, 
+      is_set_password, bank_open_account, bank_account_esb, 
+      is_data_update, is_evaluation_flag, is_ca_flag
+      )
+    values (#{username,jdbcType=CHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=CHAR}, 
+      #{password,jdbcType=CHAR}, #{paypassword,jdbcType=CHAR}, #{referrer,jdbcType=INTEGER}, 
+      #{salt,jdbcType=CHAR}, #{logintime,jdbcType=INTEGER}, #{regIp,jdbcType=CHAR}, #{regTime,jdbcType=INTEGER}, 
+      #{loginIp,jdbcType=CHAR}, #{loginTime,jdbcType=INTEGER}, #{lastIp,jdbcType=CHAR}, 
+      #{lastTime,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{openAccount,jdbcType=TINYINT}, 
+      #{borrowSms,jdbcType=INTEGER}, #{rechargeSms,jdbcType=TINYINT}, #{withdrawSms,jdbcType=TINYINT}, 
+      #{isSmtp,jdbcType=TINYINT}, #{ifReceiveNotice,jdbcType=INTEGER}, #{iconurl,jdbcType=VARCHAR}, 
+      #{version,jdbcType=DECIMAL}, #{investSms,jdbcType=TINYINT}, #{recieveSms,jdbcType=TINYINT}, 
+      #{regEsb,jdbcType=TINYINT}, #{eprovince,jdbcType=VARCHAR}, #{sendSms,jdbcType=TINYINT}, 
+      #{pid,jdbcType=INTEGER}, #{usernamep,jdbcType=VARCHAR}, #{isInstFlag,jdbcType=TINYINT}, 
+      #{instCode,jdbcType=VARCHAR}, #{ptype,jdbcType=TINYINT}, #{accountEsb,jdbcType=TINYINT}, 
+      #{referrerUserName,jdbcType=VARCHAR}, #{investflag,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
+      #{authType,jdbcType=INTEGER}, #{authStatus,jdbcType=INTEGER}, #{authTime,jdbcType=TIMESTAMP}, 
+      #{recodTotal,jdbcType=INTEGER}, #{recodTime,jdbcType=TIMESTAMP}, #{recodTruncateTime,jdbcType=TIMESTAMP}, 
+      #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, #{bankAccountEsb,jdbcType=TINYINT}, 
+      #{isDataUpdate,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{isCaFlag,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.Users" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into huiyingdai_users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="password != null" >
+        `password`,
+      </if>
+      <if test="paypassword != null" >
+        paypassword,
+      </if>
+      <if test="referrer != null" >
+        referrer,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="logintime != null" >
+        logintime,
+      </if>
+      <if test="regIp != null" >
+        reg_ip,
+      </if>
+      <if test="regTime != null" >
+        reg_time,
+      </if>
+      <if test="loginIp != null" >
+        login_ip,
+      </if>
+      <if test="loginTime != null" >
+        login_time,
+      </if>
+      <if test="lastIp != null" >
+        last_ip,
+      </if>
+      <if test="lastTime != null" >
+        last_time,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="openAccount != null" >
+        open_account,
+      </if>
+      <if test="borrowSms != null" >
+        borrow_sms,
+      </if>
+      <if test="rechargeSms != null" >
+        recharge_sms,
+      </if>
+      <if test="withdrawSms != null" >
+        withdraw_sms,
+      </if>
+      <if test="isSmtp != null" >
+        is_smtp,
+      </if>
+      <if test="ifReceiveNotice != null" >
+        if_receive_notice,
+      </if>
+      <if test="iconurl != null" >
+        iconUrl,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="investSms != null" >
+        invest_sms,
+      </if>
+      <if test="recieveSms != null" >
+        recieve_sms,
+      </if>
+      <if test="regEsb != null" >
+        reg_esb,
+      </if>
+      <if test="eprovince != null" >
+        eprovince,
+      </if>
+      <if test="sendSms != null" >
+        send_sms,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="usernamep != null" >
+        usernamep,
+      </if>
+      <if test="isInstFlag != null" >
+        is_inst_flag,
+      </if>
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="ptype != null" >
+        ptype,
+      </if>
+      <if test="accountEsb != null" >
+        account_esb,
+      </if>
+      <if test="referrerUserName != null" >
+        referrer_user_name,
+      </if>
+      <if test="investflag != null" >
+        investFlag,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="authType != null" >
+        auth_type,
+      </if>
+      <if test="authStatus != null" >
+        auth_status,
+      </if>
+      <if test="authTime != null" >
+        auth_time,
+      </if>
+      <if test="recodTotal != null" >
+        recod_total,
+      </if>
+      <if test="recodTime != null" >
+        recod_time,
+      </if>
+      <if test="recodTruncateTime != null" >
+        recod_truncate_time,
+      </if>
+      <if test="isSetPassword != null" >
+        is_set_password,
+      </if>
+      <if test="bankOpenAccount != null" >
+        bank_open_account,
+      </if>
+      <if test="bankAccountEsb != null" >
+        bank_account_esb,
+      </if>
+      <if test="isDataUpdate != null" >
+        is_data_update,
+      </if>
+      <if test="isEvaluationFlag != null" >
+        is_evaluation_flag,
+      </if>
+      <if test="isCaFlag != null" >
+        is_ca_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="username != null" >
+        #{username,jdbcType=CHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=CHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=CHAR},
+      </if>
+      <if test="paypassword != null" >
+        #{paypassword,jdbcType=CHAR},
+      </if>
+      <if test="referrer != null" >
+        #{referrer,jdbcType=INTEGER},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=CHAR},
+      </if>
+      <if test="logintime != null" >
+        #{logintime,jdbcType=INTEGER},
+      </if>
+      <if test="regIp != null" >
+        #{regIp,jdbcType=CHAR},
+      </if>
+      <if test="regTime != null" >
+        #{regTime,jdbcType=INTEGER},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=CHAR},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=INTEGER},
+      </if>
+      <if test="lastIp != null" >
+        #{lastIp,jdbcType=CHAR},
+      </if>
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="openAccount != null" >
+        #{openAccount,jdbcType=TINYINT},
+      </if>
+      <if test="borrowSms != null" >
+        #{borrowSms,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeSms != null" >
+        #{rechargeSms,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawSms != null" >
+        #{withdrawSms,jdbcType=TINYINT},
+      </if>
+      <if test="isSmtp != null" >
+        #{isSmtp,jdbcType=TINYINT},
+      </if>
+      <if test="ifReceiveNotice != null" >
+        #{ifReceiveNotice,jdbcType=INTEGER},
+      </if>
+      <if test="iconurl != null" >
+        #{iconurl,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="investSms != null" >
+        #{investSms,jdbcType=TINYINT},
+      </if>
+      <if test="recieveSms != null" >
+        #{recieveSms,jdbcType=TINYINT},
+      </if>
+      <if test="regEsb != null" >
+        #{regEsb,jdbcType=TINYINT},
+      </if>
+      <if test="eprovince != null" >
+        #{eprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="sendSms != null" >
+        #{sendSms,jdbcType=TINYINT},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="usernamep != null" >
+        #{usernamep,jdbcType=VARCHAR},
+      </if>
+      <if test="isInstFlag != null" >
+        #{isInstFlag,jdbcType=TINYINT},
+      </if>
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ptype != null" >
+        #{ptype,jdbcType=TINYINT},
+      </if>
+      <if test="accountEsb != null" >
+        #{accountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="referrerUserName != null" >
+        #{referrerUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="investflag != null" >
+        #{investflag,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="authType != null" >
+        #{authType,jdbcType=INTEGER},
+      </if>
+      <if test="authStatus != null" >
+        #{authStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authTime != null" >
+        #{authTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recodTotal != null" >
+        #{recodTotal,jdbcType=INTEGER},
+      </if>
+      <if test="recodTime != null" >
+        #{recodTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recodTruncateTime != null" >
+        #{recodTruncateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSetPassword != null" >
+        #{isSetPassword,jdbcType=TINYINT},
+      </if>
+      <if test="bankOpenAccount != null" >
+        #{bankOpenAccount,jdbcType=TINYINT},
+      </if>
+      <if test="bankAccountEsb != null" >
+        #{bankAccountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="isDataUpdate != null" >
+        #{isDataUpdate,jdbcType=TINYINT},
+      </if>
+      <if test="isEvaluationFlag != null" >
+        #{isEvaluationFlag,jdbcType=TINYINT},
+      </if>
+      <if test="isCaFlag != null" >
+        #{isCaFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.UsersExample" resultType="java.lang.Integer" >
+    select count(*) from huiyingdai_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update huiyingdai_users
+    <set >
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=CHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=CHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=CHAR},
+      </if>
+      <if test="record.password != null" >
+        `password` = #{record.password,jdbcType=CHAR},
+      </if>
+      <if test="record.paypassword != null" >
+        paypassword = #{record.paypassword,jdbcType=CHAR},
+      </if>
+      <if test="record.referrer != null" >
+        referrer = #{record.referrer,jdbcType=INTEGER},
+      </if>
+      <if test="record.salt != null" >
+        salt = #{record.salt,jdbcType=CHAR},
+      </if>
+      <if test="record.logintime != null" >
+        logintime = #{record.logintime,jdbcType=INTEGER},
+      </if>
+      <if test="record.regIp != null" >
+        reg_ip = #{record.regIp,jdbcType=CHAR},
+      </if>
+      <if test="record.regTime != null" >
+        reg_time = #{record.regTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.loginIp != null" >
+        login_ip = #{record.loginIp,jdbcType=CHAR},
+      </if>
+      <if test="record.loginTime != null" >
+        login_time = #{record.loginTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastIp != null" >
+        last_ip = #{record.lastIp,jdbcType=CHAR},
+      </if>
+      <if test="record.lastTime != null" >
+        last_time = #{record.lastTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.openAccount != null" >
+        open_account = #{record.openAccount,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowSms != null" >
+        borrow_sms = #{record.borrowSms,jdbcType=INTEGER},
+      </if>
+      <if test="record.rechargeSms != null" >
+        recharge_sms = #{record.rechargeSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.withdrawSms != null" >
+        withdraw_sms = #{record.withdrawSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.isSmtp != null" >
+        is_smtp = #{record.isSmtp,jdbcType=TINYINT},
+      </if>
+      <if test="record.ifReceiveNotice != null" >
+        if_receive_notice = #{record.ifReceiveNotice,jdbcType=INTEGER},
+      </if>
+      <if test="record.iconurl != null" >
+        iconUrl = #{record.iconurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investSms != null" >
+        invest_sms = #{record.investSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.recieveSms != null" >
+        recieve_sms = #{record.recieveSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.regEsb != null" >
+        reg_esb = #{record.regEsb,jdbcType=TINYINT},
+      </if>
+      <if test="record.eprovince != null" >
+        eprovince = #{record.eprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendSms != null" >
+        send_sms = #{record.sendSms,jdbcType=TINYINT},
+      </if>
+      <if test="record.pid != null" >
+        pid = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.usernamep != null" >
+        usernamep = #{record.usernamep,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isInstFlag != null" >
+        is_inst_flag = #{record.isInstFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ptype != null" >
+        ptype = #{record.ptype,jdbcType=TINYINT},
+      </if>
+      <if test="record.accountEsb != null" >
+        account_esb = #{record.accountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="record.referrerUserName != null" >
+        referrer_user_name = #{record.referrerUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investflag != null" >
+        investFlag = #{record.investflag,jdbcType=TINYINT},
+      </if>
+      <if test="record.userType != null" >
+        user_type = #{record.userType,jdbcType=TINYINT},
+      </if>
+      <if test="record.authType != null" >
+        auth_type = #{record.authType,jdbcType=INTEGER},
+      </if>
+      <if test="record.authStatus != null" >
+        auth_status = #{record.authStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.authTime != null" >
+        auth_time = #{record.authTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.recodTotal != null" >
+        recod_total = #{record.recodTotal,jdbcType=INTEGER},
+      </if>
+      <if test="record.recodTime != null" >
+        recod_time = #{record.recodTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.recodTruncateTime != null" >
+        recod_truncate_time = #{record.recodTruncateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isSetPassword != null" >
+        is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
+      </if>
+      <if test="record.bankOpenAccount != null" >
+        bank_open_account = #{record.bankOpenAccount,jdbcType=TINYINT},
+      </if>
+      <if test="record.bankAccountEsb != null" >
+        bank_account_esb = #{record.bankAccountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="record.isDataUpdate != null" >
+        is_data_update = #{record.isDataUpdate,jdbcType=TINYINT},
+      </if>
+      <if test="record.isEvaluationFlag != null" >
+        is_evaluation_flag = #{record.isEvaluationFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.isCaFlag != null" >
+        is_ca_flag = #{record.isCaFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update huiyingdai_users
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=CHAR},
+      mobile = #{record.mobile,jdbcType=CHAR},
+      email = #{record.email,jdbcType=CHAR},
+      `password` = #{record.password,jdbcType=CHAR},
+      paypassword = #{record.paypassword,jdbcType=CHAR},
+      referrer = #{record.referrer,jdbcType=INTEGER},
+      salt = #{record.salt,jdbcType=CHAR},
+      logintime = #{record.logintime,jdbcType=INTEGER},
+      reg_ip = #{record.regIp,jdbcType=CHAR},
+      reg_time = #{record.regTime,jdbcType=INTEGER},
+      login_ip = #{record.loginIp,jdbcType=CHAR},
+      login_time = #{record.loginTime,jdbcType=INTEGER},
+      last_ip = #{record.lastIp,jdbcType=CHAR},
+      last_time = #{record.lastTime,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      open_account = #{record.openAccount,jdbcType=TINYINT},
+      borrow_sms = #{record.borrowSms,jdbcType=INTEGER},
+      recharge_sms = #{record.rechargeSms,jdbcType=TINYINT},
+      withdraw_sms = #{record.withdrawSms,jdbcType=TINYINT},
+      is_smtp = #{record.isSmtp,jdbcType=TINYINT},
+      if_receive_notice = #{record.ifReceiveNotice,jdbcType=INTEGER},
+      iconUrl = #{record.iconurl,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=DECIMAL},
+      invest_sms = #{record.investSms,jdbcType=TINYINT},
+      recieve_sms = #{record.recieveSms,jdbcType=TINYINT},
+      reg_esb = #{record.regEsb,jdbcType=TINYINT},
+      eprovince = #{record.eprovince,jdbcType=VARCHAR},
+      send_sms = #{record.sendSms,jdbcType=TINYINT},
+      pid = #{record.pid,jdbcType=INTEGER},
+      usernamep = #{record.usernamep,jdbcType=VARCHAR},
+      is_inst_flag = #{record.isInstFlag,jdbcType=TINYINT},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      ptype = #{record.ptype,jdbcType=TINYINT},
+      account_esb = #{record.accountEsb,jdbcType=TINYINT},
+      referrer_user_name = #{record.referrerUserName,jdbcType=VARCHAR},
+      investFlag = #{record.investflag,jdbcType=TINYINT},
+      user_type = #{record.userType,jdbcType=TINYINT},
+      auth_type = #{record.authType,jdbcType=INTEGER},
+      auth_status = #{record.authStatus,jdbcType=INTEGER},
+      auth_time = #{record.authTime,jdbcType=TIMESTAMP},
+      recod_total = #{record.recodTotal,jdbcType=INTEGER},
+      recod_time = #{record.recodTime,jdbcType=TIMESTAMP},
+      recod_truncate_time = #{record.recodTruncateTime,jdbcType=TIMESTAMP},
+      is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
+      bank_open_account = #{record.bankOpenAccount,jdbcType=TINYINT},
+      bank_account_esb = #{record.bankAccountEsb,jdbcType=TINYINT},
+      is_data_update = #{record.isDataUpdate,jdbcType=TINYINT},
+      is_evaluation_flag = #{record.isEvaluationFlag,jdbcType=TINYINT},
+      is_ca_flag = #{record.isCaFlag,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.Users" >
+    update huiyingdai_users
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=CHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=CHAR},
+      </if>
+      <if test="password != null" >
+        `password` = #{password,jdbcType=CHAR},
+      </if>
+      <if test="paypassword != null" >
+        paypassword = #{paypassword,jdbcType=CHAR},
+      </if>
+      <if test="referrer != null" >
+        referrer = #{referrer,jdbcType=INTEGER},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=CHAR},
+      </if>
+      <if test="logintime != null" >
+        logintime = #{logintime,jdbcType=INTEGER},
+      </if>
+      <if test="regIp != null" >
+        reg_ip = #{regIp,jdbcType=CHAR},
+      </if>
+      <if test="regTime != null" >
+        reg_time = #{regTime,jdbcType=INTEGER},
+      </if>
+      <if test="loginIp != null" >
+        login_ip = #{loginIp,jdbcType=CHAR},
+      </if>
+      <if test="loginTime != null" >
+        login_time = #{loginTime,jdbcType=INTEGER},
+      </if>
+      <if test="lastIp != null" >
+        last_ip = #{lastIp,jdbcType=CHAR},
+      </if>
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="openAccount != null" >
+        open_account = #{openAccount,jdbcType=TINYINT},
+      </if>
+      <if test="borrowSms != null" >
+        borrow_sms = #{borrowSms,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeSms != null" >
+        recharge_sms = #{rechargeSms,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawSms != null" >
+        withdraw_sms = #{withdrawSms,jdbcType=TINYINT},
+      </if>
+      <if test="isSmtp != null" >
+        is_smtp = #{isSmtp,jdbcType=TINYINT},
+      </if>
+      <if test="ifReceiveNotice != null" >
+        if_receive_notice = #{ifReceiveNotice,jdbcType=INTEGER},
+      </if>
+      <if test="iconurl != null" >
+        iconUrl = #{iconurl,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="investSms != null" >
+        invest_sms = #{investSms,jdbcType=TINYINT},
+      </if>
+      <if test="recieveSms != null" >
+        recieve_sms = #{recieveSms,jdbcType=TINYINT},
+      </if>
+      <if test="regEsb != null" >
+        reg_esb = #{regEsb,jdbcType=TINYINT},
+      </if>
+      <if test="eprovince != null" >
+        eprovince = #{eprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="sendSms != null" >
+        send_sms = #{sendSms,jdbcType=TINYINT},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="usernamep != null" >
+        usernamep = #{usernamep,jdbcType=VARCHAR},
+      </if>
+      <if test="isInstFlag != null" >
+        is_inst_flag = #{isInstFlag,jdbcType=TINYINT},
+      </if>
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ptype != null" >
+        ptype = #{ptype,jdbcType=TINYINT},
+      </if>
+      <if test="accountEsb != null" >
+        account_esb = #{accountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="referrerUserName != null" >
+        referrer_user_name = #{referrerUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="investflag != null" >
+        investFlag = #{investflag,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="authType != null" >
+        auth_type = #{authType,jdbcType=INTEGER},
+      </if>
+      <if test="authStatus != null" >
+        auth_status = #{authStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recodTotal != null" >
+        recod_total = #{recodTotal,jdbcType=INTEGER},
+      </if>
+      <if test="recodTime != null" >
+        recod_time = #{recodTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recodTruncateTime != null" >
+        recod_truncate_time = #{recodTruncateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSetPassword != null" >
+        is_set_password = #{isSetPassword,jdbcType=TINYINT},
+      </if>
+      <if test="bankOpenAccount != null" >
+        bank_open_account = #{bankOpenAccount,jdbcType=TINYINT},
+      </if>
+      <if test="bankAccountEsb != null" >
+        bank_account_esb = #{bankAccountEsb,jdbcType=TINYINT},
+      </if>
+      <if test="isDataUpdate != null" >
+        is_data_update = #{isDataUpdate,jdbcType=TINYINT},
+      </if>
+      <if test="isEvaluationFlag != null" >
+        is_evaluation_flag = #{isEvaluationFlag,jdbcType=TINYINT},
+      </if>
+      <if test="isCaFlag != null" >
+        is_ca_flag = #{isCaFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.Users" >
+    update huiyingdai_users
+    set username = #{username,jdbcType=CHAR},
+      mobile = #{mobile,jdbcType=CHAR},
+      email = #{email,jdbcType=CHAR},
+      `password` = #{password,jdbcType=CHAR},
+      paypassword = #{paypassword,jdbcType=CHAR},
+      referrer = #{referrer,jdbcType=INTEGER},
+      salt = #{salt,jdbcType=CHAR},
+      logintime = #{logintime,jdbcType=INTEGER},
+      reg_ip = #{regIp,jdbcType=CHAR},
+      reg_time = #{regTime,jdbcType=INTEGER},
+      login_ip = #{loginIp,jdbcType=CHAR},
+      login_time = #{loginTime,jdbcType=INTEGER},
+      last_ip = #{lastIp,jdbcType=CHAR},
+      last_time = #{lastTime,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      open_account = #{openAccount,jdbcType=TINYINT},
+      borrow_sms = #{borrowSms,jdbcType=INTEGER},
+      recharge_sms = #{rechargeSms,jdbcType=TINYINT},
+      withdraw_sms = #{withdrawSms,jdbcType=TINYINT},
+      is_smtp = #{isSmtp,jdbcType=TINYINT},
+      if_receive_notice = #{ifReceiveNotice,jdbcType=INTEGER},
+      iconUrl = #{iconurl,jdbcType=VARCHAR},
+      version = #{version,jdbcType=DECIMAL},
+      invest_sms = #{investSms,jdbcType=TINYINT},
+      recieve_sms = #{recieveSms,jdbcType=TINYINT},
+      reg_esb = #{regEsb,jdbcType=TINYINT},
+      eprovince = #{eprovince,jdbcType=VARCHAR},
+      send_sms = #{sendSms,jdbcType=TINYINT},
+      pid = #{pid,jdbcType=INTEGER},
+      usernamep = #{usernamep,jdbcType=VARCHAR},
+      is_inst_flag = #{isInstFlag,jdbcType=TINYINT},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      ptype = #{ptype,jdbcType=TINYINT},
+      account_esb = #{accountEsb,jdbcType=TINYINT},
+      referrer_user_name = #{referrerUserName,jdbcType=VARCHAR},
+      investFlag = #{investflag,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT},
+      auth_type = #{authType,jdbcType=INTEGER},
+      auth_status = #{authStatus,jdbcType=INTEGER},
+      auth_time = #{authTime,jdbcType=TIMESTAMP},
+      recod_total = #{recodTotal,jdbcType=INTEGER},
+      recod_time = #{recodTime,jdbcType=TIMESTAMP},
+      recod_truncate_time = #{recodTruncateTime,jdbcType=TIMESTAMP},
+      is_set_password = #{isSetPassword,jdbcType=TINYINT},
+      bank_open_account = #{bankOpenAccount,jdbcType=TINYINT},
+      bank_account_esb = #{bankAccountEsb,jdbcType=TINYINT},
+      is_data_update = #{isDataUpdate,jdbcType=TINYINT},
+      is_evaluation_flag = #{isEvaluationFlag,jdbcType=TINYINT},
+      is_ca_flag = #{isCaFlag,jdbcType=TINYINT}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

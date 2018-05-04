@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.user.dao.model.auto.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +20,6 @@ import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper;
 import com.hyjf.am.user.dao.mapper.auto.UsersInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UsersMapper;
 import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
-import com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetail;
-import com.hyjf.am.user.dao.model.auto.AppChannelStatisticsDetailExample;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.dao.model.auto.UsersInfoExample;
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.dao.model.auto.UtmRegExample;
 import com.hyjf.am.user.service.BankOpenService;
 import com.hyjf.am.user.utils.IdCard15To18;
 
@@ -289,5 +280,14 @@ public class BankOpenServiceImpl implements BankOpenService {
 
 		return null;
 	}
+
+    @Override
+    public BankOpenAccount selectByExample(BankOpenAccountExample example) {
+        List<BankOpenAccount> bankOpenAccountList = bankOpenAccountMapper.selectByExample(example);
+        if (bankOpenAccountList != null && bankOpenAccountList.size() == 1) {
+            return bankOpenAccountList.get(0);
+        }
+        return null;
+    }
 
 }

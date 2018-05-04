@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<article class="main-content">
+    <div class="container result">
+        <!-- start 内容区域 -->
+        <div class="acount-recharge">
+            <form <span th:if test="${isBundCardFlag == 1}"> id="rechargeForm" action="${ctx}/bank/web/user/recharge/rechargeOnline.do"</span>
+            <span th:if test="${isBundCardFlag == 0}"> id="bindCardForm" action="${ctx}/bank/web/bindCard/bindCard.do?pageFrom=recharge" </span> method="post">
+            <input type="hidden" name="tokenCheck" id="tokenCheck" value="" />
+            <input type="hidden" name="tokenGrant" id="tokenGrant" value="${tokenGrant}" />
+            <input type="hidden" name="rechargeType" id="rechargeType" value="0" />
+            <input type="hidden" name="cardId" id="cardId" value="${cardId}" />
+            <ul>
+                <li class="avail">
+                    <div class="prompt">可用金额：</div>
+                    <div class="info">
+                        <span>${userBalance}</span>元
+                    </div>
+                </li>
+                <li class="type">
+                    <div class="prompt">充值方式：</div>
+                    <div class="info">
+                        <th:if test="${userType == 0 }">
+                            <a data-val=2 class="check offline" >线下充值<span></span></a>
+                            <a data-val=1 class="onlinebank">快捷充值<span></span></a>
+                            <th:if test="${isBundCardFlag == 0 and userType == 0}">
+                                <div class="hint" style="display:none;">使用快捷充值前需要先绑定快捷银行卡</div>
+                            </th:if>
+                        </th:if>
+                        <th:if test="${userType == 1 }">
+                            <a data-val=2 class="check offline">线下充值<span></span></a>
+                        </th:if>
+                    </div>
+                    <input type="hidden" value=1>
+                </li>
+                <th:if test="${isBundCardFlag == 1 and userType == 0 }">
+                    <input type="hidden" name="smsSeq" id="smsSeq" value="" />
+                    <li class="card" style="display:none">
+                        <div class="prompt">快捷银行卡：</div>
+                        <div class="info">
+                            <div>${cardNo}</div>
+                            <a href="javascript:;" class="delete-card" id="unbundling">解绑>></a>
+                            <th:if test="${!empty singleQuota and !empty singleCardQuota and !empty monthCardQuota}">
+                                <span style="color:#C0C0C0;">限额： 单笔${singleQuota}， 单日${singleCardQuota}， 单月${monthCardQuota}</span>
+                            </th:if>
+                        </div>
+                    </li>
+
+
+                    <li class="recharge" style="display:none">
+                        <div class="prompt">充值金额：</div>
+                        <div class="info acount-input"><input type="text" id = "money" placeholder="请输入金额" autocomplete="off" name="money" maxlength="7"/><em>元</em></div>
+                    </li>
+
+
+                    <li class="recharge" style="display:none">
+                        <div class="prompt">银行预留手机号：</div>
+                        <div class="info acount-input"><input type="text" maxlength="11" onkeyup="value=value.replace(/[^\d]/g,'')" value="${mobile}" placeholder="请输入银行预留手机号" autocomplete="off" name="mobile" id="phoneNum"/></div>
+                        <div class="tishi">请输入快捷银行卡银行预留手机号</div>
+                    </li>
+                    <li class="recharge" style="display:none">
+                        <div class="prompt">验证码：</div>
+                        <div class="info acount-input"><input type="text" placeholder="请输入手机验证码" autocomplete="off" maxlength="6" name="smsCode" id="code"/><span class="get-code"><em class="rule"></em>获取验证码</span></div>
+                    </li>
+
+
+                </th:if>
+                <th:if test="${isBundCardFlag == 0 and userType == 0}">
+                    <li class="bound-card" style="display:none">
+                        <div class="prompt">绑定银行卡：</div>
+                        <div class="info acount-input">
+                            <input id="cardNo" name="cardNo" type="text" placeholder="请输入银行卡号" autocomplete="off" oninput="if(value.length>19)value=value.slice(0,19)">
+                        </div>
+                    </li>
+                </th:if>
+                <li class="offline" <th:if th:test="${userType == 1 }">style="display: block" </th:if>>
+                <div class="prompt">支付宝/网银转账：</div>
+                <div class="info">
+                    收款方户名：${trueName}<br/>
+                    收款方帐号：${accountId }<br/>
+                    收款方开户行：    江西银行股份有限公司总行营业部<br/>
+                    <span class="color999">注：网银转账时，银行请选择（城市商业银行）江西银行或者南昌银行</span>
+                </div>
+                </li>
+            </ul>
+
+            <th:if test="${isBundCardFlag == 1 and userType == 0}">
+                <a class="sub" style="display:none">立即充值</a>
+            </th:if>
+
+            <th:if test="${isBundCardFlag == 0 and userType == 0}">
+                <a class="sub bindsub"  style="display:none">绑定</a>
+            </th:if>
+
+            </form>
+            <div class="reminder">
+                <h2>温馨提示</h2>
+                <ul class="reminder-list">
+                    <li class="tc-main">1. 快捷充值须先开通“ <a  style="text-decoration: underline;" target="_blank" href="https://www.95516.com/static/union/pages/card/openFirst.html?entry=openPay ">银联在线支付</a>”功能；</li>
+                    <li>2. 快捷充值时，若银联页面提示错误代码“CI77”则表示未开通“银联在线支付”功能；</li>
+                    <li>3. 投资人充值投资所有项目的充值手续费均由平台垫付；</li>
+                    <li>4. 最低充值金额应大于等于1元；</li>
+                    <li class="tc-main">5. 用户每日发起充值上限30次；</li>
+                    <li>6. 使用快捷充值的资金，取现时原卡返回；</li>
+                    <li>7. 充值/提现必须为银行借记卡，不支持存折、信用卡充值；</li>
+                    <li>8. 充值期间，请勿关闭浏览器，待充值成功并返回首页后，所充资金才能入账，如有疑问，请联系客服；</li>
+                    <li>9. 绑定银行卡时，绑定的银行卡地开户信息，需要与存管账户的用户信息保持一致；</li>
+                    <li>10. 解绑银行卡时，需要当前存管账户系统余额为0，且没有未结清的标的时(注：清算标的有约两小时的处理时间，22:00后的清算将在次日的8:00后统一清算，请耐心等待)，才可以进行解绑；如不符合条件仍需解绑，请联系客服：400-900-7878</li>
+                    <li>11. 若修改绑定银行卡失败，可以选择其它方式修改绑定银行卡，<a target="_blank" href='${ctx}/help/index.do?side=hp18&issure=is173'>点击查看详情</a>。</li>
+                    <li>12. 支付限额请参照 <a target="_blank" href="${ctx}/bank/web/user/recharge/rechargeQuotaLimit.do">支付说明</a>。</li>
+                </ul>
+            </div>
+        </div>
+        <!-- end 内容区域 -->
+    </div>
+</article>
+<script src="${ctx}/dist/js/lib/jquery.validate.js"></script>
+<script src="${ctx}/dist/js/lib/jquery.metadata.js"></script>
+<script type="text/javascript" src="${ctx}/js/bank/user/recharge/recharge.js?version=${version}" charset="utf-8"></script>
+<script type="text/javascript" src="${ctx}/js/jquery.cookie.min.js" charset="utf-8"></script>
+</body>
+</html>

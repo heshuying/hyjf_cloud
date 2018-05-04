@@ -1,7 +1,13 @@
 package com.hyjf.am.user.controller;
 
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.resquest.user.BankOpenRequest;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
+import com.hyjf.am.user.dao.model.auto.UsersInfo;
+import com.hyjf.am.user.service.BankOpenService;
+import com.hyjf.am.vo.user.UserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -11,12 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.resquest.user.BankOpenRequest;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.service.BankOpenService;
-import com.hyjf.am.vo.user.UserInfoVO;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/am-user/bankopen")
@@ -129,6 +130,17 @@ public class BankOpenController {
 		}
 		return response;
 	}
-	
+
+	@RequestMapping("/selectByExample")
+	public BankOpenAccount selectByExample(BankOpenAccountExample example) {
+		//BankOpenAccountResponse response = new BankOpenAccountResponse();
+		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(example);
+		/*if(bankOpenAccount != null){
+			BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+			BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+			response.setResult(bankOpenAccountVO);
+		}*/
+		return bankOpenAccount;
+	}
 	
 }

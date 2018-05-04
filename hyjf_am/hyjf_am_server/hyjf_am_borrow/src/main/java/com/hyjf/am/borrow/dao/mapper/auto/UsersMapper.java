@@ -1,12 +1,11 @@
-package com.hyjf.am.user.dao.mapper.auto;
+package com.hyjf.am.borrow.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.Users;
 import com.hyjf.am.user.dao.model.auto.UsersExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
 public interface UsersMapper {
     int countByExample(UsersExample example);
 
