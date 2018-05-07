@@ -1,4 +1,4 @@
-package com.hyjf.am.borrow.dao.model.auto;
+package com.hyjf.am.config.dao.model.auto;
 
 import java.util.ArrayList;
 import java.util.Date;

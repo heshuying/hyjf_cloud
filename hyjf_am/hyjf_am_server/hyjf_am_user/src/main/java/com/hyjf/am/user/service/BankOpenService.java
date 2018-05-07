@@ -1,10 +1,6 @@
 package com.hyjf.am.user.service;
 
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-
-import java.util.List;
+import com.hyjf.am.user.dao.model.auto.*;
 
 public interface BankOpenService {
 	
@@ -38,5 +34,20 @@ public interface BankOpenService {
 	UsersInfo findUserInfoByCradId(String cardNo);
 
 	BankOpenAccount selectByExample(BankOpenAccountExample example);
-    
+
+	/**
+	 * 根据用户Id,银行卡号检索用户银行卡信息
+	 * @param userId
+	 * @param cardNo
+	 * @return
+	 */
+	BankCard selectBankCardByUserId(Integer userId);
+
+	BankCard getBankCardByCardNo(Integer userId, String cardNo);
+	/**
+	 * 根据用户ID查询企业用户信息
+	 * @param userId
+	 * @return
+	 */
+	CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
 }

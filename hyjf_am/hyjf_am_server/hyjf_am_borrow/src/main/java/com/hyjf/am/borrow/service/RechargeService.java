@@ -13,36 +13,10 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  *
  */
 public interface RechargeService {
-	/**
-	 * 根据用户Id,银行卡号检索用户银行卡信息
-	 * @param userId
-	 * @param cardNo
-	 * @return
-	 */
-	 BankCard selectBankCardByUserId(Integer userId);
 
-	/**
-	 * 获取银行卡配置信息
-	 * @param bankId
-	 * @return
-	 */
-	BanksConfig getBanksConfigByBankId(Integer bankId);
+    int selectByOrdId(String ordId);
 
-	/**
-	 * 根据用户ID查询企业用户信息
-	 * @param userId
-	 * @return
-	 */
-	 CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
-
-	/**
-	 * 插入充值记录
-	 *
-	 * @param bean
-	 * @param params
-	 * @return
-	 */
-	 int insertRechargeInfo(BankCallBean bean);
+    int insertSelective(BankCallBean bean, BankCard bankCard);
 
 	 AccountRecharge selectByExample(AccountRechargeExample example);
 
@@ -54,6 +28,5 @@ public interface RechargeService {
 
 	 void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge);
 
-	BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
-
+	boolean updateBanks(AccountRechargeVO accountRecharge, BankCallBean bean, String ip);
 }

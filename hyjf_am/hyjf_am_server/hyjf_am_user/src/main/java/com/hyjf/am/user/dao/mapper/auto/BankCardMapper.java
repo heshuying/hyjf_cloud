@@ -1,10 +1,11 @@
-package com.hyjf.am.borrow.dao.mapper.auto;
+package com.hyjf.am.user.dao.mapper.auto;
 
-import com.hyjf.am.borrow.dao.model.auto.BankCard;
-import com.hyjf.am.borrow.dao.model.auto.BankCardExample;
-import java.util.List;
+import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface BankCardMapper {

@@ -1,4 +1,4 @@
-package com.hyjf.am.borrow.dao.model.auto;
+package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
 import java.util.Date;

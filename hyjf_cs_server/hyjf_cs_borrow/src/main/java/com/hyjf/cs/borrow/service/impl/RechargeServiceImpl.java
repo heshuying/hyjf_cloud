@@ -2,7 +2,10 @@ package com.hyjf.cs.borrow.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.borrow.*;
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
+import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.borrow.BankCardVO;
+import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -29,7 +32,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
@@ -83,7 +85,19 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 	@Override
 	public int insertRechargeInfo(BankCallBean bean) {
-		int response = rechargeClient.insertRechargeInfo(bean);
+		String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
+		int ret = rechargeClient.selectByOrdId(ordId);
+		if (ret == 0) {
+			return ret;
+		}
+		// 银行卡号
+		String cardNo = bean.getCardNo();
+		// 根据银行卡号检索银行卡信息
+		BankCardVO bankCard = rechargeClient.getBankCardByCardNo(Integer.parseInt(bean.getLogUserId()), cardNo);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("bankCallBean",bean);
+		paramMap.put("bankCard",bankCard);
+		int response = rechargeClient.insertSelectiveBank(paramMap);
 		return response;
 	}
 	/**
@@ -94,7 +108,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	 * @return
 	 */
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public JSONObject handleRechargeInfo(BankCallBean bean, Map<String, String> params) {
 		// 用户Id
 		Integer userId = Integer.parseInt(bean.getLogUserId());
@@ -144,70 +157,12 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
 						accountRecharge.setAccountId(accountId);// 电子账户
 						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);// 交易流水号
-						boolean isAccountRechargeFlag = this.rechargeClient.updateByExampleSelective(accountRecharge, orderId) > 0 ? true : false;
-						if (!isAccountRechargeFlag) {
-							throw new Exception("充值后,回调更新充值记录表失败!" + "充值订单号:" + orderId + ".用户ID:" + userId);
-						}
-						AccountVO newAccount = new AccountVO();
-						// 更新账户信息
-						newAccount.setUserId(userId);// 用户Id
-						newAccount.setBankTotal(txAmount); // 累加到账户总资产
-						newAccount.setBankBalance(txAmount); // 累加可用余额
-						newAccount.setBankBalanceCash(txAmount);// 银行账户可用户
-						boolean isAccountUpdateFlag = this.rechargeClient.updateBankRechargeSuccess(newAccount) > 0 ? true : false;
-						if (!isAccountUpdateFlag) {
-							throw new Exception("提现后,更新用户Account表失败!");
-						}
-
-						// 重新获取用户账户信息
-						account = this.getAccount(userId);
-						// 生成交易明细
-						AccountListVO accountList = new AccountListVO();
-						accountList.setNid(orderId);
-						accountList.setUserId(userId);
-						accountList.setAmount(txAmount);
-						accountList.setTxDate(Integer.parseInt(bean.getTxDate()));// 交易日期
-						accountList.setTxTime(Integer.parseInt(bean.getTxTime()));// 交易时间
-						accountList.setSeqNo(bean.getSeqNo());// 交易流水号
-						accountList.setBankSeqNo((bean.getTxDate() + bean.getTxTime() + bean.getSeqNo()));
-						accountList.setType(1);
-						accountList.setTrade("recharge");
-						accountList.setTradeCode("balance");
-						accountList.setAccountId(accountId);
-						accountList.setBankTotal(account.getBankTotal()); // 银行总资产
-						accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
-						accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
-						accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
-						accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
-						accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
-						accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
-						accountList.setBankAwait(account.getBankAwait());// 银行待收总额
-						accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
-						accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
-						accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
-						accountList.setPlanFrost(account.getPlanFrost());
-						accountList.setTotal(account.getTotal());
-						accountList.setBalance(account.getBalance());
-						accountList.setFrost(account.getFrost());
-						accountList.setAwait(account.getAwait());
-						accountList.setRepay(account.getRepay());
-						accountList.setRemark("快捷充值");
-						accountList.setCreateTime(nowTime);
-						accountList.setBaseUpdate(nowTime);
-						accountList.setOperator(userId + "");
-						accountList.setIp(ip);
-						accountList.setIsUpdate(0);
-						accountList.setBaseUpdate(0);
-						accountList.setInterest(null);
-						accountList.setWeb(0);
-						accountList.setIsBank(1);// 是否是银行的交易记录 0:否 ,1:是
-						accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账
-						accountList.setTradeStatus(1);// 成功状态
-						// 插入交易明细
-						boolean isAccountListUpdateFlag = this.rechargeClient.insertSelective(accountList) > 0 ? true : false;
-
-						if (isAccountListUpdateFlag) {
+						Map<String,Object> paramMap = new HashMap<>();
+						paramMap.put("accountRecharge",accountRecharge);
+						paramMap.put("bean",bean);
+						paramMap.put("ip",ip);
+						boolean flag = rechargeClient.updateBanks(paramMap);
+						if (flag) {
 							// 更新成功
 							// 如果需要短信
 							UserVO users = rechargeClient.getUsers(userId);

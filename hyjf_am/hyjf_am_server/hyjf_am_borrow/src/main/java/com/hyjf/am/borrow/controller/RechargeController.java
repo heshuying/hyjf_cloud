@@ -1,19 +1,30 @@
 package com.hyjf.am.borrow.controller;
 
-import com.hyjf.am.borrow.dao.model.auto.*;
+import com.hyjf.am.borrow.dao.model.auto.Account;
+import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
+import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
+import com.hyjf.am.borrow.dao.model.auto.BankCard;
 import com.hyjf.am.borrow.service.AccountService;
 import com.hyjf.am.borrow.service.RechargeService;
-import com.hyjf.am.response.borrow.*;
-import com.hyjf.am.vo.borrow.*;
+import com.hyjf.am.response.borrow.AccountRechargeResponse;
+import com.hyjf.am.response.borrow.AccountResponse;
+import com.hyjf.am.vo.borrow.AccountListVO;
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
+import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+
 import java.util.Map;
 
+@Api(value = "充值接口")
 @RestController
 @RequestMapping("/am-borrow/recharge")
 public class RechargeController {
@@ -26,44 +37,14 @@ public class RechargeController {
     AccountService accountService;
 
     /**
-     * 根据用户Id检索用户银行卡信息
-     * @param userId
-     * @return
-     */
-    @GetMapping("/selectByUserId/{userId}")
-    public BankCardResponse selectByUserId (@PathVariable Integer userId){
-        BankCardResponse response = new BankCardResponse();
-        BankCard bankCard = rechargeService.selectBankCardByUserId(userId);
-        if(null != bankCard){
-            BankCardVO bankCardVO = new BankCardVO();
-            BeanUtils.copyProperties(bankCard, bankCardVO);
-            response.setResult(bankCardVO);
-        }
-        return response;
-    }
-
-    /**
-     * 获取银行卡配置信息
-     * @param bankId
-     * @return
-     */
-    @GetMapping("/getBanksConfigByBankId/{bankId}")
-    public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
-        BanksConfigResponse response = new BanksConfigResponse();
-        BanksConfig bankConfig = rechargeService.getBanksConfigByBankId(bankId);
-        if(null != bankConfig){
-            BanksConfigVO banksConfigVO = new BanksConfigVO();
-            BeanUtils.copyProperties(bankConfig,banksConfigVO);
-            response.setResult(banksConfigVO);
-        }
-        return response;
-    }
-
-    /**
      *
      * @param userId
      * @return
      */
+    @ApiOperation(value = " Account", notes = " Account")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户编码", required = true, dataType = "Integer")
+    })
     @GetMapping("/getAccount/{userId}")
     public AccountResponse getAccount(@PathVariable Integer userId){
         AccountResponse response = new AccountResponse();
@@ -76,42 +57,16 @@ public class RechargeController {
         return response;
     }
 
-    /**
-     * 根据用户ID查询企业用户信息
-     * @param userId
-     * @return
-     */
-    @GetMapping("/getCorpOpenAccountRecord/{userId}")
-    public CorpOpenAccountRecordResponse getCorpOpenAccountRecord(@PathVariable Integer userId){
-        CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
-        CorpOpenAccountRecord corpOpenAccountRecord= rechargeService.getCorpOpenAccountRecord(userId);
-        if(null != corpOpenAccountRecord){
-            CorpOpenAccountRecordVO corpOpenAccountRecordVO = new CorpOpenAccountRecordVO();
-            BeanUtils.copyProperties(corpOpenAccountRecord,corpOpenAccountRecordVO);
-            response.setResult(corpOpenAccountRecordVO);
-        }
-        return response;
-    }
-
-    /**
-     * 插入充值记录
-     * @param bean
-     * @return
-     */
-    @PostMapping("/insertRechargeInfo")
-    public int insertRechargeInfo(@RequestBody @Valid BankCallBean bean){
-       Integer response = rechargeService.insertRechargeInfo(bean);
-       if (response != null){
-           return response;
-       }
-       return 0;
-    }
 
     /**
      * 查询充值记录
      * @param example
      * @return
      */
+    @ApiOperation(value = " 查询充值记录", notes = " 查询充值记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderId", value = "orderId", required = true, dataType = "String")
+    })
     @GetMapping("/selectByOrderId/{orderId}")
     public AccountRechargeResponse selectByOrderId(@PathVariable String orderId){
         AccountRechargeExample example = new AccountRechargeExample();
@@ -131,6 +86,10 @@ public class RechargeController {
      * @param paramMap
      * @return
      */
+    @ApiOperation(value = " updateByExampleSelective", notes = " updateByExampleSelective")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "paramMap", value = "paramMap", required = true, dataType = "Map<String,Object>")
+    })
     @PostMapping("/updateByExampleSelective")
     public int updateByExampleSelective(@RequestBody Map<String,Object> paramMap){
         AccountRechargeVO accountRecharge = (AccountRechargeVO) paramMap.get("accountRecharge");
@@ -146,6 +105,10 @@ public class RechargeController {
      * @param newAccount
      * @return
      */
+    @ApiOperation(value = " updateBankRechargeSuccess", notes = " updateBankRechargeSuccess")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "newAccount", value = "newAccount", required = true, dataType = "AccountVO")
+    })
     @PostMapping("/updateBankRechargeSuccess")
     public int updateBankRechargeSuccess(@RequestBody AccountVO newAccount){
         int isAccountUpdateFlag = rechargeService.updateBankRechargeSuccess(newAccount);
@@ -157,6 +120,10 @@ public class RechargeController {
      * @param accountList
      * @return
      */
+    @ApiOperation(value = " 插入交易明细", notes = " 插入交易明细")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "accountList", value = "accountList", required = true, dataType = "AccountListVO")
+    })
     @PostMapping("/insertSelective")
     public int insertSelective(@RequestBody AccountListVO accountList){
         int isAccountListUpdateFlag = rechargeService.insertSelective(accountList);
@@ -167,27 +134,35 @@ public class RechargeController {
      *
      * @param accountRecharge
      */
+    @ApiOperation(value = " 更新", notes = " 更新")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "accountRecharge", value = "accountRecharge", required = true, dataType = "AccountRechargeVO")
+    })
     @PutMapping("/updateByPrimaryKeySelective")
     public void updateByPrimaryKeySelective(@RequestBody AccountRechargeVO accountRecharge){
         this.rechargeService.updateByPrimaryKeySelective(accountRecharge);
     }
 
-    /**
-     *
-     * @param retCode
-     * @return
-     */
-    @GetMapping("/getBankReturnCodeConfig/{retCode}")
-    public BankReturnCodeConfigResponse getBankReturnCodeConfig(@PathVariable String retCode){
-        BankReturnCodeConfigExample example = new BankReturnCodeConfigExample();
-        example.createCriteria().andRetCodeEqualTo(retCode);
-        BankReturnCodeConfigResponse response = new BankReturnCodeConfigResponse();
-        BankReturnCodeConfig retCodes = this.rechargeService.selectByExample(example);
-        if(null != retCodes){
-            BankReturnCodeConfigVO bankReturnCodeConfigVO = new BankReturnCodeConfigVO();
-            BeanUtils.copyProperties(retCodes,bankReturnCodeConfigVO);
-            response.setResult(bankReturnCodeConfigVO);
-        }
-        return response;
+    @GetMapping("/selectByOrdId/{ordId}")
+    public int selectByOrdId(@PathVariable String ordId){
+        int ret = this.rechargeService.selectByOrdId(ordId);
+        return ret;
+    }
+
+    @PostMapping("/insertSelectiveBank")
+    public int insertSelectiveBank(@RequestBody Map<String,Object> paramMap){
+        BankCallBean bean = (BankCallBean) paramMap.get("bankCallBean");
+        BankCard bankCard = (BankCard) paramMap.get("bankCard");
+        int ret = rechargeService.insertSelective(bean,bankCard);
+        return ret;
+    }
+
+    @PostMapping("/updateBanks")
+    public boolean updateBanks(@RequestBody Map<String,Object> paramMap) {
+        AccountRechargeVO accountRecharge = (AccountRechargeVO) paramMap.get("accountRecharge");
+         BankCallBean bean = (BankCallBean) paramMap.get("bean");
+         String ip = (String) paramMap.get("ip");
+        boolean flag = rechargeService.updateBanks(accountRecharge,bean,ip);
+        return flag;
     }
 }

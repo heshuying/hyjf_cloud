@@ -1,6 +1,9 @@
 package com.hyjf.am.borrow.service.impl;
 
-import com.hyjf.am.borrow.dao.mapper.auto.*;
+import com.hyjf.am.borrow.dao.mapper.auto.AccountListMapper;
+import com.hyjf.am.borrow.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.borrow.dao.mapper.auto.AccountRechargeMapper;
+import com.hyjf.am.borrow.dao.mapper.auto.AdminAccountCustomizeMapper;
 import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.RechargeService;
 import com.hyjf.am.vo.borrow.AccountListVO;
@@ -8,8 +11,10 @@ import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,25 +28,20 @@ import java.util.List;
 @Service
 public class RechargeServiceImpl implements RechargeService {
 
-	@Autowired
-	protected BankCardMapper bankCardMapper;
 
-	@Autowired
-	protected BanksConfigMapper banksConfigMapper;
 
-	@Autowired
-	protected CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
+
+
 
 	@Autowired
 	protected AccountRechargeMapper accountRechargeMapper;
 
 	@Autowired
-	protected BankReturnCodeConfigMapper bankReturnCodeConfigMapper;
-
-	@Autowired
 	protected AccountMapper accountMapper;
 	@Autowired
 	protected  AccountListMapper accountListMapper;
+
+
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -53,73 +53,24 @@ public class RechargeServiceImpl implements RechargeService {
 	@Autowired
 	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
-	/**
-	 * 根据用户Id检索用户银行卡信息
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	public BankCard selectBankCardByUserId(Integer userId) {
-		BankCardExample example = new BankCardExample();
-		BankCardExample.Criteria cra = example.createCriteria();
-		cra.andUserIdEqualTo(userId);// 用户Id
-		cra.andStatusEqualTo(1);// 银行卡是否有效 0无效 1有效
-		List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
-		if (bankCardList != null && bankCardList.size() > 0) {
-			return bankCardList.get(0);
-		}
-		return null;
-	}
 
-	/**
-	 * 获取银行卡配置信息
-	 */
-	public BanksConfig getBanksConfigByBankId(Integer bankId) {
-		if(bankId == null){
-			return null;
-		}
-		BanksConfigExample example = new BanksConfigExample();
-		example.createCriteria().andIdEqualTo(bankId).andDelFlgEqualTo(0);
-		List<BanksConfig> banksConfigList = banksConfigMapper.selectByExample(example);
-		if(banksConfigList != null && !banksConfigList.isEmpty()){
-			return banksConfigList.get(0);
-		}
-		return null;
-	}
-
-	/**
-	 * 根据用户ID查询企业用户信息
-	 *
-	 * @param userId
-	 * @return
-	 */
-	public CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId) {
-		CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
-		CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
-		cra.andUserIdEqualTo(userId);
-		cra.andIsBankEqualTo(1);// 江西银行
-		List<CorpOpenAccountRecord> list = this.corpOpenAccountRecordMapper.selectByExample(example);
-		if (list != null && list.size() > 0) {
-			return list.get(0);
-		}
-		return null;
-	}
-
-	@Override
-	public int insertRechargeInfo(BankCallBean bean) {
+	public int selectByOrdId(String ordId){
 		int ret = 0;
-		String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
+		//String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
 		AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 		accountRechargeExample.createCriteria().andNidEqualTo(ordId == null ? "" : ordId);
 		List<AccountRecharge> listAccountRecharge = this.accountRechargeMapper.selectByExample(accountRechargeExample);
 		if (listAccountRecharge != null && listAccountRecharge.size() > 0) {
 			return ret;
 		}
+		return -1;
+	}
+
+	@Override
+	public int insertSelective(BankCallBean bean, BankCard bankCard){
 		int nowTime = GetDate.getNowTime10(); // 当前时间
 		// 银行卡号
 		String cardNo = bean.getCardNo();
-		// 根据银行卡号检索银行卡信息
-		BankCard bankCard = this.getBankCardByCardNo(Integer.parseInt(bean.getLogUserId()), cardNo);
 		BigDecimal money = new BigDecimal(bean.getTxAmount()); // 充值金额
 		AccountRecharge record = new AccountRecharge();
 		record.setNid(bean.getLogOrderId()); // 订单号
@@ -149,26 +100,6 @@ public class RechargeServiceImpl implements RechargeService {
 		record.setIsBank(1);// 资金托管平台 0:汇付,1:江西银行
 		// 插入用户充值记录表
 		return this.accountRechargeMapper.insertSelective(record);
-	}
-
-	/**
-	 * 根据银行卡号,用户Id检索用户银行卡信息
-	 *
-	 * @param userId
-	 * @param cardNo
-	 * @return
-	 */
-	public BankCard getBankCardByCardNo(Integer userId, String cardNo) {
-		BankCardExample example = new BankCardExample();
-		BankCardExample.Criteria cra = example.createCriteria();
-		cra.andUserIdEqualTo(userId);// 用户Id
-		cra.andCardNoEqualTo(cardNo);// 银行卡号
-		cra.andStatusEqualTo(1);// 银行卡是否有效 0无效 1有效
-		List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
-		if (bankCardList != null && bankCardList.size() > 0) {
-			return bankCardList.get(0);
-		}
-		return null;
 	}
 
 	/**
@@ -204,13 +135,86 @@ public class RechargeServiceImpl implements RechargeService {
 		this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge);
 	}
 
-
-	public BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example){
-		List<BankReturnCodeConfig> retCodes = this.bankReturnCodeConfigMapper.selectByExample(example);
-		if (retCodes != null && retCodes.size() == 1) {
-			return retCodes.get(0);
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public boolean updateBanks(AccountRechargeVO accountRecharge, BankCallBean bean, String ip){
+		{
+			// 充值订单号
+			String orderId = bean.getLogOrderId();
+			// 用户Id
+			Integer userId = Integer.parseInt(bean.getLogUserId());
+			// 交易金额
+			BigDecimal txAmount = bean.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT);
+			// 电子账户
+			String accountId = bean.getAccountId();
+			// 当前时间
+			int nowTime = GetDate.getNowTime10();
+			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
+			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRecharge.getStatus());
+			boolean isAccountRechargeFlag = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample) > 0 ? true : false;
+			AccountVO newAccount = new AccountVO();
+			// 更新账户信息
+			newAccount.setUserId(userId);// 用户Id
+			newAccount.setBankTotal(txAmount); // 累加到账户总资产
+			newAccount.setBankBalance(txAmount); // 累加可用余额
+			newAccount.setBankBalanceCash(txAmount);// 银行账户可用户
+			boolean isAccountUpdateFlag = this.adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount) > 0 ? true : false;
+			AccountExample example = new AccountExample();
+			AccountExample.Criteria criteria = example.createCriteria();
+			criteria.andUserIdEqualTo(userId);
+			// 重新获取用户账户信息
+			List<Account> listAccount = accountMapper.selectByExample(example);
+			Account account = new Account();
+			if (listAccount != null && listAccount.size() > 0) {
+				 account = listAccount.get(0);
+			}
+			// 生成交易明细
+			AccountListVO accountList = new AccountListVO();
+			accountList.setNid(orderId);
+			accountList.setUserId(userId);
+			accountList.setAmount(txAmount);
+			accountList.setTxDate(Integer.parseInt(bean.getTxDate()));// 交易日期
+			accountList.setTxTime(Integer.parseInt(bean.getTxTime()));// 交易时间
+			accountList.setSeqNo(bean.getSeqNo());// 交易流水号
+			accountList.setBankSeqNo((bean.getTxDate() + bean.getTxTime() + bean.getSeqNo()));
+			accountList.setType(1);
+			accountList.setTrade("recharge");
+			accountList.setTradeCode("balance");
+			accountList.setAccountId(accountId);
+			accountList.setBankTotal(account.getBankTotal()); // 银行总资产
+			accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
+			accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
+			accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
+			accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
+			accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
+			accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
+			accountList.setBankAwait(account.getBankAwait());// 银行待收总额
+			accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
+			accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+			accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
+			accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
+			accountList.setPlanFrost(account.getPlanFrost());
+			accountList.setTotal(account.getTotal());
+			accountList.setBalance(account.getBalance());
+			accountList.setFrost(account.getFrost());
+			accountList.setAwait(account.getAwait());
+			accountList.setRepay(account.getRepay());
+			accountList.setRemark("快捷充值");
+			accountList.setCreateTime(nowTime);
+			accountList.setBaseUpdate(nowTime);
+			accountList.setOperator(userId + "");
+			accountList.setIp(ip);
+			accountList.setIsUpdate(0);
+			accountList.setBaseUpdate(0);
+			accountList.setInterest(null);
+			accountList.setWeb(0);
+			accountList.setIsBank(1);// 是否是银行的交易记录 0:否 ,1:是
+			accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账
+			accountList.setTradeStatus(1);// 成功状态
+			// 插入交易明细
+			boolean isAccountListUpdateFlag = this. accountListMapper.insertSelective(accountList) > 0 ? true : false;
+			return isAccountListUpdateFlag;
 		}
-		return null;
 	}
 
 }

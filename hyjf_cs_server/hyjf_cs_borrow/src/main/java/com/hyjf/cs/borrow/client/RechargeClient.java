@@ -1,17 +1,15 @@
 package com.hyjf.cs.borrow.client;
 
 
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.borrow.BankCardVO;
-import com.hyjf.am.vo.borrow.BanksConfigVO;
-import com.hyjf.am.vo.borrow.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.borrow.AccountListVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
+
+import java.util.Map;
 
 public interface RechargeClient {
 
@@ -22,40 +20,13 @@ public interface RechargeClient {
      * @return
      */
     BankCardVO selectBankCardByUserId(Integer userId);
-    /**
-     * 获取银行卡配置信息
-     * @param bankId
-     * @return
-     */
-    BanksConfigVO getBanksConfigByBankId(Integer bankId);
-
-    /**
-     * 根据用户ID查询企业用户信息
-     * @param userId
-     * @return
-     */
-    CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
     AccountVO getAccount(Integer userId);
 
     UserVO getUsers(Integer userId);
 
-    /**
-     * 插入充值记录
-     *
-     * @param bean
-     * @param params
-     * @return
-     */
-    int insertRechargeInfo(BankCallBean bean);
-
     AccountRechargeVO selectByOrderId(String orderId);
 
-    int updateByExampleSelective(AccountRechargeVO accountRecharge,String orderId);
-
-    int updateBankRechargeSuccess(AccountVO newAccount);
-
-    int insertSelective(AccountListVO accountList);
 
     void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge);
 
@@ -64,4 +35,12 @@ public interface RechargeClient {
     BankOpenAccountVO selectById(int userId);
 
     UserInfoVO findUsersInfoById(int userId);
+
+    int selectByOrdId(String ordId);
+
+    int insertSelectiveBank(Map<String, Object> paramMap);
+
+    BankCardVO getBankCardByCardNo(Integer userId, String cardNo);
+
+    boolean updateBanks(Map<String, Object> paramMap);
 }

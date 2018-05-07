@@ -1,11 +1,12 @@
-package com.hyjf.am.borrow.dao.mapper.auto;
+package com.hyjf.am.config.dao.mapper.auto;
 
-import com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfigExample;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public interface BankReturnCodeConfigMapper {
     int countByExample(BankReturnCodeConfigExample example);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BankReturnCodeConfigMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfig" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="tx_code" property="txCode" jdbcType="VARCHAR" />
     <result column="method_name" property="methodName" jdbcType="VARCHAR" />
@@ -79,7 +79,7 @@
     id, tx_code, method_name, ret_code, ret_msg, error_msg, page_key, `status`, create_user_id, 
     create_user_name, create_time, update_user_id, update_user_name, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfigExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample" >
     select
     <if test="distinct" >
       distinct
@@ -106,13 +106,13 @@
     delete from hyjf_bank_return_code_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfigExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample" >
     delete from hyjf_bank_return_code_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfig" >
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -127,7 +127,7 @@
     #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR},
     #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfig" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -215,7 +215,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfigExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample" resultType="java.lang.Integer" >
     select count(*) from hyjf_bank_return_code_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -291,7 +291,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfig" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
     update hyjf_bank_return_code_config
     <set >
       <if test="txCode != null" >
@@ -336,7 +336,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfig" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
     update hyjf_bank_return_code_config
     set tx_code = #{txCode,jdbcType=VARCHAR},
       method_name = #{methodName,jdbcType=VARCHAR},

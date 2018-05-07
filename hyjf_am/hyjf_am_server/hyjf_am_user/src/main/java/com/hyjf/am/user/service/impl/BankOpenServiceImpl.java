@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,12 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.user.dao.mapper.auto.AppChannelStatisticsDetailMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper;
-import com.hyjf.am.user.dao.mapper.auto.UsersInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UsersMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
 import com.hyjf.am.user.service.BankOpenService;
 import com.hyjf.am.user.utils.IdCard15To18;
 
@@ -42,7 +37,13 @@ public class BankOpenServiceImpl implements BankOpenService {
 	private UtmRegMapper utmRegMapper;
 
 	@Autowired
+	private BankCardMapper bankCardMapper;
+
+	@Autowired
 	private AppChannelStatisticsDetailMapper appChannelStatisticsDetailMapper;
+
+    @Autowired
+    protected CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
 	
 
 	Logger _log = LoggerFactory.getLogger(BankOpenServiceImpl.class);
@@ -289,5 +290,64 @@ public class BankOpenServiceImpl implements BankOpenService {
         }
         return null;
     }
+
+    /**
+     * 根据用户Id检索用户银行卡信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankCard selectBankCardByUserId(Integer userId) {
+        BankCardExample example = new BankCardExample();
+        BankCardExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);// 用户Id
+        cra.andStatusEqualTo(1);// 银行卡是否有效 0无效 1有效
+        List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
+        if (bankCardList != null && bankCardList.size() > 0) {
+            return bankCardList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据银行卡号,用户Id检索用户银行卡信息
+     *
+     * @param userId
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public BankCard getBankCardByCardNo(Integer userId, String cardNo) {
+        BankCardExample example = new BankCardExample();
+        BankCardExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);// 用户Id
+        cra.andCardNoEqualTo(cardNo);// 银行卡号
+        cra.andStatusEqualTo(1);// 银行卡是否有效 0无效 1有效
+        List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
+        if (bankCardList != null && bankCardList.size() > 0) {
+            return bankCardList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询企业用户信息
+     *
+     * @param userId
+     * @return
+     */
+    public CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId) {
+        CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
+        CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        cra.andIsBankEqualTo(1);// 江西银行
+        List<CorpOpenAccountRecord> list = this.corpOpenAccountRecordMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
 
 }
