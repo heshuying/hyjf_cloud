@@ -18,8 +18,6 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountMapper accountMapper;
 
-
-
 	@Override
 	public void insert(Account account) {
 		accountMapper.insert(account);
@@ -41,14 +39,5 @@ public class AccountServiceImpl implements AccountService {
 		}
 		return null;
 	}
-
-	public Account selectByExample(AccountExample example) {
-		List<Account> listAccount = this.accountMapper.selectByExample(example);
-		if (listAccount != null && listAccount.size() > 0) {
-			return listAccount.get(0);
-		}
-		return null;
-	}
-
 
 }

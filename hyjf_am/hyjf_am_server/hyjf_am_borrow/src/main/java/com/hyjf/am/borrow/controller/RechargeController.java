@@ -77,26 +77,6 @@ public class RechargeController {
     }
 
     /**
-     *
-     * @param userId
-     * @return
-     */
-    @GetMapping("/selectAccountByUserId")
-    public AccountResponse selectAccountByUserId(@PathVariable Integer userId){
-        AccountExample accountExample = new AccountExample();
-		AccountExample.Criteria accountCriteria = accountExample.createCriteria();
-		accountCriteria.andUserIdEqualTo(userId);
-        AccountResponse response = new AccountResponse();
-        Account account = accountService.selectByExample(accountExample);
-        if(null != account){
-            AccountVO accountVO = new AccountVO();
-            BeanUtils.copyProperties(account,accountVO);
-            response.setResult(accountVO);
-        }
-        return response;
-    }
-
-    /**
      * 根据用户ID查询企业用户信息
      * @param userId
      * @return
@@ -132,7 +112,7 @@ public class RechargeController {
      * @param example
      * @return
      */
-    @GetMapping("/selectByOrderId")
+    @GetMapping("/selectByOrderId/{orderId}")
     public AccountRechargeResponse selectByOrderId(@PathVariable String orderId){
         AccountRechargeExample example = new AccountRechargeExample();
         example.createCriteria().andNidEqualTo(orderId);
@@ -197,7 +177,7 @@ public class RechargeController {
      * @param retCode
      * @return
      */
-    @GetMapping("/getBankReturnCodeConfig")
+    @GetMapping("/getBankReturnCodeConfig/{retCode}")
     public BankReturnCodeConfigResponse getBankReturnCodeConfig(@PathVariable String retCode){
         BankReturnCodeConfigExample example = new BankReturnCodeConfigExample();
         example.createCriteria().andRetCodeEqualTo(retCode);

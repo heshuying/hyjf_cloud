@@ -76,7 +76,6 @@ public class RechargeClientImpl implements RechargeClient {
         }
         return null;
     }
-
     @Override
     public UserVO getUsers(Integer userId) {
         UserResponse response = restTemplate
@@ -144,15 +143,7 @@ public class RechargeClientImpl implements RechargeClient {
         restTemplate.put("http://AM-BORROW/am-borrow/recharge/updateByPrimaryKeySelective",accountRecharge);
     }
 
-    @Override
-    public AccountVO selectByUserId(int userId) {
-        AccountResponse response = restTemplate
-                .getForEntity("http://AM-BORROW/am-borrow/recharge/selectAccountByUserId/"+userId,AccountResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
+
 
 
     @Override
