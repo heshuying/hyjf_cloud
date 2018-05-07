@@ -13,12 +13,13 @@ import javax.sql.DataSource;
  * @version DruidDataSourceConfig, v0.1 2018/1/21 22:32
  */
 
-@Configuration
-@MapperScan(basePackages = { "com.hyjf.am.borrow.dao.mapper" }, sqlSessionFactoryRef = "sqlSessionFactory")
+@Deprecated
+//@Configuration
+//@MapperScan(basePackages = { "com.hyjf.am.borrow.dao.mapper" }, sqlSessionFactoryRef = "sqlSessionFactory")
 public class DruidDataSourceConfig {
 
-	@Bean
-	@ConfigurationProperties(prefix = "spring.datasource")
+//	@Bean
+//	@ConfigurationProperties(prefix = "spring.datasource")
 	public DataSource druidDataSource() {
 		DataSource druidDataSource = new DruidDataSource();
 		return druidDataSource;

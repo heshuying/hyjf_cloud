@@ -20,6 +20,7 @@
         <module>hyjf_am_config</module>
         <module>hyjf_am_market</module>
         <module>hyjf_am_user</module>
+        <module>hyjf_am_message</module>
     </modules>
 
 
