@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.SiteSettingsMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.SiteSettings" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="site_name" property="siteName" jdbcType="VARCHAR" />
+    <result column="site_domain" property="siteDomain" jdbcType="VARCHAR" />
+    <result column="site_logo" property="siteLogo" jdbcType="VARCHAR" />
+    <result column="site_icp" property="siteIcp" jdbcType="VARCHAR" />
+    <result column="site_stats" property="siteStats" jdbcType="VARCHAR" />
+    <result column="site_footer" property="siteFooter" jdbcType="VARCHAR" />
+    <result column="site_status" property="siteStatus" jdbcType="BIT" />
+    <result column="site_close_reason" property="siteCloseReason" jdbcType="VARCHAR" />
+    <result column="site_keyword" property="siteKeyword" jdbcType="VARCHAR" />
+    <result column="site_description" property="siteDescription" jdbcType="VARCHAR" />
+    <result column="site_theme_path" property="siteThemePath" jdbcType="VARCHAR" />
+    <result column="site_theme" property="siteTheme" jdbcType="VARCHAR" />
+    <result column="smtp_server" property="smtpServer" jdbcType="VARCHAR" />
+    <result column="smtp_reply" property="smtpReply" jdbcType="VARCHAR" />
+    <result column="smtp_username" property="smtpUsername" jdbcType="VARCHAR" />
+    <result column="smtp_password" property="smtpPassword" jdbcType="VARCHAR" />
+    <result column="smtp_verify" property="smtpVerify" jdbcType="BIT" />
+    <result column="smtp_port" property="smtpPort" jdbcType="VARCHAR" />
+    <result column="smtp_ssl" property="smtpSsl" jdbcType="BIT" />
+    <result column="smtp_from_name" property="smtpFromName" jdbcType="VARCHAR" />
+    <result column="attachment_url" property="attachmentUrl" jdbcType="VARCHAR" />
+    <result column="attachment_dir" property="attachmentDir" jdbcType="VARCHAR" />
+    <result column="attachment_type" property="attachmentType" jdbcType="VARCHAR" />
+    <result column="attachment_maxupload" property="attachmentMaxupload" jdbcType="VARCHAR" />
+    <result column="cdn_domain" property="cdnDomain" jdbcType="VARCHAR" />
+    <result column="service_phone_number" property="servicePhoneNumber" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.config.dao.model.auto.SiteSettings" extends="BaseResultMap" >
+    <result column="site_terms" property="siteTerms" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, company, site_name, site_domain, site_logo, site_icp, site_stats, site_footer, 
+    site_status, site_close_reason, site_keyword, site_description, site_theme_path, 
+    site_theme, smtp_server, smtp_reply, smtp_username, smtp_password, smtp_verify, smtp_port, 
+    smtp_ssl, smtp_from_name, attachment_url, attachment_dir, attachment_type, attachment_maxupload, 
+    cdn_domain, service_phone_number
+  </sql>
+  <sql id="Blob_Column_List" >
+    site_terms
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettingsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from huiyingdai_site_settings
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettingsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from huiyingdai_site_settings
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from huiyingdai_site_settings
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from huiyingdai_site_settings
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettingsExample" >
+    delete from huiyingdai_site_settings
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettings" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into huiyingdai_site_settings (company, site_name, site_domain, 
+      site_logo, site_icp, site_stats, 
+      site_footer, site_status, site_close_reason, 
+      site_keyword, site_description, site_theme_path, 
+      site_theme, smtp_server, smtp_reply, 
+      smtp_username, smtp_password, smtp_verify, 
+      smtp_port, smtp_ssl, smtp_from_name, 
+      attachment_url, attachment_dir, attachment_type, 
+      attachment_maxupload, cdn_domain, service_phone_number, 
+      site_terms)
+    values (#{company,jdbcType=VARCHAR}, #{siteName,jdbcType=VARCHAR}, #{siteDomain,jdbcType=VARCHAR}, 
+      #{siteLogo,jdbcType=VARCHAR}, #{siteIcp,jdbcType=VARCHAR}, #{siteStats,jdbcType=VARCHAR}, 
+      #{siteFooter,jdbcType=VARCHAR}, #{siteStatus,jdbcType=BIT}, #{siteCloseReason,jdbcType=VARCHAR}, 
+      #{siteKeyword,jdbcType=VARCHAR}, #{siteDescription,jdbcType=VARCHAR}, #{siteThemePath,jdbcType=VARCHAR}, 
+      #{siteTheme,jdbcType=VARCHAR}, #{smtpServer,jdbcType=VARCHAR}, #{smtpReply,jdbcType=VARCHAR}, 
+      #{smtpUsername,jdbcType=VARCHAR}, #{smtpPassword,jdbcType=VARCHAR}, #{smtpVerify,jdbcType=BIT}, 
+      #{smtpPort,jdbcType=VARCHAR}, #{smtpSsl,jdbcType=BIT}, #{smtpFromName,jdbcType=VARCHAR}, 
+      #{attachmentUrl,jdbcType=VARCHAR}, #{attachmentDir,jdbcType=VARCHAR}, #{attachmentType,jdbcType=VARCHAR}, 
+      #{attachmentMaxupload,jdbcType=VARCHAR}, #{cdnDomain,jdbcType=VARCHAR}, #{servicePhoneNumber,jdbcType=VARCHAR}, 
+      #{siteTerms,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettings" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into huiyingdai_site_settings
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="siteName != null" >
+        site_name,
+      </if>
+      <if test="siteDomain != null" >
+        site_domain,
+      </if>
+      <if test="siteLogo != null" >
+        site_logo,
+      </if>
+      <if test="siteIcp != null" >
+        site_icp,
+      </if>
+      <if test="siteStats != null" >
+        site_stats,
+      </if>
+      <if test="siteFooter != null" >
+        site_footer,
+      </if>
+      <if test="siteStatus != null" >
+        site_status,
+      </if>
+      <if test="siteCloseReason != null" >
+        site_close_reason,
+      </if>
+      <if test="siteKeyword != null" >
+        site_keyword,
+      </if>
+      <if test="siteDescription != null" >
+        site_description,
+      </if>
+      <if test="siteThemePath != null" >
+        site_theme_path,
+      </if>
+      <if test="siteTheme != null" >
+        site_theme,
+      </if>
+      <if test="smtpServer != null" >
+        smtp_server,
+      </if>
+      <if test="smtpReply != null" >
+        smtp_reply,
+      </if>
+      <if test="smtpUsername != null" >
+        smtp_username,
+      </if>
+      <if test="smtpPassword != null" >
+        smtp_password,
+      </if>
+      <if test="smtpVerify != null" >
+        smtp_verify,
+      </if>
+      <if test="smtpPort != null" >
+        smtp_port,
+      </if>
+      <if test="smtpSsl != null" >
+        smtp_ssl,
+      </if>
+      <if test="smtpFromName != null" >
+        smtp_from_name,
+      </if>
+      <if test="attachmentUrl != null" >
+        attachment_url,
+      </if>
+      <if test="attachmentDir != null" >
+        attachment_dir,
+      </if>
+      <if test="attachmentType != null" >
+        attachment_type,
+      </if>
+      <if test="attachmentMaxupload != null" >
+        attachment_maxupload,
+      </if>
+      <if test="cdnDomain != null" >
+        cdn_domain,
+      </if>
+      <if test="servicePhoneNumber != null" >
+        service_phone_number,
+      </if>
+      <if test="siteTerms != null" >
+        site_terms,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="siteName != null" >
+        #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="siteDomain != null" >
+        #{siteDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="siteLogo != null" >
+        #{siteLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="siteIcp != null" >
+        #{siteIcp,jdbcType=VARCHAR},
+      </if>
+      <if test="siteStats != null" >
+        #{siteStats,jdbcType=VARCHAR},
+      </if>
+      <if test="siteFooter != null" >
+        #{siteFooter,jdbcType=VARCHAR},
+      </if>
+      <if test="siteStatus != null" >
+        #{siteStatus,jdbcType=BIT},
+      </if>
+      <if test="siteCloseReason != null" >
+        #{siteCloseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="siteKeyword != null" >
+        #{siteKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="siteDescription != null" >
+        #{siteDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="siteThemePath != null" >
+        #{siteThemePath,jdbcType=VARCHAR},
+      </if>
+      <if test="siteTheme != null" >
+        #{siteTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpServer != null" >
+        #{smtpServer,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpReply != null" >
+        #{smtpReply,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpUsername != null" >
+        #{smtpUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpPassword != null" >
+        #{smtpPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpVerify != null" >
+        #{smtpVerify,jdbcType=BIT},
+      </if>
+      <if test="smtpPort != null" >
+        #{smtpPort,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpSsl != null" >
+        #{smtpSsl,jdbcType=BIT},
+      </if>
+      <if test="smtpFromName != null" >
+        #{smtpFromName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentUrl != null" >
+        #{attachmentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentDir != null" >
+        #{attachmentDir,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentType != null" >
+        #{attachmentType,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentMaxupload != null" >
+        #{attachmentMaxupload,jdbcType=VARCHAR},
+      </if>
+      <if test="cdnDomain != null" >
+        #{cdnDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="servicePhoneNumber != null" >
+        #{servicePhoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="siteTerms != null" >
+        #{siteTerms,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettingsExample" resultType="java.lang.Integer" >
+    select count(*) from huiyingdai_site_settings
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update huiyingdai_site_settings
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.company != null" >
+        company = #{record.company,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteName != null" >
+        site_name = #{record.siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteDomain != null" >
+        site_domain = #{record.siteDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteLogo != null" >
+        site_logo = #{record.siteLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteIcp != null" >
+        site_icp = #{record.siteIcp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteStats != null" >
+        site_stats = #{record.siteStats,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteFooter != null" >
+        site_footer = #{record.siteFooter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteStatus != null" >
+        site_status = #{record.siteStatus,jdbcType=BIT},
+      </if>
+      <if test="record.siteCloseReason != null" >
+        site_close_reason = #{record.siteCloseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteKeyword != null" >
+        site_keyword = #{record.siteKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteDescription != null" >
+        site_description = #{record.siteDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteThemePath != null" >
+        site_theme_path = #{record.siteThemePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteTheme != null" >
+        site_theme = #{record.siteTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smtpServer != null" >
+        smtp_server = #{record.smtpServer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smtpReply != null" >
+        smtp_reply = #{record.smtpReply,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smtpUsername != null" >
+        smtp_username = #{record.smtpUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smtpPassword != null" >
+        smtp_password = #{record.smtpPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smtpVerify != null" >
+        smtp_verify = #{record.smtpVerify,jdbcType=BIT},
+      </if>
+      <if test="record.smtpPort != null" >
+        smtp_port = #{record.smtpPort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smtpSsl != null" >
+        smtp_ssl = #{record.smtpSsl,jdbcType=BIT},
+      </if>
+      <if test="record.smtpFromName != null" >
+        smtp_from_name = #{record.smtpFromName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachmentUrl != null" >
+        attachment_url = #{record.attachmentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachmentDir != null" >
+        attachment_dir = #{record.attachmentDir,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachmentType != null" >
+        attachment_type = #{record.attachmentType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachmentMaxupload != null" >
+        attachment_maxupload = #{record.attachmentMaxupload,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cdnDomain != null" >
+        cdn_domain = #{record.cdnDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="record.servicePhoneNumber != null" >
+        service_phone_number = #{record.servicePhoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteTerms != null" >
+        site_terms = #{record.siteTerms,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update huiyingdai_site_settings
+    set id = #{record.id,jdbcType=INTEGER},
+      company = #{record.company,jdbcType=VARCHAR},
+      site_name = #{record.siteName,jdbcType=VARCHAR},
+      site_domain = #{record.siteDomain,jdbcType=VARCHAR},
+      site_logo = #{record.siteLogo,jdbcType=VARCHAR},
+      site_icp = #{record.siteIcp,jdbcType=VARCHAR},
+      site_stats = #{record.siteStats,jdbcType=VARCHAR},
+      site_footer = #{record.siteFooter,jdbcType=VARCHAR},
+      site_status = #{record.siteStatus,jdbcType=BIT},
+      site_close_reason = #{record.siteCloseReason,jdbcType=VARCHAR},
+      site_keyword = #{record.siteKeyword,jdbcType=VARCHAR},
+      site_description = #{record.siteDescription,jdbcType=VARCHAR},
+      site_theme_path = #{record.siteThemePath,jdbcType=VARCHAR},
+      site_theme = #{record.siteTheme,jdbcType=VARCHAR},
+      smtp_server = #{record.smtpServer,jdbcType=VARCHAR},
+      smtp_reply = #{record.smtpReply,jdbcType=VARCHAR},
+      smtp_username = #{record.smtpUsername,jdbcType=VARCHAR},
+      smtp_password = #{record.smtpPassword,jdbcType=VARCHAR},
+      smtp_verify = #{record.smtpVerify,jdbcType=BIT},
+      smtp_port = #{record.smtpPort,jdbcType=VARCHAR},
+      smtp_ssl = #{record.smtpSsl,jdbcType=BIT},
+      smtp_from_name = #{record.smtpFromName,jdbcType=VARCHAR},
+      attachment_url = #{record.attachmentUrl,jdbcType=VARCHAR},
+      attachment_dir = #{record.attachmentDir,jdbcType=VARCHAR},
+      attachment_type = #{record.attachmentType,jdbcType=VARCHAR},
+      attachment_maxupload = #{record.attachmentMaxupload,jdbcType=VARCHAR},
+      cdn_domain = #{record.cdnDomain,jdbcType=VARCHAR},
+      service_phone_number = #{record.servicePhoneNumber,jdbcType=VARCHAR},
+      site_terms = #{record.siteTerms,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update huiyingdai_site_settings
+    set id = #{record.id,jdbcType=INTEGER},
+      company = #{record.company,jdbcType=VARCHAR},
+      site_name = #{record.siteName,jdbcType=VARCHAR},
+      site_domain = #{record.siteDomain,jdbcType=VARCHAR},
+      site_logo = #{record.siteLogo,jdbcType=VARCHAR},
+      site_icp = #{record.siteIcp,jdbcType=VARCHAR},
+      site_stats = #{record.siteStats,jdbcType=VARCHAR},
+      site_footer = #{record.siteFooter,jdbcType=VARCHAR},
+      site_status = #{record.siteStatus,jdbcType=BIT},
+      site_close_reason = #{record.siteCloseReason,jdbcType=VARCHAR},
+      site_keyword = #{record.siteKeyword,jdbcType=VARCHAR},
+      site_description = #{record.siteDescription,jdbcType=VARCHAR},
+      site_theme_path = #{record.siteThemePath,jdbcType=VARCHAR},
+      site_theme = #{record.siteTheme,jdbcType=VARCHAR},
+      smtp_server = #{record.smtpServer,jdbcType=VARCHAR},
+      smtp_reply = #{record.smtpReply,jdbcType=VARCHAR},
+      smtp_username = #{record.smtpUsername,jdbcType=VARCHAR},
+      smtp_password = #{record.smtpPassword,jdbcType=VARCHAR},
+      smtp_verify = #{record.smtpVerify,jdbcType=BIT},
+      smtp_port = #{record.smtpPort,jdbcType=VARCHAR},
+      smtp_ssl = #{record.smtpSsl,jdbcType=BIT},
+      smtp_from_name = #{record.smtpFromName,jdbcType=VARCHAR},
+      attachment_url = #{record.attachmentUrl,jdbcType=VARCHAR},
+      attachment_dir = #{record.attachmentDir,jdbcType=VARCHAR},
+      attachment_type = #{record.attachmentType,jdbcType=VARCHAR},
+      attachment_maxupload = #{record.attachmentMaxupload,jdbcType=VARCHAR},
+      cdn_domain = #{record.cdnDomain,jdbcType=VARCHAR},
+      service_phone_number = #{record.servicePhoneNumber,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettings" >
+    update huiyingdai_site_settings
+    <set >
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="siteName != null" >
+        site_name = #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="siteDomain != null" >
+        site_domain = #{siteDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="siteLogo != null" >
+        site_logo = #{siteLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="siteIcp != null" >
+        site_icp = #{siteIcp,jdbcType=VARCHAR},
+      </if>
+      <if test="siteStats != null" >
+        site_stats = #{siteStats,jdbcType=VARCHAR},
+      </if>
+      <if test="siteFooter != null" >
+        site_footer = #{siteFooter,jdbcType=VARCHAR},
+      </if>
+      <if test="siteStatus != null" >
+        site_status = #{siteStatus,jdbcType=BIT},
+      </if>
+      <if test="siteCloseReason != null" >
+        site_close_reason = #{siteCloseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="siteKeyword != null" >
+        site_keyword = #{siteKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="siteDescription != null" >
+        site_description = #{siteDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="siteThemePath != null" >
+        site_theme_path = #{siteThemePath,jdbcType=VARCHAR},
+      </if>
+      <if test="siteTheme != null" >
+        site_theme = #{siteTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpServer != null" >
+        smtp_server = #{smtpServer,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpReply != null" >
+        smtp_reply = #{smtpReply,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpUsername != null" >
+        smtp_username = #{smtpUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpPassword != null" >
+        smtp_password = #{smtpPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpVerify != null" >
+        smtp_verify = #{smtpVerify,jdbcType=BIT},
+      </if>
+      <if test="smtpPort != null" >
+        smtp_port = #{smtpPort,jdbcType=VARCHAR},
+      </if>
+      <if test="smtpSsl != null" >
+        smtp_ssl = #{smtpSsl,jdbcType=BIT},
+      </if>
+      <if test="smtpFromName != null" >
+        smtp_from_name = #{smtpFromName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentUrl != null" >
+        attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentDir != null" >
+        attachment_dir = #{attachmentDir,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentType != null" >
+        attachment_type = #{attachmentType,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentMaxupload != null" >
+        attachment_maxupload = #{attachmentMaxupload,jdbcType=VARCHAR},
+      </if>
+      <if test="cdnDomain != null" >
+        cdn_domain = #{cdnDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="servicePhoneNumber != null" >
+        service_phone_number = #{servicePhoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="siteTerms != null" >
+        site_terms = #{siteTerms,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettings" >
+    update huiyingdai_site_settings
+    set company = #{company,jdbcType=VARCHAR},
+      site_name = #{siteName,jdbcType=VARCHAR},
+      site_domain = #{siteDomain,jdbcType=VARCHAR},
+      site_logo = #{siteLogo,jdbcType=VARCHAR},
+      site_icp = #{siteIcp,jdbcType=VARCHAR},
+      site_stats = #{siteStats,jdbcType=VARCHAR},
+      site_footer = #{siteFooter,jdbcType=VARCHAR},
+      site_status = #{siteStatus,jdbcType=BIT},
+      site_close_reason = #{siteCloseReason,jdbcType=VARCHAR},
+      site_keyword = #{siteKeyword,jdbcType=VARCHAR},
+      site_description = #{siteDescription,jdbcType=VARCHAR},
+      site_theme_path = #{siteThemePath,jdbcType=VARCHAR},
+      site_theme = #{siteTheme,jdbcType=VARCHAR},
+      smtp_server = #{smtpServer,jdbcType=VARCHAR},
+      smtp_reply = #{smtpReply,jdbcType=VARCHAR},
+      smtp_username = #{smtpUsername,jdbcType=VARCHAR},
+      smtp_password = #{smtpPassword,jdbcType=VARCHAR},
+      smtp_verify = #{smtpVerify,jdbcType=BIT},
+      smtp_port = #{smtpPort,jdbcType=VARCHAR},
+      smtp_ssl = #{smtpSsl,jdbcType=BIT},
+      smtp_from_name = #{smtpFromName,jdbcType=VARCHAR},
+      attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+      attachment_dir = #{attachmentDir,jdbcType=VARCHAR},
+      attachment_type = #{attachmentType,jdbcType=VARCHAR},
+      attachment_maxupload = #{attachmentMaxupload,jdbcType=VARCHAR},
+      cdn_domain = #{cdnDomain,jdbcType=VARCHAR},
+      service_phone_number = #{servicePhoneNumber,jdbcType=VARCHAR},
+      site_terms = #{siteTerms,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.SiteSettings" >
+    update huiyingdai_site_settings
+    set company = #{company,jdbcType=VARCHAR},
+      site_name = #{siteName,jdbcType=VARCHAR},
+      site_domain = #{siteDomain,jdbcType=VARCHAR},
+      site_logo = #{siteLogo,jdbcType=VARCHAR},
+      site_icp = #{siteIcp,jdbcType=VARCHAR},
+      site_stats = #{siteStats,jdbcType=VARCHAR},
+      site_footer = #{siteFooter,jdbcType=VARCHAR},
+      site_status = #{siteStatus,jdbcType=BIT},
+      site_close_reason = #{siteCloseReason,jdbcType=VARCHAR},
+      site_keyword = #{siteKeyword,jdbcType=VARCHAR},
+      site_description = #{siteDescription,jdbcType=VARCHAR},
+      site_theme_path = #{siteThemePath,jdbcType=VARCHAR},
+      site_theme = #{siteTheme,jdbcType=VARCHAR},
+      smtp_server = #{smtpServer,jdbcType=VARCHAR},
+      smtp_reply = #{smtpReply,jdbcType=VARCHAR},
+      smtp_username = #{smtpUsername,jdbcType=VARCHAR},
+      smtp_password = #{smtpPassword,jdbcType=VARCHAR},
+      smtp_verify = #{smtpVerify,jdbcType=BIT},
+      smtp_port = #{smtpPort,jdbcType=VARCHAR},
+      smtp_ssl = #{smtpSsl,jdbcType=BIT},
+      smtp_from_name = #{smtpFromName,jdbcType=VARCHAR},
+      attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+      attachment_dir = #{attachmentDir,jdbcType=VARCHAR},
+      attachment_type = #{attachmentType,jdbcType=VARCHAR},
+      attachment_maxupload = #{attachmentMaxupload,jdbcType=VARCHAR},
+      cdn_domain = #{cdnDomain,jdbcType=VARCHAR},
+      service_phone_number = #{servicePhoneNumber,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

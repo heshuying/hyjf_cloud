@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.MessagePushTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.MessagePushTemplate" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tag_id" property="tagId" jdbcType="INTEGER" />
+    <result column="tag_code" property="tagCode" jdbcType="VARCHAR" />
+    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+    <result column="template_title" property="templateTitle" jdbcType="VARCHAR" />
+    <result column="template_image_url" property="templateImageUrl" jdbcType="VARCHAR" />
+    <result column="template_content" property="templateContent" jdbcType="VARCHAR" />
+    <result column="template_terminal" property="templateTerminal" jdbcType="VARCHAR" />
+    <result column="template_action" property="templateAction" jdbcType="BIT" />
+    <result column="template_action_url" property="templateActionUrl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="CHAR" />
+    <result column="lastupdate_time" property="lastupdateTime" jdbcType="INTEGER" />
+    <result column="lastupdate_user_id" property="lastupdateUserId" jdbcType="INTEGER" />
+    <result column="lastupdate_user_name" property="lastupdateUserName" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, tag_id, tag_code, template_code, template_title, template_image_url, template_content, 
+    template_terminal, template_action, template_action_url, `status`, create_time, create_user_id, 
+    create_user_name, lastupdate_time, lastupdate_user_id, lastupdate_user_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from hyjf_message_push_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from hyjf_message_push_template
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from hyjf_message_push_template
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample" >
+    delete from hyjf_message_push_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplate" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into hyjf_message_push_template (tag_id, tag_code, template_code, 
+      template_title, template_image_url, template_content, 
+      template_terminal, template_action, template_action_url, 
+      `status`, create_time, create_user_id, 
+      create_user_name, lastupdate_time, lastupdate_user_id, 
+      lastupdate_user_name)
+    values (#{tagId,jdbcType=INTEGER}, #{tagCode,jdbcType=VARCHAR}, #{templateCode,jdbcType=VARCHAR}, 
+      #{templateTitle,jdbcType=VARCHAR}, #{templateImageUrl,jdbcType=VARCHAR}, #{templateContent,jdbcType=VARCHAR}, 
+      #{templateTerminal,jdbcType=VARCHAR}, #{templateAction,jdbcType=BIT}, #{templateActionUrl,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT}, #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+      #{createUserName,jdbcType=CHAR}, #{lastupdateTime,jdbcType=INTEGER}, #{lastupdateUserId,jdbcType=INTEGER}, 
+      #{lastupdateUserName,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplate" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into hyjf_message_push_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tagId != null" >
+        tag_id,
+      </if>
+      <if test="tagCode != null" >
+        tag_code,
+      </if>
+      <if test="templateCode != null" >
+        template_code,
+      </if>
+      <if test="templateTitle != null" >
+        template_title,
+      </if>
+      <if test="templateImageUrl != null" >
+        template_image_url,
+      </if>
+      <if test="templateContent != null" >
+        template_content,
+      </if>
+      <if test="templateTerminal != null" >
+        template_terminal,
+      </if>
+      <if test="templateAction != null" >
+        template_action,
+      </if>
+      <if test="templateActionUrl != null" >
+        template_action_url,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="lastupdateTime != null" >
+        lastupdate_time,
+      </if>
+      <if test="lastupdateUserId != null" >
+        lastupdate_user_id,
+      </if>
+      <if test="lastupdateUserName != null" >
+        lastupdate_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tagId != null" >
+        #{tagId,jdbcType=INTEGER},
+      </if>
+      <if test="tagCode != null" >
+        #{tagCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateCode != null" >
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateTitle != null" >
+        #{templateTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="templateImageUrl != null" >
+        #{templateImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContent != null" >
+        #{templateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="templateTerminal != null" >
+        #{templateTerminal,jdbcType=VARCHAR},
+      </if>
+      <if test="templateAction != null" >
+        #{templateAction,jdbcType=BIT},
+      </if>
+      <if test="templateActionUrl != null" >
+        #{templateActionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=CHAR},
+      </if>
+      <if test="lastupdateTime != null" >
+        #{lastupdateTime,jdbcType=INTEGER},
+      </if>
+      <if test="lastupdateUserId != null" >
+        #{lastupdateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="lastupdateUserName != null" >
+        #{lastupdateUserName,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample" resultType="java.lang.Integer" >
+    select count(*) from hyjf_message_push_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update hyjf_message_push_template
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.tagId != null" >
+        tag_id = #{record.tagId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tagCode != null" >
+        tag_code = #{record.tagCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateCode != null" >
+        template_code = #{record.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateTitle != null" >
+        template_title = #{record.templateTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateImageUrl != null" >
+        template_image_url = #{record.templateImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateContent != null" >
+        template_content = #{record.templateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateTerminal != null" >
+        template_terminal = #{record.templateTerminal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateAction != null" >
+        template_action = #{record.templateAction,jdbcType=BIT},
+      </if>
+      <if test="record.templateActionUrl != null" >
+        template_action_url = #{record.templateActionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=CHAR},
+      </if>
+      <if test="record.lastupdateTime != null" >
+        lastupdate_time = #{record.lastupdateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastupdateUserId != null" >
+        lastupdate_user_id = #{record.lastupdateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastupdateUserName != null" >
+        lastupdate_user_name = #{record.lastupdateUserName,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update hyjf_message_push_template
+    set id = #{record.id,jdbcType=INTEGER},
+      tag_id = #{record.tagId,jdbcType=INTEGER},
+      tag_code = #{record.tagCode,jdbcType=VARCHAR},
+      template_code = #{record.templateCode,jdbcType=VARCHAR},
+      template_title = #{record.templateTitle,jdbcType=VARCHAR},
+      template_image_url = #{record.templateImageUrl,jdbcType=VARCHAR},
+      template_content = #{record.templateContent,jdbcType=VARCHAR},
+      template_terminal = #{record.templateTerminal,jdbcType=VARCHAR},
+      template_action = #{record.templateAction,jdbcType=BIT},
+      template_action_url = #{record.templateActionUrl,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_user_name = #{record.createUserName,jdbcType=CHAR},
+      lastupdate_time = #{record.lastupdateTime,jdbcType=INTEGER},
+      lastupdate_user_id = #{record.lastupdateUserId,jdbcType=INTEGER},
+      lastupdate_user_name = #{record.lastupdateUserName,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplate" >
+    update hyjf_message_push_template
+    <set >
+      <if test="tagId != null" >
+        tag_id = #{tagId,jdbcType=INTEGER},
+      </if>
+      <if test="tagCode != null" >
+        tag_code = #{tagCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateCode != null" >
+        template_code = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateTitle != null" >
+        template_title = #{templateTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="templateImageUrl != null" >
+        template_image_url = #{templateImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContent != null" >
+        template_content = #{templateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="templateTerminal != null" >
+        template_terminal = #{templateTerminal,jdbcType=VARCHAR},
+      </if>
+      <if test="templateAction != null" >
+        template_action = #{templateAction,jdbcType=BIT},
+      </if>
+      <if test="templateActionUrl != null" >
+        template_action_url = #{templateActionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=CHAR},
+      </if>
+      <if test="lastupdateTime != null" >
+        lastupdate_time = #{lastupdateTime,jdbcType=INTEGER},
+      </if>
+      <if test="lastupdateUserId != null" >
+        lastupdate_user_id = #{lastupdateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="lastupdateUserName != null" >
+        lastupdate_user_name = #{lastupdateUserName,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplate" >
+    update hyjf_message_push_template
+    set tag_id = #{tagId,jdbcType=INTEGER},
+      tag_code = #{tagCode,jdbcType=VARCHAR},
+      template_code = #{templateCode,jdbcType=VARCHAR},
+      template_title = #{templateTitle,jdbcType=VARCHAR},
+      template_image_url = #{templateImageUrl,jdbcType=VARCHAR},
+      template_content = #{templateContent,jdbcType=VARCHAR},
+      template_terminal = #{templateTerminal,jdbcType=VARCHAR},
+      template_action = #{templateAction,jdbcType=BIT},
+      template_action_url = #{templateActionUrl,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=CHAR},
+      lastupdate_time = #{lastupdateTime,jdbcType=INTEGER},
+      lastupdate_user_id = #{lastupdateUserId,jdbcType=INTEGER},
+      lastupdate_user_name = #{lastupdateUserName,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
