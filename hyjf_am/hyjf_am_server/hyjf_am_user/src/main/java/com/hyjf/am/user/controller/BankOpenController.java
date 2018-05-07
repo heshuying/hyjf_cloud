@@ -133,10 +133,13 @@ public class BankOpenController {
 		return response;
 	}
 
-	@RequestMapping("/selectByExample")
-	public BankOpenAccountResponse selectByExample(BankOpenAccountExample example) {
+	@RequestMapping("/selectById")
+	public BankOpenAccountResponse selectById(int userId) {
+		BankOpenAccountExample accountExample = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+		crt.andUserIdEqualTo(userId);
 		BankOpenAccountResponse response = new BankOpenAccountResponse();
-		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(example);
+		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(accountExample);
 		if(bankOpenAccount != null){
 			BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
 			BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);

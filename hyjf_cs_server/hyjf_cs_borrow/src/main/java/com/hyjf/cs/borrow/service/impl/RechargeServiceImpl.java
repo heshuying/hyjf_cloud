@@ -1,51 +1,45 @@
 package com.hyjf.cs.borrow.service.impl;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.borrow.*;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.borrow.mq.AppMessageProducer;
-import com.hyjf.cs.borrow.mq.Producer;
-import com.hyjf.cs.borrow.mq.SmsProducer;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.borrow.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.vo.borrow.*;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.cs.borrow.client.RechargeClient;
 import com.hyjf.cs.borrow.config.SystemConfig;
+import com.hyjf.cs.borrow.mq.AppMessageProducer;
+import com.hyjf.cs.borrow.mq.Producer;
+import com.hyjf.cs.borrow.mq.SmsProducer;
 import com.hyjf.cs.borrow.service.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用户充值Service实现类
  * 
- * @author liuyang
+ * @author
  *
  */
 @Service
@@ -53,12 +47,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 	@Autowired
 	RechargeClient rechargeClient;
-
-	@Autowired
-	private PlatformTransactionManager transactionManager;
-
-	@Autowired
-	private TransactionDefinition transactionDefinition;
 
 	@Autowired
 	SystemConfig systemConfig;
@@ -79,18 +67,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	public BankCardVO selectBankCardByUserId(Integer userId) {
 		BankCardVO bankCard = rechargeClient.selectBankCardByUserId(userId);
 		return bankCard;
-	}
-
-	@Override
-	public BanksConfigVO getBanksConfigByBankId(Integer bankId) {
-		BanksConfigVO banksConfig = rechargeClient.getBanksConfigByBankId(bankId);
-		return banksConfig;
-	}
-
-	@Override
-	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
-		CorpOpenAccountRecordVO corpOpenAccountRecord =  rechargeClient.getCorpOpenAccountRecord(userId);
-		return corpOpenAccountRecord;
 	}
 
 	@Override
@@ -118,8 +94,8 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	 * @return
 	 */
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public JSONObject handleRechargeInfo(BankCallBean bean, Map<String, String> params) {
-		TransactionStatus txStatus = null;
 		// 用户Id
 		Integer userId = Integer.parseInt(bean.getLogUserId());
 		// 充值订单号
@@ -141,15 +117,9 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		// 充值成功
 		if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
 			// 查询用户账户,为了版本控制,必须把查询用户账户放在最前面
-			AccountExample accountExample = new AccountExample();
-			AccountExample.Criteria accountCriteria = accountExample.createCriteria();
-			accountCriteria.andUserIdEqualTo(userId);
-			AccountVO account = rechargeClient.selectByExample(accountExample);
+			AccountVO account = rechargeClient.selectByUserId(userId);
 			// 查询充值记录
-			AccountRechargeExample example = new AccountRechargeExample();
-			example.createCriteria().andNidEqualTo(orderId);
-			AccountRechargeVO accountRecharge = rechargeClient.selectByExample(example);// 查询充值记录
-
+			AccountRechargeVO accountRecharge = rechargeClient.selectByOrderId(orderId);// 查询充值记录
 			// 如果没有充值记录
 			if (accountRecharge != null) {
 				//add by cwyang 增加redis防重校验 2017-08-02
@@ -157,7 +127,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 				if(!reslut){
 					return jsonMessage("充值成功", "0");
 				}
-				//end
 				// 交易金额
 				BigDecimal txAmount = bean.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT);
 				// 判断充值记录状态
@@ -167,11 +136,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 				} else {
 					// 如果不是成功状态
 					try {
-						// 开启事务
-						txStatus = this.transactionManager.getTransaction(transactionDefinition);
 						// 将数据封装更新至充值记录
-						AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
-						accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRecharge.getStatus());
 						accountRecharge.setFee(BigDecimal.ZERO); // 费用
 						accountRecharge.setDianfuFee(BigDecimal.ZERO);// 商户垫付金额
 						accountRecharge.setBalance(txAmount);// 实际到账余额
@@ -179,11 +144,11 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
 						accountRecharge.setAccountId(accountId);// 电子账户
 						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);// 交易流水号
-						boolean isAccountRechargeFlag = this.rechargeClient.updateByExampleSelective(accountRecharge, accountRechargeExample) > 0 ? true : false;
+						boolean isAccountRechargeFlag = this.rechargeClient.updateByExampleSelective(accountRecharge, orderId) > 0 ? true : false;
 						if (!isAccountRechargeFlag) {
 							throw new Exception("充值后,回调更新充值记录表失败!" + "充值订单号:" + orderId + ".用户ID:" + userId);
 						}
-						Account newAccount = new Account();
+						AccountVO newAccount = new AccountVO();
 						// 更新账户信息
 						newAccount.setUserId(userId);// 用户Id
 						newAccount.setBankTotal(txAmount); // 累加到账户总资产
@@ -197,7 +162,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 						// 重新获取用户账户信息
 						account = this.getAccount(userId);
 						// 生成交易明细
-						AccountList accountList = new AccountList();
+						AccountListVO accountList = new AccountListVO();
 						accountList.setNid(orderId);
 						accountList.setUserId(userId);
 						accountList.setAmount(txAmount);
@@ -244,8 +209,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 						if (isAccountListUpdateFlag) {
 							// 更新成功
-							// 提交事务
-							this.transactionManager.commit(txStatus);
 							// 如果需要短信
 							UserVO users = rechargeClient.getUsers(userId);
 							// 可以发送充值短信时
@@ -284,10 +247,8 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 							}
 							return jsonMessage("充值成功!", "0");
 						} else {
-							// 回滚事务
-							transactionManager.rollback(txStatus);
 							// 查询充值交易状态
-                            accountRecharge = rechargeClient.selectByExample(example);// 查询充值记录
+                            accountRecharge = rechargeClient.selectByOrderId(orderId);// 查询充值记录
 							if (RECHARGE_STATUS_SUCCESS == accountRecharge.getStatus()) {
 								return jsonMessage("充值成功!", "0");
 							} else {
@@ -296,8 +257,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 							}
 						}
 					} catch (Exception e) {
-						// 回滚事务
-						transactionManager.rollback(txStatus);
 						System.err.println(e);
 					}
 				}
@@ -307,9 +266,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 			}
 		} else {
 			// 更新订单信息
-			AccountRechargeExample example = new AccountRechargeExample();
-			example.createCriteria().andNidEqualTo(orderId);
-			AccountRechargeVO accountRecharge =this.rechargeClient.selectByExample(example);
+			AccountRechargeVO accountRecharge =this.rechargeClient.selectByOrderId(orderId);
 			if (accountRecharge != null ) {
 				if (RECHARGE_STATUS_WAIT == accountRecharge.getStatus()) {
 					// 更新处理状态
@@ -330,9 +287,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	public String getBankRetMsg(String retCode) {
 		//如果错误码不为空
 		if (StringUtils.isNotBlank(retCode)) {
-			BankReturnCodeConfigExample example = new BankReturnCodeConfigExample();
-			example.createCriteria().andRetCodeEqualTo(retCode);
-			BankReturnCodeConfigVO codeConfig = this.rechargeClient.getBankReturnCodeConfig(example);
+			BankReturnCodeConfigVO codeConfig = this.rechargeClient.getBankReturnCodeConfig(retCode);
 			if (codeConfig != null ) {
 				String retMsg = codeConfig.getErrorMsg();
 				if (StringUtils.isNotBlank(retMsg)) {

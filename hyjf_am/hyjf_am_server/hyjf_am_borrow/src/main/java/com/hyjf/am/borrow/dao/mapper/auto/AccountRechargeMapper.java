@@ -2,6 +2,7 @@ package com.hyjf.am.borrow.dao.mapper.auto;
 
 import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
 import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,11 @@ public interface AccountRechargeMapper {
 
     AccountRecharge selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") AccountRecharge record, @Param("example") AccountRechargeExample example);
+    int updateByExampleSelective(@Param("record") AccountRechargeVO record, @Param("example") AccountRechargeExample example);
 
     int updateByExample(@Param("record") AccountRecharge record, @Param("example") AccountRechargeExample example);
 
-    int updateByPrimaryKeySelective(AccountRecharge record);
+    int updateByPrimaryKeySelective(AccountRechargeVO record);
 
     int updateByPrimaryKey(AccountRecharge record);
 }

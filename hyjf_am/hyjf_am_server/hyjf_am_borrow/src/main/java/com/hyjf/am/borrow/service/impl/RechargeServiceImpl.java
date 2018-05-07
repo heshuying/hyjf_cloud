@@ -3,12 +3,13 @@ package com.hyjf.am.borrow.service.impl;
 import com.hyjf.am.borrow.dao.mapper.auto.*;
 import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.RechargeService;
+import com.hyjf.am.vo.borrow.AccountListVO;
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
+import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -39,13 +40,6 @@ public class RechargeServiceImpl implements RechargeService {
 
 	@Autowired
 	protected AccountMapper accountMapper;
-
-	@Autowired
-	private PlatformTransactionManager transactionManager;
-
-	@Autowired
-	private TransactionDefinition transactionDefinition;
-
 	@Autowired
 	protected  AccountListMapper accountListMapper;
 
@@ -191,22 +185,22 @@ public class RechargeServiceImpl implements RechargeService {
 		return null;
 	}
 
-	public int updateByExampleSelective(AccountRecharge accountRecharge,AccountRechargeExample accountRechargeExample){
+	public int updateByExampleSelective(AccountRechargeVO accountRecharge,AccountRechargeExample accountRechargeExample){
 		int count = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
 		return count;
 	}
 
-	public int updateBankRechargeSuccess(Account newAccount){
+	public int updateBankRechargeSuccess(AccountVO newAccount){
 		int isAccountUpdateFlag = adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount);
 		return isAccountUpdateFlag;
 	}
 
-	public int insertSelective(AccountList accountList){
+	public int insertSelective(AccountListVO accountList){
 		int isAccountListUpdateFlag = accountListMapper.insertSelective(accountList);
 		return isAccountListUpdateFlag;
 	}
 
-	public void updateByPrimaryKeySelective(AccountRecharge accountRecharge){
+	public void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge){
 		this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge);
 	}
 

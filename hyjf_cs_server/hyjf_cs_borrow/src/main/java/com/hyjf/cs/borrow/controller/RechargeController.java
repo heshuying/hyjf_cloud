@@ -61,10 +61,8 @@ public class RechargeController{
 	 */
 	@RequestMapping("/page")
 	public ModelAndView userAuthInves(HttpServletRequest request, HttpServletResponse response, String mobile, String money) {
-
-		//LogUtil.startLog(UserDirectRechargeDefine.THIS_CLASS, UserDirectRechargeDefine.USER_DIRECT_RECHARGE_PAGE_ACTION);
+		Logger.info("充值服务");
 		ModelAndView modelAndView = new ModelAndView();
-
 		// 用户id
 		WebViewUser user = WebUtils.getUser(request);
 		if (user == null) {
@@ -123,7 +121,6 @@ public class RechargeController{
 		UserInfoVO userInfo = this.userRechargeService.getUsersInfoByUserId(user.getUserId());
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
-
 		// 拼装参数 调用江西银行
 		// 同步调用路径
 		String retUrl = systemConfig.getWebHost() +
@@ -151,15 +148,12 @@ public class RechargeController{
 		directRechargeBean.setAccountId(account.getAccount());
 		String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL;
 		directRechargeBean.setForgotPwdUrl(forgetPassworedUrl);
-
 		try {
 			modelAndView = userRechargeService.insertGetMV(directRechargeBean);
-			//LogUtil.endLog(UserDirectRechargeController.class.toString(), UserDirectRechargeDefine.USER_DIRECT_RECHARGE_PAGE_ACTION);
 		} catch (Exception e) {
 			e.printStackTrace();
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "调用银行接口失败！");
-			//LogUtil.errorLog(UserDirectRechargeController.class.toString(), UserDirectRechargeDefine.USER_DIRECT_RECHARGE_PAGE_ACTION, e);
 		}
 		return modelAndView;
 	}
@@ -176,7 +170,6 @@ public class RechargeController{
 	@RequestMapping(UserDirectRechargeDefine.RETURL_SYN_ACTION)
 	public ModelAndView pageReturn(HttpServletRequest request, HttpServletResponse response,
 								   @ModelAttribute BankCallBean bean) {
-	//	LogUtil.startLog(UserDirectRechargeDefine.THIS_CLASS, UserDirectRechargeDefine.RETURL_SYN_ACTION, "[页面充值同步回调开始]");
 		ModelAndView modelAndView = new ModelAndView();
 		String money = request.getParameter("txAmount");
 		String frontParams = request.getParameter("frontParams");
@@ -200,10 +193,8 @@ public class RechargeController{
 			modelAndView.addObject("balance", df.format(feeAmt).toString());
 			return modelAndView;
 		}
-
 		// 银行返回响应代码
 		String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-	//	_log.info("充值retCode:"+retCode);
 		if (bean!=null&& BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
 			// 成功
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_SUCCESS_PATH);
@@ -229,7 +220,7 @@ public class RechargeController{
 	public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response,
 								   @ModelAttribute BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
-		//LogUtil.startLog(UserDirectRechargeDefine.THIS_CLASS, UserDirectRechargeDefine.RETURL_ASY_ACTION, "[缴费授权异步回调开始]");
+		Logger.info("[缴费授权异步回调开始]");
 		String phone = request.getParameter("phone");
 		bean.setMobile(phone);
 		bean.convert();
@@ -244,7 +235,7 @@ public class RechargeController{
 			JSONObject msg = this.userRechargeService.handleRechargeInfo(bean, params);
 			// 充值成功
 			if (msg != null && msg.get("error").equals("0")) {
-			//	logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
+				Logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
 				result.setMessage("充值成功");
 				result.setStatus(true);
 				return result;
@@ -254,7 +245,7 @@ public class RechargeController{
 				return result;
 			}
 		}
-	//	LogUtil.endLog(UserDirectRechargeDefine.THIS_CLASS, UserDirectRechargeDefine.RETURL_ASY_ACTION, "[用户充值完成后,回调结束]");
+		Logger.info(UserDirectRechargeDefine.THIS_CLASS, UserDirectRechargeDefine.RETURL_ASY_ACTION, "[用户充值完成后,回调结束]");
 		result.setMessage("充值失败");
 		result.setStatus(false);
 		return result;

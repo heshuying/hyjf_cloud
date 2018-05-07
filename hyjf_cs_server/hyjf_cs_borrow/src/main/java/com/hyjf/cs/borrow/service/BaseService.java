@@ -1,6 +1,5 @@
 package com.hyjf.cs.borrow.service;
 
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 /**
@@ -8,8 +7,8 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
  * BaseService
  * </p>
  *
- * @author gogtz
- * @version 1.0.0
+ * @author
+ * @version
  */
 public interface BaseService {
 

@@ -1,15 +1,15 @@
 package com.hyjf.am.borrow.service;
 
 import com.hyjf.am.borrow.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.dao.model.auto.UsersInfoExample;
+import com.hyjf.am.vo.borrow.AccountListVO;
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
+import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * 用户充值Service
  * 
- * @author liuyang
+ * @author
  *
  */
 public interface RechargeService {
@@ -44,15 +44,15 @@ public interface RechargeService {
 	 */
 	 int insertRechargeInfo(BankCallBean bean);
 
-	AccountRecharge selectByExample(AccountRechargeExample example);
+	 AccountRecharge selectByExample(AccountRechargeExample example);
 
-	 int updateByExampleSelective(AccountRecharge accountRecharge,AccountRechargeExample accountRechargeExample);
+	 int updateByExampleSelective(AccountRechargeVO accountRecharge,AccountRechargeExample accountRechargeExample);
 
-	 int updateBankRechargeSuccess(Account newAccount);
+	 int updateBankRechargeSuccess(AccountVO newAccount);
 
-	 int insertSelective(AccountList accountList);
+	 int insertSelective(AccountListVO accountList);
 
-	 void updateByPrimaryKeySelective(AccountRecharge accountRecharge);
+	 void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge);
 
 	BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
 

@@ -1,17 +1,11 @@
 package com.hyjf.cs.borrow.client;
 
 
-import com.hyjf.am.borrow.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.am.vo.borrow.*;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface RechargeClient {
 
@@ -49,21 +43,21 @@ public interface RechargeClient {
      */
     int insertRechargeInfo(BankCallBean bean);
 
-    AccountRechargeVO selectByExample(AccountRechargeExample example);
+    AccountRechargeVO selectByOrderId(String orderId);
 
-    int updateByExampleSelective(AccountRechargeVO accountRecharge,AccountRechargeExample accountRechargeExample);
+    int updateByExampleSelective(AccountRechargeVO accountRecharge,String orderId);
 
-    int updateBankRechargeSuccess(Account newAccount);
+    int updateBankRechargeSuccess(AccountVO newAccount);
 
-    int insertSelective(AccountList accountList);
+    int insertSelective(AccountListVO accountList);
 
     void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge);
 
-    AccountVO selectByExample(@RequestBody AccountExample example);
+    AccountVO selectByUserId(int userId);
 
-    BankReturnCodeConfigVO getBankReturnCodeConfig(BankReturnCodeConfigExample example);
+    BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 
-    BankOpenAccountVO selectByExample(BankOpenAccountExample example);
+    BankOpenAccountVO selectById(int userId);
 
     UserInfoVO findUsersInfoById(int userId);
 }

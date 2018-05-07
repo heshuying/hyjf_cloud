@@ -1,11 +1,9 @@
 package com.hyjf.cs.borrow.client.impl;
 
-import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.response.borrow.*;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.vo.borrow.*;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -88,9 +86,9 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public AccountRechargeVO selectByExample(AccountRechargeExample example) {
+    public AccountRechargeVO selectByOrderId(String orderId) {
         AccountRechargeResponse response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/selectByExample",example,AccountRechargeResponse.class).getBody();
+                .getForEntity("http://AM-BORROW/am-borrow/recharge/selectByOrderId/"+orderId,AccountRechargeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -98,11 +96,10 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public int updateByExampleSelective(AccountRechargeVO accountRecharge, AccountRechargeExample accountRechargeExample) {
-
+    public int updateByExampleSelective(AccountRechargeVO accountRecharge, String orderId) {
         Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("accountRecharge",accountRecharge);
-        paramMap.put("accountRechargeExample",accountRechargeExample);
+        paramMap.put("orderId",orderId);
         Integer response = restTemplate
                 .postForEntity("http://AM-BORROW/am-borrow/recharge/updateByExampleSelective",paramMap, Integer.class).getBody();
         if (response != null) {
@@ -112,7 +109,7 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public int updateBankRechargeSuccess(Account newAccount) {
+    public int updateBankRechargeSuccess(AccountVO newAccount) {
         Integer response = restTemplate
                 .postForEntity("http://AM-BORROW/am-borrow/recharge/updateBankRechargeSuccess",newAccount, Integer.class).getBody();
         if (response != null) {
@@ -122,7 +119,7 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public int insertSelective(AccountList accountList) {
+    public int insertSelective(AccountListVO accountList) {
         Integer response = restTemplate
                 .postForEntity("http://AM-BORROW/am-borrow/recharge/insertSelective",accountList, Integer.class).getBody();
         if (response != null) {
@@ -137,28 +134,29 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public AccountVO selectByExample(AccountExample example) {
+    public AccountVO selectByUserId(int userId) {
         AccountResponse response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/selectAccountByExample",example,AccountResponse.class).getBody();
+                .getForEntity("http://AM-BORROW/am-borrow/recharge/selectAccountByUserId/"+userId,AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
         return null;
     }
+
 
     @Override
-    public BankReturnCodeConfigVO getBankReturnCodeConfig(BankReturnCodeConfigExample example) {
+    public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
         BankReturnCodeConfigResponse response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/getBankReturnCodeConfig",example,BankReturnCodeConfigResponse.class).getBody();
+                .getForEntity("http://AM-BORROW/am-borrow/recharge/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
         return null;
     }
 
-    public BankOpenAccountVO selectByExample(BankOpenAccountExample example) {
+    public BankOpenAccountVO selectById(int userId) {
         BankOpenAccountResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/bankopen/selectByExample/" + example, BankOpenAccountResponse.class).getBody();
+                .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

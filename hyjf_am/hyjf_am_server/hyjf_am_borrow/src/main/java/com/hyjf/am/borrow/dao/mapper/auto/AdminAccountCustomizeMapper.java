@@ -14,6 +14,7 @@ package com.hyjf.am.borrow.dao.mapper.auto;
 import com.hyjf.am.borrow.dao.model.auto.Account;
 import com.hyjf.am.borrow.dao.model.auto.AdminAccountListCustomize;
 import com.hyjf.am.borrow.dao.model.auto.BankMerchantAccount;
+import com.hyjf.am.vo.borrow.AccountVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -302,7 +303,7 @@ public interface AdminAccountCustomizeMapper {
 	 * @param newAccount
 	 * @return
 	 */
-	int updateBankRechargeSuccess(Account newAccount);
+	int updateBankRechargeSuccess(AccountVO newAccount);
 
 	/**
 	 * 债转投资后,更新出让人账户信息

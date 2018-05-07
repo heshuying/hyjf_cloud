@@ -2,6 +2,7 @@ package com.hyjf.am.borrow.dao.mapper.auto;
 
 import com.hyjf.am.borrow.dao.model.auto.AccountList;
 import com.hyjf.am.borrow.dao.model.auto.AccountListExample;
+import com.hyjf.am.vo.borrow.AccountListVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public interface AccountListMapper {
 
     int insert(AccountList record);
 
-    int insertSelective(AccountList record);
+    int insertSelective(AccountListVO record);
 
     List<AccountList> selectByExample(AccountListExample example);
 
