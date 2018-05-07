@@ -47,12 +47,6 @@ public class MybatisConfig {
 		return DataSourceBuilder.create().type(dataSourceType).build();
 	}
 
-	@Bean(name = "readDataSource2")
-	@ConfigurationProperties(prefix = "datasource.read2")
-	public DataSource readDataSource2() {
-		return DataSourceBuilder.create().type(dataSourceType).build();
-	}
-
 	/**
 	 * 
 	 * @Qualifier 根据名称进行注入，通常是在具有相同的多个类型的实例的一个注入（例如有多个DataSource类型的实例）
@@ -60,8 +54,7 @@ public class MybatisConfig {
 	 */
 	@Bean("dynamicDataSource")
 	public DynamicDataSource dynamicDataSource(@Qualifier("writeDataSource") DataSource writeDataSource,
-			@Qualifier("readDataSource1") DataSource readDataSource1,
-			@Qualifier("readDataSource2") DataSource readDataSource2) {
+			@Qualifier("readDataSource1") DataSource readDataSource1) {
 		
 		Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
 		targetDataSources.put(DbType.WRITE, writeDataSource);

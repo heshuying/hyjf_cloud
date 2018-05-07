@@ -1,7 +1,6 @@
 package com.hyjf.am.borrow.service;
 
 import com.hyjf.am.borrow.dao.model.auto.Account;
-import com.hyjf.am.borrow.dao.model.auto.AccountExample;
 
 /**
  * @author xiasq
@@ -12,5 +11,4 @@ public interface AccountService {
     void insert(Account account);
 
      Account getAccount(Integer userId);
-     Account selectByExample(AccountExample example);
 }

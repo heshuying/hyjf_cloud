@@ -59,8 +59,6 @@ public interface RechargeClient {
 
     void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge);
 
-    AccountVO selectByUserId(int userId);
-
     BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 
     BankOpenAccountVO selectById(int userId);

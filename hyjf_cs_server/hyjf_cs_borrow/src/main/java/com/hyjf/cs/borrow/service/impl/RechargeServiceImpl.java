@@ -117,7 +117,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		// 充值成功
 		if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
 			// 查询用户账户,为了版本控制,必须把查询用户账户放在最前面
-			AccountVO account = rechargeClient.selectByUserId(userId);
+			AccountVO account = rechargeClient.getAccount(userId);
 			// 查询充值记录
 			AccountRechargeVO accountRecharge = rechargeClient.selectByOrderId(orderId);// 查询充值记录
 			// 如果没有充值记录
