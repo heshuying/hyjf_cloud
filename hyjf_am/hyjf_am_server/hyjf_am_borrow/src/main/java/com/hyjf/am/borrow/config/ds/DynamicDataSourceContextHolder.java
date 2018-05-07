@@ -1,4 +1,4 @@
-package com.hyjf.am.user.config.ds;
+package com.hyjf.am.borrow.config.ds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class DynamicDataSourceContextHolder {
 
 	// 列举数据源的key
 	public enum DbType {
-		WRITE, READ1, READ2
+		WRITE, READ1
 	}
 
     /**

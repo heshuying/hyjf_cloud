@@ -1,0 +1,7 @@
+spring:
+  #mongodb
+  data:
+    mongodb:
+      uri: mongodb://testuser:e2VdOav40i@47.94.171.28:28001/admin
+      database: mservice
+

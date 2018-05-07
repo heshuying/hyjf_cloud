@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<form id="fm" name="fm" th:action='${bankForm.action }' method="post" enctype="application/json">
+    <span th:if ="${bankForm.allParams}!=null">
+        <div th:each="record:${bankForm.allParams }" >
+            <input type="hidden" th:name='${record.key }' th:id='${record.key }' th:value='${record.value}' />
+        </div>
+    </span>
+</form>
+<script>
+    document.getElementById("fm").submit();
+</script>
+</body>
+</html>
