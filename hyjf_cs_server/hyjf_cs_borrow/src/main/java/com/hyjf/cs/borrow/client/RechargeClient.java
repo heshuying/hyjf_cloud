@@ -1,17 +1,20 @@
 package com.hyjf.cs.borrow.client;
 
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.hyjf.am.borrow.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.vo.borrow.*;
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
+import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.borrow.BankCardVO;
+import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.borrow.BanksConfigVO;
+import com.hyjf.am.vo.borrow.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface RechargeClient {
 

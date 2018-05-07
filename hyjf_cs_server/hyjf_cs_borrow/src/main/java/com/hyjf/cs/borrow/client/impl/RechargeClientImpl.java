@@ -1,25 +1,36 @@
 package com.hyjf.cs.borrow.client.impl;
 
-import com.hyjf.am.borrow.dao.model.auto.*;
-import com.hyjf.am.response.borrow.*;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.vo.borrow.*;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.borrow.client.RechargeClient;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.hyjf.am.borrow.dao.model.auto.*;
+import com.hyjf.am.response.borrow.AccountRechargeResponse;
+import com.hyjf.am.response.borrow.AccountResponse;
+import com.hyjf.am.response.borrow.BankCardResponse;
+import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.borrow.BanksConfigResponse;
+import com.hyjf.am.response.borrow.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
+import com.hyjf.am.vo.borrow.AccountRechargeVO;
+import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.borrow.BankCardVO;
+import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.borrow.BanksConfigVO;
+import com.hyjf.am.vo.borrow.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.cs.borrow.client.RechargeClient;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 @Service
 public class RechargeClientImpl implements RechargeClient {

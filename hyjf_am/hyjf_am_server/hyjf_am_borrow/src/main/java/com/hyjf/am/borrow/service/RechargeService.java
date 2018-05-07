@@ -1,15 +1,20 @@
 package com.hyjf.am.borrow.service;
 
-import com.hyjf.am.borrow.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.dao.model.auto.UsersInfoExample;
+import com.hyjf.am.borrow.dao.model.auto.Account;
+import com.hyjf.am.borrow.dao.model.auto.AccountList;
+import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
+import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
+import com.hyjf.am.borrow.dao.model.auto.BankCard;
+import com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfig;
+import com.hyjf.am.borrow.dao.model.auto.BankReturnCodeConfigExample;
+import com.hyjf.am.borrow.dao.model.auto.BanksConfig;
+import com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * 用户充值Service
  * 
- * @author liuyang
+ * 
  *
  */
 public interface RechargeService {

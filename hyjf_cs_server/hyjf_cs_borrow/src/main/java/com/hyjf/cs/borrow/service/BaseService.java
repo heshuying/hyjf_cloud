@@ -1,6 +1,5 @@
 package com.hyjf.cs.borrow.service;
 
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 /**

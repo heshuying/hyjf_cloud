@@ -1,12 +1,10 @@
 package com.hyjf.cs.borrow.service;
 
+import java.util.Map;
+
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.borrow.dao.model.auto.Account;
-import com.hyjf.am.borrow.dao.model.auto.BankCard;
-import com.hyjf.am.borrow.dao.model.auto.BanksConfig;
-import com.hyjf.am.borrow.dao.model.auto.CorpOpenAccountRecord;
-import com.hyjf.am.user.dao.model.auto.Users;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.borrow.BankCardVO;
 import com.hyjf.am.vo.borrow.BanksConfigVO;
@@ -15,9 +13,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Map;
 
 /**
  * 用户充值Service
