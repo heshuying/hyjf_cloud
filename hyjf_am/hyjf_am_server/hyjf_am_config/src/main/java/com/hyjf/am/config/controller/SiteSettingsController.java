@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/am-config/siteSettings")
 public class SiteSettingsController {
 
+    Logger logger = LoggerFactory.getLogger(SiteSettingsController.class);
+
     @Autowired
     private SiteSettingsService siteSettingsService;
-
-    Logger logger = LoggerFactory.getLogger(SiteSettingsController.class);
 
     public SiteSettingsResponse findOne() {
         logger.info("查询邮件配置开始...");
