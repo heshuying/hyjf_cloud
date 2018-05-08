@@ -1,16 +1,15 @@
 package com.hyjf.cs.message.client;
 
-import com.hyjf.am.vo.config.SmsTemplateVO;
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.am.vo.user.UserVO;
 
 /**
  * @author xiasq
