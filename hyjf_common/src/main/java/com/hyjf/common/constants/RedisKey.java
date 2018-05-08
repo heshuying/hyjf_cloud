@@ -27,4 +27,9 @@ public interface RedisKey {
      * 记录密码错误次数Redis前缀
      */
     String PASSWORD_ERR_COUNT = "password_err_count_";
+
+    /**
+     * 邮件配置key
+     */
+    String SITE_SETTINGS = "site_settings";
 }

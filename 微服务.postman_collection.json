@@ -66,10 +66,10 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/smsCode/send",
+					"raw": "http://web.xiasq.com:8080/smsCode/send",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"web.xiasq.com"
 					],
 					"port": "8080",
 					"path": [
@@ -121,10 +121,10 @@
 					"raw": "{\"mobilephone\":\"15011110001\",\"smsCode\":\"111387\",\"password\":\"a123456\"}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/register",
+					"raw": "http://web.xiasq.com:8080/user/register",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"web.xiasq.com"
 					],
 					"port": "8080",
 					"path": [
@@ -189,10 +189,10 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/login",
+					"raw": "http://web.xiasq.com:8080/user/login",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"web.xiasq.com"
 					],
 					"port": "8080",
 					"path": [

@@ -10,10 +10,10 @@ import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.util.MyAuthenticator;
-import com.hyjf.am.vo.config.SiteSettingVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
@@ -38,7 +38,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 public class MailHandle {
 
 	private static final Logger logger = LoggerFactory.getLogger(MailHandle.class);
-	private static SiteSettingVO setting = null;
+	private static SiteSettingsVO setting = null;
 	/** 超时时间 */
 	private static Integer smtpTimeout = 25000;
 
@@ -50,7 +50,7 @@ public class MailHandle {
 	@PostConstruct
 	private static void init() throws RuntimeException {
 		// 取得邮件服务器信息
-		SiteSettingVO siteSetting = amConfigClient.findSiteSetting();
+		SiteSettingsVO siteSetting = amConfigClient.findSiteSetting();
 		if (siteSetting == null) {
 			throw new RuntimeException("邮件配置无效");
 		}

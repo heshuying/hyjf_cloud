@@ -1,12 +1,14 @@
 package com.hyjf.am.vo.config;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 
 /**
  * @author xiasq
- * @version SiteSettingVO, v0.1 2018/5/4 15:50
+ * @version SiteSettingsVO, v0.1 2018/5/4 15:50
  */
-public class SiteSettingVO implements Serializable {
+public class SiteSettingsVO extends BaseVO implements Serializable {
     private Integer id;
 
     private String company;
@@ -297,5 +299,40 @@ public class SiteSettingVO implements Serializable {
 
     public void setSiteTerms(String siteTerms) {
         this.siteTerms = siteTerms == null ? null : siteTerms.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "SiteSettingsVO{" +
+                "id=" + id +
+                ", company='" + company + '\'' +
+                ", siteName='" + siteName + '\'' +
+                ", siteDomain='" + siteDomain + '\'' +
+                ", siteLogo='" + siteLogo + '\'' +
+                ", siteIcp='" + siteIcp + '\'' +
+                ", siteStats='" + siteStats + '\'' +
+                ", siteFooter='" + siteFooter + '\'' +
+                ", siteStatus=" + siteStatus +
+                ", siteCloseReason='" + siteCloseReason + '\'' +
+                ", siteKeyword='" + siteKeyword + '\'' +
+                ", siteDescription='" + siteDescription + '\'' +
+                ", siteThemePath='" + siteThemePath + '\'' +
+                ", siteTheme='" + siteTheme + '\'' +
+                ", smtpServer='" + smtpServer + '\'' +
+                ", smtpReply='" + smtpReply + '\'' +
+                ", smtpUsername='" + smtpUsername + '\'' +
+                ", smtpPassword='" + smtpPassword + '\'' +
+                ", smtpVerify=" + smtpVerify +
+                ", smtpPort='" + smtpPort + '\'' +
+                ", smtpSsl=" + smtpSsl +
+                ", smtpFromName='" + smtpFromName + '\'' +
+                ", attachmentUrl='" + attachmentUrl + '\'' +
+                ", attachmentDir='" + attachmentDir + '\'' +
+                ", attachmentType='" + attachmentType + '\'' +
+                ", attachmentMaxupload='" + attachmentMaxupload + '\'' +
+                ", cdnDomain='" + cdnDomain + '\'' +
+                ", servicePhoneNumber='" + servicePhoneNumber + '\'' +
+                ", siteTerms='" + siteTerms + '\'' +
+                '}';
     }
 }

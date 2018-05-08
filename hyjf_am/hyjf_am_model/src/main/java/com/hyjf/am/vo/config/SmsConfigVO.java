@@ -111,4 +111,19 @@ public class SmsConfigVO extends BaseVO implements Serializable {
 		this.noticeToTime = noticeToTime;
 	}
 
+	@Override
+	public String toString() {
+		return "SmsConfigVO{" +
+				"id=" + id +
+				", maxIpCount=" + maxIpCount +
+				", maxMachineCount=" + maxMachineCount +
+				", maxBrowserCount=" + maxBrowserCount +
+				", maxPhoneCount=" + maxPhoneCount +
+				", maxIntervalTime=" + maxIntervalTime +
+				", maxValidTime=" + maxValidTime +
+				", noticeToPhone='" + noticeToPhone + '\'' +
+				", noticeToEmail='" + noticeToEmail + '\'' +
+				", noticeToTime=" + noticeToTime +
+				'}';
+	}
 }

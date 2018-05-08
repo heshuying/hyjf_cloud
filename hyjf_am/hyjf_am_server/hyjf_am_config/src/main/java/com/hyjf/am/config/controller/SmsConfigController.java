@@ -36,7 +36,7 @@ public class SmsConfigController {
 			smsConfigVO = new SmsConfigVO();
 			BeanUtils.copyProperties(smsConfig, smsConfigVO);
 		}
-		logger.info("smsConfigVO is : {}", JSONObject.toJSONString(smsConfigVO));
+		logger.info("smsConfigVO is : {}", smsConfigVO);
 		response.setResult(smsConfigVO);
 		return response;
 	}
