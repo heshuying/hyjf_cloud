@@ -1,14 +1,10 @@
-package com.hyjf.am.vo.config;
-
-import com.hyjf.am.vo.BaseVO;
+package com.hyjf.am.config.dao.model.auto;
 
 import java.io.Serializable;
 
-/**
- * @author xiasq
- * @version SmsMailTemplateVO, v0.1 2018/5/4 10:40
- */
-public class SmsMailTemplateVO extends BaseVO implements Serializable {
+public class SmsMailTemplate implements Serializable {
+    private Integer id;
+
     private String mailValue;
 
     private String mailName;
@@ -22,6 +18,22 @@ public class SmsMailTemplateVO extends BaseVO implements Serializable {
     private String mailContent;
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getMailValue() {
+        return mailValue;
+    }
+
+    public void setMailValue(String mailValue) {
+        this.mailValue = mailValue == null ? null : mailValue.trim();
+    }
 
     public String getMailName() {
         return mailName;
@@ -61,25 +73,5 @@ public class SmsMailTemplateVO extends BaseVO implements Serializable {
 
     public void setMailContent(String mailContent) {
         this.mailContent = mailContent == null ? null : mailContent.trim();
-    }
-
-    public String getMailValue() {
-        return mailValue;
-    }
-
-    public void setMailValue(String mailValue) {
-        this.mailValue = mailValue;
-    }
-
-    @Override
-    public String toString() {
-        return "SmsMailTemplateVO{" +
-                "mailValue='" + mailValue + '\'' +
-                ", mailName='" + mailName + '\'' +
-                ", mailStatus=" + mailStatus +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", mailContent='" + mailContent + '\'' +
-                '}';
     }
 }

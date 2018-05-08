@@ -35,7 +35,7 @@ public class TestMQ {
 		params.put("mobile", "15311112222");
 
 		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, MQConstant.HYJF_DEFAULT_TAG, JSON.toJSONBytes(params)));
+		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(params)));
 
 	}
 

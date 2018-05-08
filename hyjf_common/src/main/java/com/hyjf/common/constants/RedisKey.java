@@ -47,4 +47,9 @@ public interface RedisKey {
      * 短信模版key
      */
     String SMS_TEMPLATE = "sms_template";
+
+    /**
+     * 邮件模版key
+     */
+    String SMS_MAIL_TEMPLATE = "sms_mail_template";
 }
