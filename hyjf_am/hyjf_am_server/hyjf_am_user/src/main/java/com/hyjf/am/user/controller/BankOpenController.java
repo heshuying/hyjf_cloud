@@ -132,8 +132,8 @@ public class BankOpenController {
 		return response;
 	}
 
-	@RequestMapping("/selectById")
-	public BankOpenAccountResponse selectById(int userId) {
+	@RequestMapping("/selectById/{userId}")
+	public BankOpenAccountResponse selectById(@PathVariable int userId) {
 		BankOpenAccountExample accountExample = new BankOpenAccountExample();
 		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
 		crt.andUserIdEqualTo(userId);
