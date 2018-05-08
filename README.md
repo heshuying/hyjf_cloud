@@ -33,7 +33,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 ├── hyjf_cs_server
 |   ├── hyjf_cs_borrow  -- 核心组合微服务 [端口:8082] 
 |   ├── hyjf_cs_market  -- 市场组合微服务 [端口:8083] 
-|   ├── hyjf_am_message  -- 消息组合微服务 [端口:8084] 
+|   ├── hyjf_cs_message  -- 消息组合微服务 [端口:8084] 
 |   └── hyjf_cs_user    -- 用户组合微服务 [端口:8081] 
 
 ```
