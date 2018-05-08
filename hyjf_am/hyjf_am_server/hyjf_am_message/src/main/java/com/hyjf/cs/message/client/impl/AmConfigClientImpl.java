@@ -60,7 +60,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @return
      */
     @Override
-    public SiteSettingVO findSiteSetting() {
+    public SiteSettingsVO findSiteSetting() {
         //todo xiashuqing
         return null;
     }
