@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version SmsTemplateController, v0.1 2018/5/8 10:18
  */
 @RestController
-@RequestMapping("/am-config/smstemplate")
+@RequestMapping("/am-config/smsTemplate")
 public class SmsTemplateController {
 
     Logger logger = LoggerFactory.getLogger(SmsTemplateController.class);

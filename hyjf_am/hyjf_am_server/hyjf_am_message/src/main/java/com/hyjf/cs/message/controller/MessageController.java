@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.controller;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -8,5 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
  * 提供消息查询服务:  app消息
  */
 @RestController
+@RequestMapping("/")
 public class MessageController {
+
+
 }

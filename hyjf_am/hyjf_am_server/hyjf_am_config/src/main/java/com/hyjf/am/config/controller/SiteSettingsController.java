@@ -32,6 +32,7 @@ public class SiteSettingsController {
      *
      * @return
      */
+    @RequestMapping("/findOne")
     public SiteSettingsResponse findOne() {
         logger.info("查询邮件配置开始...");
         SiteSettingsResponse response = new SiteSettingsResponse();
