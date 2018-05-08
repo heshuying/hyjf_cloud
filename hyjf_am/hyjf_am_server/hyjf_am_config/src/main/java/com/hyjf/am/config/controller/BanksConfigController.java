@@ -9,6 +9,7 @@ import com.hyjf.am.response.borrow.BanksConfigResponse;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.borrow.BanksConfigVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/am-config/recharge")
 public class BanksConfigController {
 
+    @Autowired
     private BankConfigService bankConfigService;
     /**
      * 获取银行卡配置信息

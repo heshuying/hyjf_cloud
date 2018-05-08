@@ -29,11 +29,11 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 |   |   ├── hyjf_am_borrow -- 标的 、资金、资产微服务[端口:8093]
 |   |   ├── hyjf_am_config -- 公用配置微服务[端口:8091]
 |   |   ├── hyjf_am_market -- 市场微服务[端口:8094] 包含活动、券等
-|   |   ├── hyjf_am_message  -- 消息微服务[端口:8095] 
 |   |   └── hyjf_am_user   -- 用户微服务[端口:8092]
 ├── hyjf_cs_server
 |   ├── hyjf_cs_borrow  -- 核心组合微服务 [端口:8082] 
 |   ├── hyjf_cs_market  -- 市场组合微服务 [端口:8083] 
+|   ├── hyjf_am_message  -- 消息组合微服务 [端口:8084] 
 |   └── hyjf_cs_user    -- 用户组合微服务 [端口:8081] 
 
 ```
