@@ -72,8 +72,10 @@ public class AccessFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 
-		String requestUrl = request.getRequestURL().toString();
+		String fullRequestUrl = request.getRequestURL().toString();
 		String requestUri = request.getRequestURI().toString();
+		// 截取访问域名
+		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
 		String prefix = "/api";
 		if (requestUrl.contains("app")) {
 			if (StringUtils.isNotBlank(appKeyIgnoreUrls) && !appKeyIgnoreUrls.contains(requestUri)) {
