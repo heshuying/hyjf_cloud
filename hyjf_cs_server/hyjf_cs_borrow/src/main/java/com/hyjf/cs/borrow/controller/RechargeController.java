@@ -41,7 +41,7 @@ import java.util.Map;
  *
  */
 @Controller
-@RequestMapping(value = "/recharge")
+@RequestMapping(value = "/cs-borrow/recharge")
 public class RechargeController{
 	
 	Logger Logger = LoggerFactory.getLogger(RechargeController.class);
@@ -76,7 +76,6 @@ public class RechargeController{
 			modelAndView.addObject("message", "用户未开户！");
 			return modelAndView;
 		}
-
         BankOpenAccountVO account = this.userRechargeService.getBankOpenAccount(user.getUserId());
 
 		// 判断用户是否设置过交易密码
@@ -123,11 +122,9 @@ public class RechargeController{
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
 		// 同步调用路径
-		String retUrl = systemConfig.getWebHost() +
-				UserDirectRechargeDefine.REQUEST_MAPPING + UserDirectRechargeDefine.RETURL_SYN_ACTION + ".do?txAmount="+money;
+		String retUrl = systemConfig.getWebHost() + UserDirectRechargeDefine.RETURL_SYN_ACTION + ".do?txAmount="+money;
 		// 异步调用路
-		String bgRetUrl = systemConfig.getWebHost() +
-				UserDirectRechargeDefine.REQUEST_MAPPING + UserDirectRechargeDefine.RETURL_ASY_ACTION + ".do?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + UserDirectRechargeDefine.RETURL_ASY_ACTION + ".do?phone="+mobile;
 
 		// 用户ID
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
