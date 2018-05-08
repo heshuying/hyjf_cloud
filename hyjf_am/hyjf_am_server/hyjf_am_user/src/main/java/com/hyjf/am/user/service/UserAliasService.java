@@ -4,6 +4,9 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.user.dao.model.auto.MobileCode;
+import com.hyjf.am.vo.user.UserAliasVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -12,8 +15,24 @@ import com.hyjf.am.user.dao.model.auto.MobileCode;
 public interface UserAliasService {
     /**
      * 根据手机号查询推送别名
+     *
      * @param mobile
      * @return
      */
     MobileCode findAliasByMobile(String mobile);
+
+    /**
+     * 根据手机号查询推送别名 - 批量
+     *
+     * @param mobiles
+     * @return
+     */
+    List<UserAliasVO> findAliasByMobiles(List<String> mobiles);
+
+    /**
+     * 根据设备类型统计用户人数
+     * @param clientAndroid
+     * @return
+     */
+    Integer countAliasByClient(String clientAndroid);
 }

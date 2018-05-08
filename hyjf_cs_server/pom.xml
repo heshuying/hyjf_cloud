@@ -23,6 +23,7 @@
 		<module>hyjf_cs_user</module>
 		<module>hyjf_cs_market</module>
 		<module>hyjf_cs_borrow</module>
+		<module>hyjf_cs_message</module>
 	</modules>
 
 </project>

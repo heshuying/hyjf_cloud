@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author fuqiang
@@ -34,10 +35,12 @@ public class SiteSettingsServiceImpl implements SiteSettingsService {
         if (siteSettings == null) {
             SiteSettingsExample example = new SiteSettingsExample();
             List<SiteSettings> siteSettingsList = siteSettingsMapper.selectByExample(example);
-            if (!CollectionUtils.isEmpty(siteSettingsList))
-                return siteSettingsList.get(0);
+            if (!CollectionUtils.isEmpty(siteSettingsList)) {
+                siteSettings = siteSettingsList.get(0);
+                redisUtil.setEx(RedisKey.SITE_SETTINGS, siteSettings, 1, TimeUnit.DAYS);
+                return siteSettings;
+            }
         }
-
-        return null;
+        return siteSettings;
     }
 }
