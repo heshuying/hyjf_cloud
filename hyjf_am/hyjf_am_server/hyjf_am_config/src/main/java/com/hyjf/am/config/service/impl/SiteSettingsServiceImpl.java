@@ -37,11 +37,10 @@ public class SiteSettingsServiceImpl implements SiteSettingsService {
             List<SiteSettings> siteSettingsList = siteSettingsMapper.selectByExample(example);
             if (!CollectionUtils.isEmpty(siteSettingsList)) {
                 siteSettings = siteSettingsList.get(0);
-				redisUtil.setEx(RedisKey.SITE_SETTINGS, siteSettings, 1, TimeUnit.DAYS);
+                redisUtil.setEx(RedisKey.SITE_SETTINGS, siteSettings, 1, TimeUnit.DAYS);
                 return siteSettings;
             }
         }
-
-        return null;
+        return siteSettings;
     }
 }

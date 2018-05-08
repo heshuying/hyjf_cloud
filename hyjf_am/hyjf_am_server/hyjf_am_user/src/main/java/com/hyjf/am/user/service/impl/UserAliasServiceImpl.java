@@ -44,4 +44,15 @@ public class UserAliasServiceImpl implements UserAliasService {
         List<UserAliasVO> userAliasVOList = mobileCodeCustomizeMapper.findAliasByMobiles(mobiles);
         return userAliasVOList;
     }
+
+    @Override
+    public Integer countAliasByClient(String clientAndroid) {
+        MobileCodeExample example = new MobileCodeExample();
+        example.createCriteria().andClientEqualTo(clientAndroid);
+        List<MobileCode> mobileCodeList = mobileCodeMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(mobileCodeList)) {
+            return mobileCodeList.size();
+        }
+        return 0;
+    }
 }

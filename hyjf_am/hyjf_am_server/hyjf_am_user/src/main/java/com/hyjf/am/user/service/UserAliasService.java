@@ -28,4 +28,11 @@ public interface UserAliasService {
      * @return
      */
     List<UserAliasVO> findAliasByMobiles(List<String> mobiles);
+
+    /**
+     * 根据设备类型统计用户人数
+     * @param clientAndroid
+     * @return
+     */
+    Integer countAliasByClient(String clientAndroid);
 }
