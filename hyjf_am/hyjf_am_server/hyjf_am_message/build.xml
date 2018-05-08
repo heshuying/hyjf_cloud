@@ -1,9 +1,0 @@
-<project name="hyjf-am-message" basedir="." default="main">
-	<target name="main" description="Generate the files">
-		<delete includeEmptyDirs="true">
-			<fileset dir="/com/hyjf/cs/message/dao/mapper/xml/auto" includes="**/*.xml" />
-			<fileset dir="/com/hyjf/cs/message/dao/mapper/auto" includes="**/*.java" />
-			<fileset dir="/com/hyjf/cs/message/dao/model/auto" includes="**/*.java" />
-		</delete>
-	</target>
-</project>
