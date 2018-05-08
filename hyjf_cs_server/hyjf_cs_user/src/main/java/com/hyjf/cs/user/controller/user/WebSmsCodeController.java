@@ -17,13 +17,13 @@ import com.hyjf.cs.user.util.GetCilentIP;
 
 /**
  * @author xiasq
- * @version SmsCodeController, v0.1 2018/4/25 9:01
+ * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
 
 @RestController
-@RequestMapping("/api/smsCode")
-public class SmsCodeController {
-	private static final Logger logger = LoggerFactory.getLogger(SmsCodeController.class);
+@RequestMapping("/web/smsCode")
+public class WebSmsCodeController {
+	private static final Logger logger = LoggerFactory.getLogger(WebSmsCodeController.class);
 
 	@Autowired
 	private SmsCodeService sendSmsCode;

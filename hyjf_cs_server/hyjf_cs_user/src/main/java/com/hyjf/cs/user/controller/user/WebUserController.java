@@ -20,13 +20,13 @@ import com.hyjf.cs.user.vo.RegisterVO;
 
 /**
  * @author xiasq
- * @version UserController, v0.1 2018/4/21 15:06
+ * @version WebUserController, v0.1 2018/4/21 15:06
  */
 
 @RestController
-@RequestMapping("/api/user")
-public class UserController {
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+@RequestMapping("/web/user")
+public class WebUserController {
+	private static final Logger logger = LoggerFactory.getLogger(WebUserController.class);
 
 	@Autowired
 	private UserService userService;
