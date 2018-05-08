@@ -1,10 +1,14 @@
 package com.hyjf.am.vo.config;
 
+import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version SmsMailTemplateVO, v0.1 2018/5/4 10:40
  */
-public class SmsMailTemplateVO {
+public class SmsMailTemplateVO extends BaseVO implements Serializable {
     private String mailValue;
 
     private String mailName;
@@ -65,5 +69,17 @@ public class SmsMailTemplateVO {
 
     public void setMailValue(String mailValue) {
         this.mailValue = mailValue;
+    }
+
+    @Override
+    public String toString() {
+        return "SmsMailTemplateVO{" +
+                "mailValue='" + mailValue + '\'' +
+                ", mailName='" + mailName + '\'' +
+                ", mailStatus=" + mailStatus +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", mailContent='" + mailContent + '\'' +
+                '}';
     }
 }
