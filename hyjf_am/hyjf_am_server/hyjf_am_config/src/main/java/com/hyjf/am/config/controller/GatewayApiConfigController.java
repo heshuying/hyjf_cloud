@@ -28,6 +28,10 @@ public class GatewayApiConfigController {
     @Autowired
     GatewayApiConfigService gatewayApiConfigService;
 
+    /**
+     * 查询所有网关配置
+     * @return
+     */
     @RequestMapping("/findAll")
     public GatewayApiConfigResponse findAll(){
         logger.info("findGatewayConfigs start...");
