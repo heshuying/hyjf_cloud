@@ -32,4 +32,19 @@ public interface RedisKey {
      * 邮件配置key
      */
     String SITE_SETTINGS = "site_settings";
+
+    /**
+     * 消息推送模版key
+     */
+    String MESSAGE_PUSH_TEMPLATE = "message_push_template";
+
+    /**
+     * 短信通知配置key
+     */
+    String SMS_NOTICE_CONFIG = "sms_notice_config";
+
+    /**
+     * 短信模版key
+     */
+    String SMS_TEMPLATE = "sms_template";
 }
