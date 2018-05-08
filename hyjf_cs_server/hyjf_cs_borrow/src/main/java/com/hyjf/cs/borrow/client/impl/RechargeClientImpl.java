@@ -7,6 +7,8 @@ import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.borrow.BankCardVO;
@@ -125,9 +127,9 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public int insertSelectiveBank(Map<String, Object> paramMap){
+    public int insertSelectiveBank(BankRequest bankRequest){
         Integer response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/insertSelectiveBank",paramMap, Integer.class).getBody();
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/insertSelectiveBank",bankRequest, Integer.class).getBody();
         if (response != null) {
             return response;
         }
@@ -135,9 +137,9 @@ public class RechargeClientImpl implements RechargeClient {
     }
 
     @Override
-    public boolean updateBanks(Map<String, Object> paramMap) {
+    public boolean updateBanks(BankAccountBeanRequest bankAccountBeanRequest) {
         boolean response = restTemplate
-                .postForEntity("http://AM-BORROW/am-borrow/recharge/updateBanks",paramMap, boolean.class).getBody();
+                .postForEntity("http://AM-BORROW/am-borrow/recharge/updateBanks",bankAccountBeanRequest, boolean.class).getBody();
         return response;
     }
 
