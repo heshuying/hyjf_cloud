@@ -1,10 +1,14 @@
 package com.hyjf.am.vo.config;
 
+import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version SmsTemplateVO, v0.1 2018/5/4 10:22
  */
-public class SmsTemplateVO {
+public class SmsTemplateVO extends BaseVO implements Serializable {
 
     private String tplCode;
 
@@ -66,5 +70,17 @@ public class SmsTemplateVO {
 
     public void setTplCode(String tplCode) {
         this.tplCode = tplCode;
+    }
+
+    @Override
+    public String toString() {
+        return "SmsTemplateVO{" +
+                "tplCode='" + tplCode + '\'' +
+                ", tplName='" + tplName + '\'' +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", tplContent='" + tplContent + '\'' +
+                '}';
     }
 }

@@ -1,12 +1,15 @@
 package com.hyjf.am.vo.user;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author xiasq
  * @version UserAliasVO, v0.1 2018/5/4 10:46
  */
-public class UserAliasVO implements Serializable {
+public class UserAliasVO extends BaseVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	/*
@@ -87,4 +90,15 @@ public class UserAliasVO implements Serializable {
 		this.client = client;
 	}
 
+	@Override
+	public String toString() {
+		return "UserAliasVO{" +
+				"userId=" + userId +
+				", mobileCode='" + mobileCode + '\'' +
+				", mobile='" + mobile + '\'' +
+				", mobiles=" + Arrays.toString(mobiles) +
+				", packageCode='" + packageCode + '\'' +
+				", client='" + client + '\'' +
+				'}';
+	}
 }
