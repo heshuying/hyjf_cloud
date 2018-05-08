@@ -11,7 +11,7 @@ import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
  */
 public interface SmsNoticeConfigService {
     /**
-     * 根据name查询SmsNoticeConfig
+     * 根据tplCode查询短信通知配置
      *
      * @param tplCode
      * @return

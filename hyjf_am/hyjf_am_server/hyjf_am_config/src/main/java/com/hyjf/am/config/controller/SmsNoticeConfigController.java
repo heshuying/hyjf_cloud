@@ -28,6 +28,11 @@ public class SmsNoticeConfigController {
     @Autowired
     private SmsNoticeConfigService smsNoticeConfigService;
 
+    /**
+     * 根据tplCode查询短信通知配置
+     * @param tplCode
+     * @return
+     */
     @RequestMapping("/findSmsNoticeByCode/{tplCode}")
     public SmsNoticeConfigResponse findSmsNoticeByCode(@PathVariable String tplCode) {
         logger.info("findSmsNoticeByCode start...");
