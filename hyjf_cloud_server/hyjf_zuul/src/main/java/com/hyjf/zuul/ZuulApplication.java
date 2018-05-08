@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.zuul.filter.AccessFilter;
-import com.hyjf.zuul.filter.AppFilter;
 
 @EnableZuulProxy
 @SpringBootApplication
@@ -28,10 +27,5 @@ public class ZuulApplication {
 	@Bean
 	public AccessFilter accessFilter() {
 		return new AccessFilter();
-	}
-
-	@Bean
-	public AppFilter appFilter() {
-		return new AppFilter();
 	}
 }

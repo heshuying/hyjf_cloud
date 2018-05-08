@@ -2,3 +2,13 @@ basic:
   auth:
     username: hyjf
     password: hyjf123
+
+
+ignore:
+  urls:
+    app:
+      key: /server/getBestServerAction,
+      user: /smsCode/send,/user/register,/user/register
+    web: /smsCode/send,/user/register,/user/register
+    wechat: /smsCode/send,/user/register,/user/register
+    api: /smsCode/send,/user/register,/user/register

@@ -46,7 +46,16 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
     6. 启动服务网关zuul ,zuul启动之前必须启动am_config
         zuul 统一访问 http://localhost:8080
     7. batch 访问： http://localhost:9091
-     
+    
+    
+    ps:
+        本地配置host文件 （样例）：
+            127.0.0.1       app.xiasq.com
+            127.0.0.1       web.xiasq.com
+            127.0.0.1       api.xiasq.com
+            127.0.0.1       wechat.xiasq.com
+        目前是根据域名区分请求渠道，不添加host文件会无法访问  
+        
 ### 微服务架构
    ![调用链](pic2.png)    
        

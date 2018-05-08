@@ -43,10 +43,11 @@ public class RechargeController {
      */
     @ApiOperation(value = " Account", notes = " Account")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户编码", required = true, dataType = "Integer")
+            @ApiImplicitParam(name = "userId", value = "用户编码", required = true, dataType = "String")
     })
     @GetMapping("/getAccount/{userId}")
-    public AccountResponse getAccount(@PathVariable Integer userId){
+    public AccountResponse getAccount(@PathVariable(value = "userId") Integer userId){
+        logger.info("getAccount:"+userId);
         AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(userId);
         if(null != account){
