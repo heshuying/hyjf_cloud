@@ -2,8 +2,6 @@ package com.hyjf.cs.message.client;
 
 import com.hyjf.am.vo.config.*;
 
-import java.util.List;
-
 /**
  * @author xiasq
  * @version AmConfigClient, v0.1 2018/5/4 10:00
@@ -41,5 +39,5 @@ public interface AmConfigClient {
      * 查询邮件配置
      * @return
      */
-    SiteSettingVO findSiteSetting();
+    SiteSettingsVO findSiteSetting();
 }

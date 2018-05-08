@@ -20,7 +20,7 @@ public interface AmUserClient {
 
 	/**
 	 * 根据userId查询用户
-	 * @param mobile
+	 * @param userId
 	 * @return
 	 */
 	UserVO findUserById(int userId);
@@ -34,7 +34,7 @@ public interface AmUserClient {
 
 	/**
 	 * 根据手机号查询推送别名 - 批量
-	 * @param mobile
+	 * @param mobiles
 	 * @return
 	 */
 	List<UserAliasVO> findAliasesByMobiles(List<String> mobiles);
