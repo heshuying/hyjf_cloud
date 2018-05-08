@@ -6,13 +6,12 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.PropUtils;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Transaction;
 
 /**
@@ -36,19 +35,20 @@ public class RedisUtils {
      */
     public static JedisPool getPool() {
         if (pool == null) {
-            JedisPoolConfig config = new JedisPoolConfig();
-            config.setMaxTotal(Integer.valueOf(PropUtils.getRedisValue("redis.pool.maxActive")));
-            config.setMaxIdle(Integer.valueOf(PropUtils.getRedisValue("redis.pool.maxIdle")));
-            config.setMaxWaitMillis(Long.valueOf(PropUtils.getRedisValue("redis.pool.maxWait")));
-            config.setTestOnBorrow(Boolean.valueOf(PropUtils.getRedisValue("redis.pool.testOnBorrow")));
-            config.setTestOnReturn(Boolean.valueOf(PropUtils.getRedisValue("redis.pool.testOnReturn")));
-            // 测试环境
-            // pool = new JedisPool(config, bundle.getString("redis.ip"),
-            // Integer.valueOf(bundle.getString("redis.port")));
-            // 线上环境
-            pool =
-                    new JedisPool(config, PropUtils.getRedisValue("redis.ip"), Integer.valueOf(PropUtils
-                            .getRedisValue("redis.port")), 100000, PropUtils.getRedisValue("redis.pool.password"));
+//            JedisPoolConfig config = new JedisPoolConfig();
+//            config.setMaxTotal(redisConfig.getMaxTotal());
+//            config.setMaxIdle(redisConfig.getMaxIdle());
+//            config.setMaxWaitMillis(redisConfig.getMaxWait());
+//            config.setTestOnBorrow(redisConfig.isTestOnBorrow());
+//            config.setTestOnReturn(redisConfig.isTestOnReturn());
+//            // 测试环境
+//            // pool = new JedisPool(config, bundle.getString("redis.ip"),
+//            // Integer.valueOf(bundle.getString("redis.port")));
+//            // 线上环境
+//            pool =
+//                    new JedisPool(config, redisConfig.getRedisIp(), redisConfig.getRedisPort() , 100000, redisConfig.getRedisPass());
+        	
+        	pool = SpringUtils.getBean("redisPoolFactory");
         }
         return pool;
     }
@@ -743,4 +743,5 @@ public class RedisUtils {
         }
         return result;
     }
+    
 }
