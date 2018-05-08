@@ -2,11 +2,13 @@ package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version SmsTemplateVO, v0.1 2018/5/4 10:22
  */
-public class SmsTemplateVO extends BaseVO {
+public class SmsTemplateVO extends BaseVO implements Serializable {
 
     private String tplCode;
 

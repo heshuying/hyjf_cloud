@@ -2,11 +2,13 @@ package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version SmsNoticeConfigVO, v0.1 2018/5/4 10:30
  */
-public class SmsNoticeConfigVO extends BaseVO {
+public class SmsNoticeConfigVO extends BaseVO implements Serializable {
 
     private String name;
 

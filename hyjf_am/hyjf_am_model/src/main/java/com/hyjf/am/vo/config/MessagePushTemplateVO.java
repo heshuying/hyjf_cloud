@@ -1,12 +1,14 @@
 package com.hyjf.am.vo.config;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 
 /**
  * @author xiasq
  * @version MessagePushTemplateVO, v0.1 2018/5/4 10:42
  */
-public class MessagePushTemplateVO implements Serializable {
+public class MessagePushTemplateVO extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer tagId;
@@ -177,5 +179,28 @@ public class MessagePushTemplateVO implements Serializable {
 
     public void setLastupdateUserName(String lastupdateUserName) {
         this.lastupdateUserName = lastupdateUserName == null ? null : lastupdateUserName.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "MessagePushTemplateVO{" +
+                "id=" + id +
+                ", tagId=" + tagId +
+                ", tagCode='" + tagCode + '\'' +
+                ", templateCode='" + templateCode + '\'' +
+                ", templateTitle='" + templateTitle + '\'' +
+                ", templateImageUrl='" + templateImageUrl + '\'' +
+                ", templateContent='" + templateContent + '\'' +
+                ", templateTerminal='" + templateTerminal + '\'' +
+                ", templateAction=" + templateAction +
+                ", templateActionUrl='" + templateActionUrl + '\'' +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", createUserId=" + createUserId +
+                ", createUserName='" + createUserName + '\'' +
+                ", lastupdateTime=" + lastupdateTime +
+                ", lastupdateUserId=" + lastupdateUserId +
+                ", lastupdateUserName='" + lastupdateUserName + '\'' +
+                '}';
     }
 }
