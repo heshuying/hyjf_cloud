@@ -8,6 +8,7 @@ import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
 import com.hyjf.am.config.dao.model.auto.SmsNoticeConfigExample;
 import com.hyjf.am.config.service.SmsNoticeConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  * @author fuqiang
  * @version SmsNoticeConfigServiceImpl, v0.1 2018/5/8 10:08
  */
+@Service
 public class SmsNoticeConfigServiceImpl implements SmsNoticeConfigService {
 
     @Autowired

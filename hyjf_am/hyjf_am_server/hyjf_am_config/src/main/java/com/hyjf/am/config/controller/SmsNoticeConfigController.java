@@ -30,6 +30,7 @@ public class SmsNoticeConfigController {
 
     /**
      * 根据tplCode查询短信通知配置
+     *
      * @param tplCode
      * @return
      */
@@ -40,6 +41,7 @@ public class SmsNoticeConfigController {
         SmsNoticeConfigVO smsNoticeConfigVO = null;
         SmsNoticeConfig smsNoticeConfig = smsNoticeConfigService.findSmsNoticeByCode(tplCode);
         if (smsNoticeConfig != null) {
+            smsNoticeConfigVO = new SmsNoticeConfigVO();
             BeanUtils.copyProperties(smsNoticeConfig, smsNoticeConfigVO);
         }
         logger.info("smsNoticeConfigVO is :{}", smsNoticeConfigVO);

@@ -27,6 +27,11 @@ public class SiteSettingsController {
     @Autowired
     private SiteSettingsService siteSettingsService;
 
+    /**
+     * 查询邮件配置
+     *
+     * @return
+     */
     public SiteSettingsResponse findOne() {
         logger.info("查询邮件配置开始...");
         SiteSettingsResponse response = new SiteSettingsResponse();
