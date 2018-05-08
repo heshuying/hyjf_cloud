@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,7 +38,7 @@ import java.util.Map;
 /**
  * 用户充值Controller
  * 
- * @author
+ * @author zhangqq
  *
  */
 @Controller
@@ -51,12 +52,20 @@ public class RechargeController{
 
 	@Autowired
 	SystemConfig systemConfig;
+
+
+	@RequestMapping(value = "/init")
+	public String init(Model model) {
+		
+		return "recharge/recharge";
+	}
+	
 	/**
-	 *
-	 * 页面充值
-	 * @author sunss
+	 * 调用充值接口
 	 * @param request
 	 * @param response
+	 * @param mobile
+	 * @param money
 	 * @return
 	 */
 	@RequestMapping("/page")
@@ -64,19 +73,24 @@ public class RechargeController{
 		Logger.info("充值服务");
 		ModelAndView modelAndView = new ModelAndView();
 		// 用户id
-		WebViewUser user = WebUtils.getUser(request);
-		if (user == null) {
-			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
-			modelAndView.addObject("message", "登录失效，请重新登陆！");
-			return modelAndView;
-		}
-		UserVO users=userRechargeService.getUsers(user.getUserId());
+		
+//		WebViewUser user = WebUtils.getUser(request);
+//		if (user == null) {
+//			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
+//			modelAndView.addObject("message", "登录失效，请重新登陆！");
+//			return modelAndView;
+//		}
+		
+		Integer userId = Integer.parseInt(request.getParameter("userId"));
+		
+		
+		UserVO users=userRechargeService.getUsers(userId);
 		if (users.getBankOpenAccount()==0) {// 未开户
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "用户未开户！");
 			return modelAndView;
 		}
-        BankOpenAccountVO account = this.userRechargeService.getBankOpenAccount(user.getUserId());
+        BankOpenAccountVO account = this.userRechargeService.getBankOpenAccount(userId);
 
 		// 判断用户是否设置过交易密码
 		if (users.getIsSetPassword() == 0) {// 未设置交易密码
@@ -86,7 +100,7 @@ public class RechargeController{
 		}
 
 		// 根据用户ID查询用户平台银行卡信息
-		BankCardVO bankCard = this.userRechargeService.selectBankCardByUserId(user.getUserId());
+		BankCardVO bankCard = this.userRechargeService.selectBankCardByUserId(userId);
 		if (bankCard == null) {
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 			modelAndView.addObject("message", "查询银行卡信息失败！");
@@ -117,7 +131,7 @@ public class RechargeController{
 		}
 
 		String cardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
-		UserInfoVO userInfo = this.userRechargeService.getUsersInfoByUserId(user.getUserId());
+		UserInfoVO userInfo = this.userRechargeService.getUsersInfoByUserId(userId);
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
@@ -134,16 +148,16 @@ public class RechargeController{
 		directRechargeBean.setName(name);
 		directRechargeBean.setCardNo(cardNo);
 		directRechargeBean.setMobile(mobile);
-		directRechargeBean.setUserId(user.getUserId());
+		directRechargeBean.setUserId(userId);
 		directRechargeBean.setIp(CustomUtil.getIpAddr(request));
-		directRechargeBean.setUserName(user.getUsername());
+		directRechargeBean.setUserName("test"); //TOOD:username
 		// 同步 异步
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setPlatform("0");
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
 		directRechargeBean.setAccountId(account.getAccount());
-		String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL;
+		String forgetPassworedUrl = "http://www.hyjf.com";//TODO:
 		directRechargeBean.setForgotPwdUrl(forgetPassworedUrl);
 		try {
 			modelAndView = userRechargeService.insertGetMV(directRechargeBean);
