@@ -36,9 +36,9 @@ public class SmsTemplateController {
      * @param tplCode
      * @return
      */
-    @RequestMapping("/findSmsTemplateByCode")
+    @RequestMapping("/findSmsTemplateByCode/{tplCode}")
     public SmsTemplateResponse findSmsTemplateByCode(@PathVariable String tplCode) {
-        logger.info("查询短信模板开始...");
+        logger.info("查询短信模板开始... tplCode is :{}", tplCode);
         SmsTemplateResponse response = new SmsTemplateResponse();
         SmsTemplateVO smsTemplateVO = null;
         SmsTemplate smsTemplate = smsTemplateService.findSmsTemplateByCode(tplCode);

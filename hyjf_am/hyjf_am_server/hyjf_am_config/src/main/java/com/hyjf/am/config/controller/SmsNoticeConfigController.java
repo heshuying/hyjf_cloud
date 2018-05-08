@@ -36,7 +36,7 @@ public class SmsNoticeConfigController {
      */
     @RequestMapping("/findSmsNoticeByCode/{tplCode}")
     public SmsNoticeConfigResponse findSmsNoticeByCode(@PathVariable String tplCode) {
-        logger.info("findSmsNoticeByCode start...");
+        logger.info("findSmsNoticeByCode start... tplCode is :{}", tplCode);
         SmsNoticeConfigResponse response = new SmsNoticeConfigResponse();
         SmsNoticeConfigVO smsNoticeConfigVO = null;
         SmsNoticeConfig smsNoticeConfig = smsNoticeConfigService.findSmsNoticeByCode(tplCode);

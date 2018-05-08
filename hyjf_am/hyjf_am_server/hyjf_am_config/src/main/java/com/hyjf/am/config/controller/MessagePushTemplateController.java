@@ -38,7 +38,7 @@ public class MessagePushTemplateController {
      */
     @RequestMapping("/findMessagePushTemplateByCode/{tplCode}")
     public MessagePushTemplateResponse findMessagePushTemplateByCode(@PathVariable String tplCode) {
-        logger.info("查询消息推送模板开始...");
+        logger.info("查询消息推送模板开始... tplCode is :{}", tplCode);
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplateVO messagePushTemplateVO = null;
         MessagePushTemplate messagePushTemplate = templateServcie.findMessagePushTemplateByCode(tplCode);
