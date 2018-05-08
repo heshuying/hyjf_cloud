@@ -30,8 +30,11 @@ public class SmsConfigServiceImpl implements SmsConfigService {
 		SmsConfig smsConfig = (SmsConfig) redisUtil.get(RedisKey.SMS_CONFIG);
 		if (smsConfig == null) {
 			List<SmsConfig> list = smsConfigMapper.selectByExample(new SmsConfigExample());
-			if (!CollectionUtils.isEmpty(list))
-				return list.get(0);
+			if (!CollectionUtils.isEmpty(list)){
+				smsConfig = list.get(0);
+				redisUtil.set(RedisKey.SMS_CONFIG, smsConfig);
+				return smsConfig;
+			}
 		}
 		return smsConfig;
 	}

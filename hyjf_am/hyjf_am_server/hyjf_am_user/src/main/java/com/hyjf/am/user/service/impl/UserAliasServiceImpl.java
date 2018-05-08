@@ -4,10 +4,13 @@
 package com.hyjf.am.user.service.impl;
 
 import com.hyjf.am.user.dao.mapper.auto.MobileCodeMapper;
+import com.hyjf.am.user.dao.mapper.customize.MobileCodeCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.MobileCode;
 import com.hyjf.am.user.dao.model.auto.MobileCodeExample;
 import com.hyjf.am.user.service.UserAliasService;
+import com.hyjf.am.vo.user.UserAliasVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -16,10 +19,14 @@ import java.util.List;
  * @author fuqiang
  * @version UserAliasServiceImpl, v0.1 2018/5/8 11:05
  */
+@Service
 public class UserAliasServiceImpl implements UserAliasService {
 
     @Autowired
     private MobileCodeMapper mobileCodeMapper;
+
+    @Autowired
+    private MobileCodeCustomizeMapper mobileCodeCustomizeMapper;
 
     @Override
     public MobileCode findAliasByMobile(String mobile) {
@@ -30,5 +37,11 @@ public class UserAliasServiceImpl implements UserAliasService {
             return mobileCodeList.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<UserAliasVO> findAliasByMobiles(List<String> mobiles) {
+        List<UserAliasVO> userAliasVOList = mobileCodeCustomizeMapper.findAliasByMobiles(mobiles);
+        return userAliasVOList;
     }
 }

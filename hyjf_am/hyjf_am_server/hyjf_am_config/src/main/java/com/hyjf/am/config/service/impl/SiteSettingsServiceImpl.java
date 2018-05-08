@@ -34,8 +34,11 @@ public class SiteSettingsServiceImpl implements SiteSettingsService {
         if (siteSettings == null) {
             SiteSettingsExample example = new SiteSettingsExample();
             List<SiteSettings> siteSettingsList = siteSettingsMapper.selectByExample(example);
-            if (!CollectionUtils.isEmpty(siteSettingsList))
+            if (!CollectionUtils.isEmpty(siteSettingsList)) {
+                siteSettings = siteSettingsList.get(0);
+                redisUtil.set(RedisKey.SITE_SETTINGS, siteSettings);
                 return siteSettingsList.get(0);
+            }
         }
 
         return null;
