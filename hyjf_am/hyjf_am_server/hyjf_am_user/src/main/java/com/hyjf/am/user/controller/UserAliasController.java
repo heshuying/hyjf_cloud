@@ -70,4 +70,17 @@ public class UserAliasController {
         }
         return list;
     }
+
+    /**
+     * 根据设备类型统计用户人数
+     *
+     * @param clientAndroid
+     * @return
+     */
+    @RequestMapping("/countAliasByClient/{clientAndroid}")
+    public Integer countAliasByClient(@PathVariable String clientAndroid) {
+        logger.info("根据设备类型统计用户人数开始... clientAndroid is :{}", clientAndroid);
+        Integer count = userAliasService.countAliasByClient(clientAndroid);
+        return count;
+    }
 }
