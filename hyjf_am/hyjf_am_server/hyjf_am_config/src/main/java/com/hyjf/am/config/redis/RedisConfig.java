@@ -2,6 +2,7 @@ package com.hyjf.am.config.redis;
 
 import java.nio.charset.Charset;
 
+import com.alibaba.fastjson.parser.ParserConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,14 +38,14 @@ public class RedisConfig {
 	public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
 		template.setConnectionFactory(redisConnectionFactory);
+		// fastjson默认情况下会开启autoType的检查，添加autotype白名单
+		ParserConfig.getGlobalInstance().addAccept("com.hyjf.");
 
-		//使用fastjson序列化
+		// 使用fastjson序列化
 		FastJsonRedisSerializer fastJsonRedisSerializer = new FastJsonRedisSerializer(Object.class);
-
 		// value值的序列化采用fastJsonRedisSerializer
 		template.setValueSerializer(fastJsonRedisSerializer);
 		template.setHashValueSerializer(fastJsonRedisSerializer);
-
 		// key的序列化采用StringRedisSerializer
 		template.setKeySerializer(new StringRedisSerializer());
 		template.setHashKeySerializer(new StringRedisSerializer());
@@ -53,8 +54,7 @@ public class RedisConfig {
 
 	@Bean
 	@ConditionalOnMissingBean(StringRedisTemplate.class)
-	public StringRedisTemplate stringRedisTemplate(
-			RedisConnectionFactory redisConnectionFactory) {
+	public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 		StringRedisTemplate template = new StringRedisTemplate();
 		template.setConnectionFactory(redisConnectionFactory);
 		return template;
