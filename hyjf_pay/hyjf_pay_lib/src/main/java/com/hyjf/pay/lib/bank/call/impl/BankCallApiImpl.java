@@ -12,15 +12,18 @@
 package com.hyjf.pay.lib.bank.call.impl;
 
 import com.hyjf.common.http.HttpDealBank;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
 import com.hyjf.pay.lib.bank.call.BankCallApi;
 import com.hyjf.pay.lib.bank.util.*;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -28,11 +31,8 @@ import java.util.Map;
 @Service
 public class BankCallApiImpl implements BankCallApi {
     private static Logger log = LoggerFactory.getLogger(BankCallApiImpl.class);
-
-    /**
-     * THIS_CLASS
-     */
-    private static final String THIS_CLASS = BankCallApiImpl.class.getName();
+	
+	private PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
 
     /**
      * 版本号
@@ -58,19 +58,19 @@ public class BankCallApiImpl implements BankCallApi {
 
         // 银行代码
         if (Validator.isNull(_bankcode)) {
-            _bankcode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
+            _bankcode = paySystemConfig.getBankcode();
         }
         // 交易渠道
         if (Validator.isNull(_coinstChannel)) {
-            _coinstChannel = PropUtils.getSystem(BankCallConstant.BANK_COINST_CHANNEL);
+            _coinstChannel = paySystemConfig.getCoinstChannel();
         }
         // 接口默认版本号
         if (Validator.isNull(_version)) {
-            _version = PropUtils.getSystem(BankCallConstant.BANK_VERSION);
+            _version = paySystemConfig.getVersion();
         }
         // 平台机构代码
         if (Validator.isNull(_instCode)) {
-            _instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+            _instCode = paySystemConfig.getInstcode();
         }
     }
 
