@@ -7,6 +7,8 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.RSAHelper;
@@ -16,12 +18,13 @@ import com.hyjf.pay.config.SystemConfig;
 /**
  * Created by cuigq on 2018/3/6.
  */
+@Component
 public class BankCallSignUtils_ {
 
     private static Logger logger = LoggerFactory.getLogger(BankCallSignUtils_.class.getName());
     
-
-    private static SystemConfig systemConfig = SpringUtils.getBean(SystemConfig.class);
+    @Autowired
+    SystemConfig systemConfig;
 
 //    /**
 //     * 商户公钥文件地址
@@ -45,7 +48,7 @@ public class BankCallSignUtils_ {
      * @param map
      * @return
      */
-    public static String mergeMap(Map<String, String> map) {
+    public String mergeMap(Map<String, String> map) {
         // 字典序排序后生成待签名字符串
         Map<String, Object> reqMap = new TreeMap<String, Object>(map);
         logger.debug("待签名对象信息=【" + reqMap + "】");
@@ -78,7 +81,7 @@ public class BankCallSignUtils_ {
      * @return
      * @throws Exception
      */
-    public static String sign(String signStr) {
+    public String sign(String signStr) {
 
         logger.debug((new StringBuilder()).append("待签名字符串：signStr=")
                 .append(signStr).toString());
@@ -104,7 +107,7 @@ public class BankCallSignUtils_ {
      * @param dataText 待签名字符串
      * @return
      */
-    public static boolean verify(String signText, String dataText) {
+    public boolean verify(String signText, String dataText) {
         signText = signText.replaceAll("[\\t\\n\\r]", "");
         logger.debug((new StringBuilder()).append("待签名字符串：signStr=")
                 .append(dataText).toString());

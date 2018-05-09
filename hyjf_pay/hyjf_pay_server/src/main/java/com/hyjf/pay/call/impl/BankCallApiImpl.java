@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 @Service
 public class BankCallApiImpl implements BankCallApi {
     private static Logger log = LoggerFactory.getLogger(BankCallApiImpl.class);
+    
+    @Autowired
+    BankCallSignUtils_ bankCallSignUtils_;
 
     /**
      * 版本号
@@ -108,9 +112,9 @@ public class BankCallApiImpl implements BankCallApi {
         BankCallBean ret = new BankCallBean();
         String result = BankCallConstant.RECEIVED_FAIL;
         try {
-            String checkValue = BankCallSignUtils_.mergeMap(bean.getAllParams());
+            String checkValue = bankCallSignUtils_.mergeMap(bean.getAllParams());
             // RSA方式验签
-            boolean res = BankCallSignUtils_.verify(bean.get(BankCallConstant.PARAM_SIGN), checkValue);
+            boolean res = bankCallSignUtils_.verify(bean.get(BankCallConstant.PARAM_SIGN), checkValue);
             ret.setLogVerifyFlag(res);
             if (res) {
                 result = BankCallConstant.RECEIVED_SUCCESS;
@@ -132,9 +136,9 @@ public class BankCallApiImpl implements BankCallApi {
         BankCallBean ret = new BankCallBean();
         String result = BankCallConstant.RECEIVED_FAIL;
         try {
-            String checkValue = BankCallSignUtils_.mergeMap(mapParam);
+            String checkValue = bankCallSignUtils_.mergeMap(mapParam);
             // RSA方式验签
-            boolean res = BankCallSignUtils_.verify(String.valueOf(mapParam.get(BankCallConstant.PARAM_SIGN)), checkValue);
+            boolean res = bankCallSignUtils_.verify(String.valueOf(mapParam.get(BankCallConstant.PARAM_SIGN)), checkValue);
             ret.setLogVerifyFlag(res);
             if (res) {
                 result = BankCallConstant.RECEIVED_SUCCESS;
@@ -149,8 +153,8 @@ public class BankCallApiImpl implements BankCallApi {
     }
 
     private String generateSignCall(BankCallPnrApiBean bean) {
-        String mergedStr = BankCallSignUtils_.mergeMap(bean.getAllParams());
-        return BankCallSignUtils_.sign(mergedStr);
+        String mergedStr = bankCallSignUtils_.mergeMap(bean.getAllParams());
+        return bankCallSignUtils_.sign(mergedStr);
     }
 
 

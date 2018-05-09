@@ -1,11 +1,9 @@
 package com.hyjf.pay.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@EnableAutoConfiguration
+@Component
 public class SystemConfig {
     
     @Value("${hyjf.bank.page.return.url}")

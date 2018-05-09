@@ -47,6 +47,8 @@ public class BankCallUtils implements Serializable {
 
 	/** 接口路径(后台)查询用 */
 	private static final String REQUEST_MAPPING_CALLAPIBG_FORQUERY = "/callApiBgForQuery.json";
+	
+//	static PaySystemConfig paySystemConfig = new PaySystemConfig();
 
 //	@Autowired
 	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
