@@ -22,7 +22,9 @@ import cn.emay.sdk.client.api.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SmsHandle {
 	private static final String TITLE = "【汇盈金服】";
 
@@ -60,11 +62,11 @@ public class SmsHandle {
 	private static Client client = null;
 
 	@Autowired
-	private static SmsLogDao smsLogDao;
+	private SmsLogDao smsLogDao;
 	@Autowired
-	private static AmUserClient amUserClient;
+	private AmUserClient amUserClient;
 	@Autowired
-	private static AmConfigClient amConfigClient;
+	private AmConfigClient amConfigClient;
 	private static Logger logger = LoggerFactory.getLogger(SmsHandle.class);
 
 	private SmsHandle() {
@@ -76,14 +78,14 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Client getClient() throws Exception {
+	public Client getClient() throws Exception {
 		if (client == null) {
 			syncInit();
 		}
 		return client;
 	}
 
-	private static synchronized void syncInit() {
+	private synchronized void syncInit() {
 		if (client == null) {
 			try {
 				client = new Client(SOFT_SERIALNO, KEY);
@@ -99,7 +101,7 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<String, String> getParmMap(String channelType) throws Exception {
+	public Map<String, String> getParmMap(String channelType) throws Exception {
 		if (parmMap == null || parmMapMaketing == null) {
 			syncInitParmMap();
 		}
@@ -110,7 +112,7 @@ public class SmsHandle {
 		}
 	}
 
-	private static synchronized void syncInitParmMap() {
+	private synchronized void syncInitParmMap() {
 		if (parmMap == null || parmMapMaketing == null) {
 			try {
 				parmMap = new HashMap<String, String>();
@@ -140,7 +142,7 @@ public class SmsHandle {
 	 * @return 返回结果,0表示发送成功
 	 * @throws Exception
 	 */
-	public static Integer sendMessage(String mobile, String messageStr, String type, String sender, String channelType)
+	public Integer sendMessage(String mobile, String messageStr, String type, String sender, String channelType)
 			throws Exception {
 		String url = URL;
 		Map<String, String> parmMap = getParmMap(channelType);
@@ -181,7 +183,7 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String channelType) {
+	public Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String channelType) {
 		int status = -1;
 		try {
 			// 获取模板信息
@@ -218,7 +220,7 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String sender,
+	public Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String sender,
 			String channelType) {
 		int status = -1;
 		try {
@@ -250,7 +252,7 @@ public class SmsHandle {
 	/**
 	 * 根据用户ID和模版号给某用户发短信
 	 *
-	 * @param mobil
+	 * @param userId
 	 *            电话号码,多个电话号码用逗号分隔
 	 * @param tplCode
 	 *            模板Code
@@ -259,7 +261,7 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Integer sendMessages(Integer userId, String tplCode, Map<String, String> replaceStrs,
+	public Integer sendMessages(Integer userId, String tplCode, Map<String, String> replaceStrs,
 			String channelType) {
 		int status = -1;
 		try {
@@ -311,16 +313,16 @@ public class SmsHandle {
 	/**
 	 * 根据电话号码和模版号给某电话发短信
 	 *
-	 * @param mobil
+	 * @param mobile
 	 *            电话号码,多个电话号码用逗号分隔
-	 * @param tpl_code
+	 * @param tplCode
 	 *            tpl_code
 	 * @param replaceStrs
 	 *            需要替换的字符串Map<需替换的字符串,替换值> 例:[value_name]:陈真
 	 * @return
 	 * @throws Exception
 	 */
-	public static Integer sendMessages(String mobile, String tplCode, Map<String, String> replaceStrs,
+	public Integer sendMessages(String mobile, String tplCode, Map<String, String> replaceStrs,
 			String channelType) {
 		int status = -1;
 		try {

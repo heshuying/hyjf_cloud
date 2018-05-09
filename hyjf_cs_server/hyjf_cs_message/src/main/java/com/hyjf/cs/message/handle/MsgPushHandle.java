@@ -29,21 +29,23 @@ import cn.jpush.api.common.resp.APIConnectionException;
 import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.PushPayload;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MsgPushHandle {
 	private final static Logger logger = LoggerFactory.getLogger(MsgPushHandle.class);
 
 	@Autowired
-	private static AmUserClient amUserClient;
+	private AmUserClient amUserClient;
 
 	@Autowired
-	private static AmConfigClient amConfigClient;
+	private AmConfigClient amConfigClient;
 
 	@Autowired
-	private static MessagePushMsgHistoryDao messagePushMsgHistoryDao;
+	private MessagePushMsgHistoryDao messagePushMsgHistoryDao;
 
 	@Autowired
-	private static MessagePushMsgDao messagePushMsgDao;
+	private MessagePushMsgDao messagePushMsgDao;
 
 	/**
 	 * 
@@ -54,7 +56,7 @@ public class MsgPushHandle {
 	 * @return 返回结果,0表示发送成功 -1标识失败
 	 * @throws Exception
 	 */
-	public static Integer sendMessages(Integer msgId) {
+	public Integer sendMessages(Integer msgId) {
 
 		MessagePush message = messagePushMsgDao.findById(msgId);
 
@@ -79,7 +81,7 @@ public class MsgPushHandle {
 	 * @param usersId
 	 * @return
 	 */
-	public static Integer sendMessages(String tplCode, Map<String, String> replaceStrs, Integer usersId) {
+	public Integer sendMessages(String tplCode, Map<String, String> replaceStrs, Integer usersId) {
 		if (usersId == null || usersId == 0) {
 			return -1;
 		}
@@ -103,7 +105,7 @@ public class MsgPushHandle {
 	 * @return 0 成功 -1电话号码无效 -2此用户无移动终端 -3表示没有查到模版 -4表示其他错误
 	 * @throws Exception
 	 */
-	public static Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String mobile) {
+	public Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String mobile) {
 		// 获取模板信息
 		if (StringUtils.isEmpty(mobile)) {
 			return -1;
@@ -150,7 +152,7 @@ public class MsgPushHandle {
 	 * @param messagePushTemplate
 	 *            模板
 	 */
-	public static MessagePushMsgHistory addMessageHistoryRecord(String mobile, String message,
+	public MessagePushMsgHistory addMessageHistoryRecord(String mobile, String message,
 			MessagePushTemplateVO messagePushTemplate) {
 
 		UserAliasVO userAliasVO = amUserClient.findAliasByMobile(mobile);
@@ -203,10 +205,10 @@ public class MsgPushHandle {
 	/**
 	 * 添加发送记录（手动添加消息）
 	 *
-	 * @param messagePushMsg
+	 * @param message
 	 *            消息
 	 */
-	public static List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePush message) {
+	public List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePush message) {
 		List<MessagePushMsgHistory> histories = new ArrayList<MessagePushMsgHistory>();
 		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 			// 发给所有人
@@ -302,9 +304,9 @@ public class MsgPushHandle {
 	/**
 	 * 极光推送及更新发送状态
 	 *
-	 * @param messagePushMsgHistory
+	 * @param msg
 	 */
-	public static void send(MessagePushMsgHistory msg) throws Exception {
+	public void send(MessagePushMsgHistory msg) throws Exception {
 		logger.info("开始推送: msg_id is :{}, msg_content is:{}", msg.getId(), msg.getMsgContent());
 		String msgId = ""; // 极光返回id
 		String msgProId = "";// 新极光返回id
