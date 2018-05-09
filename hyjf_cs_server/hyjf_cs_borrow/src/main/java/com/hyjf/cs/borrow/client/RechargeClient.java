@@ -1,6 +1,8 @@
 package com.hyjf.cs.borrow.client;
 
 
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.borrow.BankCardVO;
@@ -38,9 +40,9 @@ public interface RechargeClient {
 
     int selectByOrdId(String ordId);
 
-    int insertSelectiveBank(Map<String, Object> paramMap);
+    int insertSelectiveBank(BankRequest bankRequest);
 
     BankCardVO getBankCardByCardNo(Integer userId, String cardNo);
 
-    boolean updateBanks(Map<String, Object> paramMap);
+    boolean updateBanks(BankAccountBeanRequest bankAccountBeanRequest);
 }
