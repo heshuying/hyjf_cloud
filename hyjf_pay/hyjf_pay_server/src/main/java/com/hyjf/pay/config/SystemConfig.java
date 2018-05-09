@@ -7,103 +7,146 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableAutoConfiguration
 public class SystemConfig {
-	
-    @Value("${hyjf.bank.page.url}")
-    public String pageUrl;
     
     @Value("${hyjf.bank.page.return.url}")
-    public String returnUrl;
+    private String returnUrl;
     
     @Value("${hyjf.bank.page.callback.url}")
-    public String callbackUrl;
+    private String callbackUrl;
     
     @Value("${hyjf.bank.page.forgotpwd.url}")
-    public String forgotpwdUrl;
+    private String forgotpwdUrl;
     
     @Value("${hyjf.bank.page.url}")
-    public String bankPageUrl;
+    private String bankPageUrl;
+    
     /** 银行代码 */
     @Value("${hyjf.bank.bankcode}")
-	public String bankCode;
+	private String bankCode;
+    
 	/** 交易渠道 */
     @Value("${hyjf.bank.coinst.channel}")
-	public String bankChannel;
+	private String bankChannel;
+    
 	/** 接口默认版本号 */
     @Value("${hyjf.bank.version}")
-	public String bankVersion;
+	private String bankVersion;
+    
 	/** 平台机构代码 */
     @Value("${hyjf.bank.instcode}")
-	public String bankInstCode;
+	private String bankInstCode;
+    
+	/** 银行接口联机url */
+    @Value("${hyjf.bank.online.url}")
+	private String bankOnlineUrl;
+    
+	/** 公钥地址 */
+    @Value("${hyjf.bank.pubkey.path}")
+	private String bankPubkeyPath;
+    
+	/** 私钥地址 */
+    @Value("${hyjf.bank.prikey.path}")
+	private String bankPrikeyPath;
+    
+	/** 私钥密码 */
+    @Value("${hyjf.bank.prikey.pass}")
+	private String bankPrikeyPass;
 
-    public String getBankCode() {
-        return bankCode;
-    }
+	public String getReturnUrl() {
+		return returnUrl;
+	}
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
+	public void setReturnUrl(String returnUrl) {
+		this.returnUrl = returnUrl;
+	}
 
-    public String getBankChannel() {
-        return bankChannel;
-    }
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
 
-    public void setBankChannel(String bankChannel) {
-        this.bankChannel = bankChannel;
-    }
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+	}
 
-    public String getBankVersion() {
-        return bankVersion;
-    }
+	public String getForgotpwdUrl() {
+		return forgotpwdUrl;
+	}
 
-    public void setBankVersion(String bankVersion) {
-        this.bankVersion = bankVersion;
-    }
+	public void setForgotpwdUrl(String forgotpwdUrl) {
+		this.forgotpwdUrl = forgotpwdUrl;
+	}
 
-    public String getBankInstCode() {
-        return bankInstCode;
-    }
+	public String getBankPageUrl() {
+		return bankPageUrl;
+	}
 
-    public void setBankInstCode(String bankInstCode) {
-        this.bankInstCode = bankInstCode;
-    }
+	public void setBankPageUrl(String bankPageUrl) {
+		this.bankPageUrl = bankPageUrl;
+	}
 
-    public String getBankPageUrl() {
-        return bankPageUrl;
-    }
+	public String getBankCode() {
+		return bankCode;
+	}
 
-    public void setBankPageUrl(String bankPageUrl) {
-        this.bankPageUrl = bankPageUrl;
-    }
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+	}
 
-    public String getPageUrl() {
-        return pageUrl;
-    }
+	public String getBankChannel() {
+		return bankChannel;
+	}
 
-    public void setPageUrl(String pageUrl) {
-        this.pageUrl = pageUrl;
-    }
+	public void setBankChannel(String bankChannel) {
+		this.bankChannel = bankChannel;
+	}
 
-    public String getReturnUrl() {
-        return returnUrl;
-    }
+	public String getBankVersion() {
+		return bankVersion;
+	}
 
-    public void setReturnUrl(String returnUrl) {
-        this.returnUrl = returnUrl;
-    }
+	public void setBankVersion(String bankVersion) {
+		this.bankVersion = bankVersion;
+	}
 
-    public String getCallbackUrl() {
-        return callbackUrl;
-    }
+	public String getBankInstCode() {
+		return bankInstCode;
+	}
 
-    public void setCallbackUrl(String callbackUrl) {
-        this.callbackUrl = callbackUrl;
-    }
+	public void setBankInstCode(String bankInstCode) {
+		this.bankInstCode = bankInstCode;
+	}
 
-    public String getForgotpwdUrl() {
-        return forgotpwdUrl;
-    }
+	public String getBankOnlineUrl() {
+		return bankOnlineUrl;
+	}
 
-    public void setForgotpwdUrl(String forgotpwdUrl) {
-        this.forgotpwdUrl = forgotpwdUrl;
-    }
+	public void setBankOnlineUrl(String bankOnlineUrl) {
+		this.bankOnlineUrl = bankOnlineUrl;
+	}
+
+	public String getBankPubkeyPath() {
+		return bankPubkeyPath;
+	}
+
+	public void setBankPubkeyPath(String bankPubkeyPath) {
+		this.bankPubkeyPath = bankPubkeyPath;
+	}
+
+	public String getBankPrikeyPath() {
+		return bankPrikeyPath;
+	}
+
+	public void setBankPrikeyPath(String bankPrikeyPath) {
+		this.bankPrikeyPath = bankPrikeyPath;
+	}
+
+	public String getBankPrikeyPass() {
+		return bankPrikeyPass;
+	}
+
+	public void setBankPrikeyPass(String bankPrikeyPass) {
+		this.bankPrikeyPass = bankPrikeyPass;
+	}
+    
+    
 }

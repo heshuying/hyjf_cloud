@@ -3,24 +3,21 @@
  */
 package com.hyjf.pay.call.impl;
 
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.common.http.HttpDealBank;
-import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.call.BankCallApi;
+import com.hyjf.pay.call.util.BankCallSignUtils_;
 import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallSignUtils_;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.Map;
-
-import javax.sql.DataSource;
 
 @Service
 public class BankCallApiImpl implements BankCallApi {
@@ -45,6 +42,8 @@ public class BankCallApiImpl implements BankCallApi {
      * 交易渠道
      */
     private String _coinstChannel;
+    
+    private SystemConfig _systemConfig;
 
     public BankCallApiImpl(@Qualifier("systemConfig") SystemConfig systemConfig) {
 
@@ -64,6 +63,8 @@ public class BankCallApiImpl implements BankCallApi {
         if (Validator.isNull(_instCode)) {
             _instCode = systemConfig.getBankInstCode();
         }
+        
+        _systemConfig = systemConfig;
     }
 
     /**
@@ -76,7 +77,6 @@ public class BankCallApiImpl implements BankCallApi {
     public String callChinaPnrApi(BankCallPnrApiBean bean) {
 
         // 方法名
-        String methodName = "callChinaPnrApi";
         log.info("[调用汇付天下API接口开始]");
         log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
         String result = null;
@@ -90,7 +90,7 @@ public class BankCallApiImpl implements BankCallApi {
         }
         try {
             // 发送请求
-            String HTTP_URL = PropUtils.getSystem(BankCallConstant.BANK_ONLINE_URL);
+            String HTTP_URL = _systemConfig.getBankPageUrl();
             result = HttpDealBank.post(HTTP_URL, bean.getAllParams());
             log.debug( "[返回结果:" + result + "]");
         } catch (Exception e) {
@@ -103,7 +103,6 @@ public class BankCallApiImpl implements BankCallApi {
     @Override
     public BankCallBean verifyChinaPnr(BankCallBean bean) {
         // 方法名
-        String methodName = "verifyChinaPnr";
         log.info("[验证银行存管签名开始]");
         log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
         BankCallBean ret = new BankCallBean();
@@ -128,7 +127,6 @@ public class BankCallApiImpl implements BankCallApi {
     @Override
     public BankCallBean verifyChinaPnr(Map<String, String> mapParam) {
         // 方法名
-        String methodName = "verifyChinaPnr";
         log.info("[验证银行存管签名开始]");
         log.debug("参数: " + mapParam == null ? "无" : mapParam + "]");
         BankCallBean ret = new BankCallBean();

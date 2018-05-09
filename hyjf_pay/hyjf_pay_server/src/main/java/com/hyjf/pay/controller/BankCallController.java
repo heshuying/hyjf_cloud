@@ -65,7 +65,6 @@ public class BankCallController extends BaseController {
     @ResponseBody
     public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
-        String methodName = "callPageApi";
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 //        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         Map<String,Object> resultMap = new HashMap<String,Object>();
@@ -91,7 +90,7 @@ public class BankCallController extends BaseController {
                 bean.set(BankCallConstant.PARAM_RETURL, retUrl);
             }
             if (Validator.isNotNull(bean.getNotifyUrl())) {
-                String notifyUrl = systemConfig.callbackUrl + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String notifyUrl = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setNotifyUrl(notifyUrl);
                 bean.set(BankCallConstant.PARAM_NOTIFYURL, notifyUrl);

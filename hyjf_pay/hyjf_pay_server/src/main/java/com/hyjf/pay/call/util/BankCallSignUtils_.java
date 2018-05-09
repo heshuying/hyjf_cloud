@@ -1,15 +1,17 @@
-package com.hyjf.pay.lib.bank.util;
-
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.util.RSAHelper;
-import com.hyjf.common.util.RSAKeyUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.hyjf.pay.call.util;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.common.util.RSAHelper;
+import com.hyjf.common.util.RSAKeyUtil;
+import com.hyjf.pay.config.SystemConfig;
 
 /**
  * Created by cuigq on 2018/3/6.
@@ -17,21 +19,24 @@ import java.util.TreeMap;
 public class BankCallSignUtils_ {
 
     private static Logger logger = LoggerFactory.getLogger(BankCallSignUtils_.class.getName());
+    
 
-    /**
-     * 商户公钥文件地址
-     **/
-    public static final String BANK_PUB_KEY_PATH = PropUtils.getSystem(BankCallConstant.BANK_PUB_KEY_PATH);
+    private static SystemConfig systemConfig = SpringUtils.getBean(SystemConfig.class);
 
-    /**
-     * 商户私钥文件地址
-     **/
-    public static final String BANK_PRI_KEY_PATH = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PATH);
-
-    /**
-     * 商户私钥文件地址
-     **/
-    public static final String BANK_PRI_KEY_PASS = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PASS);
+//    /**
+//     * 商户公钥文件地址
+//     **/
+//    public static final String BANK_PUB_KEY_PATH = PropUtils.getSystem(BankCallConstant.BANK_PUB_KEY_PATH);
+//
+//    /**
+//     * 商户私钥文件地址
+//     **/
+//    public static final String BANK_PRI_KEY_PATH = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PATH);
+//
+//    /**
+//     * 商户私钥文件地址
+//     **/
+//    public static final String BANK_PRI_KEY_PASS = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PASS);
 
 
     /**
@@ -79,7 +84,7 @@ public class BankCallSignUtils_ {
                 .append(signStr).toString());
         String sign = null;
         try {
-            RSAKeyUtil rsaKey = new RSAKeyUtil(new File(BANK_PRI_KEY_PATH), BANK_PRI_KEY_PASS);
+            RSAKeyUtil rsaKey = new RSAKeyUtil(new File(systemConfig.getBankPrikeyPath()), systemConfig.getBankPrikeyPass());
             RSAHelper signer = new RSAHelper(rsaKey.getPrivateKey());
 
             sign = signer.sign(signStr);
@@ -108,7 +113,7 @@ public class BankCallSignUtils_ {
 
         boolean b = false;
         try {
-            RSAKeyUtil ru = new RSAKeyUtil(new File(BANK_PUB_KEY_PATH));
+            RSAKeyUtil ru = new RSAKeyUtil(new File(systemConfig.getBankPubkeyPath()));
             RSAHelper signHelper = new RSAHelper(ru.getPublicKey());
             b = signHelper.verify(dataText, signText);
         } catch (Exception e) {
