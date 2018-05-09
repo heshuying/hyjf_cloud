@@ -3,15 +3,16 @@ package com.hyjf.am.borrow.controller;
 import com.hyjf.am.borrow.dao.model.auto.Account;
 import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
 import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
-import com.hyjf.am.borrow.dao.model.auto.BankCard;
 import com.hyjf.am.borrow.service.AccountService;
 import com.hyjf.am.borrow.service.RechargeService;
 import com.hyjf.am.response.borrow.AccountRechargeResponse;
 import com.hyjf.am.response.borrow.AccountResponse;
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountListVO;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.am.vo.user.BankCallVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -21,8 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Api(value = "充值接口")
 @RestController
@@ -82,24 +81,7 @@ public class RechargeController {
         return response;
     }
 
-    /**
-     *
-     * @param paramMap
-     * @return
-     */
-    @ApiOperation(value = " updateByExampleSelective", notes = " updateByExampleSelective")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "paramMap", value = "paramMap", required = true, dataType = "Map<String,Object>")
-    })
-    @PostMapping("/updateByExampleSelective")
-    public int updateByExampleSelective(@RequestBody Map<String,Object> paramMap){
-        AccountRechargeVO accountRecharge = (AccountRechargeVO) paramMap.get("accountRecharge");
-        String orderId = (String) paramMap.get("orderId");
-        AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
-        accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRecharge.getStatus());
-        int count = rechargeService.updateByExampleSelective(accountRecharge, accountRechargeExample);
-        return count;
-    }
+
 
     /**
      *
@@ -151,18 +133,16 @@ public class RechargeController {
     }
 
     @PostMapping("/insertSelectiveBank")
-    public int insertSelectiveBank(@RequestBody Map<String,Object> paramMap){
-        BankCallBean bean = (BankCallBean) paramMap.get("bankCallBean");
-        BankCard bankCard = (BankCard) paramMap.get("bankCard");
-        int ret = rechargeService.insertSelective(bean,bankCard);
+    public int insertSelectiveBank(@RequestBody BankRequest bankRequest){
+        int ret = rechargeService.insertSelective(bankRequest);
         return ret;
     }
 
     @PostMapping("/updateBanks")
-    public boolean updateBanks(@RequestBody Map<String,Object> paramMap) {
-        AccountRechargeVO accountRecharge = (AccountRechargeVO) paramMap.get("accountRecharge");
-         BankCallBean bean = (BankCallBean) paramMap.get("bean");
-         String ip = (String) paramMap.get("ip");
+    public boolean updateBanks(@RequestBody BankAccountBeanRequest bankAccountBeanRequest) {
+        AccountRechargeVO accountRecharge =  bankAccountBeanRequest.getAccountRecharge();
+         BankCallVO bean =  bankAccountBeanRequest.getBean();
+         String ip =  bankAccountBeanRequest.getIp();
         boolean flag = rechargeService.updateBanks(accountRecharge,bean,ip);
         return flag;
     }

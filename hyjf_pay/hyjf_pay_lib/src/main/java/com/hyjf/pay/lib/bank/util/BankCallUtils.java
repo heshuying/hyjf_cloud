@@ -12,12 +12,13 @@ package com.hyjf.pay.lib.bank.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
-import com.hyjf.pay.lib.config.SystemConfig;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,6 @@ public class BankCallUtils implements Serializable {
 	 */
 	private static final long serialVersionUID = -6921342106125704382L;
 
-	/** THIS_CLASS */
-	private static final String THIS_CLASS = BankCallUtils.class.getName();
-
 	/** 跳转的jsp页面 */
 	private static final String SEND_JSP = "/bank/bank_send";
 
@@ -50,8 +48,9 @@ public class BankCallUtils implements Serializable {
 	/** 接口路径(后台)查询用 */
 	private static final String REQUEST_MAPPING_CALLAPIBG_FORQUERY = "/callApiBgForQuery.json";
 
-	@Autowired
-	public static SystemConfig systemConfig;
+//	@Autowired
+	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+
 	/**
 	 * 调用接口(页面)
 	 * 
@@ -66,7 +65,7 @@ public class BankCallUtils implements Serializable {
 		ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 		try {
 			// 取出调用汇付接口的url
-			String payurl =  systemConfig.getBankUrl();
+			String payurl =  paySystemConfig.getBankUrl();
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}
@@ -128,7 +127,7 @@ public class BankCallUtils implements Serializable {
 			// bean转换成参数
 			bean.convert();
 			// 取出调用汇付接口的url
-			String payurl = systemConfig.getBankUrl();
+			String payurl = paySystemConfig.getBankUrl();
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}
@@ -172,34 +171,5 @@ public class BankCallUtils implements Serializable {
 		}
 		return ret;
 	}
-
-	/**
-	 * 取得页面同步返回 URL
-	 */
-	public static String getPageRetUrl() {
-		return PropUtils.getSystem(BankCallConstant.BANK_PAGE_RETURN_URL);
-	}
-
-	/**
-	 * 取得页面异步返回 URL
-	 */
-	public static String getPageNotifyUrl() {
-		return PropUtils.getSystem(BankCallConstant.BANK_PAGE_CALLBACK_URL);
-	}
-
-	/**
-	 * 取得页面异步返回 URL
-	 */
-	public static String getApiNotifyURL() {
-		return PropUtils.getSystem(BankCallConstant.BANK_API_CALLBACK_URL);
-	}
-
-	/**
-	 * 忘记密码url
-	 * 
-	 * @return
-	 */
-	public static String getForgotPwdUrl() {
-		return PropUtils.getSystem(BankCallConstant.BANK_PAGE_FORGOTPWD_URL);
-	}
+	
 }

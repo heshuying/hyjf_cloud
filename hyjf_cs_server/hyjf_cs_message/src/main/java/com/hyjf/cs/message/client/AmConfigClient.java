@@ -1,5 +1,7 @@
 package com.hyjf.cs.message.client;
 
+import com.hyjf.am.response.borrow.BankCardResponse;
+import com.hyjf.am.response.config.SiteSettingsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -7,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import com.hyjf.am.vo.config.*;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author xiasq
@@ -17,6 +20,9 @@ public class AmConfigClient {
 
 	@Autowired
 	private GenericRest rest;
+
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@Value("${am.config.service.name}")
 	private String amConfigServiceName;
@@ -96,13 +102,19 @@ public class AmConfigClient {
 	 * @return
 	 */
 	public SiteSettingsVO findSiteSetting() {
-		RestResponse<SiteSettingsVO> resp = Rests.exc(() -> {
+		/*RestResponse<SiteSettingsVO> resp = Rests.exc(() -> {
 			String url = Rests.toUrl(amConfigServiceName, "/am-config/siteSettings/findOne");
 			ResponseEntity<RestResponse<SiteSettingsVO>> responseEntity = rest.get(url,
 					new ParameterizedTypeReference<RestResponse<SiteSettingsVO>>() {
 					});
 			return responseEntity.getBody();
 		});
-		return resp.getResult();
+		return resp.getResult();*/
+		SiteSettingsResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

@@ -2,12 +2,15 @@ package com.hyjf.cs.borrow.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.borrow.BankCardVO;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.user.BankCallVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -30,8 +33,11 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
@@ -94,10 +100,15 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		String cardNo = bean.getCardNo();
 		// 根据银行卡号检索银行卡信息
 		BankCardVO bankCard = rechargeClient.getBankCardByCardNo(Integer.parseInt(bean.getLogUserId()), cardNo);
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("bankCallBean",bean);
-		paramMap.put("bankCard",bankCard);
-		int response = rechargeClient.insertSelectiveBank(paramMap);
+
+		MultiValueMap<String, Object> requestEntity = new LinkedMultiValueMap<>();
+		requestEntity.add("bankCallBean", bean);
+		requestEntity.add("bankCard", bankCard);
+
+		BankRequest bankRequest = new BankRequest();
+		BeanUtils.copyProperties(bean,bankRequest);
+		bankRequest.setBank(bankCard.getBank());
+		int response = rechargeClient.insertSelectiveBank(bankRequest);
 		return response;
 	}
 	/**
@@ -157,11 +168,13 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
 						accountRecharge.setAccountId(accountId);// 电子账户
 						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);// 交易流水号
-						Map<String,Object> paramMap = new HashMap<>();
-						paramMap.put("accountRecharge",accountRecharge);
-						paramMap.put("bean",bean);
-						paramMap.put("ip",ip);
-						boolean flag = rechargeClient.updateBanks(paramMap);
+						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
+						BankCallVO bankCallVO = new BankCallVO();
+						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
+						BeanUtils.copyProperties(bean,bankCallVO);
+						bankAccountBeanRequest.setBean(bankCallVO);
+						bankAccountBeanRequest.setIp(ip);
+						boolean flag = rechargeClient.updateBanks(bankAccountBeanRequest);
 						if (flag) {
 							// 更新成功
 							// 如果需要短信
@@ -300,8 +313,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		bean.setTxCode(BankCallMethodConstant.TXCODE_DIRECT_RECHARGE_PAGE);// 交易代码
-		bean.setInstCode(systemConfig.instCode);// 机构代码
-		bean.setBankCode(systemConfig.bankCode);// 银行代码
 		bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
 		bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
 		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号

@@ -46,8 +46,8 @@ public class HyjfMessage implements Serializable {
         this.replaceStrs = replaceStrs;
     }
 
-    private Integer userId;
+    protected Integer userId;
 
-    private Map<String, String> replaceStrs;
+    protected Map<String, String> replaceStrs;
 
 }

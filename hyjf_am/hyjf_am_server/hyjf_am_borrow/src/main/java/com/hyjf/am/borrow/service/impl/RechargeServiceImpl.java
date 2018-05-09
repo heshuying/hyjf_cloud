@@ -6,9 +6,11 @@ import com.hyjf.am.borrow.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.borrow.dao.mapper.auto.AdminAccountCustomizeMapper;
 import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.RechargeService;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountListVO;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.user.BankCallVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -67,36 +69,36 @@ public class RechargeServiceImpl implements RechargeService {
 	}
 
 	@Override
-	public int insertSelective(BankCallBean bean, BankCard bankCard){
+	public int insertSelective(BankRequest bankRequest){
 		int nowTime = GetDate.getNowTime10(); // 当前时间
 		// 银行卡号
-		String cardNo = bean.getCardNo();
-		BigDecimal money = new BigDecimal(bean.getTxAmount()); // 充值金额
+		String cardNo = bankRequest.getCardNo();
+		BigDecimal money = new BigDecimal(bankRequest.getTxAmount()); // 充值金额
 		AccountRecharge record = new AccountRecharge();
-		record.setNid(bean.getLogOrderId()); // 订单号
-		record.setUserId(Integer.parseInt(bean.getLogUserId())); // 用户ID
-		record.setUsername(bean.getLogUserName());// 用户 名
-		record.setTxDate(Integer.parseInt(bean.getTxDate()));// 交易日期
-		record.setTxTime(Integer.parseInt(bean.getTxTime()));// 交易时间
-		record.setSeqNo(Integer.parseInt(bean.getSeqNo())); // 交易流水号
-		record.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo()); // 交易日期+交易时间+交易流水号
+		record.setNid(bankRequest.getLogOrderId()); // 订单号
+		record.setUserId(Integer.parseInt(bankRequest.getLogUserId())); // 用户ID
+		record.setUsername(bankRequest.getLogUserName());// 用户 名
+		record.setTxDate(Integer.parseInt(bankRequest.getTxDate()));// 交易日期
+		record.setTxTime(Integer.parseInt(bankRequest.getTxTime()));// 交易时间
+		record.setSeqNo(Integer.parseInt(bankRequest.getSeqNo())); // 交易流水号
+		record.setBankSeqNo(bankRequest.getTxDate() + bankRequest.getTxTime() + bankRequest.getSeqNo()); // 交易日期+交易时间+交易流水号
 		record.setStatus(RECHARGE_STATUS_WAIT); // 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
-		record.setAccountId(bean.getAccountId());// 电子账号
+		record.setAccountId(bankRequest.getAccountId());// 电子账号
 		record.setMoney(money); // 金额
 		record.setCardid(cardNo);// 银行卡号
 		record.setFeeFrom(null);// 手续费扣除方式
 		record.setFee(BigDecimal.ZERO); // 费用
 		record.setDianfuFee(BigDecimal.ZERO);// 垫付费用
 		record.setBalance(money); // 实际到账余额
-		record.setPayment(bankCard == null ? "" : bankCard.getBank()); // 所属银行
+		record.setPayment(bankRequest == null ? "" : bankRequest.getBank()); // 所属银行
 		record.setGateType("QP"); // 网关类型：QP快捷支付
 		record.setType(1); // 类型.1网上充值.0线下充值
 		record.setRemark("快捷充值");// 备注
 		record.setCreateTime(nowTime);
-		record.setOperator(bean.getLogUserId());
+		record.setOperator(bankRequest.getLogUserId());
 		record.setAddtime(String.valueOf(nowTime));
-		record.setAddip(bean.getUserIP());
-		record.setClient(bean.getLogClient()); // 0pc
+		record.setAddip(bankRequest.getUserIP());
+		record.setClient(bankRequest.getLogClient()); // 0pc
 		record.setIsBank(1);// 资金托管平台 0:汇付,1:江西银行
 		// 插入用户充值记录表
 		return this.accountRechargeMapper.insertSelective(record);
@@ -136,8 +138,7 @@ public class RechargeServiceImpl implements RechargeService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public boolean updateBanks(AccountRechargeVO accountRecharge, BankCallBean bean, String ip){
+	public boolean updateBanks(AccountRechargeVO accountRecharge, BankCallVO bean, String ip){
 		{
 			// 充值订单号
 			String orderId = bean.getLogOrderId();
@@ -151,14 +152,14 @@ public class RechargeServiceImpl implements RechargeService {
 			int nowTime = GetDate.getNowTime10();
 			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRecharge.getStatus());
-			boolean isAccountRechargeFlag = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample) > 0 ? true : false;
+			int isAccountRechargeFlag = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
 			AccountVO newAccount = new AccountVO();
 			// 更新账户信息
 			newAccount.setUserId(userId);// 用户Id
 			newAccount.setBankTotal(txAmount); // 累加到账户总资产
 			newAccount.setBankBalance(txAmount); // 累加可用余额
 			newAccount.setBankBalanceCash(txAmount);// 银行账户可用户
-			boolean isAccountUpdateFlag = this.adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount) > 0 ? true : false;
+			int isAccountUpdateFlag = this.adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount);
 			AccountExample example = new AccountExample();
 			AccountExample.Criteria criteria = example.createCriteria();
 			criteria.andUserIdEqualTo(userId);

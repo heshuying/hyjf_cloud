@@ -17,6 +17,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,6 +28,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SmsConsumer extends Consumer {
 	private static final Logger logger = LoggerFactory.getLogger(SmsConsumer.class);
+
+	@Autowired
+	private SmsHandle smsHandle;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -54,20 +58,20 @@ public class SmsConsumer extends Consumer {
 			if (null != smsMessage) {
 				switch (smsMessage.getServiceType()) {
 				case MessageConstant.SMSSENDFORMANAGER:// 通知配置,根据模版给指定管理员手机号发送消息（满标，标到期等）
-					SmsHandle.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),
+					smsHandle.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),
 							smsMessage.getChannelType());
 					break;
 				case MessageConstant.SMSSENDFORMOBILE: // 根据电话号码和模版号给某电话发短信
-					SmsHandle.sendMessages(smsMessage.getMobile(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
+					smsHandle.sendMessages(smsMessage.getMobile(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
 							smsMessage.getChannelType());
 					break;
 				case MessageConstant.SMSSENDFORUSER:// 根据用户ID和模版号给某用户发短信
-					SmsHandle.sendMessages(smsMessage.getUserId(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
+					smsHandle.sendMessages(smsMessage.getUserId(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
 							smsMessage.getChannelType());
 					break;
 				case MessageConstant.SMSSENDFORUSERSNOTPL:// 根据电话号码和消息内容给某电话发短信
 					try {
-						SmsHandle.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
+						smsHandle.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
 								smsMessage.getServiceType(), null, smsMessage.getChannelType());
 					} catch (Exception e) {
 						logger.error("send sms error....");

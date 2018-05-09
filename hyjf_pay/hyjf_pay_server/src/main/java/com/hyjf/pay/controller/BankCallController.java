@@ -2,7 +2,6 @@ package com.hyjf.pay.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,13 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,16 +32,12 @@ import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.BankCallDefine;
+import com.hyjf.pay.call.BankCallApi;
 import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.entity.ChinapnrExclusiveLog;
-import com.hyjf.pay.lib.PnrApiBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import com.hyjf.pay.lib.bank.call.BankCallApi;
-import com.hyjf.pay.lib.bank.call.impl.BankCallApiImpl;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.pay.service.BankPayLogService;
 
 @Controller
@@ -71,11 +63,10 @@ public class BankCallController extends BaseController {
      */
     @PostMapping(value = "callApiPage.json")
     @ResponseBody
-    public ModelAndView callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
+    public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
-        String methodName = "callPageApi";
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
+//        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         Map<String,Object> resultMap = new HashMap<String,Object>();
         try {
             // 参数转换成Map
@@ -99,7 +90,7 @@ public class BankCallController extends BaseController {
                 bean.set(BankCallConstant.PARAM_RETURL, retUrl);
             }
             if (Validator.isNotNull(bean.getNotifyUrl())) {
-                String notifyUrl = systemConfig.callbackUrl + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String notifyUrl = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setNotifyUrl(notifyUrl);
                 bean.set(BankCallConstant.PARAM_NOTIFYURL, notifyUrl);
@@ -127,7 +118,7 @@ public class BankCallController extends BaseController {
                     // 跳转到汇付天下画面
                     bean.setAction(systemConfig.getBankPageUrl() + bean.getLogBankDetailUrl());
                     resultMap.put(BankCallDefine.BANK_FORM, bean);
-                    modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
+//                    modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
                 } else {
                     throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
                 }
@@ -138,7 +129,7 @@ public class BankCallController extends BaseController {
         } finally {
            _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         }
-        return modelAndView;
+        return resultMap;
     }
 
     /**
@@ -192,7 +183,6 @@ public class BankCallController extends BaseController {
                 e.printStackTrace();
             }
             // 验签
-            BankCallApi api = new BankCallApiImpl();
             BankCallBean result = api.verifyChinaPnr(bean);
             try {
                 if (StringUtils.isNotBlank(bean.getAcqRes())) {
@@ -343,7 +333,6 @@ public class BankCallController extends BaseController {
         }
 
         //先验签
-        BankCallApi api = new BankCallApiImpl();
         BankCallBean result = api.verifyChinaPnr(mapParam);
 
         String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
@@ -593,65 +582,6 @@ public class BankCallController extends BaseController {
     }
 
     /**
-     * 调用接口(AJAX)
-     *
-     * @param bean
-     * @return
-     * @throws Exception
-     */
-    @ResponseBody
-    @PostMapping(value = "callApiAjax")
-    public String callApiAjax(@RequestBody BankCallBean bean) throws Exception {
-        String methodName = "callApiAjax";
-        _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-        String ret = "";
-        try {
-            // 参数转换成Map
-            bean.convert();
-            // 消息类型
-            String txCode = bean.getTxCode();
-            if (Validator.isNull(txCode)) {
-                throw new RuntimeException("消息类型不能为空");
-            }
-            // 设置返回URL
-            if (Validator.isNotNull(bean.getNotifyURL())) {
-                bean.setNotifyURL(BankCallUtils.getApiNotifyURL() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
-                        + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL + BankCallConstant.PARAM_LOGNOTIFYURL);
-                bean.set(BankCallConstant.PARAM_NOTIFY_URL, bean.getNotifyURL());
-            }
-            if (Validator.isNotNull(bean.getRetNotifyURL())) {
-                bean.setRetNotifyURL(BankCallUtils.getApiNotifyURL() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
-                        + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL + BankCallConstant.PARAM_LOGRETNOTIFYURL);
-                bean.set(BankCallConstant.PARAM_RETNOTIFY_URL, bean.getRetNotifyURL());
-            }
-            // 得到接口API对象
-            BankCallApi api = new BankCallApiImpl();
-            Class<BankCallApiImpl> c = BankCallApiImpl.class;
-            Object obj = api;
-            // 取得该消息类型对应的bean
-            Method method = c.getMethod(txCode, BankCallPnrApiBean.class);
-            Object retBean = method.invoke(obj, bean);
-            if (retBean != null && retBean instanceof PnrApiBean) {
-                BankCallPnrApiBean pnrApiBean = (BankCallPnrApiBean) retBean;
-                // 调用汇付天下API接口
-                String result = api.callChinaPnrApi(pnrApiBean);
-                // 结果不为空时
-                if (Validator.isNotNull(result)) {
-                    JSONObject jo = JSONObject.parseObject(result);
-                    return jo.toString();
-                }
-            }
-        } catch (JSONException e1) {
-            _log.debug("转换成JSON时失败");
-        } catch (Exception e) {
-            _log.error(String.valueOf(e));
-        } finally {
-            _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-        }
-        return ret;
-    }
-
-    /**
      * 接收联机异步返回的消息
      *
      * @return
@@ -689,7 +619,6 @@ public class BankCallController extends BaseController {
                 bean.setLogNotifyType(logNotifyType);
             }
             // 验签
-            BankCallApi api = new BankCallApiImpl();
             BankCallBean result = api.verifyChinaPnr(bean);
             bean.convert();
             bean.setLogOrderId(logOrderId);
@@ -844,139 +773,6 @@ public class BankCallController extends BaseController {
         }
         _log.info("[交易完成后,回调结束]");
         return modelAndView;
-    }
-
-    /**
-     * 调用接口(后台)给查询用，去掉日志表
-     *
-     * @param bean
-     * @return
-     * @throws Exception
-     */
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "callApiBgForQuery")
-    public String callApiBgForQuery(HttpServletRequest request, @ModelAttribute BankCallBean bean) throws Exception {
-
-        _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "] 订单号: " + bean.getLogOrderId());
-        String ret = "";
-        String logOrderId = bean.getLogOrderId();
-//		_log.info("订单号: "+bean.getLogOrderId()+" ,请求参数：" + JSONObject.toJSONString(bean));
-        try {
-            // 参数转换成Map
-            bean.convert();
-            // 消息类型
-            String txCode = bean.getTxCode();
-            if (Validator.isNull(txCode)) {
-                throw new RuntimeException("消息类型不能为空");
-            }
-            // 操作时间
-            int nowTime = GetDate.getNowTime10();
-            bean.setLogTime(String.valueOf(nowTime));
-            // 发送前插入状态记录
-//			Long exclusiveId = bankCallService.insertChinapnrExclusiveLog(bean);
-//			if (exclusiveId == null || exclusiveId <= 0) {
-//				throw new RuntimeException("接口调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
-//			}
-            if (Validator.isNotNull(bean.getNotifyURL())) {
-                String notifyURL = BankCallUtils.getApiNotifyURL() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
-                        + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
-                        + BankCallConstant.PARAM_LOGNOTIFYURL;
-                bean.setNotifyURL(notifyURL);
-                bean.set(BankCallConstant.PARAM_NOTIFY_URL, notifyURL);
-            }
-            if (Validator.isNotNull(bean.getRetNotifyURL())) {
-                String retNotifyURL = BankCallUtils.getApiNotifyURL() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
-                        + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
-                        + BankCallConstant.PARAM_LOGRETNOTIFYURL;
-                bean.setRetNotifyURL(retNotifyURL);
-                bean.set(BankCallConstant.PARAM_RETNOTIFY_URL, retNotifyURL);
-            }
-            // 得到接口API对象
-            BankCallApi api = new BankCallApiImpl();
-            Class<BankCallApiImpl> c = BankCallApiImpl.class;
-            Object obj = api;
-            // 取得该消息类型对应的bean
-            Method method = c.getMethod(txCode, BankCallPnrApiBean.class);
-            Object retBean = method.invoke(obj, bean);
-            if (retBean != null && retBean instanceof BankCallPnrApiBean) {
-                BankCallPnrApiBean pnrApiBean = (BankCallPnrApiBean) retBean;
-                // 发送前插入日志记录
-//				boolean sendLogFlag = bankCallService.insertChinapnrSendLog(pnrApiBean, bean);
-//				if (!sendLogFlag) {
-//					throw new RuntimeException("接口调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
-//				}
-//				_log.info("订单号: "+bean.getLogOrderId()+" ,发送请求参数:  "+pnrApiBean.getJson());
-                // 调用汇付天下API接口
-                String result = api.callChinaPnrApi(pnrApiBean);
-                BankCallBean backBean = (BankCallBean) JSONObject.parseObject(result, BankCallBean.class);
-                // 实体转化
-                backBean.convert();
-                backBean.setLogOrderId(bean.getLogOrderId());
-                backBean.setLogUserId(bean.getLogUserId());
-                backBean.setTxDate(StringUtil.isBlank(backBean.getTxDate()) ? bean.getTxDate() : backBean.getTxDate());
-                backBean.setTxTime(StringUtil.isBlank(backBean.getTxTime()) ? bean.getTxTime() : backBean.getTxTime());
-                backBean.setSeqNo(StringUtil.isBlank(backBean.getSeqNo()) ? bean.getSeqNo() : backBean.getSeqNo());
-                backBean.setTxCode(StringUtil.isBlank(backBean.getTxCode()) ? bean.getTxCode() : backBean.getTxCode());
-                // 插入返回值
-//				boolean chinapnrLogFlag = bankCallService.insertChinapnrLog(backBean, 2);
-//				if (!chinapnrLogFlag) {
-//					throw new RuntimeException("接口调用后,保存回调数据失败！订单号：" + backBean.getLogOrderId());
-//				}
-                _log.info("订单号: " + bean.getLogOrderId() + " ,返回 :  " + backBean.getRetCode());
-
-                // 发送状态(1:处理中)
-                String status = BankCallConstant.STATUS_SENDING;
-                BankCallBean verifyResult = api.verifyChinaPnr(backBean);
-                backBean.convert();
-                // 检证失败
-                if (Validator.isNull(verifyResult) || !verifyResult.isLogVerifyFlag()) {
-                    status = BankCallConstant.STATUS_VERTIFY_NG;
-                    bean.setLogOrderStatus(status);
-                    _log.info("result验签失败,订单号：" + bean.getLogOrderId());
-                } else {
-                    status = BankCallConstant.STATUS_VERTIFY_OK;
-                    bean.setLogOrderStatus(status);
-//					LogUtil.debugLog(BankCallDefine.CONTROLLOR_CLASS_NAME, methodName, "验证签名成功");
-                }
-                // 返回参数中含有logOrderId时, 更新状态记录
-                if (Validator.isNotNull(logOrderId)) {
-                    // 取得检证数据
-//					ChinapnrExclusiveLogWithBLOBs record = bankCallService.selectChinapnrExclusiveLogByOrderId(logOrderId);
-//					if(null == record){
-//						_log.info("ChinapnrExclusiveLog表查询不到数据，logOrderId："+logOrderId+"，即信接口："+bean.getTxCode()+",电子账号："+bean.getAccountId());
-//					}
-//					backBean.setLogOrderId(bean.getLogOrderId());
-//					backBean.setLogUserId(bean.getLogUserId());
-//					backBean.setLogClient(bean.getLogClient());
-//					boolean exclusiveLogUpdateFlag = bankCallService.updateChinapnrExclusiveLog(exclusiveId, backBean, nowTime);
-//					if (!exclusiveLogUpdateFlag) {
-//						throw new RuntimeException("接口调用后,更新exclusivelog数据失败！订单号：" + bean.getLogOrderId());
-//					}
-                    // 验签成功时
-                    if (verifyResult.isLogVerifyFlag()) {
-                        bean.getAllParams().remove(BankCallConstant.PARAM_SIGN);
-                        bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
-                        bean.setSign(null);
-                        bean.setVersion(null);
-                        ret = JSONObject.toJSONString(backBean, true);
-                        return ret;
-                    } else {
-                        // 更新数据状态为验签失败
-//						boolean updateExclusiveLogFlag = this.bankCallService.updateChinapnrExclusiveLog(exclusiveId, 3);
-//						if (!updateExclusiveLogFlag) {
-//							throw new RuntimeException("异步回调成功后,验签失败失败！订单号：" + bean.getLogOrderId());
-//						}
-
-                        _log.info("异步回调成功后,验签失败失败！订单号：" + bean.getLogOrderId());
-                    }
-                }
-            }
-        } catch (Exception e) {
-            _log.error("订单号：" + logOrderId, e);
-        } finally {
-            _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "] 订单号: " + bean.getLogOrderId());
-        }
-        return ret;
     }
 
 }

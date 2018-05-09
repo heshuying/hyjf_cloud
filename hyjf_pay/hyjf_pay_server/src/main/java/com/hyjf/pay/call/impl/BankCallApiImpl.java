@@ -1,38 +1,27 @@
 /**
- * Description:汇盈金服调用银行存管接口
- * Copyright: Copyright (HYJF Corporation)2015
- * Company: HYJF Corporation
- *
- * @author: wangkun
- * @version: 1.0
- * Created at: 2015年11月23日 下午4:26:10
- * Modification History:
- * Modified by :
+ * 汇盈金服调用银行存管接口
  */
-package com.hyjf.pay.lib.bank.call.impl;
+package com.hyjf.pay.call.impl;
 
-import com.hyjf.common.http.HttpDealBank;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
-import com.hyjf.pay.lib.bank.call.BankCallApi;
-import com.hyjf.pay.lib.bank.util.*;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import com.hyjf.common.http.HttpDealBank;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.call.BankCallApi;
+import com.hyjf.pay.call.util.BankCallSignUtils_;
+import com.hyjf.pay.config.SystemConfig;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 
 @Service
 public class BankCallApiImpl implements BankCallApi {
     private static Logger log = LoggerFactory.getLogger(BankCallApiImpl.class);
-
-    /**
-     * THIS_CLASS
-     */
-    private static final String THIS_CLASS = BankCallApiImpl.class.getName();
 
     /**
      * 版本号
@@ -53,25 +42,29 @@ public class BankCallApiImpl implements BankCallApi {
      * 交易渠道
      */
     private String _coinstChannel;
+    
+    private SystemConfig _systemConfig;
 
-    public BankCallApiImpl() {
+    public BankCallApiImpl(@Qualifier("systemConfig") SystemConfig systemConfig) {
 
         // 银行代码
         if (Validator.isNull(_bankcode)) {
-            _bankcode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
+            _bankcode = systemConfig.getBankCode();
         }
         // 交易渠道
         if (Validator.isNull(_coinstChannel)) {
-            _coinstChannel = PropUtils.getSystem(BankCallConstant.BANK_COINST_CHANNEL);
+            _coinstChannel = systemConfig.getBankChannel();
         }
         // 接口默认版本号
         if (Validator.isNull(_version)) {
-            _version = PropUtils.getSystem(BankCallConstant.BANK_VERSION);
+            _version = systemConfig.getBankVersion();
         }
         // 平台机构代码
         if (Validator.isNull(_instCode)) {
-            _instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+            _instCode = systemConfig.getBankInstCode();
         }
+        
+        _systemConfig = systemConfig;
     }
 
     /**
@@ -84,7 +77,6 @@ public class BankCallApiImpl implements BankCallApi {
     public String callChinaPnrApi(BankCallPnrApiBean bean) {
 
         // 方法名
-        String methodName = "callChinaPnrApi";
         log.info("[调用汇付天下API接口开始]");
         log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
         String result = null;
@@ -98,7 +90,7 @@ public class BankCallApiImpl implements BankCallApi {
         }
         try {
             // 发送请求
-            String HTTP_URL = PropUtils.getSystem(BankCallConstant.BANK_ONLINE_URL);
+            String HTTP_URL = _systemConfig.getBankPageUrl();
             result = HttpDealBank.post(HTTP_URL, bean.getAllParams());
             log.debug( "[返回结果:" + result + "]");
         } catch (Exception e) {
@@ -111,7 +103,6 @@ public class BankCallApiImpl implements BankCallApi {
     @Override
     public BankCallBean verifyChinaPnr(BankCallBean bean) {
         // 方法名
-        String methodName = "verifyChinaPnr";
         log.info("[验证银行存管签名开始]");
         log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
         BankCallBean ret = new BankCallBean();
@@ -136,7 +127,6 @@ public class BankCallApiImpl implements BankCallApi {
     @Override
     public BankCallBean verifyChinaPnr(Map<String, String> mapParam) {
         // 方法名
-        String methodName = "verifyChinaPnr";
         log.info("[验证银行存管签名开始]");
         log.debug("参数: " + mapParam == null ? "无" : mapParam + "]");
         BankCallBean ret = new BankCallBean();
