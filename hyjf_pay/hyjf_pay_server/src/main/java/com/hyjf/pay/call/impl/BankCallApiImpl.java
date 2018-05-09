@@ -1,26 +1,17 @@
 /**
- * Description:汇盈金服调用银行存管接口
- * Copyright: Copyright (HYJF Corporation)2015
- * Company: HYJF Corporation
- *
- * @author: wangkun
- * @version: 1.0
- * Created at: 2015年11月23日 下午4:26:10
- * Modification History:
- * Modified by :
+ * 汇盈金服调用银行存管接口
  */
-package com.hyjf.pay.lib.bank.call.impl;
+package com.hyjf.pay.call.impl;
 
 import com.hyjf.common.http.HttpDealBank;
-import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.call.BankCallApi;
+import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
-import com.hyjf.pay.lib.bank.call.BankCallApi;
-import com.hyjf.pay.lib.bank.util.*;
-import com.hyjf.pay.lib.config.PaySystemConfig;
-
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallSignUtils_;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +22,9 @@ import java.util.Map;
 @Service
 public class BankCallApiImpl implements BankCallApi {
     private static Logger log = LoggerFactory.getLogger(BankCallApiImpl.class);
-	
-	private PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+
+  /*  @Autowired
+    SystemConfig systemConfig;*/
 
     /**
      * 版本号
@@ -56,21 +48,23 @@ public class BankCallApiImpl implements BankCallApi {
 
     public BankCallApiImpl() {
 
+        SystemConfig systemConfig = new SystemConfig();
         // 银行代码
         if (Validator.isNull(_bankcode)) {
-            _bankcode = paySystemConfig.getBankcode();
+            System.out.print(systemConfig.getBankCode());
+            _bankcode = systemConfig.getBankCode();
         }
         // 交易渠道
         if (Validator.isNull(_coinstChannel)) {
-            _coinstChannel = paySystemConfig.getCoinstChannel();
+            _coinstChannel = systemConfig.getBankChannel();
         }
         // 接口默认版本号
         if (Validator.isNull(_version)) {
-            _version = paySystemConfig.getVersion();
+            _version = systemConfig.getBankVersion();
         }
         // 平台机构代码
         if (Validator.isNull(_instCode)) {
-            _instCode = paySystemConfig.getInstcode();
+            _instCode = systemConfig.getBankInstCode();
         }
     }
 

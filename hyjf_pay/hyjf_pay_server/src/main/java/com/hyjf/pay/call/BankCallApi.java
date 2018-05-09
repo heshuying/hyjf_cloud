@@ -1,17 +1,7 @@
 /**
- * Description: 汇盈金服调用支付等API接口
- * Copyright: Copyright (HYJF Corporation)2015
- * Company: HYJF Corporation
- *
- * @author: wangkun
- * @version: 1.0
- * Created at: 2015年11月23日 下午4:20:22
- * Modification History:
- * Modified by :
+ * 汇盈金服调用支付等API接口
  */
-package com.hyjf.pay.lib.bank.call;
-
-import org.springframework.stereotype.Service;
+package com.hyjf.pay.call;
 
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
