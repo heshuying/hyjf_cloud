@@ -2,7 +2,6 @@ package com.hyjf.am.config.redis;
 
 import java.nio.charset.Charset;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,9 +9,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.serializer.support.DeserializingConverter;
-import org.springframework.core.serializer.support.SerializingConverter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,7 +26,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
  */
 
 @Configuration
-//@ConditionalOnClass({ RedisOperations.class })
+@ConditionalOnClass({ RedisOperations.class })
 @EnableAutoConfiguration
 public class RedisConfig {
 
@@ -46,11 +42,12 @@ public class RedisConfig {
 		FastJsonRedisSerializer fastJsonRedisSerializer = new FastJsonRedisSerializer(Object.class);
 
 		// value值的序列化采用fastJsonRedisSerializer
-		template.setValueSerializer(new RedisObjectSerializer());
-		//template.setHashValueSerializer(fastJsonRedisSerializer);
+		template.setValueSerializer(fastJsonRedisSerializer);
+		template.setHashValueSerializer(fastJsonRedisSerializer);
+
 		// key的序列化采用StringRedisSerializer
 		template.setKeySerializer(new StringRedisSerializer());
-		//template.setHashKeySerializer(new StringRedisSerializer());
+		template.setHashKeySerializer(new StringRedisSerializer());
 		return template;
 	}
 
@@ -63,35 +60,32 @@ public class RedisConfig {
 		return template;
 	}
 
-	public static class RedisObjectSerializer implements RedisSerializer<Object> {
-		public final static byte[] EMPTY_ARRAY = new byte[0];
-		private Converter<Object, byte[]> serializer = new SerializingConverter();
-		private Converter<byte[], Object> deserializer = new DeserializingConverter();
+	public static class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
-		public Object deserialize(byte[] bytes) {
-			if (isEmpty(bytes)) {
+		public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+
+		private Class<T> clazz;
+
+		public FastJsonRedisSerializer(Class<T> clazz) {
+			super();
+			this.clazz = clazz;
+		}
+
+		@Override
+		public byte[] serialize(T t) throws SerializationException {
+			if (null == t) {
+				return new byte[0];
+			}
+			return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(DEFAULT_CHARSET);
+		}
+
+		@Override
+		public T deserialize(byte[] bytes) throws SerializationException {
+			if (null == bytes || bytes.length <= 0) {
 				return null;
 			}
-			try {
-				return deserializer.convert(bytes);
-			} catch (Exception ex) {
-				throw new SerializationException("Cannot deserialize", ex);
-			}
-		}
-
-		public byte[] serialize(Object object) {
-			if (object == null) {
-				return EMPTY_ARRAY;
-			}
-			try {
-				return serializer.convert(object);
-			} catch (Exception ex) {
-				return EMPTY_ARRAY;
-			}
-		}
-
-		private boolean isEmpty(byte[] data) {
-			return (data == null || data.length == 0);
+			String str = new String(bytes, DEFAULT_CHARSET);
+			return (T) JSON.parseObject(str, clazz);
 		}
 	}
 }
