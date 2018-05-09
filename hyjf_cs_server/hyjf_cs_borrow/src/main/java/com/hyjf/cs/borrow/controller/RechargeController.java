@@ -136,9 +136,9 @@ public class RechargeController{
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
 		// 同步调用路径
-		String retUrl = systemConfig.getWebHost() + UserDirectRechargeDefine.RETURL_SYN_ACTION + ".do?txAmount="+money;
+		String retUrl = systemConfig.getWebHost() + UserDirectRechargeDefine.RETURL_SYN_ACTION + "?txAmount="+money;
 		// 异步调用路
-		String bgRetUrl = systemConfig.getWebHost() + UserDirectRechargeDefine.RETURL_ASY_ACTION + ".do?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + UserDirectRechargeDefine.RETURL_ASY_ACTION + "?phone="+mobile;
 
 		// 用户ID
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
@@ -186,7 +186,7 @@ public class RechargeController{
 		String frontParams = request.getParameter("frontParams");
 		String isSuccess = request.getParameter("isSuccess");
 		// 充值成功
-		DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+		DecimalFormat df = new DecimalFormat("#,##0.00");
 		BigDecimal feeAmt = new BigDecimal(money);
 
 		if(StringUtils.isBlank(bean.getRetCode())&&StringUtils.isNotBlank(frontParams)){
