@@ -17,6 +17,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,6 +28,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppMessageConsumer extends Consumer {
 	private static final Logger logger = LoggerFactory.getLogger(AppMessageConsumer.class);
+
+	@Autowired
+	private MsgPushHandle msgPushHandle;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -54,16 +58,16 @@ public class AppMessageConsumer extends Consumer {
 			if (null != appMsMessage) {
 				switch (appMsMessage.getServiceType()) {
 				case MessageConstant.APPMSSENDFORMOBILE:// 根据电话号码和模版给指定手机号推送app消息
-					MsgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
+					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getMobile());
 					break;
 				case MessageConstant.APPMSSENDFORUSER: // 根据用户编号和模版号给某电话推送app消息
-					MsgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
+					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getUserId());
 					break;
 
 				case MessageConstant.APPMSSENDFORMSG:
-					MsgPushHandle.sendMessages(appMsMessage.getMsgId());
+					msgPushHandle.sendMessages(appMsMessage.getMsgId());
 					break;
 
 				default:

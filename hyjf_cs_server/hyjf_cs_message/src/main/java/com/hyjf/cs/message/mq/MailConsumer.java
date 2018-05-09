@@ -18,6 +18,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,6 +29,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MailConsumer extends Consumer {
 	private static final Logger logger = LoggerFactory.getLogger(MailConsumer.class);
+
+	@Autowired
+	private MailHandle mailHandle;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -55,15 +59,15 @@ public class MailConsumer extends Consumer {
 			if (null != mailMessage) {
 				switch (mailMessage.getServiceType()) {
 				case MessageConstant.MAILSENDFORUSER:// 给指定用户发送邮件
-					MailHandle.sendMail(mailMessage.getUserId(), mailMessage.getSubject(), mailMessage.getBody(),
+					mailHandle.sendMail(mailMessage.getUserId(), mailMessage.getSubject(), mailMessage.getBody(),
 							mailMessage.getFileNames());
 					break;
 				case MessageConstant.MAILSENDFORMAILINGADDRESS:// 给指定用户发送邮件
-					MailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(),
+					mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(),
 							mailMessage.getMailKbn(), mailMessage.getReplaceStrs(), mailMessage.getFileNames());
 					break;
 				case MessageConstant.MAILSENDFORMAILINGADDRESSMSG:// 批量给邮件地址发送邮件信息
-					MailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(), mailMessage.getBody(),
+					mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(), mailMessage.getBody(),
 							mailMessage.getFileNames());
 					break;
 

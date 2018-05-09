@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hyjf.common.validator.Validator;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -35,6 +36,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  * @author gogtz
  * @version 1.0.0
  */
+@Component
 public class MailHandle {
 
 	private static final Logger logger = LoggerFactory.getLogger(MailHandle.class);
@@ -43,12 +45,12 @@ public class MailHandle {
 	private static Integer smtpTimeout = 25000;
 
 	@Autowired
-	private static AmUserClient amUserClient;
+	private AmUserClient amUserClient;
 	@Autowired
-	private static AmConfigClient amConfigClient;
+	private AmConfigClient amConfigClient;
 
 	@PostConstruct
-	private static void init() throws RuntimeException {
+	private void init() throws RuntimeException {
 		// 取得邮件服务器信息
 		SiteSettingsVO siteSetting = amConfigClient.findSiteSetting();
 		if (siteSetting == null) {
@@ -59,15 +61,13 @@ public class MailHandle {
 
 	/**
 	 * 送信
-	 *
 	 * @param userId
-	 * @param fMail
-	 * @param fMailNm
+	 * @param subject
 	 * @param mailKbn
 	 * @param replaceMap
-	 * @throws Exception
+	 * @param fileNames
 	 */
-	public static void sendMail(Integer userId, String subject, String mailKbn, Map<String, String> replaceMap,
+	public void sendMail(Integer userId, String subject, String mailKbn, Map<String, String> replaceMap,
 			String[] fileNames) {
 		try {
 			// 取得模板
@@ -92,14 +92,12 @@ public class MailHandle {
 
 	/**
 	 * 送信
-	 *
 	 * @param userId
-	 * @param fMail
-	 * @param fMailNm
+	 * @param subject
 	 * @param body
-	 * @throws Exception
+	 * @param fileNames
 	 */
-	public static void sendMail(Integer userId, String subject, String body, String[] fileNames) {
+	public void sendMail(Integer userId, String subject, String body, String[] fileNames) {
 		try {
 			// 取得模板
 			String email = getMailAddress(userId);
@@ -114,16 +112,14 @@ public class MailHandle {
 	}
 
 	/**
-	 * 送信
 	 *
-	 * @param toMails
-	 * @param fMail
-	 * @param fMailNm
+	 * @param toMailArray
+	 * @param subject
 	 * @param mailKbn
 	 * @param replaceMap
-	 * @throws Exception
+	 * @param fileNames
 	 */
-	public static void sendMail(String[] toMailArray, String subject, String mailKbn, Map<String, String> replaceMap,
+	public void sendMail(String[] toMailArray, String subject, String mailKbn, Map<String, String> replaceMap,
 			String[] fileNames) {
 
 		try {
@@ -145,15 +141,12 @@ public class MailHandle {
 
 	/**
 	 * 给平台自己发送短信
-	 *
-	 * @param toMails
-	 * @param fMail
-	 * @param fMailNm
 	 * @param mailKbn
 	 * @param replaceMap
+	 * @param fileNames
 	 * @throws Exception
 	 */
-	public static void sendMailToSelf(String mailKbn, Map<String, String> replaceMap, String[] fileNames)
+	public void sendMailToSelf(String mailKbn, Map<String, String> replaceMap, String[] fileNames)
 			throws Exception {
 		try {
 			// 取得模板
@@ -171,14 +164,12 @@ public class MailHandle {
 
 	/**
 	 * 送信
-	 *
-	 * @param toMails
-	 * @param fMail
+	 * @param toMailArray
+	 * @param subject
 	 * @param body
-	 * @param replaceMap
-	 * @throws Exception
+	 * @param fileNames
 	 */
-	public static void sendMail(String[] toMailArray, String subject, String body, String[] fileNames) {
+	public void sendMail(String[] toMailArray, String subject, String body, String[] fileNames) {
 		try {
 			// 开始送信
 			send(toMailArray, subject, body, fileNames);
@@ -189,12 +180,11 @@ public class MailHandle {
 
 	/**
 	 * 替换模板变量
-	 *
-	 * @param replace
+	 * @param messageStr
 	 * @param replaceMap
 	 * @return
 	 */
-	private static String replaceAllParameter(String messageStr, Map<String, String> replaceMap) {
+	private String replaceAllParameter(String messageStr, Map<String, String> replaceMap) {
 		if (Validator.isNotNull(messageStr)) {
 			for (String key : replaceMap.keySet()) {
 				messageStr = StringUtils.replace(messageStr, "[" + key + "]", replaceMap.get(key));
@@ -206,14 +196,13 @@ public class MailHandle {
 	/**
 	 * 送信
 	 *
-	 * @param toMails
-	 * @param fMail
-	 * @param fMailNm
+	 * @param toMailArray
 	 * @param subject
 	 * @param content
-	 * @throws RuntimeException
+	 * @param fileNames
+	 * @throws Exception
 	 */
-	private static void send(String[] toMailArray, String subject, String content, String[] fileNames)
+	private void send(String[] toMailArray, String subject, String content, String[] fileNames)
 			throws Exception {
 		if (setting == null) {
 			throw new RuntimeException(CustomConstants.ECOMS001);
@@ -286,7 +275,7 @@ public class MailHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	private static String getMailAddress(Integer userId) throws Exception {
+	private String getMailAddress(Integer userId) throws Exception {
 		UserVO userVO = amUserClient.findUserById(userId);
 		if (userVO == null) {
 			throw new Exception("用户信息不存在");
