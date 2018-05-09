@@ -1,23 +1,14 @@
 package com.hyjf.pay.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.base.BaseController;
-import com.hyjf.pay.bean.BankCallDefine;
-import com.hyjf.pay.call.BankCallApi;
-import com.hyjf.pay.call.impl.BankCallApiImpl;
-import com.hyjf.pay.config.SystemConfig;
-import com.hyjf.pay.entity.ChinapnrExclusiveLog;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.service.BankPayLogService;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.StringUtil;
@@ -31,13 +22,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.base.BaseController;
+import com.hyjf.pay.bean.BankCallDefine;
+import com.hyjf.pay.call.BankCallApi;
+import com.hyjf.pay.config.SystemConfig;
+import com.hyjf.pay.entity.ChinapnrExclusiveLog;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.service.BankPayLogService;
 
 @Controller
 @RequestMapping(value = "/bankcall")
@@ -62,11 +63,11 @@ public class BankCallController extends BaseController {
      */
     @PostMapping(value = "callApiPage.json")
     @ResponseBody
-    public ModelAndView callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
+    public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
         String methodName = "callPageApi";
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
+//        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         Map<String,Object> resultMap = new HashMap<String,Object>();
         try {
             // 参数转换成Map
@@ -118,7 +119,7 @@ public class BankCallController extends BaseController {
                     // 跳转到汇付天下画面
                     bean.setAction(systemConfig.getBankPageUrl() + bean.getLogBankDetailUrl());
                     resultMap.put(BankCallDefine.BANK_FORM, bean);
-                    modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
+//                    modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
                 } else {
                     throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
                 }
@@ -129,7 +130,7 @@ public class BankCallController extends BaseController {
         } finally {
            _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         }
-        return modelAndView;
+        return resultMap;
     }
 
     /**
@@ -183,7 +184,6 @@ public class BankCallController extends BaseController {
                 e.printStackTrace();
             }
             // 验签
-            BankCallApi api = new BankCallApiImpl();
             BankCallBean result = api.verifyChinaPnr(bean);
             try {
                 if (StringUtils.isNotBlank(bean.getAcqRes())) {
@@ -334,7 +334,6 @@ public class BankCallController extends BaseController {
         }
 
         //先验签
-        BankCallApi api = new BankCallApiImpl();
         BankCallBean result = api.verifyChinaPnr(mapParam);
 
         String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
@@ -621,7 +620,6 @@ public class BankCallController extends BaseController {
                 bean.setLogNotifyType(logNotifyType);
             }
             // 验签
-            BankCallApi api = new BankCallApiImpl();
             BankCallBean result = api.verifyChinaPnr(bean);
             bean.convert();
             bean.setLogOrderId(logOrderId);

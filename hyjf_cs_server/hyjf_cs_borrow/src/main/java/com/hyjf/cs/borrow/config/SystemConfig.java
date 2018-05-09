@@ -10,13 +10,7 @@ public class SystemConfig {
 
     @Value("${http.hyjf.web.host}")
     public String httpWebHost;
-
-    @Value("${hyjf.bank.instcode}")
-    public String instCode;
-
-    @Value("${ hyjf.bank.bankcode}")
-    public String bankCode;
-
+    
     public String getWebHost() {
         return webHost;
     }
@@ -33,19 +27,4 @@ public class SystemConfig {
         this.httpWebHost = httpWebHost;
     }
 
-    public String getInstCode() {
-        return instCode;
-    }
-
-    public void setInstCode(String instCode) {
-        this.instCode = instCode;
-    }
-
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
 }

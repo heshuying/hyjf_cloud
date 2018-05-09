@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaySystemConfig {
 
- /*   @Value("${hyjf.pay.bank.url}")
+    @Value("${hyjf.pay.bank.url}")
     public String bankUrl;
 
     public String getBankUrl() {
@@ -16,6 +16,6 @@ public class PaySystemConfig {
     public void setBankUrl(String bankUrl) {
         this.bankUrl = bankUrl;
     }
-*/
+
 
 }

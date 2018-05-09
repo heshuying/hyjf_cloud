@@ -95,8 +95,8 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
      */
     private void setBankCallCommon(String version, String txCode, String channel) {
         // 获取共通信息
-        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+//        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
+//        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
         String txDate = GetOrderIdUtils.getTxDate();
         String txTime = GetOrderIdUtils.getTxTime();
         String seqNo = GetOrderIdUtils.getSeqNo(6);

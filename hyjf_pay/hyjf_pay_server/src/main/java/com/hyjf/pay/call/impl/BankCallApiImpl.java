@@ -15,16 +15,16 @@ import com.hyjf.pay.lib.bank.util.BankCallSignUtils_;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 @Service
 public class BankCallApiImpl implements BankCallApi {
     private static Logger log = LoggerFactory.getLogger(BankCallApiImpl.class);
-
-  /*  @Autowired
-    SystemConfig systemConfig;*/
 
     /**
      * 版本号
@@ -46,12 +46,10 @@ public class BankCallApiImpl implements BankCallApi {
      */
     private String _coinstChannel;
 
-    public BankCallApiImpl() {
+    public BankCallApiImpl(@Qualifier("systemConfig") SystemConfig systemConfig) {
 
-        SystemConfig systemConfig = new SystemConfig();
         // 银行代码
         if (Validator.isNull(_bankcode)) {
-            System.out.print(systemConfig.getBankCode());
             _bankcode = systemConfig.getBankCode();
         }
         // 交易渠道

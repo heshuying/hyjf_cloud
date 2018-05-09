@@ -1,19 +1,26 @@
 package com.hyjf.pay.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
+@EnableAutoConfiguration
 public class SystemConfig {
+	
     @Value("${hyjf.bank.page.url}")
     public String pageUrl;
+    
     @Value("${hyjf.bank.page.return.url}")
     public String returnUrl;
+    
     @Value("${hyjf.bank.page.callback.url}")
     public String callbackUrl;
+    
     @Value("${hyjf.bank.page.forgotpwd.url}")
     public String forgotpwdUrl;
-    @Value("hyjf.bank.page.url=https://test.credit2go.cn/escrow")
+    
+    @Value("${hyjf.bank.page.url}")
     public String bankPageUrl;
     /** 银行代码 */
     @Value("${hyjf.bank.bankcode}")

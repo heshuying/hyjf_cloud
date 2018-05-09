@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages={"com.hyjf.common","com.hyjf.cs.borrow"})
+@ComponentScan(basePackages={"com.hyjf.common","com.hyjf.cs.borrow","com.hyjf.pay"})
 public class CsBorrowApplication {
 
 	@Bean
@@ -22,9 +22,9 @@ public class CsBorrowApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(CsBorrowApplication.class, args);
-		String[] beanNmaes = ctx.getBeanDefinitionNames();
-		for (String string : beanNmaes) {
-			System.out.println(string);
-		}
+//		String[] beanNmaes = ctx.getBeanDefinitionNames();
+//		for (String string : beanNmaes) {
+//			System.out.println(string);
+//		}
 	}
 }

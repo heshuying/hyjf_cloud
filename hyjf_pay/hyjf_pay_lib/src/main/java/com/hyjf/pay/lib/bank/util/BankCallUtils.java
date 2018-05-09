@@ -49,7 +49,7 @@ public class BankCallUtils implements Serializable {
 	private static final String REQUEST_MAPPING_CALLAPIBG_FORQUERY = "/callApiBgForQuery.json";
 
 //	@Autowired
-	//private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
 
 	/**
 	 * 调用接口(页面)
@@ -65,7 +65,7 @@ public class BankCallUtils implements Serializable {
 		ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 		try {
 			// 取出调用汇付接口的url
-			String payurl =  PropUtils.getSystem("hyjf.pay.bank.url");
+			String payurl =  paySystemConfig.getBankUrl();
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}
@@ -127,7 +127,7 @@ public class BankCallUtils implements Serializable {
 			// bean转换成参数
 			bean.convert();
 			// 取出调用汇付接口的url
-			String payurl = PropUtils.getSystem("hyjf.pay.bank.url");
+			String payurl = paySystemConfig.getBankUrl();
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}

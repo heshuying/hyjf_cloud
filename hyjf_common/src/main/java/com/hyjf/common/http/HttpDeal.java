@@ -99,7 +99,7 @@ public class HttpDeal {
 			// （6）执行post方法
 			response = httpclient.execute(httpPost);
 			if (StringPool.OK.equals(response.getStatusLine().getReasonPhrase())
-					&& response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					|| response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				// （7）最终返回结果是个string返回来，传到上面一层方法中去。
 				content = EntityUtils.toString(response.getEntity(), StringPool.UTF8);
 			}
