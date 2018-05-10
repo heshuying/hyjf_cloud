@@ -19,10 +19,6 @@ public class AmUserApplication {
 	}
 
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(AmUserApplication.class, args);
-		String[] beans = ctx.getBeanDefinitionNames();
-		for (String string : beans) {
-			System.out.println(string);
-		}
+		SpringApplication.run(AmUserApplication.class, args);
 	}
 }

@@ -73,17 +73,7 @@ public class RechargeController{
 		Logger.info("充值服务");
 		ModelAndView modelAndView = new ModelAndView();
 		// 用户id
-		
-//		WebViewUser user = WebUtils.getUser(request);
-//		if (user == null) {
-//			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
-//			modelAndView.addObject("message", "登录失效，请重新登陆！");
-//			return modelAndView;
-//		}
-		
 		Integer userId = Integer.parseInt(request.getParameter("userId"));
-		
-		
 		UserVO users=userRechargeService.getUsers(userId);
 		if (users.getBankOpenAccount()==0) {// 未开户
 			modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
@@ -123,7 +113,6 @@ public class RechargeController{
 		if(money.indexOf(".")>=0){
 			String l = money.substring(money.indexOf(".")+1,money.length());
 			if(l.length()>2){
-				//logger.info("充值金额不能大于两位小数,充值金额:[" + money + "]");
 				modelAndView = new ModelAndView(UserDirectRechargeDefine.DIRECTRE_CHARGE_ERROR_PATH);
 				modelAndView.addObject("message", "充值值金额不能大于两位小数！");
 				return modelAndView;

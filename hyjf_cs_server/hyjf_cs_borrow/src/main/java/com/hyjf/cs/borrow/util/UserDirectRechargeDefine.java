@@ -12,7 +12,7 @@ public class UserDirectRechargeDefine {
     /** 跳转到缴费页面 */
     public static final String USER_DIRECT_RECHARGE_PAGE_ACTION = "/page";
     /** 用户授权自动投资成功页面*/
-    public static final String DIRECTRE_CHARGE_SUCCESS_PATH = "/bank/user/recharge/recharge_success";
+    public static final String DIRECTRE_CHARGE_SUCCESS_PATH = "/bank/recharge_success";
     /** 用户授权自动投资失败页面*/
     public static final String DIRECTRE_CHARGE_ERROR_PATH = "/bank/user/recharge/recharge_error";
 ;

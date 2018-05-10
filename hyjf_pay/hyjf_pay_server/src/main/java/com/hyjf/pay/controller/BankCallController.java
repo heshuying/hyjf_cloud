@@ -61,12 +61,11 @@ public class BankCallController extends BaseController {
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "callApiPage.json")
+    @RequestMapping(value = "callApiPage.json")
     @ResponseBody
     public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-//        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         Map<String,Object> resultMap = new HashMap<String,Object>();
         try {
             // 参数转换成Map
@@ -118,7 +117,6 @@ public class BankCallController extends BaseController {
                     // 跳转到汇付天下画面
                     bean.setAction(systemConfig.getBankPageUrl() + bean.getLogBankDetailUrl());
                     resultMap.put(BankCallDefine.BANK_FORM, bean);
-//                    modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
                 } else {
                     throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
                 }
@@ -163,10 +161,6 @@ public class BankCallController extends BaseController {
             bean.setLogOrderId(logOrderId);
             bean.setLogUserId(logUserId);
             // 写入银行接口接收记录
-//			boolean chinapnrLogFlag = this.bankCallService.insertChinapnrLog(bean, 0);
-//			if (!chinapnrLogFlag) {
-//				throw new RuntimeException("同步回调后,保存回调数据失败！订单号：" + bean.getLogOrderId());
-//			}
             this.payLogService.saveChinapnrLog(bean, 0);
 
             // 发送状态(1:处理中)
@@ -316,7 +310,7 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @PostMapping(value = "callPageBack")
+    @RequestMapping(value = "callPageBack")
     public void callPageBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
 
         String methodName = "callPageBack";
@@ -356,8 +350,6 @@ public class BankCallController extends BaseController {
             // 发送状态(1:处理中)
             String status = BankCallConstant.STATUS_SENDING;
             // 验签
-//			BankCallApi api = new BankCallApiImpl();
-//			BankCallBean result = api.verifyChinaPnr(bean);
             try {
                 if (StringUtils.isNotBlank(bean.getAcqRes())) {
                     bean.setAcqRes(URLDecoder.decode(bean.getAcqRes(), CustomConstants.UTF8));
@@ -473,8 +465,6 @@ public class BankCallController extends BaseController {
     @ResponseBody
     @PostMapping(value = "callApiBg.json")
     public String callApiBg(HttpServletRequest request, @ModelAttribute BankCallBean bean) throws Exception {
-
-        String methodName = "callApiBg";
         _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         String ret = "";
         String logOrderId = bean.getLogOrderId();
@@ -522,10 +512,8 @@ public class BankCallController extends BaseController {
                 } catch (IOException e) {
                     throw new IllegalArgumentException(e.getMessage());
                 }
-
                 //先验签
                 BankCallBean verifyResult = api.verifyChinaPnr(mapParam);
-
                 BankCallBean backBean = JSONObject.parseObject(result, BankCallBean.class);
                 // 实体转化
                 backBean.convert();
@@ -539,7 +527,6 @@ public class BankCallController extends BaseController {
                 payLogService.insertChinapnrLog(backBean, mapParam, 2);
                 // 发送状态(1:处理中)
                 String status = BankCallConstant.STATUS_SENDING;
-//				BankCallBean verifyResult = api.verifyChinaPnr(backBean);
                 backBean.convert();
                 // 检证失败
                 if (Validator.isNull(verifyResult) || !verifyResult.isLogVerifyFlag()) {
@@ -586,10 +573,8 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @PostMapping(value = "callApiReturn")
+    @RequestMapping(value = "callApiReturn")
     public void callBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
-
-        String methodName = "callBack";
         String bgData = request.getParameter("bgData");
         String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
         String logUserId = request.getParameter(BankCallConstant.PARAM_LOGUSERID);
@@ -730,10 +715,8 @@ public class BankCallController extends BaseController {
      *
      * @return
      */
-    @PostMapping(value = "pageForgotPWD")
+    @RequestMapping(value = "pageForgotPWD")
     public ModelAndView pageForgotPWD(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
-
-        String methodName = "pageForgotPWD";
         String logOrderId = request.getParameter("logOrderId");
         // 真实的返回URL
         String retUrl = "";

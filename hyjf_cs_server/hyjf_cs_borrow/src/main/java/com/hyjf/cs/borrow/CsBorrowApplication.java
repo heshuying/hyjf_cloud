@@ -21,10 +21,6 @@ public class CsBorrowApplication {
 	}
 
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(CsBorrowApplication.class, args);
-//		String[] beanNmaes = ctx.getBeanDefinitionNames();
-//		for (String string : beanNmaes) {
-//			System.out.println(string);
-//		}
+		SpringApplication.run(CsBorrowApplication.class, args);
 	}
 }

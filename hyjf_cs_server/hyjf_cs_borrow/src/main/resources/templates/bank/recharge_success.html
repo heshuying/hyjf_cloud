@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<article class="main-content">
+    <div class="container-investsuccess">
+        <!-- start 内容区域 -->
+        <div class="invest-success">
+            <div class="top-attr">
+                <img src="/images/success-img2.png">
+                <p class="top-title value">恭喜您,充值成功！</p>
+            </div>
+            <div class="mid-attr">
+                <ul>
+                    <li class="recharge">
+                        <div>您已成功向账户充值：<span class="value"><p th:text='${balance}'></p></span>元</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="invest-bom-bg"> </div>
+        <!-- end 内容区域 -->
+    </div>
+</article>
+
+</body>
+</html>
