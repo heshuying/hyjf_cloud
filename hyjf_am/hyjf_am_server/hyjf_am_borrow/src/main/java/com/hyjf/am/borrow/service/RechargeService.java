@@ -1,11 +1,11 @@
 package com.hyjf.am.borrow.service;
 
+import com.hyjf.am.borrow.dao.model.auto.Account;
+import com.hyjf.am.borrow.dao.model.auto.AccountList;
 import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
 import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.borrow.AccountListVO;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
-import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.BankCallVO;
 
 /**
@@ -24,11 +24,11 @@ public interface RechargeService {
 
 	 int updateByExampleSelective(AccountRechargeVO accountRecharge,AccountRechargeExample accountRechargeExample);
 
-	 int updateBankRechargeSuccess(AccountVO newAccount);
+	 int updateBankRechargeSuccess(Account newAccount);
 
-	 int insertSelective(AccountListVO accountList);
+	 int insertSelective(AccountList accountList);
 
-	 void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge);
+	 void updateByPrimaryKeySelective(AccountRecharge accountRecharge);
 
 	boolean updateBanks(AccountRechargeVO accountRecharge, BankCallVO bean, String ip);
 }

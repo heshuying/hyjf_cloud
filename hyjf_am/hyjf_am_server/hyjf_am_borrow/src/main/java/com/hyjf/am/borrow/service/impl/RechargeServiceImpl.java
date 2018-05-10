@@ -7,16 +7,12 @@ import com.hyjf.am.borrow.dao.mapper.auto.AdminAccountCustomizeMapper;
 import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.RechargeService;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.borrow.AccountListVO;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
-import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.BankCallVO;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -123,17 +119,17 @@ public class RechargeServiceImpl implements RechargeService {
 		return count;
 	}
 
-	public int updateBankRechargeSuccess(AccountVO newAccount){
+	public int updateBankRechargeSuccess(Account newAccount){
 		int isAccountUpdateFlag = adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount);
 		return isAccountUpdateFlag;
 	}
 
-	public int insertSelective(AccountListVO accountList){
+	public int insertSelective(AccountList accountList){
 		int isAccountListUpdateFlag = accountListMapper.insertSelective(accountList);
 		return isAccountListUpdateFlag;
 	}
 
-	public void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge){
+	public void updateByPrimaryKeySelective(AccountRecharge accountRecharge){
 		this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge);
 	}
 
@@ -153,7 +149,7 @@ public class RechargeServiceImpl implements RechargeService {
 			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRecharge.getStatus());
 			int isAccountRechargeFlag = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
-			AccountVO newAccount = new AccountVO();
+			Account newAccount = new Account();
 			// 更新账户信息
 			newAccount.setUserId(userId);// 用户Id
 			newAccount.setBankTotal(txAmount); // 累加到账户总资产
@@ -170,7 +166,7 @@ public class RechargeServiceImpl implements RechargeService {
 				 account = listAccount.get(0);
 			}
 			// 生成交易明细
-			AccountListVO accountList = new AccountListVO();
+			AccountList accountList = new AccountList();
 			accountList.setNid(orderId);
 			accountList.setUserId(userId);
 			accountList.setAmount(txAmount);

@@ -18,7 +18,7 @@ public interface AccountListMapper {
 
     int insert(AccountList record);
 
-    int insertSelective(AccountListVO record);
+    int insertSelective(AccountList record);
 
     List<AccountList> selectByExample(AccountListExample example);
 

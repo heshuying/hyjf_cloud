@@ -27,7 +27,7 @@ public interface AccountRechargeMapper {
 
     int updateByExample(@Param("record") AccountRecharge record, @Param("example") AccountRechargeExample example);
 
-    int updateByPrimaryKeySelective(AccountRechargeVO record);
+    int updateByPrimaryKeySelective(AccountRecharge record);
 
     int updateByPrimaryKey(AccountRecharge record);
 }

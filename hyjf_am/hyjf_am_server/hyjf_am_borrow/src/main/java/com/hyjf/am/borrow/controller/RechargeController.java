@@ -1,6 +1,7 @@
 package com.hyjf.am.borrow.controller;
 
 import com.hyjf.am.borrow.dao.model.auto.Account;
+import com.hyjf.am.borrow.dao.model.auto.AccountList;
 import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
 import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
 import com.hyjf.am.borrow.service.AccountService;
@@ -9,7 +10,6 @@ import com.hyjf.am.response.borrow.AccountRechargeResponse;
 import com.hyjf.am.response.borrow.AccountResponse;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.borrow.AccountListVO;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.BankCallVO;
@@ -90,10 +90,10 @@ public class RechargeController {
      */
     @ApiOperation(value = " updateBankRechargeSuccess", notes = " updateBankRechargeSuccess")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "newAccount", value = "newAccount", required = true, dataType = "AccountVO")
+            @ApiImplicitParam(name = "newAccount", value = "newAccount", required = true, dataType = "Account")
     })
     @PostMapping("/updateBankRechargeSuccess")
-    public int updateBankRechargeSuccess(@RequestBody AccountVO newAccount){
+    public int updateBankRechargeSuccess(@RequestBody Account newAccount){
         int isAccountUpdateFlag = rechargeService.updateBankRechargeSuccess(newAccount);
         return isAccountUpdateFlag;
     }
@@ -105,10 +105,10 @@ public class RechargeController {
      */
     @ApiOperation(value = " 插入交易明细", notes = " 插入交易明细")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "accountList", value = "accountList", required = true, dataType = "AccountListVO")
+            @ApiImplicitParam(name = "accountList", value = "accountList", required = true, dataType = "AccountList")
     })
     @PostMapping("/insertSelective")
-    public int insertSelective(@RequestBody AccountListVO accountList){
+    public int insertSelective(@RequestBody AccountList accountList){
         int isAccountListUpdateFlag = rechargeService.insertSelective(accountList);
         return isAccountListUpdateFlag;
     }
@@ -119,10 +119,10 @@ public class RechargeController {
      */
     @ApiOperation(value = " 更新", notes = " 更新")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "accountRecharge", value = "accountRecharge", required = true, dataType = "AccountRechargeVO")
+            @ApiImplicitParam(name = "accountRecharge", value = "accountRecharge", required = true, dataType = "AccountRecharge")
     })
     @PutMapping("/updateByPrimaryKeySelective")
-    public void updateByPrimaryKeySelective(@RequestBody AccountRechargeVO accountRecharge){
+    public void updateByPrimaryKeySelective(@RequestBody AccountRecharge accountRecharge){
         this.rechargeService.updateByPrimaryKeySelective(accountRecharge);
     }
 
