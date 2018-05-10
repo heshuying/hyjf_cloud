@@ -39,11 +39,11 @@ public class SiteSettings implements Serializable {
 
     private String smtpPassword;
 
-    private Boolean smtpVerify;
+    private Integer smtpVerify;
 
     private String smtpPort;
 
-    private Boolean smtpSsl;
+    private Integer smtpSsl;
 
     private String smtpFromName;
 
@@ -207,11 +207,11 @@ public class SiteSettings implements Serializable {
         this.smtpPassword = smtpPassword == null ? null : smtpPassword.trim();
     }
 
-    public Boolean getSmtpVerify() {
+    public Integer getSmtpVerify() {
         return smtpVerify;
     }
 
-    public void setSmtpVerify(Boolean smtpVerify) {
+    public void setSmtpVerify(Integer smtpVerify) {
         this.smtpVerify = smtpVerify;
     }
 
@@ -223,11 +223,11 @@ public class SiteSettings implements Serializable {
         this.smtpPort = smtpPort == null ? null : smtpPort.trim();
     }
 
-    public Boolean getSmtpSsl() {
+    public Integer getSmtpSsl() {
         return smtpSsl;
     }
 
-    public void setSmtpSsl(Boolean smtpSsl) {
+    public void setSmtpSsl(Integer smtpSsl) {
         this.smtpSsl = smtpSsl;
     }
 

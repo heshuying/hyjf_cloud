@@ -62,7 +62,9 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 	 *
 	 * @param validCodeType
 	 * @param mobile
-	 * @param request
+	 * @param token
+	 * @param ip
+	 * @throws MQException
 	 */
 	@Override
 	public void sendSmsCode(String validCodeType, String mobile, String token, String ip) throws MQException {
