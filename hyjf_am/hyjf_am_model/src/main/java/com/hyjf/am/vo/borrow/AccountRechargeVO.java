@@ -6,6 +6,15 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class AccountRechargeVO extends BaseVO implements Serializable {
+    /** 订单号 */
+    public String logOrderId;
+
+    /** 操作用户userId */
+    public String logUserId;
+
+    /** 交易金额 */
+    public String txAmount;
+
     private Integer id;
 
     private String nid;
@@ -79,6 +88,34 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
     private BigDecimal version;
 
     private static final long serialVersionUID = 1L;
+
+    public String getLogOrderId() {
+        return logOrderId;
+    }
+
+    public void setLogOrderId(String logOrderId) {
+        this.logOrderId = logOrderId;
+    }
+
+    public String getLogUserId() {
+        return logUserId;
+    }
+
+    public void setLogUserId(String logUserId) {
+        this.logUserId = logUserId;
+    }
+
+    public String getTxAmount() {
+        return txAmount;
+    }
+
+    public void setTxAmount(String txAmount) {
+        this.txAmount = txAmount;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Integer getId() {
         return id;

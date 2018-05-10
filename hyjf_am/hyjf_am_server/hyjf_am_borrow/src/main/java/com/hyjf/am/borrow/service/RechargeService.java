@@ -6,7 +6,6 @@ import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
 import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
-import com.hyjf.am.vo.user.BankCallVO;
 
 /**
  * 用户充值Service
@@ -22,7 +21,7 @@ public interface RechargeService {
 
 	 AccountRecharge selectByExample(AccountRechargeExample example);
 
-	 int updateByExampleSelective(AccountRechargeVO accountRecharge,AccountRechargeExample accountRechargeExample);
+	 int updateByExampleSelective(AccountRecharge accountRecharge,AccountRechargeExample accountRechargeExample);
 
 	 int updateBankRechargeSuccess(Account newAccount);
 
@@ -30,5 +29,5 @@ public interface RechargeService {
 
 	 void updateByPrimaryKeySelective(AccountRecharge accountRecharge);
 
-	boolean updateBanks(AccountRechargeVO accountRecharge, BankCallVO bean, String ip);
+	boolean updateBanks(AccountRechargeVO accountRecharge, String ip);
 }

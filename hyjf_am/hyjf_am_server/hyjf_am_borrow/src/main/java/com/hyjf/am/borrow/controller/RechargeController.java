@@ -141,9 +141,8 @@ public class RechargeController {
     @PostMapping("/updateBanks")
     public boolean updateBanks(@RequestBody BankAccountBeanRequest bankAccountBeanRequest) {
         AccountRechargeVO accountRecharge =  bankAccountBeanRequest.getAccountRecharge();
-         BankCallVO bean =  bankAccountBeanRequest.getBean();
-         String ip =  bankAccountBeanRequest.getIp();
-        boolean flag = rechargeService.updateBanks(accountRecharge,bean,ip);
+        String ip =  bankAccountBeanRequest.getIp();
+        boolean flag = rechargeService.updateBanks(accountRecharge,ip);
         return flag;
     }
 }

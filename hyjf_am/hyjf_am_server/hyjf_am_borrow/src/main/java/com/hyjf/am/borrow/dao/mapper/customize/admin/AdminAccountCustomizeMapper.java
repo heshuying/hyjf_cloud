@@ -9,16 +9,15 @@
  * Modified by :
  * */
 
-package com.hyjf.am.borrow.dao.mapper.auto;
+package com.hyjf.am.borrow.dao.mapper.customize.admin;
 
 import com.hyjf.am.borrow.dao.model.auto.Account;
 import com.hyjf.am.borrow.dao.model.auto.AdminAccountListCustomize;
 import com.hyjf.am.borrow.dao.model.auto.BankMerchantAccount;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-@Service
+
 public interface AdminAccountCustomizeMapper {
 
 	/**

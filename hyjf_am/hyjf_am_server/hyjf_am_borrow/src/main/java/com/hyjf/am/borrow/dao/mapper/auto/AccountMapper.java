@@ -2,11 +2,10 @@ package com.hyjf.am.borrow.dao.mapper.auto;
 
 import com.hyjf.am.borrow.dao.model.auto.Account;
 import com.hyjf.am.borrow.dao.model.auto.AccountExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
 public interface AccountMapper {
     int countByExample(AccountExample example);
 

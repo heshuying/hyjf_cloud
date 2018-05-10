@@ -3,14 +3,14 @@ package com.hyjf.am.borrow.service.impl;
 import com.hyjf.am.borrow.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.borrow.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.borrow.dao.mapper.auto.AccountRechargeMapper;
-import com.hyjf.am.borrow.dao.mapper.auto.AdminAccountCustomizeMapper;
+import com.hyjf.am.borrow.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.borrow.dao.model.auto.*;
 import com.hyjf.am.borrow.service.RechargeService;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
-import com.hyjf.am.vo.user.BankCallVO;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.common.util.StringUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +25,6 @@ import java.util.List;
  */
 @Service
 public class RechargeServiceImpl implements RechargeService {
-
-
-
-
-
 
 	@Autowired
 	protected AccountRechargeMapper accountRechargeMapper;
@@ -54,7 +49,6 @@ public class RechargeServiceImpl implements RechargeService {
 
 	public int selectByOrdId(String ordId){
 		int ret = 0;
-		//String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
 		AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 		accountRechargeExample.createCriteria().andNidEqualTo(ordId == null ? "" : ordId);
 		List<AccountRecharge> listAccountRecharge = this.accountRechargeMapper.selectByExample(accountRechargeExample);
@@ -114,7 +108,7 @@ public class RechargeServiceImpl implements RechargeService {
 		return null;
 	}
 
-	public int updateByExampleSelective(AccountRechargeVO accountRecharge,AccountRechargeExample accountRechargeExample){
+	public int updateByExampleSelective(AccountRecharge accountRecharge,AccountRechargeExample accountRechargeExample){
 		int count = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
 		return count;
 	}
@@ -134,20 +128,22 @@ public class RechargeServiceImpl implements RechargeService {
 	}
 
 	@Override
-	public boolean updateBanks(AccountRechargeVO accountRecharge, BankCallVO bean, String ip){
+	public boolean updateBanks(AccountRechargeVO accountRechargeVO, String ip){
 		{
 			// 充值订单号
-			String orderId = bean.getLogOrderId();
+			String orderId = accountRechargeVO.getLogOrderId();
 			// 用户Id
-			Integer userId = Integer.parseInt(bean.getLogUserId());
+			Integer userId = Integer.parseInt(accountRechargeVO.getLogUserId());
 			// 交易金额
-			BigDecimal txAmount = bean.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT);
+			BigDecimal txAmount = new BigDecimal(accountRechargeVO.getTxAmount());
 			// 电子账户
-			String accountId = bean.getAccountId();
+			String accountId = accountRechargeVO.getAccountId();
 			// 当前时间
 			int nowTime = GetDate.getNowTime10();
 			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
-			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRecharge.getStatus());
+			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRechargeVO.getStatus());
+			AccountRecharge accountRecharge = new AccountRecharge();
+			BeanUtils.copyProperties(accountRechargeVO,accountRecharge);
 			int isAccountRechargeFlag = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
 			Account newAccount = new Account();
 			// 更新账户信息
@@ -170,10 +166,10 @@ public class RechargeServiceImpl implements RechargeService {
 			accountList.setNid(orderId);
 			accountList.setUserId(userId);
 			accountList.setAmount(txAmount);
-			accountList.setTxDate(Integer.parseInt(bean.getTxDate()));// 交易日期
-			accountList.setTxTime(Integer.parseInt(bean.getTxTime()));// 交易时间
-			accountList.setSeqNo(bean.getSeqNo());// 交易流水号
-			accountList.setBankSeqNo((bean.getTxDate() + bean.getTxTime() + bean.getSeqNo()));
+			accountList.setTxDate(accountRechargeVO.getTxDate());// 交易日期
+			accountList.setTxTime(accountRechargeVO.getTxTime());// 交易时间
+			accountList.setSeqNo(StringUtil.valueOf(accountRechargeVO.getSeqNo()));// 交易流水号
+			accountList.setBankSeqNo(StringUtil.valueOf(accountRechargeVO.getTxDate() + accountRechargeVO.getTxTime() + accountRechargeVO.getSeqNo()));
 			accountList.setType(1);
 			accountList.setTrade("recharge");
 			accountList.setTradeCode("balance");

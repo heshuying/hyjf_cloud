@@ -168,11 +168,13 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
 						accountRecharge.setAccountId(accountId);// 电子账户
 						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);// 交易流水号
+						accountRecharge.setLogOrderId(bean.getLogOrderId());
+						accountRecharge.setLogUserId(bean.getLogUserId());
+						accountRecharge.setTxAmount(bean.getTxAmount());
+						accountRecharge.setTxDate(Integer.parseInt(null==bean.getTxDate()?"0":bean.getTxDate()));
+						accountRecharge.setTxTime(Integer.parseInt(null==bean.getTxTime()?"0":bean.getTxTime()));
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
-						BankCallVO bankCallVO = new BankCallVO();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
-						BeanUtils.copyProperties(bean,bankCallVO);
-						bankAccountBeanRequest.setBean(bankCallVO);
 						bankAccountBeanRequest.setIp(ip);
 						boolean flag = rechargeClient.updateBanks(bankAccountBeanRequest);
 						if (flag) {
