@@ -80,7 +80,7 @@ public class AmConfigClient {
 
 	/**
 	 * 查询app消息模板
-	 * 
+	 *
 	 * @param tplCode
 	 * @return
 	 */

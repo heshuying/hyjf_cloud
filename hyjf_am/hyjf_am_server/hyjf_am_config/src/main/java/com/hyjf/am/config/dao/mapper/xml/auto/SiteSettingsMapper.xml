@@ -20,9 +20,9 @@
     <result column="smtp_reply" property="smtpReply" jdbcType="VARCHAR" />
     <result column="smtp_username" property="smtpUsername" jdbcType="VARCHAR" />
     <result column="smtp_password" property="smtpPassword" jdbcType="VARCHAR" />
-    <result column="smtp_verify" property="smtpVerify" jdbcType="BIT" />
+    <result column="smtp_verify" property="smtpVerify" jdbcType="TINYINT" />
     <result column="smtp_port" property="smtpPort" jdbcType="VARCHAR" />
-    <result column="smtp_ssl" property="smtpSsl" jdbcType="BIT" />
+    <result column="smtp_ssl" property="smtpSsl" jdbcType="TINYINT" />
     <result column="smtp_from_name" property="smtpFromName" jdbcType="VARCHAR" />
     <result column="attachment_url" property="attachmentUrl" jdbcType="VARCHAR" />
     <result column="attachment_dir" property="attachmentDir" jdbcType="VARCHAR" />
@@ -175,8 +175,8 @@
       #{siteFooter,jdbcType=VARCHAR}, #{siteStatus,jdbcType=BIT}, #{siteCloseReason,jdbcType=VARCHAR}, 
       #{siteKeyword,jdbcType=VARCHAR}, #{siteDescription,jdbcType=VARCHAR}, #{siteThemePath,jdbcType=VARCHAR}, 
       #{siteTheme,jdbcType=VARCHAR}, #{smtpServer,jdbcType=VARCHAR}, #{smtpReply,jdbcType=VARCHAR}, 
-      #{smtpUsername,jdbcType=VARCHAR}, #{smtpPassword,jdbcType=VARCHAR}, #{smtpVerify,jdbcType=BIT}, 
-      #{smtpPort,jdbcType=VARCHAR}, #{smtpSsl,jdbcType=BIT}, #{smtpFromName,jdbcType=VARCHAR}, 
+      #{smtpUsername,jdbcType=VARCHAR}, #{smtpPassword,jdbcType=VARCHAR}, #{smtpVerify,jdbcType=TINYINT}, 
+      #{smtpPort,jdbcType=VARCHAR}, #{smtpSsl,jdbcType=TINYINT}, #{smtpFromName,jdbcType=VARCHAR}, 
       #{attachmentUrl,jdbcType=VARCHAR}, #{attachmentDir,jdbcType=VARCHAR}, #{attachmentType,jdbcType=VARCHAR}, 
       #{attachmentMaxupload,jdbcType=VARCHAR}, #{cdnDomain,jdbcType=VARCHAR}, #{servicePhoneNumber,jdbcType=VARCHAR}, 
       #{siteTerms,jdbcType=LONGVARCHAR})
@@ -325,13 +325,13 @@
         #{smtpPassword,jdbcType=VARCHAR},
       </if>
       <if test="smtpVerify != null" >
-        #{smtpVerify,jdbcType=BIT},
+        #{smtpVerify,jdbcType=TINYINT},
       </if>
       <if test="smtpPort != null" >
         #{smtpPort,jdbcType=VARCHAR},
       </if>
       <if test="smtpSsl != null" >
-        #{smtpSsl,jdbcType=BIT},
+        #{smtpSsl,jdbcType=TINYINT},
       </if>
       <if test="smtpFromName != null" >
         #{smtpFromName,jdbcType=VARCHAR},
@@ -423,13 +423,13 @@
         smtp_password = #{record.smtpPassword,jdbcType=VARCHAR},
       </if>
       <if test="record.smtpVerify != null" >
-        smtp_verify = #{record.smtpVerify,jdbcType=BIT},
+        smtp_verify = #{record.smtpVerify,jdbcType=TINYINT},
       </if>
       <if test="record.smtpPort != null" >
         smtp_port = #{record.smtpPort,jdbcType=VARCHAR},
       </if>
       <if test="record.smtpSsl != null" >
-        smtp_ssl = #{record.smtpSsl,jdbcType=BIT},
+        smtp_ssl = #{record.smtpSsl,jdbcType=TINYINT},
       </if>
       <if test="record.smtpFromName != null" >
         smtp_from_name = #{record.smtpFromName,jdbcType=VARCHAR},
@@ -480,9 +480,9 @@
       smtp_reply = #{record.smtpReply,jdbcType=VARCHAR},
       smtp_username = #{record.smtpUsername,jdbcType=VARCHAR},
       smtp_password = #{record.smtpPassword,jdbcType=VARCHAR},
-      smtp_verify = #{record.smtpVerify,jdbcType=BIT},
+      smtp_verify = #{record.smtpVerify,jdbcType=TINYINT},
       smtp_port = #{record.smtpPort,jdbcType=VARCHAR},
-      smtp_ssl = #{record.smtpSsl,jdbcType=BIT},
+      smtp_ssl = #{record.smtpSsl,jdbcType=TINYINT},
       smtp_from_name = #{record.smtpFromName,jdbcType=VARCHAR},
       attachment_url = #{record.attachmentUrl,jdbcType=VARCHAR},
       attachment_dir = #{record.attachmentDir,jdbcType=VARCHAR},
@@ -515,9 +515,9 @@
       smtp_reply = #{record.smtpReply,jdbcType=VARCHAR},
       smtp_username = #{record.smtpUsername,jdbcType=VARCHAR},
       smtp_password = #{record.smtpPassword,jdbcType=VARCHAR},
-      smtp_verify = #{record.smtpVerify,jdbcType=BIT},
+      smtp_verify = #{record.smtpVerify,jdbcType=TINYINT},
       smtp_port = #{record.smtpPort,jdbcType=VARCHAR},
-      smtp_ssl = #{record.smtpSsl,jdbcType=BIT},
+      smtp_ssl = #{record.smtpSsl,jdbcType=TINYINT},
       smtp_from_name = #{record.smtpFromName,jdbcType=VARCHAR},
       attachment_url = #{record.attachmentUrl,jdbcType=VARCHAR},
       attachment_dir = #{record.attachmentDir,jdbcType=VARCHAR},
@@ -584,13 +584,13 @@
         smtp_password = #{smtpPassword,jdbcType=VARCHAR},
       </if>
       <if test="smtpVerify != null" >
-        smtp_verify = #{smtpVerify,jdbcType=BIT},
+        smtp_verify = #{smtpVerify,jdbcType=TINYINT},
       </if>
       <if test="smtpPort != null" >
         smtp_port = #{smtpPort,jdbcType=VARCHAR},
       </if>
       <if test="smtpSsl != null" >
-        smtp_ssl = #{smtpSsl,jdbcType=BIT},
+        smtp_ssl = #{smtpSsl,jdbcType=TINYINT},
       </if>
       <if test="smtpFromName != null" >
         smtp_from_name = #{smtpFromName,jdbcType=VARCHAR},
@@ -638,9 +638,9 @@
       smtp_reply = #{smtpReply,jdbcType=VARCHAR},
       smtp_username = #{smtpUsername,jdbcType=VARCHAR},
       smtp_password = #{smtpPassword,jdbcType=VARCHAR},
-      smtp_verify = #{smtpVerify,jdbcType=BIT},
+      smtp_verify = #{smtpVerify,jdbcType=TINYINT},
       smtp_port = #{smtpPort,jdbcType=VARCHAR},
-      smtp_ssl = #{smtpSsl,jdbcType=BIT},
+      smtp_ssl = #{smtpSsl,jdbcType=TINYINT},
       smtp_from_name = #{smtpFromName,jdbcType=VARCHAR},
       attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
       attachment_dir = #{attachmentDir,jdbcType=VARCHAR},
@@ -670,9 +670,9 @@
       smtp_reply = #{smtpReply,jdbcType=VARCHAR},
       smtp_username = #{smtpUsername,jdbcType=VARCHAR},
       smtp_password = #{smtpPassword,jdbcType=VARCHAR},
-      smtp_verify = #{smtpVerify,jdbcType=BIT},
+      smtp_verify = #{smtpVerify,jdbcType=TINYINT},
       smtp_port = #{smtpPort,jdbcType=VARCHAR},
-      smtp_ssl = #{smtpSsl,jdbcType=BIT},
+      smtp_ssl = #{smtpSsl,jdbcType=TINYINT},
       smtp_from_name = #{smtpFromName,jdbcType=VARCHAR},
       attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
       attachment_dir = #{attachmentDir,jdbcType=VARCHAR},

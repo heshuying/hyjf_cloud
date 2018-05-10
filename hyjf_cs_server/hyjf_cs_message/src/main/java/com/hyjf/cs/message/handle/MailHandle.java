@@ -1,32 +1,30 @@
 package com.hyjf.cs.message.handle;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-import javax.mail.*;
-import javax.mail.internet.*;
-
 import com.hyjf.am.vo.config.SiteSettingsVO;
-import com.hyjf.cs.message.client.AmConfigClient;
-import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.util.MyAuthenticator;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.message.client.AmConfigClient;
+import com.hyjf.cs.message.client.AmUserClient;
+import com.hyjf.cs.message.util.MyAuthenticator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.hyjf.common.validator.Validator;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * <p>
@@ -40,7 +38,7 @@ import org.springframework.stereotype.Component;
 public class MailHandle {
 
 	private static final Logger logger = LoggerFactory.getLogger(MailHandle.class);
-	private static SiteSettingsVO setting = null;
+	private static volatile SiteSettingsVO setting = null;
 	/** 超时时间 */
 	private static Integer smtpTimeout = 25000;
 
@@ -49,14 +47,15 @@ public class MailHandle {
 	@Autowired
 	private AmConfigClient amConfigClient;
 
-	@PostConstruct
 	private void init() throws RuntimeException {
-		// 取得邮件服务器信息
-		SiteSettingsVO siteSetting = amConfigClient.findSiteSetting();
-		if (siteSetting == null) {
-			throw new RuntimeException("邮件配置无效");
+		if (setting == null) {
+			// 取得邮件服务器信息
+			SiteSettingsVO siteSetting = amConfigClient.findSiteSetting();
+			if (siteSetting == null) {
+				throw new RuntimeException("邮件配置无效");
+			}
+			setting = siteSetting;
 		}
-		setting = siteSetting;
 	}
 
 	/**
@@ -149,6 +148,7 @@ public class MailHandle {
 	public void sendMailToSelf(String mailKbn, Map<String, String> replaceMap, String[] fileNames)
 			throws Exception {
 		try {
+			init();
 			// 取得模板
 			SmsMailTemplateVO template = amConfigClient.findSmsMailTemplateByCode(mailKbn);
 			String body = replaceAllParameter(template.getMailContent(), replaceMap);
@@ -204,6 +204,7 @@ public class MailHandle {
 	 */
 	private void send(String[] toMailArray, String subject, String content, String[] fileNames)
 			throws Exception {
+		init();
 		if (setting == null) {
 			throw new RuntimeException(CustomConstants.ECOMS001);
 		}

@@ -1374,52 +1374,52 @@ public class SiteSettingsExample {
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyEqualTo(Boolean value) {
+        public Criteria andSmtpVerifyEqualTo(Integer value) {
             addCriterion("smtp_verify =", value, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyNotEqualTo(Boolean value) {
+        public Criteria andSmtpVerifyNotEqualTo(Integer value) {
             addCriterion("smtp_verify <>", value, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyGreaterThan(Boolean value) {
+        public Criteria andSmtpVerifyGreaterThan(Integer value) {
             addCriterion("smtp_verify >", value, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andSmtpVerifyGreaterThanOrEqualTo(Integer value) {
             addCriterion("smtp_verify >=", value, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyLessThan(Boolean value) {
+        public Criteria andSmtpVerifyLessThan(Integer value) {
             addCriterion("smtp_verify <", value, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyLessThanOrEqualTo(Boolean value) {
+        public Criteria andSmtpVerifyLessThanOrEqualTo(Integer value) {
             addCriterion("smtp_verify <=", value, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyIn(List<Boolean> values) {
+        public Criteria andSmtpVerifyIn(List<Integer> values) {
             addCriterion("smtp_verify in", values, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyNotIn(List<Boolean> values) {
+        public Criteria andSmtpVerifyNotIn(List<Integer> values) {
             addCriterion("smtp_verify not in", values, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyBetween(Boolean value1, Boolean value2) {
+        public Criteria andSmtpVerifyBetween(Integer value1, Integer value2) {
             addCriterion("smtp_verify between", value1, value2, "smtpVerify");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpVerifyNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andSmtpVerifyNotBetween(Integer value1, Integer value2) {
             addCriterion("smtp_verify not between", value1, value2, "smtpVerify");
             return (Criteria) this;
         }
@@ -1504,52 +1504,52 @@ public class SiteSettingsExample {
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslEqualTo(Boolean value) {
+        public Criteria andSmtpSslEqualTo(Integer value) {
             addCriterion("smtp_ssl =", value, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslNotEqualTo(Boolean value) {
+        public Criteria andSmtpSslNotEqualTo(Integer value) {
             addCriterion("smtp_ssl <>", value, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslGreaterThan(Boolean value) {
+        public Criteria andSmtpSslGreaterThan(Integer value) {
             addCriterion("smtp_ssl >", value, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andSmtpSslGreaterThanOrEqualTo(Integer value) {
             addCriterion("smtp_ssl >=", value, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslLessThan(Boolean value) {
+        public Criteria andSmtpSslLessThan(Integer value) {
             addCriterion("smtp_ssl <", value, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslLessThanOrEqualTo(Boolean value) {
+        public Criteria andSmtpSslLessThanOrEqualTo(Integer value) {
             addCriterion("smtp_ssl <=", value, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslIn(List<Boolean> values) {
+        public Criteria andSmtpSslIn(List<Integer> values) {
             addCriterion("smtp_ssl in", values, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslNotIn(List<Boolean> values) {
+        public Criteria andSmtpSslNotIn(List<Integer> values) {
             addCriterion("smtp_ssl not in", values, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslBetween(Boolean value1, Boolean value2) {
+        public Criteria andSmtpSslBetween(Integer value1, Integer value2) {
             addCriterion("smtp_ssl between", value1, value2, "smtpSsl");
             return (Criteria) this;
         }
 
-        public Criteria andSmtpSslNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andSmtpSslNotBetween(Integer value1, Integer value2) {
             addCriterion("smtp_ssl not between", value1, value2, "smtpSsl");
             return (Criteria) this;
         }

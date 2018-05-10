@@ -31,7 +31,7 @@ public class SiteSettingsServiceImpl implements SiteSettingsService {
 
     @Override
     public SiteSettings findOne() {
-        SiteSettings siteSettings = (SiteSettings) redisUtil.get(RedisKey.SITE_SETTINGS);
+        SiteSettings siteSettings = null;
         if (siteSettings == null) {
             SiteSettingsExample example = new SiteSettingsExample();
             List<SiteSettings> siteSettingsList = siteSettingsMapper.selectByExample(example);
