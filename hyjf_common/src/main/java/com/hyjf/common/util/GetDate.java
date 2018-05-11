@@ -1332,31 +1332,6 @@ public class GetDate extends PropertyEditorSupport {
 	}
 
 	public static void main(String[] args) throws ParseException {
-		// System.out.println(getMonthDay());
-		// System.out.println(new Date().getTime());
-		// long time = new Date().getTime() / 1000;
-		// System.out.println(GetDate.timestamptoStrYYYYMMDDHHMMSS(String.valueOf(time)));
-		// SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		// Date d1 = sdf.parse("2012-09-08 10:10:10");
-		// Date d2 = sdf.parse("2012-09-15 00:00:00");
-		// System.out.println(daysBetween(d1, d2));
-
-		// System.out.println(getServerDateTime(6, countDate(new Date(), 2,
-		// 1)));
-
-		// System.out.println(daysBetween("2012-09-08 10:10:10", "2012-09-15
-		// 00:00:00"));
-		// System.out.println(GetDate.date2Str(GetDate.date_sdf));
-		// System.out.println(GetDate.date2Str(GetDate.countDateYYYYMMDD(5,
-		// 1),GetDate.date_sdf));
-		// String dates =
-		// GetDate.getDayStart(GetDate.date2Str(GetDate.countDateYYYYMMDD(5, 1),
-		// GetDate.date_sdf));
-		// System.out.println(dates);
-		// System.out.println(GetDate.str2Date(dates,
-		// GetDate.datetimeFormat).getTime() / 1000);
-		// System.out.println(GetDate.getDateMyTimeInMillis(1449504000));
-		// System.out.println(GetDate.getDateTimeMyTime(1449504000));
 		System.out.println(GetDate.getDate("yyyy-MM-dd"));
 	}
 

@@ -3,11 +3,9 @@ package com.hyjf.am.config.dao.mapper.auto;
 import com.hyjf.am.config.dao.model.auto.BanksConfig;
 import com.hyjf.am.config.dao.model.auto.BanksConfigExample;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface BanksConfigMapper {
     int countByExample(BanksConfigExample example);
 

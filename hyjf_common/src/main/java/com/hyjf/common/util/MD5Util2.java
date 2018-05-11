@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;  
   
-public class MD5Util2 {  
+public class MD5Util2 {
     /** 
      * 默认的密码字符串组合，用来将字节转换成 16 进制表示的字符,apache校验下载的文件的正确性用的就是默认的这个组合 
      */  
@@ -118,11 +118,8 @@ public class MD5Util2 {
         long begin = System.currentTimeMillis();  
   
         File file = new File("C:/12345.txt");  
-        String md5 = getFileMD5String(file);  
-  
-//      String md5 = getMD5String("a");  
-          
+        String md5 = getFileMD5String(file);
         long end = System.currentTimeMillis();  
-        System.out.println("md5:" + md5 + " time:" + ((end - begin) / 1000) + "s");  
+        System.out.println("md5:" + md5 + " time:" + ((end - begin) / 1000) + "s");
     }  
 }  

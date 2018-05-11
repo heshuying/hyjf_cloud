@@ -60,30 +60,29 @@ public class RechargeServiceImpl implements RechargeService {
 
 	@Override
 	public int insertSelective(BankRequest bankRequest){
-		int nowTime = GetDate.getNowTime10(); // 当前时间
-		// 银行卡号
+		int nowTime = GetDate.getNowTime10();
 		String cardNo = bankRequest.getCardNo();
-		BigDecimal money = new BigDecimal(bankRequest.getTxAmount()); // 充值金额
+		BigDecimal money = new BigDecimal(bankRequest.getTxAmount());
 		AccountRecharge record = new AccountRecharge();
 		record.setNid(bankRequest.getLogOrderId()); // 订单号
-		record.setUserId(Integer.parseInt(bankRequest.getLogUserId())); // 用户ID
+		record.setUserId(Integer.parseInt(bankRequest.getLogUserId()));
 		record.setUsername(bankRequest.getLogUserName());// 用户 名
-		record.setTxDate(Integer.parseInt(bankRequest.getTxDate()));// 交易日期
-		record.setTxTime(Integer.parseInt(bankRequest.getTxTime()));// 交易时间
-		record.setSeqNo(Integer.parseInt(bankRequest.getSeqNo())); // 交易流水号
-		record.setBankSeqNo(bankRequest.getTxDate() + bankRequest.getTxTime() + bankRequest.getSeqNo()); // 交易日期+交易时间+交易流水号
+		record.setTxDate(Integer.parseInt(bankRequest.getTxDate()));
+		record.setTxTime(Integer.parseInt(bankRequest.getTxTime()));
+		record.setSeqNo(Integer.parseInt(bankRequest.getSeqNo()));
+		record.setBankSeqNo(bankRequest.getTxDate() + bankRequest.getTxTime() + bankRequest.getSeqNo());
 		record.setStatus(RECHARGE_STATUS_WAIT); // 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
-		record.setAccountId(bankRequest.getAccountId());// 电子账号
-		record.setMoney(money); // 金额
-		record.setCardid(cardNo);// 银行卡号
-		record.setFeeFrom(null);// 手续费扣除方式
-		record.setFee(BigDecimal.ZERO); // 费用
-		record.setDianfuFee(BigDecimal.ZERO);// 垫付费用
+		record.setAccountId(bankRequest.getAccountId());
+		record.setMoney(money);
+		record.setCardid(cardNo);
+		record.setFeeFrom(null);
+		record.setFee(BigDecimal.ZERO);
+		record.setDianfuFee(BigDecimal.ZERO);
 		record.setBalance(money); // 实际到账余额
-		record.setPayment(bankRequest == null ? "" : bankRequest.getBank()); // 所属银行
-		record.setGateType("QP"); // 网关类型：QP快捷支付
+		record.setPayment(bankRequest == null ? "" : bankRequest.getBank());
+		record.setGateType("QP");
 		record.setType(1); // 类型.1网上充值.0线下充值
-		record.setRemark("快捷充值");// 备注
+		record.setRemark("快捷充值");
 		record.setCreateTime(nowTime);
 		record.setOperator(bankRequest.getLogUserId());
 		record.setAddtime(String.valueOf(nowTime));
@@ -130,15 +129,10 @@ public class RechargeServiceImpl implements RechargeService {
 	@Override
 	public boolean updateBanks(AccountRechargeVO accountRechargeVO, String ip){
 		{
-			// 充值订单号
 			String orderId = accountRechargeVO.getLogOrderId();
-			// 用户Id
 			Integer userId = Integer.parseInt(accountRechargeVO.getLogUserId());
-			// 交易金额
 			BigDecimal txAmount = new BigDecimal(accountRechargeVO.getTxAmount());
-			// 电子账户
 			String accountId = accountRechargeVO.getAccountId();
-			// 当前时间
 			int nowTime = GetDate.getNowTime10();
 			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRechargeVO.getStatus());
@@ -155,37 +149,35 @@ public class RechargeServiceImpl implements RechargeService {
 			AccountExample example = new AccountExample();
 			AccountExample.Criteria criteria = example.createCriteria();
 			criteria.andUserIdEqualTo(userId);
-			// 重新获取用户账户信息
 			List<Account> listAccount = accountMapper.selectByExample(example);
 			Account account = new Account();
 			if (listAccount != null && listAccount.size() > 0) {
 				 account = listAccount.get(0);
 			}
-			// 生成交易明细
 			AccountList accountList = new AccountList();
 			accountList.setNid(orderId);
 			accountList.setUserId(userId);
 			accountList.setAmount(txAmount);
-			accountList.setTxDate(accountRechargeVO.getTxDate());// 交易日期
-			accountList.setTxTime(accountRechargeVO.getTxTime());// 交易时间
-			accountList.setSeqNo(StringUtil.valueOf(accountRechargeVO.getSeqNo()));// 交易流水号
+			accountList.setTxDate(accountRechargeVO.getTxDate());
+			accountList.setTxTime(accountRechargeVO.getTxTime());
+			accountList.setSeqNo(StringUtil.valueOf(accountRechargeVO.getSeqNo()));
 			accountList.setBankSeqNo(StringUtil.valueOf(accountRechargeVO.getTxDate() + accountRechargeVO.getTxTime() + accountRechargeVO.getSeqNo()));
 			accountList.setType(1);
 			accountList.setTrade("recharge");
 			accountList.setTradeCode("balance");
 			accountList.setAccountId(accountId);
-			accountList.setBankTotal(account.getBankTotal()); // 银行总资产
-			accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
-			accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
-			accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
-			accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
-			accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
-			accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
+			accountList.setBankTotal(account.getBankTotal());
+			accountList.setBankBalance(account.getBankBalance());
+			accountList.setBankFrost(account.getBankFrost());
+			accountList.setBankWaitCapital(account.getBankWaitCapital());
+			accountList.setBankWaitInterest(account.getBankWaitInterest());
+			accountList.setBankAwaitCapital(account.getBankAwaitCapital());
+			accountList.setBankAwaitInterest(account.getBankAwaitInterest());
 			accountList.setBankAwait(account.getBankAwait());// 银行待收总额
-			accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-			accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
-			accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
-			accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
+			accountList.setBankInterestSum(account.getBankInterestSum());
+			accountList.setBankInvestSum(account.getBankInvestSum());
+			accountList.setBankWaitRepay(account.getBankWaitRepay());
+			accountList.setPlanBalance(account.getPlanBalance());
 			accountList.setPlanFrost(account.getPlanFrost());
 			accountList.setTotal(account.getTotal());
 			accountList.setBalance(account.getBalance());

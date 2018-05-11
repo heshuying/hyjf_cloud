@@ -144,7 +144,6 @@ public class ThreeDESUtils {
 //		
 		String kkey = key + timestamp;
 //
-//		System.out.println(""+all);
 		long end1= System.currentTimeMillis();
 		System.out.println("耗时："+(end1-start1)+"毫秒");
 		System.out.println("-----------------------------------");

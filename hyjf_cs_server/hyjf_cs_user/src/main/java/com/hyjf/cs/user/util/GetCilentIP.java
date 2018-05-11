@@ -1,14 +1,15 @@
 package com.hyjf.cs.user.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
 import javax.servlet.http.HttpServletRequest;
 
 public class GetCilentIP {
-
+	static  Logger logger =  LoggerFactory.getLogger(GetCilentIP.class);
 	/**
 	 * 获取主机的ip地址
 	 * 
@@ -49,7 +50,7 @@ public class GetCilentIP {
 
 		// 获取网卡，获取地址
 		byte[] mac = NetworkInterface.getByInetAddress(ia).getHardwareAddress();
-		System.out.println("mac数组长度：" + mac.length);
+		logger.info("mac数组长度：" + mac.length);
 		StringBuffer sb = new StringBuffer("");
 		for (int i = 0; i < mac.length; i++) {
 			if (i != 0) {
@@ -58,7 +59,7 @@ public class GetCilentIP {
 			// 字节转换为整数
 			int temp = mac[i] & 0xff;
 			String str = Integer.toHexString(temp);
-			System.out.println("每8位:" + str);
+			logger.info("每8位:" + str);
 			if (str.length() == 1) {
 				sb.append("0" + str);
 			} else {

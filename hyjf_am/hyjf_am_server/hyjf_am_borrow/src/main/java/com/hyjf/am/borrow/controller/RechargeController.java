@@ -1,5 +1,6 @@
 package com.hyjf.am.borrow.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.borrow.dao.model.auto.Account;
 import com.hyjf.am.borrow.dao.model.auto.AccountList;
 import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
@@ -12,7 +13,6 @@ import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
-import com.hyjf.am.vo.user.BankCallVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -46,7 +46,7 @@ public class RechargeController {
     })
     @GetMapping("/getAccount/{userId}")
     public AccountResponse getAccount(@PathVariable(value = "userId") Integer userId){
-        logger.info("getAccount:"+userId);
+        logger.info("getAccount...param is :{}", JSONObject.toJSONString(userId));
         AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(userId);
         if(null != account){
@@ -56,7 +56,6 @@ public class RechargeController {
         }
         return response;
     }
-
 
     /**
      * 查询充值记录
@@ -69,6 +68,7 @@ public class RechargeController {
     })
     @GetMapping("/selectByOrderId/{orderId}")
     public AccountRechargeResponse selectByOrderId(@PathVariable String orderId){
+        logger.info("selectByOrderId...param is :{}", JSONObject.toJSONString(orderId));
         AccountRechargeExample example = new AccountRechargeExample();
         example.createCriteria().andNidEqualTo(orderId);
         AccountRechargeResponse response = new AccountRechargeResponse();
@@ -81,8 +81,6 @@ public class RechargeController {
         return response;
     }
 
-
-
     /**
      *
      * @param newAccount
@@ -94,6 +92,7 @@ public class RechargeController {
     })
     @PostMapping("/updateBankRechargeSuccess")
     public int updateBankRechargeSuccess(@RequestBody Account newAccount){
+        logger.info("updateBankRechargeSuccess...param is :{}", JSONObject.toJSONString(newAccount));
         int isAccountUpdateFlag = rechargeService.updateBankRechargeSuccess(newAccount);
         return isAccountUpdateFlag;
     }
@@ -109,6 +108,7 @@ public class RechargeController {
     })
     @PostMapping("/insertSelective")
     public int insertSelective(@RequestBody AccountList accountList){
+        logger.info("insertSelective...param is :{}", JSONObject.toJSONString(accountList));
         int isAccountListUpdateFlag = rechargeService.insertSelective(accountList);
         return isAccountListUpdateFlag;
     }
@@ -123,23 +123,27 @@ public class RechargeController {
     })
     @PutMapping("/updateByPrimaryKeySelective")
     public void updateByPrimaryKeySelective(@RequestBody AccountRecharge accountRecharge){
+        logger.info("updateByPrimaryKeySelective...param is :{}", JSONObject.toJSONString(accountRecharge));
         this.rechargeService.updateByPrimaryKeySelective(accountRecharge);
     }
 
     @GetMapping("/selectByOrdId/{ordId}")
     public int selectByOrdId(@PathVariable String ordId){
+        logger.info("selectByOrdId...param is :{}", JSONObject.toJSONString(ordId));
         int ret = this.rechargeService.selectByOrdId(ordId);
         return ret;
     }
 
     @PostMapping("/insertSelectiveBank")
     public int insertSelectiveBank(@RequestBody BankRequest bankRequest){
+        logger.info("insertSelectiveBank...param is :{}", JSONObject.toJSONString(bankRequest));
         int ret = rechargeService.insertSelective(bankRequest);
         return ret;
     }
 
     @PostMapping("/updateBanks")
     public boolean updateBanks(@RequestBody BankAccountBeanRequest bankAccountBeanRequest) {
+        logger.info("updateBanks...param is :{}", JSONObject.toJSONString(bankAccountBeanRequest));
         AccountRechargeVO accountRecharge =  bankAccountBeanRequest.getAccountRecharge();
         String ip =  bankAccountBeanRequest.getIp();
         boolean flag = rechargeService.updateBanks(accountRecharge,ip);
