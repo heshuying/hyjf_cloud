@@ -2,7 +2,7 @@
  * Description:银行存管接口util类
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
- * @author: wangkun
+ * @author: zhangqq
  * @version: 1.0
  * Created at: 2015年11月23日 上午11:48:46
  * Modification History:
@@ -13,16 +13,12 @@ package com.hyjf.pay.lib.bank.util;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
 import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.Serializable;
@@ -48,9 +44,6 @@ public class BankCallUtils implements Serializable {
 	/** 接口路径(后台)查询用 */
 	private static final String REQUEST_MAPPING_CALLAPIBG_FORQUERY = "/callApiBgForQuery.json";
 	
-//	static PaySystemConfig paySystemConfig = new PaySystemConfig();
-
-//	@Autowired
 	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
 
 	/**

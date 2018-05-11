@@ -89,9 +89,6 @@ public class ChinaPnrSignUtils implements Serializable {
         SecureLink sl = new SecureLink();
         try {
             verifySignResult = sl.VeriSignMsg(MER_PUB_KEY_PATH, forEncryptionStr, chkValue);
-//            System.out.println("***************被签名的数据体forEncryptionStr:\n"+forEncryptionStr);
-//            System.out.println("***************需要验证的签名chkValue:\n"+chkValue);
-//            System.out.println("***************验签结果:"+verifySignResult);
         } catch (Exception e) {
             log.error(String.valueOf(e));
             // 打印日志

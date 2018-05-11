@@ -42,26 +42,6 @@ public class MD5Utils {
 	}
 
 	public static void main(String[] args) throws IOException {
-		// MD5_Test aa = new MD5_Test();
-//		String key = "123456788765432112345678";
-//		Integer timestamp = 1450830576;
-//		StringBuffer all = new StringBuffer();
-//		for (int i = 1450830576; i <= 1450840576; i++) {
-//			String kkey = key + i;
-//			String md5 = MD5Utils.MD5(kkey);
-//			System.out.println(md5.substring(0, 24));
-//			AppendFile.method1("D:\\key100.java", md5.substring(0, 24)+"\n");
-//		}
-//		System.out.println("Done");
-//
-//		String kkey = key + timestamp;
-//		System.out.println("" + all);
-//		long end1 = System.currentTimeMillis();
-		// String md5 = MD5_Test.MD5(kkey);
-		// System.out.println(md5.length());
-		// System.out.print(md5.substring(0, 24));
-		
-//		password= MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
 		System.out.println(MD5Utils.MD5(MD5Utils.MD5("123456") + "iq3Gyf"));
 		
 	}

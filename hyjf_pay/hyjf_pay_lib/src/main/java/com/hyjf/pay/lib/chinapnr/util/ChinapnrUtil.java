@@ -247,85 +247,12 @@ public class ChinapnrUtil {
         return uuid;
     }
 
-    // /**
-    // * 设置商户私有域
-    // *
-    // * @param bean
-    // */
-    // public static void setMerPriv(ChinapnrBean bean) {
-    // // 设置商户私有域
-    // JSONObject jo = new JSONObject();
-    // String uuid = UUID.randomUUID().toString();
-    // bean.setUuid(uuid);
-    // // String merPriv = bean.getMerPriv();
-    // // if (Validator.isNotNull(merPriv)) {
-    // // try {
-    // // jo = JSONObject.parseObject(merPriv);
-    // // } catch (Exception e) {
-    // // jo = new JSONObject();
-    // // jo.put("merPriv", merPriv);
-    // // }
-    // // }
-    // //jo.put("retUrl", bean.getRetUrl());
-    // jo.put("uuid", bean.getUuid());
-    // //bean.setRetUrl(getRetUrl());
-    // //bean.set(ChinaPnrConstant.PARAM_RETURL, getRetUrl());
-    // try {
-    // String merPrivBase64 =
-    // URLEncoder.encode(HttpClientHandler.getBase64Encode(jo.toString()),
-    // "UTF-8");
-    // bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPrivBase64);
-    // bean.setMerPriv(merPrivBase64);
-    // } catch (UnsupportedEncodingException e) {
-    // LogUtil.errorLog(THIS_CLASS, "setMerPriv", "商户私有域加密失败.[商户私有域:" +
-    // jo.toString() + "]", e);
-    // }
-    // }
-    //
-    // /**
-    // * 取得商户私有域
-    // *
-    // * @param bean
-    // * @return
-    // */
-    // public static void getMerPriv(ChinapnrBean bean) {
-    // // 取得商户私有域
-    // String paramMerPriv = bean.getMerPriv();
-    // try {
-    // if (Validator.isNotNull(bean.getMerPriv())) {
-    // String merPrivBase64 = URLDecoder.decode(paramMerPriv, "UTF-8");
-    // merPrivBase64 = URLDecoder.decode(merPrivBase64, "UTF-8");
-    // String merPriv = HttpClientHandler.getBase64Decode(merPrivBase64);
-    //
-    // if (Validator.isNotNull(merPriv)) {
-    // JSONObject jo = JSONObject.parseObject(merPriv);
-    // bean.setUuid(jo.getString("uuid"));
-    // //bean.setRetUrl(jo.getString("retUrl"));
-    // // 回复商户私有域
-    // // if (Validator.isNotNull(jo.getString("merPriv"))) {
-    // // merPriv = jo.getString("merPriv");
-    // // } else {
-    // // merPriv = "";
-    // // }
-    // bean.setMerPriv(merPriv);
-    // bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPriv);
-    // }
-    // }
-    // } catch (Exception e) {
-    // LogUtil.errorLog(THIS_CLASS, "getUUID", "商户私有域解密失败.[商户私有域:" +
-    // paramMerPriv + "]", e);
-    // }
-    // }
-
     public static void main(String[] args) {
         ChinapnrBean bean = new ChinapnrBean();
         bean.setVersion("10");
         bean.setCmdId("QueryBalanceBg");
         bean.setUsrCustId("6000060001672694");
         try {
-            // ModelAndView modelAndView = callApi(bean);
-            // System.out.println(modelAndView);
-
             ChinapnrBean b = callApiBg(bean);
             System.out.println(b.getRespCode());
 

@@ -10,7 +10,6 @@ import com.hyjf.am.vo.borrow.BankCardVO;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.BankCallVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -33,13 +32,14 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,11 +47,12 @@ import java.util.Map;
 /**
  * 用户充值Service实现类
  * 
- * @author
+ * @author zhangqq
  *
  */
 @Service
 public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeService  {
+	Logger  logger = LoggerFactory.getLogger(RechargeServiceImpl.class);
 
 	@Autowired
 	RechargeClient rechargeClient;
@@ -61,6 +62,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 	@Autowired
 	AppMessageProducer appMessageProducer;
+
 	@Autowired
 	SmsProducer smsProducer;
 
@@ -96,15 +98,11 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		if (ret == 0) {
 			return ret;
 		}
-		// 银行卡号
 		String cardNo = bean.getCardNo();
-		// 根据银行卡号检索银行卡信息
 		BankCardVO bankCard = rechargeClient.getBankCardByCardNo(Integer.parseInt(bean.getLogUserId()), cardNo);
-
 		MultiValueMap<String, Object> requestEntity = new LinkedMultiValueMap<>();
 		requestEntity.add("bankCallBean", bean);
 		requestEntity.add("bankCard", bankCard);
-
 		BankRequest bankRequest = new BankRequest();
 		BeanUtils.copyProperties(bean,bankRequest);
 		bankRequest.setBank(bankCard.getBank());
@@ -140,13 +138,11 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		String accountId = bean.getAccountId();
 		// 充值成功
 		if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-			// 查询用户账户,为了版本控制,必须把查询用户账户放在最前面
-			AccountVO account = rechargeClient.getAccount(userId);
 			// 查询充值记录
 			AccountRechargeVO accountRecharge = rechargeClient.selectByOrderId(orderId);// 查询充值记录
 			// 如果没有充值记录
 			if (accountRecharge != null) {
-				//add by cwyang 增加redis防重校验 2017-08-02
+				//redis防重校验
 				boolean reslut = RedisUtils.tranactionSet("recharge_orderid" + orderId, 10);
 				if(!reslut){
 					return jsonMessage("充值成功", "0");
@@ -178,8 +174,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 						bankAccountBeanRequest.setIp(ip);
 						boolean flag = rechargeClient.updateBanks(bankAccountBeanRequest);
 						if (flag) {
-							// 更新成功
-							// 如果需要短信
 							UserVO users = rechargeClient.getUsers(userId);
 							// 可以发送充值短信时
 							if (users != null && users.getRechargeSms() != null && users.getRechargeSms() == 0) {
@@ -190,14 +184,12 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 								UserInfoVO info = getUsersInfoByUserId(userId);
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
-
 								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null,
 										MessageConstant.SMSSENDFORUSER, null,
 										CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
 										CustomConstants.CHANNEL_TYPE_NORMAL);
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
 										MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-
 								smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
 										JSON.toJSONBytes(smsMessage)));
 								appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
@@ -231,7 +223,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 					}
 				}
 			} else {
-				System.out.println("充值失败,未查询到相应的充值记录." + "用户ID:" + userId + ",充值订单号:" + orderId);
+				logger.info("充值失败,未查询到相应的充值记录." + "用户ID:" + userId + ",充值订单号:" + orderId);
 				return jsonMessage("充值失败,未查询到相应的充值记录", "1");
 			}
 		} else {
@@ -239,12 +231,11 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 			AccountRechargeVO accountRecharge =this.rechargeClient.selectByOrderId(orderId);
 			if (accountRecharge != null ) {
 				if (RECHARGE_STATUS_WAIT == accountRecharge.getStatus()) {
-					// 更新处理状态
-					accountRecharge.setStatus(RECHARGE_STATUS_FAIL);// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
+					accountRecharge.setStatus(RECHARGE_STATUS_FAIL);
 					accountRecharge.setUpdateTime(nowTime);
 					accountRecharge.setMessage(errorMsg);
-					accountRecharge.setAccountId(accountId);// 电子账户
-					accountRecharge.setBankSeqNo(txDate + txTime + seqNo);// 交易流水号
+					accountRecharge.setAccountId(accountId);
+					accountRecharge.setBankSeqNo(txDate + txTime + seqNo);
 					this.rechargeClient.updateByPrimaryKeySelective(accountRecharge);
 				}
 			}
@@ -255,7 +246,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 
 	public String getBankRetMsg(String retCode) {
-		//如果错误码不为空
 		if (StringUtils.isNotBlank(retCode)) {
 			BankReturnCodeConfigVO codeConfig = this.rechargeClient.getBankReturnCodeConfig(retCode);
 			if (codeConfig != null ) {
@@ -309,7 +299,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		ModelAndView mv = new ModelAndView();
 		// 充值订单号
 		String logOrderId = GetOrderIdUtils.getOrderId2(rechargeBean.getUserId());
-		// 充值订单日期
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		// 调用 2.3.4联机绑定卡到电子账户充值
 		BankCallBean bean = new BankCallBean();

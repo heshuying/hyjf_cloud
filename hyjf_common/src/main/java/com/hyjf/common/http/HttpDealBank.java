@@ -1,13 +1,8 @@
 package com.hyjf.common.http;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.hyjf.common.util.StringPool;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -15,17 +10,16 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.hyjf.common.util.StringPool;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * 在java中处理http请求.
@@ -38,7 +32,7 @@ public class HttpDealBank {
 
 	static HostnameVerifier hv = new HostnameVerifier() {
 		public boolean verify(String urlHostName, SSLSession session) {
-			System.out.println("Warning: URL Host: " + urlHostName + " vs. " + session.getPeerHost());
+			log.info("Warning: URL Host: " + urlHostName + " vs. " + session.getPeerHost());
 			return true;
 		}
 	};
@@ -113,7 +107,6 @@ public class HttpDealBank {
 			// 请求到即信端
 			ResponseEntity response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
 			// 响应报文
-			//System.out.println("(即信端-->P2P)响应报文：\r\n" + response.getBody().toString().replace(",", ",\r\n"));
 			Map<String,String> responseMap = (Map<String,String>) response.getBody();
 			result = JSONObject.toJSONString(responseMap);
 		} catch (Exception e) {

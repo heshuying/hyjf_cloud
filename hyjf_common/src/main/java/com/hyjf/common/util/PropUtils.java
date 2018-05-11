@@ -19,13 +19,13 @@ public class PropUtils {
 	protected static final String SYSTEM_RESOURCES_PROPERTIES_FILE_NAME = "properties/system.properties";
 
 	protected static final String REDIS_RESOURCES_PROPERTIES_FILE_NAME = "properties/redis.properties";
-	
+
 	protected static final String JDBC_RESOURCES_PROPERTIES_FILE_NAME = "properties/jdbc.properties";
 
 
 	/**
 	 * 取得所有属性值
-	 * 
+	 *
 	 * @param propertiesFileName
 	 * @return
 	 * @throws IOException
@@ -138,7 +138,7 @@ public class PropUtils {
         }
         return null;
     }
-    
+
     /**
      * 取得jdbc文件的属性值
      *

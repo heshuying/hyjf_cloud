@@ -48,8 +48,6 @@ public class CommonUtils {
 				try {
 					field.setAccessible(true); // 设置些属性是可以访问的
 					Object val = field.get(obj);
-					// System.out.println(field.getName() + "=" + (String) val);
-
 					if (val == null) {
 						field.set(obj, "");
 					}

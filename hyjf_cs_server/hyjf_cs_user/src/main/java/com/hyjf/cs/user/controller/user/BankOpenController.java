@@ -52,7 +52,6 @@ public class BankOpenController {
 
 	@RequestMapping(value = "/init")
 	public String init(Model model) {
-		
 		return "bankopen/init";
 	}
 
