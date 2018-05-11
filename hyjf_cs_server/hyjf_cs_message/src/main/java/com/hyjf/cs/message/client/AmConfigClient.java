@@ -2,6 +2,7 @@ package com.hyjf.cs.message.client;
 
 import com.hyjf.am.response.borrow.BankCardResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
+import com.hyjf.am.response.config.SmsTemplateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -34,14 +35,21 @@ public class AmConfigClient {
 	 * @return
 	 */
 	public SmsTemplateVO findSmsTemplateByCode(String tplCode) {
-		RestResponse<SmsTemplateVO> resp = Rests.exc(() -> {
-			String url = Rests.toUrl(amConfigServiceName, "/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode);
-			ResponseEntity<RestResponse<SmsTemplateVO>> responseEntity = rest.get(url,
-					new ParameterizedTypeReference<RestResponse<SmsTemplateVO>>() {
-					});
-			return responseEntity.getBody();
-		});
-		return resp.getResult();
+//		RestResponse<SmsTemplateVO> resp = Rests.exc(() -> {
+//			String url = Rests.toUrl(amConfigServiceName, "/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode);
+//			ResponseEntity<RestResponse<SmsTemplateVO>> responseEntity = rest.get(url,
+//					new ParameterizedTypeReference<RestResponse<SmsTemplateVO>>() {
+//					});
+//			return responseEntity.getBody();
+//		});
+//		return resp.getResult();
+
+		SmsTemplateResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplateByCode/"+ tplCode, SmsTemplateResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 	/**

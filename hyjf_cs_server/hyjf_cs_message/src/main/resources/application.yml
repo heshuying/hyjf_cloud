@@ -43,3 +43,6 @@ am:
   user:
     service:
       name: AM-USER
+
+env:
+  test : true

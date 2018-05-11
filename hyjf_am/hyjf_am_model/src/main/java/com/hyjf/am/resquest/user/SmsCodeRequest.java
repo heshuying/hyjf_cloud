@@ -15,7 +15,7 @@ public class SmsCodeRequest extends BaseVO {
 	private String verificationType;
 	// 平台
 	private String platform;
-	// 验证码
+	// 验证码状态
 	private Integer status;
 	// 验证码更新状态
 	private Integer updateStatus;
