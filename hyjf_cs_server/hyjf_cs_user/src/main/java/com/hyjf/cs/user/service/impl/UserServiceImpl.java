@@ -16,6 +16,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.user.service.ActivityService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,6 @@ import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.redis.StringRedisUtil;
-import com.hyjf.cs.user.service.CouponService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
-	private CouponService couponService;
+	private ActivityService activityService;
 	@Autowired
 	private CouponProducer couponProducer;
 	@Autowired
@@ -266,7 +266,7 @@ public class UserServiceImpl implements UserService {
 
 		// 2. 投之家用户注册送券活动
 		// 活动有效期校验
-		if (!couponService.checkActivityIfAvailable(activityIdTzj)) {
+		if (!activityService.checkActivityIfAvailable(activityIdTzj)) {
 			// 投之家用户额外发两张加息券
 			if (StringUtils.isNotEmpty(userVO.getReferrerUserName())
 					&& userVO.getReferrerUserName().equals("touzhijia")) {
@@ -288,7 +288,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 3. 注册送188元新手红包
-		if (!couponService.checkActivityIfAvailable(activityId)) {
+		if (!activityService.checkActivityIfAvailable(activityId)) {
 			try {
 				JSONObject params = new JSONObject();
 				params.put("mqMsgId", GetCode.getRandomCode(10));
