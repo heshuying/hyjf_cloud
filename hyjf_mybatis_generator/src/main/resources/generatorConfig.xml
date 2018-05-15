@@ -43,8 +43,54 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
+        <!-- hyjf_user -->
+
+        <!-- 用户银行卡信息表 -->
+        <table tableName="ht_account_bank" domainObjectName="AccountBank">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="bank_status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+        <!-- 用户汇付开户记录表 -->
+        <table tableName="ht_account_chinapnr" domainObjectName="AccountChinapnr">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+        <!-- 测评结果表 -->
+        <table tableName="ht_evalation" domainObjectName="Evalation">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户测评总结表 -->
+        <table tableName="ht_user_evalation_result" domainObjectName="UserEvalationResult">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户测评问卷结果表 -->
+        <table tableName="ht_user_evalation" domainObjectName="UserEvalation">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户测试行为表 -->
+        <table tableName="ht_user_evalation_behavior" domainObjectName="UserEvalationBehavior">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 短信发送 -->
+        <table tableName="ht_smscode" domainObjectName="SmsCode">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 推荐人关联表 -->
+        <table tableName="ht_spreads_user" domainObjectName="SpreadsUser">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 推荐人修改日志表 -->
+        <table tableName="ht_spreads_user_log" domainObjectName="SpreadsUserLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 推广提成发送日志 -->
+        <table tableName="ht_spreads_log" domainObjectName="SpreadsLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="pay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_valid" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
         <!-- 用戶表 -->
-        <table tableName="huiyingdai_users" domainObjectName="Users">
+        <table tableName="ht_user" domainObjectName="User">
             <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
             <columnOverride column="open_account" javaType="java.lang.Integer" jdbcType="TINYINT"/>
@@ -68,10 +114,9 @@
             <columnOverride column="is_evaluation_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
             <columnOverride column="is_ca_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
-
         <!-- 用戶详情表 -->
-        <table tableName="huiyingdai_users_info" domainObjectName="UsersInfo">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        <table tableName="ht_user_info" domainObjectName="UserInfo">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="department_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_staff" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -82,62 +127,131 @@
             <columnOverride column="email_isApprove" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="borrower_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        <!-- 用户紧急联络人表 -->
+        <table tableName="ht_user_contact" domainObjectName="UserContract">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户log日志表 -->
+        <table tableName="ht_user_log" domainObjectName="UserLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
         <!-- 用户预注册表 -->
-        <table tableName="hyjf_pre_regist" domainObjectName="PreRegist">
+        <table tableName="ht_pre_regist" domainObjectName="PreRegist">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="regist_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
-        <!-- 用户账户表 -->
-        <table tableName="huiyingdai_account" domainObjectName="Account">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="isok" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
-        <!-- 推荐人关联表 -->
-        <table tableName="huiyingdai_spreads_users" domainObjectName="SpreadsUsers">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-
-        <!-- 推广链接注册表 -->
-        <table tableName="huiyingdai_utm_reg" domainObjectName="UtmReg">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="open_account" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="bind_card" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
-        <!-- 用户log日志表 -->
-        <table tableName="huiyingdai_users_log" domainObjectName="UsersLog">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-        <!-- 用户信息操作履历表 -->
-        <table tableName="huiyingdai_users_modify_log" domainObjectName="UsersModifyLog">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-
-        <!-- 短信发送 -->
-        <table tableName="huiyingdai_smscode" domainObjectName="SmsCode">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
         <!-- 用户江西银行开户日志表 -->
-        <table tableName="hyjf_bank_open_account_log" domainObjectName="BankOpenAccountLog">
+        <table tableName="ht_bank_open_account_log" domainObjectName="BankOpenAccountLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="client" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!-- 用户江西银行开户表 -->
-        <table tableName="hyjf_bank_open_account" domainObjectName="BankOpenAccount">
+        <table tableName="ht_bank_open_account" domainObjectName="BankOpenAccount">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
+
+        <!-- 用户授权记录 -->
+        <table tableName="ht_appointment_auth_log" domainObjectName="AppointmentAuthLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户违约记录 -->
+        <table tableName="ht_appointment_recod_log" domainObjectName="AppointmentRecodLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户江西银行银行卡表 -->
+        <table tableName="ht_bank_card" domainObjectName="BankCard">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 用户银行卡操作记录表 -->
+        <table tableName="ht_bank_card_log" domainObjectName="BankCardLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="card_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="operation_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 第三方平台用户绑定表-->
+        <table tableName="ht_bind_user" domainObjectName="BindUser">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="bind_unique_id" javaType="java.lang.Long" jdbcType="INTEGER" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!--用户CA认证记录表-->
+        <table tableName="ht_certificate_authority" domainObjectName="CertificateAuthority">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="id_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 企业用户开户表 -->
+        <table tableName="ht_corp_open_account_record" domainObjectName="CorpOpenAccountRecord">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_bank" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 用户自动投标签约表 -->
+        <table tableName="ht_hjh_user_auth" domainObjectName="HjhUserAuth">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="auto_inves_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_credit_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_withdraw_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_consume_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_payment_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 用户授权日志表 -->
+        <table tableName="ht_hjh_user_auth_log" domainObjectName="HjhUserAuthLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="order_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auth_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="operate_esb" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 推广链接平台表 -->
+        <table tableName="ht_utm_plat" domainObjectName="UtmPlat">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="source_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="attorn_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 推广链接表 -->
+        <table tableName="ht_utm" domainObjectName="Utm">
+            <generatedKey column="utm_id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 推广链接表 -->
+        <table tableName="ht_utm_visit" domainObjectName="UtmVisit">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="login" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 推广链接注册表 -->
+        <table tableName="ht_utm_reg" domainObjectName="UtmReg">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="open_account" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="bind_card" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
         <!-- APP渠道统计详情表 -->
-        <table tableName="hyjf_app_channel_statistics_detail" domainObjectName="AppChannelStatisticsDetail">
+        <table tableName="ht_app_channel_statistics_detail" domainObjectName="AppChannelStatisticsDetail">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
+
+
+
+
+
+
+        <!-- hyjf_config -->
+
+        <!-- 网关配置表 -->
+        <table tableName="ht_gateway_api_config" domainObjectName="GatewayApiConfig">
+        </table>
+        <!-- 短信配置表 -->
+        <table tableName="ht_sms_config" domainObjectName="SmsConfig">
+        </table>
 
         <!-- 广告表 -->
         <table tableName="huiyingdai_ads" domainObjectName="Ads">
@@ -146,6 +260,14 @@
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_end" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="newuser_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+
+        <!-- hyjf_borrow -->
+        <!-- 用户账户表 -->
+        <table tableName="huiyingdai_account" domainObjectName="Account">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="isok" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <!-- 标的详情 -->
@@ -170,33 +292,6 @@
             <columnOverride column="entrusted_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="asset_attributes" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_engine_used" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
-
-        <!-- 消息发送 -->
-        <table tableName="hyjf_message_push_msg" domainObjectName="MessagePushMsg">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="msg_action" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="msg_destination_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="msg_send_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="msg_send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-        <!-- 用户信息接收记录 -->
-        <table tableName="hyjf_message_push_msg_history" domainObjectName="MessagePushMsgHistory">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="msg_action" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="msg_firstread_plat" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="msg_destination_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="msg_send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
-
-        <!-- 网关配置表 -->
-        <table tableName="s_gateway_api_config" domainObjectName="GatewayApiConfig">
-        </table>
-
-        <!-- 短信配置表 -->
-        <table tableName="huiyingdai_sms_config" domainObjectName="SmsConfig">
         </table>
 
 

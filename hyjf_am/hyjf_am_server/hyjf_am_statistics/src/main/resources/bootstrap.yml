@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: AM-STATISTICS
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:1111/eureka/
+  instance:
+    preferIpAddress: true
+server:
+  port: 8085
+
+logging:
+  file: am-statistics.log

@@ -279,7 +279,8 @@ public class UserServiceImpl implements UserService {
 				json.put("remark", "投之家用户注册送加息券");
 				json.put("sendFlg", 0);
 				try {
-					couponProducer.messageSend(new Producer.MassageContent(MQConstant.TZJ_REGISTER_INTEREST_TOPIC, JSON.toJSONBytes(json)));
+					couponProducer.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC,
+							MQConstant.TZJ_REGISTER_INTEREST_TAG, JSON.toJSONBytes(json)));
 				} catch (MQException e) {
 					logger.error("投之家用户注册送券失败....userId is :" + userId, e);
 				}
@@ -293,8 +294,8 @@ public class UserServiceImpl implements UserService {
 				params.put("mqMsgId", GetCode.getRandomCode(10));
 				params.put("userId", String.valueOf(userId));
 				params.put("sendFlg", "11");
-				couponProducer
-						.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC, JSON.toJSONBytes(params)));
+				couponProducer.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC,
+						MQConstant.REGISTER_COUPON_TAG, JSON.toJSONBytes(params)));
 			} catch (Exception e) {
 				logger.error("注册发放888红包失败...", e);
 			}
