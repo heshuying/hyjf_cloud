@@ -2,6 +2,7 @@ package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class UtmReg implements Serializable {
     private Integer id;
@@ -9,8 +10,6 @@ public class UtmReg implements Serializable {
     private Integer utmId;
 
     private Integer userId;
-
-    private Integer createTime;
 
     private Integer investTime;
 
@@ -24,7 +23,15 @@ public class UtmReg implements Serializable {
 
     private Integer bindCard;
 
-    private Long hxyid;
+    private Integer hxyid;
+
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -50,14 +57,6 @@ public class UtmReg implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
     }
 
     public Integer getInvestTime() {
@@ -108,11 +107,43 @@ public class UtmReg implements Serializable {
         this.bindCard = bindCard;
     }
 
-    public Long getHxyid() {
+    public Integer getHxyid() {
         return hxyid;
     }
 
-    public void setHxyid(Long hxyid) {
+    public void setHxyid(Integer hxyid) {
         this.hxyid = hxyid;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

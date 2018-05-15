@@ -2,12 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
 import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecordExample;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
-@Service
 public interface CorpOpenAccountRecordMapper {
     int countByExample(CorpOpenAccountRecordExample example);
 

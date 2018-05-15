@@ -6,7 +6,7 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
-    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
     <result column="id_type" property="idType" jdbcType="VARCHAR" />
     <result column="id_no" property="idNo" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -17,12 +17,10 @@
     <result column="acq_res" property="acqRes" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -84,8 +82,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, user_name, order_id, mobile, id_type, id_no, `name`, card_no, acct_use, 
-    last_srv_auth_code, user_ip, acq_res, client, `status`, create_time, create_user_id, 
-    create_user_name, update_time, update_user_id, update_user_name
+    last_srv_auth_code, user_ip, acq_res, client, `status`, create_user_id, update_user_id, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample" >
     select
@@ -93,7 +91,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from hyjf_bank_open_account_log
+    from ht_bank_open_account_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -107,15 +105,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from hyjf_bank_open_account_log
+    from ht_bank_open_account_log
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from hyjf_bank_open_account_log
+    delete from ht_bank_open_account_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample" >
-    delete from hyjf_bank_open_account_log
+    delete from ht_bank_open_account_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -124,26 +122,26 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_bank_open_account_log (user_id, user_name, order_id, 
+    insert into ht_bank_open_account_log (user_id, user_name, order_id, 
       mobile, id_type, id_no, 
       `name`, card_no, acct_use, 
       last_srv_auth_code, user_ip, acq_res, 
-      client, `status`, create_time, 
-      create_user_id, create_user_name, update_time, 
-      update_user_id, update_user_name)
+      client, `status`, create_user_id, 
+      update_user_id, create_time, update_time
+      )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
-      #{mobile,jdbcType=VARCHAR}, #{idType,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=CHAR}, #{idType,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{acctUse,jdbcType=VARCHAR}, 
       #{lastSrvAuthCode,jdbcType=VARCHAR}, #{userIp,jdbcType=VARCHAR}, #{acqRes,jdbcType=VARCHAR}, 
-      #{client,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR})
+      #{client,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_bank_open_account_log
+    insert into ht_bank_open_account_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
@@ -187,23 +185,17 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
-      </if>
-      <if test="createUserName != null" >
-        create_user_name,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
       </if>
       <if test="updateUserId != null" >
         update_user_id,
       </if>
-      <if test="updateUserName != null" >
-        update_user_name,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -217,7 +209,7 @@
         #{orderId,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null" >
-        #{mobile,jdbcType=VARCHAR},
+        #{mobile,jdbcType=CHAR},
       </if>
       <if test="idType != null" >
         #{idType,jdbcType=VARCHAR},
@@ -249,34 +241,28 @@
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createUserName != null" >
-        #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserName != null" >
-        #{updateUserName,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample" resultType="java.lang.Integer" >
-    select count(*) from hyjf_bank_open_account_log
+    select count(*) from ht_bank_open_account_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update hyjf_bank_open_account_log
+    update ht_bank_open_account_log
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -291,7 +277,7 @@
         order_id = #{record.orderId,jdbcType=VARCHAR},
       </if>
       <if test="record.mobile != null" >
-        mobile = #{record.mobile,jdbcType=VARCHAR},
+        mobile = #{record.mobile,jdbcType=CHAR},
       </if>
       <if test="record.idType != null" >
         id_type = #{record.idType,jdbcType=VARCHAR},
@@ -323,23 +309,17 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.createUserName != null" >
-        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUserName != null" >
-        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -347,12 +327,12 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update hyjf_bank_open_account_log
+    update ht_bank_open_account_log
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
       order_id = #{record.orderId,jdbcType=VARCHAR},
-      mobile = #{record.mobile,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=CHAR},
       id_type = #{record.idType,jdbcType=VARCHAR},
       id_no = #{record.idNo,jdbcType=VARCHAR},
       `name` = #{record.name,jdbcType=VARCHAR},
@@ -363,18 +343,16 @@
       acq_res = #{record.acqRes,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLog" >
-    update hyjf_bank_open_account_log
+    update ht_bank_open_account_log
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -386,7 +364,7 @@
         order_id = #{orderId,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null" >
-        mobile = #{mobile,jdbcType=VARCHAR},
+        mobile = #{mobile,jdbcType=CHAR},
       </if>
       <if test="idType != null" >
         id_type = #{idType,jdbcType=VARCHAR},
@@ -418,33 +396,27 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createUserName != null" >
-        create_user_name = #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserName != null" >
-        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLog" >
-    update hyjf_bank_open_account_log
+    update ht_bank_open_account_log
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
       order_id = #{orderId,jdbcType=VARCHAR},
-      mobile = #{mobile,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=CHAR},
       id_type = #{idType,jdbcType=VARCHAR},
       id_no = #{idNo,jdbcType=VARCHAR},
       `name` = #{name,jdbcType=VARCHAR},
@@ -455,12 +427,10 @@
       acq_res = #{acqRes,jdbcType=VARCHAR},
       client = #{client,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

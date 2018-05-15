@@ -233,11 +233,6 @@
             <columnOverride column="open_account" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="bind_card" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        <!-- APP渠道统计详情表 -->
-        <table tableName="ht_app_channel_statistics_detail" domainObjectName="AppChannelStatisticsDetail">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-
 
 
 

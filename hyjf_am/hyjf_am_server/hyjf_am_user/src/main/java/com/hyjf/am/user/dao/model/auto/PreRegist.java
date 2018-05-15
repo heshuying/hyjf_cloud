@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class PreRegist implements Serializable {
     private Integer id;
@@ -25,11 +26,13 @@ public class PreRegist implements Serializable {
 
     private String remark;
 
-    private Integer createTime;
+    private Date createTime;
 
-    private Integer updateTime;
+    private Date updateTime;
 
-    private Integer updateBy;
+    private Integer createUser;
+
+    private Integer updateUser;
 
     private static final long serialVersionUID = 1L;
 
@@ -121,27 +124,35 @@ public class PreRegist implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public Integer getUpdateBy() {
-        return updateBy;
+    public Integer getCreateUser() {
+        return createUser;
     }
 
-    public void setUpdateBy(Integer updateBy) {
-        this.updateBy = updateBy;
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
     }
 }

@@ -2,11 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
-
+import org.apache.ibatis.annotations.Param;
 
 public interface BankCardMapper {
     int countByExample(BankCardExample example);

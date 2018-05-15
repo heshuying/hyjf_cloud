@@ -715,66 +715,6 @@ public class BankCardExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIsNull() {
-            addCriterion("create_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeIsNotNull() {
-            addCriterion("create_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeEqualTo(Date value) {
-            addCriterion("create_time =", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotEqualTo(Date value) {
-            addCriterion("create_time <>", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeGreaterThan(Date value) {
-            addCriterion("create_time >", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("create_time >=", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeLessThan(Date value) {
-            addCriterion("create_time <", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
-            addCriterion("create_time <=", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeIn(List<Date> values) {
-            addCriterion("create_time in", values, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotIn(List<Date> values) {
-            addCriterion("create_time not in", values, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeBetween(Date value1, Date value2) {
-            addCriterion("create_time between", value1, value2, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
-            addCriterion("create_time not between", value1, value2, "createTime");
-            return (Criteria) this;
-        }
-
         public Criteria andCreateUserIdIsNull() {
             addCriterion("create_user_id is null");
             return (Criteria) this;
@@ -832,136 +772,6 @@ public class BankCardExample {
 
         public Criteria andCreateUserIdNotBetween(Integer value1, Integer value2) {
             addCriterion("create_user_id not between", value1, value2, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameIsNull() {
-            addCriterion("create_user_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameIsNotNull() {
-            addCriterion("create_user_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameEqualTo(String value) {
-            addCriterion("create_user_name =", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameNotEqualTo(String value) {
-            addCriterion("create_user_name <>", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameGreaterThan(String value) {
-            addCriterion("create_user_name >", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameGreaterThanOrEqualTo(String value) {
-            addCriterion("create_user_name >=", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameLessThan(String value) {
-            addCriterion("create_user_name <", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameLessThanOrEqualTo(String value) {
-            addCriterion("create_user_name <=", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameLike(String value) {
-            addCriterion("create_user_name like", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameNotLike(String value) {
-            addCriterion("create_user_name not like", value, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameIn(List<String> values) {
-            addCriterion("create_user_name in", values, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameNotIn(List<String> values) {
-            addCriterion("create_user_name not in", values, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameBetween(String value1, String value2) {
-            addCriterion("create_user_name between", value1, value2, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNameNotBetween(String value1, String value2) {
-            addCriterion("create_user_name not between", value1, value2, "createUserName");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeIsNull() {
-            addCriterion("update_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeIsNotNull() {
-            addCriterion("update_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeEqualTo(Date value) {
-            addCriterion("update_time =", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeNotEqualTo(Date value) {
-            addCriterion("update_time <>", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeGreaterThan(Date value) {
-            addCriterion("update_time >", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("update_time >=", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeLessThan(Date value) {
-            addCriterion("update_time <", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
-            addCriterion("update_time <=", value, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeIn(List<Date> values) {
-            addCriterion("update_time in", values, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeNotIn(List<Date> values) {
-            addCriterion("update_time not in", values, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
-            addCriterion("update_time between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
-            addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
 
@@ -1025,73 +835,123 @@ public class BankCardExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameIsNull() {
-            addCriterion("update_user_name is null");
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameIsNotNull() {
-            addCriterion("update_user_name is not null");
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameEqualTo(String value) {
-            addCriterion("update_user_name =", value, "updateUserName");
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("create_time =", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameNotEqualTo(String value) {
-            addCriterion("update_user_name <>", value, "updateUserName");
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("create_time <>", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameGreaterThan(String value) {
-            addCriterion("update_user_name >", value, "updateUserName");
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("create_time >", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameGreaterThanOrEqualTo(String value) {
-            addCriterion("update_user_name >=", value, "updateUserName");
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_time >=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameLessThan(String value) {
-            addCriterion("update_user_name <", value, "updateUserName");
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("create_time <", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameLessThanOrEqualTo(String value) {
-            addCriterion("update_user_name <=", value, "updateUserName");
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("create_time <=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameLike(String value) {
-            addCriterion("update_user_name like", value, "updateUserName");
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("create_time in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameNotLike(String value) {
-            addCriterion("update_user_name not like", value, "updateUserName");
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("create_time not in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameIn(List<String> values) {
-            addCriterion("update_user_name in", values, "updateUserName");
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameNotIn(List<String> values) {
-            addCriterion("update_user_name not in", values, "updateUserName");
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameBetween(String value1, String value2) {
-            addCriterion("update_user_name between", value1, value2, "updateUserName");
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("update_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserNameNotBetween(String value1, String value2) {
-            addCriterion("update_user_name not between", value1, value2, "updateUserName");
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("update_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeEqualTo(Date value) {
+            addCriterion("update_time =", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotEqualTo(Date value) {
+            addCriterion("update_time <>", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThan(Date value) {
+            addCriterion("update_time >", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("update_time >=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThan(Date value) {
+            addCriterion("update_time <", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("update_time <=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIn(List<Date> values) {
+            addCriterion("update_time in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotIn(List<Date> values) {
+            addCriterion("update_time not in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("update_time between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
     }
