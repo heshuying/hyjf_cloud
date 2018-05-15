@@ -31,7 +31,7 @@ public interface BankOpenService {
 
 
 
-	UsersInfo findUserInfoByCradId(String cardNo);
+	UserInfo findUserInfoByCradId(String cardNo);
 
 	BankOpenAccount selectByExample(BankOpenAccountExample example);
 

@@ -20,8 +20,6 @@ public class AccountBank implements Serializable {
 
     private Integer area;
 
-    private Boolean default;
-
     private String cardType;
 
     private String respcode;
@@ -104,14 +102,6 @@ public class AccountBank implements Serializable {
 
     public void setArea(Integer area) {
         this.area = area;
-    }
-
-    public Boolean getDefault() {
-        return default;
-    }
-
-    public void setDefault(Boolean default) {
-        this.default = default;
     }
 
     public String getCardType() {

@@ -9,9 +9,9 @@ import java.util.List;
 
 /**
  * @author fuqiang
- * @version MobileCodeCustomizeMapper, v0.1 2018/5/8 14:14
+ * @version UserAliasCustomizeMapper, v0.1 2018/5/8 14:14
  */
-public interface MobileCodeCustomizeMapper {
+public interface UserAliasCustomizeMapper {
     /**
      * 根据手机号查询推送别名 - 批量
      * @param mobiles

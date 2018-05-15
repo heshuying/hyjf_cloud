@@ -655,66 +655,6 @@ public class AccountBankExample {
             return (Criteria) this;
         }
 
-        public Criteria andDefaultIsNull() {
-            addCriterion("`default` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultIsNotNull() {
-            addCriterion("`default` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultEqualTo(Boolean value) {
-            addCriterion("`default` =", value, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultNotEqualTo(Boolean value) {
-            addCriterion("`default` <>", value, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultGreaterThan(Boolean value) {
-            addCriterion("`default` >", value, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("`default` >=", value, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultLessThan(Boolean value) {
-            addCriterion("`default` <", value, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultLessThanOrEqualTo(Boolean value) {
-            addCriterion("`default` <=", value, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultIn(List<Boolean> values) {
-            addCriterion("`default` in", values, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultNotIn(List<Boolean> values) {
-            addCriterion("`default` not in", values, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultBetween(Boolean value1, Boolean value2) {
-            addCriterion("`default` between", value1, value2, "default");
-            return (Criteria) this;
-        }
-
-        public Criteria andDefaultNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("`default` not between", value1, value2, "default");
-            return (Criteria) this;
-        }
-
         public Criteria andCardTypeIsNull() {
             addCriterion("card_type is null");
             return (Criteria) this;

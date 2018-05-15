@@ -10,7 +10,6 @@
     <result column="province" property="province" jdbcType="CHAR" />
     <result column="city" property="city" jdbcType="CHAR" />
     <result column="area" property="area" jdbcType="INTEGER" />
-    <result column="default" property="default" jdbcType="BIT" />
     <result column="card_type" property="cardType" jdbcType="VARCHAR" />
     <result column="respcode" property="respcode" jdbcType="VARCHAR" />
     <result column="respdesc" property="respdesc" jdbcType="VARCHAR" />
@@ -80,9 +79,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, bank_status, account, bank, branch, province, city, area, `default`, card_type, 
-    respcode, respdesc, create_user, update_user, create_time, create_ip, update_time, 
-    update_ip
+    user_id, bank_status, account, bank, branch, province, city, area, card_type, respcode, 
+    respdesc, create_user, update_user, create_time, create_ip, update_time, update_ip
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AccountBankExample" >
     select
@@ -123,16 +121,16 @@
     </selectKey>
     insert into ht_account_bank (bank_status, account, bank, 
       branch, province, city, area, 
-      `default`, card_type, respcode, 
-      respdesc, create_user, update_user, 
-      create_time, create_ip, update_time, 
-      update_ip)
+      card_type, respcode, respdesc, 
+      create_user, update_user, create_time, 
+      create_ip, update_time, update_ip
+      )
     values (#{bankStatus,jdbcType=TINYINT}, #{account,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, 
       #{branch,jdbcType=VARCHAR}, #{province,jdbcType=CHAR}, #{city,jdbcType=CHAR}, #{area,jdbcType=INTEGER}, 
-      #{default,jdbcType=BIT}, #{cardType,jdbcType=VARCHAR}, #{respcode,jdbcType=VARCHAR}, 
-      #{respdesc,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createIp,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateIp,jdbcType=VARCHAR})
+      #{cardType,jdbcType=VARCHAR}, #{respcode,jdbcType=VARCHAR}, #{respdesc,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createIp,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateIp,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountBank" >
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
@@ -160,9 +158,6 @@
       </if>
       <if test="area != null" >
         area,
-      </if>
-      <if test="default != null" >
-        `default`,
       </if>
       <if test="cardType != null" >
         card_type,
@@ -213,9 +208,6 @@
       </if>
       <if test="area != null" >
         #{area,jdbcType=INTEGER},
-      </if>
-      <if test="default != null" >
-        #{default,jdbcType=BIT},
       </if>
       <if test="cardType != null" >
         #{cardType,jdbcType=VARCHAR},
@@ -279,9 +271,6 @@
       <if test="record.area != null" >
         area = #{record.area,jdbcType=INTEGER},
       </if>
-      <if test="record.default != null" >
-        `default` = #{record.default,jdbcType=BIT},
-      </if>
       <if test="record.cardType != null" >
         card_type = #{record.cardType,jdbcType=VARCHAR},
       </if>
@@ -324,7 +313,6 @@
       province = #{record.province,jdbcType=CHAR},
       city = #{record.city,jdbcType=CHAR},
       area = #{record.area,jdbcType=INTEGER},
-      `default` = #{record.default,jdbcType=BIT},
       card_type = #{record.cardType,jdbcType=VARCHAR},
       respcode = #{record.respcode,jdbcType=VARCHAR},
       respdesc = #{record.respdesc,jdbcType=VARCHAR},
@@ -361,9 +349,6 @@
       </if>
       <if test="area != null" >
         area = #{area,jdbcType=INTEGER},
-      </if>
-      <if test="default != null" >
-        `default` = #{default,jdbcType=BIT},
       </if>
       <if test="cardType != null" >
         card_type = #{cardType,jdbcType=VARCHAR},
@@ -404,7 +389,6 @@
       province = #{province,jdbcType=CHAR},
       city = #{city,jdbcType=CHAR},
       area = #{area,jdbcType=INTEGER},
-      `default` = #{default,jdbcType=BIT},
       card_type = #{cardType,jdbcType=VARCHAR},
       respcode = #{respcode,jdbcType=VARCHAR},
       respdesc = #{respdesc,jdbcType=VARCHAR},

@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.user.dao.mapper.auto.UsersInfoMapper;
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
-import com.hyjf.am.user.dao.model.auto.UsersInfoExample;
+import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfoExample;
 import com.hyjf.am.user.service.UserInfoService;
 
 /**
@@ -20,13 +20,13 @@ import com.hyjf.am.user.service.UserInfoService;
 public class UserInfoServiceImpl implements UserInfoService {
 
 	@Autowired
-	private UsersInfoMapper usersInfoMapper;
+	private UserInfoMapper UserInfoMapper;
 
 	@Override
-	public UsersInfo findUserInfoById(int userId) {
-		UsersInfoExample usersInfoExample = new UsersInfoExample();
-		usersInfoExample.createCriteria().andUserIdEqualTo(userId);
-		List<UsersInfo> usersList = usersInfoMapper.selectByExample(usersInfoExample);
+	public UserInfo findUserInfoById(int userId) {
+		UserInfoExample UserInfoExample = new UserInfoExample();
+		UserInfoExample.createCriteria().andUserIdEqualTo(userId);
+		List<UserInfo> usersList = UserInfoMapper.selectByExample(UserInfoExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}

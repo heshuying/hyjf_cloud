@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.MobileCodeMapper;
-import com.hyjf.am.user.dao.mapper.customize.MobileCodeCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.MobileCode;
-import com.hyjf.am.user.dao.model.auto.MobileCodeExample;
+import com.hyjf.am.user.dao.mapper.auto.UserAliasMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserAliasMapper;
+import com.hyjf.am.user.dao.mapper.customize.UserAliasCustomizeMapper;
+import com.hyjf.am.user.dao.model.auto.UserAlias;
+import com.hyjf.am.user.dao.model.auto.UserAliasExample;
+import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.service.UserAliasService;
 import com.hyjf.am.vo.user.UserAliasVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,37 +24,37 @@ import java.util.List;
 @Service
 public class UserAliasServiceImpl implements UserAliasService {
 
-    @Autowired
-    private MobileCodeMapper mobileCodeMapper;
+	@Autowired
+	private UserAliasMapper UserAliasMapper;
 
-    @Autowired
-    private MobileCodeCustomizeMapper mobileCodeCustomizeMapper;
+	@Autowired
+	private UserAliasCustomizeMapper userAliasCustomizeMapper;
 
-    @Override
-    public MobileCode findAliasByMobile(String mobile) {
-        MobileCodeExample example = new MobileCodeExample();
-        example.createCriteria().andMobileCodeEqualTo(mobile);
-        List<MobileCode> mobileCodeList = mobileCodeMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(mobileCodeList)) {
-            return mobileCodeList.get(0);
-        }
-        return null;
-    }
+	@Override
+	public UserAlias findAliasByMobile(String mobile) {
+		UserAliasExample example = new UserAliasExample();
+		example.createCriteria().andAliasEqualTo(mobile);
+		List<UserAlias> UserAliasList = UserAliasMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(UserAliasList)) {
+			return UserAliasList.get(0);
+		}
+		return null;
+	}
 
-    @Override
-    public List<UserAliasVO> findAliasByMobiles(List<String> mobiles) {
-        List<UserAliasVO> userAliasVOList = mobileCodeCustomizeMapper.findAliasByMobiles(mobiles);
-        return userAliasVOList;
-    }
+	@Override
+	public List<UserAliasVO> findAliasByMobiles(List<String> mobiles) {
+		List<UserAliasVO> userAliasVOList = userAliasCustomizeMapper.findAliasByMobiles(mobiles);
+		return userAliasVOList;
+	}
 
-    @Override
-    public Integer countAliasByClient(String clientAndroid) {
-        MobileCodeExample example = new MobileCodeExample();
-        example.createCriteria().andClientEqualTo(clientAndroid);
-        List<MobileCode> mobileCodeList = mobileCodeMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(mobileCodeList)) {
-            return mobileCodeList.size();
-        }
-        return 0;
-    }
+	@Override
+	public Integer countAliasByClient(String clientAndroid) {
+		UserAliasExample example = new UserAliasExample();
+		example.createCriteria().andClientEqualTo(clientAndroid);
+		List<UserAlias> UserAliasList = UserAliasMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(UserAliasList)) {
+			return UserAliasList.size();
+		}
+		return 0;
+	}
 }

@@ -48,6 +48,7 @@
         <!-- 用户银行卡信息表 -->
         <table tableName="ht_account_bank" domainObjectName="AccountBank">
             <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true"/>
+            <ignoreColumn column="default" delimitedColumnName="true" />
             <columnOverride column="bank_status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
         <!-- 用户汇付开户记录表 -->
@@ -134,6 +135,10 @@
         <!-- 用户log日志表 -->
         <table tableName="ht_user_log" domainObjectName="UserLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户log日志表 -->
+        <table tableName="ht_user_login_log" domainObjectName="UserLoginLog">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
         <!-- 用户预注册表 -->
         <table tableName="ht_pre_regist" domainObjectName="PreRegist">
@@ -233,7 +238,10 @@
             <columnOverride column="open_account" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="bind_card" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        <!-- app 存储设备唯一标识码 -->
+        <table tableName="ht_user_alias" domainObjectName="UserAlias">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
 
 
 

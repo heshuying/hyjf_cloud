@@ -1,6 +1,8 @@
 package com.hyjf.am.user.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import com.hyjf.am.user.dao.model.auto.SmsCode;
 import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.SmsService;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
 
 /**
@@ -45,7 +46,7 @@ public class SmsServiceImpl implements SmsService {
 		smsCode.setCheckfor(MD5.toMD5Code(mobile + verificationCode + verificationType + platform));
 		smsCode.setMobile(mobile);
 		smsCode.setCheckcode(verificationCode);
-		smsCode.setPosttime(GetDate.getMyTimeInMillis());
+		smsCode.setCreateTime(new Date());
 		smsCode.setStatus(status);
 		smsCode.setUserId(0);
 		return smsCodeMapper.insertSelective(smsCode);
@@ -53,12 +54,16 @@ public class SmsServiceImpl implements SmsService {
 
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus) {
-		int time = GetDate.getNowTime10();
-		int timeAfter = time - 900;// 15分钟有效 900
+
 		SmsCodeExample example = new SmsCodeExample();
 		SmsCodeExample.Criteria cra = example.createCriteria();
-		cra.andPosttimeGreaterThanOrEqualTo(timeAfter);
-		cra.andPosttimeLessThanOrEqualTo(time);
+
+		Calendar can = Calendar.getInstance();
+		cra.andCreateTimeLessThanOrEqualTo(can.getTime());
+		can.add(Calendar.MINUTE, -15);
+		can.getTime();
+		cra.andCreateTimeGreaterThanOrEqualTo(can.getTime());
+
 		cra.andMobileEqualTo(mobile);
 		cra.andCheckcodeEqualTo(verificationCode);
 		List<Integer> list = new ArrayList<Integer>();
@@ -105,7 +110,7 @@ public class SmsServiceImpl implements SmsService {
 		smsCode.setCheckfor(MD5.toMD5Code(mobile + verificationCode + verificationType + platform));
 		smsCode.setMobile(mobile);
 		smsCode.setCheckcode(verificationCode);
-		smsCode.setPosttime(GetDate.getMyTimeInMillis());
+		smsCode.setCreateTime(new Date());
 		smsCode.setStatus(status);
 		smsCode.setUserId(0);
 		return smsCodeMapper.insertSelective(smsCode);

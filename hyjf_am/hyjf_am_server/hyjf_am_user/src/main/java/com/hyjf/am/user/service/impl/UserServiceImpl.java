@@ -2,6 +2,7 @@ package com.hyjf.am.user.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.hyjf.common.constants.MQConstant;
@@ -42,22 +43,23 @@ import com.hyjf.common.validator.Validator;
 public class UserServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
-	private UsersMapper usersMapper;
-
+	private UserMapper usersMapper;
+	@Autowired
+	private UserLoginLogMapper userLoginLogMapper;
 	@Autowired
 	private PreRegistMapper preRegistMapper;
 
 	@Autowired
-	private UsersInfoMapper usersInfoMapper;
+	private UserInfoMapper usersInfoMapper;
 
 	@Autowired
 	private AccountProducer accountProducer;
 
 	@Autowired
-	private SpreadsUsersMapper spreadsUsersMapper;
+	private SpreadsUserMapper spreadsUsersMapper;
 
 	@Autowired
-	private UsersLogMapper usersLogMapper;
+	private UserLogMapper usersLogMapper;
 
 	@Autowired
 	UserInfoService userInfoService;
@@ -78,7 +80,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Users register(RegisterUserRequest userRequest) throws MQException {
+	public User register(RegisterUserRequest userRequest) throws MQException {
 
 		String mobile = userRequest.getMobilephone();
 		String loginIp = userRequest.getLoginIp();
@@ -91,9 +93,9 @@ public class UserServiceImpl implements UserService {
 		String refferUserName = null;
 		Integer attribute = null;
 		// 获取推荐人表
-		Users refferUser = getRefferUsers(mobile, reffer);
+		User refferUser = getRefferUsers(mobile, reffer);
 		if (refferUser != null) {
-			UsersInfo refferUserInfo = findUsersInfo(refferUser.getUserId());
+			UserInfo refferUserInfo = findUsersInfo(refferUser.getUserId());
 			if (refferUserInfo != null) {
 				// 如果该用户的上级不为空
 				if (Validator.isNotNull(refferUserInfo.getAttribute())) {
@@ -108,7 +110,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 1. 写入用户信息表
-		Users users = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
+		User users = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
 		int userId = users.getUserId();
 
 		// 2. 写入用户详情表
@@ -130,14 +132,17 @@ public class UserServiceImpl implements UserService {
 		// 6. 保存用户注册日志
 		this.insertRegLog(userId, loginIp);
 
+		// 7. 注册成功默认登录
+		this.updateLoginUser(userId, loginIp);
+
 		return users;
 	}
 
 	@Override
-	public Users findUserByUserId(int userId) {
-		UsersExample usersExample = new UsersExample();
+	public User findUserByUserId(int userId) {
+		UserExample usersExample = new UserExample();
 		usersExample.createCriteria().andUserIdEqualTo(userId);
-		List<Users> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = usersMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -151,11 +156,11 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 	@Override
-	public UsersInfo findUsersInfo(int userId) {
-		UsersInfoExample example = new UsersInfoExample();
-		UsersInfoExample.Criteria criteria = example.createCriteria();
+	public UserInfo findUsersInfo(int userId) {
+		UserInfoExample example = new UserInfoExample();
+		UserInfoExample.Criteria criteria = example.createCriteria();
 		criteria.andUserIdEqualTo(userId);
-		List<UsersInfo> list = usersInfoMapper.selectByExample(example);
+		List<UserInfo> list = usersInfoMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(list)) {
 			return list.get(0);
 		}
@@ -167,14 +172,14 @@ public class UserServiceImpl implements UserService {
 	public String generateUniqueUsername(String mobile) {
 		String username = "hyjf" + mobile.substring(mobile.length() - 6, mobile.length());
 		// 第一规则
-		UsersExample ue = new UsersExample();
-		UsersExample.Criteria cr = ue.createCriteria();
+		UserExample ue = new UserExample();
+		UserExample.Criteria cr = ue.createCriteria();
 		cr.andUsernameEqualTo(username);
 		int cn1 = usersMapper.countByExample(ue);
 		if (cn1 > 0) {
 			// 第二规则
-			UsersExample ue2 = new UsersExample();
-			UsersExample.Criteria cr2 = ue2.createCriteria();
+			UserExample ue2 = new UserExample();
+			UserExample.Criteria cr2 = ue2.createCriteria();
 			username = "hyjf" + mobile;
 			cr2.andUsernameEqualTo(username);
 			int cn2 = usersMapper.countByExample(ue2);
@@ -183,8 +188,8 @@ public class UserServiceImpl implements UserService {
 				int i = 0;
 				while (true) {
 					i++;
-					UsersExample ue3 = new UsersExample();
-					UsersExample.Criteria cr3 = ue3.createCriteria();
+					UserExample ue3 = new UserExample();
+					UserExample.Criteria cr3 = ue3.createCriteria();
 					username = "hyjf" + mobile.substring(mobile.length() - 6, mobile.length()) + i;
 					cr3.andUsernameEqualTo(username);
 					int cn3 = usersMapper.countByExample(ue3);
@@ -198,10 +203,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Users findUserByMobile(String mobile) {
-		UsersExample usersExample = new UsersExample();
+	public User findUserByMobile(String mobile) {
+		UserExample usersExample = new UserExample();
 		usersExample.createCriteria().andMobileEqualTo(mobile);
-		List<Users> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = usersMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -209,17 +214,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Users findUserByUsernameOrMobile(String condition) {
-		UsersExample mobileExample = new UsersExample();
+	public User findUserByUsernameOrMobile(String condition) {
+		UserExample mobileExample = new UserExample();
 		mobileExample.createCriteria().andMobileEqualTo(condition);
-		List<Users> usersList1 = usersMapper.selectByExample(mobileExample);
+		List<User> usersList1 = usersMapper.selectByExample(mobileExample);
 		if (!CollectionUtils.isEmpty(usersList1)) {
 			return usersList1.get(0);
 		}
 
-		UsersExample usernameExample = new UsersExample();
+		UserExample usernameExample = new UserExample();
 		usernameExample.createCriteria().andUsernameEqualTo(condition);
-		List<Users> usersList2 = usersMapper.selectByExample(usernameExample);
+		List<User> usersList2 = usersMapper.selectByExample(usernameExample);
 		if (!CollectionUtils.isEmpty(usersList2)) {
 			return usersList2.get(0);
 		}
@@ -227,15 +232,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Users findUserByRecommendName(String reffer) {
-		UsersExample usersExample = new UsersExample();
-		UsersExample.Criteria criteria = usersExample.createCriteria();
+	public User findUserByRecommendName(String reffer) {
+		UserExample usersExample = new UserExample();
+		UserExample.Criteria criteria = usersExample.createCriteria();
 		if (Validator.isMobile(reffer)) {
 			criteria.andMobileEqualTo(reffer);
 		} else {
 			criteria.andUserIdEqualTo(Integer.valueOf(reffer));
 		}
-		List<Users> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = usersMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -244,7 +249,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO assembleUserVO(UserVO userVO) {
-		UsersInfo usersInfo = userInfoService.findUserInfoById(userVO.getUserId());
+		UserInfo usersInfo = userInfoService.findUserInfoById(userVO.getUserId());
 		if (usersInfo != null) {
 			userVO.setSex(usersInfo.getSex());
 			userVO.setNickname(usersInfo.getNickname());
@@ -263,17 +268,30 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void updateLoginUser(int userId, String ip) {
-		Users user = findUserByUserId(userId);
-		if (user.getLoginIp() != null) {
-			user.setLastIp(user.getLoginIp());
+		UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);
+		if (userLoginLog == null) {
+			userLoginLog = new UserLoginLog();
+			userLoginLog.setUserId(userId);
+			userLoginLog.setLoginIp(ip);
+			userLoginLog.setLoginTime(new Date());
+			userLoginLog.setLastIp(userLoginLog.getLoginIp());
+			userLoginLog.setLastTime(userLoginLog.getLoginTime());
+			userLoginLog.setLoginTimes(1);
+			userLoginLog.setCreateTime(new Date());
+			userLoginLogMapper.insertSelective(userLoginLog);
+		} else {
+			if (userLoginLog.getLoginIp() != null) {
+				userLoginLog.setLastIp(userLoginLog.getLoginIp());
+			}
+			if (userLoginLog.getLoginTime() != null) {
+				userLoginLog.setLastTime(userLoginLog.getLoginTime());
+			}
+			userLoginLog.setLoginIp(ip);
+			userLoginLog.setLoginTime(new Date());
+			userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);// 登录次数
+			userLoginLog.setUpdateTime(new Date());
+			userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
 		}
-		if (user.getLoginTime() != null) {
-			user.setLastTime(user.getLoginTime());
-		}
-		user.setLoginIp(ip);
-		user.setLoginTime(GetDate.getNowTime10());
-		user.setLogintime(user.getLogintime() + 1);// 登录次数
-		usersMapper.updateByPrimaryKeySelective(user);
 	}
 
 	/**
@@ -301,7 +319,7 @@ public class UserServiceImpl implements UserService {
 	 * @param ip
 	 * @param usersInfo
 	 */
-	private void getAddress(String ip, UsersInfo usersInfo) {
+	private void getAddress(String ip, UserInfo usersInfo) {
 		if (StringUtils.isEmpty(ip)) {
 			return;
 		}
@@ -340,8 +358,8 @@ public class UserServiceImpl implements UserService {
 	 * @param reffer
 	 * @return
 	 */
-	private Users getRefferUsers(String mobile, String reffer) {
-		List<Users> recommends = null;
+	private User getRefferUsers(String mobile, String reffer) {
+		List<User> recommends = null;
 		// 以下语句用来设置用户有无主单开始 2015年12月30日18:28:34 孙亮
 		// 1.注册成功时，推荐人关联
 		// B1、用户在注册时，没有填写推荐人，也没有预注册，或预注册时没有关联推荐人，则推荐人为空；
@@ -365,12 +383,12 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		if (StringUtils.isNotEmpty(reffer)) {
-			UsersExample exampleUser = new UsersExample();
+			UserExample exampleUser = new UserExample();
 			if (Validator.isMobile(reffer)) {
-				UsersExample.Criteria criteria = exampleUser.createCriteria();
+				UserExample.Criteria criteria = exampleUser.createCriteria();
 				criteria.andMobileEqualTo(reffer);
 			} else {
-				UsersExample.Criteria criteria1 = exampleUser.createCriteria();
+				UserExample.Criteria criteria1 = exampleUser.createCriteria();
 				Integer recommend = Integer.valueOf(reffer);
 				criteria1.andUserIdEqualTo(recommend);
 			}
@@ -394,15 +412,14 @@ public class UserServiceImpl implements UserService {
 	 * @param refferUsername
 	 * @return
 	 */
-	private Users insertUsers(String mobile, String password, String loginIp, String platform, Integer refferUserId,
+	private User insertUsers(String mobile, String password, String loginIp, String platform, Integer refferUserId,
 			String refferUsername) {
-		Users user = new Users();
+		User user = new User();
 		String userName = generateUniqueUsername(mobile);
 		user.setInstCode("10000000");
 		user.setIsInstFlag(0);
 		user.setUsername(userName);
 		user.setMobile(mobile);
-		user.setLoginIp(loginIp);
 		user.setRechargeSms(0);
 		user.setWithdrawSms(0);
 		user.setInvestflag(0);
@@ -416,12 +433,7 @@ public class UserServiceImpl implements UserService {
 		String codeSalt = GetCode.getRandomCode(6);
 		user.setPassword(MD5Utils.MD5(password + codeSalt));
 		user.setRegIp(loginIp);
-		user.setRegTime(time);
-		user.setLoginIp(loginIp);
-		user.setLoginTime(time);
-		user.setLastIp(loginIp);
-		user.setLastTime(time);
-		user.setLogintime(1);// 登录次数
+		user.setRegTime(new Date());
 		user.setStatus(0);
 		user.setSalt(codeSalt);
 		user.setBorrowSms(0);
@@ -450,7 +462,7 @@ public class UserServiceImpl implements UserService {
 	 * @param attribute
 	 */
 	private void insertUsersInfo(int userId, String loginIp, Integer attribute) {
-		UsersInfo userInfo = new UsersInfo();
+		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);// 默认为无主单
 		// 根据ip获取注册地址
 		if (StringUtils.isNotEmpty(loginIp)) {
@@ -461,7 +473,7 @@ public class UserServiceImpl implements UserService {
 		userInfo.setMobileIsapprove(1);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
-		userInfo.setUpdateTime(GetDate.getNowTime10());
+		userInfo.setUpdateTime(new Date());
 		userInfo.setPromoteway(0);
 		userInfo.setIs51(0);
 		userInfo.setIsStaff(0);
@@ -547,11 +559,11 @@ public class UserServiceImpl implements UserService {
 	 * @param loginIp
 	 */
 	private void insertSpreadsUser(int userId, int referer, String loginIp) {
-		SpreadsUsers spreadUser = new SpreadsUsers();
+		SpreadsUser spreadUser = new SpreadsUser();
 		spreadUser.setUserId(userId);
 		spreadUser.setSpreadsUserid(referer);
-		spreadUser.setAddip(loginIp);
-		spreadUser.setAddtime(String.valueOf(GetDate.getNowTime10()));
+		spreadUser.setCreateIp(loginIp);
+		spreadUser.setCreateTime(new Date());
 		spreadUser.setType("reg");
 		spreadUser.setOpernote("reg");
 		spreadUser.setOperation(userId + "");
@@ -567,7 +579,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	private void insertUtmReg(int userId, String utmId) {
 		UtmReg utmReg = new UtmReg();
-		utmReg.setCreateTime(GetDate.getNowTime10());
+		utmReg.setCreateTime(new Date());
 		utmReg.setUtmId(Integer.parseInt(utmId));
 		utmReg.setUserId(userId);
 		utmReg.setOpenAccount(0);
@@ -583,7 +595,7 @@ public class UserServiceImpl implements UserService {
 	 * @param loginIp
 	 */
 	private void insertRegLog(int userId, String loginIp) {
-		UsersLog userLog = new UsersLog();
+		UserLog userLog = new UserLog();
 		userLog.setUserId(userId);
 		userLog.setIp(loginIp);
 		userLog.setEvent("register");
@@ -591,4 +603,22 @@ public class UserServiceImpl implements UserService {
 		logger.info("注册插入userLog：{}", JSON.toJSONString(userLog));
 		usersLogMapper.insertSelective(userLog);
 	}
+
+	/**
+	 * 根据userId查询登录日志
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private UserLoginLog findUserLoginLogByUserId(int userId) {
+		UserLoginLogExample example = new UserLoginLogExample();
+		UserLoginLogExample.Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		List<UserLoginLog> list = userLoginLogMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.get(0);
+		}
+		return null;
+	}
+
 }

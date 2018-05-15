@@ -775,6 +775,76 @@ public class BankCardExample {
             return (Criteria) this;
         }
 
+        public Criteria andCreateUserNameIsNull() {
+            addCriterion("create_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameIsNotNull() {
+            addCriterion("create_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameEqualTo(String value) {
+            addCriterion("create_user_name =", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameNotEqualTo(String value) {
+            addCriterion("create_user_name <>", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameGreaterThan(String value) {
+            addCriterion("create_user_name >", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("create_user_name >=", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameLessThan(String value) {
+            addCriterion("create_user_name <", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameLessThanOrEqualTo(String value) {
+            addCriterion("create_user_name <=", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameLike(String value) {
+            addCriterion("create_user_name like", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameNotLike(String value) {
+            addCriterion("create_user_name not like", value, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameIn(List<String> values) {
+            addCriterion("create_user_name in", values, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameNotIn(List<String> values) {
+            addCriterion("create_user_name not in", values, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameBetween(String value1, String value2) {
+            addCriterion("create_user_name between", value1, value2, "createUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateUserNameNotBetween(String value1, String value2) {
+            addCriterion("create_user_name not between", value1, value2, "createUserName");
+            return (Criteria) this;
+        }
+
         public Criteria andUpdateUserIdIsNull() {
             addCriterion("update_user_id is null");
             return (Criteria) this;
@@ -832,6 +902,76 @@ public class BankCardExample {
 
         public Criteria andUpdateUserIdNotBetween(Integer value1, Integer value2) {
             addCriterion("update_user_id not between", value1, value2, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameIsNull() {
+            addCriterion("update_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameIsNotNull() {
+            addCriterion("update_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameEqualTo(String value) {
+            addCriterion("update_user_name =", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameNotEqualTo(String value) {
+            addCriterion("update_user_name <>", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameGreaterThan(String value) {
+            addCriterion("update_user_name >", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("update_user_name >=", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameLessThan(String value) {
+            addCriterion("update_user_name <", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameLessThanOrEqualTo(String value) {
+            addCriterion("update_user_name <=", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameLike(String value) {
+            addCriterion("update_user_name like", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameNotLike(String value) {
+            addCriterion("update_user_name not like", value, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameIn(List<String> values) {
+            addCriterion("update_user_name in", values, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameNotIn(List<String> values) {
+            addCriterion("update_user_name not in", values, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameBetween(String value1, String value2) {
+            addCriterion("update_user_name between", value1, value2, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNameNotBetween(String value1, String value2) {
+            addCriterion("update_user_name not between", value1, value2, "updateUserName");
             return (Criteria) this;
         }
 

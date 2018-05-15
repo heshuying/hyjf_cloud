@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AppChannelStatisticsDetailDao extends BaseMongoDao<AppChannelStatisticsDetail> {
 
-	public AppChannelStatisticsDetail findById(int id) {
+	public AppChannelStatisticsDetail findByUserId(int userId) {
 		Query query = new Query();
-		Criteria criteria = Criteria.where("id").is(id);
+		Criteria criteria = Criteria.where("userId").is(userId);
 		query.addCriteria(criteria);
 		return mongoTemplate.findOne(query, getEntityClass());
 	}

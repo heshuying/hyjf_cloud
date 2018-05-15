@@ -16,9 +16,13 @@ public class BankOpenAccount implements Serializable {
 
     private Integer createUserId;
 
+    private String createUserName;
+
     private Date updateTime;
 
     private Integer updateUserId;
+
+    private String updateUserName;
 
     private static final long serialVersionUID = 1L;
 
@@ -70,6 +74,14 @@ public class BankOpenAccount implements Serializable {
         this.createUserId = createUserId;
     }
 
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName == null ? null : createUserName.trim();
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -84,5 +96,13 @@ public class BankOpenAccount implements Serializable {
 
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateUserName() {
+        return updateUserName;
+    }
+
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
     }
 }

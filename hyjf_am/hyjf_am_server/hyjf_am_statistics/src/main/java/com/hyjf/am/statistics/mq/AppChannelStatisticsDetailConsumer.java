@@ -1,7 +1,11 @@
 package com.hyjf.am.statistics.mq;
 
+import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.statistics.bean.AppChannelStatisticsDetail;
+import com.hyjf.am.statistics.mongo.AppChannelStatisticsDetailDao;
+import com.hyjf.am.vo.message.SmsMessage;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -12,6 +16,8 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
@@ -26,6 +32,9 @@ import com.hyjf.common.constants.MQConstant;
 @Component
 public class AppChannelStatisticsDetailConsumer extends Consumer {
 	private static final Logger logger = LoggerFactory.getLogger(AppChannelStatisticsDetailConsumer.class);
+
+	@Autowired
+	private AppChannelStatisticsDetailDao appChannelStatisticsDetailDao;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -47,9 +56,23 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 	public class MessageListener implements MessageListenerConcurrently {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			MessageExt msg = msgs.get(0);
-			MailMessage mailMessage = JSONObject.parseObject(msg.getBody(), MailMessage.class);
-			logger.info("AppChannelStatisticsDetailConsumer 收到消息，开始处理....mailMessage is :{}", mailMessage);
+			logger.info("AppChannelStatisticsDetailConsumer 收到消息，开始处理....msgs is :{}", msgs);
+
+			for (MessageExt msg : msgs) {
+				if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG.equals(msg.getTags())) {
+					Integer userId = JSONObject.parseObject(msg.getBody(), Integer.class);
+					if(userId== null){
+						logger.error("参数错误，userId is null...");
+						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+					}
+					// 更新AppChannelStatisticsDetailDao开户时间
+					AppChannelStatisticsDetail entiy = appChannelStatisticsDetailDao.findByUserId(userId);
+					if(entiy!=null){
+						entiy.setOpenAccountTime(new Date());
+						appChannelStatisticsDetailDao.save(entiy);
+					}
+				}
+			}
 
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

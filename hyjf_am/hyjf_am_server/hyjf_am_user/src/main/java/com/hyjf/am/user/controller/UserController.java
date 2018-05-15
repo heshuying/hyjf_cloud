@@ -15,7 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.user.dao.model.auto.Users;
+import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
@@ -37,7 +37,7 @@ public class UserController {
 	public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {
 		logger.info("user register:" + JSONObject.toJSONString(userRequest));
 		UserResponse userResponse = new UserResponse();
-		Users user = null;
+		User user = null;
 		try {
 			user = userService.register(userRequest);
 
@@ -69,7 +69,7 @@ public class UserController {
 	public UserResponse findUserByUserId(@PathVariable int userId) {
 		logger.info("findUserByUserId run...userId is :{}", userId);
 		UserResponse response = new UserResponse();
-		Users user = userService.findUserByUserId(userId);
+		User user = userService.findUserByUserId(userId);
 		if (user != null) {
 			UserVO userVO = new UserVO();
 			BeanUtils.copyProperties(user, userVO);
@@ -88,7 +88,7 @@ public class UserController {
 	public UserResponse findUserByMobile(@PathVariable String mobile) {
 		logger.info("findUserByMobile...mobile is :{}", mobile);
 		UserResponse response = new UserResponse();
-		Users user = userService.findUserByMobile(mobile);
+		User user = userService.findUserByMobile(mobile);
 		if (user != null) {
 			UserVO userVO = new UserVO();
 			BeanUtils.copyProperties(user, userVO);
@@ -107,7 +107,7 @@ public class UserController {
 	public UserResponse findUserByCondition(@PathVariable String condition) {
 		logger.info("findUserByCondition run...condition is :{}", condition);
 		UserResponse response = new UserResponse();
-		Users user = userService.findUserByUsernameOrMobile(condition);
+		User user = userService.findUserByUsernameOrMobile(condition);
 		if (user != null) {
 			UserVO userVO = new UserVO();
 			BeanUtils.copyProperties(user, userVO);
@@ -126,7 +126,7 @@ public class UserController {
 	public UserResponse findUserByRecommendName(@PathVariable String reffer) {
 		logger.info("findUserByRecommendName run...reffer is :{}", reffer);
 		UserResponse response = new UserResponse();
-		Users user = userService.findUserByRecommendName(reffer);
+		User user = userService.findUserByRecommendName(reffer);
 		if (user != null) {
 			UserVO userVO = new UserVO();
 			BeanUtils.copyProperties(user, userVO);
