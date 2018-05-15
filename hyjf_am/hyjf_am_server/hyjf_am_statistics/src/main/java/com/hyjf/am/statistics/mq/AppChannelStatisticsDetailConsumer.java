@@ -59,17 +59,25 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 			logger.info("AppChannelStatisticsDetailConsumer 收到消息，开始处理....msgs is :{}", msgs);
 
 			for (MessageExt msg : msgs) {
+				// 开户更新
 				if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG.equals(msg.getTags())) {
 					Integer userId = JSONObject.parseObject(msg.getBody(), Integer.class);
-					if(userId== null){
+					if (userId == null) {
 						logger.error("参数错误，userId is null...");
 						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 					}
 					// 更新AppChannelStatisticsDetailDao开户时间
-					AppChannelStatisticsDetail entiy = appChannelStatisticsDetailDao.findByUserId(userId);
-					if(entiy!=null){
-						entiy.setOpenAccountTime(new Date());
-						appChannelStatisticsDetailDao.save(entiy);
+					AppChannelStatisticsDetail entity = appChannelStatisticsDetailDao.findByUserId(userId);
+					if (entity != null) {
+						entity.setOpenAccountTime(new Date());
+						appChannelStatisticsDetailDao.save(entity);
+					}
+				} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG.equals(msg.getTags())) {
+					// 保存
+					AppChannelStatisticsDetail entity = JSONObject.parseObject(msg.getBody(),
+							AppChannelStatisticsDetail.class);
+					if (entity != null) {
+						appChannelStatisticsDetailDao.save(entity);
 					}
 				}
 			}
