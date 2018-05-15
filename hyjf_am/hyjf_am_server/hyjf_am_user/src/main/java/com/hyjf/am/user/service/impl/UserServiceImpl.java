@@ -467,11 +467,9 @@ public class UserServiceImpl implements UserService {
 	 * @param attribute
 	 */
 	private void insertUsersInfo(int userId, String loginIp, Integer attribute) {
-		UsersInfo userInfo = new UsersInfo();
-		// 默认为无主单
-		userInfo.setAttribute(0);
 		UserInfo userInfo = new UserInfo();
-		userInfo.setAttribute(0);// 默认为无主单
+		userInfo.setAttribute(0);
+		// 默认为无主单
 		// 根据ip获取注册地址
 		if (StringUtils.isNotEmpty(loginIp)) {
 			getAddress(loginIp, userInfo);
