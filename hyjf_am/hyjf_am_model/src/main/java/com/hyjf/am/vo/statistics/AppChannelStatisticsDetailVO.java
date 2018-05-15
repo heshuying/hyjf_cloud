@@ -1,6 +1,4 @@
-package com.hyjf.am.statistics.bean;
-
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.hyjf.am.vo.statistics;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,12 +6,9 @@ import java.util.Date;
 
 /**
  * @author xiasq
- * @version AppChannelStatisticsDetail, v0.1 2018/5/15 15:03
+ * @version AppChannelStatisticsDetailVO, v0.1 2018/5/15 17:16
  */
-
-@Document(collection = "t_app_channel_statistics_detail")
-public class AppChannelStatisticsDetail implements Serializable {
-    private String id;
+public class AppChannelStatisticsDetailVO implements Serializable {
 
     private Integer sourceId;
 
@@ -38,14 +33,6 @@ public class AppChannelStatisticsDetail implements Serializable {
     private BigDecimal cumulativeInvest;
 
     private static final long serialVersionUID = 1L;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Integer getSourceId() {
         return sourceId;

@@ -39,9 +39,9 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-		defaultMQPushConsumer.setConsumerGroup(MQConstant.MAIL_GROUP);
+		defaultMQPushConsumer.setConsumerGroup(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
-		defaultMQPushConsumer.subscribe(MQConstant.MAIL_TOPIC, "*");
+		defaultMQPushConsumer.subscribe(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -73,7 +73,7 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 						appChannelStatisticsDetailDao.save(entity);
 					}
 				} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG.equals(msg.getTags())) {
-					// 保存
+					logger.info("app渠道统计保存消息....");
 					AppChannelStatisticsDetail entity = JSONObject.parseObject(msg.getBody(),
 							AppChannelStatisticsDetail.class);
 					if (entity != null) {
