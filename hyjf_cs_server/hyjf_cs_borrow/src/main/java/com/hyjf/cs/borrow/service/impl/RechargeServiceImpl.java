@@ -10,12 +10,14 @@ import com.hyjf.am.vo.borrow.BankCardVO;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
@@ -40,6 +42,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -245,6 +250,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	}
 
 
+	@Override
 	public String getBankRetMsg(String retCode) {
 		if (StringUtils.isNotBlank(retCode)) {
 			BankReturnCodeConfigVO codeConfig = this.rechargeClient.getBankReturnCodeConfig(retCode);
@@ -286,6 +292,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	public UserInfoVO getUsersInfoByUserId(Integer userId) {
 		if (userId != null) {
 			UserInfoVO usersInfo = this.rechargeClient.findUsersInfoById(userId);
@@ -343,5 +350,89 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		}
 		return mv;
 	}
+
+	@Override
+	public ModelAndView userAuthInves(HttpServletRequest request, HttpServletResponse response, String mobile, String money) {
+		Integer userId = Integer.parseInt(request.getParameter("userId"));
+		// 信息校验
+		BankCardVO bankCard = this.selectBankCardByUserId(userId);
+		ModelAndView modelAndView = this.checkUserMessage(bankCard,userId,money);
+		if (!modelAndView.isEmpty()){
+			return modelAndView;
+		}
+		BankOpenAccountVO account = this.getBankOpenAccount(userId);
+		String cardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
+		UserInfoVO userInfo = this.getUsersInfoByUserId(userId);
+		String idNo = userInfo.getIdcard();
+		String name = userInfo.getTruename();
+		// 拼装参数 调用江西银行
+		String retUrl = systemConfig.getWebHost() + "/return" + "?txAmount="+money;
+		String bgRetUrl = systemConfig.getWebHost() + "/bgreturn" + "?phone="+mobile;
+		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
+		directRechargeBean.setTxAmount(money);
+		directRechargeBean.setIdNo(idNo);
+		directRechargeBean.setName(name);
+		directRechargeBean.setCardNo(cardNo);
+		directRechargeBean.setMobile(mobile);
+		directRechargeBean.setUserId(userId);
+		directRechargeBean.setIp(CustomUtil.getIpAddr(request));
+		directRechargeBean.setUserName("test");
+		directRechargeBean.setRetUrl(retUrl);
+		directRechargeBean.setNotifyUrl(bgRetUrl);
+		directRechargeBean.setPlatform("0");
+		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
+		directRechargeBean.setAccountId(account.getAccount());
+		String forgetPassworedUrl = "http://www.hyjf.com";
+		directRechargeBean.setForgotPwdUrl(forgetPassworedUrl);
+		try {
+			modelAndView = this.insertGetMV(directRechargeBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
+			modelAndView.addObject("message", "调用银行接口失败！");
+		}
+		return modelAndView;
+	}
+
+	public ModelAndView checkUserMessage(BankCardVO bankCard,Integer userId,String money){
+		ModelAndView modelAndView = new ModelAndView();
+		UserVO users=this.getUsers(userId);
+		if (users.getBankOpenAccount()==0) {
+			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
+			modelAndView.addObject("message", "用户未开户！");
+			return modelAndView;
+		}
+		if (users.getIsSetPassword() == 0) {
+			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
+			modelAndView.addObject("message", "用户未设置交易密码！");
+			return modelAndView;
+		}
+		if (bankCard == null) {
+			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
+			modelAndView.addObject("message", "查询银行卡信息失败！");
+			return modelAndView;
+		}
+
+		if (StringUtils.isEmpty(money)) {
+			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
+			modelAndView.addObject("message", "充值金额不能为空！");
+			return modelAndView;
+		}
+		if (!money.matches("-?[0-9]+.*[0-9]*")) {
+			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
+			modelAndView.addObject("message", "充值金额格式错误！");
+			return modelAndView;
+		}
+		if(money.indexOf(".")>=0){
+			String l = money.substring(money.indexOf(".")+1,money.length());
+			if(l.length()>2){
+				modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
+				modelAndView.addObject("message", "充值值金额不能大于两位小数！");
+				return modelAndView;
+			}
+		}
+		return modelAndView;
+	}
+
 
 }

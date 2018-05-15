@@ -17,6 +17,7 @@ import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author xiasq
@@ -66,13 +67,13 @@ public class WebUserController {
 	 */
 	@PostMapping(value = "/login", produces = "application/json; charset=utf-8")
 	public ApiResult<UserVO> login(@RequestParam String loginUserName,
-								   @RequestParam String loginPassword,
-			HttpServletRequest request) {
-		logger.info("login start, loginUserName is :{}", loginUserName);
-		ApiResult<UserVO> result = new ApiResult<UserVO>();
-		UserVO userVO = userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+				@RequestParam String loginPassword,
+				HttpServletRequest request) {
+			logger.info("login start, loginUserName is :{}", loginUserName);
+			ApiResult<UserVO> result = new ApiResult<UserVO>();
+			UserVO userVO = userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
 
-		if (userVO != null) {
+			if (userVO != null) {
 			logger.info("login success, userId is :{}", userVO.getUserId());
 			result.setResult(userVO);
 		} else {
@@ -82,6 +83,29 @@ public class WebUserController {
 		}
 
 		return result;
+	}
+
+	/**
+	 * 用户授权自动投资
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("/userAuthInves")
+	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = false) String token, HttpServletRequest request) {
+		ModelAndView modelAndView = userService.userAuthInves(token,request);
+		return modelAndView;
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/creditUserAuthInves")
+	public ModelAndView creditUserAuthInves(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		return modelAndView;
 	}
 
 }

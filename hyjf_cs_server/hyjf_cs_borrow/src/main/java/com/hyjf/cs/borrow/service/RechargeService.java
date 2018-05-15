@@ -12,6 +12,9 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 用户充值Service
  * 
@@ -63,4 +66,5 @@ public interface RechargeService extends BaseService{
 	 ModelAndView insertGetMV(UserDirectRechargeBean rechargeBean) throws Exception;
 
 
+    ModelAndView userAuthInves(HttpServletRequest request, HttpServletResponse response, String mobile, String money);
 }

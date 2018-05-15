@@ -1,7 +1,12 @@
 package com.hyjf.zuul.filter;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.util.SignValue;
+import com.hyjf.zuul.redis.RedisUtil;
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,13 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.util.SignValue;
-import com.hyjf.zuul.redis.RedisUtil;
-import com.netflix.zuul.ZuulFilter;
-import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.exception.ZuulException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author xiasq
@@ -121,14 +120,14 @@ public class AccessFilter extends ZuulFilter {
 			ctx.setResponseBody("token is empty");
 			return;
 		}
-		UserVO userVO = (UserVO) redisUtil.get(RedisKey.USER_TOKEN_REDIS + token);
-		if (userVO == null) {
+		WebViewUser webViewUser = (WebViewUser) redisUtil.get(RedisKey.USER_TOKEN_REDIS + token);
+		if (webViewUser == null) {
 			logger.error("user is not exist...");
 			ctx.setResponseBody("user is not exist");
 			return;
 		}
-		ctx.addZuulRequestHeader("userId", userVO.getUserId() + "");
-		logger.info(String.format("user token:%s userId:%s", token, userVO.getUserId()));
+		ctx.addZuulRequestHeader("userId", webViewUser.getUserId() + "");
+		logger.info(String.format("user token:%s userId:%s", token, webViewUser.getUserId()));
 	}
 
 }

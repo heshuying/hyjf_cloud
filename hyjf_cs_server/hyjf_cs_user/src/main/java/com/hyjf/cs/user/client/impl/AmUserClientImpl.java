@@ -1,23 +1,24 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.HjhUserAuthResponse;
+import com.hyjf.am.response.user.SmsCodeResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.exception.ServiceException;
+import com.hyjf.cs.user.client.AmUserClient;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.hyjf.am.response.user.SmsCodeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.user.client.AmUserClient;
 
 import java.io.UnsupportedEncodingException;
 
@@ -147,5 +148,22 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER/am-user/user/updateLoginUser/" + userId + "/" + args;
 		logger.info("url:{}", url);
 		restTemplate.getForEntity(url, String.class);
+	}
+
+
+	@Override
+	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
+		HjhUserAuthResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getHjhUserAuthByUserId/"+userId, HjhUserAuthResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog) {
+		restTemplate.put("http://AM-USER/am-user/user/insertSelective",hjhUserAuthLog);
 	}
 }

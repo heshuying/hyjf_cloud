@@ -1,6 +1,8 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 
@@ -28,4 +30,8 @@ public interface AmUserClient {
     UserVO findUserByUserNameOrMobile(String loginUserName);
 
 	void updateLoginUser(int userId, String ip);
+
+	HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
+
+	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
 }

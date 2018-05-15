@@ -4,6 +4,10 @@ import java.io.UnsupportedEncodingException;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.user.HjhUserAuthResponse;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,4 +156,21 @@ public class UserController {
 		userService.updateLoginUser(userId, args);
 	}
 
+	@RequestMapping("/getHjhUserAuthByUserId/{userId}")
+	public HjhUserAuthResponse getHjhUserAuthByUserId(@PathVariable Integer userId) {
+		logger.info("getHjhUserAuthByUserId run...userId is :{}", userId);
+		HjhUserAuthResponse response = new HjhUserAuthResponse();
+		HjhUserAuth hjhUserAuth = userService.getHjhUserAuthByUserId(userId);
+		if (hjhUserAuth != null){
+			HjhUserAuthVO hjhUserAuthVO = new HjhUserAuthVO();
+			BeanUtils.copyProperties(hjhUserAuth,hjhUserAuthVO);
+			response.setResult(hjhUserAuthVO);
+		}
+		return response;
+	}
+	@RequestMapping("/insertSelective")
+	public void insertSelective(@RequestBody HjhUserAuthLog hjhUserAuthLog){
+		logger.info("insertSelective:" + JSONObject.toJSONString(hjhUserAuthLog));
+		userService.insertSelective(hjhUserAuthLog);
+	}
 }

@@ -62,6 +62,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserInfoService userInfoService;
 
+	@Autowired
+	HjhUserAuthMapper hjhUserAuthMapper;
+
+	@Autowired
+	HjhUserAuthLogMapper hjhUserAuthLogMapper;
+
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
 	@Value("${file.upload.head.path}")
@@ -410,8 +416,7 @@ public class UserServiceImpl implements UserService {
 		user.setRecieveSms(0);
 		user.setVersion(new BigDecimal("0"));
 		user.setUserType(0);
-		user.setIsSetPassword(0);// 是否设置了交易密码 0未设置
-
+		user.setIsSetPassword(0);
 		int time = GetDate.getNowTime10();
 		String codeSalt = GetCode.getRandomCode(6);
 		user.setPassword(MD5Utils.MD5(password + codeSalt));
@@ -421,7 +426,7 @@ public class UserServiceImpl implements UserService {
 		user.setLoginTime(time);
 		user.setLastIp(loginIp);
 		user.setLastTime(time);
-		user.setLogintime(1);// 登录次数
+		user.setLogintime(1);
 		user.setStatus(0);
 		user.setSalt(codeSalt);
 		user.setBorrowSms(0);
@@ -435,8 +440,8 @@ public class UserServiceImpl implements UserService {
 		user.setReferrerUserName(refferUsername);
 
 		if (StringUtils.isNotBlank(platform)) {
-			user.setRegEsb(Integer.parseInt(platform)); // 账户开通平台 0pc 1微信 2安卓
-														// 3IOS 4其他
+			user.setRegEsb(Integer.parseInt(platform));
+			// 账户开通平台 0pc 1微信 2安卓 3IOS 4其他
 		}
 		usersMapper.insertSelective(user);
 		return user;
@@ -451,7 +456,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	private void insertUsersInfo(int userId, String loginIp, Integer attribute) {
 		UsersInfo userInfo = new UsersInfo();
-		userInfo.setAttribute(0);// 默认为无主单
+		// 默认为无主单
+		userInfo.setAttribute(0);
 		// 根据ip获取注册地址
 		if (StringUtils.isNotEmpty(loginIp)) {
 			getAddress(loginIp, userInfo);
@@ -509,7 +515,6 @@ public class UserServiceImpl implements UserService {
 		account.setBankAwait(BigDecimal.ZERO);
 		account.setBankWaitRepayOrg(BigDecimal.ZERO);
 		account.setBankAwaitOrg(BigDecimal.ZERO);
-
 		// 汇付相关
 		account.setTotal(BigDecimal.ZERO);
 		account.setIncome(BigDecimal.ZERO);
@@ -591,4 +596,28 @@ public class UserServiceImpl implements UserService {
 		logger.info("注册插入userLog：{}", JSON.toJSONString(userLog));
 		usersLogMapper.insertSelective(userLog);
 	}
+
+	/**
+	 *
+	 * 根据用户id查询用户签约授权信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public HjhUserAuth getHjhUserAuthByUserId(Integer userId) {
+		HjhUserAuthExample example = new HjhUserAuthExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		List<HjhUserAuth> list = hjhUserAuthMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public void insertSelective(HjhUserAuthLog hjhUserAuthLog){
+		hjhUserAuthLogMapper.insertSelective(hjhUserAuthLog);
+	}
+
 }
