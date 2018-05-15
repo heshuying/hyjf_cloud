@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.user.service;
 
-import com.hyjf.am.user.dao.model.auto.MobileCode;
+import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.vo.user.UserAliasVO;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public interface UserAliasService {
      * @param mobile
      * @return
      */
-    MobileCode findAliasByMobile(String mobile);
+    UserAlias findAliasByMobile(String mobile);
 
     /**
      * 根据手机号查询推送别名 - 批量

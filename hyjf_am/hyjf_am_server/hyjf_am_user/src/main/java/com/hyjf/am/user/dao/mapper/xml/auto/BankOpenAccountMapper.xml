@@ -81,7 +81,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from hyjf_bank_open_account
+    from ht_bank_open_account
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -95,15 +95,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from hyjf_bank_open_account
+    from ht_bank_open_account
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from hyjf_bank_open_account
+    delete from ht_bank_open_account
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountExample" >
-    delete from hyjf_bank_open_account
+    delete from ht_bank_open_account
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -112,7 +112,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_bank_open_account (user_id, user_name, account, 
+    insert into ht_bank_open_account (user_id, user_name, account, 
       create_time, create_user_id, create_user_name, 
       update_time, update_user_id, update_user_name
       )
@@ -125,7 +125,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_bank_open_account
+    insert into ht_bank_open_account
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
@@ -186,13 +186,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountExample" resultType="java.lang.Integer" >
-    select count(*) from hyjf_bank_open_account
+    select count(*) from ht_bank_open_account
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update hyjf_bank_open_account
+    update ht_bank_open_account
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -230,7 +230,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update hyjf_bank_open_account
+    update ht_bank_open_account
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
@@ -246,7 +246,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
-    update hyjf_bank_open_account
+    update ht_bank_open_account
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -279,7 +279,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
-    update hyjf_bank_open_account
+    update ht_bank_open_account
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
       account = #{account,jdbcType=VARCHAR},

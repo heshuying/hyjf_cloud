@@ -4,7 +4,7 @@
 package com.hyjf.am.user.controller;
 
 import com.hyjf.am.response.user.UserAliasResponse;
-import com.hyjf.am.user.dao.model.auto.MobileCode;
+import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.service.UserAliasService;
 import com.hyjf.am.vo.user.UserAliasVO;
 import org.slf4j.Logger;
@@ -42,10 +42,10 @@ public class UserAliasController {
         logger.info("根据手机号查询推送别名开始... mobile is :{}", mobile);
         UserAliasResponse response = new UserAliasResponse();
         UserAliasVO userAliasVO = null;
-        MobileCode mobileCode = userAliasService.findAliasByMobile(mobile);
-        if (mobileCode != null) {
+        UserAlias userAlias = userAliasService.findAliasByMobile(mobile);
+        if (userAlias != null) {
             userAliasVO = new UserAliasVO();
-            BeanUtils.copyProperties(mobileCode, userAliasVO);
+            BeanUtils.copyProperties(userAlias, userAliasVO);
         }
         logger.info("userAliasVO is :{}", userAliasVO);
         response.setResult(userAliasVO);

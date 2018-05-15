@@ -7,8 +7,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.mq.AppChannelStatisticsDetailProducer;
+import com.hyjf.am.user.mq.Producer;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +24,16 @@ import com.hyjf.am.user.service.BankOpenService;
 import com.hyjf.am.user.utils.IdCard15To18;
 
 @Service
-public class BankOpenServiceImpl implements BankOpenService {	
-
+public class BankOpenServiceImpl implements BankOpenService {
+    private Logger _log = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 	@Autowired
 	private BankOpenAccountLogMapper bankOpenAccountLogMapper;
 
 	@Autowired
-	private UsersMapper usersMapper;
+	private UserMapper usersMapper;
 
 	@Autowired
-	private UsersInfoMapper usersInfoMapper;
+	private UserInfoMapper usersInfoMapper;
 
 	@Autowired
 	private BankOpenAccountMapper bankOpenAccountMapper;
@@ -39,14 +44,11 @@ public class BankOpenServiceImpl implements BankOpenService {
 	@Autowired
 	private BankCardMapper bankCardMapper;
 
-	@Autowired
-	private AppChannelStatisticsDetailMapper appChannelStatisticsDetailMapper;
-
     @Autowired
     protected CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
-	
 
-	Logger _log = LoggerFactory.getLogger(BankOpenServiceImpl.class);
+    @Autowired
+    private AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
 
 	@Override
 	public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc,String name,String idno,String cardNo) {
@@ -125,7 +127,7 @@ public class BankOpenServiceImpl implements BankOpenService {
             throw new RuntimeException("删除用户开户日志表失败，用户开户订单号：" + orderId + ",用户userId:" + userId);
         }
         // 获取用户信息
-        Users user = this.getUsers(userId);
+        User user = this.getUsers(userId);
         // 用户名
         String userName = user.getUsername();
         // 身份证号
@@ -161,7 +163,7 @@ public class BankOpenServiceImpl implements BankOpenService {
             throw new RuntimeException("更新用户表失败！");
         }
         // 根据用户ID查询用户信息表
-        UsersInfo userInfo = this.getUsersInfoByUserId(userId);
+        UserInfo userInfo = this.getUsersInfoByUserId(userId);
         if (userInfo == null) {
             _log.info("获取用户详情表失败,用户ID:[" + userId + "]");
             throw new RuntimeException("根据用户ID,查询用户详情失败");
@@ -199,18 +201,21 @@ public class BankOpenServiceImpl implements BankOpenService {
             utmReg.setOpenAccount(1);
             this.utmRegMapper.updateByPrimaryKeySelective(utmReg);
         }
-        // APP渠道统计明细更新
-        AppChannelStatisticsDetail appChannelStatisticsDetail = this.selectAppChannelByUserId(userId);
-        if (appChannelStatisticsDetail != null) {
-            appChannelStatisticsDetail.setOpenAccountTime(new Date());
-            this.appChannelStatisticsDetailMapper.updateByPrimaryKeySelective(appChannelStatisticsDetail);
-        }
 
+        /**
+         * APP渠道统计明细更新-修改开户时间
+         */
+        try {
+            appChannelStatisticsDetailProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG, JSON.toJSONBytes(userId)));
+        } catch (MQException e) {
+            _log.error("开户统计app渠道失败....", e);
+        }
         return openAccountFlag;
     }
     
 
-	public Users getUsers(Integer userId) {
+	public User getUsers(Integer userId) {
 		return usersMapper.selectByPrimaryKey(userId);
 	}
 
@@ -220,11 +225,11 @@ public class BankOpenServiceImpl implements BankOpenService {
 	 * @param userId
 	 * @return
 	 */
-	public UsersInfo getUsersInfoByUserId(Integer userId) {
+	public UserInfo getUsersInfoByUserId(Integer userId) {
 		if (userId != null) {
-			UsersInfoExample example = new UsersInfoExample();
+			UserInfoExample example = new UserInfoExample();
 			example.createCriteria().andUserIdEqualTo(userId);
-			List<UsersInfo> usersInfoList = this.usersInfoMapper.selectByExample(example);
+			List<UserInfo> usersInfoList = this.usersInfoMapper.selectByExample(example);
 			if (usersInfoList != null && usersInfoList.size() > 0) {
 				return usersInfoList.get(0);
 			}
@@ -249,31 +254,13 @@ public class BankOpenServiceImpl implements BankOpenService {
         return null;
     }
 
-    /**
-     * 根据用户ID检索APP渠道统计明细
-     *
-     * @param userId
-     * @return
-     */
-    private AppChannelStatisticsDetail selectAppChannelByUserId(Integer userId) {
-        AppChannelStatisticsDetailExample example = new AppChannelStatisticsDetailExample();
-        AppChannelStatisticsDetailExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        List<AppChannelStatisticsDetail> list = this.appChannelStatisticsDetailMapper.selectByExample(example);
-        if (list != null && list.size() == 1) {
-            return list.get(0);
-        }
-        return null;
-    }
-
-
 	@Override
-	public UsersInfo findUserInfoByCradId(String cardNo) {
-		UsersInfoExample example = new UsersInfoExample();
-		UsersInfoExample.Criteria cra = example.createCriteria();
+	public UserInfo findUserInfoByCradId(String cardNo) {
+		UserInfoExample example = new UserInfoExample();
+		UserInfoExample.Criteria cra = example.createCriteria();
 		cra.andIdcardEqualTo(cardNo);
 
-		List<UsersInfo> list = usersInfoMapper.selectByExample(example);
+		List<UserInfo> list = usersInfoMapper.selectByExample(example);
 
 		if (list != null && list.size() == 1) {
 			return list.get(0);

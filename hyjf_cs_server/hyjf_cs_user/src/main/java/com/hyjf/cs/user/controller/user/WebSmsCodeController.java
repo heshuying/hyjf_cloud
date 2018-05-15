@@ -30,16 +30,18 @@ public class WebSmsCodeController {
 
 	/**
 	 * 发送短信验证码 范围：注册，修改手机号(验证原手机，修改新手机)
-	 *
 	 * @param validCodeType
 	 * @param mobile
+	 * @param token
 	 * @param request
 	 * @return
 	 * @throws MQException
 	 */
 	@RequestMapping(value = "/send")
-	public BaseResultBean sendSmsCode(@RequestParam String validCodeType, @RequestParam String mobile,
-			@RequestHeader(value = "token", required = false) String token, HttpServletRequest request)
+	public BaseResultBean sendSmsCode(@RequestParam String validCodeType,
+									  @RequestParam String mobile,
+									  @RequestHeader(value = "token", required = false) String token,
+									  HttpServletRequest request)
 			throws MQException {
 		logger.info("sendSmsCode start, validCodeType is :{}, mobile is: {}", validCodeType, mobile);
 		BaseResultBean resultBean = new BaseResultBean();

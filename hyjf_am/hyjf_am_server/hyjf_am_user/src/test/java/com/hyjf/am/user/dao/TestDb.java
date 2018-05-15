@@ -10,8 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.AmUserApplication;
-import com.hyjf.am.user.dao.mapper.auto.UsersMapper;
-import com.hyjf.am.user.dao.model.auto.Users;
+import com.hyjf.am.user.dao.mapper.auto.UserMapper;
+import com.hyjf.am.user.dao.model.auto.User;
 
 /**
  * @author xiasq
@@ -23,11 +23,11 @@ public class TestDb {
 	Logger logger = LoggerFactory.getLogger(TestDb.class);
 
 	@Autowired
-	UsersMapper usersMapper;
+	UserMapper usersMapper;
 
 	@Test
 	public void getUser() {
-		Users users = usersMapper.selectByPrimaryKey(1);
+		User users = usersMapper.selectByPrimaryKey(1);
 		if (users != null)
 			logger.info("users is :{}", JSONObject.toJSONString(users));
 		logger.info("none this userId");

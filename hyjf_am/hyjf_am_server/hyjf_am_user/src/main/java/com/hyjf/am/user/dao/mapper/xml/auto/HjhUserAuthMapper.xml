@@ -25,11 +25,11 @@
     <result column="credit_cancel_time" property="creditCancelTime" jdbcType="VARCHAR" />
     <result column="payment_cancel_time" property="paymentCancelTime" jdbcType="VARCHAR" />
     <result column="repay_cancel_time" property="repayCancelTime" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
     <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -94,8 +94,8 @@
     auto_consume_status, auto_create_time, auto_order_id, auto_credit_order_id, auto_credit_time, 
     auto_bid_time, auto_bid_end_time, auto_payment_status, auto_payment_time, auto_payment_end_time, 
     auto_repay_status, auto_repay_time, auto_repay_end_time, inves_cancel_time, credit_cancel_time, 
-    payment_cancel_time, repay_cancel_time, create_time, create_user, update_time, update_user, 
-    del_flg
+    payment_cancel_time, repay_cancel_time, del_flg, create_user, update_user, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthExample" >
     select
@@ -103,7 +103,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from hyjf_hjh_user_auth
+    from ht_hjh_user_auth
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -117,15 +117,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from hyjf_hjh_user_auth
+    from ht_hjh_user_auth
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from hyjf_hjh_user_auth
+    delete from ht_hjh_user_auth
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthExample" >
-    delete from hyjf_hjh_user_auth
+    delete from ht_hjh_user_auth
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -134,15 +134,15 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_hjh_user_auth (user_id, user_name, auto_inves_status, 
+    insert into ht_hjh_user_auth (user_id, user_name, auto_inves_status, 
       auto_credit_status, auto_withdraw_status, auto_consume_status, 
       auto_create_time, auto_order_id, auto_credit_order_id, 
       auto_credit_time, auto_bid_time, auto_bid_end_time, 
       auto_payment_status, auto_payment_time, auto_payment_end_time, 
       auto_repay_status, auto_repay_time, auto_repay_end_time, 
       inves_cancel_time, credit_cancel_time, payment_cancel_time, 
-      repay_cancel_time, create_time, create_user, 
-      update_time, update_user, del_flg
+      repay_cancel_time, del_flg, create_user, 
+      update_user, create_time, update_time
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{autoInvesStatus,jdbcType=TINYINT}, 
       #{autoCreditStatus,jdbcType=TINYINT}, #{autoWithdrawStatus,jdbcType=TINYINT}, #{autoConsumeStatus,jdbcType=TINYINT}, 
@@ -151,15 +151,15 @@
       #{autoPaymentStatus,jdbcType=TINYINT}, #{autoPaymentTime,jdbcType=INTEGER}, #{autoPaymentEndTime,jdbcType=VARCHAR}, 
       #{autoRepayStatus,jdbcType=TINYINT}, #{autoRepayTime,jdbcType=INTEGER}, #{autoRepayEndTime,jdbcType=VARCHAR}, 
       #{invesCancelTime,jdbcType=VARCHAR}, #{creditCancelTime,jdbcType=VARCHAR}, #{paymentCancelTime,jdbcType=VARCHAR}, 
-      #{repayCancelTime,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{createUser,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT}
+      #{repayCancelTime,jdbcType=VARCHAR}, #{delFlg,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, 
+      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuth" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_hjh_user_auth
+    insert into ht_hjh_user_auth
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
@@ -227,20 +227,20 @@
       <if test="repayCancelTime != null" >
         repay_cancel_time,
       </if>
-      <if test="createTime != null" >
-        create_time,
+      <if test="delFlg != null" >
+        del_flg,
       </if>
       <if test="createUser != null" >
         create_user,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="updateUser != null" >
         update_user,
       </if>
-      <if test="delFlg != null" >
-        del_flg,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -310,31 +310,31 @@
       <if test="repayCancelTime != null" >
         #{repayCancelTime,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+      <if test="delFlg != null" >
+        #{delFlg,jdbcType=TINYINT},
       </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null" >
-        #{delFlg,jdbcType=TINYINT},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthExample" resultType="java.lang.Integer" >
-    select count(*) from hyjf_hjh_user_auth
+    select count(*) from ht_hjh_user_auth
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update hyjf_hjh_user_auth
+    update ht_hjh_user_auth
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -405,20 +405,20 @@
       <if test="record.repayCancelTime != null" >
         repay_cancel_time = #{record.repayCancelTime,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+      <if test="record.delFlg != null" >
+        del_flg = #{record.delFlg,jdbcType=TINYINT},
       </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
-      </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
-      <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -426,7 +426,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update hyjf_hjh_user_auth
+    update ht_hjh_user_auth
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
@@ -450,17 +450,17 @@
       credit_cancel_time = #{record.creditCancelTime,jdbcType=VARCHAR},
       payment_cancel_time = #{record.paymentCancelTime,jdbcType=VARCHAR},
       repay_cancel_time = #{record.repayCancelTime,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      del_flg = #{record.delFlg,jdbcType=TINYINT},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuth" >
-    update hyjf_hjh_user_auth
+    update ht_hjh_user_auth
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -528,26 +528,26 @@
       <if test="repayCancelTime != null" >
         repay_cancel_time = #{repayCancelTime,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+      <if test="delFlg != null" >
+        del_flg = #{delFlg,jdbcType=TINYINT},
       </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=TINYINT},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuth" >
-    update hyjf_hjh_user_auth
+    update ht_hjh_user_auth
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
       auto_inves_status = #{autoInvesStatus,jdbcType=TINYINT},
@@ -570,11 +570,11 @@
       credit_cancel_time = #{creditCancelTime,jdbcType=VARCHAR},
       payment_cancel_time = #{paymentCancelTime,jdbcType=VARCHAR},
       repay_cancel_time = #{repayCancelTime,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
+      del_flg = #{delFlg,jdbcType=TINYINT},
       create_user = #{createUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=TINYINT}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

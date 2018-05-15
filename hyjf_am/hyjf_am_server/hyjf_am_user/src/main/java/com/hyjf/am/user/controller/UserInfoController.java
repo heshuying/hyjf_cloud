@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.user.dao.model.auto.UsersInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.UserInfoService;
 
 /**
@@ -26,7 +26,7 @@ public class UserInfoController {
 	@RequestMapping("/findById/{userId}")
 	public UserInfoResponse findUserInfoById(@PathVariable int userId) {
 		UserInfoResponse response = new UserInfoResponse();
-		UsersInfo usersInfo = userInfoService.findUserInfoById(userId);
+		UserInfo usersInfo = userInfoService.findUserInfoById(userId);
 		if (usersInfo != null) {
 			UserInfoVO userInfoVO = new UserInfoVO();
 			BeanUtils.copyProperties(usersInfo, userInfoVO);

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserAliasCustomizeMapper">
+
+<select id="findAliasByMobiles" parameterType="java.util.List" resultType="com.hyjf.am.vo.user.UserAliasVO">
+    select id, user_id, sign, alias, client, package_code
+    from hyjf_user_alias
+    where package_code in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</select>
+
+</mapper>

@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthLog implements Serializable {
     private Integer id;
@@ -19,15 +20,15 @@ public class HjhUserAuthLog implements Serializable {
 
     private Integer authCreateTime;
 
-    private Integer createTime;
+    private Integer delFlg;
 
     private Integer createUser;
 
-    private Integer updateTime;
-
     private Integer updateUser;
 
-    private Integer delFlg;
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -95,12 +96,12 @@ public class HjhUserAuthLog implements Serializable {
         this.authCreateTime = authCreateTime;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
+    public Integer getDelFlg() {
+        return delFlg;
     }
 
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
+    public void setDelFlg(Integer delFlg) {
+        this.delFlg = delFlg;
     }
 
     public Integer getCreateUser() {
@@ -111,14 +112,6 @@ public class HjhUserAuthLog implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getUpdateUser() {
         return updateUser;
     }
@@ -127,11 +120,19 @@ public class HjhUserAuthLog implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -392,14 +392,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * 注册后处理: 1. 单点登录 2. 判断投之家着陆页送券 3. 注册送188红包
+	 * 注册后处理: 1. 登录 2. 判断投之家着陆页送券 3. 注册送188红包
 	 * 
 	 * @param userVO
 	 */
 	private void afterRegisterHandle(UserVO userVO) {
 		int userId = userVO.getUserId();
 
-		// 1. 注册成功之后登录 单点登录
+		// 1. 注册成功之后登录
 		String token = generatorToken(userId, userVO.getUsername());
 		WebViewUser webViewUser = new WebViewUser();
 		BeanUtils.copyProperties(userVO,webViewUser);
@@ -410,8 +410,7 @@ public class UserServiceImpl implements UserService {
 		// 活动有效期校验
 		if (!activityService.checkActivityIfAvailable(activityIdTzj)) {
 			// 投之家用户额外发两张加息券
-			if (StringUtils.isNotEmpty(userVO.getReferrerUserName())
-					&& userVO.getReferrerUserName().equals("touzhijia")) {
+			if ("touzhijia".equals(userVO.getReferrerUserName())) {
 				// 发放两张加息券
 				JSONObject json = new JSONObject();
 				json.put("userId", userId);
@@ -422,7 +421,8 @@ public class UserServiceImpl implements UserService {
 				json.put("remark", "投之家用户注册送加息券");
 				json.put("sendFlg", 0);
 				try {
-					couponProducer.messageSend(new Producer.MassageContent(MQConstant.TZJ_REGISTER_INTEREST_TOPIC, JSON.toJSONBytes(json)));
+					couponProducer.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC,
+							MQConstant.TZJ_REGISTER_INTEREST_TAG, JSON.toJSONBytes(json)));
 				} catch (MQException e) {
 					logger.error("投之家用户注册送券失败....userId is :" + userId, e);
 				}
@@ -436,8 +436,8 @@ public class UserServiceImpl implements UserService {
 				params.put("mqMsgId", GetCode.getRandomCode(10));
 				params.put("userId", String.valueOf(userId));
 				params.put("sendFlg", "11");
-				couponProducer
-						.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC, JSON.toJSONBytes(params)));
+				couponProducer.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC,
+						MQConstant.REGISTER_COUPON_TAG, JSON.toJSONBytes(params)));
 			} catch (Exception e) {
 				logger.error("注册发放888红包失败...", e);
 			}

@@ -18,23 +18,27 @@ public class CorpOpenAccountRecord implements Serializable {
 
     private String openBankId;
 
-    private String cardId;
+    private String account;
 
     private Integer status;
 
     private Integer isBank;
-
-    private Date addTime;
-
-    private Date updateTime;
-
-    private String remark;
 
     private Integer cardType;
 
     private String taxRegistrationCode;
 
     private String buseNo;
+
+    private String remark;
+
+    private Integer createUser;
+
+    private Integer updateUser;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -94,12 +98,12 @@ public class CorpOpenAccountRecord implements Serializable {
         this.openBankId = openBankId == null ? null : openBankId.trim();
     }
 
-    public String getCardId() {
-        return cardId;
+    public String getAccount() {
+        return account;
     }
 
-    public void setCardId(String cardId) {
-        this.cardId = cardId == null ? null : cardId.trim();
+    public void setAccount(String account) {
+        this.account = account == null ? null : account.trim();
     }
 
     public Integer getStatus() {
@@ -116,30 +120,6 @@ public class CorpOpenAccountRecord implements Serializable {
 
     public void setIsBank(Integer isBank) {
         this.isBank = isBank;
-    }
-
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
     }
 
     public Integer getCardType() {
@@ -164,5 +144,45 @@ public class CorpOpenAccountRecord implements Serializable {
 
     public void setBuseNo(String buseNo) {
         this.buseNo = buseNo == null ? null : buseNo.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

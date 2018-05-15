@@ -123,7 +123,7 @@ public class BankOpenController {
 	@RequestMapping("/findByCardId/{cardId}")
 	public UserInfoResponse findByCardId(@PathVariable String cardId) {
 		UserInfoResponse response = new UserInfoResponse();
-		UsersInfo usersInfo = bankOpenService.findUserInfoByCradId(cardId);
+		UserInfo usersInfo = bankOpenService.findUserInfoByCradId(cardId);
 		if (usersInfo != null) {
 			UserInfoVO userInfoVO = new UserInfoVO();
 			BeanUtils.copyProperties(usersInfo, userInfoVO);

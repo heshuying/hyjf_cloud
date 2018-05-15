@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.AppointmentRecodLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.AppointmentRecodLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="recod" property="recod" jdbcType="INTEGER" />
+    <result column="recod_total" property="recodTotal" jdbcType="INTEGER" />
+    <result column="recod_nid" property="recodNid" jdbcType="VARCHAR" />
+    <result column="recod_money" property="recodMoney" jdbcType="DECIMAL" />
+    <result column="apoint_order_id" property="apointOrderId" jdbcType="VARCHAR" />
+    <result column="recod_remark" property="recodRemark" jdbcType="VARCHAR" />
+    <result column="recod_type" property="recodType" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, recod, recod_total, recod_nid, recod_money, apoint_order_id, recod_remark, recod_type, 
+    user_id, user_name, create_user_id, update_user_id, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentRecodLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_appointment_recod_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_appointment_recod_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_appointment_recod_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentRecodLogExample" >
+    delete from ht_appointment_recod_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentRecodLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_appointment_recod_log (recod, recod_total, recod_nid, 
+      recod_money, apoint_order_id, recod_remark, 
+      recod_type, user_id, user_name, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{recod,jdbcType=INTEGER}, #{recodTotal,jdbcType=INTEGER}, #{recodNid,jdbcType=VARCHAR}, 
+      #{recodMoney,jdbcType=DECIMAL}, #{apointOrderId,jdbcType=VARCHAR}, #{recodRemark,jdbcType=VARCHAR}, 
+      #{recodType,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentRecodLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_appointment_recod_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recod != null" >
+        recod,
+      </if>
+      <if test="recodTotal != null" >
+        recod_total,
+      </if>
+      <if test="recodNid != null" >
+        recod_nid,
+      </if>
+      <if test="recodMoney != null" >
+        recod_money,
+      </if>
+      <if test="apointOrderId != null" >
+        apoint_order_id,
+      </if>
+      <if test="recodRemark != null" >
+        recod_remark,
+      </if>
+      <if test="recodType != null" >
+        recod_type,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recod != null" >
+        #{recod,jdbcType=INTEGER},
+      </if>
+      <if test="recodTotal != null" >
+        #{recodTotal,jdbcType=INTEGER},
+      </if>
+      <if test="recodNid != null" >
+        #{recodNid,jdbcType=VARCHAR},
+      </if>
+      <if test="recodMoney != null" >
+        #{recodMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="apointOrderId != null" >
+        #{apointOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="recodRemark != null" >
+        #{recodRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="recodType != null" >
+        #{recodType,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentRecodLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_appointment_recod_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_appointment_recod_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.recod != null" >
+        recod = #{record.recod,jdbcType=INTEGER},
+      </if>
+      <if test="record.recodTotal != null" >
+        recod_total = #{record.recodTotal,jdbcType=INTEGER},
+      </if>
+      <if test="record.recodNid != null" >
+        recod_nid = #{record.recodNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recodMoney != null" >
+        recod_money = #{record.recodMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.apointOrderId != null" >
+        apoint_order_id = #{record.apointOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recodRemark != null" >
+        recod_remark = #{record.recodRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recodType != null" >
+        recod_type = #{record.recodType,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_appointment_recod_log
+    set id = #{record.id,jdbcType=INTEGER},
+      recod = #{record.recod,jdbcType=INTEGER},
+      recod_total = #{record.recodTotal,jdbcType=INTEGER},
+      recod_nid = #{record.recodNid,jdbcType=VARCHAR},
+      recod_money = #{record.recodMoney,jdbcType=DECIMAL},
+      apoint_order_id = #{record.apointOrderId,jdbcType=VARCHAR},
+      recod_remark = #{record.recodRemark,jdbcType=VARCHAR},
+      recod_type = #{record.recodType,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentRecodLog" >
+    update ht_appointment_recod_log
+    <set >
+      <if test="recod != null" >
+        recod = #{recod,jdbcType=INTEGER},
+      </if>
+      <if test="recodTotal != null" >
+        recod_total = #{recodTotal,jdbcType=INTEGER},
+      </if>
+      <if test="recodNid != null" >
+        recod_nid = #{recodNid,jdbcType=VARCHAR},
+      </if>
+      <if test="recodMoney != null" >
+        recod_money = #{recodMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="apointOrderId != null" >
+        apoint_order_id = #{apointOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="recodRemark != null" >
+        recod_remark = #{recodRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="recodType != null" >
+        recod_type = #{recodType,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentRecodLog" >
+    update ht_appointment_recod_log
+    set recod = #{recod,jdbcType=INTEGER},
+      recod_total = #{recodTotal,jdbcType=INTEGER},
+      recod_nid = #{recodNid,jdbcType=VARCHAR},
+      recod_money = #{recodMoney,jdbcType=DECIMAL},
+      apoint_order_id = #{apointOrderId,jdbcType=VARCHAR},
+      recod_remark = #{recodRemark,jdbcType=VARCHAR},
+      recod_type = #{recodType,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
