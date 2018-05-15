@@ -1,6 +1,8 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.vo.user.UserVO;
@@ -74,4 +76,9 @@ public interface UserService {
 	UserVO assembleUserVO(UserVO userVO);
 
 	void updateLoginUser(int userId, String ip);
+
+
+	HjhUserAuth getHjhUserAuthByUserId(Integer userId);
+
+	void insertSelective(HjhUserAuthLog hjhUserAuthLog);
 }

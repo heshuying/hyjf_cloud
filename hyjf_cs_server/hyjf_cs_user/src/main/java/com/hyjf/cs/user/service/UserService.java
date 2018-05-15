@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.vo.RegisterVO;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author xiasq
@@ -40,4 +41,6 @@ public interface UserService {
 	 * @param ip
 	 */
 	UserVO login(String loginUserName, String loginPassword, String ip);
+
+	ModelAndView userAuthInves(String token,HttpServletRequest request);
 }

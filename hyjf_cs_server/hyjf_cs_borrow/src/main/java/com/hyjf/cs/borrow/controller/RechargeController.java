@@ -40,7 +40,7 @@ import java.util.Map;
 @RequestMapping(value = "/web/recharge")
 public class RechargeController{
 	
-	Logger Logger = LoggerFactory.getLogger(RechargeController.class);
+	Logger logger = LoggerFactory.getLogger(RechargeController.class);
 
 	@Autowired
 	private RechargeService userRechargeService;
@@ -65,78 +65,8 @@ public class RechargeController{
 	 */
 	@RequestMapping("/page")
 	public ModelAndView userAuthInves(HttpServletRequest request, HttpServletResponse response, String mobile, String money) {
-		Logger.info("充值服务");
-		ModelAndView modelAndView = new ModelAndView();
-		Integer userId = Integer.parseInt(request.getParameter("userId"));
-		UserVO users=userRechargeService.getUsers(userId);
-		if (users.getBankOpenAccount()==0) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", "用户未开户！");
-			return modelAndView;
-		}
-        BankOpenAccountVO account = this.userRechargeService.getBankOpenAccount(userId);
-		// 判断用户是否设置过交易密码
-		if (users.getIsSetPassword() == 0) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", "用户未设置交易密码！");
-			return modelAndView;
-		}
-		// 根据用户ID查询用户平台银行卡信息
-		BankCardVO bankCard = this.userRechargeService.selectBankCardByUserId(userId);
-		if (bankCard == null) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", "查询银行卡信息失败！");
-			return modelAndView;
-		}
-
-		if (StringUtils.isEmpty(money)) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", "充值金额不能为空！");
-			return modelAndView;
-		}
-		if (!money.matches("-?[0-9]+.*[0-9]*")) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", "充值金额格式错误！");
-			return modelAndView;
-		}
-		if(money.indexOf(".")>=0){
-			String l = money.substring(money.indexOf(".")+1,money.length());
-			if(l.length()>2){
-				modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-				modelAndView.addObject("message", "充值值金额不能大于两位小数！");
-				return modelAndView;
-			}
-		}
-		String cardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
-		UserInfoVO userInfo = this.userRechargeService.getUsersInfoByUserId(userId);
-		String idNo = userInfo.getIdcard();
-		String name = userInfo.getTruename();
-		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getWebHost() + "/return" + "?txAmount="+money;
-		String bgRetUrl = systemConfig.getWebHost() + "/bgreturn" + "?phone="+mobile;
-		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
-		directRechargeBean.setTxAmount(money);
-		directRechargeBean.setIdNo(idNo);
-		directRechargeBean.setName(name);
-		directRechargeBean.setCardNo(cardNo);
-		directRechargeBean.setMobile(mobile);
-		directRechargeBean.setUserId(userId);
-		directRechargeBean.setIp(CustomUtil.getIpAddr(request));
-		directRechargeBean.setUserName("test");
-		directRechargeBean.setRetUrl(retUrl);
-		directRechargeBean.setNotifyUrl(bgRetUrl);
-		directRechargeBean.setPlatform("0");
-		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
-		directRechargeBean.setAccountId(account.getAccount());
-		String forgetPassworedUrl = "http://www.hyjf.com";//TODO:
-		directRechargeBean.setForgotPwdUrl(forgetPassworedUrl);
-		try {
-			modelAndView = userRechargeService.insertGetMV(directRechargeBean);
-		} catch (Exception e) {
-			e.printStackTrace();
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", "调用银行接口失败！");
-		}
+		logger.info("充值服务");
+		ModelAndView modelAndView = userRechargeService.userAuthInves(request,response,mobile,money);
 		return modelAndView;
 	}
 
@@ -197,7 +127,7 @@ public class RechargeController{
 	public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response,
 								   @ModelAttribute BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
-		Logger.info("[缴费授权异步回调开始]");
+		logger.info("[缴费授权异步回调开始]");
 		String phone = request.getParameter("phone");
 		bean.setMobile(phone);
 		bean.convert();
@@ -210,7 +140,7 @@ public class RechargeController{
 			JSONObject msg = this.userRechargeService.handleRechargeInfo(bean, params);
 			// 充值成功
 			if (msg != null && msg.get("error").equals("0")) {
-				Logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
+				logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
 				result.setMessage("充值成功");
 				result.setStatus(true);
 				return result;
@@ -220,7 +150,7 @@ public class RechargeController{
 				return result;
 			}
 		}
-		Logger.info(RechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
+		logger.info(RechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
 		result.setMessage("充值失败");
 		result.setStatus(false);
 		return result;

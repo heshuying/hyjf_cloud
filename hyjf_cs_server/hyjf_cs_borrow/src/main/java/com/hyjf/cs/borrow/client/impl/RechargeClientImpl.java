@@ -52,6 +52,7 @@ public class RechargeClientImpl implements RechargeClient {
         return null;
     }
 
+    @Override
     public BankOpenAccountVO selectById(int userId) {
         BankOpenAccountResponse response = restTemplate
                 .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
@@ -61,6 +62,7 @@ public class RechargeClientImpl implements RechargeClient {
         return null;
     }
 
+    @Override
     public UserInfoVO findUsersInfoById(int userId) {
         UserInfoResponse response = restTemplate
                 .getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();

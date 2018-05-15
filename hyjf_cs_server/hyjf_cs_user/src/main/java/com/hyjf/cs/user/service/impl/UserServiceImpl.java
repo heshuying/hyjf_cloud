@@ -2,6 +2,7 @@ package com.hyjf.cs.user.service.impl;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -12,11 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.ActivityService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +57,7 @@ import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author xiasq
@@ -71,6 +81,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private StringRedisUtil stringRedisUtil;
 
+	@Autowired
+	SystemConfig systemConfig;
 	@Value("${hyjf.activity.regist.tzj.id}")
 	private String activityIdTzj;
 	@Value("${hyjf.activity.888.id}")
@@ -93,8 +105,9 @@ public class UserServiceImpl implements UserService {
 		registerUserRequest.setLoginIp(GetCilentIP.getIpAddr(request));
 		// 2.注册
 		UserVO userVO = amUserClient.register(registerUserRequest);
-		if (userVO == null)
+		if (userVO == null) {
 			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
+		}
 
 		// 3.注册后处理
 		this.afterRegisterHandle(userVO);
@@ -117,8 +130,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public UserVO login(String loginUserName, String loginPassword, String ip) {
-		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginUserName, 32))
+		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginUserName, 32)) {
 			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
+		}
 
 		// 获取密码错误次数
 		String errCount = stringRedisUtil.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
@@ -126,6 +140,123 @@ public class UserServiceImpl implements UserService {
 			throw new ReturnMessageException(LoginError.PWD_ERROR_TOO_MANEY_ERROR);
 		}
 		return this.doLogin(loginUserName, loginPassword, ip);
+	}
+
+	@Override
+	public ModelAndView userAuthInves(String token,HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
+		String smsCode = request.getParameter("smsCode");
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		if (user == null) {
+			modelAndView = new ModelAndView("/bank/user/autoplus/auto-tender-fail");
+			modelAndView.addObject("message", "登录失效，请重新登陆");
+			return modelAndView;
+		}
+		// 检查数据是否完整
+		if (Validator.isNull(lastSrvAuthCode) || Validator.isNull(smsCode)) {
+			modelAndView = new ModelAndView("/bank/user/autoplus/auto-tender-fail");
+			modelAndView.addObject("message", "参数错误，请重试");
+			return modelAndView;
+		}
+		UserVO users= amUserClient.findUserById(user.getUserId());
+		if (users.getBankOpenAccount()==0) {
+			modelAndView = new ModelAndView("/bank/user/autoplus/auto-tender-fail");
+			modelAndView.addObject("message", "用户未开户！");
+			return modelAndView;
+		}
+		// 判断用户是否设置过交易密码
+		if (users.getIsSetPassword() == 0) {
+			modelAndView = new ModelAndView("/bank/user/autoplus/auto-tender-fail");
+			modelAndView.addObject("message", "用户未设置交易密码");
+			return modelAndView;
+		}
+		// 判断是否授权过  todo
+		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
+		if(hjhUserAuth!=null&&hjhUserAuth.getAutoCreditStatus().intValue()==1){
+			modelAndView = new ModelAndView("/bank/user/autoplus/auto-tender-fail");
+			modelAndView.addObject("message", "用户已授权,无需重复授权");
+			return modelAndView;
+		}
+		// 组装发往江西银行参数
+		BankCallBean bean = getCommonBankCallBean(user,2,lastSrvAuthCode,smsCode);
+		// 插入日志
+		Integer nowTime=GetDate.getNowTime10();
+		HjhUserAuthLogVO hjhUserAuthLog=new HjhUserAuthLogVO();
+		hjhUserAuthLog.setUserId(users.getUserId());
+		hjhUserAuthLog.setUserName(users.getUsername());
+		hjhUserAuthLog.setOrderId(bean.getLogOrderId());
+		hjhUserAuthLog.setOrderStatus(2);
+		if(BankCallConstant.QUERY_TYPE_2!=null){
+			hjhUserAuthLog.setAuthType(4);
+		}else{
+			hjhUserAuthLog.setAuthType(Integer.valueOf(BankCallConstant.QUERY_TYPE_2));
+		}
+		hjhUserAuthLog.setOperateEsb(0);
+		hjhUserAuthLog.setCreateUser(user.getUserId());
+		hjhUserAuthLog.setCreateTime(nowTime);
+		hjhUserAuthLog.setUpdateTime(nowTime);
+		hjhUserAuthLog.setUpdateUser(user.getUserId());
+		hjhUserAuthLog.setDelFlg(0);
+		this.amUserClient.insertUserAuthLog(hjhUserAuthLog);
+		// 跳转到汇付天下画面
+		try {
+			modelAndView = BankCallUtils.callApi(bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			modelAndView = new ModelAndView("/bank/user/autoplus/auto-tender-fail");
+			modelAndView.addObject("message", "调用银行接口失败！");
+		}
+
+		return modelAndView;
+	}
+
+	/**
+	 * 组装发往江西银行参数
+	 * @param users
+	 * @param type
+	 * @param lastSrvAuthCode
+	 * @param smsCode
+	 * @return
+	 */
+	private BankCallBean getCommonBankCallBean(WebViewUser users,int type,String lastSrvAuthCode,String smsCode) {
+		String remark = "";
+		String txcode = "";
+		// 同步调用路径
+		String retUrl = systemConfig.getWebHost()+"/bank/user/autoplus";
+		// 异步调用路
+		String bgRetUrl = systemConfig.getWebHost()+"/bank/user/autoplus";
+		// 构造函数已经设置
+		// 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
+		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,users.getUserId(),"000002");
+
+		if(type==1){
+			remark = "投资人自动投标签约增强";
+			retUrl += "/userAuthInvesReturn" + ".do";
+			bgRetUrl+= "/userAuthInvesBgreturn" + ".do";
+			bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
+			bean.setDeadline(GetDate.date2Str(GetDate.countDate(1,5),new SimpleDateFormat("yyyyMMdd")));
+			bean.setTxAmount("1000000");
+			bean.setTotAmount("1000000000");
+		} else if(type==2){
+			// 2.4.8.投资人自动债权转让签约增强
+			remark = "投资人自动债权转让签约增强";
+			retUrl += "/credituserAuthInvesReturn" + ".do";
+			bgRetUrl+="/credituserAuthInvesBgreturn" + ".do";
+			bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
+		}
+		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
+		bean.setOrderId(bean.getLogOrderId());
+		// 电子账号
+		bean.setAccountId(users.getBankAccount());
+		//忘记密码通知地址
+		bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+		bean.setRetUrl(retUrl);
+		bean.setNotifyUrl(bgRetUrl);
+		bean.setLastSrvAuthCode(lastSrvAuthCode);
+		bean.setSmsCode(smsCode);
+		bean.setLogRemark(remark);
+		return bean;
 	}
 
 	/**
@@ -150,8 +281,9 @@ public class UserServiceImpl implements UserService {
 
 		if (password.equals(passwordDb)) {
 			// 是否禁用
-			if (userVO.getStatus() == 1)
+			if (userVO.getStatus() == 1) {
 				throw new ReturnMessageException(LoginError.USER_INVALID_ERROR);
+			}
 
 			// 更新登录信息
 			amUserClient.updateLoginUser(userId, ip);
@@ -161,8 +293,10 @@ public class UserServiceImpl implements UserService {
 
 			// 2. 缓存
 			String token = generatorToken(userVO.getUserId(), userVO.getUsername());
-			userVO.setToken(token);
-			redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, userVO, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
+			WebViewUser webViewUser = new WebViewUser();
+			BeanUtils.copyProperties(userVO,webViewUser);
+			webViewUser.setToken(token);
+			redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
 
 			// 3. todo 登录时自动同步线下充值记录
 
@@ -182,10 +316,12 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 	private boolean checkMaxLength(String value, int max) {
-		if (StringUtils.isEmpty(value))
+		if (StringUtils.isEmpty(value)) {
 			return true;
-		if (value.length() > max)
+		}
+		if (value.length() > max) {
 			return true;
+		}
 		return false;
 	}
 
@@ -195,20 +331,24 @@ public class UserServiceImpl implements UserService {
 	 * @param registerVO
 	 */
 	private void registerCheckParam(RegisterVO registerVO) {
-		if (registerVO == null)
+		if (registerVO == null) {
 			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
+		}
 
 		String mobile = registerVO.getMobilephone();
-		if (Validator.isNull(mobile))
+		if (Validator.isNull(mobile)) {
 			throw new ReturnMessageException(RegisterError.MOBILE_IS_NOT_NULL_ERROR);
+		}
 
 		String smsCode = registerVO.getSmsCode();
-		if (Validator.isNull(smsCode))
+		if (Validator.isNull(smsCode)) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_IS_NOT_NULL_ERROR);
+		}
 
 		String password = registerVO.getPassword();
-		if (Validator.isNull(password))
+		if (Validator.isNull(password)) {
 			throw new ReturnMessageException(RegisterError.PASSWORD_IS_NOT_NULL_ERROR);
+		}
 
 		if (!Validator.isMobile(mobile)) {
 			throw new ReturnMessageException(RegisterError.MOBILE_IS_NOT_REAL_ERROR);
@@ -261,8 +401,10 @@ public class UserServiceImpl implements UserService {
 
 		// 1. 注册成功之后登录
 		String token = generatorToken(userId, userVO.getUsername());
-		userVO.setToken(token);
-		redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, userVO, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
+		WebViewUser webViewUser = new WebViewUser();
+		BeanUtils.copyProperties(userVO,webViewUser);
+		webViewUser.setToken(token);
+		redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
 
 		// 2. 投之家用户注册送券活动
 		// 活动有效期校验

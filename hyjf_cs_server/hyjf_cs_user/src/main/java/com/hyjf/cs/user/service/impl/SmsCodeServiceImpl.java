@@ -1,29 +1,15 @@
 package com.hyjf.cs.user.service.impl;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.util.CustomConstants;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.config.SmsConfigVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
@@ -35,6 +21,17 @@ import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.service.SmsCodeService;
 import com.hyjf.cs.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiasq
@@ -114,29 +111,30 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		}
 
 		if (StringUtils.isNotEmpty(token)) {
-			UserVO userVO = (UserVO) redisUtil.get(token);
-			if (userVO != null) {
+			WebViewUser webViewUser = (WebViewUser) redisUtil.get(token);
+			if (webViewUser != null) {
 				// 验证原手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
-					if (StringUtils.isBlank(userVO.getMobile())) {
+					if (StringUtils.isBlank(webViewUser.getMobile())) {
 						throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
 					}
-					if (!userVO.getMobile().equals(mobile)) {
+					if (!webViewUser.getMobile().equals(mobile)) {
 						throw new ReturnMessageException(RegisterError.MOBILE_NEED_SAME_ERROR);
 					}
 				}
 
 				// 绑定新手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-					if (userVO.equals(mobile)) {
+					if (webViewUser.equals(mobile)) {
 						throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
 					}
 					if (userService.existUser(mobile)) {
 						throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
 					}
 				}
-			} else
-				throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
+			} else {
+                throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
+            }
 		}
 
 		// 判断发送间隔时间
@@ -154,11 +152,12 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
 
 		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
-		if (smsConfig == null)
-			throw new ReturnMessageException(RegisterError.FIND_SMSCONFIG_ERROR);
+		if (smsConfig == null) {
+            throw new ReturnMessageException(RegisterError.FIND_SMSCONFIG_ERROR);
+        }
 
 		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
-			if (Integer.valueOf(ipCount) == smsConfig.getMaxIpCount()) {
+			if (Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount())) {
 				try {
 					// 发送短信通知
 					Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -190,7 +189,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		}
 		logger.info(mobile + "----------MaxPhoneCount-----------" + count);
 		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
-			if (Integer.valueOf(count) == smsConfig.getMaxPhoneCount()) {
+			if (Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount())) {
 				try {
 					// 发送短信通知
 					Map<String, String> replaceStrs = new HashMap<String, String>();
