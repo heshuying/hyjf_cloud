@@ -252,14 +252,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * 注册后处理: 1. 单点登录 2. 判断投之家着陆页送券 3. 注册送188红包
+	 * 注册后处理: 1. 登录 2. 判断投之家着陆页送券 3. 注册送188红包
 	 * 
 	 * @param userVO
 	 */
 	private void afterRegisterHandle(UserVO userVO) {
 		int userId = userVO.getUserId();
 
-		// 1. 注册成功之后登录 单点登录
+		// 1. 注册成功之后登录
 		String token = generatorToken(userId, userVO.getUsername());
 		userVO.setToken(token);
 		redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, userVO, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
@@ -268,8 +268,7 @@ public class UserServiceImpl implements UserService {
 		// 活动有效期校验
 		if (!activityService.checkActivityIfAvailable(activityIdTzj)) {
 			// 投之家用户额外发两张加息券
-			if (StringUtils.isNotEmpty(userVO.getReferrerUserName())
-					&& userVO.getReferrerUserName().equals("touzhijia")) {
+			if ("touzhijia".equals(userVO.getReferrerUserName())) {
 				// 发放两张加息券
 				JSONObject json = new JSONObject();
 				json.put("userId", userId);
