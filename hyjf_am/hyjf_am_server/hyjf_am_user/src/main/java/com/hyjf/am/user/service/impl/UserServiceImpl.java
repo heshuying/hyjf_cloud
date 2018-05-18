@@ -1,20 +1,5 @@
 package com.hyjf.am.user.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import com.hyjf.common.constants.MQConstant;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
@@ -27,12 +12,26 @@ import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.user.utils.UploadFileUtils;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -342,7 +341,7 @@ public class UserServiceImpl implements UserService {
 				return;
 			}
 			String resultCode = resultObj.getString("code");
-			if (resultCode.equals("0")) { // 查询成功
+			if ("0".equals(resultCode)) { // 查询成功
 				String region = resultObj.getJSONObject("data").getString("region");
 				String city = resultObj.getJSONObject("data").getString("city");
 				String county = resultObj.getJSONObject("data").getString("county");
@@ -648,6 +647,34 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void insertSelective(HjhUserAuthLog hjhUserAuthLog){
 		hjhUserAuthLogMapper.insertSelective(hjhUserAuthLog);
+	}
+
+	@Override
+	public HjhUserAuthLog selectByExample(String orderId){
+		HjhUserAuthLogExample example=new HjhUserAuthLogExample();
+		example.createCriteria().andOrderIdEqualTo(orderId);
+		List<HjhUserAuthLog>  hjhUserAuthLogList = hjhUserAuthLogMapper.selectByExample(example);
+		if(hjhUserAuthLogList!=null&&hjhUserAuthLogList.size()>0) {
+			return hjhUserAuthLogList.get(0);
+		}else {
+			return null;
+		}
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(HjhUserAuthLog record){
+
+		return hjhUserAuthLogMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public int insertSelective(HjhUserAuth record){
+		return hjhUserAuthMapper.insertSelective(record);
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(HjhUserAuth record){
+		return hjhUserAuthMapper.updateByPrimaryKeySelective(record);
 	}
 
 }

@@ -184,7 +184,7 @@ public class AnRongApiBean implements Serializable {
 				String fName = f.getName();
 				try {
 					// 方法名是get开头的话
-					if (StringUtils.isNotBlank(fName) && !(fName.length() > 3 && fName.substring(0, 3).equals("log"))) {
+					if (StringUtils.isNotBlank(fName) && !(fName.length() > 3 && "log".equals(fName.substring(0, 3)))) {
 						// 参数方法获取
 						String paramName = fName.substring(0, 1).toUpperCase() + fName.substring(1, fName.length());
 						// 取得结果

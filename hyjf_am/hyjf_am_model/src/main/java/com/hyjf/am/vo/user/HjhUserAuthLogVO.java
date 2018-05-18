@@ -1,8 +1,10 @@
 package com.hyjf.am.vo.user;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 
-public class HjhUserAuthLogVO implements Serializable {
+public class HjhUserAuthLogVO extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer userId;

@@ -14,8 +14,6 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.am.vo.borrow.AccountVO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +39,6 @@ public class RechargeController {
      * @return
      */
     @ApiOperation(value = " Account", notes = " Account")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户编码", required = true, dataType = "String")
-    })
     @GetMapping("/getAccount/{userId}")
     public AccountResponse getAccount(@PathVariable(value = "userId") Integer userId){
         logger.info("getAccount...param is :{}", JSONObject.toJSONString(userId));
@@ -63,9 +58,6 @@ public class RechargeController {
      * @return
      */
     @ApiOperation(value = " 查询充值记录", notes = " 查询充值记录")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "orderId", value = "orderId", required = true, dataType = "String")
-    })
     @GetMapping("/selectByOrderId/{orderId}")
     public AccountRechargeResponse selectByOrderId(@PathVariable String orderId){
         logger.info("selectByOrderId...param is :{}", JSONObject.toJSONString(orderId));
@@ -87,9 +79,6 @@ public class RechargeController {
      * @return
      */
     @ApiOperation(value = " updateBankRechargeSuccess", notes = " updateBankRechargeSuccess")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "newAccount", value = "newAccount", required = true, dataType = "Account")
-    })
     @PostMapping("/updateBankRechargeSuccess")
     public int updateBankRechargeSuccess(@RequestBody Account newAccount){
         logger.info("updateBankRechargeSuccess...param is :{}", JSONObject.toJSONString(newAccount));
@@ -103,9 +92,6 @@ public class RechargeController {
      * @return
      */
     @ApiOperation(value = " 插入交易明细", notes = " 插入交易明细")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "accountList", value = "accountList", required = true, dataType = "AccountList")
-    })
     @PostMapping("/insertSelective")
     public int insertSelective(@RequestBody AccountList accountList){
         logger.info("insertSelective...param is :{}", JSONObject.toJSONString(accountList));
@@ -118,9 +104,6 @@ public class RechargeController {
      * @param accountRecharge
      */
     @ApiOperation(value = " 更新", notes = " 更新")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "accountRecharge", value = "accountRecharge", required = true, dataType = "AccountRecharge")
-    })
     @PutMapping("/updateByPrimaryKeySelective")
     public void updateByPrimaryKeySelective(@RequestBody AccountRecharge accountRecharge){
         logger.info("updateByPrimaryKeySelective...param is :{}", JSONObject.toJSONString(accountRecharge));

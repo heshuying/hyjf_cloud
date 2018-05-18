@@ -1,21 +1,5 @@
 package com.hyjf.soa.apiweb;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.common.security.utils.MD5;
@@ -23,6 +7,9 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.util.PropertiesConstants;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -31,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 public class CommonSoaUtils {
-	private static Logger _log = LoggerFactory.getLogger(CommonSoaUtils.class);  
+	private static Logger logger = LoggerFactory.getLogger(CommonSoaUtils.class);
 	public static final String SOA_COUPON_KEY;
 	public static final String SOA_INTERFACE_KEY;
 	private static ExecutorService exec;
@@ -172,12 +159,12 @@ public class CommonSoaUtils {
 		String webUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
 		webUrl = StringUtils.endsWith(webUrl, "/") ? webUrl : webUrl + "/";
 		String requestUrl = webUrl + CommonSoaUtils.COUPON_SEND_USER;
-		_log.info("--------调用apiweb接口发放优惠券,用户编号："+CommonParamBean.getUserId()+"------------");
-		_log.info("apiweb接口url：" + requestUrl);
+        logger.info("--------调用apiweb接口发放优惠券,用户编号："+CommonParamBean.getUserId()+"------------");
+        logger.info("apiweb接口url：" + requestUrl);
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_COUPON_KEY + CommonParamBean.getUserId()
 				+ CommonParamBean.getSendFlg() + SOA_COUPON_KEY));
 		params.put("sign", sign);
-		_log.info("-----------------调用apiweb接口发放优惠券----------------");
+        logger.info("-----------------调用apiweb接口发放优惠券----------------");
 		// 0:成功，1：失败
 		return HttpClientUtils.post(requestUrl, params);
 	}
@@ -223,12 +210,12 @@ public class CommonSoaUtils {
 		String webUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
 		webUrl = StringUtils.endsWith(webUrl, "/") ? webUrl : webUrl + "/";
 		String requestUrl = webUrl + CommonSoaUtils.COUPON_SEND_USER;
-		_log.info("--------调用apiweb接口发放优惠券,用户编号："+CommonParamBean.getUserId()+"------------");
-		_log.info("apiweb接口url：" + requestUrl);
+        logger.info("--------调用apiweb接口发放优惠券,用户编号："+CommonParamBean.getUserId()+"------------");
+        logger.info("apiweb接口url：" + requestUrl);
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_COUPON_KEY + CommonParamBean.getUserId()
 				+ CommonParamBean.getSendFlg() + SOA_COUPON_KEY));
 		params.put("sign", sign);
-		_log.info("-----------------调用apiweb接口发放优惠券----------------");
+        logger.info("-----------------调用apiweb接口发放优惠券----------------");
 		CommonSoaUtils.noRetPost(requestUrl, params);
 	}
 
@@ -256,7 +243,7 @@ public class CommonSoaUtils {
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + borrowNid + money + platform
 				+ couponGrantId + timestamp + SOA_INTERFACE_KEY));
 		params.put("chkValue", sign);
-		_log.info("优惠券投资校验调用:" + requestUrl);
+        logger.info("优惠券投资校验调用:" + requestUrl);
 		// 0:成功，1：失败
 		String result = HttpClientUtils.post(requestUrl, params);
 		JSONObject status = JSONObject.parseObject(result);
@@ -297,7 +284,7 @@ public class CommonSoaUtils {
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + borrowNid + money + platform
 				+ couponGrantId + ip + ordId + couponOldTime + timestamp + SOA_INTERFACE_KEY));
 		params.put("chkValue", sign);
-		_log.info("优惠券投资调用:" + requestUrl);
+        logger.info("优惠券投资调用:" + requestUrl);
 		// 0:成功，1：失败
 		String intmin = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_TIME);
 		// add by zhangjp 优惠券投资 end
@@ -325,8 +312,8 @@ public class CommonSoaUtils {
 				exec.shutdownNow();
 			}
 
-			_log.info("\ntaskResult : " + taskResult);
-			_log.info("failReason : " + failReason);
+            logger.info("\ntaskResult : " + taskResult);
+            logger.info("failReason : " + failReason);
 			return null;
 		}
 
@@ -362,7 +349,7 @@ public class CommonSoaUtils {
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + borrowNid + money + platform
                 + couponGrantId + ip + ordId + couponOldTime + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("优惠券投资调用:" + requestUrl);
+        logger.info("优惠券投资调用:" + requestUrl);
 
         
         String result = HttpClientUtils.post(requestUrl, params);
@@ -407,7 +394,7 @@ public class CommonSoaUtils {
 		params.put("chkValue", chkValue);
 		// 请求路径
 		String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.COUPON_LOANS;
-		_log.info("开始请求优惠券放款接口，url：" + requestUrl + " params: " + params);
+		logger.info("开始请求优惠券放款接口，url：" + requestUrl + " params: " + params);
 		CommonSoaUtils.noRetPost(requestUrl,params);*/
 	}
 	
@@ -429,7 +416,7 @@ public class CommonSoaUtils {
 		params.put("chkValue", chkValue);
 		// 请求路径
 		String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.COUPON_REPAY;
-		_log.info("开始请求直投类优惠券还款接口，url：" + requestUrl + " params: " + params);
+		logger.info("开始请求直投类优惠券还款接口，url：" + requestUrl + " params: " + params);
 		CommonSoaUtils.noRetPost(requestUrl,params);*/
 	}
 	
@@ -448,7 +435,7 @@ public class CommonSoaUtils {
 		params.put("chkValue", chkValue);
 		// 请求路径
 		String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.COUPON_REPAY_HTJ;
-		_log.info("开始请求汇添金优惠券还款接口，url：" + requestUrl + " params: " + params);
+		logger.info("开始请求汇添金优惠券还款接口，url：" + requestUrl + " params: " + params);
 		CommonSoaUtils.noRetPost(requestUrl,params);*/
 	}
 	
@@ -467,7 +454,7 @@ public class CommonSoaUtils {
 		params.put("chkValue", chkValue);
 		// 请求路径
 		String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.COUPON_ONLY_REPAY;
-		_log.info("开始请求体验金按收益期限还款接口，url：" + requestUrl + " params: " + params);
+        logger.info("开始请求体验金按收益期限还款接口，url：" + requestUrl + " params: " + params);
 		HttpClientUtils.post(requestUrl, params);
 	}
 	
@@ -871,7 +858,7 @@ public class CommonSoaUtils {
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + planNid + money + platform
                 + couponGrantId + ip + ordId + couponOldTime + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("优惠券投资调用:" + requestUrl);
+        logger.info("优惠券投资调用:" + requestUrl);
 
         
         String result = HttpClientUtils.post(requestUrl, params);
@@ -896,7 +883,7 @@ public class CommonSoaUtils {
         String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.PLAN_COUPON_RECOVER;
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + planNid + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("汇添金优惠券收益及还款时间更新:" + requestUrl);
+        logger.info("汇添金优惠券收益及还款时间更新:" + requestUrl);
         CommonSoaUtils.noRetPost(requestUrl, params);
     }
     
@@ -925,7 +912,7 @@ public class CommonSoaUtils {
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + planNid + money + platform
                 + couponGrantId + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("优惠券投资校验调用:" + requestUrl);
+        logger.info("优惠券投资校验调用:" + requestUrl);
         // 0:成功，1：失败
         String result = HttpClientUtils.post(requestUrl, params);
         JSONObject status = JSONObject.parseObject(result);
@@ -948,7 +935,7 @@ public class CommonSoaUtils {
         String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.GET_USEREVALATIONRESULT_BY_USERID;
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId  + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("返回用户是否测评标识调用:" + requestUrl);
+        logger.info("返回用户是否测评标识调用:" + requestUrl);
         // 0:成功，1：失败
         String result = HttpClientUtils.post(requestUrl, params);
         JSONObject status = JSONObject.parseObject(result);
@@ -961,7 +948,7 @@ public class CommonSoaUtils {
      * 银行存管同步余额（异步）
      */
     public static JSONObject synBalanceRetPost(Integer userId) {
-        _log.info("-----------------调用apiweb接口同步余额异步userId:"+userId+"----------------");
+        logger.info("-----------------调用apiweb接口同步余额异步userId:"+userId+"----------------");
         Map<String, String> params = new HashMap<String, String>();
         // 用户编号
         params.put("userId", userId+"");
@@ -973,10 +960,10 @@ public class CommonSoaUtils {
         webUrl = StringUtils.endsWith(webUrl, "/") ? webUrl : webUrl + "/";
         String requestUrl = webUrl + CommonSoaUtils.BANK_SYNBALANCE;
 
-        _log.info("apiweb接口url：" + requestUrl);
+        logger.info("apiweb接口url：" + requestUrl);
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("-----------------调用apiweb接口同步余额异步----------------");
+        logger.info("-----------------调用apiweb接口同步余额异步----------------");
         // 0:成功，1：失败
         String result = HttpClientUtils.post(requestUrl, params);
         JSONObject status = JSONObject.parseObject(result);
@@ -988,7 +975,7 @@ public class CommonSoaUtils {
      * 银行存管同步余额（异步）
      */
     public static void synBalance(Integer userId) {
-        _log.info("-----------------调用apiweb接口同步余额异步userId:"+userId+"----------------");
+        logger.info("-----------------调用apiweb接口同步余额异步userId:"+userId+"----------------");
         Map<String, String> params = new HashMap<String, String>();
         // 用户编号
         params.put("userId", userId+"");
@@ -1000,10 +987,10 @@ public class CommonSoaUtils {
         webUrl = StringUtils.endsWith(webUrl, "/") ? webUrl : webUrl + "/";
         String requestUrl = webUrl + CommonSoaUtils.BANK_SYNBALANCE;
 
-        _log.info("apiweb接口url：" + requestUrl);
+        logger.info("apiweb接口url：" + requestUrl);
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("-----------------调用apiweb接口同步余额异步----------------");
+        logger.info("-----------------调用apiweb接口同步余额异步----------------");
         CommonSoaUtils.noRetPost(requestUrl, params);
     }
     
@@ -1011,7 +998,7 @@ public class CommonSoaUtils {
      * 银行存管同步余额（异步）
      */
     public static void synBalance(String bankAccount) {
-        _log.info("-----------------调用apiweb接口同步余额异步bankAccout:"+bankAccount+"----------------");
+        logger.info("-----------------调用apiweb接口同步余额异步bankAccout:"+bankAccount+"----------------");
         Map<String, String> params = new HashMap<String, String>();
         // 用户编号
         params.put("bankAccount", bankAccount+"");
@@ -1023,10 +1010,10 @@ public class CommonSoaUtils {
         webUrl = StringUtils.endsWith(webUrl, "/") ? webUrl : webUrl + "/";
         String requestUrl = webUrl + CommonSoaUtils.BANKACCUNOUT_SYNBALANCE;
 
-        _log.info("apiweb接口url：" + requestUrl);
+        logger.info("apiweb接口url：" + requestUrl);
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + bankAccount + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        _log.info("-----------------调用apiweb接口同步余额异步----------------");
+        logger.info("-----------------调用apiweb接口同步余额异步----------------");
         CommonSoaUtils.noRetPost(requestUrl, params);
     }
     
@@ -1034,7 +1021,7 @@ public class CommonSoaUtils {
      * 根据查询条件取得用户线下充值信息（同步）
      */
     public static JSONObject offlineRechargeList(Map<String,String> searchCon) {
-        _log.info("-----------------调用apiweb接口取得用户线下充值信息----------------");
+        logger.info("-----------------调用apiweb接口取得用户线下充值信息----------------");
         String timestamp = GetDate.getNowTime10() + "";
         // 时间戳
         searchCon.put("timestamp", timestamp);
@@ -1064,7 +1051,7 @@ public class CommonSoaUtils {
     public static JSONObject getBanksList() {
         Map<String, String> params = new HashMap<String, String>();
         String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.BANK_LIST;
-        _log.info("返回快捷银行充值限额:" + requestUrl);
+        logger.info("返回快捷银行充值限额:" + requestUrl);
         String result = HttpClientUtils.post(requestUrl, params);
         JSONObject status = JSONObject.parseObject(result);
         return status;
@@ -1100,7 +1087,7 @@ public class CommonSoaUtils {
 //        params.put("chkValue", chkValue);
         // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
-        if(!url.substring(url.length()-1, url.length()).equals("/")) {
+        if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
         }
         String requestUrl = url + CommonSoaUtils.CHONGZHI;
@@ -1124,7 +1111,7 @@ public class CommonSoaUtils {
   //      params.put("chkValue", chkValue);
         // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
-        if(!url.substring(url.length()-1, url.length()).equals("/")) {
+        if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
         }
         String requestUrl = url + CommonSoaUtils.TIXIAN;
@@ -1147,7 +1134,7 @@ public class CommonSoaUtils {
 
         // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
-        if(!url.substring(url.length()-1, url.length()).equals("/")) {
+        if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
         }
         String requestUrl = url + CommonSoaUtils.TOUZI;
@@ -1175,7 +1162,7 @@ public class CommonSoaUtils {
 
         // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
-        if(!url.substring(url.length()-1, url.length()).equals("/")) {
+        if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
         }
         String requestUrl = url + "act2018list/investment";
@@ -1201,7 +1188,7 @@ public class CommonSoaUtils {
 
         // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
-        if(!url.substring(url.length()-1, url.length()).equals("/")) {
+        if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
         }
         String requestUrl = url + "act2018list/open";
@@ -1216,7 +1203,7 @@ public class CommonSoaUtils {
      */
 
     public static void listBorrow(String borrowNid) {
-    	_log.info("上市活动开始放款请求"+borrowNid);
+        logger.info("上市活动开始放款请求"+borrowNid);
         String timestamp = String.valueOf(GetDate.getNowTime10());
        // String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
@@ -1228,7 +1215,7 @@ public class CommonSoaUtils {
 
         // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
-        if(!url.substring(url.length()-1, url.length()).equals("/")) {
+        if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
         }
         String requestUrl = url + "act2018list/actonefang";

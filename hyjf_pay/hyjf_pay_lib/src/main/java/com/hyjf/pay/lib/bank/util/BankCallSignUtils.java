@@ -49,7 +49,7 @@ public class BankCallSignUtils implements Serializable {
 	/** 商户私钥文件地址 **/
 	public static final String BANK_PRI_KEY_PASS = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PASS);
 	
-	static Logger _log = LoggerFactory.getLogger(BankCallSignUtils.class);
+	static Logger logger = LoggerFactory.getLogger(BankCallSignUtils.class);
 
 	/**
 	 * RSA方式加签
@@ -70,12 +70,12 @@ public class BankCallSignUtils implements Serializable {
 		String sign = null;
 		RSAHelper signer = null;
 		try {
-			//_log.info("获取签名私钥:" + BANK_PRI_KEY_PATH);
+			//logger.info("获取签名私钥:" + BANK_PRI_KEY_PATH);
 			RSAKeyUtil rsaKey = new RSAKeyUtil(new File(BANK_PRI_KEY_PATH), BANK_PRI_KEY_PASS);
 			signer = new RSAHelper(rsaKey.getPrivateKey());
 			sign = signer.sign(signStr);
 		} catch (Exception e) {
-			_log.info("签名校验异常" + e.getMessage());
+			logger.info("签名校验异常" + e.getMessage());
 		}
 		return sign;
 	}
@@ -99,7 +99,7 @@ public class BankCallSignUtils implements Serializable {
 			RSAHelper signHelper = new RSAHelper(ru.getPublicKey());
 			b = signHelper.verify(dataText, signText);
 		} catch (Exception e) {
-			_log.info("签名校验异常" + e.getMessage());
+			logger.info("签名校验异常" + e.getMessage());
 		}
 		return b;
 	}

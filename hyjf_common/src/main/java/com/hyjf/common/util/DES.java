@@ -36,7 +36,7 @@ public class DES {
      * @throws Exception
      */
     public static String encrypt(String message, String key) {
-        if (message == null || message.equals("")) {
+        if (message == null || "".equals(message)) {
             return "";
         }
         try {

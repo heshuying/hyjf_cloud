@@ -52,7 +52,7 @@ public class BankCallVO {
      */
     public BigDecimal getBigDecimal(String key) {
         String val = paramMap.get(key);
-        if (val!=null&&!val.equals("")) {
+        if (val!=null&&!"".equals(val)) {
             return new BigDecimal(val);
         }
         return BigDecimal.ZERO;

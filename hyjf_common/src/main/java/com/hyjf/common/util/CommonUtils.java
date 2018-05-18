@@ -32,19 +32,21 @@ public class CommonUtils {
 	 * @param obj
 	 */
 	public static Object convertNullToEmptyString(Object obj) {
-		if (obj == null)
-			return obj;
+		if (obj == null) {
+            return obj;
+        }
 		// 获取对象属性
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			// 跳过静态属性
 			String mod = Modifier.toString(field.getModifiers());
-			if (mod.indexOf("static") != -1)
-				continue;
+			if (mod.indexOf("static") != -1) {
+                continue;
+            }
 
 			// 得到属性的类名
 			String className = field.getType().getSimpleName();
-			if (className.equalsIgnoreCase("String")) {
+			if ("String".equalsIgnoreCase(className)) {
 				try {
 					field.setAccessible(true); // 设置些属性是可以访问的
 					Object val = field.get(obj);
@@ -80,8 +82,9 @@ public class CommonUtils {
 	 */
 	public static String getPeriodUnitByRepayStyle(String repayStyle) {
 
-		if (StringUtils.isEmpty(repayStyle))
-			return StringUtils.EMPTY;
+		if (StringUtils.isEmpty(repayStyle)) {
+            return StringUtils.EMPTY;
+        }
 
 		String periodUnit;
 		if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayStyle)) {
@@ -99,10 +102,12 @@ public class CommonUtils {
 	 * @return
 	 */
 	public static boolean isStageRepay(String repayStyle) {
-		if (StringUtils.isEmpty(repayStyle))
-			return false;
-		if (Arrays.asList(CustomConstants.BORROW_STYLE_ENDDAY, CustomConstants.BORROW_STYLE_END).contains(repayStyle))
-			return false;
+		if (StringUtils.isEmpty(repayStyle)) {
+            return false;
+        }
+		if (Arrays.asList(CustomConstants.BORROW_STYLE_ENDDAY, CustomConstants.BORROW_STYLE_END).contains(repayStyle)) {
+            return false;
+        }
 		return true;
 	}
 

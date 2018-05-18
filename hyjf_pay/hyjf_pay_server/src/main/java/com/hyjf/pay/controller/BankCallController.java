@@ -43,7 +43,7 @@ import com.hyjf.pay.service.BankPayLogService;
 @Controller
 @RequestMapping(value = "/bankcall")
 public class BankCallController extends BaseController {
-    Logger _log = LoggerFactory.getLogger(BankCallController.class);
+    Logger logger = LoggerFactory.getLogger(BankCallController.class);
 
     @Autowired
     BankPayLogService payLogService;
@@ -65,7 +65,7 @@ public class BankCallController extends BaseController {
     @ResponseBody
     public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
 
-        _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+        logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         Map<String,Object> resultMap = new HashMap<String,Object>();
         try {
             // 参数转换成Map
@@ -122,10 +122,10 @@ public class BankCallController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            _log.error(String.valueOf(e));
+            logger.error(String.valueOf(e));
             throw e;
         } finally {
-           _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+            logger.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         }
         return resultMap;
     }
@@ -148,7 +148,7 @@ public class BankCallController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         // 部分接口调用有返回结果
         if (Validator.isNotNull(bean) && StringUtils.isNotBlank(bean.getTxCode())) {
-            _log.info("交易完成后,回调开始,消息类型:[" + (bean == null ? "" : bean.getTxCode()) + "],订单号:[" + logOrderId + "],用户ID:[" + logUserId + "].");
+            logger.info("交易完成后,回调开始,消息类型:[" + (bean == null ? "" : bean.getTxCode()) + "],订单号:[" + logOrderId + "],用户ID:[" + logUserId + "].");
             // 判断返回参数是否为空
             if (Validator.isNull(bean)) {
                 throw new RuntimeException("接收的同步返回参数为空，调用银行接口失败");
@@ -190,12 +190,12 @@ public class BankCallController extends BaseController {
             if (Validator.isNull(result) || !result.isLogVerifyFlag()) {
                 status = BankCallConstant.STATUS_VERTIFY_NG;
                 bean.setLogOrderStatus(status);
-                _log.debug("验证签名失败");
-                _log.info("验签失败,订单号:[" + bean.getLogOrderId() + "]");
+                logger.debug("验证签名失败");
+                logger.info("验签失败,订单号:[" + bean.getLogOrderId() + "]");
             } else {
                 status = BankCallConstant.STATUS_VERTIFY_OK;
                 bean.setLogOrderStatus(status);
-                _log.debug("验证签名成功");
+                logger.debug("验证签名成功");
             }
             // 查询相应的订单记录
             if (Validator.isNotNull(logOrderId)) {
@@ -217,7 +217,7 @@ public class BankCallController extends BaseController {
                     notifyUrl = jo.getString(BankCallConstant.PARAM_NOTIFYURL);
                     String isSuccess = request.getParameter("isSuccess");
                     // 交易成功了
-                    if (isSuccess != null && isSuccess.equals("1")) {
+                    if (isSuccess != null && "1".equals(isSuccess)) {
                         retUrl = jo.getString(BankCallConstant.PARAM_SUCCESSFULURL);
                     }else{
                         retUrl = jo.getString(BankCallConstant.PARAM_RETURL);
@@ -236,7 +236,7 @@ public class BankCallController extends BaseController {
 
                     if (result.isLogVerifyFlag() && Validator.isNotNull(retUrl)) {
                         bean.setAction(retUrl);
-                        _log.info("同步回调跳转,callBeckUrl:[" + bean.getAction() + "].");
+                        logger.info("同步回调跳转,callBeckUrl:[" + bean.getAction() + "].");
                         bean.getAllParams().remove(BankCallConstant.PARAM_SIGN);
                         bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
                         bean.setSign(null);
@@ -274,7 +274,7 @@ public class BankCallController extends BaseController {
                     notifyUrl = jo.getString(BankCallConstant.PARAM_NOTIFYURL);
                     String isSuccess = request.getParameter("isSuccess");
                     // 交易成功了
-                    if (isSuccess != null && isSuccess.equals("1")) {
+                    if (isSuccess != null && "1".equals(isSuccess)) {
                         retUrl = jo.getString(BankCallConstant.PARAM_SUCCESSFULURL);
                     }else{
                         retUrl = jo.getString(BankCallConstant.PARAM_RETURL);
@@ -286,7 +286,7 @@ public class BankCallController extends BaseController {
                     bean.setRetUrl(retUrl);
                     bean.setNotifyUrl(notifyUrl);
                     bean.setAction(retUrl);
-                    _log.info("同步回调,callBackUrl:[" + bean.getAction() + "]");
+                    logger.info("同步回调,callBackUrl:[" + bean.getAction() + "]");
                     bean.getAllParams().remove(BankCallConstant.PARAM_SIGN);
                     bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
                     bean.setSign(null);
@@ -301,7 +301,7 @@ public class BankCallController extends BaseController {
                 modelAndView.addObject("content", "订单信息错误");
             }
         }
-        _log.info("[交易完成后,回调结束]");
+        logger.info("[交易完成后,回调结束]");
         return modelAndView;
     }
 
@@ -315,8 +315,8 @@ public class BankCallController extends BaseController {
 
         String methodName = "callPageBack";
         String bgData = request.getParameter("bgData");
-        _log.info("接收异步返回的消息开始,订单号:【" + bean.getLogOrderId() + "】,用户ID:【" + bean.getLogUserId() + "】.");
-        _log.debug("消息内容=【" + bgData + "】");
+        logger.info("接收异步返回的消息开始,订单号:【" + bean.getLogOrderId() + "】,用户ID:【" + bean.getLogUserId() + "】.");
+        logger.debug("消息内容=【" + bgData + "】");
 
         Map<String, String> mapParam;
         try {
@@ -362,12 +362,12 @@ public class BankCallController extends BaseController {
             if (Validator.isNull(result) || !result.isLogVerifyFlag()) {
                 status = BankCallConstant.STATUS_VERTIFY_NG;
                 bean.setLogOrderStatus(status);
-                _log.debug("验证签名失败");
-                _log.info("验签失败,订单号:[" + bean.getLogOrderId() + "].");
+                logger.debug("验证签名失败");
+                logger.info("验签失败,订单号:[" + bean.getLogOrderId() + "].");
             } else {
                 status = BankCallConstant.STATUS_VERTIFY_OK;
                 bean.setLogOrderStatus(status);
-                _log.debug("验证签名成功");
+                logger.debug("验证签名成功");
             }
             // 真实的返回URL
             String notifyUrl = "";
@@ -431,7 +431,7 @@ public class BankCallController extends BaseController {
                         // 更新数据状态为验签失败
                         this.payLogService.updateChinapnrExclusiveLog(logOrderId, 3);
                     }
-                    _log.info("[接收异步返回的消息结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+                    logger.info("[接收异步返回的消息结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
                 }
             }
         }
@@ -465,7 +465,7 @@ public class BankCallController extends BaseController {
     @ResponseBody
     @PostMapping(value = "callApiBg.json")
     public String callApiBg(HttpServletRequest request, @ModelAttribute BankCallBean bean) throws Exception {
-        _log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+        logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         String ret = "";
         String logOrderId = bean.getLogOrderId();
         try {
@@ -532,11 +532,11 @@ public class BankCallController extends BaseController {
                 if (Validator.isNull(verifyResult) || !verifyResult.isLogVerifyFlag()) {
                     status = BankCallConstant.STATUS_VERTIFY_NG;
                     bean.setLogOrderStatus(status);
-                    _log.debug("验证签名失败");
+                    logger.debug("验证签名失败");
                 } else {
                     status = BankCallConstant.STATUS_VERTIFY_OK;
                     bean.setLogOrderStatus(status);
-                    _log.debug("验证签名成功");
+                    logger.debug("验证签名成功");
 
                     bean.getAllParams().remove(BankCallConstant.PARAM_SIGN);
                     bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
@@ -561,9 +561,9 @@ public class BankCallController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            _log.error("订单号：" + logOrderId, e);
+            logger.error("订单号：" + logOrderId, e);
         } finally {
-            _log.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+            logger.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         }
         return ret;
     }
@@ -582,8 +582,8 @@ public class BankCallController extends BaseController {
         String content = "";
         if (StringUtils.isNotBlank(bgData)) {
             bean = JSONObject.parseObject(bgData, BankCallBean.class);
-            _log.info("[接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-            _log.info("-接收异步返回的消息开始, 消息类型:[" + (bean == null ? "" : bean.getTxCode()) + "],订单号:[" + logOrderId + "],用户ID:[" + logUserId + "].");
+            logger.info("[接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+            logger.info("-接收异步返回的消息开始, 消息类型:[" + (bean == null ? "" : bean.getTxCode()) + "],订单号:[" + logOrderId + "],用户ID:[" + logUserId + "].");
             // 判断返回参数是否为空
             if (Validator.isNull(bean)) {
                 throw new RuntimeException("接收的同步返回参数为空，调用银行接口失败");
@@ -593,7 +593,7 @@ public class BankCallController extends BaseController {
             // 参数转换成Map
             bean.convert();
             // 输出debug日志
-            _log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
+            logger.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
             bean.setLogOrderId(logOrderId);
             bean.setLogUserId(logUserId);
             // 写入银行接口接收记录
@@ -612,12 +612,12 @@ public class BankCallController extends BaseController {
             if (Validator.isNull(result) || !result.isLogVerifyFlag()) {
                 status = BankCallConstant.STATUS_VERTIFY_NG;
                 bean.setLogOrderStatus(status);
-                _log.debug("验证签名失败");
-                _log.info("验签失败,订单号:" + bean.getLogOrderId() + "]");
+                logger.debug("验证签名失败");
+                logger.info("验签失败,订单号:" + bean.getLogOrderId() + "]");
             } else {
                 status = BankCallConstant.STATUS_VERTIFY_OK;
                 bean.setLogOrderStatus(status);
-                _log.debug("验证签名成功");
+                logger.debug("验证签名成功");
             }
             // 真实的返回URL
             String notifyUrl = "";
@@ -686,7 +686,7 @@ public class BankCallController extends BaseController {
                         // 更新数据状态为验签失败
                         this.payLogService.updateChinapnrExclusiveLog(logOrderId, 3);
                     }
-                    _log.info("[接收异步返回的消息结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+                    logger.info("[接收异步返回的消息结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
                 }
             }
         }
@@ -740,7 +740,7 @@ public class BankCallController extends BaseController {
                 if (null != bean.getAllParams().get(BankCallConstant.PARAM_ACQRES)) {
                     bean.getAllParams().put(BankCallConstant.PARAM_ACQRES, bean.getAllParams().get(BankCallConstant.PARAM_ACQRES));
                 }
-                _log.info("同步回调跳转,callBackUrl:[" + bean.getAction() + "].");
+                logger.info("同步回调跳转,callBackUrl:[" + bean.getAction() + "].");
                 bean.getAllParams().remove(BankCallConstant.PARAM_SIGN);
                 bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
                 bean.setSign(null);
@@ -754,7 +754,7 @@ public class BankCallController extends BaseController {
             modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_RESULT);
             modelAndView.addObject("content", "订单信息错误");
         }
-        _log.info("[交易完成后,回调结束]");
+        logger.info("[交易完成后,回调结束]");
         return modelAndView;
     }
 

@@ -1,18 +1,17 @@
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.resquest.user.BankOpenRequest;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.cs.user.client.AmBankOpenClient;
+import com.hyjf.cs.user.client.AmUserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.user.BankOpenRequest;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.user.client.AmBankOpenClient;
-import com.hyjf.cs.user.client.AmUserClient;
 
 
 /**
@@ -47,6 +46,16 @@ public class AmBankOpenClientImpl implements AmBankOpenClient {
 			return result;
 		}
 		return 0;
+	}
+
+	@Override
+	public BankOpenAccountVO selectById(int userId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 	
 }

@@ -162,13 +162,13 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 					// 如果不是成功状态
 					try {
 						// 将数据封装更新至充值记录
-						accountRecharge.setFee(BigDecimal.ZERO); // 费用
-						accountRecharge.setDianfuFee(BigDecimal.ZERO);// 商户垫付金额
-						accountRecharge.setBalance(txAmount);// 实际到账余额
-						accountRecharge.setUpdateTime(nowTime);// 更新时间
-						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
-						accountRecharge.setAccountId(accountId);// 电子账户
-						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);// 交易流水号
+						accountRecharge.setFee(BigDecimal.ZERO);
+						accountRecharge.setDianfuFee(BigDecimal.ZERO);
+						accountRecharge.setBalance(txAmount);
+						accountRecharge.setUpdateTime(nowTime);
+						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);
+						accountRecharge.setAccountId(accountId);
+						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);
 						accountRecharge.setLogOrderId(bean.getLogOrderId());
 						accountRecharge.setLogUserId(bean.getLogUserId());
 						accountRecharge.setTxAmount(bean.getTxAmount());
@@ -215,7 +215,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 							return jsonMessage("充值成功!", "0");
 						} else {
 							// 查询充值交易状态
-                            accountRecharge = rechargeClient.selectByOrderId(orderId);// 查询充值记录
+                            accountRecharge = rechargeClient.selectByOrderId(orderId);
 							if (RECHARGE_STATUS_SUCCESS == accountRecharge.getStatus()) {
 								return jsonMessage("充值成功!", "0");
 							} else {

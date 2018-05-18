@@ -892,6 +892,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * String类型 转换为Date, 如果参数长度为10 转换格式”yyyy-MM-dd“ 如果参数长度为19 转换格式”yyyy-MM-dd
 	 * HH:mm:ss“ * @param text String类型的时间值
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		if (text!=null && !"".equals(text)) {
 			try {
@@ -1342,7 +1343,7 @@ public class GetDate extends PropertyEditorSupport {
 	 */
 	public static Integer getMyTimeInMillis() {
 		// 当前时间
-		long milliseconds = new Date().getTime() / 1000;
+		long milliseconds = System.currentTimeMillis() / 1000;
 		return (int) milliseconds;
 	}
 
@@ -1764,15 +1765,15 @@ public class GetDate extends PropertyEditorSupport {
 		String dateStr = GetDate.dateToString2(date);
 		String jidu = dateStr.substring(5, 7);
 		String resultDateStr = dateStr.substring(0, 5);
-		if (jidu.equals("01") || jidu.equals("02") || jidu.equals("03")) {
+		if ("01".equals(jidu) || "02".equals(jidu) || "03".equals(jidu)) {
 			resultDateStr += "01-01";
-		} else if (jidu.equals("04") || jidu.equals("05") || jidu.equals("06")) {
+		} else if ("04".equals(jidu) || "05".equals(jidu) || "06".equals(jidu)) {
 			resultDateStr += "04-01";
 		}
-		if (jidu.equals("07") || jidu.equals("08") || jidu.equals("09")) {
+		if ("07".equals(jidu) || "08".equals(jidu) || "09".equals(jidu)) {
 			resultDateStr += "07-01";
 		}
-		if (jidu.equals("10") || jidu.equals("11") || jidu.equals("12")) {
+		if ("10".equals(jidu) || "11".equals(jidu) || "12".equals(jidu)) {
 			resultDateStr += "10-01";
 		}
 		return GetDate.stringToDate2(resultDateStr);
@@ -1788,15 +1789,15 @@ public class GetDate extends PropertyEditorSupport {
 		String dateStr = GetDate.dateToString2(date);
 		String jidu = dateStr.substring(5, 7);
 		String resultDateStr = dateStr.substring(0, 5);
-		if (jidu.equals("01") || jidu.equals("02") || jidu.equals("03")) {
+		if ("01".equals(jidu) || "02".equals(jidu) || "03".equals(jidu)) {
 			resultDateStr += "03-31";
-		} else if (jidu.equals("04") || jidu.equals("05") || jidu.equals("06")) {
+		} else if ("04".equals(jidu) || "05".equals(jidu) || "06".equals(jidu)) {
 			resultDateStr += "06-30";
 		}
-		if (jidu.equals("07") || jidu.equals("08") || jidu.equals("09")) {
+		if ("07".equals(jidu) || "08".equals(jidu) || "09".equals(jidu)) {
 			resultDateStr += "09-30";
 		}
-		if (jidu.equals("10") || jidu.equals("11") || jidu.equals("12")) {
+		if ("10".equals(jidu) || "11".equals(jidu) || "12".equals(jidu)) {
 			resultDateStr += "12-31";
 		}
 		return GetDate.stringToDate2(resultDateStr);
@@ -1846,8 +1847,9 @@ public class GetDate extends PropertyEditorSupport {
         Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
         int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
-        if (w < 0)
-            w = 0;
+        if (w < 0) {
+			w = 0;
+		}
         return weekDays[w];
     }
     

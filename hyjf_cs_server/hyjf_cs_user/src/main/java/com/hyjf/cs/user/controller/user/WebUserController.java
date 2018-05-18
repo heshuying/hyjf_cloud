@@ -1,14 +1,5 @@
 package com.hyjf.cs.user.controller.user;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.constants.LoginError;
@@ -17,13 +8,25 @@ import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author xiasq
  * @version WebUserController, v0.1 2018/4/21 15:06
  */
-
+@Api(value = "web端用户接口")
 @RestController
 @RequestMapping("/web/user")
 public class WebUserController {
@@ -39,6 +42,7 @@ public class WebUserController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value = "用户注册", notes = "用户注册")
 	@PostMapping(value = "/register", produces = "application/json; charset=utf-8")
 	public ApiResult<UserVO> register(@RequestBody @Valid RegisterVO registerVO, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -91,21 +95,77 @@ public class WebUserController {
 	 * @param response
 	 */
 	@RequestMapping("/userAuthInves")
-	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = false) String token, HttpServletRequest request) {
+	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
 		ModelAndView modelAndView = userService.userAuthInves(token,request);
 		return modelAndView;
 	}
 
 	/**
-	 *
+	 *用户授权自动债转
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/creditUserAuthInves")
-	public ModelAndView creditUserAuthInves(HttpServletRequest request) {
-		ModelAndView modelAndView = new ModelAndView();
+	public ModelAndView creditUserAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request) {
+		ModelAndView modelAndView =  userService.creditUserAuthInves(token,request);
 		return modelAndView;
 	}
 
+	/**
+	 * 用户授权自动投资同步回调
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/userAuthInvesReturn")
+	public Map<String,String> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+		logger.info("userAuthInvesReturn:"+"[投资人自动投标签约增强同步回调开始]");
+		Map<String,String> result = userService.userAuthInvesReturn(token,bean,request);
+		return result;
+	}
+
+	/**
+	 * 用户授权自动债转同步回调
+	 * @param request
+	 * @param response
+	 * @param bean
+	 * @return
+	 */
+	@RequestMapping("/credituserAuthInvesReturn")
+	public Map<String, String> userCreditAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response,
+												  @ModelAttribute BankCallBean bean) {
+		logger.info("[投资人自动债转签约增强同步回调开始]");
+		Map<String,String> result = userService.userCreditAuthInvesReturn(token,bean,request);
+		return result;
+	}
+
+	/**
+	 * 用户授权自动投资异步回调
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/userAuthInvesBgreturn")
+	public String userAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,BankCallBean bean) {
+		String result = userService.userBgreturn(bean);
+		return result;
+	}
+
+	/**
+	 * 用户授权自动债转异步回调
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/credituserAuthInvesBgreturn")
+	public String userCreditAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
+											  @ModelAttribute BankCallBean bean) {
+		String result = userService.userBgreturn(bean);
+		return result;
+
+	}
 }

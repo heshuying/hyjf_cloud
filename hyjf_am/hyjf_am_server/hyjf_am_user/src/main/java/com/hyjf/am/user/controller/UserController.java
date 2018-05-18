@@ -1,12 +1,15 @@
 package com.hyjf.am.user.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.user.HjhUserAuthLogResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -168,9 +171,38 @@ public class UserController {
 		}
 		return response;
 	}
-	@RequestMapping("/insertSelective")
-	public void insertSelective(@RequestBody HjhUserAuthLog hjhUserAuthLog){
+
+	@RequestMapping("/insertLogSelective")
+	public void insertLogSelective(@RequestBody HjhUserAuthLog hjhUserAuthLog){
 		logger.info("insertSelective:" + JSONObject.toJSONString(hjhUserAuthLog));
 		userService.insertSelective(hjhUserAuthLog);
+	}
+
+	@RequestMapping("/selectByExample/{orderId}")
+	public HjhUserAuthLogResponse selectByExample(@RequestBody String orderId){
+		HjhUserAuthLogResponse response = new HjhUserAuthLogResponse();
+		HjhUserAuthLog hjhUserAuthLog = userService.selectByExample(orderId);
+		if (null != hjhUserAuthLog){
+			HjhUserAuthLogVO hjhUserAuthLogVO = new HjhUserAuthLogVO();
+			BeanUtils.copyProperties(hjhUserAuthLog,hjhUserAuthLogVO);
+			response.setResult(hjhUserAuthLogVO);
+		}
+		return response;
+	}
+
+	@RequestMapping("/updateLogByPrimaryKeySelective")
+	public int updateLogByPrimaryKeySelective(@RequestBody HjhUserAuthLog record){
+		int count = userService.updateByPrimaryKeySelective(record);
+		return count;
+	}
+
+	@RequestMapping("/insertSelective")
+	public int insertSelective(@RequestBody HjhUserAuth record){
+		return userService.insertSelective(record);
+	}
+
+	@RequestMapping("/updateByPrimaryKeySelective")
+	public int updateByPrimaryKeySelective(@RequestBody HjhUserAuth record){
+		return userService.updateByPrimaryKeySelective(record);
 	}
 }

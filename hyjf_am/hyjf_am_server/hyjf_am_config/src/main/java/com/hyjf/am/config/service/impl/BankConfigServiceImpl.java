@@ -25,6 +25,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 	/**
 	 * 获取银行卡配置信息
 	 */
+	@Override
 	public BanksConfig getBanksConfigByBankId(Integer bankId) {
 		if (bankId == null) {
 			return null;
