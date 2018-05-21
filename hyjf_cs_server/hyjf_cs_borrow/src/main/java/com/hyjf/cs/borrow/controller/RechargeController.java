@@ -1,12 +1,7 @@
 package com.hyjf.cs.borrow.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.borrow.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.cs.borrow.config.SystemConfig;
 import com.hyjf.cs.borrow.service.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -23,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
@@ -139,7 +135,7 @@ public class RechargeController{
 		if (user!=null&&bean != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
 			JSONObject msg = this.userRechargeService.handleRechargeInfo(bean, params);
 			// 充值成功
-			if (msg != null && msg.get("error").equals("0")) {
+			if (msg != null && "0".equals(msg.get("error"))) {
 				logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
 				result.setMessage("充值成功");
 				result.setStatus(true);

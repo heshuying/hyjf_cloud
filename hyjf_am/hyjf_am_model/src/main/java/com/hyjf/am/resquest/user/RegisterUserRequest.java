@@ -6,7 +6,7 @@ package com.hyjf.am.resquest.user;
  */
 public class RegisterUserRequest {
 	private String mobilephone;
-	private String smscode;
+	private String smsCode;
 	private String reffer;
 	private String password;
 	private String utmId;
@@ -21,12 +21,12 @@ public class RegisterUserRequest {
 		this.mobilephone = mobilephone;
 	}
 
-	public String getSmscode() {
-		return smscode;
+	public String getSmsCode() {
+		return smsCode;
 	}
 
-	public void setSmscode(String smscode) {
-		this.smscode = smscode;
+	public void setSmsCode(String smsCode) {
+		this.smsCode = smsCode;
 	}
 
 	public String getReffer() {

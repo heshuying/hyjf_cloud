@@ -269,7 +269,7 @@ public class GetOrderIdUtils {
 						jedis.unwatch();
 					} else {
 						String ret = (String) result.get(0);
-						if (ret != null && ret.equals("OK")) {
+						if (ret != null && "OK".equals(ret)) {
 							break;
 						} else {
 							jedis.unwatch();
@@ -312,7 +312,7 @@ public class GetOrderIdUtils {
 						jedis.unwatch();
 					} else {
 						String ret = (String) result.get(0);
-						if (ret != null && ret.equals("OK")) {
+						if (ret != null && "OK".equals(ret)) {
 							break;
 						} else {
 							jedis.unwatch();

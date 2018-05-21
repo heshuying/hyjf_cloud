@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class BankCallUtils implements Serializable {
-	private static Logger _log = LoggerFactory.getLogger(BankCallUtils.class);
+	private static Logger logger = LoggerFactory.getLogger(BankCallUtils.class);
 
 	/**
 	 * 序列化id
@@ -55,7 +55,7 @@ public class BankCallUtils implements Serializable {
 	 */
 	public static ModelAndView callApi(BankCallBean bean) throws Exception {
 		String methodName = "callApi";
-		_log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		// 跳转页面
 		ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 		try {
@@ -98,10 +98,10 @@ public class BankCallUtils implements Serializable {
 				modelAndView.addAllObjects(map);
 			}
 		} catch (Exception e) {
-			_log.error(String.valueOf(e));
+			logger.error(String.valueOf(e));
 			throw e;
 		} finally {
-			_log.debug("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+			logger.debug("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		}
 		return modelAndView;
 	}
@@ -116,7 +116,7 @@ public class BankCallUtils implements Serializable {
 	public static BankCallBean callApiBg(BankCallBean bean) {
 
 		String methodName = "callApiBg";
-		_log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		BankCallBean ret = null;
 		try {
 			// bean转换成参数
@@ -153,16 +153,16 @@ public class BankCallUtils implements Serializable {
 			}
 			// 调用银行接口
 			String url = payurl + REQUEST_MAPPING_CALLAPIBG;
-			_log.info("调用银行接口url: {}", url);
+			logger.info("调用银行接口url: {}", url);
 			String result = HttpDeal.post(url, allParams);
 			if (Validator.isNotNull(result)) {
 				// 将返回字符串转换成BankCallBean
 				ret = JSONObject.parseObject(result, BankCallBean.class);
 			}
 		} catch (Exception e) {
-			_log.error(String.valueOf(e));
+			logger.error(String.valueOf(e));
 		} finally {
-			_log.debug("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+			logger.debug("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		}
 		return ret;
 	}

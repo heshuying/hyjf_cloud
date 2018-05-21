@@ -3,6 +3,7 @@ package com.hyjf.cs.user.controller.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author xiasq
@@ -113,4 +115,84 @@ public class AppUserController {
 		userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}
+
+	/**
+	 * 用户授权自动债转
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/userAuthCredit")
+	public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView modelAndView =  userService.creditUserAuthInves(token,request);
+		return modelAndView;
+	}
+
+	/**
+	 * 用户授权自动债转同步回调
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/userAuthCreditReturn")
+	public ModelAndView userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+		ModelAndView result = userService.userAuthCreditReturn(token,bean,request);
+		 return result;
+	}
+
+	/**
+	 * 用户授权自动债转异步回调
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/userAuthCreditBgreturn")
+	public String userCreditAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
+											  @ModelAttribute BankCallBean bean) {
+		String result = userService.userBgreturn(bean);
+		return result;
+	}
+	/**
+	 * 用户授权自动投资
+	 *
+	 * @param request
+	 * @param form
+	 * @return
+	 */
+	@RequestMapping("/userAuthInves")
+	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView modelAndView = userService.userAuthInves(token,request);
+		return modelAndView;
+	}
+
+	/**
+	 * 用户授权自动投资同步回调
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/userAuthInvesReturn")
+	public ModelAndView userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+		ModelAndView modelAndView = userService.appUserAuthInvesReturn(token,bean,request);
+		return modelAndView;
+	}
+
+	/**
+	 * 用户授权自动投资异步回调
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/userAuthInvesBgreturn")
+	public String userAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
+										@ModelAttribute BankCallBean bean) {
+		String result = userService.userBgreturn(bean);
+		return result;
+	}
+
 }

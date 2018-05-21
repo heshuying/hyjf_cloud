@@ -3,15 +3,13 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AppChannelStatisticsDetailProducer;
 import com.hyjf.am.user.mq.Producer;
+import com.hyjf.am.user.service.BankOpenService;
+import com.hyjf.am.user.utils.IdCard15To18;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang3.StringUtils;
@@ -20,12 +18,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.user.service.BankOpenService;
-import com.hyjf.am.user.utils.IdCard15To18;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class BankOpenServiceImpl implements BankOpenService {
-    private Logger _log = LoggerFactory.getLogger(BankOpenServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 	@Autowired
 	private BankOpenAccountLogMapper bankOpenAccountLogMapper;
 
@@ -115,7 +114,7 @@ public class BankOpenServiceImpl implements BankOpenService {
 
     @Override
     public boolean updateUserAccount(Integer userId,String trueName,  String orderId, String accountId, String idNo,Integer bankAccountEsb,String mobile) {
-        _log.info("开户成功后,更新用户账户信息");
+        logger.info("开户成功后,更新用户账户信息");
         // 需要调用查询接口查询用户的银行卡号  手机号  绑卡关系查询接口&&&&&&&&&&&&&&&&&&&&&&&&&&&
         // 当前日期
         Date nowDate = new Date();
@@ -132,7 +131,7 @@ public class BankOpenServiceImpl implements BankOpenService {
         String userName = user.getUsername();
         // 身份证号
 //        String idNo = openAccoutLog.getIdNo();
-        _log.info("用户ID:" + userId + "],用户名:[" + userName + "],用户身份证号:[" + idNo + "]");
+        logger.info("用户ID:" + userId + "],用户名:[" + userName + "],用户身份证号:[" + idNo + "]");
         // 根据身份证号获取用户相关信息
         if (idNo != null && idNo.length() < 18) {
             try {
@@ -159,13 +158,13 @@ public class BankOpenServiceImpl implements BankOpenService {
         // 更新相应的用户表
         boolean usersFlag = usersMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
         if (!usersFlag) {
-            _log.info("开户成功后,更新用户信息失败,用户ID:[" + userId + "]");
+            logger.info("开户成功后,更新用户信息失败,用户ID:[" + userId + "]");
             throw new RuntimeException("更新用户表失败！");
         }
         // 根据用户ID查询用户信息表
         UserInfo userInfo = this.getUsersInfoByUserId(userId);
         if (userInfo == null) {
-            _log.info("获取用户详情表失败,用户ID:[" + userId + "]");
+            logger.info("获取用户详情表失败,用户ID:[" + userId + "]");
             throw new RuntimeException("根据用户ID,查询用户详情失败");
         }
         userInfo.setTruename(trueName);// 姓名
@@ -177,7 +176,7 @@ public class BankOpenServiceImpl implements BankOpenService {
         // 更新用户详细信息表
         boolean userInfoFlag = usersInfoMapper.updateByPrimaryKeySelective(userInfo) > 0 ? true : false;
         if (!userInfoFlag) {
-            _log.info("更新用户详细信息表失败,用户ID:[" + userId + "]");
+            logger.info("更新用户详细信息表失败,用户ID:[" + userId + "]");
             throw new RuntimeException("更新用户详情表失败！");
         }
         // 插入银行账户关联表
@@ -190,7 +189,7 @@ public class BankOpenServiceImpl implements BankOpenService {
         openAccount.setCreateUserName(userName);
         boolean openAccountFlag = this.bankOpenAccountMapper.insertSelective(openAccount) > 0 ? true : false;
         if (!openAccountFlag) {
-            _log.info("开户成功后,插入用户银行账户关联表失败,用户ID:[" + userId + "]");
+            logger.info("开户成功后,插入用户银行账户关联表失败,用户ID:[" + userId + "]");
             throw new RuntimeException("插入用户银行账户关联表失败！");
         }
         
@@ -209,7 +208,7 @@ public class BankOpenServiceImpl implements BankOpenService {
             appChannelStatisticsDetailProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                     MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG, JSON.toJSONBytes(userId)));
         } catch (MQException e) {
-            _log.error("开户统计app渠道失败....", e);
+            logger.error("开户统计app渠道失败....", e);
         }
         return openAccountFlag;
     }
@@ -324,6 +323,7 @@ public class BankOpenServiceImpl implements BankOpenService {
      * @param userId
      * @return
      */
+    @Override
     public CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId) {
         CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
         CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();

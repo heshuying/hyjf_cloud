@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -34,4 +35,14 @@ public interface AmUserClient {
 	HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
 
 	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
+
+    BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
+
+	HjhUserAuthLogVO selectByExample(String orderId);
+
+	int updateByPrimaryKeySelective(HjhUserAuthLogVO record);
+
+	int insertSelective(HjhUserAuthVO record);
+
+	int updateByPrimaryKeySelective(HjhUserAuthVO record);
 }

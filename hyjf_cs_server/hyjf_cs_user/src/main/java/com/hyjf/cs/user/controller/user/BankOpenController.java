@@ -1,26 +1,5 @@
 package com.hyjf.cs.user.controller.user;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
@@ -35,6 +14,23 @@ import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 
@@ -45,7 +41,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 @Controller
 @RequestMapping("/api/secure/open")
 public class BankOpenController {
-	private static final Logger _log = LoggerFactory.getLogger(BankOpenController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
 
 	@Autowired
 	private BankOpenService bankOpenService;
@@ -64,12 +60,9 @@ public class BankOpenController {
 	 * @return
 	 */
     @ApiOperation(value = "开户", notes = "用户开户")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "bankOpenVO", value = "用户信息", required = true, dataType = "BankOpenAccountVO")
-    })
 	@PostMapping(value = "/openBankAccount")
 	public ModelAndView openBankAccount(@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
-		_log.info("openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
+        logger.info("openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
 		
 		ModelAndView reuslt = new ModelAndView("bankopen/error");
 
@@ -199,11 +192,11 @@ public class BankOpenController {
         //保存开户日志
         int uflag = this.bankOpenService.updateUserAccountLog(userId, user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
         if (uflag == 0) {
-            _log.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + userId + "]");
+            logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + userId + "]");
             model.addAttribute("message", "操作失败！");
             return reuslt;
         }
-        _log.info("开户end");
+        logger.info("开户end");
     
 
 		return reuslt;

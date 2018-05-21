@@ -1,12 +1,11 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.HjhUserAuthResponse;
-import com.hyjf.am.response.user.SmsCodeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -163,7 +162,59 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog) {
-		restTemplate.put("http://AM-USER/am-user/user/insertSelective",hjhUserAuthLog);
+	public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
+		BankReturnCodeConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/recharge/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
+
+	@Override
+	public void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog) {
+		restTemplate.put("http://AM-USER/am-user/user/insertLogSelective",hjhUserAuthLog);
+	}
+
+	@Override
+	public HjhUserAuthLogVO selectByExample(String orderId) {
+		HjhUserAuthLogResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(HjhUserAuthLogVO record){
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateLogByPrimaryKeySelective", record, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
+	@Override
+	public int insertSelective(HjhUserAuthVO record){
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/insertSelective", record, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(HjhUserAuthVO record){
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByPrimaryKeySelective", record, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
 }

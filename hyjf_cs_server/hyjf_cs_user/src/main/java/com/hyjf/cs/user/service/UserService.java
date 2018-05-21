@@ -6,7 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.vo.RegisterVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -43,4 +46,16 @@ public interface UserService {
 	UserVO login(String loginUserName, String loginPassword, String ip);
 
 	ModelAndView userAuthInves(String token,HttpServletRequest request);
+
+	ModelAndView creditUserAuthInves(String token, HttpServletRequest request);
+
+	Map<String,String> userAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request);
+
+	String userBgreturn(BankCallBean bean);
+
+	Map<String,String> userCreditAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request);
+
+	ModelAndView userAuthCreditReturn(String token, BankCallBean bean, HttpServletRequest request);
+
+	ModelAndView appUserAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request);
 }

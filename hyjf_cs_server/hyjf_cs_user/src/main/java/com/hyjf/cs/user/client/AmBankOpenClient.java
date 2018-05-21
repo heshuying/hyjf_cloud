@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.BankOpenRequest;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 
 /**
@@ -12,5 +13,6 @@ public interface AmBankOpenClient {
 	UserInfoVO findUserInfoByCardNo(String cradNo);
 
 	int updateUserAccountLog(BankOpenRequest request);
-	
+
+	BankOpenAccountVO selectById(int userId);
 }

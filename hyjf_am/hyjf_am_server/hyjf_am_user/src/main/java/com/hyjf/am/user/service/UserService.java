@@ -81,4 +81,12 @@ public interface UserService {
 	HjhUserAuth getHjhUserAuthByUserId(Integer userId);
 
 	void insertSelective(HjhUserAuthLog hjhUserAuthLog);
+
+	HjhUserAuthLog selectByExample(String orderId);
+
+	int updateByPrimaryKeySelective(HjhUserAuthLog record);
+
+	int insertSelective(HjhUserAuth record);
+
+	int updateByPrimaryKeySelective(HjhUserAuth record);
 }
