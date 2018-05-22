@@ -12,6 +12,17 @@ public class RegisterVO {
 	private String password;
 	private String utmId;
 
+    @Override
+    public String toString() {
+        return "RegisterVO{" +
+                "mobilephone='" + mobilephone + '\'' +
+                ", smsCode='" + smsCode + '\'' +
+                ", reffer='" + reffer + '\'' +
+                ", password='" + password + '\'' +
+                ", utmId='" + utmId + '\'' +
+                '}';
+    }
+
     public String getMobilephone() {
         return mobilephone;
     }

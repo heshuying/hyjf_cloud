@@ -3,40 +3,78 @@ package com.hyjf.cs.user.beans;
 
 public class OpenAccountPageBean {
 
-    // 请求银行类型
-    private String TxCode;
-    // 手机号
+    /**
+     * 请求银行类型
+     */
+    private String txCode;
+
+    /**
+     * 手机号
+     */
     private String mobile;
-    // 姓名
+
+    /**
+     * 姓名
+     */
     private String trueName;
-    // 身份证号
+
+    /**
+     * 身份证号
+     */
     private String idNo;
-    // 性别
+
+    /**
+     * 性别
+     */
     private  String gender;
-    // 身份属性  1：出借角色 2：借款角色 3：代偿角色
+
+    /**
+     * 身份属性  1：出借角色 2：借款角色 3：代偿角色
+     */
     private  String identity;
-    // 用户id
+
+    /**
+     * 用户id
+     */
     private  Integer userId;
     
     private  String ip;
     
     private  String channel;
-    // 账户用途00000-普通账户
-    // 10000-红包账户（只能有一个）
-    // 01000-手续费账户（只能有一个）
-    // 00100-担保账户
+
+    /**
+     *  账户用途00000-普通账户
+     *  10000-红包账户（只能有一个）
+     *  01000-手续费账户（只能有一个）
+     *  00100-担保账户
+     */
     private  String acctUse;
-    // 同步地址
+
+    /**
+     * 同步地址
+     */
     private  String retUrl;
-    // 异步地址
+
+    /**
+     * 异步地址
+     */
     private  String notifyUrl;
-    // 哪个平台发起的
+
+    /**
+     * 哪个平台发起的
+     */
     private  String platform;
     
     private  String orderId;
-    // 商户名称
+
+    /**
+     * 商户名称
+     */
     private  String coinstName;
-    // 银行卡
+
+    /**
+     * 银行卡
+     */
     private  String cardNo;
     
     public String getMobile() {
@@ -75,12 +113,15 @@ public class OpenAccountPageBean {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
     public String getTxCode() {
-        return TxCode;
+        return txCode;
     }
+
     public void setTxCode(String txCode) {
-        TxCode = txCode;
+        this.txCode = txCode;
     }
+
     public String getIp() {
         return ip;
     }

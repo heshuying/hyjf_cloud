@@ -3,6 +3,7 @@ package com.hyjf.cs.user.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
@@ -188,33 +189,8 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public int updateByPrimaryKeySelective(HjhUserAuthLogVO record){
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateLogByPrimaryKeySelective", record, Integer.class)
-				.getBody();
-		if (result == null) {
-			return 0;
-		}
-		return result;
-	}
-
-	@Override
-	public int insertSelective(HjhUserAuthVO record){
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/insertSelective", record, Integer.class)
-				.getBody();
-		if (result == null) {
-			return 0;
-		}
-		return result;
-	}
-
-	@Override
-	public int updateByPrimaryKeySelective(HjhUserAuthVO record){
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByPrimaryKeySelective", record, Integer.class)
-				.getBody();
-		if (result == null) {
-			return 0;
-		}
-		return result;
+    public void updateUserAuthInves(BankRequest bean){
+		 restTemplate.put("http://AM-USER/am-user/user/updateUserAuthInves", bean) ;
 	}
 
 }

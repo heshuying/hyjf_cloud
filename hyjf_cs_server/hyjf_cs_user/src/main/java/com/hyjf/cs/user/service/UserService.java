@@ -45,9 +45,7 @@ public interface UserService {
 	 */
 	UserVO login(String loginUserName, String loginPassword, String ip);
 
-	ModelAndView userAuthInves(String token,HttpServletRequest request);
-
-	ModelAndView creditUserAuthInves(String token, HttpServletRequest request);
+	ModelAndView userCreditAuthInves(String token,Integer client,String type ,HttpServletRequest request);
 
 	Map<String,String> userAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request);
 
@@ -55,7 +53,5 @@ public interface UserService {
 
 	Map<String,String> userCreditAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request);
 
-	ModelAndView userAuthCreditReturn(String token, BankCallBean bean, HttpServletRequest request);
-
-	ModelAndView appUserAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request);
+	ModelAndView userAuthCreditReturn(String token, BankCallBean bean,String userAutoType, HttpServletRequest request);
 }

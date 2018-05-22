@@ -1,11 +1,9 @@
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 
 /**
  * @author xiasq
@@ -40,9 +38,5 @@ public interface AmUserClient {
 
 	HjhUserAuthLogVO selectByExample(String orderId);
 
-	int updateByPrimaryKeySelective(HjhUserAuthLogVO record);
-
-	int insertSelective(HjhUserAuthVO record);
-
-	int updateByPrimaryKeySelective(HjhUserAuthVO record);
+	void updateUserAuthInves(BankRequest bean);
 }
