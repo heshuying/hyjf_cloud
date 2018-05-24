@@ -1,9 +1,12 @@
 package com.hyjf.admin.controller;
 
-import com.hyjf.admin.Api;
+import com.hyjf.admin.api.Api;
+import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -13,13 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class DemoController {
 
-    @Autowired
-    Api api;
+	@Autowired
+	Api api;
 
-
-    @RequestMapping("/demo")
-    public String get(){
-        api.test();
-        return "success";
-    }
+	@RequestMapping("/demo")
+	public List<GatewayApiConfigVO> get() {
+		return api.test();
+	}
 }
