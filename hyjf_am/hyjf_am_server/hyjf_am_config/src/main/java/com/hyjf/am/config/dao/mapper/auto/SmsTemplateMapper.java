@@ -10,27 +10,21 @@ public interface SmsTemplateMapper {
 
     int deleteByExample(SmsTemplateExample example);
 
-    int deleteByPrimaryKey(@Param("id") Integer id, @Param("tplCode") String tplCode);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(SmsTemplate record);
 
     int insertSelective(SmsTemplate record);
 
-    List<SmsTemplate> selectByExampleWithBLOBs(SmsTemplateExample example);
-
     List<SmsTemplate> selectByExample(SmsTemplateExample example);
 
-    SmsTemplate selectByPrimaryKey(@Param("id") Integer id, @Param("tplCode") String tplCode);
+    SmsTemplate selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") SmsTemplate record, @Param("example") SmsTemplateExample example);
-
-    int updateByExampleWithBLOBs(@Param("record") SmsTemplate record, @Param("example") SmsTemplateExample example);
 
     int updateByExample(@Param("record") SmsTemplate record, @Param("example") SmsTemplateExample example);
 
     int updateByPrimaryKeySelective(SmsTemplate record);
-
-    int updateByPrimaryKeyWithBLOBs(SmsTemplate record);
 
     int updateByPrimaryKey(SmsTemplate record);
 }

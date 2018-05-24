@@ -1,8 +1,8 @@
 package com.hyjf.am.config.controller;
 
+import com.hyjf.am.config.dao.model.auto.BankConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.BanksConfig;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.borrow.BanksConfigResponse;
@@ -29,7 +29,7 @@ public class BanksConfigController {
     @GetMapping("/getBanksConfigByBankId/{bankId}")
     public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
         BanksConfigResponse response = new BanksConfigResponse();
-        BanksConfig bankConfig = bankConfigService.getBanksConfigByBankId(bankId);
+        BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
         if(null != bankConfig){
             BanksConfigVO banksConfigVO = new BanksConfigVO();
             BeanUtils.copyProperties(bankConfig,banksConfigVO);

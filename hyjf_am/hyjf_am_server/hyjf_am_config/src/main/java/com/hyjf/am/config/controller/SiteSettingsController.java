@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.SiteSettings;
-import com.hyjf.am.config.service.SiteSettingsService;
+import com.hyjf.am.config.dao.model.auto.SiteSetting;
+import com.hyjf.am.config.service.SiteSettingService;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class SiteSettingsController {
     Logger logger = LoggerFactory.getLogger(SiteSettingsController.class);
 
     @Autowired
-    private SiteSettingsService siteSettingsService;
+    private SiteSettingService siteSettingsService;
 
     /**
      * 查询邮件配置
@@ -37,7 +37,7 @@ public class SiteSettingsController {
         logger.info("查询邮件配置开始...");
         SiteSettingsResponse response = new SiteSettingsResponse();
         SiteSettingsVO siteSettingsVO = null;
-        SiteSettings siteSettings = siteSettingsService.findOne();
+        SiteSetting siteSettings = siteSettingsService.findOne();
         if (siteSettings != null) {
             siteSettingsVO = new SiteSettingsVO();
             BeanUtils.copyProperties(siteSettings, siteSettingsVO);

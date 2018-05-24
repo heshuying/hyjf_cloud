@@ -1,8 +1,8 @@
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.BankConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.BanksConfig;
 
 public interface BankConfigService {
 
@@ -11,7 +11,7 @@ public interface BankConfigService {
      * @param bankId
      * @return
      */
-    BanksConfig getBanksConfigByBankId(Integer bankId);
+    BankConfig getBankConfigByBankId(Integer bankId);
 
     BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
 }

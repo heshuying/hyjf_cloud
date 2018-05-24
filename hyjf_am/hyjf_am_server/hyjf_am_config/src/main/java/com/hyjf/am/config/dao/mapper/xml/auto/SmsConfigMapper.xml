@@ -12,10 +12,12 @@
     <result column="notice_to_phone" property="noticeToPhone" jdbcType="VARCHAR" />
     <result column="notice_to_email" property="noticeToEmail" jdbcType="VARCHAR" />
     <result column="notice_to_time" property="noticeToTime" jdbcType="INTEGER" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.config.dao.model.auto.SmsConfigWithBLOBs" extends="BaseResultMap" >
-    <result column="repay_mobiles" property="repayMobiles" jdbcType="LONGVARCHAR" />
-    <result column="full_mobiles" property="fullMobiles" jdbcType="LONGVARCHAR" />
+    <result column="repay_mobiles" property="repayMobiles" jdbcType="VARCHAR" />
+    <result column="full_mobiles" property="fullMobiles" jdbcType="VARCHAR" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -77,37 +79,16 @@
   </sql>
   <sql id="Base_Column_List" >
     id, max_ip_count, max_machine_count, max_browser_count, max_phone_count, max_interval_time, 
-    max_valid_time, notice_to_phone, notice_to_email, notice_to_time
+    max_valid_time, notice_to_phone, notice_to_email, notice_to_time, repay_mobiles, 
+    full_mobiles, create_userid, update_userid, create_time, update_time
   </sql>
-  <sql id="Blob_Column_List" >
-    repay_mobiles, full_mobiles
-  </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from huiyingdai_sms_config
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-    <if test="limitStart >= 0" >
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from huiyingdai_sms_config
+    from ht_sms_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -118,38 +99,38 @@
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from huiyingdai_sms_config
+    from ht_sms_config
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from huiyingdai_sms_config
+    delete from ht_sms_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" >
-    delete from huiyingdai_sms_config
+    delete from ht_sms_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigWithBLOBs" >
-    insert into huiyingdai_sms_config (id, max_ip_count, max_machine_count, 
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    insert into ht_sms_config (id, max_ip_count, max_machine_count, 
       max_browser_count, max_phone_count, max_interval_time, 
       max_valid_time, notice_to_phone, notice_to_email, 
-      notice_to_time, repay_mobiles, full_mobiles
-      )
+      notice_to_time, repay_mobiles, full_mobiles, 
+      create_userid, update_userid, create_time, 
+      update_time)
     values (#{id,jdbcType=INTEGER}, #{maxIpCount,jdbcType=INTEGER}, #{maxMachineCount,jdbcType=INTEGER}, 
       #{maxBrowserCount,jdbcType=INTEGER}, #{maxPhoneCount,jdbcType=INTEGER}, #{maxIntervalTime,jdbcType=INTEGER}, 
       #{maxValidTime,jdbcType=INTEGER}, #{noticeToPhone,jdbcType=VARCHAR}, #{noticeToEmail,jdbcType=VARCHAR}, 
-      #{noticeToTime,jdbcType=INTEGER}, #{repayMobiles,jdbcType=LONGVARCHAR}, #{fullMobiles,jdbcType=LONGVARCHAR}
-      )
+      #{noticeToTime,jdbcType=INTEGER}, #{repayMobiles,jdbcType=VARCHAR}, #{fullMobiles,jdbcType=VARCHAR}, 
+      #{createUserid,jdbcType=INTEGER}, #{updateUserid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigWithBLOBs" >
-    insert into huiyingdai_sms_config
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    insert into ht_sms_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -187,6 +168,18 @@
       <if test="fullMobiles != null" >
         full_mobiles,
       </if>
+      <if test="createUserid != null" >
+        create_userid,
+      </if>
+      <if test="updateUserid != null" >
+        update_userid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -220,21 +213,33 @@
         #{noticeToTime,jdbcType=INTEGER},
       </if>
       <if test="repayMobiles != null" >
-        #{repayMobiles,jdbcType=LONGVARCHAR},
+        #{repayMobiles,jdbcType=VARCHAR},
       </if>
       <if test="fullMobiles != null" >
-        #{fullMobiles,jdbcType=LONGVARCHAR},
+        #{fullMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserid != null" >
+        #{createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserid != null" >
+        #{updateUserid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" resultType="java.lang.Integer" >
-    select count(*) from huiyingdai_sms_config
+    select count(*) from ht_sms_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update huiyingdai_sms_config
+    update ht_sms_config
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -267,18 +272,30 @@
         notice_to_time = #{record.noticeToTime,jdbcType=INTEGER},
       </if>
       <if test="record.repayMobiles != null" >
-        repay_mobiles = #{record.repayMobiles,jdbcType=LONGVARCHAR},
+        repay_mobiles = #{record.repayMobiles,jdbcType=VARCHAR},
       </if>
       <if test="record.fullMobiles != null" >
-        full_mobiles = #{record.fullMobiles,jdbcType=LONGVARCHAR},
+        full_mobiles = #{record.fullMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserid != null" >
+        create_userid = #{record.createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserid != null" >
+        update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update huiyingdai_sms_config
+  <update id="updateByExample" parameterType="map" >
+    update ht_sms_config
     set id = #{record.id,jdbcType=INTEGER},
       max_ip_count = #{record.maxIpCount,jdbcType=INTEGER},
       max_machine_count = #{record.maxMachineCount,jdbcType=INTEGER},
@@ -289,30 +306,18 @@
       notice_to_phone = #{record.noticeToPhone,jdbcType=VARCHAR},
       notice_to_email = #{record.noticeToEmail,jdbcType=VARCHAR},
       notice_to_time = #{record.noticeToTime,jdbcType=INTEGER},
-      repay_mobiles = #{record.repayMobiles,jdbcType=LONGVARCHAR},
-      full_mobiles = #{record.fullMobiles,jdbcType=LONGVARCHAR}
+      repay_mobiles = #{record.repayMobiles,jdbcType=VARCHAR},
+      full_mobiles = #{record.fullMobiles,jdbcType=VARCHAR},
+      create_userid = #{record.createUserid,jdbcType=INTEGER},
+      update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
-    update huiyingdai_sms_config
-    set id = #{record.id,jdbcType=INTEGER},
-      max_ip_count = #{record.maxIpCount,jdbcType=INTEGER},
-      max_machine_count = #{record.maxMachineCount,jdbcType=INTEGER},
-      max_browser_count = #{record.maxBrowserCount,jdbcType=INTEGER},
-      max_phone_count = #{record.maxPhoneCount,jdbcType=INTEGER},
-      max_interval_time = #{record.maxIntervalTime,jdbcType=INTEGER},
-      max_valid_time = #{record.maxValidTime,jdbcType=INTEGER},
-      notice_to_phone = #{record.noticeToPhone,jdbcType=VARCHAR},
-      notice_to_email = #{record.noticeToEmail,jdbcType=VARCHAR},
-      notice_to_time = #{record.noticeToTime,jdbcType=INTEGER}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigWithBLOBs" >
-    update huiyingdai_sms_config
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    update ht_sms_config
     <set >
       <if test="maxIpCount != null" >
         max_ip_count = #{maxIpCount,jdbcType=INTEGER},
@@ -342,16 +347,28 @@
         notice_to_time = #{noticeToTime,jdbcType=INTEGER},
       </if>
       <if test="repayMobiles != null" >
-        repay_mobiles = #{repayMobiles,jdbcType=LONGVARCHAR},
+        repay_mobiles = #{repayMobiles,jdbcType=VARCHAR},
       </if>
       <if test="fullMobiles != null" >
-        full_mobiles = #{fullMobiles,jdbcType=LONGVARCHAR},
+        full_mobiles = #{fullMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserid != null" >
+        create_userid = #{createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserid != null" >
+        update_userid = #{updateUserid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigWithBLOBs" >
-    update huiyingdai_sms_config
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    update ht_sms_config
     set max_ip_count = #{maxIpCount,jdbcType=INTEGER},
       max_machine_count = #{maxMachineCount,jdbcType=INTEGER},
       max_browser_count = #{maxBrowserCount,jdbcType=INTEGER},
@@ -361,21 +378,12 @@
       notice_to_phone = #{noticeToPhone,jdbcType=VARCHAR},
       notice_to_email = #{noticeToEmail,jdbcType=VARCHAR},
       notice_to_time = #{noticeToTime,jdbcType=INTEGER},
-      repay_mobiles = #{repayMobiles,jdbcType=LONGVARCHAR},
-      full_mobiles = #{fullMobiles,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
-    update huiyingdai_sms_config
-    set max_ip_count = #{maxIpCount,jdbcType=INTEGER},
-      max_machine_count = #{maxMachineCount,jdbcType=INTEGER},
-      max_browser_count = #{maxBrowserCount,jdbcType=INTEGER},
-      max_phone_count = #{maxPhoneCount,jdbcType=INTEGER},
-      max_interval_time = #{maxIntervalTime,jdbcType=INTEGER},
-      max_valid_time = #{maxValidTime,jdbcType=INTEGER},
-      notice_to_phone = #{noticeToPhone,jdbcType=VARCHAR},
-      notice_to_email = #{noticeToEmail,jdbcType=VARCHAR},
-      notice_to_time = #{noticeToTime,jdbcType=INTEGER}
+      repay_mobiles = #{repayMobiles,jdbcType=VARCHAR},
+      full_mobiles = #{fullMobiles,jdbcType=VARCHAR},
+      create_userid = #{createUserid,jdbcType=INTEGER},
+      update_userid = #{updateUserid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

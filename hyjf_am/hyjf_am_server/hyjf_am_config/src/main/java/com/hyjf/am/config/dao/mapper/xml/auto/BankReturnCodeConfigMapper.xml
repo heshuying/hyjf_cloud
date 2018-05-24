@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BankReturnCodeConfigMapper" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="tx_code" property="txCode" jdbcType="VARCHAR" />
@@ -10,11 +10,9 @@
     <result column="error_msg" property="errorMsg" jdbcType="VARCHAR" />
     <result column="page_key" property="pageKey" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -76,8 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, tx_code, method_name, ret_code, ret_msg, error_msg, page_key, `status`, create_user_id, 
-    create_user_name, create_time, update_user_id, update_user_name, update_time
+    id, tx_code, method_name, ret_code, ret_msg, error_msg, page_key, `status`, create_userid, 
+    update_userid, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample" >
     select
@@ -85,7 +83,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from hyjf_bank_return_code_config
+    from ht_bank_return_code_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -97,17 +95,17 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
+    select 
     <include refid="Base_Column_List" />
-    from hyjf_bank_return_code_config
+    from ht_bank_return_code_config
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from hyjf_bank_return_code_config
+    delete from ht_bank_return_code_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample" >
-    delete from hyjf_bank_return_code_config
+    delete from ht_bank_return_code_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -116,22 +114,20 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_bank_return_code_config (tx_code, method_name, ret_code,
-    ret_msg, error_msg, page_key,
-    `status`, create_user_id, create_user_name,
-    create_time, update_user_id, update_user_name,
-    update_time)
-    values (#{txCode,jdbcType=VARCHAR}, #{methodName,jdbcType=VARCHAR}, #{retCode,jdbcType=VARCHAR},
-    #{retMsg,jdbcType=VARCHAR}, #{errorMsg,jdbcType=VARCHAR}, #{pageKey,jdbcType=VARCHAR},
-    #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR},
-    #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR},
-    #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_bank_return_code_config (tx_code, method_name, ret_code, 
+      ret_msg, error_msg, page_key, 
+      `status`, create_userid, update_userid, 
+      create_time, update_time)
+    values (#{txCode,jdbcType=VARCHAR}, #{methodName,jdbcType=VARCHAR}, #{retCode,jdbcType=VARCHAR}, 
+      #{retMsg,jdbcType=VARCHAR}, #{errorMsg,jdbcType=VARCHAR}, #{pageKey,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{createUserid,jdbcType=INTEGER}, #{updateUserid,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_bank_return_code_config
+    insert into ht_bank_return_code_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="txCode != null" >
         tx_code,
@@ -154,20 +150,14 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="createUserId != null" >
-        create_user_id,
+      <if test="createUserid != null" >
+        create_userid,
       </if>
-      <if test="createUserName != null" >
-        create_user_name,
+      <if test="updateUserid != null" >
+        update_userid,
       </if>
       <if test="createTime != null" >
         create_time,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
-      </if>
-      <if test="updateUserName != null" >
-        update_user_name,
       </if>
       <if test="updateTime != null" >
         update_time,
@@ -195,20 +185,14 @@
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
+      <if test="createUserid != null" >
+        #{createUserid,jdbcType=INTEGER},
       </if>
-      <if test="createUserName != null" >
-        #{createUserName,jdbcType=VARCHAR},
+      <if test="updateUserid != null" >
+        #{updateUserid,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserName != null" >
-        #{updateUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -216,13 +200,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample" resultType="java.lang.Integer" >
-    select count(*) from hyjf_bank_return_code_config
+    select count(*) from ht_bank_return_code_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update hyjf_bank_return_code_config
+    update ht_bank_return_code_config
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -248,20 +232,14 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      <if test="record.createUserid != null" >
+        create_userid = #{record.createUserid,jdbcType=INTEGER},
       </if>
-      <if test="record.createUserName != null" >
-        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      <if test="record.updateUserid != null" >
+        update_userid = #{record.updateUserid,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserName != null" >
-        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -272,27 +250,25 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update hyjf_bank_return_code_config
+    update ht_bank_return_code_config
     set id = #{record.id,jdbcType=INTEGER},
-    tx_code = #{record.txCode,jdbcType=VARCHAR},
-    method_name = #{record.methodName,jdbcType=VARCHAR},
-    ret_code = #{record.retCode,jdbcType=VARCHAR},
-    ret_msg = #{record.retMsg,jdbcType=VARCHAR},
-    error_msg = #{record.errorMsg,jdbcType=VARCHAR},
-    page_key = #{record.pageKey,jdbcType=VARCHAR},
-    `status` = #{record.status,jdbcType=TINYINT},
-    create_user_id = #{record.createUserId,jdbcType=INTEGER},
-    create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-    create_time = #{record.createTime,jdbcType=TIMESTAMP},
-    update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-    update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-    update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      tx_code = #{record.txCode,jdbcType=VARCHAR},
+      method_name = #{record.methodName,jdbcType=VARCHAR},
+      ret_code = #{record.retCode,jdbcType=VARCHAR},
+      ret_msg = #{record.retMsg,jdbcType=VARCHAR},
+      error_msg = #{record.errorMsg,jdbcType=VARCHAR},
+      page_key = #{record.pageKey,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      create_userid = #{record.createUserid,jdbcType=INTEGER},
+      update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
-    update hyjf_bank_return_code_config
+    update ht_bank_return_code_config
     <set >
       <if test="txCode != null" >
         tx_code = #{txCode,jdbcType=VARCHAR},
@@ -315,20 +291,14 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
+      <if test="createUserid != null" >
+        create_userid = #{createUserid,jdbcType=INTEGER},
       </if>
-      <if test="createUserName != null" >
-        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      <if test="updateUserid != null" >
+        update_userid = #{updateUserid,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserName != null" >
-        update_user_name = #{updateUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -337,7 +307,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig" >
-    update hyjf_bank_return_code_config
+    update ht_bank_return_code_config
     set tx_code = #{txCode,jdbcType=VARCHAR},
       method_name = #{methodName,jdbcType=VARCHAR},
       ret_code = #{retCode,jdbcType=VARCHAR},
@@ -345,11 +315,9 @@
       error_msg = #{errorMsg,jdbcType=VARCHAR},
       page_key = #{pageKey,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_userid = #{createUserid,jdbcType=INTEGER},
+      update_userid = #{updateUserid,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_user_name = #{updateUserName,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

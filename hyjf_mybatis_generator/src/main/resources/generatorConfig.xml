@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -256,8 +256,55 @@
         <table tableName="ht_sms_config" domainObjectName="SmsConfig">
         </table>
 
+        <!-- 江西银行返回码配置 -->
+        <table tableName="ht_bank_return_code_config" domainObjectName="BankReturnCodeConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 江西银行用的银行卡配置表 -->
+        <table tableName="ht_jx_bank_config" domainObjectName="BankConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="quick_payment" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 用户推送模板 -->
+        <table tableName="ht_message_push_template" domainObjectName="MessagePushTemplate">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="template_action" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 网站设置 -->
+        <table tableName="ht_site_setting" domainObjectName="SiteSetting">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="site_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="smtp_verify" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="smtp_ssl" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 邮件模版 -->
+        <table tableName="ht_sms_mail_template" domainObjectName="SmsMailTemplate">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- 短信通知配置 -->
+        <table tableName="ht_sms_notice_config" domainObjectName="SmsNoticeConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+
+        <!-- 短信发送模版 -->
+        <table tableName="ht_sms_template" domainObjectName="SmsTemplate">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+
         <!-- 广告表 -->
-        <table tableName="huiyingdai_ads" domainObjectName="Ads">
+        <table tableName="ht_ads" domainObjectName="Ads">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="typeid" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />

@@ -1,6 +1,7 @@
 package com.hyjf.am.config.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class SmsTemplate implements Serializable {
     private Integer id;
@@ -9,13 +10,17 @@ public class SmsTemplate implements Serializable {
 
     private String tplName;
 
-    private Boolean status;
-
-    private Integer createTime;
-
-    private Integer updateTime;
+    private Integer status;
 
     private String tplContent;
+
+    private Integer createUserid;
+
+    private Integer updateUserid;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -43,28 +48,12 @@ public class SmsTemplate implements Serializable {
         this.tplName = tplName == null ? null : tplName.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
     }
 
     public String getTplContent() {
@@ -73,5 +62,37 @@ public class SmsTemplate implements Serializable {
 
     public void setTplContent(String tplContent) {
         this.tplContent = tplContent == null ? null : tplContent.trim();
+    }
+
+    public Integer getCreateUserid() {
+        return createUserid;
+    }
+
+    public void setCreateUserid(Integer createUserid) {
+        this.createUserid = createUserid;
+    }
+
+    public Integer getUpdateUserid() {
+        return updateUserid;
+    }
+
+    public void setUpdateUserid(Integer updateUserid) {
+        this.updateUserid = updateUserid;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

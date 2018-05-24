@@ -3,14 +3,14 @@
 <mapper namespace="com.hyjf.am.config.dao.mapper.auto.SmsMailTemplateMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.SmsMailTemplate" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <id column="mail_value" property="mailValue" jdbcType="VARCHAR" />
     <result column="mail_name" property="mailName" jdbcType="VARCHAR" />
+    <result column="mail_value" property="mailValue" jdbcType="VARCHAR" />
     <result column="mail_status" property="mailStatus" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.config.dao.model.auto.SmsMailTemplate" extends="BaseResultMap" >
-    <result column="mail_content" property="mailContent" jdbcType="LONGVARCHAR" />
+    <result column="mail_content" property="mailContent" jdbcType="VARCHAR" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -71,37 +71,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, mail_value, mail_name, mail_status, create_time, update_time
+    id, mail_name, mail_value, mail_status, mail_content, create_userid, update_userid, 
+    create_time, update_time
   </sql>
-  <sql id="Blob_Column_List" >
-    mail_content
-  </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplateExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from huiyingdai_sms_mail_template
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-    <if test="limitStart >= 0" >
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplateExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from huiyingdai_sms_mail_template
+    from ht_sms_mail_template
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -112,22 +91,18 @@
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="map" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from huiyingdai_sms_mail_template
+    from ht_sms_mail_template
     where id = #{id,jdbcType=INTEGER}
-      and mail_value = #{mailValue,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="map" >
-    delete from huiyingdai_sms_mail_template
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_sms_mail_template
     where id = #{id,jdbcType=INTEGER}
-      and mail_value = #{mailValue,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplateExample" >
-    delete from huiyingdai_sms_mail_template
+    delete from ht_sms_mail_template
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -136,27 +111,36 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_sms_mail_template (mail_value, mail_name, mail_status, 
-      create_time, update_time, mail_content
-      )
-    values (#{mailValue,jdbcType=VARCHAR}, #{mailName,jdbcType=VARCHAR}, #{mailStatus,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{mailContent,jdbcType=LONGVARCHAR}
-      )
+    insert into ht_sms_mail_template (mail_name, mail_value, mail_status, 
+      mail_content, create_userid, update_userid, 
+      create_time, update_time)
+    values (#{mailName,jdbcType=VARCHAR}, #{mailValue,jdbcType=VARCHAR}, #{mailStatus,jdbcType=INTEGER}, 
+      #{mailContent,jdbcType=VARCHAR}, #{createUserid,jdbcType=INTEGER}, #{updateUserid,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplate" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_sms_mail_template
+    insert into ht_sms_mail_template
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="mailValue != null" >
-        mail_value,
-      </if>
       <if test="mailName != null" >
         mail_name,
       </if>
+      <if test="mailValue != null" >
+        mail_value,
+      </if>
       <if test="mailStatus != null" >
         mail_status,
+      </if>
+      <if test="mailContent != null" >
+        mail_content,
+      </if>
+      <if test="createUserid != null" >
+        create_userid,
+      </if>
+      <if test="updateUserid != null" >
+        update_userid,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -164,130 +148,130 @@
       <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="mailContent != null" >
-        mail_content,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="mailValue != null" >
-        #{mailValue,jdbcType=VARCHAR},
-      </if>
       <if test="mailName != null" >
         #{mailName,jdbcType=VARCHAR},
+      </if>
+      <if test="mailValue != null" >
+        #{mailValue,jdbcType=VARCHAR},
       </if>
       <if test="mailStatus != null" >
         #{mailStatus,jdbcType=INTEGER},
       </if>
+      <if test="mailContent != null" >
+        #{mailContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserid != null" >
+        #{createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserid != null" >
+        #{updateUserid,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="mailContent != null" >
-        #{mailContent,jdbcType=LONGVARCHAR},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplateExample" resultType="java.lang.Integer" >
-    select count(*) from huiyingdai_sms_mail_template
+    select count(*) from ht_sms_mail_template
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update huiyingdai_sms_mail_template
+    update ht_sms_mail_template
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.mailValue != null" >
-        mail_value = #{record.mailValue,jdbcType=VARCHAR},
-      </if>
       <if test="record.mailName != null" >
         mail_name = #{record.mailName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mailValue != null" >
+        mail_value = #{record.mailValue,jdbcType=VARCHAR},
       </if>
       <if test="record.mailStatus != null" >
         mail_status = #{record.mailStatus,jdbcType=INTEGER},
       </if>
+      <if test="record.mailContent != null" >
+        mail_content = #{record.mailContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserid != null" >
+        create_userid = #{record.createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserid != null" >
+        update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.mailContent != null" >
-        mail_content = #{record.mailContent,jdbcType=LONGVARCHAR},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update huiyingdai_sms_mail_template
-    set id = #{record.id,jdbcType=INTEGER},
-      mail_value = #{record.mailValue,jdbcType=VARCHAR},
-      mail_name = #{record.mailName,jdbcType=VARCHAR},
-      mail_status = #{record.mailStatus,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      mail_content = #{record.mailContent,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update huiyingdai_sms_mail_template
+    update ht_sms_mail_template
     set id = #{record.id,jdbcType=INTEGER},
-      mail_value = #{record.mailValue,jdbcType=VARCHAR},
       mail_name = #{record.mailName,jdbcType=VARCHAR},
+      mail_value = #{record.mailValue,jdbcType=VARCHAR},
       mail_status = #{record.mailStatus,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      mail_content = #{record.mailContent,jdbcType=VARCHAR},
+      create_userid = #{record.createUserid,jdbcType=INTEGER},
+      update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplate" >
-    update huiyingdai_sms_mail_template
+    update ht_sms_mail_template
     <set >
       <if test="mailName != null" >
         mail_name = #{mailName,jdbcType=VARCHAR},
       </if>
+      <if test="mailValue != null" >
+        mail_value = #{mailValue,jdbcType=VARCHAR},
+      </if>
       <if test="mailStatus != null" >
         mail_status = #{mailStatus,jdbcType=INTEGER},
       </if>
+      <if test="mailContent != null" >
+        mail_content = #{mailContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserid != null" >
+        create_userid = #{createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserid != null" >
+        update_userid = #{updateUserid,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="mailContent != null" >
-        mail_content = #{mailContent,jdbcType=LONGVARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
-      and mail_value = #{mailValue,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplate" >
-    update huiyingdai_sms_mail_template
-    set mail_name = #{mailName,jdbcType=VARCHAR},
-      mail_status = #{mailStatus,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      mail_content = #{mailContent,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-      and mail_value = #{mailValue,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.SmsMailTemplate" >
-    update huiyingdai_sms_mail_template
+    update ht_sms_mail_template
     set mail_name = #{mailName,jdbcType=VARCHAR},
+      mail_value = #{mailValue,jdbcType=VARCHAR},
       mail_status = #{mailStatus,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      mail_content = #{mailContent,jdbcType=VARCHAR},
+      create_userid = #{createUserid,jdbcType=INTEGER},
+      update_userid = #{updateUserid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
-      and mail_value = #{mailValue,jdbcType=VARCHAR}
   </update>
 </mapper>

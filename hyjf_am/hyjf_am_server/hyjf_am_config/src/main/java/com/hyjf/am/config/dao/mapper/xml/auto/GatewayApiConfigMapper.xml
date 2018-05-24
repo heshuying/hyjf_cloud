@@ -78,7 +78,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from s_gateway_api_config
+    from ht_gateway_api_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -92,21 +92,21 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from s_gateway_api_config
+    from ht_gateway_api_config
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from s_gateway_api_config
+    delete from ht_gateway_api_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfigExample" >
-    delete from s_gateway_api_config
+    delete from ht_gateway_api_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfig" >
-    insert into s_gateway_api_config (id, `path`, service_id, 
+    insert into ht_gateway_api_config (id, `path`, service_id, 
       url, retryable, enabled, strip_prefix, 
       api_name)
     values (#{id,jdbcType=INTEGER}, #{path,jdbcType=VARCHAR}, #{serviceId,jdbcType=VARCHAR}, 
@@ -114,7 +114,7 @@
       #{apiName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfig" >
-    insert into s_gateway_api_config
+    insert into ht_gateway_api_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -169,13 +169,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfigExample" resultType="java.lang.Integer" >
-    select count(*) from s_gateway_api_config
+    select count(*) from ht_gateway_api_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update s_gateway_api_config
+    update ht_gateway_api_config
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -207,7 +207,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update s_gateway_api_config
+    update ht_gateway_api_config
     set id = #{record.id,jdbcType=INTEGER},
       `path` = #{record.path,jdbcType=VARCHAR},
       service_id = #{record.serviceId,jdbcType=VARCHAR},
@@ -221,7 +221,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfig" >
-    update s_gateway_api_config
+    update ht_gateway_api_config
     <set >
       <if test="path != null" >
         `path` = #{path,jdbcType=VARCHAR},
@@ -248,7 +248,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfig" >
-    update s_gateway_api_config
+    update ht_gateway_api_config
     set `path` = #{path,jdbcType=VARCHAR},
       service_id = #{serviceId,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},

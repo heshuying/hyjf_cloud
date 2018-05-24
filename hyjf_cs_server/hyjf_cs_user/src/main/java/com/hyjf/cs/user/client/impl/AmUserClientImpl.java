@@ -242,5 +242,21 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
+	@Override
+	public int updateByPrimaryKeySelective(HjhUserAuthLogVO record) {
+		//todo by xiashuqing 20180524 不知道谁写的接口没有实现
+		return 0;
+	}
 
+	@Override
+	public int insertSelective(HjhUserAuthVO record) {
+		//todo by xiashuqing 20180524 不知道谁写的接口没有实现
+		return 0;
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(HjhUserAuthVO record) {
+		//todo by xiashuqing 20180524 不知道谁写的接口没有实现
+		return 0;
+	}
 }

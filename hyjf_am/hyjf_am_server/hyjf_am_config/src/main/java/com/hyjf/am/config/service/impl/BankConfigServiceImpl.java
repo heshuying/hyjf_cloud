@@ -1,23 +1,24 @@
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.BanksConfigMapper;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.BanksConfig;
-import com.hyjf.am.config.dao.model.auto.BanksConfigExample;
-import com.hyjf.am.config.service.BankConfigService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import com.hyjf.am.config.dao.mapper.auto.BankConfigMapper;
+import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
+import com.hyjf.am.config.dao.model.auto.BankConfig;
+import com.hyjf.am.config.dao.model.auto.BankConfigExample;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
+import com.hyjf.am.config.service.BankConfigService;
 
 @Service
 public class BankConfigServiceImpl implements BankConfigService {
 
 	@Autowired
-	protected BanksConfigMapper banksConfigMapper;
+	protected BankConfigMapper BankConfigMapper;
 
 	@Autowired
 	protected BankReturnCodeConfigMapper bankReturnCodeConfigMapper;
@@ -26,15 +27,15 @@ public class BankConfigServiceImpl implements BankConfigService {
 	 * 获取银行卡配置信息
 	 */
 	@Override
-	public BanksConfig getBanksConfigByBankId(Integer bankId) {
+	public BankConfig getBankConfigByBankId(Integer bankId) {
 		if (bankId == null) {
 			return null;
 		}
-		BanksConfigExample example = new BanksConfigExample();
+		BankConfigExample example = new BankConfigExample();
 		example.createCriteria().andIdEqualTo(bankId).andDelFlgEqualTo(0);
-		List<BanksConfig> banksConfigList = banksConfigMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(banksConfigList)) {
-			return banksConfigList.get(0);
+		List<BankConfig> BankConfigList = BankConfigMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(BankConfigList)) {
+			return BankConfigList.get(0);
 		}
 		return null;
 	}

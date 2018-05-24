@@ -707,4 +707,15 @@ public class UserServiceImpl implements UserService  {
 		return amUserClient.updatePassWd(userId, oldPW, newPW);
 	}
 
+	@Override
+	public ModelAndView userAuthCreditReturn(String token, BankCallBean bean, HttpServletRequest request) {
+		//todo by xiashuqing 20180524 不知道谁写的接口没有实现
+		return null;
+	}
+
+	@Override
+	public ModelAndView appUserAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request) {
+		//todo by xiashuqing 20180524 不知道谁写的接口没有实现
+		return null;
+	}
 }

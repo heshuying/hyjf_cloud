@@ -20,15 +20,11 @@ public class BankReturnCodeConfig implements Serializable {
 
     private Integer status;
 
-    private Integer createUserId;
+    private Integer createUserid;
 
-    private String createUserName;
+    private Integer updateUserid;
 
     private Date createTime;
-
-    private Integer updateUserId;
-
-    private String updateUserName;
 
     private Date updateTime;
 
@@ -98,20 +94,20 @@ public class BankReturnCodeConfig implements Serializable {
         this.status = status;
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+    public Integer getCreateUserid() {
+        return createUserid;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
+    public void setCreateUserid(Integer createUserid) {
+        this.createUserid = createUserid;
     }
 
-    public String getCreateUserName() {
-        return createUserName;
+    public Integer getUpdateUserid() {
+        return updateUserid;
     }
 
-    public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName == null ? null : createUserName.trim();
+    public void setUpdateUserid(Integer updateUserid) {
+        this.updateUserid = updateUserid;
     }
 
     public Date getCreateTime() {
@@ -120,22 +116,6 @@ public class BankReturnCodeConfig implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
-    }
-
-    public String getUpdateUserName() {
-        return updateUserName;
-    }
-
-    public void setUpdateUserName(String updateUserName) {
-        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
     }
 
     public Date getUpdateTime() {

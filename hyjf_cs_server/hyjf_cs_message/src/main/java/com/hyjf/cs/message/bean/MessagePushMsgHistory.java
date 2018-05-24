@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @version MessagePushMsgHistory, v0.1 2018/5/4 10:48
  */
 
-@Document(collection = "t_message_push_history")
+@Document(collection = "ht_message_push_history")
 public class MessagePushMsgHistory implements Serializable {
     private Integer id;
 

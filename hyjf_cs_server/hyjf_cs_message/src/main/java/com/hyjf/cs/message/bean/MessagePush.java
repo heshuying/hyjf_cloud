@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-@Document(collection = "t_message_push")
+@Document(collection = "ht_message_push")
 public class MessagePush implements Serializable {
     private Integer id;
 

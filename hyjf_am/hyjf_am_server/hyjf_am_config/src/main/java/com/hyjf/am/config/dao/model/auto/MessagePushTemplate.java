@@ -1,6 +1,7 @@
 package com.hyjf.am.config.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class MessagePushTemplate implements Serializable {
     private Integer id;
@@ -19,23 +20,19 @@ public class MessagePushTemplate implements Serializable {
 
     private String templateTerminal;
 
-    private Boolean templateAction;
+    private Integer templateAction;
 
     private String templateActionUrl;
 
-    private Boolean status;
+    private Integer status;
 
-    private Integer createTime;
+    private Integer createUserid;
 
-    private Integer createUserId;
+    private Integer updateUserid;
 
-    private String createUserName;
+    private Date createTime;
 
-    private Integer lastupdateTime;
-
-    private Integer lastupdateUserId;
-
-    private String lastupdateUserName;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -103,11 +100,11 @@ public class MessagePushTemplate implements Serializable {
         this.templateTerminal = templateTerminal == null ? null : templateTerminal.trim();
     }
 
-    public Boolean getTemplateAction() {
+    public Integer getTemplateAction() {
         return templateAction;
     }
 
-    public void setTemplateAction(Boolean templateAction) {
+    public void setTemplateAction(Integer templateAction) {
         this.templateAction = templateAction;
     }
 
@@ -119,59 +116,43 @@ public class MessagePushTemplate implements Serializable {
         this.templateActionUrl = templateActionUrl == null ? null : templateActionUrl.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Integer getCreateTime() {
+    public Integer getCreateUserid() {
+        return createUserid;
+    }
+
+    public void setCreateUserid(Integer createUserid) {
+        this.createUserid = createUserid;
+    }
+
+    public Integer getUpdateUserid() {
+        return updateUserid;
+    }
+
+    public void setUpdateUserid(Integer updateUserid) {
+        this.updateUserid = updateUserid;
+    }
+
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public String getCreateUserName() {
-        return createUserName;
-    }
-
-    public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName == null ? null : createUserName.trim();
-    }
-
-    public Integer getLastupdateTime() {
-        return lastupdateTime;
-    }
-
-    public void setLastupdateTime(Integer lastupdateTime) {
-        this.lastupdateTime = lastupdateTime;
-    }
-
-    public Integer getLastupdateUserId() {
-        return lastupdateUserId;
-    }
-
-    public void setLastupdateUserId(Integer lastupdateUserId) {
-        this.lastupdateUserId = lastupdateUserId;
-    }
-
-    public String getLastupdateUserName() {
-        return lastupdateUserName;
-    }
-
-    public void setLastupdateUserName(String lastupdateUserName) {
-        this.lastupdateUserName = lastupdateUserName == null ? null : lastupdateUserName.trim();
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
