@@ -118,8 +118,7 @@ public class HttpClientUtils {
         String body = null;  
         try {  
             body = EntityUtils.toString(entity);  
-            //log.info(body);
-        } catch (ParseException e) {  
+        } catch (ParseException e) {
             e.printStackTrace();  
         } catch (IOException e) {  
             e.printStackTrace();  

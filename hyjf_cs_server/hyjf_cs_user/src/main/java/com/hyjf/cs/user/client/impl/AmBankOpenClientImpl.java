@@ -57,5 +57,15 @@ public class AmBankOpenClientImpl implements AmBankOpenClient {
 		}
 		return null;
 	}
-	
+
+	@Override
+	public BankOpenAccountVO selectByAccountId(String accountId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/selectByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 }

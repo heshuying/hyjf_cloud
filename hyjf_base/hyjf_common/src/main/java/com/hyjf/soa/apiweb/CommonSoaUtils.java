@@ -28,25 +28,33 @@ public class CommonSoaUtils {
 		exec = Executors.newFixedThreadPool(50);
 	}
 
-	// 优惠券发放接口
+    /**
+     * 优惠券发放接口
+     */
 	private static final String COUPON_SEND_USER = "userCouponServer/userCouponSend.json";
-	// 优惠券发放接口
+    /**
+     * 优惠券发放接口
+     */
 	private static final String COUPON_BATCH_SEND_USER = "/userCouponServer/batchUserCouponSend.json";
-	// 优惠券校验接口
+    /**
+     * 优惠券校验接口
+     */
 	private static final String COUPON_CHECK = "/invest/validateCoupon.json";
-	// 优惠券投资接口
+    /**
+     * 优惠券投资接口
+     */
 	private static final String COUPON_INVEST = "/invest/couponTender.json";
-	// 优惠券投资接口
+    /**
+     * 优惠券投资接口
+     */
 	private static final String INVITE_USER = "/registRecommend/inviteUser.json";
-	/*// 优惠券放款接口
-	private static final String COUPON_LOANS = "/coupon/loans/borrowLoansForCoupon.json";
-	// 优惠券还款接口
-	private static final String COUPON_REPAY = "/coupon/repay/borrowRepayForCoupon.json";
-	// 汇添金优惠券还款接口
-	private static final String COUPON_REPAY_HTJ = "/coupon/repay/couponRepayForHtj.json";*/
-	// 体验金按收益期限还款接
+    /**
+     * 体验金按收益期限还款接
+     */
 	private static final String COUPON_ONLY_REPAY = "/coupon/repay/borrowRepayForCouponOnly.json";
-	// 投资更新V值
+    /**
+     * 投资更新V值
+     */
 	private static final String VIP_VALUE = "/coupon/loans/tenderVipValue.json";
 	
 	// 获取当天谜题信息
@@ -1076,16 +1084,12 @@ public class CommonSoaUtils {
      */
     public static void newyeaRecharge(Integer userId,int money) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
- //       String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
         params.put("money", String.valueOf(money));
         // 时间戳
         params.put("timestamp", timestamp);
-        // 签名
-//        params.put("chkValue", chkValue);
-        // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
         if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
@@ -1100,16 +1104,12 @@ public class CommonSoaUtils {
      */
     public static void newyearWithdraw(Integer userId,int money) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
- //       String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
         params.put("money", String.valueOf(money));
         // 时间戳
         params.put("timestamp", timestamp);
-        // 签名
-  //      params.put("chkValue", chkValue);
-        // 请求路径
         String url=PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL);
         if(!"/".equals(url.substring(url.length() - 1, url.length()))) {
         	url=url+"/";
@@ -1124,7 +1124,6 @@ public class CommonSoaUtils {
      */
     public static void newyearInvestment(Integer userId,int money) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
-       // String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
@@ -1150,7 +1149,6 @@ public class CommonSoaUtils {
 
     public static void listInvestment(Integer userId,BigDecimal money,String type ,int num) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
-       // String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
@@ -1178,7 +1176,6 @@ public class CommonSoaUtils {
 
     public static void listOpenAcc(Integer userId) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
-       // String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
@@ -1205,7 +1202,6 @@ public class CommonSoaUtils {
     public static void listBorrow(String borrowNid) {
         logger.info("上市活动开始放款请求"+borrowNid);
         String timestamp = String.valueOf(GetDate.getNowTime10());
-       // String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("borrowNid", borrowNid);
@@ -1231,16 +1227,12 @@ public class CommonSoaUtils {
      */
     public static void listedTwoRecharge(Integer userId,BigDecimal money) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
- //       String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
         params.put("money", String.valueOf(money));
         // 时间戳
         params.put("timestamp", timestamp);
-        // 签名
-//        params.put("chkValue", chkValue);
-        // 请求路径
         String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.CHONGZHI;
         CommonSoaUtils.noRetPost(requestUrl,params);
     }
@@ -1251,16 +1243,12 @@ public class CommonSoaUtils {
      */
     public static void listedTwoWithdraw(Integer userId,BigDecimal money) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
- //       String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
         params.put("money", String.valueOf(money));
         // 时间戳
         params.put("timestamp", timestamp);
-        // 签名
-  //      params.put("chkValue", chkValue);
-        // 请求路径
         String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.TIXIAN;
         CommonSoaUtils.noRetPost(requestUrl,params);
     }
@@ -1271,14 +1259,12 @@ public class CommonSoaUtils {
      */
     public static void listedTwoInvestment(Integer userId,BigDecimal money) {
         String timestamp = String.valueOf(GetDate.getNowTime10());
-       // String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + timestamp + SOA_INTERFACE_KEY));
         Map<String, String> params = new HashMap<String, String>();
         // 用户id
         params.put("userId", userId.toString());
         params.put("money", String.valueOf(money));
         // 时间戳
         params.put("timestamp", timestamp);
-
         // 请求路径
         String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.TOUZI;
         CommonSoaUtils.noRetPost(requestUrl,params);

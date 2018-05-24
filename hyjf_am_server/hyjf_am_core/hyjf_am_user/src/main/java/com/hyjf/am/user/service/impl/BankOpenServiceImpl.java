@@ -129,8 +129,6 @@ public class BankOpenServiceImpl implements BankOpenService {
         User user = this.getUsers(userId);
         // 用户名
         String userName = user.getUsername();
-        // 身份证号
-//        String idNo = openAccoutLog.getIdNo();
         logger.info("用户ID:" + userId + "],用户名:[" + userName + "],用户身份证号:[" + idNo + "]");
         // 根据身份证号获取用户相关信息
         if (idNo != null && idNo.length() < 18) {
@@ -140,16 +138,16 @@ public class BankOpenServiceImpl implements BankOpenService {
                 e.printStackTrace();
             }
         }
-        int sexInt = Integer.parseInt(idNo.substring(16, 17));// 性别
+        int sexInt = Integer.parseInt(idNo.substring(16, 17));
         if (sexInt % 2 == 0) {
             sexInt = 2;
         } else {
             sexInt = 1;
         }
-        String birthDayTemp = idNo.substring(6, 14);// 出生日期
+        String birthDayTemp = idNo.substring(6, 14);
         String birthDay = StringUtils.substring(birthDayTemp, 0, 4) + "-" + StringUtils.substring(birthDayTemp, 4, 6) + "-" + StringUtils.substring(birthDayTemp, 6, 8);
-        user.setBankOpenAccount(1);// 银行是否开户
-        user.setBankAccountEsb(bankAccountEsb);// 开户平台
+        user.setBankOpenAccount(1);
+        user.setBankAccountEsb(bankAccountEsb);
         user.setRechargeSms(0);
         user.setWithdrawSms(0);
         user.setUserType(0);
@@ -167,10 +165,10 @@ public class BankOpenServiceImpl implements BankOpenService {
             logger.info("获取用户详情表失败,用户ID:[" + userId + "]");
             throw new RuntimeException("根据用户ID,查询用户详情失败");
         }
-        userInfo.setTruename(trueName);// 姓名
-        userInfo.setIdcard(idNo);// 身份证号
-        userInfo.setSex(sexInt);// 性别
-        userInfo.setBirthday(birthDay); // 出生年月日
+        userInfo.setTruename(trueName);
+        userInfo.setIdcard(idNo);
+        userInfo.setSex(sexInt);
+        userInfo.setBirthday(birthDay);
         userInfo.setTruenameIsapprove(1);
         userInfo.setMobileIsapprove(1);
         // 更新用户详细信息表

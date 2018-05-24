@@ -147,6 +147,21 @@ public class BankOpenController {
 		return response;
 	}
 
+	@RequestMapping("/selectByAccountId/{accountId}")
+	public BankOpenAccountResponse selectByAccountId(@PathVariable String accountId) {
+		BankOpenAccountExample example = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria cra = example.createCriteria();
+		cra.andAccountEqualTo(accountId);
+		BankOpenAccountResponse response = new BankOpenAccountResponse();
+		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(example);
+		if(bankOpenAccount != null){
+			BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+			BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+			response.setResult(bankOpenAccountVO);
+		}
+		return response;
+	}
+
 	/**
 	 * 根据用户Id检索用户银行卡信息
 	 * @param userId

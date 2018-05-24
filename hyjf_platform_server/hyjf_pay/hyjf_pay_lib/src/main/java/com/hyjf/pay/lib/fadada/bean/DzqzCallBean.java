@@ -459,7 +459,7 @@ public class DzqzCallBean extends DzqzCallApiBean implements Serializable {
     }
 
     public void setErrMsg(String msg) {
-        this.result = this.ERROR;
+        this.result = ERROR;
         this.code = "";
         this.msg = msg;
     }

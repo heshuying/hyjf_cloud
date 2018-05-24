@@ -26,14 +26,19 @@ public class MerPriv {
 
     private String client;
 
-    // add by zhangjp 优惠券相关 start
-    // 用户优惠券编号
+    /**
+     * 用户优惠券编号
+     */
     private String couponGrantId;
 
-    // 更新时间（排他用）
+    /**
+     * 更新时间（排他用）
+     */
     private Integer couponOldTime;
 
-    // add by zhangjp 优惠券相关 end
+    /**
+     * add by zhangjp 优惠券相关 end
+     */
     private Integer recordId;
 
     public String getUuid() {

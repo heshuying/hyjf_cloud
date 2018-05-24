@@ -56,8 +56,7 @@ public class MD5 {
 	}
 
 	public static void main(String[] args) {
-		MD5 getMD5 = new MD5();
-		System.out.println(getMD5.toMD5Code("123456"));
+		System.out.println(MD5.toMD5Code("123456"));
 		System.out.println(String.valueOf(new char[] {'1', '2', '3'}));
 	}
 }

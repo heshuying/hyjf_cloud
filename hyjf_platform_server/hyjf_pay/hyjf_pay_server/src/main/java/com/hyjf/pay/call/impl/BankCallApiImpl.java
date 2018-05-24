@@ -3,14 +3,6 @@
  */
 package com.hyjf.pay.call.impl;
 
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.common.http.HttpDealBank;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.call.BankCallApi;
@@ -19,6 +11,13 @@ import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class BankCallApiImpl implements BankCallApi {
@@ -72,7 +71,7 @@ public class BankCallApiImpl implements BankCallApi {
     }
 
     /**
-     * 调用汇付天下API接口
+     * 调用API接口
      *
      * @param bean
      * @return
@@ -81,7 +80,7 @@ public class BankCallApiImpl implements BankCallApi {
     public String callChinaPnrApi(BankCallPnrApiBean bean) {
 
         // 方法名
-        log.info("[调用汇付天下API接口开始]");
+        log.info("[调用API接口开始]");
         log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
         String result = null;
         // 未签名时,进行签名
@@ -100,7 +99,7 @@ public class BankCallApiImpl implements BankCallApi {
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
-        log.debug("[调用汇付天下API接口结束]");
+        log.debug("[调用API接口结束]");
         return result;
     }
 
@@ -124,7 +123,7 @@ public class BankCallApiImpl implements BankCallApi {
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
-        log.debug("[验证汇付天下签名结束]");
+        log.debug("[验证签名结束]");
         return ret;
     }
 
@@ -148,7 +147,7 @@ public class BankCallApiImpl implements BankCallApi {
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
-        log.debug("[验证汇付天下签名结束]");
+        log.debug("[验证签名结束]");
         return ret;
     }
 

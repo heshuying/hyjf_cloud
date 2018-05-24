@@ -67,7 +67,7 @@ public class JPush {
     public static JPushClient getClientInstance() {
         if (jpushClient == null) {
             ClientConfig clientConfig = ClientConfig.getInstance();
-            clientConfig.setApnsProduction(isProduction); // ios 开发环境
+            clientConfig.setApnsProduction(isProduction);
             jpushClient = new JPushClient(masterSecret, appKey, null, clientConfig);
         }
         return jpushClient;

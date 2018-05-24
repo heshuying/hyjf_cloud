@@ -58,15 +58,15 @@ public class MailConsumer extends Consumer {
 			logger.info("MailConsumer 收到消息，开始处理....mailMessage is :{}", mailMessage);
 			if (null != mailMessage) {
 				switch (mailMessage.getServiceType()) {
-				case MessageConstant.MAILSENDFORUSER:// 给指定用户发送邮件
+				case MessageConstant.MAILSENDFORUSER:
 					mailHandle.sendMail(mailMessage.getUserId(), mailMessage.getSubject(), mailMessage.getBody(),
 							mailMessage.getFileNames());
 					break;
-				case MessageConstant.MAILSENDFORMAILINGADDRESS:// 给指定用户发送邮件
+				case MessageConstant.MAILSENDFORMAILINGADDRESS:
 					mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(),
 							mailMessage.getMailKbn(), mailMessage.getReplaceStrs(), mailMessage.getFileNames());
 					break;
-				case MessageConstant.MAILSENDFORMAILINGADDRESSMSG:// 批量给邮件地址发送邮件信息
+				case MessageConstant.MAILSENDFORMAILINGADDRESSMSG:
 					mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(), mailMessage.getBody(),
 							mailMessage.getFileNames());
 					break;

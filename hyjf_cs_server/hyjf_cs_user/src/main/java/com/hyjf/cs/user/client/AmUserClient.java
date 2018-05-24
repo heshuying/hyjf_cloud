@@ -40,11 +40,6 @@ public interface AmUserClient {
 	HjhUserAuthLogVO selectByExample(String orderId);
 
 	void updateUserAuthInves(BankRequest bean);
-	int updateByPrimaryKeySelective(HjhUserAuthLogVO record);
-
-	int insertSelective(HjhUserAuthVO record);
-
-	int updateByPrimaryKeySelective(HjhUserAuthVO record);
 
 	int updateUserById(UserVO user);
 

@@ -57,11 +57,11 @@ public class AppMessageConsumer extends Consumer {
 			logger.info("AppMessageConsumer 收到请求，开始推送app消息....appMsMessage is：{}", appMsMessage);
 			if (null != appMsMessage) {
 				switch (appMsMessage.getServiceType()) {
-				case MessageConstant.APPMSSENDFORMOBILE:// 根据电话号码和模版给指定手机号推送app消息
+				case MessageConstant.APPMSSENDFORMOBILE:
 					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getMobile());
 					break;
-				case MessageConstant.APPMSSENDFORUSER: // 根据用户编号和模版号给某电话推送app消息
+				case MessageConstant.APPMSSENDFORUSER:
 					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getUserId());
 					break;
@@ -75,8 +75,6 @@ public class AppMessageConsumer extends Consumer {
 					return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 				}
 			}
-
-			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 		}
 	}

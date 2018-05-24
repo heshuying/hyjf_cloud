@@ -123,11 +123,6 @@ public class SmsHandle {
 			parmMap.put("message", SmsHandle.TITLE + messageStr);
 		}
 
-//		if(envTest){
-//			logger.info("测试环境不发送短信....");
-//			return 1;
-//		}
-
 		String result = HttpDeal.post(url, parmMap).trim();
 		logger.info("短信发送结果: {}", result);
 		if(StringUtils.isBlank(result)){

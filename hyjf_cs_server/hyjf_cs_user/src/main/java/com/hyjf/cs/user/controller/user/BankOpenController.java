@@ -250,7 +250,6 @@ public class BankOpenController {
         openAccoutBean.setLogRemark("外部服务接口:开户页面");
         openAccoutBean.setLogIp(openBean.getIp());
         openAccoutBean.setLogClient(Integer.parseInt(openBean.getPlatform()));
-        // 跳转到汇付天下画面
         openBean.setOrderId(orderId);
         try {
             mv = BankCallUtils.callApi(openAccoutBean);

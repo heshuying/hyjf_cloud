@@ -10,6 +10,18 @@
  */
 package com.hyjf.pay.lib;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.common.chinapnr.MerPriv;
+import com.hyjf.common.util.GetterUtil;
+import com.hyjf.common.util.MD5Util2;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
+import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -18,20 +30,6 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.hyjf.common.chinapnr.MerPriv;
-import com.hyjf.common.util.GetterUtil;
-import com.hyjf.common.util.MD5Util2;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Administrator
@@ -161,7 +159,6 @@ public class PnrApiBean implements Serializable {
         if (paramMap == null || paramMap.size() == 0) {
             convert();
         }
-//        String jstring = JSON.toJSONString(paramMap, true);
         return paramMap;
     }
 
@@ -321,7 +318,7 @@ public class PnrApiBean implements Serializable {
                     Object result = getMethod.invoke(obj);
                     // 结果不为空时
                     if (Validator.isNotNull(result)) {
-                        String paramName = fName;// .substring(3);
+                        String paramName = fName;
                         if (ChinaPnrConstant.PARAM_BGRETURL.equals(paramName)|| ChinaPnrConstant.PARAM_RETURL.equals(paramName)) {
                             try {
                                 // 将取得的结果放到map中

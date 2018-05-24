@@ -80,7 +80,6 @@ public class ServerController {
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
-					// SecretUtil.saveInitKey(sign, initKey);
 				} else {
 					// 唯一标识
 					String sign = SecretUtil.createSign();
@@ -98,7 +97,6 @@ public class ServerController {
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
-					// SecretUtil.saveInitKey(sign, initKey);
 				}
 			} else {
 				resultBean.setStatus("1");
@@ -154,12 +152,6 @@ public class ServerController {
 			String[] temp = version.split("\\.");
 			if (temp.length > 3) {
 				int sourceId = Integer.parseInt(temp[3]);
-				// AppAccessStatistics accessStatistics = new
-				// AppAccessStatistics();
-				// accessStatistics.setSourceId(sourceId);
-				// accessStatistics.setAccessTime(new Date());
-				// // 插入数据库
-				// serverService.insertAccessInfo(accessStatistics);
 				// todo
 			}
 

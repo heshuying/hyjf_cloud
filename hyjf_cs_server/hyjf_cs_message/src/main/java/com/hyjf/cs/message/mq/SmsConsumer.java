@@ -57,19 +57,19 @@ public class SmsConsumer extends Consumer {
 			logger.info("SmsConsumer 收到消息，开始处理....smsMessage is :{}", smsMessage);
 			if (null != smsMessage) {
 				switch (smsMessage.getServiceType()) {
-				case MessageConstant.SMSSENDFORMANAGER:// 通知配置,根据模版给指定管理员手机号发送消息（满标，标到期等）
+				case MessageConstant.SMSSENDFORMANAGER:
 					smsHandle.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),
 							smsMessage.getChannelType());
 					break;
-				case MessageConstant.SMSSENDFORMOBILE: // 根据电话号码和模版号给某电话发短信
+				case MessageConstant.SMSSENDFORMOBILE:
 					smsHandle.sendMessages(smsMessage.getMobile(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
 							smsMessage.getChannelType());
 					break;
-				case MessageConstant.SMSSENDFORUSER:// 根据用户ID和模版号给某用户发短信
+				case MessageConstant.SMSSENDFORUSER:
 					smsHandle.sendMessages(smsMessage.getUserId(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
 							smsMessage.getChannelType());
 					break;
-				case MessageConstant.SMSSENDFORUSERSNOTPL:// 根据电话号码和消息内容给某电话发短信
+				case MessageConstant.SMSSENDFORUSERSNOTPL:
 					try {
 						smsHandle.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
 								smsMessage.getServiceType(), null, smsMessage.getChannelType());

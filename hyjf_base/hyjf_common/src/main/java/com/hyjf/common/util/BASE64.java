@@ -58,13 +58,13 @@ public class BASE64 {
 	}
 
 	private static int decode(char c) {
-		if (c >= 'A' && c <= 'Z')
-			return (c) - 65;
-		else if (c >= 'a' && c <= 'z')
+		if (c >= 'A' && c <= 'Z') {
+            return (c) - 65;
+        } else if (c >= 'a' && c <= 'z') {
 			return (c) - 97 + 26;
-		else if (c >= '0' && c <= '9')
+		} else if (c >= '0' && c <= '9') {
 			return (c) - 48 + 26 + 26;
-		else
+		} else {
 			switch (c) {
 			case '+':
 				return 62;
@@ -75,6 +75,7 @@ public class BASE64 {
 			default:
 				throw new RuntimeException("unexpected code: " + c);
 			}
+		}
 	}
 
 	/**
@@ -106,21 +107,25 @@ public class BASE64 {
 		int len = s.length();
 
 		while (true) {
-			while (i < len && s.charAt(i) <= ' ')
+			while (i < len && s.charAt(i) <= ' ') {
 				i++;
+			}
 
-			if (i == len)
+			if (i == len) {
 				break;
+			}
 
 			int tri = (decode(s.charAt(i)) << 18) + (decode(s.charAt(i + 1)) << 12) + (decode(s.charAt(i + 2)) << 6)
 					+ (decode(s.charAt(i + 3)));
 
 			os.write((tri >> 16) & 255);
-			if (s.charAt(i + 2) == '=')
+			if (s.charAt(i + 2) == '=') {
 				break;
+			}
 			os.write((tri >> 8) & 255);
-			if (s.charAt(i + 3) == '=')
+			if (s.charAt(i + 3) == '=') {
 				break;
+			}
 			os.write(tri & 255);
 
 			i += 4;

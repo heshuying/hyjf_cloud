@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.user;
 
+import com.hyjf.cs.user.beans.BaseMapBean;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author zhangqq
@@ -38,7 +40,9 @@ public class WeChatUserController {
      */
     @RequestMapping("/userAuthCredit")
     public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, HttpServletResponse response){
-        ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,request);
+        String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
+        String smsCode = request.getParameter("smsCode");
+        ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
         return modelAndView;
     }
 
@@ -51,60 +55,61 @@ public class WeChatUserController {
      */
     @RequestMapping("/userAuthInves")
     public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response){
-        ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,request);
+        String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
+        String smsCode = request.getParameter("smsCode");
+        ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
         return modelAndView;
     }
 
     /**
      * 用户授权自动债转同步回调
-     *
+     * @param token
+     * @param bean
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping("/userAuthCreditReturn")
-    public ModelAndView userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token,BankCallBean bean, HttpServletRequest request) {
-        ModelAndView result = userService.userAuthCreditReturn(token,bean,ClientConstant.CREDIT_AUTO_TYPE,request);
+    public Map<String,BaseMapBean> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token,BankCallBean bean, HttpServletRequest request) {
+        String sign = request.getHeader("sign");
+        String isSuccess = request.getParameter("isSuccess");
+        Map<String,BaseMapBean> result = userService.userAuthCreditReturn(token,bean,ClientConstant.CREDIT_AUTO_TYPE,sign,isSuccess);
         return result;
     }
 
     /**
      * 用户授权自动投资同步回调
-     *
+     * @param token
+     * @param bean
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping("/userAuthInvesReturn")
-    public ModelAndView userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,BankCallBean bean, HttpServletRequest request) {
-        ModelAndView result = userService.userAuthCreditReturn(token,bean,ClientConstant.INVES_AUTO_TYPE,request);
+    public Map<String,BaseMapBean> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,BankCallBean bean, HttpServletRequest request) {
+        String sign = request.getHeader("sign");
+        String isSuccess = request.getParameter("isSuccess");
+        Map<String,BaseMapBean> result = userService.userAuthCreditReturn(token,bean,ClientConstant.INVES_AUTO_TYPE,sign,isSuccess);
         return result;
     }
 
     /**
      * 用户授权自动投资异步回调
-     * @param request
-     * @param response
      * @param bean
      * @return
      */
     @ResponseBody
     @RequestMapping("/userAuthInvesBgreturn")
-    public String userAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,BankCallBean bean) {
+    public String userAuthInvesBgreturn(BankCallBean bean) {
         String result = userService.userBgreturn(bean);
         return result;
     }
 
     /**
      * 用户授权自动债转异步回调
-     * @param request
-     * @param response
      * @param bean
      * @return
      */
     @RequestMapping("/userAuthCreditBgreturn")
-    public String userCreditAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
-                                              BankCallBean bean) {
+    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
         String result = userService.userBgreturn(bean);
         return result;
     }
