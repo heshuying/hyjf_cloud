@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hyjf</groupId>
-	<artifactId>hyjf_am</artifactId>
+	<artifactId>hyjf_am_server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
-	<name>hyjf_am</name>
+	<name>hyjf_am_server</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -20,7 +20,7 @@
 	
 	<modules>
         <module>hyjf_am_model</module>
-        <module>hyjf_am_server</module>
+        <module>hyjf_am_core</module>
 		<module>hyjf_am_util</module>
 	</modules>
 

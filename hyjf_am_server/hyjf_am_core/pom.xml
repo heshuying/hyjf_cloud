@@ -6,12 +6,12 @@
 
     <parent>
         <groupId>com.hyjf</groupId>
-        <artifactId>hyjf_am</artifactId>
+        <artifactId>hyjf_am_server</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.hyjf</groupId>
-    <artifactId>hyjf_am_server</artifactId>
+    <artifactId>hyjf_am_core</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
