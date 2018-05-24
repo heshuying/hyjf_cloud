@@ -1,5 +1,28 @@
 package com.hyjf.cs.user.service.impl;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
@@ -36,27 +59,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author xiasq
@@ -499,11 +501,10 @@ public class UserServiceImpl implements UserService  {
 
 	/**
 	 *
-	 * 插入用户签约授权log
-	 * @param userId
+	 * @param user
 	 * @param bean
-	 * @param queryType
-	 * @param i
+	 * @param client
+	 * @param authType
 	 */
 	public void insertUserAuthLog(WebViewUser user, BankCallBean bean, Integer client, String authType) {
 		Integer nowTime=GetDate.getNowTime10();
@@ -983,4 +984,18 @@ public class UserServiceImpl implements UserService  {
 		}
 		return modelAndView;
 	}
+
+	/**
+	 * 修改登陆密码
+	 * @param userId
+	 * @param oldPW
+	 * @param newPW
+	 * @return
+	 */
+	@Override
+	public JSONObject updatePassWd(Integer userId, String oldPW, String newPW){
+		logger.info("UserService.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}",userId,oldPW,newPW);
+		return amUserClient.updatePassWd(userId, oldPW, newPW);
+	}
+
 }

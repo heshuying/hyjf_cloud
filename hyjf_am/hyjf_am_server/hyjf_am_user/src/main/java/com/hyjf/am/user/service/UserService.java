@@ -89,4 +89,11 @@ public interface UserService {
 	int insertSelective(HjhUserAuth record);
 
 	int updateByPrimaryKeySelective(HjhUserAuth record);
+
+	/**
+	 * 修改用户表By主键
+	 * @param record
+	 * @return int
+	 */
+	public int updateUserById(User record);
 }

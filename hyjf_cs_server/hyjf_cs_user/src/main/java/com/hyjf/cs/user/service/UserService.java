@@ -3,6 +3,7 @@ package com.hyjf.cs.user.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.vo.RegisterVO;
@@ -58,4 +59,6 @@ public interface UserService {
 	ModelAndView userAuthCreditReturn(String token, BankCallBean bean, HttpServletRequest request);
 
 	ModelAndView appUserAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request);
+
+	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 }

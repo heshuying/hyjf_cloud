@@ -1,5 +1,17 @@
 package com.hyjf.cs.user.client.impl;
 
+import java.io.UnsupportedEncodingException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.*;
@@ -12,14 +24,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author xiasq
@@ -216,5 +220,51 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return result;
 	}
+
+	/**
+	 * 根据userId修改
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public int updateUserById(UserVO user) {
+		if(user == null || user.getUserId() == null){
+			return 0;
+		}
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", user, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
+	/**
+	 * 修改登陆密码
+	 * @param userId
+	 * @param oldPW
+	 * @param newPW
+	 * @return
+	 */
+	@Override
+	public JSONObject updatePassWd(Integer userId, String oldPW, String newPW) {
+		logger.info("AmUserClient.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}",userId,oldPW,newPW);
+		JSONObject result = new JSONObject();
+		if(userId == null || StringUtils.isBlank(oldPW) || StringUtils.isBlank(newPW)){
+			result.put("status", "1");
+			result.put("statusDesc", "请求参数非法");
+			return result;
+		}
+		String url = "http://AM-USER/am-user/user/updatePassWd/" + userId + "/" + oldPW + "/" + newPW;
+		logger.info("url:{}", url);
+		ResponseEntity<JSONObject> resp = restTemplate.getForEntity(url, JSONObject.class);
+		result = resp.getBody();
+		if (result == null) {
+			result.put("status", "1");
+			result.put("statusDesc", "修改密码失败,未作任何操作");
+		}
+		return result;
+	}
+
 
 }

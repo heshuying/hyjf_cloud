@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthLogVO;
@@ -45,4 +46,9 @@ public interface AmUserClient {
 	int insertSelective(HjhUserAuthVO record);
 
 	int updateByPrimaryKeySelective(HjhUserAuthVO record);
+
+	int updateUserById(UserVO user);
+
+	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
+
 }

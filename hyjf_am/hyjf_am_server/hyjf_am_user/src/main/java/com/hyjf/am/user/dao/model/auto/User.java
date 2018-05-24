@@ -506,4 +506,60 @@ public class User implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", paypassword='" + paypassword + '\'' +
+                ", referrer=" + referrer +
+                ", referrerUserName='" + referrerUserName + '\'' +
+                ", salt='" + salt + '\'' +
+                ", status=" + status +
+                ", openAccount=" + openAccount +
+                ", borrowSms=" + borrowSms +
+                ", rechargeSms=" + rechargeSms +
+                ", withdrawSms=" + withdrawSms +
+                ", ifReceiveNotice=" + ifReceiveNotice +
+                ", iconurl='" + iconurl + '\'' +
+                ", version=" + version +
+                ", investSms=" + investSms +
+                ", recieveSms=" + recieveSms +
+                ", regEsb=" + regEsb +
+                ", eprovince='" + eprovince + '\'' +
+                ", sendSms=" + sendSms +
+                ", pid=" + pid +
+                ", usernamep='" + usernamep + '\'' +
+                ", isInstFlag=" + isInstFlag +
+                ", instCode='" + instCode + '\'' +
+                ", ptype=" + ptype +
+                ", accountEsb=" + accountEsb +
+                ", investflag=" + investflag +
+                ", userType=" + userType +
+                ", authType=" + authType +
+                ", authStatus=" + authStatus +
+                ", paymentAuthStatus=" + paymentAuthStatus +
+                ", authTime=" + authTime +
+                ", recodTotal=" + recodTotal +
+                ", recodTime=" + recodTime +
+                ", recodTruncateTime=" + recodTruncateTime +
+                ", isSetPassword=" + isSetPassword +
+                ", bankOpenAccount=" + bankOpenAccount +
+                ", bankAccountEsb=" + bankAccountEsb +
+                ", isDataUpdate=" + isDataUpdate +
+                ", isEvaluationFlag=" + isEvaluationFlag +
+                ", isCaFlag=" + isCaFlag +
+                ", isSmtp=" + isSmtp +
+                ", regIp='" + regIp + '\'' +
+                ", regTime=" + regTime +
+                ", createUserId=" + createUserId +
+                ", updateUserId=" + updateUserId +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }
