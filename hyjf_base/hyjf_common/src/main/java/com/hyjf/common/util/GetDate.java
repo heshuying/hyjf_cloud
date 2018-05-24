@@ -411,7 +411,6 @@ public class GetDate extends PropertyEditorSupport {
 		try {
 			date = sformat.parse(data);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return sformat.format(date);

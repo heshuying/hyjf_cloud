@@ -24,7 +24,6 @@ import com.hyjf.common.validator.Validator;
  */
 public class SecretUtil {
 
-    // TODO to：星辰，年后改为正式的redis，临时用全局变量替代
     private static Map<String, String> redis = new HashMap<String, String>();
 
     private static String letter = "abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ";
@@ -146,7 +145,7 @@ public class SecretUtil {
      * @return
      */
     public static void saveRedis(String key, String value) {
-        redis.put(key, value); // TODO
+        redis.put(key, value);
     }
 
     /**
@@ -155,7 +154,7 @@ public class SecretUtil {
      * @return
      */
     public static String getRedis(String key) {
-        return redis.get(key); // TODO
+        return redis.get(key);
     }
 
     /**
@@ -164,7 +163,7 @@ public class SecretUtil {
      * @return
      */
     public static String removeRedis(String key) {
-        return redis.remove(key); // TODO
+        return redis.remove(key);
     }
 
     /**

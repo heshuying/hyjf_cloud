@@ -257,7 +257,6 @@ public class ChinapnrUtil {
             System.out.println(b.getRespCode());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
