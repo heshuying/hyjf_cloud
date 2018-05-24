@@ -1,5 +1,11 @@
 package com.hyjf.am.user.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.HjhUserAuthLogResponse;
@@ -17,12 +23,30 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.HjhUserAuthLogResponse;
+import com.hyjf.am.response.user.HjhUserAuthResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.service.UserService;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.validator.Validator;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 
@@ -192,4 +216,83 @@ public class UserController {
 	public void updateUserAuthInves(@RequestBody BankRequest bean){
 		userService.updateUserAuthInves(bean);
 	}
+
+	/**
+	 * 根据userId修改用户信息
+	 * return
+	 */
+	@RequestMapping("/updateByUserId")
+	public int updateByUserId(@RequestBody User user) {
+		if(user == null || user.getUserId() == null){
+			return 0;
+		}
+		logger.info("updatePassWord run...user is :{}",user.toString());
+		return userService.updateUserById(user);
+	}
+
+	/**
+	 * 根据userId修改用户信息
+	 * return
+	 */
+	@RequestMapping("/updatePassWd/{userId}/{oldPW}/{newPW}")
+	public JSONObject updatePassWd(@PathVariable Integer userId, @PathVariable String oldPW, @PathVariable String newPW) {
+		logger.info("UserController.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}",userId,oldPW,newPW);
+		JSONObject ret = new JSONObject();
+		if(userId == null || StringUtils.isBlank(oldPW) || StringUtils.isBlank(newPW)){
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+		User user = userService.findUserByUserId(userId);
+
+		// 验证用的password
+		oldPW = MD5Utils.MD5(MD5Utils.MD5(oldPW) + user.getSalt());
+		if(!oldPW.equals(user.getPassword())){
+			ret.put("status", "1");
+			ret.put("statusDesc", "旧密码不正确");
+			return ret;
+		}
+
+		if (newPW.length() < 6 || newPW.length() > 16) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "密码长度6-16位");
+			return ret;
+		}
+
+
+		boolean hasNumber = false;
+		for (int i = 0; i < newPW.length(); i++) {
+			if (Validator.isNumber(newPW.substring(i, i + 1))) {
+				hasNumber = true;
+				break;
+			}
+		}
+		if (!hasNumber) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "密码必须包含数字");
+			return ret;
+		}
+		String regEx = "^[a-zA-Z0-9]+$";
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(newPW);
+		if (!m.matches()) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "密码必须由数字和字母组成，如abc123");
+			return ret;
+		}
+
+		User iuser = new User();
+		iuser.setUserId(userId);
+		iuser.setPassword(MD5Utils.MD5(MD5Utils.MD5(newPW) + user.getSalt()));
+		boolean success =  userService.updateUserById(user) > 0;
+		if (success) {
+			ret.put("status", "0");
+			ret.put("statusDesc", "修改密码成功");
+		} else {
+			ret.put("status", "1");
+			ret.put("statusDesc", "修改密码失败,未作任何操作");
+		}
+		return ret;
+	}
+
 }

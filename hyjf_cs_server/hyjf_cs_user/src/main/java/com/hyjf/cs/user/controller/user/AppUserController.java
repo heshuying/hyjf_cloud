@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.DES;
@@ -23,8 +25,9 @@ import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.util.SecretUtil;
 import com.hyjf.cs.user.vo.RegisterVO;
-import org.springframework.web.servlet.ModelAndView;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.Map;
 
@@ -202,6 +205,7 @@ public class AppUserController {
 
 	/**
 	 * 用户授权自动投资异步回调
+	 *
 	 * @param request
 	 * @param response
 	 * @param bean
@@ -214,5 +218,77 @@ public class AppUserController {
 		String result = userService.userBgreturn(bean);
 		return result;
 	}
+
+	/**
+	 * 修改登陆密码
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/updatePasswordAction", method = RequestMethod.POST)
+	public JSONObject updatePasswordAction(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("AppUserController.updatePasswordAction start.....");
+		JSONObject ret = new JSONObject();
+		ret.put("request", "/updatePasswordAction");
+
+		// 版本号
+		String version = request.getParameter("version");
+		// 网络状态
+		String netStatus = request.getParameter("netStatus");
+		// 平台
+		String platform = request.getParameter("platform");
+		// 唯一标识
+		String sign = request.getParameter("sign");
+		// token
+		String token = request.getParameter("token");
+		// 随机字符串
+		String randomString = request.getParameter("randomString");
+		// Order
+		String order = request.getParameter("order");
+
+		// 新密码
+		String newPassword = request.getParameter("newPassword");
+		// 旧密码
+		String oldPassword = request.getParameter("oldPassword");
+
+		// 检查参数正确性
+		if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(token) || Validator.isNull(randomString) || Validator.isNull(order)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+
+		// 取得加密用的Key
+		String key = SecretUtil.getKey(sign);
+		if (Validator.isNull(key)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+
+		// 取得用户登录信息
+		Integer userId = SecretUtil.getUserId(sign);
+		String username = SecretUtil.getUserName(sign);
+		if (username != null || userId != null) {
+			try {
+				// 解密
+				oldPassword = DES.decodeValue(key, oldPassword);
+				newPassword = DES.decodeValue(key, oldPassword);
+				ret = userService.updatePassWd(userId, oldPassword, newPassword);
+			} catch (Exception e) {
+				ret.put("status", "1");
+				ret.put("statusDesc", "修改密码失败");
+				return ret;
+			}
+		} else {
+			ret.put("status", "1");
+			ret.put("statusDesc", "用户信息不存在");
+			return ret;
+		}
+		return ret;
+	}
+
 
 }

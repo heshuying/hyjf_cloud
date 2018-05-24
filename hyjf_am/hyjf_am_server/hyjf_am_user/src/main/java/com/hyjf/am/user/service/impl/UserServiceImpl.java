@@ -680,6 +680,16 @@ public class UserServiceImpl implements UserService {
 		return hjhUserAuthMapper.updateByPrimaryKeySelective(record);
 	}
 
+	/**
+	 * 修改用户表By主键
+	 * @param record
+	 * @return int
+	 */
+	@Override
+	public int updateUserById(User record){
+		return usersMapper.updateByPrimaryKeySelective(record);
+	}
+
 	@Override
 	public void updateUserAuthInves( BankRequest bean) {
 		Integer userId = Integer.parseInt(bean.getLogUserId());

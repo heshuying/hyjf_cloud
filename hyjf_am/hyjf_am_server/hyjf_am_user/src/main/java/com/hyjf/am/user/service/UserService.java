@@ -92,4 +92,11 @@ public interface UserService {
 	int updateByPrimaryKeySelective(HjhUserAuth record);
 
     void updateUserAuthInves(BankRequest bean);
+
+	/**
+	 * 修改用户表By主键
+	 * @param record
+	 * @return int
+	 */
+	public int updateUserById(User record);
 }
