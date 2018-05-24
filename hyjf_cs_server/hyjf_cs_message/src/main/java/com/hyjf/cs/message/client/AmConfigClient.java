@@ -35,15 +35,6 @@ public class AmConfigClient {
 	 * @return
 	 */
 	public SmsTemplateVO findSmsTemplateByCode(String tplCode) {
-//		RestResponse<SmsTemplateVO> resp = Rests.exc(() -> {
-//			String url = Rests.toUrl(amConfigServiceName, "/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode);
-//			ResponseEntity<RestResponse<SmsTemplateVO>> responseEntity = rest.get(url,
-//					new ParameterizedTypeReference<RestResponse<SmsTemplateVO>>() {
-//					});
-//			return responseEntity.getBody();
-//		});
-//		return resp.getResult();
-
 		SmsTemplateResponse response = restTemplate
 				.getForEntity("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplateByCode/"+ tplCode, SmsTemplateResponse.class).getBody();
 		if (response != null) {
@@ -110,14 +101,7 @@ public class AmConfigClient {
 	 * @return
 	 */
 	public SiteSettingsVO findSiteSetting() {
-		/*RestResponse<SiteSettingsVO> resp = Rests.exc(() -> {
-			String url = Rests.toUrl(amConfigServiceName, "/am-config/siteSettings/findOne");
-			ResponseEntity<RestResponse<SiteSettingsVO>> responseEntity = rest.get(url,
-					new ParameterizedTypeReference<RestResponse<SiteSettingsVO>>() {
-					});
-			return responseEntity.getBody();
-		});
-		return resp.getResult();*/
+
 		SiteSettingsResponse response = restTemplate
 				.getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
 		if (response != null) {

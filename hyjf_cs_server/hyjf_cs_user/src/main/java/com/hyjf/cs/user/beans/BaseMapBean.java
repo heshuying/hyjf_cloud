@@ -168,7 +168,7 @@ public class BaseMapBean {
                     Object result = getMethod.invoke(obj);
                     // 结果不为空时
                     if (Validator.isNotNull(result)) {
-                        String paramName = fName;// .substring(3);
+                        String paramName = fName;
                         if (ChinaPnrConstant.PARAM_BGRETURL.equals(paramName)
                                 || ChinaPnrConstant.PARAM_RETURL.equals(paramName)) {
                             try {

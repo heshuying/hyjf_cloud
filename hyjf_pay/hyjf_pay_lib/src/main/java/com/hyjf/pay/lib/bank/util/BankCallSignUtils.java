@@ -70,7 +70,6 @@ public class BankCallSignUtils implements Serializable {
 		String sign = null;
 		RSAHelper signer = null;
 		try {
-			//logger.info("获取签名私钥:" + BANK_PRI_KEY_PATH);
 			RSAKeyUtil rsaKey = new RSAKeyUtil(new File(BANK_PRI_KEY_PATH), BANK_PRI_KEY_PASS);
 			signer = new RSAHelper(rsaKey.getPrivateKey());
 			sign = signer.sign(signStr);

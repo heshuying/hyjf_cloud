@@ -134,16 +134,7 @@ public class ThreeDESUtils {
 		long start1 = System.currentTimeMillis();
 		String key = "123456788765432112345678";
 		Integer timestamp = 1450830576;
-//		StringBuffer all = new StringBuffer();
-//		for (int i = 1450830576; i <= 1450840576; i++) {
-//			String kkey = key + i;
-//			byte[] bkey = ThreeDESUtils.GetKeyBytes(kkey);
-//			String bkeyString = new String(bkey, "UTF-8");
-//			AppendFile.method1("D:\\key100.java", bkeyString+"\n");
-//		}
-//		
 		String kkey = key + timestamp;
-//
 		long end1= System.currentTimeMillis();
 		System.out.println("耗时："+(end1-start1)+"毫秒");
 		System.out.println("-----------------------------------");
@@ -166,8 +157,6 @@ public class ThreeDESUtils {
 			System.out.println("encrypt:" + encrypt);
 			System.out.println("加密结果=" + ThreeDESUtils.Encrypt3DES(kkey, src));
 			try {
-				// decrypt = new String(ThreeDESUtils.decrypt(bkey,
-				// Base64.decode(encrypt)));
 				System.out.println("解密结果=" + ThreeDESUtils.Decrypt3DES(kkey, encrypt));
 			} catch (Exception ex) {
 				System.out.println("Exception:" + ex.getMessage());

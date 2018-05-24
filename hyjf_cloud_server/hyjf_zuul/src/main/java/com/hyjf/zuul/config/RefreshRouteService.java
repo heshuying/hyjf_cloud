@@ -25,7 +25,6 @@ public class RefreshRouteService {
 	@Autowired
     RouteLocator routeLocator;
 
-	//@PostConstruct
 	public void openTimeTaskThread() {
 		ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 		// 延时 100 秒后，按 300 秒的周期执行任务

@@ -76,7 +76,7 @@ public class GetCode {
      * @return
      */
     public static String getCouponUserCode(int couponType){
-    	long timestamp = new Date().getTime();
+    	long timestamp = System.currentTimeMillis();
     	String couponUserCode = StringUtils.EMPTY;
     	if(couponType == 1 ){
     		// 体验金
@@ -98,7 +98,7 @@ public class GetCode {
      * @return
      */
     public static String generatePrizeGroupCode(){
-        long timestamp = new Date().getTime();
+        long timestamp = System.currentTimeMillis();
         return timestamp+""; //+ getRandomCodeCoupon(3);
     }
     

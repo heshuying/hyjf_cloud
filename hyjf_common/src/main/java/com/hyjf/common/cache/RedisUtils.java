@@ -35,19 +35,6 @@ public class RedisUtils {
      */
     public static JedisPool getPool() {
         if (pool == null) {
-//            JedisPoolConfig config = new JedisPoolConfig();
-//            config.setMaxTotal(redisConfig.getMaxTotal());
-//            config.setMaxIdle(redisConfig.getMaxIdle());
-//            config.setMaxWaitMillis(redisConfig.getMaxWait());
-//            config.setTestOnBorrow(redisConfig.isTestOnBorrow());
-//            config.setTestOnReturn(redisConfig.isTestOnReturn());
-//            // 测试环境
-//            // pool = new JedisPool(config, bundle.getString("redis.ip"),
-//            // Integer.valueOf(bundle.getString("redis.port")));
-//            // 线上环境
-//            pool =
-//                    new JedisPool(config, redisConfig.getRedisIp(), redisConfig.getRedisPort() , 100000, redisConfig.getRedisPass());
-        	
         	pool = SpringUtils.getBean("redisPoolFactory");
         }
         return pool;

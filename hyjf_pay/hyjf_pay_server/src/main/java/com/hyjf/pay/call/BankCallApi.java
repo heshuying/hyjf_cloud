@@ -11,7 +11,7 @@ import java.util.Map;
 public interface BankCallApi {
 
     /**
-     * 调用汇付天下API接口
+     * 调用API接口
      *
      * @param bean
      * @return

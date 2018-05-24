@@ -36,16 +36,16 @@ public class IdCard15To18 {
         if(idCardNumber == null || idCardNumber.length() < 17) {  
             throw new Exception("不合法的身份证号码");  
         }  
-        char[] Ai = idCardNumber.toCharArray();  
-        int[] Wi = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};  
+        char[] ai = idCardNumber.toCharArray();
+        int[] wi = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
         char[] verifyCode = {'1','0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};  
-        int S = 0;  
-        int Y;  
-        for(int i = 0; i < Wi.length; i++){  
-            S += (Ai[i] - '0') * Wi[i];  
+        int s = 0;
+        int y;
+        for(int i = 0; i < wi.length; i++){
+            s += (ai[i] - '0') * wi[i];
         }  
-        Y = S % 11;  
-        return verifyCode[Y];  
+        y = s % 11;
+        return verifyCode[y];
     }  
       
     /** 

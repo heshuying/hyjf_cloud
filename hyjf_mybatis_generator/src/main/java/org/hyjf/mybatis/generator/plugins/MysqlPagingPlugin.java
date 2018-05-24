@@ -74,7 +74,8 @@ public class MysqlPagingPlugin extends PluginAdapter {
 		topLevelClass.addMethod(method);
 	}
 
-	public boolean validate(List<String> arg0) {
+	@Override
+    public boolean validate(List<String> arg0) {
 		return true;
 	}
 

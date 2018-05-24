@@ -93,12 +93,15 @@ public class WebUserController {
 
 	/**
 	 * 用户授权自动投资
+	 * @param token
 	 * @param request
-	 * @param response
+	 * @return
 	 */
 	@RequestMapping("/userAuthInves")
 	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-		ModelAndView modelAndView = userService.userCreditAuthInves(token,ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_1,request);
+		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
+		String smsCode = request.getParameter("smsCode");
+		ModelAndView modelAndView = userService.userCreditAuthInves(token,ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstant.CHANNEL_PC,lastSrvAuthCode,smsCode);
 		return modelAndView;
 	}
 
@@ -110,62 +113,61 @@ public class WebUserController {
 	 */
 	@RequestMapping("/creditUserAuthInves")
 	public ModelAndView creditUserAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request) {
-		ModelAndView modelAndView =  userService.userCreditAuthInves(token, ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_2,request);
+		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
+		String smsCode = request.getParameter("smsCode");
+		ModelAndView modelAndView =  userService.userCreditAuthInves(token, ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstant.CHANNEL_PC,lastSrvAuthCode,smsCode);
 		return modelAndView;
 	}
 
 	/**
 	 * 用户授权自动投资同步回调
-	 *
+	 * @param token
 	 * @param request
-	 * @param response
+	 * @param bean
 	 * @return
 	 */
 	@RequestMapping("/userAuthInvesReturn")
 	public Map<String,String> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
 		logger.info("userAuthInvesReturn:"+"[投资人自动投标签约增强同步回调开始]");
-		Map<String,String> result = userService.userAuthInvesReturn(token,bean,request);
+		String isSuccess = request.getParameter("isSuccess");
+		Map<String,String> result = userService.userAuthReturn(token,bean,ClientConstant.INVES_URL_TYPE,isSuccess);
 		return result;
 	}
 
 	/**
 	 * 用户授权自动债转同步回调
+	 * @param token
 	 * @param request
-	 * @param response
 	 * @param bean
 	 * @return
 	 */
 	@RequestMapping("/credituserAuthInvesReturn")
-	public Map<String, String> userCreditAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response,
+	public Map<String, String> userCreditAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,
 												  @ModelAttribute BankCallBean bean) {
 		logger.info("[投资人自动债转签约增强同步回调开始]");
-		Map<String,String> result = userService.userCreditAuthInvesReturn(token,bean,request);
+		String isSuccess = request.getParameter("isSuccess");
+		Map<String,String> result = userService.userAuthReturn(token,bean,ClientConstant.CREDIT_URL_TYPE,isSuccess);
 		return result;
 	}
 
 	/**
-	 * 用户授权自动投资异步回调
-	 *
-	 * @param request
-	 * @param response
+	 *  用户授权自动投资异步回调
+	 * @param bean
 	 * @return
 	 */
 	@RequestMapping("/userAuthInvesBgreturn")
-	public String userAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,BankCallBean bean) {
+	public String userAuthInvesBgreturn(BankCallBean bean) {
 		String result = userService.userBgreturn(bean);
 		return result;
 	}
 
 	/**
 	 * 用户授权自动债转异步回调
-	 *
-	 * @param request
-	 * @param response
+	 * @param bean
 	 * @return
 	 */
 	@RequestMapping("/credituserAuthInvesBgreturn")
-	public String userCreditAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
-											  @ModelAttribute BankCallBean bean) {
+	public String userCreditAuthInvesBgreturn(BankCallBean bean) {
 		String result = userService.userBgreturn(bean);
 		return result;
 

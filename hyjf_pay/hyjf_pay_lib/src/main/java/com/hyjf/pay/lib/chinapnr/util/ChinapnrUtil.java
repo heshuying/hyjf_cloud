@@ -115,7 +115,6 @@ public class ChinapnrUtil {
             // 调用汇付接口
             String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIBG, bean.getAllParams());
             log.info("请求pay工程返回结果：" + result);
-//            System.out.println("请求pay工程返回结果：" + result);
             if (Validator.isNotNull(result)) {
                 // 将返回字符串转换成ChinapnrBean
                 ret = JSONObject.parseObject(result, ChinapnrBean.class);

@@ -21,7 +21,8 @@ public class MyAuthenticator extends Authenticator {
 		this.password = password;
 	}
 
-	protected PasswordAuthentication getPasswordAuthentication() {
+	@Override
+    protected PasswordAuthentication getPasswordAuthentication() {
 		return new PasswordAuthentication(username, password);
 	}
 

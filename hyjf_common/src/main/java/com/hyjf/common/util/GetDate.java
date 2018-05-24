@@ -179,15 +179,9 @@ public class GetDate extends PropertyEditorSupport {
 	 */
 	public static Calendar getCalendar(long millis) {
 		Calendar cal = Calendar.getInstance();
-		// --------------------cal.setTimeInMillis(millis);
 		cal.setTime(new Date(millis));
 		return cal;
 	}
-
-	// ////////////////////////////////////////////////////////////////////////////
-	// getDate
-	// 各种方式获取的Date
-	// ////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * 当前日期
@@ -498,7 +492,6 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日历的时间戳
 	 */
 	public static Timestamp getCalendarTimestamp(Calendar cal) {
-		// ---------------------return new Timestamp(cal.getTimeInMillis());
 		return new Timestamp(cal.getTime().getTime());
 	}
 
@@ -509,11 +502,6 @@ public class GetDate extends PropertyEditorSupport {
 		Timestamp buydate = Timestamp.valueOf(nowTime);
 		return buydate;
 	}
-
-	// ////////////////////////////////////////////////////////////////////////////
-	// getMillis
-	// 各种方式获取的Millis
-	// ////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * 系统时间的毫秒数
@@ -532,7 +520,6 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日历的毫秒数
 	 */
 	public static long getMillis(Calendar cal) {
-		// --------------------return cal.getTimeInMillis();
 		return cal.getTime().getTime();
 	}
 
@@ -897,9 +884,9 @@ public class GetDate extends PropertyEditorSupport {
 		if (text!=null && !"".equals(text)) {
 			try {
 				if (text.indexOf(":") == -1 && text.length() == 10) {
-					setValue(this.date_sdf.parse(text));
+					setValue(date_sdf.parse(text));
 				} else if (text.indexOf(":") > 0 && text.length() == 19) {
-					setValue(this.datetimeFormat.parse(text));
+					setValue(datetimeFormat.parse(text));
 				} else {
 					throw new IllegalArgumentException("Could not parse date, date format is error ");
 				}

@@ -15,4 +15,6 @@ public interface AmBankOpenClient {
 	int updateUserAccountLog(BankOpenRequest request);
 
 	BankOpenAccountVO selectById(int userId);
+
+	BankOpenAccountVO selectByAccountId(String accountId);
 }

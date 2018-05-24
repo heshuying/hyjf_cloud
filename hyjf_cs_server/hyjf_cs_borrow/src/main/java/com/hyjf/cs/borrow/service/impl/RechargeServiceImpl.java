@@ -339,7 +339,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		if (result == 0) {
 			throw new Exception("插入充值记录失败,userid=["+rechargeBean.getUserId()+"].accountid=["+rechargeBean.getAccountId()+"]");
 		}
-		// 跳转到汇付天下画面
 		try {
 			mv = BankCallUtils.callApi(bean);
 		} catch (Exception e) {

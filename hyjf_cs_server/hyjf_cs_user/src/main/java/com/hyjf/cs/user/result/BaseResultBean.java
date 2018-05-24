@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * app接口返回数据的几类
- * 
+ *
  * @author renxingchen
  * @version hyjf 1.0
  * @since hyjf 1.0 2016年2月19日

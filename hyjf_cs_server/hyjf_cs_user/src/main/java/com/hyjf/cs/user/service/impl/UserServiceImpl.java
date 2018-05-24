@@ -6,10 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -17,12 +14,9 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.beans.*;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -37,6 +31,7 @@ import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.service.ActivityService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
+import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterVO;
@@ -374,23 +369,21 @@ public class UserServiceImpl implements UserService  {
 	 * @return
 	 */
 	@Override
-	public ModelAndView userCreditAuthInves(String token,Integer client,String type,HttpServletRequest request) {
+	public ModelAndView userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode) {
 		ModelAndView modelAndView = new ModelAndView();
-		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
-		String smsCode = request.getParameter("smsCode");
 		WebViewUser user = (WebViewUser) redisUtil.get(token);
 		//检查用户信息
-		this.checkUserMessage(user,lastSrvAuthCode,smsCode);
-		// 判断是否授权过  todo
+		UserVO users = this.checkUserMessage(user,lastSrvAuthCode,smsCode);
+		// 判断是否授权过
+		// TODO: 2018/5/24 判断授权方法有不同处理 
 		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
 		if(hjhUserAuth!=null&&hjhUserAuth.getAutoCreditStatus().intValue()==1){
 			throw new ReturnMessageException(AuthorizedError.CANNOT_REPEAT_ERROR);
 		}
 		// 组装发往江西银行参数
-		BankCallBean bean = getCommonBankCallBean(user,type,lastSrvAuthCode,smsCode);
+		BankCallBean bean = getCommonBankCallBean(user,type,client,channel,lastSrvAuthCode,smsCode);
 		// 插入日志
-		this.insertUserAuthLog(user, bean,client,type);
-		// 跳转到汇付天下画面
+		this.insertUserAuthLog(users, bean,client,type);
 		try {
 			modelAndView = BankCallUtils.callApi(bean);
 		} catch (Exception e) {
@@ -408,16 +401,12 @@ public class UserServiceImpl implements UserService  {
 	 * @param smsCode
 	 * @return
 	 */
-	private BankCallBean getCommonBankCallBean(WebViewUser users,String type,String lastSrvAuthCode,String smsCode) {
+	private BankCallBean getCommonBankCallBean(WebViewUser users,String type,Integer client, String channel,String lastSrvAuthCode,String smsCode) {
 		String remark = "";
 		String txcode = "";
-		// 同步调用路径
-		String retUrl = systemConfig.getWebHost()+"/bank/user/autoplus";
-		// 异步调用路
-		String bgRetUrl = systemConfig.getWebHost()+"/bank/user/autoplus";
-		// 构造函数已经设置
-		// 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
-		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,users.getUserId(),"000002");
+		String retUrl = systemConfig.getWebHost()+ClientConstant.CLIENT_HEADER_MAP.get(client)+"/user";
+		String bgRetUrl = systemConfig.getWebHost()+ClientConstant.CLIENT_HEADER_MAP.get(client)+"/user";
+		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,users.getUserId(),channel);
 		if("1".equals(type)){
 			remark = "投资人自动投标签约增强";
 			retUrl += "/userAuthInvesReturn";
@@ -427,24 +416,83 @@ public class UserServiceImpl implements UserService  {
 			bean.setTxAmount("1000000");
 			bean.setTotAmount("1000000000");
 		} else if("2".equals(type)){
-			// 2.4.8.投资人自动债权转让签约增强
 			remark = "投资人自动债权转让签约增强";
 			retUrl += "/credituserAuthInvesReturn";
 			bgRetUrl+="/credituserAuthInvesBgreturn";
 			bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
 		}
+
+		if(client == 1 || client == 2){
+			bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
+			bean.setOrderId(bean.getLogOrderId());
+			bean.setAccountId(users.getBankAccount());
+			bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+			bean.setRetUrl(retUrl);
+			bean.setNotifyUrl(bgRetUrl);
+			bean.setLastSrvAuthCode(lastSrvAuthCode);
+			bean.setSmsCode(smsCode);
+			bean.setLogRemark(remark);
+		}else {
+			String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());
+			// 取得用户在江西银行的客户号
+			BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(users.getUserId());
+			bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
+			bean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE));
+			bean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE));
+			bean.setTxDate(GetOrderIdUtils.getTxDate());
+			bean.setTxTime(GetOrderIdUtils.getTxTime());
+			bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+			bean.setChannel(channel);
+			bean.setAccountId(bankOpenAccount.getAccount());
+			bean.setOrderId(orderId);
+			bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+			bean.setRetUrl(retUrl);
+			bean.setNotifyUrl(bgRetUrl);
+			bean.setLastSrvAuthCode(lastSrvAuthCode);
+			bean.setSmsCode(smsCode);
+			// 操作者ID
+			bean.setLogUserId(String.valueOf(users.getUserId()));
+			bean.setLogOrderId(orderId);
+			bean.setLogRemark(remark);
+			bean.setLogClient(client);
+		}
+		return bean;
+	}
+
+	/**
+	 * 组装发往江西银行参数
+	 * @param accountId
+	 * @param userid
+	 * @param type
+	 * @param channel
+	 * @param lastSrvAuthCode
+	 * @param smsCode
+	 * @return
+	 */
+	private BankCallBean getCommonBankCallBean(String accountId, Integer userid, int type, String channel, String lastSrvAuthCode, String smsCode) {
+		String remark = "";
+		String txcode = "";
+		// 构造函数已经设置
+		// 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
+		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,userid,channel);
+		if(type==1){
+			remark = "投资人自动投标签约增强";
+			bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
+			bean.setDeadline(GetDate.date2Str(GetDate.countDate(1,5),new SimpleDateFormat("yyyyMMdd")));
+			bean.setTxAmount("1000000");
+			bean.setTotAmount("1000000000");
+		} else if(type==2){
+			remark = "投资人自动债权转让签约增强";
+			bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
+		}
 		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
 		bean.setOrderId(bean.getLogOrderId());
-		// 电子账号
-		bean.setAccountId(users.getBankAccount());
-		//忘记密码通知地址
+		bean.setAccountId(accountId);
 		bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
-		bean.setRetUrl(retUrl);
-		bean.setNotifyUrl(bgRetUrl);
-		bean.setSuccessfulUrl(retUrl+"&isSuccess=1");
 		bean.setLastSrvAuthCode(lastSrvAuthCode);
 		bean.setSmsCode(smsCode);
 		bean.setLogRemark(remark);
+
 		return bean;
 	}
 
@@ -454,7 +502,7 @@ public class UserServiceImpl implements UserService  {
 	 * @param lastSrvAuthCode
 	 * @param smsCode
 	 */
-	public void checkUserMessage(WebViewUser user,String lastSrvAuthCode,String smsCode){
+	public UserVO checkUserMessage(WebViewUser user,String lastSrvAuthCode,String smsCode){
 		if (user == null) {
 			throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
 		}
@@ -470,6 +518,7 @@ public class UserServiceImpl implements UserService  {
 		if (users.getIsSetPassword() == 0) {
 			throw new ReturnMessageException(AuthorizedError.NOT_SET_PWD_ERROR);
 		}
+		return users;
 	}
 
 	/**
@@ -480,7 +529,7 @@ public class UserServiceImpl implements UserService  {
 	 * @param queryType
 	 * @param i
 	 */
-	public void insertUserAuthLog(WebViewUser user, BankCallBean bean, Integer client, String authType) {
+	public void insertUserAuthLog(UserVO user, BankCallBean bean, Integer client, String authType) {
 		Date nowTime=GetDate.getNowTime();
 		HjhUserAuthLogVO hjhUserAuthLog=new HjhUserAuthLogVO();
 		hjhUserAuthLog.setUserId(user.getUserId());
@@ -540,7 +589,7 @@ public class UserServiceImpl implements UserService  {
 	 * @return
 	 */
 	@Override
-	public Map<String,String> userAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request) {
+	public Map<String,String> userAuthReturn(String token, BankCallBean bean,String urlType,String isSuccess) {
 		Map<String,String> resultMap = new HashMap<>();
 		resultMap.put("status", "success");
 		bean.convert();
@@ -548,44 +597,13 @@ public class UserServiceImpl implements UserService  {
 		if (user == null) {
 			throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
 		}
-		String isSuccess = request.getParameter("isSuccess");
 		if (isSuccess == null || !"1".equals(isSuccess)) {
 			resultMap.put("status", "fail");
 		}
 		logger.info("自动投资授权同步回调调用查询接口查询状态结束  结果为:" + (bean == null ? "空" : bean.getRetCode()));
 		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
 		if(hjhUserAuth.getAutoCreditStatus()==0) {
-			resultMap.put("typeURL", "2");
-		}else {
-			resultMap.put("typeURL", "0");
-		}
-		return resultMap;
-	}
-
-	/**
-	 * web授权自动债转同步回调
-	 * @param token
-	 * @param bean
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public Map<String, String> userCreditAuthInvesReturn(String token, BankCallBean bean, HttpServletRequest request) {
-		Map<String,String> resultMap = new HashMap<>();
-		resultMap.put("status", "success");
-		bean.convert();
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
-		if (user == null) {
-			throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
-		}
-		String isSuccess = request.getParameter("isSuccess");
-		if (isSuccess == null || !"1".equals(isSuccess)) {
-			// TODO: 2018/5/21 失败原因
-			resultMap.put("status", "fail");
-		}
-		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
-		if(hjhUserAuth.getAutoInvesStatus()==0) {
-			resultMap.put("typeURL", "1");
+			resultMap.put("typeURL", urlType);
 		}else {
 			resultMap.put("typeURL", "0");
 		}
@@ -631,10 +649,8 @@ public class UserServiceImpl implements UserService  {
 	 * @return
 	 */
 	@Override
-	public ModelAndView userAuthCreditReturn(String token, BankCallBean bean,String userAutoType, HttpServletRequest request) {
-		String sign = request.getHeader("sign");
+	public Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean,String userAutoType, String sign,String isSuccess) {
 		bean.convert();
-		String isSuccess = request.getParameter("isSuccess");
 		// 用户ID
 		Integer userId = Integer.parseInt(bean.getLogUserId());
 		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(userId);
@@ -649,6 +665,119 @@ public class UserServiceImpl implements UserService  {
 		}
 	}
 
+	@Override
+	public ModelAndView apiUserAuthInves(String token, AutoPlusRequestBean payRequestBean) {
+		ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
+		// 检查参数是否为空
+		if(payRequestBean.checkParmIsNull(modelAndView)){
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000001);
+			payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000001, "请求参数异常"));
+			logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
+			return modelAndView;
+		}
+		// 验签
+		if (!this.verifyRequestSign(payRequestBean, "/server/autoPlus/userAuthInves")) {
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002);
+			payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
+			logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
+			return modelAndView;
+		}
+		// 根据电子账户号查询用户ID
+		BankOpenAccountVO bankOpenAccount = this.amBankOpenClient.selectByAccountId(payRequestBean.getAccountId());
+		if(bankOpenAccount == null){
+			logger.info("-------------------没有根据电子银行卡找到用户"+payRequestBean.getAccountId()+"！--------------------");
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004,"没有根据电子银行卡找到用户");
+			payRequestBean.doNotify(params);
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004);
+			return modelAndView;
+		}
+		// 检查用户是否存在
+		UserVO user= amUserClient.findUserById(bankOpenAccount.getUserId());
+		if (user == null) {
+			logger.info("-------------------用户不存在汇盈金服账户！"+payRequestBean.getAccountId()+"！--------------------");
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000007,"用户不存在汇盈金服账户！");
+			payRequestBean.doNotify(params);
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000007);
+			return modelAndView;
+		}
+		Integer userId = user.getUserId();
+		if (user.getBankOpenAccount().intValue() != 1) {
+			logger.info("-------------------用户未开户！"+payRequestBean.getAccountId()+"！--------------------");
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000006,"用户未开户！");
+			payRequestBean.doNotify(params);
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000006);
+			return modelAndView;
+		}
+		// 检查是否设置交易密码
+		Integer passwordFlag = user.getIsSetPassword();
+		if (passwordFlag != 1) {
+			logger.info("-------------------未设置交易密码！"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_TP000002,"未设置交易密码！");
+			payRequestBean.doNotify(params);
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_TP000002);
+			return modelAndView;
+		}
+		// TODO: 2018/5/24 xiashuqing 根据订单号查询授权码
+		//this.autoPlusService.selectBankSmsSeq(userId, BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
+		String smsSeq = null;
+		if (StringUtils.isBlank(smsSeq)) {
+			logger.info("-------------------授权码为空！"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000008,"未查询到短信授权码！");
+			payRequestBean.doNotify(params);
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000008);
+			return modelAndView;
+		}
+		logger.info("-------------------授权码为！"+smsSeq+"电子账户号"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
+		// 查询是否已经授权过
+		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
+		if(hjhUserAuth!=null&&hjhUserAuth.getAutoInvesStatus()==1){
+			logger.info("-------------------已经授权过！"+payRequestBean.getAccountId());
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000009,"已授权,请勿重复授权！");
+			payRequestBean.doNotify(params);
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000009);
+			return modelAndView;
+		}
+		// 同步调用路径
+		String retUrl = systemConfig.getWebHost()
+				+ "/server/autoPlus/userAuthInvesReturn?acqRes="
+				+ payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getRetUrl().replace("#", "*-*-*");
+		// 异步调用路
+		String bgRetUrl =systemConfig.getWebHost()
+				+ "/server/autoPlus/userAuthInvesBgreturn?acqRes="
+				+ payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getNotifyUrl().replace("#", "*-*-*");
+
+		// 组装发往江西银行参数
+		BankCallBean bean = getCommonBankCallBean(payRequestBean.getAccountId(),userId,1,payRequestBean.getChannel(),smsSeq,payRequestBean.getSmsCode());
+		bean.setRetUrl(retUrl);
+		bean.setNotifyUrl(bgRetUrl);
+		// 插入日志
+		this.insertUserAuthLog(user, bean,1, BankCallConstant.QUERY_TYPE_1);
+		try {
+			modelAndView = BankCallUtils.callApi(bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("调用银行接口失败！"+e.getMessage());
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
+			payRequestBean.doNotify(params);
+			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
+			return modelAndView;
+		}
+		logger.info("自动投资授权申请end");
+		return modelAndView;
+	}
+
+	private ModelAndView getErrorMV(AutoPlusRequestBean payRequestBean, ModelAndView modelAndView, String status) {
+		AutoPlusRetBean repwdResult = new AutoPlusRetBean();
+		BaseResultBean resultBean = new BaseResultBean();
+		resultBean.setStatusForResponse(status);
+		repwdResult.setCallBackAction(payRequestBean.getRetUrl());
+		repwdResult.set("chkValue", resultBean.getChkValue());
+		repwdResult.set("status", resultBean.getStatus());
+		repwdResult.setAcqRes(payRequestBean.getAcqRes());
+		modelAndView.addObject("callBackForm", repwdResult);
+		return modelAndView;
+	}
+
 	/**
 	 * 组装跳转错误页面MV
 	 * @param param
@@ -657,8 +786,8 @@ public class UserServiceImpl implements UserService  {
 	 * @param hjhUserAuth
 	 * @return
 	 */
-	private ModelAndView getErrorModelAndView(ResultEnum param,String sign, String type, HjhUserAuthVO hjhUserAuth) {
-		ModelAndView modelAndView = new ModelAndView("/jumpHTML");
+	private Map<String,BaseMapBean> getErrorModelAndView(ResultEnum param,String sign, String type, HjhUserAuthVO hjhUserAuth) {
+		Map<String,BaseMapBean> result = new HashMap<>();
 		BaseMapBean baseMapBean = new BaseMapBean();
 		baseMapBean.set(CustomConstants.APP_STATUS, param.getStatus());
 		baseMapBean.set(CustomConstants.APP_STATUS_DESC, param.getStatusDesc());
@@ -667,8 +796,8 @@ public class UserServiceImpl implements UserService  {
 		baseMapBean.set("userAutoType", type);
 		baseMapBean.set(CustomConstants.APP_SIGN, sign);
 		baseMapBean.setCallBackAction(systemConfig.getWebHost()+"/user/setting/authorization/result/failed");
-		modelAndView.addObject("callBackForm", baseMapBean);
-		return modelAndView;
+		result.put("callBackForm", baseMapBean);
+		return result;
 	}
 
 	/**
@@ -679,8 +808,8 @@ public class UserServiceImpl implements UserService  {
 	 * @param autoCreditStatus
 	 * @return
 	 */
-	private ModelAndView getSuccessModelAndView(String sign, String type, HjhUserAuthVO hjhUserAuth) {
-		ModelAndView modelAndView = new ModelAndView("/jumpHTML");
+	private Map<String,BaseMapBean> getSuccessModelAndView(String sign, String type, HjhUserAuthVO hjhUserAuth) {
+		Map<String,BaseMapBean> result = new HashMap<>();
 		BaseMapBean baseMapBean = new BaseMapBean();
 		baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.SUCCESS.getStatus());
 		baseMapBean.set(CustomConstants.APP_STATUS_DESC, ResultEnum.SUCCESS.getStatusDesc());
@@ -689,7 +818,32 @@ public class UserServiceImpl implements UserService  {
 		baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
 		baseMapBean.set("userAutoType", type);
 		baseMapBean.setCallBackAction(systemConfig.getWebHost()+"/user/setting/authorization/result/success");
-		modelAndView.addObject("callBackForm", baseMapBean);
-		return modelAndView;
+		result.put("callBackForm", baseMapBean);
+		return result;
+	}
+
+	/**
+	 * 验证外部请求签名
+	 *
+	 * @param paramBean
+	 * @return
+	 */
+	protected boolean verifyRequestSign(BaseBean paramBean, String methodName) {
+
+		String sign = StringUtils.EMPTY;
+
+		// 机构编号必须参数
+		String instCode = paramBean.getInstCode();
+		if (StringUtils.isEmpty(instCode)) {
+			return false;
+		}
+
+		if (BaseDefine.METHOD_BORROW_AUTH_INVES.equals(methodName)) {
+			// 自动投资 增强
+			AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getSmsCode() + bean.getTimestamp();
+		}
+
+		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
 	}
 }

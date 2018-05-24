@@ -80,15 +80,12 @@ public class MybatisConfig {
 	 */
 	@Bean
 	public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicDataSource") DynamicDataSource dynamicDataSource,
-//			@Value("${mybatis.typeAliasesPackage}") String typeAliasesPackage,
 			@Value("${mybatis.mapper-locations}") String mapperLocations) throws Exception {
 		
 		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-		factoryBean.setDataSource(dynamicDataSource);// 指定数据源(这个必须有，否则报错)
+		factoryBean.setDataSource(dynamicDataSource);
 		// 下边两句仅仅用于*.xml文件，如果整个持久层操作不需要使用到xml文件的话（只用注解就可以搞定），则不加
-//		factoryBean.setTypeAliasesPackage(typeAliasesPackage);// 指定基包
-//		factoryBean.setTypeAliases("");
-		factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));//
+		factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));
 		return factoryBean.getObject();
 	}
 
