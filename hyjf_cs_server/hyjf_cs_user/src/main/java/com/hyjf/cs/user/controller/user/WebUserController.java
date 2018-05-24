@@ -6,9 +6,11 @@ import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.UserService;
+import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -96,7 +98,7 @@ public class WebUserController {
 	 */
 	@RequestMapping("/userAuthInves")
 	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-		ModelAndView modelAndView = userService.userAuthInves(token,request);
+		ModelAndView modelAndView = userService.userCreditAuthInves(token,ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_1,request);
 		return modelAndView;
 	}
 
@@ -108,7 +110,7 @@ public class WebUserController {
 	 */
 	@RequestMapping("/creditUserAuthInves")
 	public ModelAndView creditUserAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request) {
-		ModelAndView modelAndView =  userService.creditUserAuthInves(token,request);
+		ModelAndView modelAndView =  userService.userCreditAuthInves(token, ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_2,request);
 		return modelAndView;
 	}
 

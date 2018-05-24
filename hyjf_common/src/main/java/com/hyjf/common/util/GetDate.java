@@ -476,7 +476,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 系统当前的时间戳
 	 */
 	public static Timestamp getTimestamp() {
-		return new Timestamp(new Date().getTime());
+		return new Timestamp(System.currentTimeMillis());
 	}
 
 	/**
@@ -521,7 +521,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 系统时间的毫秒数
 	 */
 	public static long getMillis() {
-		return new Date().getTime();
+		return  System.currentTimeMillis();
 	}
 
 	/**
@@ -866,7 +866,7 @@ public class GetDate extends PropertyEditorSupport {
 		long millisDiff = getMillis(calSrc) - getMillis(calDes);
 
 		if (flag == 'y') {
-			return (calSrc.get(calSrc.YEAR) - calDes.get(calDes.YEAR));
+			return (calSrc.get(Calendar.YEAR) - calDes.get(Calendar.YEAR));
 		}
 
 		if (flag == 'd') {
@@ -991,6 +991,19 @@ public class GetDate extends PropertyEditorSupport {
 	 */
 	public static int getNowTime10() {
 		return (int) (getMillis() / 1000);
+	}
+
+	public static Date getNowTime(){
+		Date date=new Date();
+		SimpleDateFormat temp=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String date1=temp.format(date);
+		Date date2= null;
+		try {
+			date2 = temp.parse(date1);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date2;
 	}
 
 	/**

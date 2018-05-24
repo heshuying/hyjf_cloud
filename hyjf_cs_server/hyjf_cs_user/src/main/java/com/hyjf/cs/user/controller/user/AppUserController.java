@@ -3,6 +3,9 @@ package com.hyjf.cs.user.controller.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.cs.user.util.ClientConstant;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +135,7 @@ public class AppUserController {
 	 */
 	@RequestMapping("/userAuthCredit")
 	public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView modelAndView =  userService.creditUserAuthInves(token,request);
+		ModelAndView modelAndView =  userService.userCreditAuthInves(token,ClientConstant.APP_CLIENT, BankCallConstant.QUERY_TYPE_2,request);
 		return modelAndView;
 	}
 
@@ -145,7 +148,7 @@ public class AppUserController {
 	 */
 	@RequestMapping("/userAuthCreditReturn")
 	public ModelAndView userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
-		ModelAndView result = userService.userAuthCreditReturn(token,bean,request);
+		ModelAndView result = userService.userAuthCreditReturn(token,bean,ClientConstant.CREDIT_AUTO_TYPE,request);
 		 return result;
 	}
 
@@ -158,7 +161,7 @@ public class AppUserController {
 	 */
 	@RequestMapping("/userAuthCreditBgreturn")
 	public String userCreditAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
-											  @ModelAttribute BankCallBean bean) {
+											   BankCallBean bean) {
 		String result = userService.userBgreturn(bean);
 		return result;
 	}
@@ -172,7 +175,7 @@ public class AppUserController {
 	 */
 	@RequestMapping("/userAuthInves")
 	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView modelAndView = userService.userAuthInves(token,request);
+		ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.APP_CLIENT, BankCallConstant.QUERY_TYPE_1,request);
 		return modelAndView;
 	}
 
@@ -185,7 +188,7 @@ public class AppUserController {
 	 */
 	@RequestMapping("/userAuthInvesReturn")
 	public ModelAndView userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
-		ModelAndView modelAndView = userService.appUserAuthInvesReturn(token,bean,request);
+		ModelAndView modelAndView = userService.userAuthCreditReturn(token,bean,ClientConstant.INVES_AUTO_TYPE,request);
 		return modelAndView;
 	}
 
@@ -199,7 +202,7 @@ public class AppUserController {
 	@ResponseBody
 	@RequestMapping("/userAuthInvesBgreturn")
 	public String userAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
-										@ModelAttribute BankCallBean bean) {
+										BankCallBean bean) {
 		String result = userService.userBgreturn(bean);
 		return result;
 	}

@@ -15,6 +15,18 @@ public class BankOpenVO {
 	
 	private Integer userId;
 
+	@Override
+	public String toString() {
+		return "BankOpenVO{" +
+				"trueName='" + trueName + '\'' +
+				", idNo='" + idNo + '\'' +
+				", cardNo='" + cardNo + '\'' +
+				", mobile='" + mobile + '\'' +
+				", smsCode='" + smsCode + '\'' +
+				", userId=" + userId +
+				'}';
+	}
+
 	public String getTrueName() {
 		return trueName;
 	}

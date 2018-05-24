@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
@@ -89,6 +90,8 @@ public interface UserService {
 	int insertSelective(HjhUserAuth record);
 
 	int updateByPrimaryKeySelective(HjhUserAuth record);
+
+    void updateUserAuthInves(BankRequest bean);
 
 	/**
 	 * 修改用户表By主键

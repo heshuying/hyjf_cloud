@@ -2,6 +2,7 @@ package com.hyjf.am.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -9,6 +10,7 @@ import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
 import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
+import com.hyjf.am.user.utils.BankCallConstant;
 import com.hyjf.am.user.utils.UploadFileUtils;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -293,7 +295,8 @@ public class UserServiceImpl implements UserService {
 			}
 			userLoginLog.setLoginIp(ip);
 			userLoginLog.setLoginTime(new Date());
-			userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);// 登录次数
+            // 登录次数
+			userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);
 			userLoginLog.setUpdateTime(new Date());
 			userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
 		}
@@ -341,7 +344,7 @@ public class UserServiceImpl implements UserService {
 				return;
 			}
 			String resultCode = resultObj.getString("code");
-			if ("0".equals(resultCode)) { // 查询成功
+			if ("0".equals(resultCode)) {
 				String region = resultObj.getJSONObject("data").getString("region");
 				String city = resultObj.getJSONObject("data").getString("city");
 				String county = resultObj.getJSONObject("data").getString("county");
@@ -686,5 +689,122 @@ public class UserServiceImpl implements UserService {
 	public int updateUserById(User record){
 		return usersMapper.updateByPrimaryKeySelective(record);
 	}
+
+	@Override
+	public void updateUserAuthInves( BankRequest bean) {
+		Integer userId = Integer.parseInt(bean.getLogUserId());
+		Date nowTime= GetDate.getNowTime();
+		HjhUserAuthLog hjhUserAuthLog=this.selectByExample(bean.getOrderId());
+		//更新用户签约授权日志表
+		if(hjhUserAuthLog!=null){
+			hjhUserAuthLog.setUpdateTime(nowTime);
+			hjhUserAuthLog.setUpdateUser(userId);
+			hjhUserAuthLog.setOrderStatus(1);
+			hjhUserAuthLog.setAuthCreateTime(nowTime);
+			this.updateByPrimaryKeySelective(hjhUserAuthLog);
+		}
+		// 这里同步异步一起进来会导致重复插入的异常，加一个同步锁
+		HjhUserAuth hjhUserAuth=this.getHjhUserAuthByUserId(userId);
+		// 更新用户签约授权状态信息表
+		if (hjhUserAuth == null) {
+			User user= this.findUserByUserId(userId);
+			hjhUserAuth = new HjhUserAuth();
+			// 设置状态
+			setAuthType(hjhUserAuth, bean);
+			hjhUserAuth.setAutoWithdrawStatus(0);
+			hjhUserAuth.setAutoConsumeStatus(0);
+			hjhUserAuth.setUserId(user.getUserId());
+			hjhUserAuth.setUserName(user.getUsername());
+			hjhUserAuth.setCreateUser(user.getUserId());
+			hjhUserAuth.setCreateTime(nowTime);
+			hjhUserAuth.setUpdateTime(nowTime);
+			hjhUserAuth.setUpdateUser(userId);
+			hjhUserAuth.setDelFlg(0);
+			this.insertSelective(hjhUserAuth);
+		} else {
+			HjhUserAuth updateHjhUserAuth = new HjhUserAuth();
+			// 设置状态
+			setAuthType(hjhUserAuth, bean);
+			updateHjhUserAuth.setId(hjhUserAuth.getId());
+			updateHjhUserAuth.setUpdateTime(nowTime);
+			updateHjhUserAuth.setUpdateUser(userId);
+			this.updateByPrimaryKeySelective(hjhUserAuth);
+		}
+	}
+	/**
+	 * 设置状态
+	 * @param hjhUserAuth
+	 * @param bean
+	 */
+	private void setAuthType(HjhUserAuth hjhUserAuth, BankRequest bean) {
+		// 授权类型
+		String txcode = bean.getTxCode();
+		if(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS.equals(txcode)){
+			hjhUserAuth.setAutoInvesStatus(1);
+			hjhUserAuth.setAutoOrderId(bean.getOrderId());
+			hjhUserAuth.setAutoBidTime(GetDate.getNowTime10());
+			hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
+			hjhUserAuth.setAutoBidEndTime(bean.getDeadline());
+		}else if(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS.equals(txcode)){
+			hjhUserAuth.setAutoCreditStatus(1);
+			hjhUserAuth.setAutoCreditOrderId(bean.getOrderId());
+			hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
+			hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
+		}else if(BankCallConstant.TXCODE_CREDIT_AUTH_QUERY.equals(txcode)){
+			//根据银行查询投资人签约状态
+			if(BankCallConstant.QUERY_TYPE_1.equals(bean.getType())){
+				hjhUserAuth.setAutoInvesStatus(1);
+				hjhUserAuth.setAutoOrderId(bean.getOrderId());
+				hjhUserAuth.setAutoBidTime(GetDate.getNowTime10());
+				hjhUserAuth.setAutoBidEndTime(bean.getBidDeadline());
+			}else if(BankCallConstant.QUERY_TYPE_2.equals(bean.getType())){
+				hjhUserAuth.setAutoCreditStatus(1);
+				hjhUserAuth.setAutoCreditOrderId(bean.getOrderId());
+				hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
+			}
+		}
+		// 新增缴费授权和还款授权
+		else if(BankCallConstant.TXCODE_PAYMENT_AUTH_PAGE.equals(txcode)){
+			hjhUserAuth.setAutoPaymentStatus(1);
+			hjhUserAuth.setAutoPaymentEndTime(bean.getDeadline());
+			hjhUserAuth.setAutoPaymentTime(GetDate.getNowTime10());
+		}else if(BankCallConstant.TXCODE_REPAY_AUTH_PAGE.equals(txcode)){
+			hjhUserAuth.setAutoRepayStatus(1);
+			hjhUserAuth.setAutoRepayEndTime(bean.getDeadline());
+			hjhUserAuth.setAutoRepayTime(GetDate.getNowTime10());
+		}
+
+		// 客户授权功能查询接口
+		else if(BankCallConstant.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
+			//自动投标功能开通标志
+			String autoBidStatus = bean.getAutoBid();
+			//自动债转功能开通标志
+			String autoTransfer = bean.getAutoTransfer();
+			//缴费授权
+			String paymentAuth = bean.getPaymentAuth();
+			//还款授权
+			String repayAuth = bean.getRepayAuth();
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(autoBidStatus)){
+				hjhUserAuth.setAutoInvesStatus(Integer.parseInt(autoBidStatus));
+			}
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(autoTransfer)){
+				hjhUserAuth.setAutoCreditStatus(Integer.parseInt(autoTransfer));
+			}
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(paymentAuth)){
+				hjhUserAuth.setAutoPaymentStatus(Integer.parseInt(paymentAuth));
+				hjhUserAuth.setAutoPaymentEndTime(bean.getPaymentDeadline());
+			}
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(repayAuth)){
+				hjhUserAuth.setAutoRepayStatus(Integer.parseInt(repayAuth));
+				hjhUserAuth.setAutoRepayEndTime(bean.getRepayDeadline());
+			}
+			//自动投标到期日
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(bean.getAutoBidDeadline())) {
+				hjhUserAuth.setAutoBidEndTime(bean.getAutoBidDeadline());
+			}
+		}
+
+	}
+
 
 }

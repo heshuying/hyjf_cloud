@@ -1,7 +1,6 @@
 package com.hyjf.pay.lib.bank.bean;
 
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 
 import java.io.Serializable;
@@ -10,7 +9,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
 	/**
 	 * 构造体
-	 * @author liubin
+	 * @author
 	 */
 	public BankCallBean() {
 		super();
@@ -24,7 +23,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	 * 下记公用字段设置：<br/> 
 	 * bankCode，instCode，channel，txDate，txTime，seqNo；<br/> 
 	 * logOrderId，logOrderDate，logUserId<br/> 
-	 * @author liubin
+	 * @author
 	 * @param version
 	 * @param txCode
 	 * @param userId
@@ -45,7 +44,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	 * 下记公用字段设置：<br/> 
 	 * bankCode，instCode，channel，txDate，txTime，seqNo，orderId；<br/> 
 	 * logOrderId，logOrderDate，logUserId<br/> 
-	 * @author liubin
+	 * @author
 	 * @param version
 	 * @param txCode
 	 * @param userId
@@ -72,7 +71,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
      * 下记公用字段设置：<br/> 
      * bankCode，instCode，channel，txDate，txTime，seqNo；<br/> 
      * logOrderId，logOrderDate，logUserId<br/> 
-     * @author liubin
+     * @author
      * @param version
      * @param txCode
      * @param userId
@@ -89,14 +88,12 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
     /**
      * 构造体用设置共通字段
-     * @author liubin
+     * @author
      * @param version
      * @param txCode
      */
     private void setBankCallCommon(String version, String txCode, String channel) {
         // 获取共通信息
-//        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-//        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
         String txDate = GetOrderIdUtils.getTxDate();
         String txTime = GetOrderIdUtils.getTxTime();
         String seqNo = GetOrderIdUtils.getSeqNo(6);
@@ -122,7 +119,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
 	/**
 	 * 构造体用设置log字段
-	 * @author liubin
+	 * @author
 	 * @param  userId
 	 */
 	private void setBankCallLog(Integer userId) {

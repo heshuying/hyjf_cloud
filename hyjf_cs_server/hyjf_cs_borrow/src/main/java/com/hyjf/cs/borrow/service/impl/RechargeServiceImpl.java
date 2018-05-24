@@ -105,9 +105,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		}
 		String cardNo = bean.getCardNo();
 		BankCardVO bankCard = rechargeClient.getBankCardByCardNo(Integer.parseInt(bean.getLogUserId()), cardNo);
-		MultiValueMap<String, Object> requestEntity = new LinkedMultiValueMap<>();
-		requestEntity.add("bankCallBean", bean);
-		requestEntity.add("bankCard", bankCard);
 		BankRequest bankRequest = new BankRequest();
 		BeanUtils.copyProperties(bean,bankRequest);
 		bankRequest.setBank(bankCard.getBank());
@@ -144,7 +141,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		// 充值成功
 		if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
 			// 查询充值记录
-			AccountRechargeVO accountRecharge = rechargeClient.selectByOrderId(orderId);// 查询充值记录
+			AccountRechargeVO accountRecharge = rechargeClient.selectByOrderId(orderId);
 			// 如果没有充值记录
 			if (accountRecharge != null) {
 				//redis防重校验
@@ -309,30 +306,30 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		// 调用 2.3.4联机绑定卡到电子账户充值
 		BankCallBean bean = new BankCallBean();
-		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-		bean.setTxCode(BankCallMethodConstant.TXCODE_DIRECT_RECHARGE_PAGE);// 交易代码
-		bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
-		bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
-		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
-		bean.setChannel(rechargeBean.getChannel()); // 交易渠道
-		bean.setAccountId(rechargeBean.getAccountId()); // 电子账号
-		bean.setCardNo(rechargeBean.getCardNo()); // 银行卡号
+		bean.setVersion(BankCallConstant.VERSION_10);
+		bean.setTxCode(BankCallMethodConstant.TXCODE_DIRECT_RECHARGE_PAGE);
+		bean.setTxDate(GetOrderIdUtils.getTxDate());
+		bean.setTxTime(GetOrderIdUtils.getTxTime());
+		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+		bean.setChannel(rechargeBean.getChannel());
+		bean.setAccountId(rechargeBean.getAccountId());
+		bean.setCardNo(rechargeBean.getCardNo());
 		bean.setCurrency(BankCallConstant.CURRENCY_TYPE_RMB);
 		bean.setTxAmount(rechargeBean.getTxAmount());
-		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD); // 证件类型
-		bean.setIdNo(rechargeBean.getIdNo()); // 身份证号
-		bean.setName(rechargeBean.getName()); // 姓名
-		bean.setMobile(rechargeBean.getMobile()); // 手机号
+		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+		bean.setIdNo(rechargeBean.getIdNo());
+		bean.setName(rechargeBean.getName());
+		bean.setMobile(rechargeBean.getMobile());
 		bean.setForgotPwdUrl(rechargeBean.getForgotPwdUrl());
 		bean.setUserIP(rechargeBean.getIp());
 		bean.setRetUrl(rechargeBean.getRetUrl());
 		bean.setNotifyUrl(rechargeBean.getNotifyUrl());
-		bean.setLogOrderId(logOrderId);// 订单号
-		bean.setLogOrderDate(orderDate);// 充值订单日期
+		bean.setLogOrderId(logOrderId);
+		bean.setLogOrderDate(orderDate);
 		bean.setLogUserId(String.valueOf(rechargeBean.getUserId()));
 		bean.setLogUserName(rechargeBean.getUserName());
 		bean.setLogRemark("充值页面");
-		bean.setLogClient(Integer.parseInt(rechargeBean.getPlatform()));// 充值平台
+		bean.setLogClient(Integer.parseInt(rechargeBean.getPlatform()));
 		// 充值成功后跳转的url
 		bean.setSuccessfulUrl(bean.getRetUrl()+"&isSuccess=1");
 		// 页面调用必须传的

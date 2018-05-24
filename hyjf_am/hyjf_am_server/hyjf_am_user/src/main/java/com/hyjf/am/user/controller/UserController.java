@@ -6,6 +6,22 @@ import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.HjhUserAuthLogResponse;
+import com.hyjf.am.response.user.HjhUserAuthResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.service.UserService;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +47,8 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author xiasq
@@ -194,20 +212,9 @@ public class UserController {
 		return response;
 	}
 
-	@RequestMapping("/updateLogByPrimaryKeySelective")
-	public int updateLogByPrimaryKeySelective(@RequestBody HjhUserAuthLog record){
-		int count = userService.updateByPrimaryKeySelective(record);
-		return count;
-	}
-
-	@RequestMapping("/insertSelective")
-	public int insertSelective(@RequestBody HjhUserAuth record){
-		return userService.insertSelective(record);
-	}
-
-	@RequestMapping("/updateByPrimaryKeySelective")
-	public int updateByPrimaryKeySelective(@RequestBody HjhUserAuth record){
-		return userService.updateByPrimaryKeySelective(record);
+	@RequestMapping("/updateUserAuthInves")
+	public void updateUserAuthInves(@RequestBody BankRequest bean){
+		userService.updateUserAuthInves(bean);
 	}
 
 	/**

@@ -25,10 +25,10 @@ public class ServerController {
 
 	/** 从系统配置中获取最新版本号 */
 	@Value("${hyjf.app.version.new}")
-	private String NEW_VERSION;
+	private String newVersion;
 	/** 从系统配置中获取测试环境地址 */
 	@Value("${hyjf.app.serverip.test}")
-	private String TEST_SERVERIP;
+	private String testServerIp;
 
 	/**
 	 * 获取最优服务器
@@ -63,7 +63,7 @@ public class ServerController {
 			boolean isSafe = SecretUtil.checkSecretKey(appId, appKey, randomString, secretKey);
 
 			if (isSafe) {
-				if (version.substring(0, 5).equals(NEW_VERSION)) {
+				if (version.substring(0, 5).equals(newVersion)) {
 					logger.info("-------------version格式化：" + version.substring(0, 5));
 					// 唯一标识
 					String sign = "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604";
@@ -76,7 +76,7 @@ public class ServerController {
 					signValue.setVersion(version);
 					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
-					resultBean.setServerIp(DES.encryptDES_ECB(TEST_SERVERIP, initKey));
+					resultBean.setServerIp(DES.encryptDES_ECB(testServerIp, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
@@ -125,7 +125,7 @@ public class ServerController {
 		ServerResultBean resultBean = new ServerResultBean();
 
 		try {
-			if (version.substring(0, 5).equals(NEW_VERSION)
+			if (version.substring(0, 5).equals(newVersion)
 					&& "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)) {
 				String key = "iUq3OGYv";
 				// 保存Key
