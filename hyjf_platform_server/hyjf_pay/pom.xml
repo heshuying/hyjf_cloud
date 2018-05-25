@@ -14,7 +14,7 @@
 
 	<parent>
 		<groupId>com.hyjf</groupId>
-		<artifactId>hyjf_cloud</artifactId>
+		<artifactId>hyjf_platform_server</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
