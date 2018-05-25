@@ -271,11 +271,11 @@ public class UserServiceImpl implements UserService  {
 		}
 
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+		/*int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
 				CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
 		if (cnt == 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
-		}
+		}*/
 		String reffer = registerVO.getReffer();
 		if (isNotBlank(reffer) && amUserClient.countUserByRecommendName(reffer) <= 0) {
 			throw new ReturnMessageException(RegisterError.REFFER_INVALID_ERROR);
