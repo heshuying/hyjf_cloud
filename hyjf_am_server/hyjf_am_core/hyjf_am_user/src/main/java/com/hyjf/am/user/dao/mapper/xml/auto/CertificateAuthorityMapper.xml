@@ -15,7 +15,7 @@
     <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_username" property="createUsername" jdbcType="VARCHAR" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -81,7 +81,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, user_name, mobile, true_name, id_type, id_no, email, `status`, code, 
-    customer_id, remark, create_user_id, create_user_name, update_user_id, update_user_name, 
+    customer_id, remark, create_user_id, create_username, update_user_id, update_user_name, 
     create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample" >
@@ -125,13 +125,13 @@
       true_name, id_type, id_no, 
       email, `status`, code, 
       customer_id, remark, create_user_id, 
-      create_user_name, update_user_id, update_user_name, 
+      create_username, update_user_id, update_user_name, 
       create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, 
       #{trueName,jdbcType=VARCHAR}, #{idType,jdbcType=TINYINT}, #{idNo,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
       #{customerId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
+      #{createUsername,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.CertificateAuthority" >
@@ -176,8 +176,8 @@
       <if test="createUserId != null" >
         create_user_id,
       </if>
-      <if test="createUserName != null" >
-        create_user_name,
+      <if test="createUsername != null" >
+        create_username,
       </if>
       <if test="updateUserId != null" >
         update_user_id,
@@ -229,8 +229,8 @@
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="createUserName != null" >
-        #{createUserName,jdbcType=VARCHAR},
+      <if test="createUsername != null" >
+        #{createUsername,jdbcType=VARCHAR},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
@@ -294,8 +294,8 @@
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.createUserName != null" >
-        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      <if test="record.createUsername != null" >
+        create_username = #{record.createUsername,jdbcType=VARCHAR},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -329,7 +329,7 @@
       customer_id = #{record.customerId,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      create_username = #{record.createUsername,jdbcType=VARCHAR},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -377,8 +377,8 @@
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="createUserName != null" >
-        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      <if test="createUsername != null" >
+        create_username = #{createUsername,jdbcType=VARCHAR},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
@@ -409,7 +409,7 @@
       customer_id = #{customerId,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_username = #{createUsername,jdbcType=VARCHAR},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},

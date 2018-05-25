@@ -26,8 +26,8 @@
     <result column="payment_cancel_time" property="paymentCancelTime" jdbcType="VARCHAR" />
     <result column="repay_cancel_time" property="repayCancelTime" jdbcType="VARCHAR" />
     <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
-    <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -94,8 +94,8 @@
     auto_consume_status, auto_create_time, auto_order_id, auto_credit_order_id, auto_credit_time, 
     auto_bid_time, auto_bid_end_time, auto_payment_status, auto_payment_time, auto_payment_end_time, 
     auto_repay_status, auto_repay_time, auto_repay_end_time, inves_cancel_time, credit_cancel_time, 
-    payment_cancel_time, repay_cancel_time, del_flg, create_user, update_user, create_time, 
-    update_time
+    payment_cancel_time, repay_cancel_time, del_flg, create_user_id, update_user_id, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthExample" >
     select
@@ -141,8 +141,8 @@
       auto_payment_status, auto_payment_time, auto_payment_end_time, 
       auto_repay_status, auto_repay_time, auto_repay_end_time, 
       inves_cancel_time, credit_cancel_time, payment_cancel_time, 
-      repay_cancel_time, del_flg, create_user, 
-      update_user, create_time, update_time
+      repay_cancel_time, del_flg, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{autoInvesStatus,jdbcType=TINYINT}, 
       #{autoCreditStatus,jdbcType=TINYINT}, #{autoWithdrawStatus,jdbcType=TINYINT}, #{autoConsumeStatus,jdbcType=TINYINT}, 
@@ -151,8 +151,8 @@
       #{autoPaymentStatus,jdbcType=TINYINT}, #{autoPaymentTime,jdbcType=INTEGER}, #{autoPaymentEndTime,jdbcType=VARCHAR}, 
       #{autoRepayStatus,jdbcType=TINYINT}, #{autoRepayTime,jdbcType=INTEGER}, #{autoRepayEndTime,jdbcType=VARCHAR}, 
       #{invesCancelTime,jdbcType=VARCHAR}, #{creditCancelTime,jdbcType=VARCHAR}, #{paymentCancelTime,jdbcType=VARCHAR}, 
-      #{repayCancelTime,jdbcType=VARCHAR}, #{delFlg,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, 
-      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{repayCancelTime,jdbcType=VARCHAR}, #{delFlg,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuth" >
@@ -230,11 +230,11 @@
       <if test="delFlg != null" >
         del_flg,
       </if>
-      <if test="createUser != null" >
-        create_user,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updateUser != null" >
-        update_user,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -313,11 +313,11 @@
       <if test="delFlg != null" >
         #{delFlg,jdbcType=TINYINT},
       </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -408,11 +408,11 @@
       <if test="record.delFlg != null" >
         del_flg = #{record.delFlg,jdbcType=TINYINT},
       </if>
-      <if test="record.createUser != null" >
-        create_user = #{record.createUser,jdbcType=INTEGER},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=INTEGER},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -451,8 +451,8 @@
       payment_cancel_time = #{record.paymentCancelTime,jdbcType=VARCHAR},
       repay_cancel_time = #{record.repayCancelTime,jdbcType=VARCHAR},
       del_flg = #{record.delFlg,jdbcType=TINYINT},
-      create_user = #{record.createUser,jdbcType=INTEGER},
-      update_user = #{record.updateUser,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -531,11 +531,11 @@
       <if test="delFlg != null" >
         del_flg = #{delFlg,jdbcType=TINYINT},
       </if>
-      <if test="createUser != null" >
-        create_user = #{createUser,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -571,8 +571,8 @@
       payment_cancel_time = #{paymentCancelTime,jdbcType=VARCHAR},
       repay_cancel_time = #{repayCancelTime,jdbcType=VARCHAR},
       del_flg = #{delFlg,jdbcType=TINYINT},
-      create_user = #{createUser,jdbcType=INTEGER},
-      update_user = #{updateUser,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

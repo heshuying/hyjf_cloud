@@ -698,7 +698,7 @@ public class UserServiceImpl implements UserService {
 		//更新用户签约授权日志表
 		if(hjhUserAuthLog!=null){
 			hjhUserAuthLog.setUpdateTime(nowTime);
-			hjhUserAuthLog.setUpdateUser(userId);
+			hjhUserAuthLog.setUpdateUserId(userId);
 			hjhUserAuthLog.setOrderStatus(1);
 			hjhUserAuthLog.setAuthCreateTime(nowTime);
 			this.updateByPrimaryKeySelective(hjhUserAuthLog);
@@ -715,10 +715,10 @@ public class UserServiceImpl implements UserService {
 			hjhUserAuth.setAutoConsumeStatus(0);
 			hjhUserAuth.setUserId(user.getUserId());
 			hjhUserAuth.setUserName(user.getUsername());
-			hjhUserAuth.setCreateUser(user.getUserId());
+			hjhUserAuth.setCreateUserId(user.getUserId());
 			hjhUserAuth.setCreateTime(nowTime);
 			hjhUserAuth.setUpdateTime(nowTime);
-			hjhUserAuth.setUpdateUser(userId);
+			hjhUserAuth.setUpdateUserId(userId);
 			hjhUserAuth.setDelFlg(0);
 			this.insertSelective(hjhUserAuth);
 		} else {
@@ -727,7 +727,7 @@ public class UserServiceImpl implements UserService {
 			setAuthType(hjhUserAuth, bean);
 			updateHjhUserAuth.setId(hjhUserAuth.getId());
 			updateHjhUserAuth.setUpdateTime(nowTime);
-			updateHjhUserAuth.setUpdateUser(userId);
+			updateHjhUserAuth.setUpdateUserId(userId);
 			this.updateByPrimaryKeySelective(hjhUserAuth);
 		}
 	}

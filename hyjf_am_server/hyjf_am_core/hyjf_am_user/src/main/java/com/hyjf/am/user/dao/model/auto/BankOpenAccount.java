@@ -16,7 +16,7 @@ public class BankOpenAccount implements Serializable {
 
     private Integer createUserId;
 
-    private String createUserName;
+    private String createUsername;
 
     private Date updateTime;
 
@@ -74,12 +74,12 @@ public class BankOpenAccount implements Serializable {
         this.createUserId = createUserId;
     }
 
-    public String getCreateUserName() {
-        return createUserName;
+    public String getCreateUsername() {
+        return createUsername;
     }
 
-    public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName == null ? null : createUserName.trim();
+    public void setCreateUsername(String createUsername) {
+        this.createUsername = createUsername == null ? null : createUsername.trim();
     }
 
     public Date getUpdateTime() {

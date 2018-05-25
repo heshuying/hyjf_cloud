@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -117,7 +117,6 @@
         </table>
         <!-- 用戶详情表 -->
         <table tableName="ht_user_info" domainObjectName="UserInfo">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="department_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_staff" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -138,7 +137,6 @@
         </table>
         <!-- 用户log日志表 -->
         <table tableName="ht_user_login_log" domainObjectName="UserLoginLog">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
         <!-- 用户预注册表 -->
         <table tableName="ht_pre_regist" domainObjectName="PreRegist">

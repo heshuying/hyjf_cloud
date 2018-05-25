@@ -132,38 +132,35 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserInfo" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_user_info (role_id, is_staff, department_id, 
-      parent_id, is51, nickname, 
-      birthday, sex, truename, 
-      idcard, truename_isApprove, mobile_isApprove, 
-      email_isApprove, education, province, 
-      city, area, address, 
-      intro, interest, `attribute`, 
-      promoteway, is_contact, vip_id, 
-      vip_value, vip_exp_date, vip_platform, 
-      borrower_type, update_user_id, update_time
-      )
-    values (#{roleId,jdbcType=TINYINT}, #{isStaff,jdbcType=TINYINT}, #{departmentId,jdbcType=TINYINT}, 
-      #{parentId,jdbcType=INTEGER}, #{is51,jdbcType=TINYINT}, #{nickname,jdbcType=VARCHAR}, 
-      #{birthday,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{truename,jdbcType=VARCHAR}, 
-      #{idcard,jdbcType=VARCHAR}, #{truenameIsapprove,jdbcType=TINYINT}, #{mobileIsapprove,jdbcType=TINYINT}, 
-      #{emailIsapprove,jdbcType=TINYINT}, #{education,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
-      #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{intro,jdbcType=VARCHAR}, #{interest,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, 
-      #{promoteway,jdbcType=INTEGER}, #{isContact,jdbcType=BIT}, #{vipId,jdbcType=INTEGER}, 
-      #{vipValue,jdbcType=INTEGER}, #{vipExpDate,jdbcType=INTEGER}, #{vipPlatform,jdbcType=TINYINT}, 
-      #{borrowerType,jdbcType=TINYINT}, #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into ht_user_info (user_id, role_id, is_staff, 
+      department_id, parent_id, is51, 
+      nickname, birthday, sex, 
+      truename, idcard, truename_isApprove, 
+      mobile_isApprove, email_isApprove, education, 
+      province, city, area, 
+      address, intro, interest, 
+      `attribute`, promoteway, is_contact, 
+      vip_id, vip_value, vip_exp_date, 
+      vip_platform, borrower_type, update_user_id, 
+      update_time)
+    values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=TINYINT}, #{isStaff,jdbcType=TINYINT}, 
+      #{departmentId,jdbcType=TINYINT}, #{parentId,jdbcType=INTEGER}, #{is51,jdbcType=TINYINT}, 
+      #{nickname,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
+      #{truename,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{truenameIsapprove,jdbcType=TINYINT}, 
+      #{mobileIsapprove,jdbcType=TINYINT}, #{emailIsapprove,jdbcType=TINYINT}, #{education,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, #{interest,jdbcType=VARCHAR}, 
+      #{attribute,jdbcType=INTEGER}, #{promoteway,jdbcType=INTEGER}, #{isContact,jdbcType=BIT}, 
+      #{vipId,jdbcType=INTEGER}, #{vipValue,jdbcType=INTEGER}, #{vipExpDate,jdbcType=INTEGER}, 
+      #{vipPlatform,jdbcType=TINYINT}, #{borrowerType,jdbcType=TINYINT}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserInfo" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_user_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
       <if test="roleId != null" >
         role_id,
       </if>
@@ -256,6 +253,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
       <if test="roleId != null" >
         #{roleId,jdbcType=TINYINT},
       </if>

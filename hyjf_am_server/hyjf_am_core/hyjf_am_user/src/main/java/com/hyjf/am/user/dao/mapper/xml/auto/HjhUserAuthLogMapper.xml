@@ -9,10 +9,10 @@
     <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
     <result column="auth_type" property="authType" jdbcType="TINYINT" />
     <result column="operate_esb" property="operateEsb" jdbcType="TINYINT" />
-    <result column="auth_create_time" property="authCreateTime" jdbcType="INTEGER" />
+    <result column="auth_create_time" property="authCreateTime" jdbcType="TIMESTAMP" />
     <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
-    <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -76,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, user_name, order_id, order_status, auth_type, operate_esb, auth_create_time, 
-    del_flg, create_user, update_user, create_time, update_time
+    del_flg, create_user_id, update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample" >
     select
@@ -117,13 +117,13 @@
     </selectKey>
     insert into ht_hjh_user_auth_log (user_id, user_name, order_id, 
       order_status, auth_type, operate_esb, 
-      auth_create_time, del_flg, create_user, 
-      update_user, create_time, update_time
+      auth_create_time, del_flg, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
       #{orderStatus,jdbcType=TINYINT}, #{authType,jdbcType=TINYINT}, #{operateEsb,jdbcType=TINYINT}, 
-      #{authCreateTime,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, 
-      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{authCreateTime,jdbcType=TIMESTAMP}, #{delFlg,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthLog" >
@@ -156,11 +156,11 @@
       <if test="delFlg != null" >
         del_flg,
       </if>
-      <if test="createUser != null" >
-        create_user,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updateUser != null" >
-        update_user,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -189,16 +189,16 @@
         #{operateEsb,jdbcType=TINYINT},
       </if>
       <if test="authCreateTime != null" >
-        #{authCreateTime,jdbcType=INTEGER},
+        #{authCreateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="delFlg != null" >
         #{delFlg,jdbcType=TINYINT},
       </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -239,16 +239,16 @@
         operate_esb = #{record.operateEsb,jdbcType=TINYINT},
       </if>
       <if test="record.authCreateTime != null" >
-        auth_create_time = #{record.authCreateTime,jdbcType=INTEGER},
+        auth_create_time = #{record.authCreateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.delFlg != null" >
         del_flg = #{record.delFlg,jdbcType=TINYINT},
       </if>
-      <if test="record.createUser != null" >
-        create_user = #{record.createUser,jdbcType=INTEGER},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=INTEGER},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -270,10 +270,10 @@
       order_status = #{record.orderStatus,jdbcType=TINYINT},
       auth_type = #{record.authType,jdbcType=TINYINT},
       operate_esb = #{record.operateEsb,jdbcType=TINYINT},
-      auth_create_time = #{record.authCreateTime,jdbcType=INTEGER},
+      auth_create_time = #{record.authCreateTime,jdbcType=TIMESTAMP},
       del_flg = #{record.delFlg,jdbcType=TINYINT},
-      create_user = #{record.createUser,jdbcType=INTEGER},
-      update_user = #{record.updateUser,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -302,16 +302,16 @@
         operate_esb = #{operateEsb,jdbcType=TINYINT},
       </if>
       <if test="authCreateTime != null" >
-        auth_create_time = #{authCreateTime,jdbcType=INTEGER},
+        auth_create_time = #{authCreateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="delFlg != null" >
         del_flg = #{delFlg,jdbcType=TINYINT},
       </if>
-      <if test="createUser != null" >
-        create_user = #{createUser,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -330,10 +330,10 @@
       order_status = #{orderStatus,jdbcType=TINYINT},
       auth_type = #{authType,jdbcType=TINYINT},
       operate_esb = #{operateEsb,jdbcType=TINYINT},
-      auth_create_time = #{authCreateTime,jdbcType=INTEGER},
+      auth_create_time = #{authCreateTime,jdbcType=TIMESTAMP},
       del_flg = #{delFlg,jdbcType=TINYINT},
-      create_user = #{createUser,jdbcType=INTEGER},
-      update_user = #{updateUser,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
