@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.BankConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.BankConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bank_id" property="bankId" jdbcType="INTEGER" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="pay_alliance_code" property="payAllianceCode" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="bank_icon" property="bankIcon" jdbcType="VARCHAR" />
+    <result column="bank_logo" property="bankLogo" jdbcType="VARCHAR" />
+    <result column="quick_payment" property="quickPayment" jdbcType="TINYINT" />
+    <result column="single_quota" property="singleQuota" jdbcType="DECIMAL" />
+    <result column="single_card_quota" property="singleCardQuota" jdbcType="DECIMAL" />
+    <result column="fee_withdraw" property="feeWithdraw" jdbcType="DECIMAL" />
+    <result column="sort_id" property="sortId" jdbcType="SMALLINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
+    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="month_card_quota" property="monthCardQuota" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, bank_id, bank_name, pay_alliance_code, bank_code, bank_icon, bank_logo, quick_payment, 
+    single_quota, single_card_quota, fee_withdraw, sort_id, remark, create_userid, update_userid, 
+    create_time, update_time, del_flg, month_card_quota
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.BankConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_jx_bank_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_jx_bank_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_jx_bank_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.BankConfigExample" >
+    delete from ht_jx_bank_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.BankConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_jx_bank_config (bank_id, bank_name, pay_alliance_code, 
+      bank_code, bank_icon, bank_logo, 
+      quick_payment, single_quota, single_card_quota, 
+      fee_withdraw, sort_id, remark, 
+      create_userid, update_userid, create_time, 
+      update_time, del_flg, month_card_quota
+      )
+    values (#{bankId,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, #{payAllianceCode,jdbcType=VARCHAR}, 
+      #{bankCode,jdbcType=VARCHAR}, #{bankIcon,jdbcType=VARCHAR}, #{bankLogo,jdbcType=VARCHAR}, 
+      #{quickPayment,jdbcType=TINYINT}, #{singleQuota,jdbcType=DECIMAL}, #{singleCardQuota,jdbcType=DECIMAL}, 
+      #{feeWithdraw,jdbcType=DECIMAL}, #{sortId,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, 
+      #{createUserid,jdbcType=INTEGER}, #{updateUserid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlg,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.BankConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_jx_bank_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="payAllianceCode != null" >
+        pay_alliance_code,
+      </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="bankIcon != null" >
+        bank_icon,
+      </if>
+      <if test="bankLogo != null" >
+        bank_logo,
+      </if>
+      <if test="quickPayment != null" >
+        quick_payment,
+      </if>
+      <if test="singleQuota != null" >
+        single_quota,
+      </if>
+      <if test="singleCardQuota != null" >
+        single_card_quota,
+      </if>
+      <if test="feeWithdraw != null" >
+        fee_withdraw,
+      </if>
+      <if test="sortId != null" >
+        sort_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createUserid != null" >
+        create_userid,
+      </if>
+      <if test="updateUserid != null" >
+        update_userid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="delFlg != null" >
+        del_flg,
+      </if>
+      <if test="monthCardQuota != null" >
+        month_card_quota,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        #{bankId,jdbcType=INTEGER},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="payAllianceCode != null" >
+        #{payAllianceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankIcon != null" >
+        #{bankIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="bankLogo != null" >
+        #{bankLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="quickPayment != null" >
+        #{quickPayment,jdbcType=TINYINT},
+      </if>
+      <if test="singleQuota != null" >
+        #{singleQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="singleCardQuota != null" >
+        #{singleCardQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="feeWithdraw != null" >
+        #{feeWithdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="sortId != null" >
+        #{sortId,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserid != null" >
+        #{createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserid != null" >
+        #{updateUserid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlg != null" >
+        #{delFlg,jdbcType=TINYINT},
+      </if>
+      <if test="monthCardQuota != null" >
+        #{monthCardQuota,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.BankConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_jx_bank_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_jx_bank_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.bankId != null" >
+        bank_id = #{record.bankId,jdbcType=INTEGER},
+      </if>
+      <if test="record.bankName != null" >
+        bank_name = #{record.bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payAllianceCode != null" >
+        pay_alliance_code = #{record.payAllianceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankCode != null" >
+        bank_code = #{record.bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankIcon != null" >
+        bank_icon = #{record.bankIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankLogo != null" >
+        bank_logo = #{record.bankLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.quickPayment != null" >
+        quick_payment = #{record.quickPayment,jdbcType=TINYINT},
+      </if>
+      <if test="record.singleQuota != null" >
+        single_quota = #{record.singleQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="record.singleCardQuota != null" >
+        single_card_quota = #{record.singleCardQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="record.feeWithdraw != null" >
+        fee_withdraw = #{record.feeWithdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sortId != null" >
+        sort_id = #{record.sortId,jdbcType=SMALLINT},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserid != null" >
+        create_userid = #{record.createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserid != null" >
+        update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlg != null" >
+        del_flg = #{record.delFlg,jdbcType=TINYINT},
+      </if>
+      <if test="record.monthCardQuota != null" >
+        month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_jx_bank_config
+    set id = #{record.id,jdbcType=INTEGER},
+      bank_id = #{record.bankId,jdbcType=INTEGER},
+      bank_name = #{record.bankName,jdbcType=VARCHAR},
+      pay_alliance_code = #{record.payAllianceCode,jdbcType=VARCHAR},
+      bank_code = #{record.bankCode,jdbcType=VARCHAR},
+      bank_icon = #{record.bankIcon,jdbcType=VARCHAR},
+      bank_logo = #{record.bankLogo,jdbcType=VARCHAR},
+      quick_payment = #{record.quickPayment,jdbcType=TINYINT},
+      single_quota = #{record.singleQuota,jdbcType=DECIMAL},
+      single_card_quota = #{record.singleCardQuota,jdbcType=DECIMAL},
+      fee_withdraw = #{record.feeWithdraw,jdbcType=DECIMAL},
+      sort_id = #{record.sortId,jdbcType=SMALLINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_userid = #{record.createUserid,jdbcType=INTEGER},
+      update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flg = #{record.delFlg,jdbcType=TINYINT},
+      month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.BankConfig" >
+    update ht_jx_bank_config
+    <set >
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=INTEGER},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="payAllianceCode != null" >
+        pay_alliance_code = #{payAllianceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankIcon != null" >
+        bank_icon = #{bankIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="bankLogo != null" >
+        bank_logo = #{bankLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="quickPayment != null" >
+        quick_payment = #{quickPayment,jdbcType=TINYINT},
+      </if>
+      <if test="singleQuota != null" >
+        single_quota = #{singleQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="singleCardQuota != null" >
+        single_card_quota = #{singleCardQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="feeWithdraw != null" >
+        fee_withdraw = #{feeWithdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="sortId != null" >
+        sort_id = #{sortId,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserid != null" >
+        create_userid = #{createUserid,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserid != null" >
+        update_userid = #{updateUserid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlg != null" >
+        del_flg = #{delFlg,jdbcType=TINYINT},
+      </if>
+      <if test="monthCardQuota != null" >
+        month_card_quota = #{monthCardQuota,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.BankConfig" >
+    update ht_jx_bank_config
+    set bank_id = #{bankId,jdbcType=INTEGER},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      pay_alliance_code = #{payAllianceCode,jdbcType=VARCHAR},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      bank_icon = #{bankIcon,jdbcType=VARCHAR},
+      bank_logo = #{bankLogo,jdbcType=VARCHAR},
+      quick_payment = #{quickPayment,jdbcType=TINYINT},
+      single_quota = #{singleQuota,jdbcType=DECIMAL},
+      single_card_quota = #{singleCardQuota,jdbcType=DECIMAL},
+      fee_withdraw = #{feeWithdraw,jdbcType=DECIMAL},
+      sort_id = #{sortId,jdbcType=SMALLINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_userid = #{createUserid,jdbcType=INTEGER},
+      update_userid = #{updateUserid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flg = #{delFlg,jdbcType=TINYINT},
+      month_card_quota = #{monthCardQuota,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

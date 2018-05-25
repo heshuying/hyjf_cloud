@@ -23,6 +23,6 @@
 		<module>hyjf_config</module>
 		<module>hyjf_eureka</module>
 		<module>hyjf_zuul</module>
-	</modules>
+    </modules>
 
 </project>

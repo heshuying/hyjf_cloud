@@ -20,14 +20,11 @@
     </parent>
 
     <modules>
+        <module>hyjf_base</module>
         <module>hyjf_cloud_server</module>
         <module>hyjf_cs_server</module>
-        <module>hyjf_am</module>
-        <module>hyjf_admin</module>
-        <module>hyjf_batch</module>
-        <module>hyjf_common</module>
-        <module>hyjf_mybatis_generator</module>
-        <module>hyjf_pay</module>
+        <module>hyjf_am_server</module>
+        <module>hyjf_platform_server</module>
     </modules>
 
     <properties>

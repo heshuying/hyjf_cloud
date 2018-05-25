@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @version SmsLog, v0.1 2018/5/4 9:31
  */
 
-@Document(collection = "t_sms_log")
+@Document(collection = "ht_sms_log")
 public class SmsLog implements Serializable {
 
     private Integer id;

@@ -242,5 +242,4 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
-
 }

@@ -862,5 +862,4 @@ public class UserServiceImpl implements UserService  {
 		logger.info("UserService.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}",userId,oldPW,newPW);
 		return amUserClient.updatePassWd(userId, oldPW, newPW);
 	}
-
 }
