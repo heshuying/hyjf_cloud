@@ -100,12 +100,14 @@ public class UserServiceImpl implements UserService  {
 	@Value("${hyjf.activity.888.id}")
 	private String activityId;
 
-	/**
-	 * 1. 必要参数检查 2. 注册 3. 注册后处理
-	 * 
-	 * @param registerVO
-	 * @throws ReturnMessageException
-	 */
+    /**
+     * 1. 必要参数检查 2. 注册 3. 注册后处理
+     * @param registerVO
+     * @param request
+     * @param response
+     * @return
+     * @throws ReturnMessageException
+     */
 	@Override
 	public UserVO register(RegisterVO registerVO, HttpServletRequest request, HttpServletResponse response)
 			throws ReturnMessageException {
@@ -155,7 +157,7 @@ public class UserServiceImpl implements UserService  {
 
 	/**
 	 * 登录处理
-	 * 
+	 *
 	 * @param loginUserName
 	 * @param loginPassword
 	 * @return
@@ -204,7 +206,7 @@ public class UserServiceImpl implements UserService  {
 
 	/**
 	 * 字符串长度检查
-	 * 
+	 *
 	 * @param value
 	 * @param max
 	 * @return
@@ -221,7 +223,7 @@ public class UserServiceImpl implements UserService  {
 
 	/**
 	 * 注册参数校验
-	 * 
+	 *
 	 * @param registerVO
 	 */
 	private void registerCheckParam(RegisterVO registerVO) {
@@ -286,7 +288,7 @@ public class UserServiceImpl implements UserService  {
 
 	/**
 	 * 注册后处理: 1. 登录 2. 判断投之家着陆页送券 3. 注册送188红包
-	 * 
+	 *
 	 * @param userVO
 	 */
 	private void afterRegisterHandle(UserVO userVO) {
@@ -350,7 +352,7 @@ public class UserServiceImpl implements UserService  {
 
 	/**
 	 * jwt生成token
-	 * 
+	 *
 	 * @param userId
 	 * @param username
 	 * @return
@@ -471,19 +473,19 @@ public class UserServiceImpl implements UserService  {
 	 * @param smsCode
 	 * @return
 	 */
-	private BankCallBean getCommonBankCallBean(String accountId, Integer userid, int type, String channel, String lastSrvAuthCode, String smsCode) {
+	private BankCallBean getCommonBankCallBean(String accountId, Integer userid, String type, String channel, String lastSrvAuthCode, String smsCode) {
 		String remark = "";
 		String txcode = "";
 		// 构造函数已经设置
 		// 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
 		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,userid,channel);
-		if(type==1){
+		if(("1").equals(type)){
 			remark = "投资人自动投标签约增强";
 			bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
 			bean.setDeadline(GetDate.date2Str(GetDate.countDate(1,5),new SimpleDateFormat("yyyyMMdd")));
 			bean.setTxAmount("1000000");
 			bean.setTotAmount("1000000000");
-		} else if(type==2){
+		} else if(("2").equals(type)){
 			remark = "投资人自动债权转让签约增强";
 			bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
 		}
@@ -667,7 +669,7 @@ public class UserServiceImpl implements UserService  {
 	}
 
 	@Override
-	public ModelAndView apiUserAuthInves(String token, AutoPlusRequestBean payRequestBean) {
+	public ModelAndView apiUserAuth(String type, AutoPlusRequestBean payRequestBean) {
 		ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
 		// 检查参数是否为空
 		if(payRequestBean.checkParmIsNull(modelAndView)){
@@ -748,7 +750,7 @@ public class UserServiceImpl implements UserService  {
 				+ payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
 		// 组装发往江西银行参数
-		BankCallBean bean = getCommonBankCallBean(payRequestBean.getAccountId(),userId,1,payRequestBean.getChannel(),smsSeq,payRequestBean.getSmsCode());
+		BankCallBean bean = getCommonBankCallBean(payRequestBean.getAccountId(),userId,type,payRequestBean.getChannel(),smsSeq,payRequestBean.getSmsCode());
 		bean.setRetUrl(retUrl);
 		bean.setNotifyUrl(bgRetUrl);
 		// 插入日志
