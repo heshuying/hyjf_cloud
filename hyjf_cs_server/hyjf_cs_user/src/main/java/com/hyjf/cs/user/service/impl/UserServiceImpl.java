@@ -1,28 +1,5 @@
 package com.hyjf.cs.user.service.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
@@ -61,7 +38,26 @@ import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author xiasq
@@ -137,13 +133,13 @@ public class UserServiceImpl implements UserService  {
 	/**
 	 *
 	 * @param loginUserName
-	 *            可以是手机号或者用户名
+	 *           手机号
 	 * @param loginPassword
 	 * @param ip
 	 */
 	@Override
 	public UserVO login(String loginUserName, String loginPassword, String ip) {
-		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginUserName, 32)) {
+		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
 		}
 
@@ -373,8 +369,7 @@ public class UserServiceImpl implements UserService  {
 	 * @return
 	 */
 	@Override
-	public ModelAndView userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode) {
-		ModelAndView modelAndView = new ModelAndView();
+	public BankCallBean userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode) {
 		WebViewUser user = (WebViewUser) redisUtil.get(token);
 		//检查用户信息
 		UserVO users = this.checkUserMessage(user,lastSrvAuthCode,smsCode);
@@ -388,13 +383,7 @@ public class UserServiceImpl implements UserService  {
 		BankCallBean bean = getCommonBankCallBean(user,type,client,channel,lastSrvAuthCode,smsCode);
 		// 插入日志
 		this.insertUserAuthLog(users, bean,client,type);
-		try {
-			modelAndView = BankCallUtils.callApi(bean);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
-		}
-		return modelAndView;
+		return bean;
 	}
 
 	/**
@@ -659,87 +648,20 @@ public class UserServiceImpl implements UserService  {
 		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(userId);
 		if (isSuccess == null || !"1".equals(isSuccess)|| hjhUserAuth == null||hjhUserAuth.getAutoCreditStatus()!=1) {
 			if (ClientConstant.INVES_AUTO_TYPE.equals(userAutoType)){
-				return getErrorModelAndView(ResultEnum.USER_ERROR_204,sign,userAutoType, hjhUserAuth);
+				return getErrorMap(ResultEnum.USER_ERROR_204,sign,userAutoType, hjhUserAuth);
 			}else {
-				return getErrorModelAndView(ResultEnum.USER_ERROR_205,sign,userAutoType, hjhUserAuth);
+				return getErrorMap(ResultEnum.USER_ERROR_205,sign,userAutoType, hjhUserAuth);
 			}
 		}else {
-			return getSuccessModelAndView(sign, userAutoType, hjhUserAuth);
+			return getSuccessMap(sign, userAutoType, hjhUserAuth);
 		}
 	}
 
 	@Override
-	public ModelAndView apiUserAuth(String type, AutoPlusRequestBean payRequestBean) {
-		ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
-		// 检查参数是否为空
-		if(payRequestBean.checkParmIsNull(modelAndView)){
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000001);
-			payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000001, "请求参数异常"));
-			logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
-			return modelAndView;
-		}
-		// 验签
-		if (!this.verifyRequestSign(payRequestBean, "/server/autoPlus/userAuthInves")) {
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002);
-			payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
-			logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
-			return modelAndView;
-		}
-		// 根据电子账户号查询用户ID
+	public BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean) {
 		BankOpenAccountVO bankOpenAccount = this.amBankOpenClient.selectByAccountId(payRequestBean.getAccountId());
-		if(bankOpenAccount == null){
-			logger.info("-------------------没有根据电子银行卡找到用户"+payRequestBean.getAccountId()+"！--------------------");
-			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004,"没有根据电子银行卡找到用户");
-			payRequestBean.doNotify(params);
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004);
-			return modelAndView;
-		}
-		// 检查用户是否存在
 		UserVO user= amUserClient.findUserById(bankOpenAccount.getUserId());
-		if (user == null) {
-			logger.info("-------------------用户不存在汇盈金服账户！"+payRequestBean.getAccountId()+"！--------------------");
-			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000007,"用户不存在汇盈金服账户！");
-			payRequestBean.doNotify(params);
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000007);
-			return modelAndView;
-		}
 		Integer userId = user.getUserId();
-		if (user.getBankOpenAccount().intValue() != 1) {
-			logger.info("-------------------用户未开户！"+payRequestBean.getAccountId()+"！--------------------");
-			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000006,"用户未开户！");
-			payRequestBean.doNotify(params);
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000006);
-			return modelAndView;
-		}
-		// 检查是否设置交易密码
-		Integer passwordFlag = user.getIsSetPassword();
-		if (passwordFlag != 1) {
-			logger.info("-------------------未设置交易密码！"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
-			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_TP000002,"未设置交易密码！");
-			payRequestBean.doNotify(params);
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_TP000002);
-			return modelAndView;
-		}
-		// TODO: 2018/5/24 xiashuqing 根据订单号查询授权码
-		//this.autoPlusService.selectBankSmsSeq(userId, BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
-		String smsSeq = null;
-		if (StringUtils.isBlank(smsSeq)) {
-			logger.info("-------------------授权码为空！"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
-			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000008,"未查询到短信授权码！");
-			payRequestBean.doNotify(params);
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000008);
-			return modelAndView;
-		}
-		logger.info("-------------------授权码为！"+smsSeq+"电子账户号"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
-		// 查询是否已经授权过
-		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
-		if(hjhUserAuth!=null&&hjhUserAuth.getAutoInvesStatus()==1){
-			logger.info("-------------------已经授权过！"+payRequestBean.getAccountId());
-			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000009,"已授权,请勿重复授权！");
-			payRequestBean.doNotify(params);
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000009);
-			return modelAndView;
-		}
 		// 同步调用路径
 		String retUrl = systemConfig.getWebHost()
 				+ "/server/autoPlus/userAuthInvesReturn?acqRes="
@@ -748,38 +670,17 @@ public class UserServiceImpl implements UserService  {
 		String bgRetUrl =systemConfig.getWebHost()
 				+ "/server/autoPlus/userAuthInvesBgreturn?acqRes="
 				+ payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getNotifyUrl().replace("#", "*-*-*");
-
 		// 组装发往江西银行参数
 		BankCallBean bean = getCommonBankCallBean(payRequestBean.getAccountId(),userId,type,payRequestBean.getChannel(),smsSeq,payRequestBean.getSmsCode());
 		bean.setRetUrl(retUrl);
 		bean.setNotifyUrl(bgRetUrl);
 		// 插入日志
 		this.insertUserAuthLog(user, bean,1, BankCallConstant.QUERY_TYPE_1);
-		try {
-			modelAndView = BankCallUtils.callApi(bean);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info("调用银行接口失败！"+e.getMessage());
-			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
-			payRequestBean.doNotify(params);
-			getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
-			return modelAndView;
-		}
 		logger.info("自动投资授权申请end");
-		return modelAndView;
+		return bean;
 	}
 
-	private ModelAndView getErrorMV(AutoPlusRequestBean payRequestBean, ModelAndView modelAndView, String status) {
-		AutoPlusRetBean repwdResult = new AutoPlusRetBean();
-		BaseResultBean resultBean = new BaseResultBean();
-		resultBean.setStatusForResponse(status);
-		repwdResult.setCallBackAction(payRequestBean.getRetUrl());
-		repwdResult.set("chkValue", resultBean.getChkValue());
-		repwdResult.set("status", resultBean.getStatus());
-		repwdResult.setAcqRes(payRequestBean.getAcqRes());
-		modelAndView.addObject("callBackForm", repwdResult);
-		return modelAndView;
-	}
+
 
 	/**
 	 * 组装跳转错误页面MV
@@ -789,7 +690,7 @@ public class UserServiceImpl implements UserService  {
 	 * @param hjhUserAuth
 	 * @return
 	 */
-	private Map<String,BaseMapBean> getErrorModelAndView(ResultEnum param,String sign, String type, HjhUserAuthVO hjhUserAuth) {
+	private Map<String,BaseMapBean> getErrorMap(ResultEnum param,String sign, String type, HjhUserAuthVO hjhUserAuth) {
 		Map<String,BaseMapBean> result = new HashMap<>();
 		BaseMapBean baseMapBean = new BaseMapBean();
 		baseMapBean.set(CustomConstants.APP_STATUS, param.getStatus());
@@ -811,7 +712,7 @@ public class UserServiceImpl implements UserService  {
 	 * @param autoCreditStatus
 	 * @return
 	 */
-	private Map<String,BaseMapBean> getSuccessModelAndView(String sign, String type, HjhUserAuthVO hjhUserAuth) {
+	private Map<String,BaseMapBean> getSuccessMap(String sign, String type, HjhUserAuthVO hjhUserAuth) {
 		Map<String,BaseMapBean> result = new HashMap<>();
 		BaseMapBean baseMapBean = new BaseMapBean();
 		baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.SUCCESS.getStatus());
@@ -831,7 +732,8 @@ public class UserServiceImpl implements UserService  {
 	 * @param paramBean
 	 * @return
 	 */
-	protected boolean verifyRequestSign(BaseBean paramBean, String methodName) {
+	@Override
+	public boolean verifyRequestSign(BaseBean paramBean, String methodName) {
 
 		String sign = StringUtils.EMPTY;
 
@@ -861,5 +763,87 @@ public class UserServiceImpl implements UserService  {
 	public JSONObject updatePassWd(Integer userId, String oldPW, String newPW){
 		logger.info("UserService.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}",userId,oldPW,newPW);
 		return amUserClient.updatePassWd(userId, oldPW, newPW);
+	}
+
+	@Override
+	public Map<String,String> checkParam(AutoPlusRequestBean payRequestBean){
+		Map<String,String> resultMap = new HashMap<>();
+		// 检查参数是否为空
+		if(payRequestBean.checkParmIsNull()){
+			payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000001, "请求参数异常"));
+			logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
+			return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000001);
+		}
+		// 验签
+		if (!this.verifyRequestSign(payRequestBean, "/server/autoPlus/userAuthInves")) {
+			payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
+			logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
+			return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000002);
+		}
+		// 根据电子账户号查询用户ID
+		BankOpenAccountVO bankOpenAccount = this.amBankOpenClient.selectByAccountId(payRequestBean.getAccountId());
+		if(bankOpenAccount == null){
+			logger.info("-------------------没有根据电子银行卡找到用户"+payRequestBean.getAccountId()+"！--------------------");
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004,"没有根据电子银行卡找到用户");
+			payRequestBean.doNotify(params);
+			return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000004);
+		}
+		// 检查用户是否存在
+		UserVO user= amUserClient.findUserById(bankOpenAccount.getUserId());
+		if (user == null) {
+			logger.info("-------------------用户不存在汇盈金服账户！"+payRequestBean.getAccountId()+"！--------------------");
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000007,"用户不存在汇盈金服账户！");
+			payRequestBean.doNotify(params);
+			return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000007);
+		}
+		if (user.getBankOpenAccount().intValue() != 1) {
+			logger.info("-------------------用户未开户！"+payRequestBean.getAccountId()+"！--------------------");
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000006,"用户未开户！");
+			payRequestBean.doNotify(params);
+			return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000006);
+		}
+		// 检查是否设置交易密码
+		Integer passwordFlag = user.getIsSetPassword();
+		if (passwordFlag != 1) {
+			logger.info("-------------------未设置交易密码！"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_TP000002,"未设置交易密码！");
+			payRequestBean.doNotify(params);
+			return getErrorMV(payRequestBean,  ErrorCodeConstant.STATUS_TP000002);
+		}
+		// TODO: 2018/5/24 xiashuqing 根据订单号查询授权码
+		//this.autoPlusService.selectBankSmsSeq(userId, BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
+		String smsSeq = null;
+		if (StringUtils.isBlank(smsSeq)) {
+			logger.info("-------------------授权码为空！"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000008,"未查询到短信授权码！");
+			payRequestBean.doNotify(params);
+			return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000008);
+		}
+		logger.info("-------------------授权码为！"+smsSeq+"电子账户号"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
+		// 查询是否已经授权过
+		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
+		if(hjhUserAuth!=null&&hjhUserAuth.getAutoInvesStatus()==1){
+			logger.info("-------------------已经授权过！"+payRequestBean.getAccountId());
+			Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000009,"已授权,请勿重复授权！");
+			payRequestBean.doNotify(params);
+			return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000009);
+		}else {
+			resultMap.put("isSuccess","true");
+			resultMap.put("smsSeq",smsSeq);
+			return null;
+		}
+	}
+
+	@Override
+	public Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status) {
+		Map<String,String> result = new HashMap<>();
+		BaseResultBean resultBean = new BaseResultBean();
+		resultBean.setStatusForResponse(status);
+		result.put("callBackAction",payRequestBean.getRetUrl());
+		result.put("chkValue", resultBean.getChkValue());
+		result.put("status", resultBean.getStatus());
+		result.put("acqRes",payRequestBean.getAcqRes());
+		result.put("isSuccess","false");
+		return result;
 	}
 }

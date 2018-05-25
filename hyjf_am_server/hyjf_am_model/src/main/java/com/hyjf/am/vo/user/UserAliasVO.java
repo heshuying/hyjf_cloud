@@ -26,12 +26,12 @@ public class UserAliasVO extends BaseVO implements Serializable {
 	 * @return
 	 */
 	private String mobile;
-	/**
-	 * 手机号
-	 * 
-	 * @return
-	 */
-	private String mobiles[];
+    /**
+     * 手机号
+     *
+     * @return
+     */
+    private String[] mobiles;
 	/**
 	 * 包号，39 新极光 79老极光 推送
 	 */

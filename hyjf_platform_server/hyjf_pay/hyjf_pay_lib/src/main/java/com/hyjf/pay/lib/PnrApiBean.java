@@ -306,7 +306,7 @@ public class PnrApiBean implements Serializable {
             Class c = this.getClass();
             Object obj = this;
             // 得到方法
-            Field fieldlist[] = c.getDeclaredFields();
+            Field[] fieldlist = c.getDeclaredFields();
             for (int i = 0; i < fieldlist.length; i++) {
                 Field f = fieldlist[i];
                 // 得到方法名

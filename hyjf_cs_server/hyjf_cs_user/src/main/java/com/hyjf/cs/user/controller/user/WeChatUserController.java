@@ -3,16 +3,23 @@
  */
 package com.hyjf.cs.user.controller.user;
 
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
+import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +34,43 @@ import java.util.Map;
 @RestController
 @RequestMapping("/wechat/user")
 public class WeChatUserController {
-
+    private static final Logger logger = LoggerFactory.getLogger(WeChatUserController.class);
     @Autowired
     private UserService userService;
+
+    /**
+     * 登录接口
+     * @param request
+     * @param loginUserName
+     * @param loginPassword
+     * @param env
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/login", produces = "application/json; charset=utf-8")
+    public ApiResult<UserVO> login(HttpServletRequest request, @RequestParam String loginUserName, @RequestParam String loginPassword,
+                                     @RequestParam String env) {
+        // 现只支持两个参数  1微信  2风车理财
+        if (!"1".equals(env) && !"2".equals(env)) {
+            throw new ReturnMessageException(LoginError.ERROR_PARAM);
+        }
+        logger.info("login start, loginUserName is :{}", loginUserName);
+        ApiResult<UserVO> result = new ApiResult<UserVO>();
+        // weChat 只支持手机号登录
+        if (!CommonUtils.isMobile(loginUserName)) {
+            throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
+        }
+        UserVO userVO = userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+        if (userVO != null) {
+            logger.info("login success, userId is :{}", userVO.getUserId());
+            result.setResult(userVO);
+        } else {
+            logger.error("login failed...");
+            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
+        }
+        return result;
+    }
 
     /**
      * 用户自动债转授权
@@ -42,7 +83,14 @@ public class WeChatUserController {
     public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, HttpServletResponse response){
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
-        ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+        BankCallBean bean = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            modelAndView = BankCallUtils.callApi(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
+        }
         return modelAndView;
     }
 
@@ -57,7 +105,14 @@ public class WeChatUserController {
     public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response){
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
-        ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+        BankCallBean bean = userService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            modelAndView = BankCallUtils.callApi(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
+        }
         return modelAndView;
     }
 

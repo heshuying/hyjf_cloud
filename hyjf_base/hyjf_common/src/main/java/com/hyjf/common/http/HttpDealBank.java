@@ -31,7 +31,8 @@ public class HttpDealBank {
 	private static final String THIS_CLASS = HttpDeal.class.getName();
 
 	static HostnameVerifier hv = new HostnameVerifier() {
-		public boolean verify(String urlHostName, SSLSession session) {
+		@Override
+        public boolean verify(String urlHostName, SSLSession session) {
 			log.info("Warning: URL Host: " + urlHostName + " vs. " + session.getPeerHost());
 			return true;
 		}
@@ -156,7 +157,8 @@ public class HttpDealBank {
 	}
 
 	static class NewTrustManager implements javax.net.ssl.TrustManager, javax.net.ssl.X509TrustManager {
-		public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+		@Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 			return null;
 		}
 
@@ -168,12 +170,14 @@ public class HttpDealBank {
 			return true;
 		}
 
-		public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
+		@Override
+        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
 				throws java.security.cert.CertificateException {
 			return;
 		}
 
-		public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
+		@Override
+        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
 				throws java.security.cert.CertificateException {
 			return;
 		}

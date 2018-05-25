@@ -1,17 +1,16 @@
 package com.hyjf.cs.user.service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
+import com.hyjf.cs.user.beans.BaseBean;
 import com.hyjf.cs.user.beans.BaseMapBean;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -48,7 +47,7 @@ public interface UserService {
 	 */
 	UserVO login(String loginUserName, String loginPassword, String ip);
 
-    ModelAndView userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode);
+    BankCallBean userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode);
 
     Map<String,String> userAuthReturn(String token, BankCallBean bean, String urlType, String isSuccess);
 
@@ -56,7 +55,13 @@ public interface UserService {
 
 	Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean, String userAutoType, String sign, String isSuccess);
 
-	ModelAndView apiUserAuth(String type, AutoPlusRequestBean payRequestBean);
+	BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
+
+	boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
+
+	Map<String,String> checkParam(AutoPlusRequestBean payRequestBean);
+
+	Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status);
 }

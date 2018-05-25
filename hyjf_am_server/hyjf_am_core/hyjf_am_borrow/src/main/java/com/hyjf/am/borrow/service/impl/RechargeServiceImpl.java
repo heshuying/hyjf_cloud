@@ -47,7 +47,8 @@ public class RechargeServiceImpl implements RechargeService {
 	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
 
-	public int selectByOrdId(String ordId){
+	@Override
+    public int selectByOrdId(String ordId){
 		int ret = 0;
 		AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 		accountRechargeExample.createCriteria().andNidEqualTo(ordId == null ? "" : ordId);
@@ -98,7 +99,8 @@ public class RechargeServiceImpl implements RechargeService {
 	 * @param example
 	 * @return
 	 */
-	public AccountRecharge selectByExample(AccountRechargeExample example) {
+	@Override
+    public AccountRecharge selectByExample(AccountRechargeExample example) {
 		List<AccountRecharge> accountRecharges = accountRechargeMapper.selectByExample(example);
 		if (accountRecharges != null && accountRecharges.size() == 1) {
 			AccountRecharge accountRecharge = accountRecharges.get(0);
@@ -107,22 +109,26 @@ public class RechargeServiceImpl implements RechargeService {
 		return null;
 	}
 
-	public int updateByExampleSelective(AccountRecharge accountRecharge,AccountRechargeExample accountRechargeExample){
+	@Override
+    public int updateByExampleSelective(AccountRecharge accountRecharge, AccountRechargeExample accountRechargeExample){
 		int count = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
 		return count;
 	}
 
-	public int updateBankRechargeSuccess(Account newAccount){
+	@Override
+    public int updateBankRechargeSuccess(Account newAccount){
 		int isAccountUpdateFlag = adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount);
 		return isAccountUpdateFlag;
 	}
 
-	public int insertSelective(AccountList accountList){
+	@Override
+    public int insertSelective(AccountList accountList){
 		int isAccountListUpdateFlag = accountListMapper.insertSelective(accountList);
 		return isAccountListUpdateFlag;
 	}
 
-	public void updateByPrimaryKeySelective(AccountRecharge accountRecharge){
+	@Override
+    public void updateByPrimaryKeySelective(AccountRecharge accountRecharge){
 		this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge);
 	}
 

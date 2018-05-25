@@ -176,7 +176,7 @@ public class AnRongApiBean implements Serializable {
 			Class c = this.getClass();
 			Object obj = this;
 			// 得到方法
-			Field fieldlist[] = c.getDeclaredFields();
+            Field[] fieldlist = c.getDeclaredFields();
 			for (int i = 0; i < fieldlist.length; i++) {
 				// 获取类属性
 				Field f = fieldlist[i];

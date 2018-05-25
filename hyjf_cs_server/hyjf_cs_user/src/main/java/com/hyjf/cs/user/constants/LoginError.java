@@ -11,6 +11,7 @@ public enum LoginError implements ErrorCode {
     USER_INVALID_ERROR("1", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
     CHECK_NULL_ERROR("1", "用户名或密码不能为空！"),
     REFFER_INVALID_ERROR("1", "无效的推荐人！"),
+    ERROR_PARAM("1", "请求参数非法"),
     PWD_ERROR_TOO_MANEY_ERROR("1", "登录失败,当日密码错误已打上限，请明日再试！");
 
 

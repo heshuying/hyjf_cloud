@@ -3,10 +3,13 @@ package com.hyjf.cs.user.controller.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,7 +143,14 @@ public class AppUserController {
 	public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
 		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
 		String smsCode = request.getParameter("smsCode");
-		ModelAndView modelAndView =  userService.userCreditAuthInves(token,ClientConstant.APP_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstant.CHANNEL_APP,lastSrvAuthCode,smsCode);
+		BankCallBean bean =  userService.userCreditAuthInves(token,ClientConstant.APP_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstant.CHANNEL_APP,lastSrvAuthCode,smsCode);
+		ModelAndView modelAndView = new ModelAndView();
+		try {
+			modelAndView = BankCallUtils.callApi(bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
+		}
 		return modelAndView;
 	}
 
@@ -184,7 +194,14 @@ public class AppUserController {
 	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
 		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
 		String smsCode = request.getParameter("smsCode");
-		ModelAndView modelAndView = userService.userCreditAuthInves(token, ClientConstant.APP_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstant.CHANNEL_APP,lastSrvAuthCode,smsCode);
+		BankCallBean bean = userService.userCreditAuthInves(token, ClientConstant.APP_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstant.CHANNEL_APP,lastSrvAuthCode,smsCode);
+		ModelAndView modelAndView = new ModelAndView();
+		try {
+			modelAndView = BankCallUtils.callApi(bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
+		}
 		return modelAndView;
 	}
 

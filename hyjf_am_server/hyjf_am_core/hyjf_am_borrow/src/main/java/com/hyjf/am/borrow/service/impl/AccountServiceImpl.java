@@ -29,7 +29,8 @@ public class AccountServiceImpl implements AccountService {
 	 * @param userId
 	 * @return 获取用户的账户信息
 	 */
-	public Account getAccount(Integer userId) {
+	@Override
+    public Account getAccount(Integer userId) {
 		AccountExample example = new AccountExample();
 		AccountExample.Criteria criteria = example.createCriteria();
 		criteria.andUserIdEqualTo(userId);

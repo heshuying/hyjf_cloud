@@ -142,7 +142,7 @@ public class AutoPlusRequestBean extends BaseBean{
      * @param modelAndView
      * @return
      */
-    public boolean checkParmIsNull(ModelAndView modelAndView) {
+    public boolean checkParmIsNull() {
         boolean result = false;
         if (Validator.isNull(getTimestamp())) {
             return true;
