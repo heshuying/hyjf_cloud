@@ -5,15 +5,12 @@ package com.hyjf.cs.user.controller.user;
 
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.service.UserService;
+import com.hyjf.cs.user.util.ClientConstant;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author zhangqq
@@ -29,15 +26,23 @@ public class ApiUserController {
 
     /**
      * 自动投资授权
-     * @param token
-     * @param request
-     * @param response
      * @param payRequestBean
      * @return
      */
     @RequestMapping(value = "/userAuthInves")
-    public ModelAndView userAuthInves(@RequestHeader(value = "token") String token, HttpServletRequest request, HttpServletResponse response, AutoPlusRequestBean payRequestBean){
-        ModelAndView modelAndView =  userService.apiUserAuthInves(token,payRequestBean);
+    public ModelAndView userAuthInves(AutoPlusRequestBean payRequestBean){
+        ModelAndView modelAndView =  userService.apiUserAuth(ClientConstant.INVES_AUTO_TYPE,payRequestBean);
+        return modelAndView;
+    }
+
+    /**
+     * 用户自动债转授权
+     * @param payRequestBean
+     * @return
+     */
+    @RequestMapping("/userAuthCredit")
+    public ModelAndView userAuthCredit(AutoPlusRequestBean payRequestBean){
+        ModelAndView modelAndView =  userService.apiUserAuth(ClientConstant.CREDIT_AUTO_TYPE,payRequestBean);
         return modelAndView;
     }
 

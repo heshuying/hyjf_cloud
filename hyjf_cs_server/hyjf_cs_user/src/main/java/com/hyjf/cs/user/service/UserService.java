@@ -56,7 +56,7 @@ public interface UserService {
 
 	Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean, String userAutoType, String sign, String isSuccess);
 
-	ModelAndView apiUserAuthInves(String token, AutoPlusRequestBean payRequestBean);
+	ModelAndView apiUserAuth(String type, AutoPlusRequestBean payRequestBean);
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 }
