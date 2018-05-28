@@ -62,8 +62,6 @@ public class UserInfo implements Serializable {
 
     private Integer borrowerType;
 
-    private Integer updateUserId;
-
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
@@ -298,14 +296,6 @@ public class UserInfo implements Serializable {
 
     public void setBorrowerType(Integer borrowerType) {
         this.borrowerType = borrowerType;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
     }
 
     public Date getUpdateTime() {

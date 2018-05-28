@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="spreads_userid" property="spreadsUserid" jdbcType="INTEGER" />
+    <result column="spreads_user_id" property="spreadsUserId" jdbcType="INTEGER" />
     <result column="nid" property="nid" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="spreads_type" property="spreadsType" jdbcType="VARCHAR" />
@@ -21,8 +21,6 @@
     <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
     <result column="pay_status" property="payStatus" jdbcType="TINYINT" />
     <result column="is_valid" property="isValid" jdbcType="TINYINT" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -85,9 +83,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, spreads_userid, nid, `type`, spreads_type, account_type, scales, borrow_nid, 
+    id, user_id, spreads_user_id, nid, `type`, spreads_type, account_type, scales, borrow_nid, 
     tender_id, repay_id, account_all, account_capital, account_interest, account, remark, 
-    create_ip, pay_status, is_valid, create_user_id, update_user_id, create_time, update_time
+    create_ip, pay_status, is_valid, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLogExample" >
     select
@@ -126,22 +124,20 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_spreads_log (user_id, spreads_userid, nid, 
+    insert into ht_spreads_log (user_id, spreads_user_id, nid, 
       `type`, spreads_type, account_type, 
       scales, borrow_nid, tender_id, 
       repay_id, account_all, account_capital, 
       account_interest, account, remark, 
       create_ip, pay_status, is_valid, 
-      create_user_id, update_user_id, create_time, 
-      update_time)
-    values (#{userId,jdbcType=INTEGER}, #{spreadsUserid,jdbcType=INTEGER}, #{nid,jdbcType=VARCHAR}, 
+      create_time, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{spreadsUserId,jdbcType=INTEGER}, #{nid,jdbcType=VARCHAR}, 
       #{type,jdbcType=VARCHAR}, #{spreadsType,jdbcType=VARCHAR}, #{accountType,jdbcType=VARCHAR}, 
       #{scales,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{tenderId,jdbcType=INTEGER}, 
       #{repayId,jdbcType=INTEGER}, #{accountAll,jdbcType=DECIMAL}, #{accountCapital,jdbcType=DECIMAL}, 
       #{accountInterest,jdbcType=DECIMAL}, #{account,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
       #{createIp,jdbcType=VARCHAR}, #{payStatus,jdbcType=TINYINT}, #{isValid,jdbcType=TINYINT}, 
-      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -152,8 +148,8 @@
       <if test="userId != null" >
         user_id,
       </if>
-      <if test="spreadsUserid != null" >
-        spreads_userid,
+      <if test="spreadsUserId != null" >
+        spreads_user_id,
       </if>
       <if test="nid != null" >
         nid,
@@ -203,12 +199,6 @@
       <if test="isValid != null" >
         is_valid,
       </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
-      </if>
       <if test="createTime != null" >
         create_time,
       </if>
@@ -220,8 +210,8 @@
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="spreadsUserid != null" >
-        #{spreadsUserid,jdbcType=INTEGER},
+      <if test="spreadsUserId != null" >
+        #{spreadsUserId,jdbcType=INTEGER},
       </if>
       <if test="nid != null" >
         #{nid,jdbcType=VARCHAR},
@@ -271,12 +261,6 @@
       <if test="isValid != null" >
         #{isValid,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -300,8 +284,8 @@
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
-      <if test="record.spreadsUserid != null" >
-        spreads_userid = #{record.spreadsUserid,jdbcType=INTEGER},
+      <if test="record.spreadsUserId != null" >
+        spreads_user_id = #{record.spreadsUserId,jdbcType=INTEGER},
       </if>
       <if test="record.nid != null" >
         nid = #{record.nid,jdbcType=VARCHAR},
@@ -351,12 +335,6 @@
       <if test="record.isValid != null" >
         is_valid = #{record.isValid,jdbcType=TINYINT},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -372,7 +350,7 @@
     update ht_spreads_log
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
-      spreads_userid = #{record.spreadsUserid,jdbcType=INTEGER},
+      spreads_user_id = #{record.spreadsUserId,jdbcType=INTEGER},
       nid = #{record.nid,jdbcType=VARCHAR},
       `type` = #{record.type,jdbcType=VARCHAR},
       spreads_type = #{record.spreadsType,jdbcType=VARCHAR},
@@ -389,8 +367,6 @@
       create_ip = #{record.createIp,jdbcType=VARCHAR},
       pay_status = #{record.payStatus,jdbcType=TINYINT},
       is_valid = #{record.isValid,jdbcType=TINYINT},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -403,8 +379,8 @@
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="spreadsUserid != null" >
-        spreads_userid = #{spreadsUserid,jdbcType=INTEGER},
+      <if test="spreadsUserId != null" >
+        spreads_user_id = #{spreadsUserId,jdbcType=INTEGER},
       </if>
       <if test="nid != null" >
         nid = #{nid,jdbcType=VARCHAR},
@@ -454,12 +430,6 @@
       <if test="isValid != null" >
         is_valid = #{isValid,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -472,7 +442,7 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
     update ht_spreads_log
     set user_id = #{userId,jdbcType=INTEGER},
-      spreads_userid = #{spreadsUserid,jdbcType=INTEGER},
+      spreads_user_id = #{spreadsUserId,jdbcType=INTEGER},
       nid = #{nid,jdbcType=VARCHAR},
       `type` = #{type,jdbcType=VARCHAR},
       spreads_type = #{spreadsType,jdbcType=VARCHAR},
@@ -489,8 +459,6 @@
       create_ip = #{createIp,jdbcType=VARCHAR},
       pay_status = #{payStatus,jdbcType=TINYINT},
       is_valid = #{isValid,jdbcType=TINYINT},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

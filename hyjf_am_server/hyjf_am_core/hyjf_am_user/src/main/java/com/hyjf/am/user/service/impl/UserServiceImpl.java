@@ -568,7 +568,7 @@ public class UserServiceImpl implements UserService {
 	private void insertSpreadsUser(int userId, int referer, String loginIp) {
 		SpreadsUser spreadUser = new SpreadsUser();
 		spreadUser.setUserId(userId);
-		spreadUser.setSpreadsUserid(referer);
+		spreadUser.setSpreadsUserId(referer);
 		spreadUser.setCreateIp(loginIp);
 		spreadUser.setCreateTime(new Date());
 		spreadUser.setType("reg");
@@ -700,7 +700,7 @@ public class UserServiceImpl implements UserService {
 			hjhUserAuthLog.setUpdateTime(nowTime);
 			hjhUserAuthLog.setUpdateUserId(userId);
 			hjhUserAuthLog.setOrderStatus(1);
-			hjhUserAuthLog.setAuthCreateTime(nowTime);
+			hjhUserAuthLog.setAuthCreateTime(GetDate.getNowTime10());
 			this.updateByPrimaryKeySelective(hjhUserAuthLog);
 		}
 		// 这里同步异步一起进来会导致重复插入的异常，加一个同步锁

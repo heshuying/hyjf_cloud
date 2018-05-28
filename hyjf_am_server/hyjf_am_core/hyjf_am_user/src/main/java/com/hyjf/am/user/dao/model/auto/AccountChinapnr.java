@@ -18,10 +18,6 @@ public class AccountChinapnr implements Serializable {
 
     private String createIp;
 
-    private String createUser;
-
-    private String updateUser;
-
     private Date createTime;
 
     private Date updateTime;
@@ -82,22 +78,6 @@ public class AccountChinapnr implements Serializable {
 
     public void setCreateIp(String createIp) {
         this.createIp = createIp == null ? null : createIp.trim();
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
     }
 
     public Date getCreateTime() {

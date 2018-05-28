@@ -9,7 +9,7 @@
     <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
     <result column="auth_type" property="authType" jdbcType="TINYINT" />
     <result column="operate_esb" property="operateEsb" jdbcType="TINYINT" />
-    <result column="auth_create_time" property="authCreateTime" jdbcType="TIMESTAMP" />
+    <result column="auth_create_time" property="authCreateTime" jdbcType="INTEGER" />
     <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
@@ -122,7 +122,7 @@
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
       #{orderStatus,jdbcType=TINYINT}, #{authType,jdbcType=TINYINT}, #{operateEsb,jdbcType=TINYINT}, 
-      #{authCreateTime,jdbcType=TIMESTAMP}, #{delFlg,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{authCreateTime,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -189,7 +189,7 @@
         #{operateEsb,jdbcType=TINYINT},
       </if>
       <if test="authCreateTime != null" >
-        #{authCreateTime,jdbcType=TIMESTAMP},
+        #{authCreateTime,jdbcType=INTEGER},
       </if>
       <if test="delFlg != null" >
         #{delFlg,jdbcType=TINYINT},
@@ -239,7 +239,7 @@
         operate_esb = #{record.operateEsb,jdbcType=TINYINT},
       </if>
       <if test="record.authCreateTime != null" >
-        auth_create_time = #{record.authCreateTime,jdbcType=TIMESTAMP},
+        auth_create_time = #{record.authCreateTime,jdbcType=INTEGER},
       </if>
       <if test="record.delFlg != null" >
         del_flg = #{record.delFlg,jdbcType=TINYINT},
@@ -270,7 +270,7 @@
       order_status = #{record.orderStatus,jdbcType=TINYINT},
       auth_type = #{record.authType,jdbcType=TINYINT},
       operate_esb = #{record.operateEsb,jdbcType=TINYINT},
-      auth_create_time = #{record.authCreateTime,jdbcType=TIMESTAMP},
+      auth_create_time = #{record.authCreateTime,jdbcType=INTEGER},
       del_flg = #{record.delFlg,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -302,7 +302,7 @@
         operate_esb = #{operateEsb,jdbcType=TINYINT},
       </if>
       <if test="authCreateTime != null" >
-        auth_create_time = #{authCreateTime,jdbcType=TIMESTAMP},
+        auth_create_time = #{authCreateTime,jdbcType=INTEGER},
       </if>
       <if test="delFlg != null" >
         del_flg = #{delFlg,jdbcType=TINYINT},
@@ -330,7 +330,7 @@
       order_status = #{orderStatus,jdbcType=TINYINT},
       auth_type = #{authType,jdbcType=TINYINT},
       operate_esb = #{operateEsb,jdbcType=TINYINT},
-      auth_create_time = #{authCreateTime,jdbcType=TIMESTAMP},
+      auth_create_time = #{authCreateTime,jdbcType=INTEGER},
       del_flg = #{delFlg,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},

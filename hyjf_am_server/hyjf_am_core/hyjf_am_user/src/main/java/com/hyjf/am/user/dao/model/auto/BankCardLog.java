@@ -22,10 +22,6 @@ public class BankCardLog implements Serializable {
 
     private Integer status;
 
-    private Integer createUserId;
-
-    private Integer updateUserId;
-
     private Date createTime;
 
     private Date updateTime;
@@ -102,22 +98,6 @@ public class BankCardLog implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Integer getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

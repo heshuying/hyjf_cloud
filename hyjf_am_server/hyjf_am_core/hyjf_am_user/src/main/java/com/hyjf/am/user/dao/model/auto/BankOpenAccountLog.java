@@ -36,11 +36,7 @@ public class BankOpenAccountLog implements Serializable {
 
     private Integer createUserId;
 
-    private String createUsername;
-
     private Integer updateUserId;
-
-    private String updateUserName;
 
     private Date createTime;
 
@@ -176,28 +172,12 @@ public class BankOpenAccountLog implements Serializable {
         this.createUserId = createUserId;
     }
 
-    public String getCreateUsername() {
-        return createUsername;
-    }
-
-    public void setCreateUsername(String createUsername) {
-        this.createUsername = createUsername == null ? null : createUsername.trim();
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
 
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
-    }
-
-    public String getUpdateUserName() {
-        return updateUserName;
-    }
-
-    public void setUpdateUserName(String updateUserName) {
-        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
     }
 
     public Date getCreateTime() {

@@ -13,8 +13,6 @@
     <result column="card_type" property="cardType" jdbcType="VARCHAR" />
     <result column="respcode" property="respcode" jdbcType="VARCHAR" />
     <result column="respdesc" property="respdesc" jdbcType="VARCHAR" />
-    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -80,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List" >
     user_id, bank_status, account, bank, branch, province, city, area, card_type, respcode, 
-    respdesc, create_user, update_user, create_time, create_ip, update_time, update_ip
+    respdesc, create_time, create_ip, update_time, update_ip
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AccountBankExample" >
     select
@@ -122,15 +120,13 @@
     insert into ht_account_bank (bank_status, account, bank, 
       branch, province, city, area, 
       card_type, respcode, respdesc, 
-      create_user, update_user, create_time, 
-      create_ip, update_time, update_ip
-      )
+      create_time, create_ip, update_time, 
+      update_ip)
     values (#{bankStatus,jdbcType=TINYINT}, #{account,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, 
       #{branch,jdbcType=VARCHAR}, #{province,jdbcType=CHAR}, #{city,jdbcType=CHAR}, #{area,jdbcType=INTEGER}, 
       #{cardType,jdbcType=VARCHAR}, #{respcode,jdbcType=VARCHAR}, #{respdesc,jdbcType=VARCHAR}, 
-      #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createIp,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateIp,jdbcType=VARCHAR}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{createIp,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateIp,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountBank" >
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
@@ -167,12 +163,6 @@
       </if>
       <if test="respdesc != null" >
         respdesc,
-      </if>
-      <if test="createUser != null" >
-        create_user,
-      </if>
-      <if test="updateUser != null" >
-        update_user,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -217,12 +207,6 @@
       </if>
       <if test="respdesc != null" >
         #{respdesc,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -280,12 +264,6 @@
       <if test="record.respdesc != null" >
         respdesc = #{record.respdesc,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUser != null" >
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=VARCHAR},
-      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -316,8 +294,6 @@
       card_type = #{record.cardType,jdbcType=VARCHAR},
       respcode = #{record.respcode,jdbcType=VARCHAR},
       respdesc = #{record.respdesc,jdbcType=VARCHAR},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_user = #{record.updateUser,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_ip = #{record.createIp,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -359,12 +335,6 @@
       <if test="respdesc != null" >
         respdesc = #{respdesc,jdbcType=VARCHAR},
       </if>
-      <if test="createUser != null" >
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -392,8 +362,6 @@
       card_type = #{cardType,jdbcType=VARCHAR},
       respcode = #{respcode,jdbcType=VARCHAR},
       respdesc = #{respdesc,jdbcType=VARCHAR},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_user = #{updateUser,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_ip = #{createIp,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},

@@ -245,63 +245,63 @@ public class SpreadsUserExample {
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridIsNull() {
-            addCriterion("spreads_userid is null");
+        public Criteria andSpreadsUserIdIsNull() {
+            addCriterion("spreads_user_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridIsNotNull() {
-            addCriterion("spreads_userid is not null");
+        public Criteria andSpreadsUserIdIsNotNull() {
+            addCriterion("spreads_user_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridEqualTo(Integer value) {
-            addCriterion("spreads_userid =", value, "spreadsUserid");
+        public Criteria andSpreadsUserIdEqualTo(Integer value) {
+            addCriterion("spreads_user_id =", value, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridNotEqualTo(Integer value) {
-            addCriterion("spreads_userid <>", value, "spreadsUserid");
+        public Criteria andSpreadsUserIdNotEqualTo(Integer value) {
+            addCriterion("spreads_user_id <>", value, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridGreaterThan(Integer value) {
-            addCriterion("spreads_userid >", value, "spreadsUserid");
+        public Criteria andSpreadsUserIdGreaterThan(Integer value) {
+            addCriterion("spreads_user_id >", value, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridGreaterThanOrEqualTo(Integer value) {
-            addCriterion("spreads_userid >=", value, "spreadsUserid");
+        public Criteria andSpreadsUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("spreads_user_id >=", value, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridLessThan(Integer value) {
-            addCriterion("spreads_userid <", value, "spreadsUserid");
+        public Criteria andSpreadsUserIdLessThan(Integer value) {
+            addCriterion("spreads_user_id <", value, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridLessThanOrEqualTo(Integer value) {
-            addCriterion("spreads_userid <=", value, "spreadsUserid");
+        public Criteria andSpreadsUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("spreads_user_id <=", value, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridIn(List<Integer> values) {
-            addCriterion("spreads_userid in", values, "spreadsUserid");
+        public Criteria andSpreadsUserIdIn(List<Integer> values) {
+            addCriterion("spreads_user_id in", values, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridNotIn(List<Integer> values) {
-            addCriterion("spreads_userid not in", values, "spreadsUserid");
+        public Criteria andSpreadsUserIdNotIn(List<Integer> values) {
+            addCriterion("spreads_user_id not in", values, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridBetween(Integer value1, Integer value2) {
-            addCriterion("spreads_userid between", value1, value2, "spreadsUserid");
+        public Criteria andSpreadsUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("spreads_user_id between", value1, value2, "spreadsUserId");
             return (Criteria) this;
         }
 
-        public Criteria andSpreadsUseridNotBetween(Integer value1, Integer value2) {
-            addCriterion("spreads_userid not between", value1, value2, "spreadsUserid");
+        public Criteria andSpreadsUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("spreads_user_id not between", value1, value2, "spreadsUserId");
             return (Criteria) this;
         }
 
@@ -652,126 +652,6 @@ public class SpreadsUserExample {
 
         public Criteria andCreateIpNotBetween(String value1, String value2) {
             addCriterion("create_ip not between", value1, value2, "createIp");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdIsNull() {
-            addCriterion("create_user_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdIsNotNull() {
-            addCriterion("create_user_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdEqualTo(Integer value) {
-            addCriterion("create_user_id =", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdNotEqualTo(Integer value) {
-            addCriterion("create_user_id <>", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdGreaterThan(Integer value) {
-            addCriterion("create_user_id >", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("create_user_id >=", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdLessThan(Integer value) {
-            addCriterion("create_user_id <", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdLessThanOrEqualTo(Integer value) {
-            addCriterion("create_user_id <=", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdIn(List<Integer> values) {
-            addCriterion("create_user_id in", values, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdNotIn(List<Integer> values) {
-            addCriterion("create_user_id not in", values, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdBetween(Integer value1, Integer value2) {
-            addCriterion("create_user_id between", value1, value2, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("create_user_id not between", value1, value2, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdIsNull() {
-            addCriterion("update_user_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdIsNotNull() {
-            addCriterion("update_user_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdEqualTo(Integer value) {
-            addCriterion("update_user_id =", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdNotEqualTo(Integer value) {
-            addCriterion("update_user_id <>", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdGreaterThan(Integer value) {
-            addCriterion("update_user_id >", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("update_user_id >=", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdLessThan(Integer value) {
-            addCriterion("update_user_id <", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdLessThanOrEqualTo(Integer value) {
-            addCriterion("update_user_id <=", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdIn(List<Integer> values) {
-            addCriterion("update_user_id in", values, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdNotIn(List<Integer> values) {
-            addCriterion("update_user_id not in", values, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdBetween(Integer value1, Integer value2) {
-            addCriterion("update_user_id between", value1, value2, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("update_user_id not between", value1, value2, "updateUserId");
             return (Criteria) this;
         }
 

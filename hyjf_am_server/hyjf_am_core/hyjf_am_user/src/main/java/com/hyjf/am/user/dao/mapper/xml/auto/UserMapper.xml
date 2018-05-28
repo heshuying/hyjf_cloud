@@ -48,8 +48,6 @@
     <result column="is_smtp" property="isSmtp" jdbcType="TINYINT" />
     <result column="reg_ip" property="regIp" jdbcType="VARCHAR" />
     <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -118,7 +116,7 @@
     is_inst_flag, inst_code, ptype, account_esb, investFlag, user_type, auth_type, auth_status, 
     payment_auth_status, auth_time, recod_total, recod_time, recod_truncate_time, is_set_password, 
     bank_open_account, bank_account_esb, is_data_update, is_evaluation_flag, is_ca_flag, 
-    is_smtp, reg_ip, reg_time, create_user_id, update_user_id, create_time, update_time
+    is_smtp, reg_ip, reg_time, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserExample" >
     select
@@ -172,8 +170,7 @@
       is_set_password, bank_open_account, bank_account_esb, 
       is_data_update, is_evaluation_flag, is_ca_flag, 
       is_smtp, reg_ip, reg_time, 
-      create_user_id, update_user_id, create_time, 
-      update_time)
+      create_time, update_time)
     values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{paypassword,jdbcType=VARCHAR}, #{referrer,jdbcType=INTEGER}, 
       #{referrerUserName,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, 
@@ -189,8 +186,7 @@
       #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, #{bankAccountEsb,jdbcType=TINYINT}, 
       #{isDataUpdate,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{isCaFlag,jdbcType=TINYINT}, 
       #{isSmtp,jdbcType=TINYINT}, #{regIp,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, 
-      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.User" >
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
@@ -332,12 +328,6 @@
       </if>
       <if test="regTime != null" >
         reg_time,
-      </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -481,12 +471,6 @@
       </if>
       <if test="regTime != null" >
         #{regTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -643,12 +627,6 @@
       <if test="record.regTime != null" >
         reg_time = #{record.regTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -708,8 +686,6 @@
       is_smtp = #{record.isSmtp,jdbcType=TINYINT},
       reg_ip = #{record.regIp,jdbcType=VARCHAR},
       reg_time = #{record.regTime,jdbcType=TIMESTAMP},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -854,12 +830,6 @@
       <if test="regTime != null" >
         reg_time = #{regTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -916,8 +886,6 @@
       is_smtp = #{isSmtp,jdbcType=TINYINT},
       reg_ip = #{regIp,jdbcType=VARCHAR},
       reg_time = #{regTime,jdbcType=TIMESTAMP},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}
