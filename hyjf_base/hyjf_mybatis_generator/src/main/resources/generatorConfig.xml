@@ -341,7 +341,11 @@
             <columnOverride column="asset_attributes" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_engine_used" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        
+		<!-- 卡BIN配置表 -->
+        <table tableName="ht_card_bin" domainObjectName="CardBin">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
 
 
     </context>
