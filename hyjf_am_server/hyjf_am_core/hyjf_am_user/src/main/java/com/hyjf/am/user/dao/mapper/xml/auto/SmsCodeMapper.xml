@@ -8,8 +8,7 @@
     <result column="checkfor" property="checkfor" jdbcType="VARCHAR" />
     <result column="checkcode" property="checkcode" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="posttime" property="posttime" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -72,8 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, mobile, checkfor, checkcode, `status`, create_user_id, update_user_id, 
-    create_time, update_time
+    id, user_id, mobile, checkfor, checkcode, `status`, posttime, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.SmsCodeExample" >
     select
@@ -113,13 +111,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_smscode (user_id, mobile, checkfor, 
-      checkcode, `status`, create_user_id, 
-      update_user_id, create_time, update_time
-      )
+      checkcode, `status`, posttime, 
+      create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{mobile,jdbcType=CHAR}, #{checkfor,jdbcType=VARCHAR}, 
-      #{checkcode,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{checkcode,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{posttime,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.SmsCode" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -142,11 +138,8 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
+      <if test="posttime != null" >
+        posttime,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -171,11 +164,8 @@
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
+      <if test="posttime != null" >
+        #{posttime,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -212,11 +202,8 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      <if test="record.posttime != null" >
+        posttime = #{record.posttime,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -237,8 +224,7 @@
       checkfor = #{record.checkfor,jdbcType=VARCHAR},
       checkcode = #{record.checkcode,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      posttime = #{record.posttime,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -263,11 +249,8 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      <if test="posttime != null" >
+        posttime = #{posttime,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -285,8 +268,7 @@
       checkfor = #{checkfor,jdbcType=VARCHAR},
       checkcode = #{checkcode,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      posttime = #{posttime,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

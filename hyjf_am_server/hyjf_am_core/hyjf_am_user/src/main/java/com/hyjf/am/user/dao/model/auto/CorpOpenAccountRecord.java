@@ -32,9 +32,9 @@ public class CorpOpenAccountRecord implements Serializable {
 
     private String remark;
 
-    private Integer createUserId;
+    private Integer createUser;
 
-    private Integer updateUserId;
+    private Integer updateUser;
 
     private Date createTime;
 
@@ -154,20 +154,20 @@ public class CorpOpenAccountRecord implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+    public Integer getCreateUser() {
+        return createUser;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
     }
 
-    public Integer getUpdateUserId() {
-        return updateUserId;
+    public Integer getUpdateUser() {
+        return updateUser;
     }
 
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
     }
 
     public Date getCreateTime() {

@@ -575,52 +575,52 @@ public class HjhUserAuthLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeEqualTo(Date value) {
+        public Criteria andAuthCreateTimeEqualTo(Integer value) {
             addCriterion("auth_create_time =", value, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeNotEqualTo(Date value) {
+        public Criteria andAuthCreateTimeNotEqualTo(Integer value) {
             addCriterion("auth_create_time <>", value, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeGreaterThan(Date value) {
+        public Criteria andAuthCreateTimeGreaterThan(Integer value) {
             addCriterion("auth_create_time >", value, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andAuthCreateTimeGreaterThanOrEqualTo(Integer value) {
             addCriterion("auth_create_time >=", value, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeLessThan(Date value) {
+        public Criteria andAuthCreateTimeLessThan(Integer value) {
             addCriterion("auth_create_time <", value, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeLessThanOrEqualTo(Date value) {
+        public Criteria andAuthCreateTimeLessThanOrEqualTo(Integer value) {
             addCriterion("auth_create_time <=", value, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeIn(List<Date> values) {
+        public Criteria andAuthCreateTimeIn(List<Integer> values) {
             addCriterion("auth_create_time in", values, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeNotIn(List<Date> values) {
+        public Criteria andAuthCreateTimeNotIn(List<Integer> values) {
             addCriterion("auth_create_time not in", values, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeBetween(Date value1, Date value2) {
+        public Criteria andAuthCreateTimeBetween(Integer value1, Integer value2) {
             addCriterion("auth_create_time between", value1, value2, "authCreateTime");
             return (Criteria) this;
         }
 
-        public Criteria andAuthCreateTimeNotBetween(Date value1, Date value2) {
+        public Criteria andAuthCreateTimeNotBetween(Integer value1, Integer value2) {
             addCriterion("auth_create_time not between", value1, value2, "authCreateTime");
             return (Criteria) this;
         }

@@ -97,10 +97,6 @@ public class User implements Serializable {
 
     private Date regTime;
 
-    private Integer createUserId;
-
-    private Integer updateUserId;
-
     private Date createTime;
 
     private Date updateTime;
@@ -473,22 +469,6 @@ public class User implements Serializable {
 
     public void setRegTime(Date regTime) {
         this.regTime = regTime;
-    }
-
-    public Integer getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

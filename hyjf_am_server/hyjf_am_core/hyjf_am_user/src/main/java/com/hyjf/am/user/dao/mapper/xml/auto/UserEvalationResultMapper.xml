@@ -11,8 +11,6 @@
     <result column="inst_name" property="instName" jdbcType="VARCHAR" />
     <result column="lasttime" property="lasttime" jdbcType="TIMESTAMP" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -76,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, eval_type, summary, score_count, inst_code, inst_name, lasttime, remarks, 
-    create_user_id, update_user_id, create_time, update_time
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserEvalationResultExample" >
     select
@@ -117,14 +115,12 @@
     </selectKey>
     insert into ht_user_evalation_result (user_id, eval_type, summary, 
       score_count, inst_code, inst_name, 
-      lasttime, remarks, create_user_id, 
-      update_user_id, create_time, update_time
-      )
+      lasttime, remarks, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{evalType,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
       #{scoreCount,jdbcType=TINYINT}, #{instCode,jdbcType=VARCHAR}, #{instName,jdbcType=VARCHAR}, 
-      #{lasttime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{lasttime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserEvalationResult" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -155,12 +151,6 @@
       </if>
       <if test="remarks != null" >
         remarks,
-      </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -193,12 +183,6 @@
       </if>
       <if test="remarks != null" >
         #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -244,12 +228,6 @@
       <if test="record.remarks != null" >
         remarks = #{record.remarks,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -272,8 +250,6 @@
       inst_name = #{record.instName,jdbcType=VARCHAR},
       lasttime = #{record.lasttime,jdbcType=TIMESTAMP},
       remarks = #{record.remarks,jdbcType=VARCHAR},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -307,12 +283,6 @@
       <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -332,8 +302,6 @@
       inst_name = #{instName,jdbcType=VARCHAR},
       lasttime = #{lasttime,jdbcType=TIMESTAMP},
       remarks = #{remarks,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

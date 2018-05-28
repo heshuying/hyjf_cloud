@@ -16,9 +16,7 @@ public class SmsCode implements Serializable {
 
     private Integer status;
 
-    private Integer createUserId;
-
-    private Integer updateUserId;
+    private Integer posttime;
 
     private Date createTime;
 
@@ -74,20 +72,12 @@ public class SmsCode implements Serializable {
         this.status = status;
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+    public Integer getPosttime() {
+        return posttime;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
+    public void setPosttime(Integer posttime) {
+        this.posttime = posttime;
     }
 
     public Date getCreateTime() {

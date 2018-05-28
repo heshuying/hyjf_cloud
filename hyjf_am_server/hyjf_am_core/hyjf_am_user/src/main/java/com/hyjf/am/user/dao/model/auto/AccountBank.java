@@ -26,10 +26,6 @@ public class AccountBank implements Serializable {
 
     private String respdesc;
 
-    private String createUser;
-
-    private String updateUser;
-
     private Date createTime;
 
     private String createIp;
@@ -126,22 +122,6 @@ public class AccountBank implements Serializable {
 
     public void setRespdesc(String respdesc) {
         this.respdesc = respdesc == null ? null : respdesc.trim();
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
     }
 
     public Date getCreateTime() {

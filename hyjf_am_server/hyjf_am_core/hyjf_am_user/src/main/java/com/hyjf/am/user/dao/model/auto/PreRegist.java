@@ -30,9 +30,9 @@ public class PreRegist implements Serializable {
 
     private Date updateTime;
 
-    private Integer createUserId;
+    private Integer createUser;
 
-    private Integer updateUserId;
+    private Integer updateUser;
 
     private static final long serialVersionUID = 1L;
 
@@ -140,19 +140,19 @@ public class PreRegist implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+    public Integer getCreateUser() {
+        return createUser;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
     }
 
-    public Integer getUpdateUserId() {
-        return updateUserId;
+    public Integer getUpdateUser() {
+        return updateUser;
     }
 
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
     }
 }

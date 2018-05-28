@@ -16,8 +16,8 @@
     <result column="tax_registration_code" property="taxRegistrationCode" jdbcType="CHAR" />
     <result column="buse_no" property="buseNo" jdbcType="CHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -81,7 +81,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, username, busi_code, busi_name, guar_type, open_bank_id, account, `status`, 
-    is_bank, card_type, tax_registration_code, buse_no, remark, create_user_id, update_user_id, 
+    is_bank, card_type, tax_registration_code, buse_no, remark, create_user, update_user, 
     create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecordExample" >
@@ -125,13 +125,13 @@
       busi_name, guar_type, open_bank_id, 
       account, `status`, is_bank, 
       card_type, tax_registration_code, buse_no, 
-      remark, create_user_id, update_user_id, 
+      remark, create_user, update_user, 
       create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{busiCode,jdbcType=CHAR}, 
       #{busiName,jdbcType=VARCHAR}, #{guarType,jdbcType=CHAR}, #{openBankId,jdbcType=CHAR}, 
       #{account,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{isBank,jdbcType=TINYINT}, 
       #{cardType,jdbcType=INTEGER}, #{taxRegistrationCode,jdbcType=CHAR}, #{buseNo,jdbcType=CHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord" >
@@ -179,11 +179,11 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="createUserId != null" >
-        create_user_id,
+      <if test="createUser != null" >
+        create_user,
       </if>
-      <if test="updateUserId != null" >
-        update_user_id,
+      <if test="updateUser != null" >
+        update_user,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -232,11 +232,11 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -297,11 +297,11 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -330,8 +330,8 @@
       tax_registration_code = #{record.taxRegistrationCode,jdbcType=CHAR},
       buse_no = #{record.buseNo,jdbcType=CHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -380,11 +380,11 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -410,8 +410,8 @@
       tax_registration_code = #{taxRegistrationCode,jdbcType=CHAR},
       buse_no = #{buseNo,jdbcType=CHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

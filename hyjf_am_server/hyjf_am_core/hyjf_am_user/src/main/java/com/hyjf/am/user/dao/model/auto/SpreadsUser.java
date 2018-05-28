@@ -8,7 +8,7 @@ public class SpreadsUser implements Serializable {
 
     private Integer userId;
 
-    private Integer spreadsUserid;
+    private Integer spreadsUserId;
 
     private String set;
 
@@ -19,10 +19,6 @@ public class SpreadsUser implements Serializable {
     private String operation;
 
     private String createIp;
-
-    private Integer createUserId;
-
-    private Integer updateUserId;
 
     private Date createTime;
 
@@ -46,12 +42,12 @@ public class SpreadsUser implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getSpreadsUserid() {
-        return spreadsUserid;
+    public Integer getSpreadsUserId() {
+        return spreadsUserId;
     }
 
-    public void setSpreadsUserid(Integer spreadsUserid) {
-        this.spreadsUserid = spreadsUserid;
+    public void setSpreadsUserId(Integer spreadsUserId) {
+        this.spreadsUserId = spreadsUserId;
     }
 
     public String getSet() {
@@ -92,22 +88,6 @@ public class SpreadsUser implements Serializable {
 
     public void setCreateIp(String createIp) {
         this.createIp = createIp == null ? null : createIp.trim();
-    }
-
-    public Integer getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

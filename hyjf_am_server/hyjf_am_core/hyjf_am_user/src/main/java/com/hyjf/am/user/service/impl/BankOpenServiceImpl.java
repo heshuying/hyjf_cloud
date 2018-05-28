@@ -61,7 +61,6 @@ public class BankOpenServiceImpl implements BankOpenService {
 			openAccountLog.setStatus(0);
 			openAccountLog.setUpdateTime(date);
 			openAccountLog.setUpdateUserId(userId);
-			openAccountLog.setUpdateUserName(openAccountLog.getCreateUsername());
 			boolean updateFlag = this.bankOpenAccountLogMapper.updateByPrimaryKeySelective(openAccountLog) > 0 ? true
 					: false;
 			if (updateFlag) {
@@ -78,7 +77,6 @@ public class BankOpenServiceImpl implements BankOpenService {
 			bankOpenAccountLog.setOrderId(logOrderId);
 			bankOpenAccountLog.setCreateTime(date);
 			bankOpenAccountLog.setCreateUserId(userId);
-			bankOpenAccountLog.setCreateUsername(userName);
 			bankOpenAccountLog.setName(name);
 			bankOpenAccountLog.setIdNo(idno);
 			bankOpenAccountLog.setCardNo(cardNo);
@@ -107,7 +105,6 @@ public class BankOpenServiceImpl implements BankOpenService {
             openAccountLog.setStatus(status);
             openAccountLog.setUpdateTime(date);
             openAccountLog.setUpdateUserId(userId);
-            openAccountLog.setUpdateUserName(openAccountLog.getCreateUsername());
             this.bankOpenAccountLogMapper.updateByPrimaryKeySelective(openAccountLog);
         }
 
@@ -185,7 +182,6 @@ public class BankOpenServiceImpl implements BankOpenService {
         openAccount.setAccount(accountId);
         openAccount.setCreateTime(nowDate);
         openAccount.setCreateUserId(userId);
-        openAccount.setCreateUsername(userName);
         boolean openAccountFlag = this.bankOpenAccountMapper.insertSelective(openAccount) > 0 ? true : false;
         if (!openAccountFlag) {
             logger.info("开户成功后,插入用户银行账户关联表失败,用户ID:[" + userId + "]");
