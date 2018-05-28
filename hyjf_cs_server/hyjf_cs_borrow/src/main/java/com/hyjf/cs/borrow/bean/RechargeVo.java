@@ -41,10 +41,10 @@ public class RechargeVo  {
         this.rechargeType = rechargeType;
     }
 
-    private String money;// 充值金额
+    private String money;
 
-    private String bankCode;// 银行编号
+    private String bankCode;
 
-    private String rechargeType;// 充值类型
+    private String rechargeType;
 
 }

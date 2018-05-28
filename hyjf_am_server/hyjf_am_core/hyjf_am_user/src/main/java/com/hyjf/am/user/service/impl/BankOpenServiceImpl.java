@@ -101,7 +101,8 @@ public class BankOpenServiceImpl implements BankOpenService {
         List<BankOpenAccountLog> bankOpenAccountLogs = this.bankOpenAccountLogMapper.selectByExample(example);
         if (bankOpenAccountLogs != null && bankOpenAccountLogs.size() == 1) {
             BankOpenAccountLog openAccountLog = bankOpenAccountLogs.get(0);
-            openAccountLog.setStatus(status); // 更新开户状态
+            // 更新开户状态
+            openAccountLog.setStatus(status);
             openAccountLog.setUpdateTime(date);
             openAccountLog.setUpdateUserId(userId);
             this.bankOpenAccountLogMapper.updateByPrimaryKeySelective(openAccountLog);
@@ -281,8 +282,9 @@ public class BankOpenServiceImpl implements BankOpenService {
     public BankCard selectBankCardByUserId(Integer userId) {
         BankCardExample example = new BankCardExample();
         BankCardExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);// 用户Id
-        cra.andStatusEqualTo(1);// 银行卡是否有效 0无效 1有效
+        cra.andUserIdEqualTo(userId);
+        // 银行卡是否有效 0无效 1有效
+        cra.andStatusEqualTo(1);
         List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
         if (bankCardList != null && bankCardList.size() > 0) {
             return bankCardList.get(0);
@@ -301,9 +303,12 @@ public class BankOpenServiceImpl implements BankOpenService {
     public BankCard getBankCardByCardNo(Integer userId, String cardNo) {
         BankCardExample example = new BankCardExample();
         BankCardExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);// 用户Id
-        cra.andCardNoEqualTo(cardNo);// 银行卡号
-        cra.andStatusEqualTo(1);// 银行卡是否有效 0无效 1有效
+        // 用户Id
+        cra.andUserIdEqualTo(userId);
+        // 银行卡号
+        cra.andCardNoEqualTo(cardNo);
+        // 银行卡是否有效 0无效 1有效
+        cra.andStatusEqualTo(1);
         List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
         if (bankCardList != null && bankCardList.size() > 0) {
             return bankCardList.get(0);
@@ -322,7 +327,8 @@ public class BankOpenServiceImpl implements BankOpenService {
         CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
         CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
         cra.andUserIdEqualTo(userId);
-        cra.andIsBankEqualTo(1);// 江西银行
+        // 江西银行
+        cra.andIsBankEqualTo(1);
         List<CorpOpenAccountRecord> list = this.corpOpenAccountRecordMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list.get(0);

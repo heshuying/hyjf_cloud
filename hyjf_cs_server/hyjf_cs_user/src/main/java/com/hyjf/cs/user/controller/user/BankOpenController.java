@@ -204,7 +204,7 @@ public class BankOpenController {
         ModelAndView mv = new ModelAndView();
         // 根据身份证号码获取性别
         String gender = "";
-        int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));// 性别   奇数为男，偶数为女
+        int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
         if (sexInt % 2 == 0) {
             gender = "F";
         } else {
@@ -220,9 +220,9 @@ public class BankOpenController {
         String idType = BankCallConstant.ID_TYPE_IDCARD;
         // 调用开户接口
         BankCallBean openAccoutBean = new BankCallBean();
-        openAccoutBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-        openAccoutBean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE);// 消息类型(用户开户)
-        openAccoutBean.setInstCode(bankInstCode);// 机构代码
+        openAccoutBean.setVersion(BankCallConstant.VERSION_10);
+        openAccoutBean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE);
+        openAccoutBean.setInstCode(bankInstCode);
         openAccoutBean.setBankCode(bankCode);
         openAccoutBean.setTxDate(txDate);
         openAccoutBean.setTxTime(txTime);

@@ -11,6 +11,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -20,15 +21,13 @@ import java.util.Map;
 public interface UserService {
 	/**
 	 * 注册
-	 * 
 	 * @param registerVO
-	 * @param request
-	 * @param response
+	 * @param ip
 	 * @return
 	 * @throws ReturnMessageException
 	 */
-	UserVO register(RegisterVO registerVO, HttpServletRequest request, HttpServletResponse response)
-			throws ReturnMessageException;
+	UserVO register(RegisterVO registerVO, String ip)
+            throws ReturnMessageException;
 
 	/**
 	 * 用户存在检查
@@ -64,4 +63,12 @@ public interface UserService {
 	Map<String,String> checkParam(AutoPlusRequestBean payRequestBean);
 
 	Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status);
+
+	/**
+	 * api端注册
+	 * @param registerVO
+	 * @param ipAddr
+	 * @return
+	 */
+	UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr);
 }

@@ -98,7 +98,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 	@Override
 	public int insertRechargeInfo(BankCallBean bean) {
-		String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
+		String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId();
 		int ret = rechargeClient.selectByOrdId(ordId);
 		if (ret == 0) {
 			return ret;

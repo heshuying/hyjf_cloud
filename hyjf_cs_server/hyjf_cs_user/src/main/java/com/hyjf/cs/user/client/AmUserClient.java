@@ -45,4 +45,6 @@ public interface AmUserClient {
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 
+	HjhInstConfigVO  selectInstConfigByInstCode(String instCode);
+
 }

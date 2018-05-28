@@ -98,7 +98,7 @@ public class SmsMessage extends HyjfMessage {
 
     private String message;
 
-    private String serviceType;// 业务类型
+    private String serviceType;
 
     private String sender;
 

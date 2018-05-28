@@ -104,10 +104,10 @@ public class AppMsMessage extends HyjfMessage {
 
     private String mobile;
 
-    private String serviceType;// 业务类型
+    private String serviceType;
 
     private String tplCode;
     
-    private Integer msgId;//消息id
+    private Integer msgId;
 
 }

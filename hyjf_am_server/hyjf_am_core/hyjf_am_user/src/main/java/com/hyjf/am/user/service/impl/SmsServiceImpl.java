@@ -37,7 +37,8 @@ public class SmsServiceImpl implements SmsService {
 		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
 			for (SmsCode smsCode : codeList) {
-				smsCode.setStatus(CommonConstant.CKCODE_FAILED);// 失效7
+				// 失效7
+				smsCode.setStatus(CommonConstant.CKCODE_FAILED);
 				smsCodeMapper.updateByPrimaryKey(smsCode);
 			}
 		}
@@ -67,14 +68,16 @@ public class SmsServiceImpl implements SmsService {
 		cra.andMobileEqualTo(mobile);
 		cra.andCheckcodeEqualTo(verificationCode);
 		List<Integer> list = new ArrayList<Integer>();
-		list.add(0);//短信验证码状态,新验证码
+		//短信验证码状态,新验证码
+		list.add(0);
 		list.add(status);
 		cra.andStatusIn(list);
 		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
 			for (SmsCode smsCode : codeList) {
 				if (smsCode.getCheckfor().equals(MD5.toMD5Code(mobile + verificationCode + verificationType + platform))) {
-					smsCode.setStatus(updateStatus);// 已验8或已读9
+					// 已验8或已读9
+					smsCode.setStatus(updateStatus);
 					smsCodeMapper.updateByPrimaryKey(smsCode);
 					return 1;
 				}
@@ -92,17 +95,17 @@ public class SmsServiceImpl implements SmsService {
 		SmsCodeExample.Criteria cra = example.createCriteria();
 		cra.andMobileEqualTo(mobile);
 		List<Integer> statusList = new ArrayList<Integer>();
-		statusList.add(0);//短信验证码状态,新验证码
-		statusList.add(8);//短信验证码状态,已验
+		//短信验证码状态,新验证码
+		statusList.add(0);
+		//短信验证码状态,已验
+		statusList.add(8);
 		cra.andStatusIn(statusList);
 		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
 			for (SmsCode smsCode : codeList) {
-				// if (smsCode.getCheckfor().equals(MD5.toMD5Code(mobile +
-				// verificationCode + verificationType + platform))) {
-				smsCode.setStatus(7);// 失效7
+				// 失效7
+				smsCode.setStatus(7);
 				smsCodeMapper.updateByPrimaryKey(smsCode);
-				// }
 			}
 		}
 		// 保存新验证码到数据库

@@ -48,6 +48,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -105,13 +106,14 @@ public class UserServiceImpl implements UserService  {
      * @throws ReturnMessageException
      */
 	@Override
-	public UserVO register(RegisterVO registerVO, HttpServletRequest request, HttpServletResponse response)
+	public UserVO register(RegisterVO registerVO, String ip)
 			throws ReturnMessageException {
 		// 1. 参数检查
 		this.registerCheckParam(registerVO);
 		RegisterUserRequest registerUserRequest = new RegisterUserRequest();
 		BeanUtils.copyProperties(registerVO, registerUserRequest);
-		registerUserRequest.setLoginIp(GetCilentIP.getIpAddr(request));
+		registerUserRequest.setLoginIp(ip);
+		registerUserRequest.setInstCode(1);
 		// 2.注册
 		UserVO userVO = amUserClient.register(registerUserRequest);
 		if (userVO == null) {
@@ -121,6 +123,30 @@ public class UserServiceImpl implements UserService  {
 		// 3.注册后处理
 		this.afterRegisterHandle(userVO);
 
+		return userVO;
+	}
+
+	@Override
+	public UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr) {
+		// 1. 参数检查
+		this.registerCheckParam(registerVO);
+		RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+		BeanUtils.copyProperties(registerVO, registerUserRequest);
+		registerUserRequest.setLoginIp(ipAddr);
+		// 根据机构编号检索机构信息
+		HjhInstConfigVO instConfig = this.amUserClient.selectInstConfigByInstCode(registerVO.getInstCode());
+		// 机构编号
+		if (instConfig == null) {
+			throw new ReturnMessageException(RegisterError.INSTCODE_ERROR);
+
+		}
+		// TODO: 2018/5/28 验签
+		registerUserRequest.setInstCode(instConfig.getInstType());
+		// 2.注册
+		UserVO userVO = amUserClient.register(registerUserRequest);
+		if (userVO == null) {
+			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
+		}
 		return userVO;
 	}
 
@@ -846,4 +872,6 @@ public class UserServiceImpl implements UserService  {
 		result.put("isSuccess","false");
 		return result;
 	}
+
+
 }

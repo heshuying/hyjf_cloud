@@ -105,6 +105,6 @@ public class MailMessage extends HyjfMessage {
 
     private String mailKbn;
 
-    private String serviceType;// 业务类型
+    private String serviceType;
 
 }
