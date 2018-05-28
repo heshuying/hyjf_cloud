@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version BorrowController, v0.1 2018/5/28 12:42
  */
 
+@Api(value = "根据机构编号检索机构信息")
 @RestController
 @RequestMapping("/am-borrow/borrow")
 public class BorrowController {
@@ -28,6 +29,7 @@ public class BorrowController {
     @Autowired
     UserService userService;
 
+    @ApiOperation(value = " 根据机构编号检索机构信息")
     @GetMapping("/selectInstConfigByInstCode/{instCode}")
     public HjhInstConfigResponse selectInstConfigByInstCode(@PathVariable(value = "instCode") String instCode) {
         HjhInstConfigResponse response = new HjhInstConfigResponse();
