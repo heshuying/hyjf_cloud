@@ -7,23 +7,33 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.DES;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.AutoPlusRetBean;
 import com.hyjf.cs.user.beans.BaseResultBean;
+import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.constants.RegisterError;
+import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
+import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -38,6 +48,34 @@ public class ApiUserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    private AmUserClient amUserClient;
+
+    /**
+     * 注册
+     * @param registerVO
+     * @param request
+     * @param response
+     * @return
+     */
+    @ApiOperation(value = "用户注册", notes = "用户注册")
+    @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
+    public ApiResult<UserVO> register(@RequestBody @Valid RegisterVO registerVO, HttpServletRequest request,
+                                      HttpServletResponse response) {
+        logger.info("register start, registerVO is :{}", JSONObject.toJSONString(registerVO));
+        ApiResult<UserVO> result = new ApiResult<UserVO>();
+
+        UserVO userVO = userService.apiRegister(registerVO, GetCilentIP.getIpAddr(request));
+        if (userVO != null) {
+            logger.info("register success, userId is :{}", userVO.getUserId());
+            result.setResult(userVO);
+        } else {
+            logger.error("register failed...");
+            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+        }
+        return result;
+    }
 
     /**
      * 自动投资授权

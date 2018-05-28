@@ -54,7 +54,7 @@ public class WebUserController {
 		logger.info("register start, registerVO is :{}", JSONObject.toJSONString(registerVO));
 		ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-		UserVO userVO = userService.register(registerVO, request, response);
+		UserVO userVO = userService.register(registerVO,GetCilentIP.getIpAddr(request));
 
 		if (userVO != null) {
 			logger.info("register success, userId is :{}", userVO.getUserId());

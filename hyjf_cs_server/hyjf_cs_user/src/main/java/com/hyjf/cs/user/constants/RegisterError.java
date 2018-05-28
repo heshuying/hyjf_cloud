@@ -24,7 +24,7 @@ public enum RegisterError implements ErrorCode {
 	SEND_SMSCODE_TOO_MANNY_ERROR("1", "该设备短信请求次数超限，请明日再试!"),
 	IP_VISIT_TOO_MANNY_ERROR("1", "IP访问次数超限!"),
 	FIND_SMSCONFIG_ERROR("1", "获取短信配置失败!"),
-
+	INSTCODE_ERROR("1","机构编号错误"),
 	CODETYPE_INVALID_ERROR("1", "无效的验证码类型!"),
 	MOBILE_FORMAT_ERROR("1", "手机号格式不正确"),
 	USER_NOT_EXISTS_ERROR("1", "不存在用户")

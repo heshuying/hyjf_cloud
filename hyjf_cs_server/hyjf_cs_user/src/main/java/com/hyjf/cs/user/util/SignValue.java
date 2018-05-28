@@ -59,11 +59,11 @@ public class SignValue implements Serializable {
         this.version = version;
     }
 
-    private String initKey;// 初始化密钥
+    private String initKey;
 
-    private String key;// DES加解密密钥
+    private String key;
 
-    private String token;// 用户token信息
+    private String token;
     
     // 应用版本号
     private String version;

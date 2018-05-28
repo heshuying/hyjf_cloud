@@ -31,7 +31,6 @@
     <result column="vip_exp_date" property="vipExpDate" jdbcType="INTEGER" />
     <result column="vip_platform" property="vipPlatform" jdbcType="TINYINT" />
     <result column="borrower_type" property="borrowerType" jdbcType="TINYINT" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -96,7 +95,7 @@
     user_id, role_id, is_staff, department_id, parent_id, is51, nickname, birthday, sex, 
     truename, idcard, truename_isApprove, mobile_isApprove, email_isApprove, education, 
     province, city, area, address, intro, interest, `attribute`, promoteway, is_contact, 
-    vip_id, vip_value, vip_exp_date, vip_platform, borrower_type, update_user_id, update_time
+    vip_id, vip_value, vip_exp_date, vip_platform, borrower_type, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserInfoExample" >
     select
@@ -141,8 +140,8 @@
       address, intro, interest, 
       `attribute`, promoteway, is_contact, 
       vip_id, vip_value, vip_exp_date, 
-      vip_platform, borrower_type, update_user_id, 
-      update_time)
+      vip_platform, borrower_type, update_time
+      )
     values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=TINYINT}, #{isStaff,jdbcType=TINYINT}, 
       #{departmentId,jdbcType=TINYINT}, #{parentId,jdbcType=INTEGER}, #{is51,jdbcType=TINYINT}, 
       #{nickname,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
@@ -152,8 +151,8 @@
       #{address,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, #{interest,jdbcType=VARCHAR}, 
       #{attribute,jdbcType=INTEGER}, #{promoteway,jdbcType=INTEGER}, #{isContact,jdbcType=BIT}, 
       #{vipId,jdbcType=INTEGER}, #{vipValue,jdbcType=INTEGER}, #{vipExpDate,jdbcType=INTEGER}, 
-      #{vipPlatform,jdbcType=TINYINT}, #{borrowerType,jdbcType=TINYINT}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{vipPlatform,jdbcType=TINYINT}, #{borrowerType,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserInfo" >
     insert into ht_user_info
@@ -244,9 +243,6 @@
       </if>
       <if test="borrowerType != null" >
         borrower_type,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
       </if>
       <if test="updateTime != null" >
         update_time,
@@ -339,9 +335,6 @@
       </if>
       <if test="borrowerType != null" >
         #{borrowerType,jdbcType=TINYINT},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -444,9 +437,6 @@
       <if test="record.borrowerType != null" >
         borrower_type = #{record.borrowerType,jdbcType=TINYINT},
       </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -486,7 +476,6 @@
       vip_exp_date = #{record.vipExpDate,jdbcType=INTEGER},
       vip_platform = #{record.vipPlatform,jdbcType=TINYINT},
       borrower_type = #{record.borrowerType,jdbcType=TINYINT},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -579,9 +568,6 @@
       <if test="borrowerType != null" >
         borrower_type = #{borrowerType,jdbcType=TINYINT},
       </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -618,7 +604,6 @@
       vip_exp_date = #{vipExpDate,jdbcType=INTEGER},
       vip_platform = #{vipPlatform,jdbcType=TINYINT},
       borrower_type = #{borrowerType,jdbcType=TINYINT},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>

@@ -8,10 +8,8 @@
     <result column="account" property="account" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_username" property="createUsername" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,8 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, user_name, account, create_time, create_user_id, create_username, update_time, 
-    update_user_id, update_user_name
+    id, user_id, user_name, account, create_time, create_user_id, update_time, update_user_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountExample" >
     select
@@ -113,13 +110,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_bank_open_account (user_id, user_name, account, 
-      create_time, create_user_id, create_username, 
-      update_time, update_user_id, update_user_name
-      )
+      create_time, create_user_id, update_time, 
+      update_user_id)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{createUsername,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUserId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccount" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -142,17 +137,11 @@
       <if test="createUserId != null" >
         create_user_id,
       </if>
-      <if test="createUsername != null" >
-        create_username,
-      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
       <if test="updateUserId != null" >
         update_user_id,
-      </if>
-      <if test="updateUserName != null" >
-        update_user_name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -171,17 +160,11 @@
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="createUsername != null" >
-        #{createUsername,jdbcType=VARCHAR},
-      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserName != null" >
-        #{updateUserName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -212,17 +195,11 @@
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.createUsername != null" >
-        create_username = #{record.createUsername,jdbcType=VARCHAR},
-      </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserName != null" >
-        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -237,10 +214,8 @@
       account = #{record.account,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_username = #{record.createUsername,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -263,17 +238,11 @@
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="createUsername != null" >
-        create_username = #{createUsername,jdbcType=VARCHAR},
-      </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserName != null" >
-        update_user_name = #{updateUserName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -285,10 +254,8 @@
       account = #{account,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_username = #{createUsername,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+      update_user_id = #{updateUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

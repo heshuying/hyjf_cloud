@@ -293,12 +293,12 @@ public abstract class UploadFileUtils {
 			valid = true;
 		} else {
 			for (String type : allowTypes) {
-				if (flag) {// 不区分大小写后缀
+				if (flag) {
 					if (suffix != null && suffix.equalsIgnoreCase(type)) {
 						valid = true;
 						break;
 					}
-				} else {// 严格区分大小写
+				} else {
 					if (suffix != null && suffix.equals(type)) {
 						valid = true;
 						break;
@@ -343,12 +343,12 @@ public abstract class UploadFileUtils {
 			valid = true;
 		} else {
 			for (String type : allowTypes) {
-				if (flag) {// 不区分大小写后缀
+				if (flag) {
 					if (suffix != null && suffix.equalsIgnoreCase(type)) {
 						valid = true;
 						break;
 					}
-				} else {// 严格区分大小写
+				} else {
 					if (suffix != null && suffix.equals(type)) {
 						valid = true;
 						break;
@@ -565,7 +565,7 @@ public abstract class UploadFileUtils {
 	public static String getSuffix(String fileName) {
 		int index = fileName.lastIndexOf(".");
 		if (index != -1) {
-			String suffix = fileName.substring(index);// 后缀
+			String suffix = fileName.substring(index);
 			return suffix;
 		} else {
 			return null;
@@ -584,7 +584,7 @@ public abstract class UploadFileUtils {
 	public static String getType(String fileName) {
 		int index = fileName.lastIndexOf(".");
 		if (index != -1) {
-			String suffix = fileName.substring(index + 1);// 后缀
+			String suffix = fileName.substring(index + 1);
 			return suffix;
 		} else {
 			return null;

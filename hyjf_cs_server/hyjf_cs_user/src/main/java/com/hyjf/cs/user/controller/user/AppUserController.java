@@ -66,11 +66,9 @@ public class AppUserController {
 			@RequestParam(required = false) String reffer, HttpServletRequest request, HttpServletResponse response) {
 		logger.info("register start, mobile is :{}", mobile);
 		BaseResultBean resultBean = new BaseResultBean();
-
 		String mobilephone = DES.decodeValue(key, mobile);
 		String smsCode = DES.decodeValue(key, verificationCode);
 		String pwd = DES.decodeValue(key, password);
-
 		reffer = DES.decodeValue(key, reffer);
 		if (StringUtils.isNotBlank(reffer)) {
 			int count = amUserClient.countUserByRecommendName(reffer);
@@ -80,13 +78,12 @@ public class AppUserController {
 				return resultBean;
 			}
 		}
-
 		RegisterVO registerVO = new RegisterVO();
 		registerVO.setMobilephone(mobilephone);
 		registerVO.setPassword(pwd);
 		registerVO.setReffer(reffer);
 		registerVO.setSmsCode(smsCode);
-		UserVO userVO = userService.register(registerVO, request, response);
+		UserVO userVO = userService.register(registerVO,GetCilentIP.getIpAddr(request));
 
 		if (userVO != null) {
 			logger.info("register success, userId is :{}", userVO.getUserId());

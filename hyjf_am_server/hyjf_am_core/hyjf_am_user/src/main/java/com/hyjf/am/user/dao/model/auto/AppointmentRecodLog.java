@@ -25,10 +25,6 @@ public class AppointmentRecodLog implements Serializable {
 
     private String userName;
 
-    private Integer createUserId;
-
-    private Integer updateUserId;
-
     private Date createTime;
 
     private Date updateTime;
@@ -113,22 +109,6 @@ public class AppointmentRecodLog implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName == null ? null : userName.trim();
-    }
-
-    public Integer getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

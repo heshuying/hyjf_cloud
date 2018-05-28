@@ -18,7 +18,7 @@ public class HjhUserAuthLog implements Serializable {
 
     private Integer operateEsb;
 
-    private Date authCreateTime;
+    private Integer authCreateTime;
 
     private Integer delFlg;
 
@@ -88,11 +88,11 @@ public class HjhUserAuthLog implements Serializable {
         this.operateEsb = operateEsb;
     }
 
-    public Date getAuthCreateTime() {
+    public Integer getAuthCreateTime() {
         return authCreateTime;
     }
 
-    public void setAuthCreateTime(Date authCreateTime) {
+    public void setAuthCreateTime(Integer authCreateTime) {
         this.authCreateTime = authCreateTime;
     }
 

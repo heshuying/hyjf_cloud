@@ -12,10 +12,6 @@ public class AppointmentAuthLog implements Serializable {
 
     private Boolean authStatus;
 
-    private Integer createUserId;
-
-    private Integer updateUserId;
-
     private Date createTime;
 
     private Date updateTime;
@@ -52,22 +48,6 @@ public class AppointmentAuthLog implements Serializable {
 
     public void setAuthStatus(Boolean authStatus) {
         this.authStatus = authStatus;
-    }
-
-    public Integer getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

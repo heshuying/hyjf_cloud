@@ -157,7 +157,7 @@ public class RedisUtil {
 	 */
 	public boolean tryLock(String key, long timeout) {
 		boolean isSuccess = redisTemplate.opsForValue().setIfAbsent(key, "");
-		if (isSuccess) {//标注：9；redisTemplate.expire
+		if (isSuccess) {
 			redisTemplate.expire(key, timeout, TimeUnit.SECONDS);
 		}
 		return isSuccess;

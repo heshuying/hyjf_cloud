@@ -9,8 +9,6 @@
     <result column="isok" property="isok" jdbcType="BIT" />
     <result column="eggs_isok" property="eggsIsok" jdbcType="BIT" />
     <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
-    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -73,8 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, chinapnr_usrid, chinapnr_usrcustid, isok, eggs_isok, create_ip, create_user, 
-    update_user, create_time, update_time
+    id, user_id, chinapnr_usrid, chinapnr_usrcustid, isok, eggs_isok, create_ip, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AccountChinapnrExample" >
     select
@@ -114,13 +112,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_account_chinapnr (id, chinapnr_usrid, chinapnr_usrcustid, 
-      isok, eggs_isok, create_ip, create_user, 
-      update_user, create_time, update_time
-      )
+      isok, eggs_isok, create_ip, create_time, 
+      update_time)
     values (#{id,jdbcType=INTEGER}, #{chinapnrUsrid,jdbcType=VARCHAR}, #{chinapnrUsrcustid,jdbcType=BIGINT}, 
-      #{isok,jdbcType=BIT}, #{eggsIsok,jdbcType=BIT}, #{createIp,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{isok,jdbcType=BIT}, #{eggsIsok,jdbcType=BIT}, #{createIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountChinapnr" >
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
@@ -145,12 +141,6 @@
       </if>
       <if test="createIp != null" >
         create_ip,
-      </if>
-      <if test="createUser != null" >
-        create_user,
-      </if>
-      <if test="updateUser != null" >
-        update_user,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -177,12 +167,6 @@
       </if>
       <if test="createIp != null" >
         #{createIp,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -222,12 +206,6 @@
       <if test="record.createIp != null" >
         create_ip = #{record.createIp,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUser != null" >
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=VARCHAR},
-      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -248,8 +226,6 @@
       isok = #{record.isok,jdbcType=BIT},
       eggs_isok = #{record.eggsIsok,jdbcType=BIT},
       create_ip = #{record.createIp,jdbcType=VARCHAR},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_user = #{record.updateUser,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -277,12 +253,6 @@
       <if test="createIp != null" >
         create_ip = #{createIp,jdbcType=VARCHAR},
       </if>
-      <if test="createUser != null" >
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -300,8 +270,6 @@
       isok = #{isok,jdbcType=BIT},
       eggs_isok = #{eggsIsok,jdbcType=BIT},
       create_ip = #{createIp,jdbcType=VARCHAR},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_user = #{updateUser,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
