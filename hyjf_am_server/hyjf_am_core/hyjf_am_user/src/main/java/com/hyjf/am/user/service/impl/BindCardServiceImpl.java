@@ -72,6 +72,20 @@ public class BindCardServiceImpl implements BindCardService {
 	}
 	
 	/**
+	 * 根据cardNo删除银行卡
+	 * @param cardNo
+	 * @return
+	 */
+	@Override
+	public int deleteUserCardByCardNo(String cardNo) {
+		BankCardExample example = new BankCardExample();
+		BankCardExample.Criteria aCriteria = example.createCriteria();
+		aCriteria.andCardNoEqualTo(cardNo);
+		
+		return this.bankCardMapper.deleteByExample(example);
+	}
+	
+	/**
 	 * 插入用户绑定的银行卡
 	 * @param bankCard
 	 * @return

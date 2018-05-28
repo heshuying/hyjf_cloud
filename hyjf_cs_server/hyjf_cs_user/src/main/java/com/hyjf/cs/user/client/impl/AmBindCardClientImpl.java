@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.hyjf.am.response.borrow.AccountResponse;
 import com.hyjf.am.response.borrow.BanksConfigResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
@@ -73,7 +74,6 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	 */
 	@Override
 	public int deleteUserCardByCardNo(String cardNo) {
-		// TODO: 微服务待实现
 		int result = restTemplate
 				.getForEntity("http://AM-USER//am-user/card/deleteUserCardByCardNo/" + cardNo, Integer.class).getBody();
 		return result;
@@ -148,12 +148,14 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	 * @return
 	 */
 	@Override
-	public AccountVO queryBankAccount(String userId) {
-		// TODO: 微服务待实现
-		AccountVO result = restTemplate
-				.getForEntity("http://AM-USER//am-user/card/queryBankAccount/" + userId, AccountVO.class).getBody();
-		return result;
-	}
+	public AccountVO getAccount(Integer userId) {
+        AccountResponse response = restTemplate
+                .getForEntity("http://AM-BORROW/am-borrow/recharge/getAccount/" + userId, AccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
 }
 
 	

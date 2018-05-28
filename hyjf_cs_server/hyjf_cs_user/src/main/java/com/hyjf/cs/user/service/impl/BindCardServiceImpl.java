@@ -389,7 +389,7 @@ public class BindCardServiceImpl implements BindCardService{
         }
         
         // 账户余额校验
-        AccountVO account = amBindCardClient.queryBankAccount(String.valueOf(userId));
+        AccountVO account = amBindCardClient.getAccount(userId);
         BigDecimal bankBalance = this.queryBankBlance(userId, openAccount.getAccount());
         if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
 				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {

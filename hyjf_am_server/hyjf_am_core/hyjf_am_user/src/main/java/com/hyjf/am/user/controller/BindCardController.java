@@ -67,6 +67,16 @@ public class BindCardController {
 	}
 	
 	/**
+	 * 根据cardNo删除银行卡
+	 * @param cardNo
+	 * @return
+	 */
+	@RequestMapping("/deleteUserCardByUserId/{userId}")
+	public int deleteUserCardByCardNo(@PathVariable String cardNo) {
+		return bindCardService.deleteUserCardByCardNo(cardNo);
+	}
+	
+	/**
 	 * 保存用户绑定的银行卡
 	 * @param bankCardRequest
 	 * @return

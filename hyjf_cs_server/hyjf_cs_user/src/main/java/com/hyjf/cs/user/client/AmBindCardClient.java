@@ -24,9 +24,9 @@ public interface AmBindCardClient {
 
 	int updateUserCard(BankCardRequest request);
 
-	AccountVO queryBankAccount(String userId);
-
 	int deleteUserCardByCardNo(String cardNo);
+
+	AccountVO getAccount(Integer userId);
 
 }
 

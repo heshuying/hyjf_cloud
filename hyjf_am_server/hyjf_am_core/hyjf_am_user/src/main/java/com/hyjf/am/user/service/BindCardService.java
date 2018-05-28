@@ -15,4 +15,6 @@ public interface BindCardService {
 	int deleteUserCardByUserId(Integer userId);
 
 	int countUserCardValid(Integer userId);
+
+	int deleteUserCardByCardNo(String cardNo);
 }
