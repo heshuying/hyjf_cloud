@@ -14,4 +14,6 @@ public interface BankConfigService {
     BankConfig getBankConfigByBankId(Integer bankId);
 
     BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
+
+	String queryBankIdByCardNo(String cardNo);
 }
