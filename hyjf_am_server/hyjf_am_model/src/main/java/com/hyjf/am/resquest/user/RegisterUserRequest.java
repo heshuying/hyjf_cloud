@@ -12,6 +12,7 @@ public class RegisterUserRequest {
 	private String utmId;
 	private String loginIp;
 	private String platform;
+	private int instCode;
 
 	public String getMobilephone() {
 		return mobilephone;
@@ -67,5 +68,13 @@ public class RegisterUserRequest {
 
 	public void setPlatform(String platform) {
 		this.platform = platform;
+	}
+
+	public int getInstCode() {
+		return instCode;
+	}
+
+	public void setInstCode(int instCode) {
+		this.instCode = instCode;
 	}
 }

@@ -11,6 +11,7 @@ public class RegisterVO {
 	private String reffer;
 	private String password;
 	private String utmId;
+    private String instCode;
 
     @Override
     public String toString() {
@@ -20,6 +21,7 @@ public class RegisterVO {
                 ", reffer='" + reffer + '\'' +
                 ", password='" + password + '\'' +
                 ", utmId='" + utmId + '\'' +
+                ", instCode='" + instCode + '\'' +
                 '}';
     }
 
@@ -61,5 +63,13 @@ public class RegisterVO {
 
     public void setUtmId(String utmId) {
         this.utmId = utmId;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
     }
 }

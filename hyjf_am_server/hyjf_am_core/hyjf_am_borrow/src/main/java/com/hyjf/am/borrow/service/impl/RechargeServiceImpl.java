@@ -65,31 +65,36 @@ public class RechargeServiceImpl implements RechargeService {
 		String cardNo = bankRequest.getCardNo();
 		BigDecimal money = new BigDecimal(bankRequest.getTxAmount());
 		AccountRecharge record = new AccountRecharge();
-		record.setNid(bankRequest.getLogOrderId()); // 订单号
+		record.setNid(bankRequest.getLogOrderId());
 		record.setUserId(Integer.parseInt(bankRequest.getLogUserId()));
-		record.setUsername(bankRequest.getLogUserName());// 用户 名
+		record.setUsername(bankRequest.getLogUserName());
 		record.setTxDate(Integer.parseInt(bankRequest.getTxDate()));
 		record.setTxTime(Integer.parseInt(bankRequest.getTxTime()));
 		record.setSeqNo(Integer.parseInt(bankRequest.getSeqNo()));
 		record.setBankSeqNo(bankRequest.getTxDate() + bankRequest.getTxTime() + bankRequest.getSeqNo());
-		record.setStatus(RECHARGE_STATUS_WAIT); // 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
+		// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
+		record.setStatus(RECHARGE_STATUS_WAIT);
 		record.setAccountId(bankRequest.getAccountId());
 		record.setMoney(money);
 		record.setCardid(cardNo);
 		record.setFeeFrom(null);
 		record.setFee(BigDecimal.ZERO);
 		record.setDianfuFee(BigDecimal.ZERO);
-		record.setBalance(money); // 实际到账余额
+		// 实际到账余额
+		record.setBalance(money);
 		record.setPayment(bankRequest == null ? "" : bankRequest.getBank());
 		record.setGateType("QP");
-		record.setType(1); // 类型.1网上充值.0线下充值
+		// 类型.1网上充值.0线下充值
+		record.setType(1);
 		record.setRemark("快捷充值");
 		record.setCreateTime(nowTime);
 		record.setOperator(bankRequest.getLogUserId());
 		record.setAddtime(String.valueOf(nowTime));
 		record.setAddip(bankRequest.getUserIP());
-		record.setClient(bankRequest.getLogClient()); // 0pc
-		record.setIsBank(1);// 资金托管平台 0:汇付,1:江西银行
+		// 0pc
+		record.setClient(bankRequest.getLogClient());
+		// 资金托管平台 0:汇付,1:江西银行
+		record.setIsBank(1);
 		// 插入用户充值记录表
 		return this.accountRechargeMapper.insertSelective(record);
 	}

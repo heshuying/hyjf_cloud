@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
 		String platform = userRequest.getPlatform();
 		String password = userRequest.getPassword();
 		String utmId = userRequest.getUtmId();
-
+		int instType = userRequest.getInstCode();
 		Integer refferUserId = null;
 		String refferUserName = null;
 		Integer attribute = null;
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
 		int userId = users.getUserId();
 
 		// 2. 写入用户详情表
-		this.insertUsersInfo(userId, loginIp, attribute);
+		this.insertUsersInfo(userId,instType, loginIp, attribute);
 
 		// 3. 写入用户账户表
 		this.insertAccount(userId);
@@ -468,7 +468,7 @@ public class UserServiceImpl implements UserService {
 	 * @param loginIp
 	 * @param attribute
 	 */
-	private void insertUsersInfo(int userId, String loginIp, Integer attribute) {
+	private void insertUsersInfo(int userId,int instType, String loginIp, Integer attribute) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);
 		// 默认为无主单
@@ -477,7 +477,7 @@ public class UserServiceImpl implements UserService {
 			getAddress(loginIp, userInfo);
 		}
 		userInfo.setUserId(userId);
-		userInfo.setRoleId(1);
+		userInfo.setRoleId(instType);
 		userInfo.setMobileIsapprove(1);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);

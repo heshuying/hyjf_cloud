@@ -2,6 +2,7 @@ package com.hyjf.cs.user.client.impl;
 
 import java.io.UnsupportedEncodingException;
 
+import com.hyjf.am.vo.user.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,10 +20,6 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
 
@@ -240,6 +237,17 @@ public class AmUserClientImpl implements AmUserClient {
 			result.put("statusDesc", "修改密码失败,未作任何操作");
 		}
 		return result;
+	}
+
+	@Override
+	public HjhInstConfigVO selectInstConfigByInstCode(String instCode) {
+		HjhInstConfigResponse response = restTemplate
+				.getForEntity("http://AM-BORROW/am-borrow/borrow/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 }

@@ -46,12 +46,12 @@ public class BankCallConstant implements Serializable {
 	public static final String ACCOUNT_USE_GUARANTEE = "00100";
 
 	/** 证件类型 */
-	public static final String ID_TYPE_IDCARD = "01";// 身份证
+	public static final String ID_TYPE_IDCARD = "01";
 	/** 证件类型 */
-	public static final String ID_TYPE_COMCODE = "25";// 组织机构代码
+	public static final String ID_TYPE_COMCODE = "25";
 	
 	/** 选项 */
-	public static final String OPTION_1 = "1";// 1为修改
+	public static final String OPTION_1 = "1";
 	/** 交易币种 */
 	public static final String CURRENCY_TYPE_RMB = "156";
 
@@ -69,10 +69,10 @@ public class BankCallConstant implements Serializable {
 	public static final String BANK_URL_DIRECT_RECHARGE_PAGE = "/p2p/page/directRechargePage";
 	public static final String BANK_URL_PAYMENT_AUTH_PAGE = "/p2p/page/paymentAuthPage";
 	public static final String BANK_URL_REPAY_AUTH_PAGE = "/p2p/page/repayAuthPage";
-	/** 签约状态查询 */
-	public static final String QUERY_TYPE_1 = "1";// 1 自动投标签约
-	/** 签约状态查询 */
-	public static final String QUERY_TYPE_2 = "2";// 2 自动债转签约
+	/** 签约状态查询 1 自动投标签约 */
+	public static final String QUERY_TYPE_1 = "1";
+	/** 签约状态查询 2 自动债转签约*/
+	public static final String QUERY_TYPE_2 = "2";
 
 	/** 提现手续费 */
 	public static final String BANK_FEE = "hyjf.bank.fee";
