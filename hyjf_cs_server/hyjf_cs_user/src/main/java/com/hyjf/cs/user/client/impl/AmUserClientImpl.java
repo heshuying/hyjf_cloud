@@ -166,7 +166,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
 		BankReturnCodeConfigResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/recharge/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
+				.getForEntity("http://AM-CONFIG/am-config/config/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
