@@ -71,4 +71,8 @@ public interface UserService {
 	 * @return
 	 */
 	UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr);
+
+	UserVO queryUserByUserId(Integer userId);
+
+	int updateUserByUserId(UserVO userVO);
 }

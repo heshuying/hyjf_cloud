@@ -1,12 +1,38 @@
 package com.hyjf.cs.user.service.impl;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -14,9 +40,19 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.beans.*;
+import com.hyjf.cs.user.beans.AutoPlusRequestBean;
+import com.hyjf.cs.user.beans.BaseBean;
+import com.hyjf.cs.user.beans.BaseDefine;
+import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.beans.BaseResultBean;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -32,33 +68,11 @@ import com.hyjf.cs.user.service.ActivityService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
-import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author xiasq
@@ -871,6 +885,27 @@ public class UserServiceImpl implements UserService  {
 		result.put("acqRes",payRequestBean.getAcqRes());
 		result.put("isSuccess","false");
 		return result;
+	}
+	
+	/**
+	 * 获取用户对象
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserVO queryUserByUserId(Integer userId) {
+		UserVO user = amUserClient.findUserById(userId);
+		return user;
+	}
+	
+	/**
+	 * 更新用户信息
+	 * @param userVO
+	 * @return
+	 */
+	@Override
+	public int updateUserByUserId(UserVO userVO) {
+		return amUserClient.updateUserById(userVO);
 	}
 
 
