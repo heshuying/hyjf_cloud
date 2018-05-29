@@ -87,7 +87,7 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	@Override
 	public int insertUserCard(BankCardRequest request) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/insertUserCard", request, Integer.class).getBody();
+				.postForEntity("http://AM-USER/am-user/card/insertUserCard", request, Integer.class).getBody();
 		return result;
 	}
 	
@@ -98,9 +98,8 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	 */
 	@Override
 	public int updateUserCard(BankCardRequest request) {
-		// TODO: 微服务待实现
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/updateUserCard", request, Integer.class).getBody();
+				.postForEntity("http://AM-USER/am-user/card/updateUserCard", request, Integer.class).getBody();
 		return result;
 	}
 	
@@ -121,9 +120,8 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	 */
 	@Override
 	public int insertBindCardLog(BankCardLogRequest request) {
-		// TODO: 微服务待实现 
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/insertBindCardLog", request, Integer.class).getBody();
+				.postForEntity("http://AM-USER/am-user/card/insertBindCardLog", request, Integer.class).getBody();
 		return result;
 	}
 	

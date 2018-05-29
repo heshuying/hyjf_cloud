@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.auto.BankCardLog;
 
 /**
  * 绑卡接口
@@ -17,4 +18,8 @@ public interface BindCardService {
 	int countUserCardValid(Integer userId);
 
 	int deleteUserCardByCardNo(String cardNo);
+
+	int updateUserCard(BankCard bankCard);
+
+	int insertBindCardLog(BankCardLog bankCardLog);
 }

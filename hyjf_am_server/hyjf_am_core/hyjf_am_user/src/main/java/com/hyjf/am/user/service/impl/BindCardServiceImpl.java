@@ -2,13 +2,14 @@ package com.hyjf.am.user.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
+import com.hyjf.am.user.dao.model.auto.BankCardLog;
 import com.hyjf.am.user.service.BindCardService;
 
 /**
@@ -21,6 +22,8 @@ public class BindCardServiceImpl implements BindCardService {
 
 	@Autowired
 	private BankCardMapper bankCardMapper;
+	@Autowired
+	private BankCardLogMapper bankCardLogMapper;
 
 	/**
 	 * 查询用户已绑定的有效卡
@@ -93,6 +96,26 @@ public class BindCardServiceImpl implements BindCardService {
 	@Override
 	public int insertUserCard(BankCard bankCard) {
 		return this.bankCardMapper.insertSelective(bankCard);
+	}
+	
+	/**
+	 * 更新用户绑定的银行卡
+	 * @param bankCard
+	 * @return
+	 */
+	@Override
+	public int updateUserCard(BankCard bankCard) {
+		return this.bankCardMapper.updateByPrimaryKeySelective(bankCard);
+	}
+	
+	/**
+	 * 插入绑卡日志
+	 * @param bankCardLog
+	 * @return
+	 */
+	@Override
+	public int insertBindCardLog(BankCardLog bankCardLog) {
+		return this.bankCardLogMapper.insertSelective(bankCardLog);
 	}
 	
 	

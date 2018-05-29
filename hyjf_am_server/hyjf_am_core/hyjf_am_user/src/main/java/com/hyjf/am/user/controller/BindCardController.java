@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.user.BankCardResponse;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.auto.BankCardLog;
 import com.hyjf.am.user.service.BindCardService;
 import com.hyjf.am.vo.user.BankCardVO;
 
@@ -89,4 +91,29 @@ public class BindCardController {
 		return cnt;
 	}
 	
+	/**
+	 * 更新用户绑定的银行卡
+	 * @param bankCardRequest
+	 * @return
+	 */
+	@RequestMapping(value = "/updateUserCard", method = RequestMethod.POST)
+	public int updateUserCard(@RequestBody @Valid BankCardRequest bankCardRequest) {
+		BankCard bankCard = new BankCard();
+		BeanUtils.copyProperties(bankCardRequest, bankCard);
+		int cnt = bindCardService.updateUserCard(bankCard);
+		return cnt;
+	}
+	
+	/**
+	 * 插入绑卡日志
+	 * @param bankCardLogRequest
+	 * @return
+	 */
+	@RequestMapping(value = "/insertBindCardLog", method = RequestMethod.POST)
+	public int insertBindCardLog(@RequestBody @Valid BankCardLogRequest bankCardLogRequest) {
+		BankCardLog bankCardLog = new BankCardLog();
+		BeanUtils.copyProperties(bankCardLogRequest, bankCardLog);
+		int cnt = bindCardService.insertBindCardLog(bankCardLog);
+		return cnt;
+	}
 }
