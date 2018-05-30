@@ -163,40 +163,6 @@ public class BankOpenController {
 	}
 
 	/**
-	 * 根据用户Id检索用户银行卡信息
-	 * @param userId
-	 * @return
-	 */
-	@GetMapping("/selectByUserId/{userId}")
-	public BankCardResponse selectByUserId (@PathVariable Integer userId){
-		BankCardResponse response = new BankCardResponse();
-		BankCard bankCard = bankOpenService.selectBankCardByUserId(userId);
-		if(null != bankCard){
-			BankCardVO bankCardVO = new BankCardVO();
-			BeanUtils.copyProperties(bankCard, bankCardVO);
-			response.setResult(bankCardVO);
-		}
-		return response;
-	}
-
-	/**
-	 * 根据卡号检索用户银行卡信息
-	 * @param userId
-	 * @return
-	 */
-	@GetMapping("/getBankCardByCardNo/{userId}/{cardNo}")
-	public BankCardResponse getBankCardByCardNo (@PathVariable Integer userId,@PathVariable String cardNo){
-		BankCardResponse response = new BankCardResponse();
-		BankCard bankCard = bankOpenService.getBankCardByCardNo(userId,cardNo);
-		if(null != bankCard){
-			BankCardVO bankCardVO = new BankCardVO();
-			BeanUtils.copyProperties(bankCard, bankCardVO);
-			response.setResult(bankCardVO);
-		}
-		return response;
-	}
-
-	/**
 	 * 根据用户ID查询企业用户信息
 	 * @param userId
 	 * @return

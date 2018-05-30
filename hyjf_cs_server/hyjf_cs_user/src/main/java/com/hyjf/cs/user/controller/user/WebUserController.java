@@ -4,12 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
+import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
@@ -29,7 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,6 +42,8 @@ public class WebUserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@Autowired
 	SystemConfig systemConfig;
@@ -195,6 +195,51 @@ public class WebUserController {
 		String result = userService.userBgreturn(bean);
 		return result;
 
+	}
+
+	/**
+	 * 获取用戶通知配置信息
+	 * @param token
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/userNoticeSettingInit")
+	public ApiResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+		ApiResult<UserVO> result = new ApiResult<UserVO>();
+
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		UserVO userVO = userService.queryUserByUserId(user.getUserId());
+		result.setResult(userVO);
+
+		return result;
+	}
+
+	/**
+	 * 保存用户通知设置
+	 * @param token
+	 * @param userVO
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
+	@PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
+	public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserVO userVO, HttpServletRequest request,
+			HttpServletResponse response) {
+		logger.info("用戶通知設置, userVO :{}", JSONObject.toJSONString(userVO));
+		ApiResult<UserVO> result = new ApiResult<UserVO>();
+
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		userVO.setUserId(user.getUserId());
+		int ret = userService.updateUserByUserId(userVO);
+
+		if (ret <= 0) {
+			logger.error("保存用户通知设置失败");
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc("保存用户通知设置失败");
+		}
+
+		return result;
 	}
 
 	/**

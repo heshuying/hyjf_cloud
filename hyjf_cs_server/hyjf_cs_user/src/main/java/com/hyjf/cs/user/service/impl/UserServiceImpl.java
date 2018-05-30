@@ -991,4 +991,27 @@ public class UserServiceImpl implements UserService  {
 		result.put("isSuccess","false");
 		return result;
 	}
+
+	/**
+	 * 获取用户对象
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserVO queryUserByUserId(Integer userId) {
+		UserVO user = amUserClient.findUserById(userId);
+		return user;
+	}
+
+	/**
+	 * 更新用户信息
+	 * @param userVO
+	 * @return
+	 */
+	@Override
+	public int updateUserByUserId(UserVO userVO) {
+		return amUserClient.updateUserById(userVO);
+	}
+
+
 }

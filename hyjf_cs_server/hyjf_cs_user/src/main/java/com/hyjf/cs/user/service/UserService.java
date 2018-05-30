@@ -9,8 +9,6 @@ import com.hyjf.cs.user.beans.BaseMapBean;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -71,6 +69,10 @@ public interface UserService {
 	 * @return
 	 */
 	UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr);
+
+	UserVO queryUserByUserId(Integer userId);
+
+	int updateUserByUserId(UserVO userVO);
 
 	/**
 	 * 账户设置查询

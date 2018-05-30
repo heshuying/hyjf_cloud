@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/am-config/recharge")
+@RequestMapping("/am-config/config")
 public class BanksConfigController {
 
     @Autowired
     private BankConfigService bankConfigService;
+    
     /**
      * 获取银行卡配置信息
      * @param bankId
@@ -56,4 +57,14 @@ public class BanksConfigController {
         }
         return response;
     }
+    
+    /**
+	 * 根据银行卡号获取bankId
+	 * @param cardNo
+	 * @return
+	 */
+	@RequestMapping("/queryBankIdByCardNo/{cardNo}")
+	public String queryBankIdByCardNo(@PathVariable String cardNo) {
+		return bankConfigService.queryBankIdByCardNo(cardNo);
+	}
 }
