@@ -71,6 +71,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	HjhUserAuthLogMapper hjhUserAuthLogMapper;
 
+	@Autowired
+	UserEvalationResultMapper userEvalationResultMapper;
+
+	@Autowired
+	AccountChinapnrMapper accountChinapnrMapper;
+
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
 	@Value("${file.upload.head.path}")
@@ -806,5 +812,32 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Override
+	public UserEvalationResult selectUserEvalationResultByUserId(Integer userId) {
+		UserEvalationResultExample example = new UserEvalationResultExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		List<UserEvalationResult> userEvalationResult = userEvalationResultMapper.selectByExample(example);
+		if (userEvalationResult != null && userEvalationResult.size() > 0) {
+			return userEvalationResult.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public AccountChinapnr getAccountChinapnr(Integer userId) {
+		AccountChinapnr accountChinapnr = null;
+		if (userId == null) {
+			return null;
+		}
+		AccountChinapnrExample example = new AccountChinapnrExample();
+		AccountChinapnrExample.Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		List<AccountChinapnr> list = accountChinapnrMapper.selectByExample(example);
+		if (list != null && !list.isEmpty()) {
+			accountChinapnr = list.get(0);
+		}
+		return accountChinapnr;
+	}
 
 }

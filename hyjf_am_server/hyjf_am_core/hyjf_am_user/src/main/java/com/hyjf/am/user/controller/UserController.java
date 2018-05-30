@@ -2,18 +2,12 @@ package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.HjhUserAuthLogResponse;
-import com.hyjf.am.response.user.HjhUserAuthResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.UserService;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.MD5Utils;
@@ -276,4 +270,27 @@ public class UserController {
 		return ret;
 	}
 
+	@RequestMapping("/selectUserEvalationResultByUserId/{userId}")
+	public UserEvalationResultResponse selectUserEvalationResultByUserId(Integer userId) {
+		UserEvalationResultResponse response = new UserEvalationResultResponse();
+		UserEvalationResult userEvalationResult = userService.selectUserEvalationResultByUserId(userId);
+		if (null != userEvalationResult){
+			UserEvalationResultVO userEvalationResultVO = new UserEvalationResultVO();
+			BeanUtils.copyProperties(userEvalationResult,userEvalationResultVO);
+			response.setResult(userEvalationResultVO);
+		}
+		return response;
+	}
+
+	@RequestMapping("/getAccountChinapnr/{userId}")
+	public AccountChinapnrResponse getAccountChinapnr(Integer userId) {
+		AccountChinapnrResponse response = new AccountChinapnrResponse();
+		AccountChinapnr accountChinapnr = userService.getAccountChinapnr(userId);
+		if (null != accountChinapnr){
+			AccountChinapnrVO accountChinapnrVO = new AccountChinapnrVO();
+			BeanUtils.copyProperties(accountChinapnr,accountChinapnrVO);
+			response.setResult(accountChinapnrVO);
+		}
+		return response;
+	}
 }

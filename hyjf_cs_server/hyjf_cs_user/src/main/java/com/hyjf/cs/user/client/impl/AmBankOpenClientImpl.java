@@ -1,9 +1,11 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.UserEvalationResultResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -62,6 +64,16 @@ public class AmBankOpenClientImpl implements AmBankOpenClient {
 	public BankOpenAccountVO selectByAccountId(String accountId) {
 		BankOpenAccountResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/bankopen/selectByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
+		UserEvalationResultResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUserEvalationResultByUserId/" + userId, UserEvalationResultResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

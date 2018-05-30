@@ -16,7 +16,16 @@ public class SystemConfig {
 
     @Value("${hyjf.bank.bankcode}")
     public String bankCode;
-    
+
+    @Value("${file.domain.head.url}")
+    public String headUrl;
+
+    @Value("${file.domain.url}")
+    public String fileDomainUrl;
+
+    @Value("${file.upload.real.path}")
+    public String fileUpload;
+
     public String getWebHost() {
         return webHost;
     }
@@ -47,5 +56,29 @@ public class SystemConfig {
 
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
+
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
+    }
+
+    public String getFileUpload() {
+        return fileUpload;
+    }
+
+    public void setFileUpload(String fileUpload) {
+        this.fileUpload = fileUpload;
     }
 }

@@ -13,6 +13,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
@@ -32,7 +33,6 @@ import com.hyjf.cs.user.service.ActivityService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
-import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -46,8 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -148,6 +146,126 @@ public class UserServiceImpl implements UserService  {
 			throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
 		}
 		return userVO;
+	}
+
+	@Override
+	public String safeInit(String token) {
+		Map<String,Object> resultMap = new HashMap<>();
+		resultMap.put("url","user/safe/account-setting-index");
+		WebViewUser webViewUser = (WebViewUser) redisUtil.get(token);
+		resultMap.put("webViewUser", webViewUser);
+		if (webViewUser.getTruename() != null && webViewUser.getTruename().length() >= 1) {
+			resultMap.put("truename", webViewUser.getTruename().substring(0, 1) + "**");
+		}
+		if (webViewUser.getIdcard() != null && webViewUser.getIdcard().length() >= 15) {
+			resultMap.put("idcard", webViewUser.getIdcard().substring(0, 3) + "***********" + webViewUser.getIdcard().substring(webViewUser.getIdcard().length() - 4));
+		}
+		if (webViewUser.getMobile() != null && webViewUser.getMobile().length() == 11) {
+			resultMap.put("mobile", webViewUser.getMobile().substring(0, 3) + "****" + webViewUser.getMobile().substring(webViewUser.getMobile().length() - 4));
+		}
+		if (webViewUser.getEmail() != null && webViewUser.getEmail().length() >= 2) {
+			String emails[] = webViewUser.getEmail().split("@");
+			resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() -2) + "@" + emails[1]);
+		}
+		UserVO user = amUserClient.findUserById(webViewUser.getUserId());
+		// 用户角色
+		UserInfoVO userInfo = this.amUserClient.findUsersInfoById(webViewUser.getUserId());
+		resultMap.put("roleId", userInfo.getRoleId());
+		// 是否设置交易密码
+		resultMap.put("isSetPassword", user.getIsSetPassword());
+		// 紧急联系人类型
+		// TODO: 2018/5/29 紧急联系人
+		/*List<ParamName> paramList = safeService.getParamNameList("USER_RELATION");
+		JSONArray result = new JSONArray();
+		for (int i = 0; i < paramList.size(); i++) {
+			JSONObject json = new JSONObject();
+			json.put("name", paramList.get(i).getName());
+			json.put("value", paramList.get(i).getNameCd());
+			result.add(json);
+		}
+		resultMap.put("userRelation", result);*/
+		BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(webViewUser.getUserId());
+		AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(webViewUser.getUserId());
+		resultMap.put("bankOpenAccount", bankOpenAccount);
+		resultMap.put("chinapnr", chinapnr);
+
+		UserEvalationResultVO userEvalationResult = amBankOpenClient.selectUserEvalationResultByUserId(webViewUser.getUserId());
+		if (userEvalationResult != null && userEvalationResult.getId() != 0) {
+			//获取评测时间加一年的毫秒数18.2.2评测 19.2.2
+			Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(),1,1).getTime();
+			//获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
+			Long lNow = GetDate.countDate(new Date(), 5,1).getTime();
+			if (lCreate <= lNow) {
+				//已过期需要重新评测 2是已过期
+				resultMap.put("ifEvaluation", 2);
+			} else {
+				// ifEvaluation是否已经调查表示 1是已调查，0是未调查
+				resultMap.put("ifEvaluation", 1);
+				// userEvalationResult 测评结果
+				//resultMap.put("userEvalationResult", createUserEvalationResult(userEvalationResult));
+			}
+		} else {
+			resultMap.put("ifEvaluation", 0);
+		}
+		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(webViewUser.getUserId());
+		resultMap.put("hjhUserAuth", getUserAuthState(hjhUserAuth));
+		// 获得是否授权
+		// 获取用户上传头像
+		String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+		imghost = imghost.substring(0, imghost.length() - 1);
+		// 实际物理路径前缀2
+		String fileUploadTempPath = UploadFileUtils.getDoPath(PropUtils.getSystem("file.upload.head.path"));
+		if(org.apache.commons.lang3.StringUtils.isNotEmpty( user.getIconurl())){
+			resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconurl());
+		}
+		resultMap.put("inviteLink", systemConfig.getWebHost()+"/user/regist/init?from="+webViewUser.getUserId());
+		 return JSONObject.toJSONString(resultMap, true);
+	}
+
+
+
+	/*private UserEvalationResultCustomize createUserEvalationResult(UserEvalationResultVO userEvalationResult) {
+		UserEvalationResultCustomize userEvalationResultCustomize = new UserEvalationResultCustomize();
+		userEvalationResultCustomize.setType(userEvalationResult.getEvalType());
+		userEvalationResultCustomize.setSummary(userEvalationResult.getSummary());
+		userEvalationResultCustomize.setScoreCount(userEvalationResult.getScoreCount());
+		return userEvalationResultCustomize;
+	}*/
+
+	/**
+	 * 获得用户授权状态信息
+	 * 自动投标状态          缴费授权状态      还款授权状态
+	 * @param auth
+	 * @return
+	 */
+	public HjhUserAuthVO getUserAuthState(HjhUserAuthVO auth) {
+		// 缴费授权
+		int paymentAuth = valdateAuthState(auth.getAutoPaymentStatus(),auth.getAutoPaymentEndTime());
+		auth.setAutoPaymentStatus(paymentAuth);
+		// 还款授权
+		int repayAuth = valdateAuthState(auth.getAutoRepayStatus(),auth.getAutoRepayEndTime());
+		auth.setAutoRepayStatus(repayAuth);
+		// 自动投资授权
+		int invesAuth = valdateAuthState(auth.getAutoInvesStatus(),auth.getAutoBidEndTime());
+		auth.setAutoInvesStatus(invesAuth);
+		return auth;
+	}
+
+	/**
+	 * 检查是否授权  0未授权  1已授权
+	 * @param status
+	 * @param endTime
+	 * @return
+	 */
+	private int valdateAuthState(Integer status, String endTime) {
+		String nowTime = GetDate.date2Str(new Date(),GetDate.yyyyMMdd);
+		if(endTime==null || status==null){
+			return 0;
+		}
+		if (status - 0 == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
+			return 0;
+		}
+		return 1;
 	}
 
 	@Override
@@ -412,6 +530,7 @@ public class UserServiceImpl implements UserService  {
 		return bean;
 	}
 
+
 	/**
 	 * 组装发往江西银行参数
 	 * @param users
@@ -426,7 +545,7 @@ public class UserServiceImpl implements UserService  {
 		String retUrl = systemConfig.getWebHost()+ClientConstant.CLIENT_HEADER_MAP.get(client)+"/user";
 		String bgRetUrl = systemConfig.getWebHost()+ClientConstant.CLIENT_HEADER_MAP.get(client)+"/user";
 		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,users.getUserId(),channel);
-		if("1".equals(type)){
+		if(BankCallConstant.QUERY_TYPE_1.equals(type)){
 			remark = "投资人自动投标签约增强";
 			retUrl += "/userAuthInvesReturn";
 			bgRetUrl+= "/userAuthInvesBgreturn";
@@ -434,7 +553,7 @@ public class UserServiceImpl implements UserService  {
 			bean.setDeadline(GetDate.date2Str(GetDate.countDate(1,5),new SimpleDateFormat("yyyyMMdd")));
 			bean.setTxAmount("1000000");
 			bean.setTotAmount("1000000000");
-		} else if("2".equals(type)){
+		} else if(BankCallConstant.QUERY_TYPE_2.equals(type)){
 			remark = "投资人自动债权转让签约增强";
 			retUrl += "/credituserAuthInvesReturn";
 			bgRetUrl+="/credituserAuthInvesBgreturn";
@@ -494,13 +613,13 @@ public class UserServiceImpl implements UserService  {
 		// 构造函数已经设置
 		// 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
 		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,userid,channel);
-		if(("1").equals(type)){
+		if(BankCallConstant.QUERY_TYPE_1.equals(type)){
 			remark = "投资人自动投标签约增强";
 			bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
 			bean.setDeadline(GetDate.date2Str(GetDate.countDate(1,5),new SimpleDateFormat("yyyyMMdd")));
 			bean.setTxAmount("1000000");
 			bean.setTotAmount("1000000000");
-		} else if(("2").equals(type)){
+		} else if(BankCallConstant.QUERY_TYPE_2.equals(type)){
 			remark = "投资人自动债权转让签约增强";
 			bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
 		}
@@ -872,6 +991,4 @@ public class UserServiceImpl implements UserService  {
 		result.put("isSuccess","false");
 		return result;
 	}
-
-
 }

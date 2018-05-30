@@ -1,0 +1,11 @@
+package com.hyjf.am.response.user;
+
+import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class AccountChinapnrResponse extends Response<AccountChinapnrVO> {
+
+}

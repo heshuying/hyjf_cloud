@@ -2,7 +2,11 @@ package com.hyjf.cs.user.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
@@ -25,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,6 +44,9 @@ public class WebUserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	SystemConfig systemConfig;
 
 	/**
 	 * 注册
@@ -188,4 +196,27 @@ public class WebUserController {
 		return result;
 
 	}
+
+	/**
+	 *账户设置查询
+	 * @param token
+	 * @return
+	 */
+	@GetMapping(value = "init")
+	public String init(@RequestHeader(value = "token") String token) {
+		String result = userService.safeInit(token);
+		return result;
+	}
+
+	/**
+	 * 下载二维码
+	 * @param request
+	 * @param response
+	 * @param form
+	 */
+	@GetMapping("download")
+	public void download(@RequestHeader(value = "token") String token,HttpServletRequest request, HttpServletResponse response){
+		//userService.download(token);
+	}
+
 }

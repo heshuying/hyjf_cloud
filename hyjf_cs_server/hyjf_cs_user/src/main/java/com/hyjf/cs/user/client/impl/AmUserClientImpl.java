@@ -250,4 +250,23 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public UserInfoVO findUsersInfoById(int userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public AccountChinapnrVO getAccountChinapnr(Integer userId) {
+		AccountChinapnrResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getAccountChinapnr/" + userId, AccountChinapnrResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

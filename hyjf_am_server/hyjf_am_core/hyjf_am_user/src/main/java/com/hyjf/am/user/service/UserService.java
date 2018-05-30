@@ -2,10 +2,7 @@ package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
@@ -99,4 +96,8 @@ public interface UserService {
 	 * @return int
 	 */
 	public int updateUserById(User record);
+
+	UserEvalationResult selectUserEvalationResultByUserId(Integer userId);
+
+	AccountChinapnr getAccountChinapnr(Integer userId);
 }

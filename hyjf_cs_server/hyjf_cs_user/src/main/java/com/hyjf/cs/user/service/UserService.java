@@ -48,7 +48,7 @@ public interface UserService {
 
     BankCallBean userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode);
 
-    Map<String,String> userAuthReturn(String token, BankCallBean bean, String urlType, String isSuccess);
+	Map<String,String> userAuthReturn(String token, BankCallBean bean, String urlType, String isSuccess);
 
     String userBgreturn(BankCallBean bean);
 
@@ -71,4 +71,11 @@ public interface UserService {
 	 * @return
 	 */
 	UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr);
+
+	/**
+	 * 账户设置查询
+	 * @param token
+	 * @return
+	 */
+	String safeInit(String token);
 }

@@ -47,4 +47,7 @@ public interface AmUserClient {
 
 	HjhInstConfigVO  selectInstConfigByInstCode(String instCode);
 
+	UserInfoVO findUsersInfoById(int userId);
+
+    AccountChinapnrVO getAccountChinapnr(Integer userId);
 }
