@@ -6,6 +6,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.BaseBean;
 import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -123,4 +124,8 @@ public interface UserService {
 	 * @return
 	 */
 	String safeInit(String token);
+
+	MobileModifyResultBean queryForMobileModify(Integer userId);
+
+	boolean checkForMobileModify(String newMobile, String smsCode);
 }
