@@ -253,15 +253,5 @@ public class WebUserController {
 		return result;
 	}
 
-	/**
-	 * 下载二维码
-	 * @param request
-	 * @param response
-	 * @param form
-	 */
-	@GetMapping("download")
-	public void download(@RequestHeader(value = "token") String token,HttpServletRequest request, HttpServletResponse response){
-		//userService.download(token);
-	}
 
 }

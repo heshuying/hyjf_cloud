@@ -28,6 +28,14 @@ public interface UserService {
             throws ReturnMessageException;
 
 	/**
+	 * api端注册
+	 * @param registerVO
+	 * @param ipAddr
+	 * @return
+	 */
+	UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr);
+
+	/**
 	 * 用户存在检查
 	 * 
 	 * @param mobile
@@ -44,12 +52,44 @@ public interface UserService {
 	 */
 	UserVO login(String loginUserName, String loginPassword, String ip);
 
+	/**
+	 * 授权自动债转、投资
+	 * @param token
+	 * @param client  0web 1wechat 2app
+	 * @param type 1表示投资 2表示债转
+	 * @param channel
+	 * @param lastSrvAuthCode
+	 * @param smsCode
+	 * @return
+	 */
     BankCallBean userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode);
 
+	/**
+	 * web自动投资授权同步回调
+	 * @param token
+	 * @param bean
+	 * @param urlType
+	 * @param isSuccess
+	 * @return
+	 */
 	Map<String,String> userAuthReturn(String token, BankCallBean bean, String urlType, String isSuccess);
 
+	/**
+	 * 异步回调接口
+	 * @param bean
+	 * @return
+	 */
     String userBgreturn(BankCallBean bean);
 
+	/**
+	 * app、wechat授权自动债转、投资同步回调
+	 * @param token
+	 * @param bean
+	 * @param userAutoType
+	 * @param sign
+	 * @param isSuccess
+	 * @return
+	 */
 	Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean, String userAutoType, String sign, String isSuccess);
 
 	BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
@@ -62,16 +102,19 @@ public interface UserService {
 
 	Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status);
 
+
 	/**
-	 * api端注册
-	 * @param registerVO
-	 * @param ipAddr
+	 * 获取用戶通知配置信息
+	 * @param userId
 	 * @return
 	 */
-	UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr);
-
 	UserVO queryUserByUserId(Integer userId);
 
+	/**
+	 * 保存用户通知设置
+	 * @param userVO
+	 * @return
+	 */
 	int updateUserByUserId(UserVO userVO);
 
 	/**

@@ -124,6 +124,12 @@ public class UserServiceImpl implements UserService  {
 		return userVO;
 	}
 
+	/**
+	 * api注册
+	 * @param registerVO
+	 * @param ipAddr
+	 * @return
+	 */
 	@Override
 	public UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr) {
 		// 1. 参数检查
@@ -148,6 +154,11 @@ public class UserServiceImpl implements UserService  {
 		return userVO;
 	}
 
+	/**
+	 * 账户设置信息查询
+	 * @param token
+	 * @return
+	 */
 	@Override
 	public String safeInit(String token) {
 		Map<String,Object> resultMap = new HashMap<>();
@@ -202,7 +213,7 @@ public class UserServiceImpl implements UserService  {
 				// ifEvaluation是否已经调查表示 1是已调查，0是未调查
 				resultMap.put("ifEvaluation", 1);
 				// userEvalationResult 测评结果
-				//resultMap.put("userEvalationResult", createUserEvalationResult(userEvalationResult));
+				resultMap.put("userEvalationResult",userEvalationResult);
 			}
 		} else {
 			resultMap.put("ifEvaluation", 0);
@@ -221,16 +232,6 @@ public class UserServiceImpl implements UserService  {
 		resultMap.put("inviteLink", systemConfig.getWebHost()+"/user/regist/init?from="+webViewUser.getUserId());
 		 return JSONObject.toJSONString(resultMap, true);
 	}
-
-
-
-	/*private UserEvalationResultCustomize createUserEvalationResult(UserEvalationResultVO userEvalationResult) {
-		UserEvalationResultCustomize userEvalationResultCustomize = new UserEvalationResultCustomize();
-		userEvalationResultCustomize.setType(userEvalationResult.getEvalType());
-		userEvalationResultCustomize.setSummary(userEvalationResult.getSummary());
-		userEvalationResultCustomize.setScoreCount(userEvalationResult.getScoreCount());
-		return userEvalationResultCustomize;
-	}*/
 
 	/**
 	 * 获得用户授权状态信息
@@ -275,7 +276,7 @@ public class UserServiceImpl implements UserService  {
 	}
 
 	/**
-	 *
+	 *登录
 	 * @param loginUserName
 	 *           手机号
 	 * @param loginPassword
@@ -559,7 +560,7 @@ public class UserServiceImpl implements UserService  {
 			bgRetUrl+="/credituserAuthInvesBgreturn";
 			bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
 		}
-
+		//1wechat 2app
 		if(client == 1 || client == 2){
 			bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
 			bean.setOrderId(bean.getLogOrderId());
@@ -660,7 +661,7 @@ public class UserServiceImpl implements UserService  {
 	}
 
 	/**
-	 *
+	 *插入日志
 	 * @param user
 	 * @param bean
 	 * @param client
@@ -778,7 +779,7 @@ public class UserServiceImpl implements UserService  {
 	}
 
 	/**
-	 * app授权自动债转、投资同步回调
+	 * app wechat授权自动债转、投资同步回调
 	 * @param token
 	 * @param bean
 	 * @param userAutoType 1债转 0投资
