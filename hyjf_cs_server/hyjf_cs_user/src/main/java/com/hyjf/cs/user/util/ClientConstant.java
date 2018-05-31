@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author zhangqq
+ * @author zhangqingqing
  * @version ClientConstant, v0.1 2018/5/22 10:51
  */
 public class ClientConstant {

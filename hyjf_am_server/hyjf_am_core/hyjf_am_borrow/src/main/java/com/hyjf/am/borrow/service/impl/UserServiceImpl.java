@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
- * @author zhangqq
+ * @author zhangqingqing
  * @version UserServiceImpl, v0.1 2018/5/28 12:53
  */
 public class UserServiceImpl implements UserService {

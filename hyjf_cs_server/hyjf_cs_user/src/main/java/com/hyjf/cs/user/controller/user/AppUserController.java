@@ -1,15 +1,26 @@
 package com.hyjf.cs.user.controller.user;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.DES;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.result.ApiResult;
+import com.hyjf.cs.user.service.AppUserService;
+import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
+import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.util.SecretUtil;
+import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,28 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.constants.LoginError;
-import com.hyjf.cs.user.constants.RegisterError;
-import com.hyjf.cs.user.result.BaseResultBean;
-import com.hyjf.cs.user.service.UserService;
-import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.util.SecretUtil;
-import com.hyjf.cs.user.vo.RegisterVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author xiasq
  * @version AppUserController, v0.1 2018/4/25 15:43
  */
-
+@Api(value = "app端用户接口")
 @RestController
 @RequestMapping("/app/user")
 public class AppUserController {
@@ -48,6 +45,9 @@ public class AppUserController {
 	private UserService userService;
 	@Autowired
 	private AmUserClient amUserClient;
+
+	@Autowired
+	AppUserService  appUserService;
 
 	/**
 	 * 注册
@@ -60,12 +60,13 @@ public class AppUserController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value = "用户注册", notes = "用户注册")
 	@PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-	public BaseResultBean register(@RequestHeader String key, @RequestParam String mobile,
-			@RequestParam String verificationCode, @RequestParam String password,
-			@RequestParam(required = false) String reffer, HttpServletRequest request, HttpServletResponse response) {
+	public ApiResult<UserVO> register(@RequestHeader String key, @RequestParam String mobile,
+                                              @RequestParam String verificationCode, @RequestParam String password,
+                                              @RequestParam(required = false) String reffer, HttpServletRequest request, HttpServletResponse response) {
 		logger.info("register start, mobile is :{}", mobile);
-		BaseResultBean resultBean = new BaseResultBean();
+        ApiResult<UserVO> result = new ApiResult<>();
 		String mobilephone = DES.decodeValue(key, mobile);
 		String smsCode = DES.decodeValue(key, verificationCode);
 		String pwd = DES.decodeValue(key, password);
@@ -73,9 +74,8 @@ public class AppUserController {
 		if (StringUtils.isNotBlank(reffer)) {
 			int count = amUserClient.countUserByRecommendName(reffer);
 			if (count == 0) {
-				resultBean.setStatus(LoginError.REFFER_INVALID_ERROR.getErrCode());
-				resultBean.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMessage());
-				return resultBean;
+                result.setStatus(ApiResult.STATUS_FAIL);
+                result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
 			}
 		}
 		RegisterVO registerVO = new RegisterVO();
@@ -84,15 +84,15 @@ public class AppUserController {
 		registerVO.setReffer(reffer);
 		registerVO.setSmsCode(smsCode);
 		UserVO userVO = userService.register(registerVO,GetCilentIP.getIpAddr(request));
-
+        result.setResult(userVO);
 		if (userVO != null) {
 			logger.info("register success, userId is :{}", userVO.getUserId());
 		} else {
 			logger.error("register failed...");
-			resultBean.setStatus("1");
-			resultBean.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
 		}
-		return resultBean;
+		return result;
 	}
 
 	/**
@@ -103,30 +103,21 @@ public class AppUserController {
 	 * @param request
 	 * @return
 	 */
+	@ApiOperation(value = "登录", notes = "登录")
 	@PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-	public BaseResultBean login(@RequestHeader String key, @RequestParam String username, @RequestParam String password,
+	public ApiResult<UserVO> login(@RequestHeader String key, @RequestParam String username, @RequestParam String password,
 			HttpServletRequest request) {
-		BaseResultBean resultBean = new BaseResultBean();
-
+		ApiResult<UserVO> result = new ApiResult<UserVO>();
 		// 账户密码解密
 		String loginUserName = DES.decodeValue(key, username);
 		String loginPassword = DES.decodeValue(key, password);
 
-		if (Validator.isNull(loginUserName) || Validator.isNull(loginPassword)) {
-			resultBean.setStatus(LoginError.CHECK_NULL_ERROR.getErrCode());
-			resultBean.setStatusDesc(LoginError.CHECK_NULL_ERROR.getErrCode());
-			return resultBean;
+		if (Validator.isNull(loginUserName) || Validator.isNull(loginPassword)||!CommonUtils.isMobile(loginUserName)) {
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
 		}
-
-		// app 只支持手机号登录
-		if (!CommonUtils.isMobile(loginUserName)) {
-			resultBean.setStatus(LoginError.USER_LOGIN_ERROR.getErrCode());
-			resultBean.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
-			return resultBean;
-		}
-
 		userService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
-		return resultBean;
+		return result;
 	}
 
 	/**
@@ -136,6 +127,7 @@ public class AppUserController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
 	@RequestMapping("/userAuthCredit")
 	public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
 		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
@@ -158,12 +150,15 @@ public class AppUserController {
 	 * @param bean
 	 * @return
 	 */
+	@ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
 	@RequestMapping("/userAuthCreditReturn")
-	public Map<String,BaseMapBean> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+	public ApiResult<String> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+		ApiResult<String> apiResult = new ApiResult<>();
 		String sign = request.getHeader("sign");
 		String isSuccess = request.getParameter("isSuccess");
-		Map<String,BaseMapBean> result = userService.userAuthCreditReturn(token,bean,ClientConstant.CREDIT_AUTO_TYPE,sign,isSuccess);
-		 return result;
+		String result = appUserService.userAuthCreditReturn(token,bean,ClientConstant.CREDIT_AUTO_TYPE,sign,isSuccess);
+		apiResult.setResult(result);
+		 return apiResult;
 	}
 
 	/**
@@ -173,6 +168,7 @@ public class AppUserController {
 	 * @param bean
 	 * @return
 	 */
+	@ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
 	@RequestMapping("/userAuthCreditBgreturn")
 	public String userCreditAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
 											   BankCallBean bean) {
@@ -187,6 +183,7 @@ public class AppUserController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
 	@RequestMapping("/userAuthInves")
 	public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
 		String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
@@ -203,32 +200,37 @@ public class AppUserController {
 	}
 
 	/**
-	 * 用户授权自动投资同步回调
-	 * @param token
+	 * @Author: zhangqingqing
+	 * @Desc :用户授权自动投资同步回调
+	 * @Param: * @param token
 	 * @param request
 	 * @param bean
-	 * @return
+	 * @Date: 16:45 2018/5/30
+	 * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
 	 */
+	@ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
 	@RequestMapping("/userAuthInvesReturn")
-	public Map<String,BaseMapBean> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+	public ApiResult<String> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+		ApiResult<String> apiResult = new ApiResult<>();
 		String sign = request.getHeader("sign");
 		String isSuccess = request.getParameter("isSuccess");
-		Map<String,BaseMapBean> result = userService.userAuthCreditReturn(token,bean,ClientConstant.INVES_AUTO_TYPE,sign,isSuccess);
-		return result;
+		String result = appUserService.userAuthCreditReturn(token,bean,ClientConstant.INVES_AUTO_TYPE,sign,isSuccess);
+		apiResult.setResult(result);
+		return apiResult;
 	}
 
 	/**
-	 * 用户授权自动投资异步回调
-	 *
-	 * @param request
-	 * @param response
-	 * @param bean
-	 * @return
+	 * @Author: zhangqingqing
+	 * @Desc :用户授权自动投资异步回调
+	 * @Param: * @param bean
+	 * @Date: 16:46 2018/5/30
+	 * @Return: java.lang.String
 	 */
+	@ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
 	@ResponseBody
 	@RequestMapping("/userAuthInvesBgreturn")
-	public String userAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
-										BankCallBean bean) {
+	public String userAuthInvesBgreturn(BankCallBean bean) {
+
 		String result = userService.userBgreturn(bean);
 		return result;
 	}
@@ -240,6 +242,7 @@ public class AppUserController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
 	@ResponseBody
 	@RequestMapping(value = "/updatePasswordAction", method = RequestMethod.POST)
 	public JSONObject updatePasswordAction(HttpServletRequest request, HttpServletResponse response) {

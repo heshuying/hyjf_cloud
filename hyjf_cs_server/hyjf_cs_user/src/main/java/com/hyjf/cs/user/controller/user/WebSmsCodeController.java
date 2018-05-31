@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.user;
 
 import javax.servlet.http.HttpServletRequest;
 
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import com.hyjf.cs.user.util.GetCilentIP;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-
+@Api(value = "验证码")
 @RestController
 @RequestMapping("/web/smsCode")
 public class WebSmsCodeController {

@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * 用户充值Controller
  * 
- * @author zhangqq
+ * @author zhangqingqing
  *
  */
 @Controller

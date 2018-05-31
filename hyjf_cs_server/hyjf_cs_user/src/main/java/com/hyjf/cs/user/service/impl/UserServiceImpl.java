@@ -17,7 +17,10 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.beans.*;
+import com.hyjf.cs.user.beans.AutoPlusRequestBean;
+import com.hyjf.cs.user.beans.BaseBean;
+import com.hyjf.cs.user.beans.BaseDefine;
+import com.hyjf.cs.user.beans.BaseResultBean;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -33,7 +36,6 @@ import com.hyjf.cs.user.service.ActivityService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
-import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -155,9 +157,11 @@ public class UserServiceImpl implements UserService  {
 	}
 
 	/**
-	 * 账户设置信息查询
-	 * @param token
-	 * @return
+	 * @Author: zhangqingqing
+	 * @Desc :账户设置信息查询
+	 * @Param: * @param token
+	 * @Date: 16:47 2018/5/30
+	 * @Return: java.lang.String
 	 */
 	@Override
 	public String safeInit(String token) {
@@ -253,10 +257,12 @@ public class UserServiceImpl implements UserService  {
 	}
 
 	/**
-	 * 检查是否授权  0未授权  1已授权
-	 * @param status
+	 * @Author: zhangqingqing
+	 * @Desc :检查是否授权  0未授权  1已授权
+	 * @Param: * @param status
 	 * @param endTime
-	 * @return
+	 * @Date: 16:47 2018/5/30
+	 * @Return: int
 	 */
 	private int valdateAuthState(Integer status, String endTime) {
 		String nowTime = GetDate.date2Str(new Date(),GetDate.yyyyMMdd);
@@ -598,42 +604,7 @@ public class UserServiceImpl implements UserService  {
 		return bean;
 	}
 
-	/**
-	 * 组装发往江西银行参数
-	 * @param accountId
-	 * @param userid
-	 * @param type
-	 * @param channel
-	 * @param lastSrvAuthCode
-	 * @param smsCode
-	 * @return
-	 */
-	private BankCallBean getCommonBankCallBean(String accountId, Integer userid, String type, String channel, String lastSrvAuthCode, String smsCode) {
-		String remark = "";
-		String txcode = "";
-		// 构造函数已经设置
-		// 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
-		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,userid,channel);
-		if(BankCallConstant.QUERY_TYPE_1.equals(type)){
-			remark = "投资人自动投标签约增强";
-			bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
-			bean.setDeadline(GetDate.date2Str(GetDate.countDate(1,5),new SimpleDateFormat("yyyyMMdd")));
-			bean.setTxAmount("1000000");
-			bean.setTotAmount("1000000000");
-		} else if(BankCallConstant.QUERY_TYPE_2.equals(type)){
-			remark = "投资人自动债权转让签约增强";
-			bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
-		}
-		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
-		bean.setOrderId(bean.getLogOrderId());
-		bean.setAccountId(accountId);
-		bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
-		bean.setLastSrvAuthCode(lastSrvAuthCode);
-		bean.setSmsCode(smsCode);
-		bean.setLogRemark(remark);
 
-		return bean;
-	}
 
 	/**
 	 * 检查用户信息
@@ -778,99 +749,6 @@ public class UserServiceImpl implements UserService  {
 		return JSONObject.toJSONString(result, true);
 	}
 
-	/**
-	 * app wechat授权自动债转、投资同步回调
-	 * @param token
-	 * @param bean
-	 * @param userAutoType 1债转 0投资
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean,String userAutoType, String sign,String isSuccess) {
-		bean.convert();
-		// 用户ID
-		Integer userId = Integer.parseInt(bean.getLogUserId());
-		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(userId);
-		if (isSuccess == null || !"1".equals(isSuccess)|| hjhUserAuth == null||hjhUserAuth.getAutoCreditStatus()!=1) {
-			if (ClientConstant.INVES_AUTO_TYPE.equals(userAutoType)){
-				return getErrorMap(ResultEnum.USER_ERROR_204,sign,userAutoType, hjhUserAuth);
-			}else {
-				return getErrorMap(ResultEnum.USER_ERROR_205,sign,userAutoType, hjhUserAuth);
-			}
-		}else {
-			return getSuccessMap(sign, userAutoType, hjhUserAuth);
-		}
-	}
-
-	@Override
-	public BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean) {
-		BankOpenAccountVO bankOpenAccount = this.amBankOpenClient.selectByAccountId(payRequestBean.getAccountId());
-		UserVO user= amUserClient.findUserById(bankOpenAccount.getUserId());
-		Integer userId = user.getUserId();
-		// 同步调用路径
-		String retUrl = systemConfig.getWebHost()
-				+ "/server/autoPlus/userAuthInvesReturn?acqRes="
-				+ payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getRetUrl().replace("#", "*-*-*");
-		// 异步调用路
-		String bgRetUrl =systemConfig.getWebHost()
-				+ "/server/autoPlus/userAuthInvesBgreturn?acqRes="
-				+ payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getNotifyUrl().replace("#", "*-*-*");
-		// 组装发往江西银行参数
-		BankCallBean bean = getCommonBankCallBean(payRequestBean.getAccountId(),userId,type,payRequestBean.getChannel(),smsSeq,payRequestBean.getSmsCode());
-		bean.setRetUrl(retUrl);
-		bean.setNotifyUrl(bgRetUrl);
-		// 插入日志
-		this.insertUserAuthLog(user, bean,1, BankCallConstant.QUERY_TYPE_1);
-		logger.info("自动投资授权申请end");
-		return bean;
-	}
-
-
-
-	/**
-	 * 组装跳转错误页面MV
-	 * @param param
-	 * @param sign
-	 * @param type
-	 * @param hjhUserAuth
-	 * @return
-	 */
-	private Map<String,BaseMapBean> getErrorMap(ResultEnum param,String sign, String type, HjhUserAuthVO hjhUserAuth) {
-		Map<String,BaseMapBean> result = new HashMap<>();
-		BaseMapBean baseMapBean = new BaseMapBean();
-		baseMapBean.set(CustomConstants.APP_STATUS, param.getStatus());
-		baseMapBean.set(CustomConstants.APP_STATUS_DESC, param.getStatusDesc());
-		baseMapBean.set("autoInvesStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoInvesStatus()==null?"0":hjhUserAuth.getAutoInvesStatus()+ "");
-		baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
-		baseMapBean.set("userAutoType", type);
-		baseMapBean.set(CustomConstants.APP_SIGN, sign);
-		baseMapBean.setCallBackAction(systemConfig.getWebHost()+"/user/setting/authorization/result/failed");
-		result.put("callBackForm", baseMapBean);
-		return result;
-	}
-
-	/**
-	 * 组装跳转成功页面MV
-	 * @param sign
-	 * @param type
-	 * @param autoInvesStatus
-	 * @param autoCreditStatus
-	 * @return
-	 */
-	private Map<String,BaseMapBean> getSuccessMap(String sign, String type, HjhUserAuthVO hjhUserAuth) {
-		Map<String,BaseMapBean> result = new HashMap<>();
-		BaseMapBean baseMapBean = new BaseMapBean();
-		baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.SUCCESS.getStatus());
-		baseMapBean.set(CustomConstants.APP_STATUS_DESC, ResultEnum.SUCCESS.getStatusDesc());
-		baseMapBean.set(CustomConstants.APP_SIGN, sign);
-		baseMapBean.set("autoInvesStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoInvesStatus()==null?"0":hjhUserAuth.getAutoInvesStatus()+ "");
-		baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
-		baseMapBean.set("userAutoType", type);
-		baseMapBean.setCallBackAction(systemConfig.getWebHost()+"/user/setting/authorization/result/success");
-		result.put("callBackForm", baseMapBean);
-		return result;
-	}
 
 	/**
 	 * 验证外部请求签名

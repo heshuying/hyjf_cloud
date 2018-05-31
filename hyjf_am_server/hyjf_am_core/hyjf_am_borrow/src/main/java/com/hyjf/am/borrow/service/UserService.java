@@ -6,7 +6,7 @@ package com.hyjf.am.borrow.service;
 import com.hyjf.am.borrow.dao.model.auto.HjhInstConfig;
 
 /**
- * @author zhangqq
+ * @author zhangqingqing
  * @version UserService, v0.1 2018/5/28 12:53
  */
 public interface UserService {

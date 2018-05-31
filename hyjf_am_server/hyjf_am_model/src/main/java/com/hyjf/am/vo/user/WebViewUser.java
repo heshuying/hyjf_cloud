@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * WEB页面展示用户实体
  *
- * @author zqing
+ * @author zhangqingqing
  * @version hyjf 1.0
  */
 public class WebViewUser  extends BaseVO implements Serializable {

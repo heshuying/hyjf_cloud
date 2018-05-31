@@ -5,7 +5,6 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.BaseBean;
-import com.hyjf.cs.user.beans.BaseMapBean;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -80,19 +79,6 @@ public interface UserService {
 	 * @return
 	 */
     String userBgreturn(BankCallBean bean);
-
-	/**
-	 * app、wechat授权自动债转、投资同步回调
-	 * @param token
-	 * @param bean
-	 * @param userAutoType
-	 * @param sign
-	 * @param isSuccess
-	 * @return
-	 */
-	Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean, String userAutoType, String sign, String isSuccess);
-
-	BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
 
 	boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
