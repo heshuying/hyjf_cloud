@@ -1,5 +1,24 @@
 package com.hyjf.cs.user.controller.user;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
@@ -10,6 +29,7 @@ import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.result.ApiResult;
+import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -17,18 +37,9 @@ import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -278,5 +289,43 @@ public class WebUserController {
         return result;
     }
 
+	/**
+	 * 用户手机号修改基础信息获取
+	 * @param token
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/mobileModifyInit")
+	public ApiResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+		ApiResult<MobileModifyResultBean> result = new ApiResult<MobileModifyResultBean>();
+
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		MobileModifyResultBean resultBean = userService.queryForMobileModify(user.getUserId());
+		result.setResult(resultBean);
+		
+		return result;
+	}
+	
+	/**
+	 * 用户手机号码修改
+	 */
+	@ApiOperation(value = "手机号码修改", notes = "手机号码修改")
+	@PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
+	public ApiResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String newMobile, @RequestParam(required=true) String smsCode, HttpServletRequest request,
+			HttpServletResponse response) {
+		logger.info("用户手机号码修改, newMobile :{}, smsCode:{}", newMobile, smsCode);
+		ApiResult<UserVO> result = new ApiResult<UserVO>();
+
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		boolean checkRet = userService.checkForMobileModify(newMobile, smsCode);
+		if(checkRet) {
+			UserVO userVO = new UserVO();
+			userVO.setUserId(user.getUserId());
+			userVO.setMobile(newMobile);
+			userService.updateUserByUserId(userVO);
+		}
+		
+		return result;
+	}
 
 }

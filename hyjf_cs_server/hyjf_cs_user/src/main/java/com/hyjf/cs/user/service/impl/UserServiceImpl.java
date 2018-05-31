@@ -32,6 +32,7 @@ import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.redis.StringRedisUtil;
+import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.ActivityService;
 import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
@@ -420,9 +421,9 @@ public class UserServiceImpl implements UserService  {
 		if (!m.matches()) {
 			throw new ReturnMessageException(RegisterError.PASSWORD_FORMAT_ERROR);
 		}
-
+		/*
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-		/*int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
 				CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
 		if (cnt == 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
@@ -890,6 +891,41 @@ public class UserServiceImpl implements UserService  {
 	@Override
 	public int updateUserByUserId(UserVO userVO) {
 		return amUserClient.updateUserById(userVO);
+	}
+	
+	/**
+	 * 用户手机号修改信息查询
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public MobileModifyResultBean queryForMobileModify(Integer userId) {
+		MobileModifyResultBean result = new MobileModifyResultBean();
+		UserVO user = amUserClient.findUserById(userId);
+		if(user != null && StringUtils.isNotBlank(user.getMobile())) {
+			String hideMobile = user.getMobile().substring(0,user.getMobile().length()-(user.getMobile().substring(3)).length())+"****"+user.getMobile().substring(7);
+			result.setMobile(user.getMobile());
+			result.setHideMobile(hideMobile);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 更换手机号条件校验
+	 * @param newMobile
+	 * @param smsCode
+	 */
+	@Override
+	public boolean checkForMobileModify(String newMobile, String smsCode) {
+		String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
+		int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+				CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+		if (cnt <= 0) {
+			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
+		}
+		
+		return true;
 	}
 
 

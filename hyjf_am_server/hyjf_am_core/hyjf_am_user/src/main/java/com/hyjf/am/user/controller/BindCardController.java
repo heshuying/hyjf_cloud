@@ -73,7 +73,7 @@ public class BindCardController {
 	 * @param cardNo
 	 * @return
 	 */
-	@RequestMapping("/deleteUserCardByUserId/{userId}")
+	@RequestMapping("/deleteUserCardByCardNo/{cardNo}")
 	public int deleteUserCardByCardNo(@PathVariable String cardNo) {
 		return bindCardService.deleteUserCardByCardNo(cardNo);
 	}
