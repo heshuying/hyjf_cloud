@@ -37,13 +37,19 @@ public class ClientConstant {
      */
     public static final String INVES_AUTO_TYPE = "0";
 
+    /** 自动投标签约 签约状态查询 */
+    public static final String QUERY_TYPE_1 = "1";
+
+    /** 自动债转签约签约状态查询 */
+    public static final String QUERY_TYPE_2 = "2";
+
     /**
-     * 自动债转
+     * 自动债转URL_TYPE
      */
     public static final String CREDIT_URL_TYPE = "1";
 
     /**
-     * 自动投资
+     * 自动投资URL_TYPE
      */
     public static final String INVES_URL_TYPE = "2";
 

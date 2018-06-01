@@ -14,6 +14,7 @@ import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AppUserServiceImpl, v0.1 2018/5/30 17:39
  */
+@Service
 public class AppUserServiceImpl implements AppUserService {
 
     @Autowired
