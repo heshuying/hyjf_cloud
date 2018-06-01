@@ -85,19 +85,6 @@ public interface UserService {
 	 */
     String userBgreturn(BankCallBean bean);
 
-	/**
-	 * app、wechat授权自动债转、投资同步回调
-	 * @param token
-	 * @param bean
-	 * @param userAutoType
-	 * @param sign
-	 * @param isSuccess
-	 * @return
-	 */
-	Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean, String userAutoType, String sign, String isSuccess);
-
-	BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
-
 	boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);

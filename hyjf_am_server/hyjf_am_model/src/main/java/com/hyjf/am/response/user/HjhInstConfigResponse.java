@@ -7,7 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 /**
- * @author zhangqq
+ * @author zhangqingqing
  * @version HjhInstConfigResponse, v0.1 2018/5/28 12:47
  */
 public class HjhInstConfigResponse extends Response<HjhInstConfigVO> {

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author zhangqq
+ * @author zhangqingqing
  * @version BorrowController, v0.1 2018/5/28 12:42
  */
 
@@ -29,6 +29,13 @@ public class BorrowController {
     @Autowired
     UserService userService;
 
+    /**
+     * @Author: zhangqingqing
+     * @Desc :根据机构编号检索机构信息
+     * @Param: * @param instCode
+     * @Date: 9:00 2018/5/31
+     * @Return: com.hyjf.am.response.user.HjhInstConfigResponse
+     */
     @ApiOperation(value = " 根据机构编号检索机构信息")
     @GetMapping("/selectInstConfigByInstCode/{instCode}")
     public HjhInstConfigResponse selectInstConfigByInstCode(@PathVariable(value = "instCode") String instCode) {

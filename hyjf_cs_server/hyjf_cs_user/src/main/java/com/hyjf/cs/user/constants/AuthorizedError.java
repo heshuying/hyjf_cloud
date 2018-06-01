@@ -7,7 +7,7 @@ package com.hyjf.cs.user.constants;
 import com.hyjf.common.constants.ErrorCode;
 
 /**
- * @author zhangqq
+ * @author zhangqingqing
  * @version LoginError, v0.1 2018/4/25 14:58
  */
 public enum AuthorizedError implements ErrorCode {

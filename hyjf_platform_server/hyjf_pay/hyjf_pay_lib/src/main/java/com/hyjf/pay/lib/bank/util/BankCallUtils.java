@@ -2,7 +2,7 @@
  * Description:银行存管接口util类
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
- * @author: zhangqq
+ * @author: zhangqingqing
  * @version: 1.0
  * Created at: 2015年11月23日 上午11:48:46
  * Modification History:
