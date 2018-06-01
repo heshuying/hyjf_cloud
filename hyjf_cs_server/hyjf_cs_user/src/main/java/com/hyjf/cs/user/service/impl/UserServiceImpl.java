@@ -1,30 +1,76 @@
 package com.hyjf.cs.user.service.impl;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.BindEmailLogVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.common.util.AsteriskProcessUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.beans.*;
+import com.hyjf.cs.user.beans.AutoPlusRequestBean;
+import com.hyjf.cs.user.beans.BaseBean;
+import com.hyjf.cs.user.beans.BaseDefine;
+import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.beans.BaseResultBean;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.BindEmailError;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
+import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.redis.RedisUtil;
@@ -39,25 +85,6 @@ import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author xiasq
@@ -82,6 +109,9 @@ public class UserServiceImpl implements UserService  {
 
 	@Autowired
 	private SmsProducer smsProducer;
+	
+	@Autowired
+    private MailProducer mailProducer;
 
 	@Autowired
 	private RedisUtil redisUtil;
@@ -1045,6 +1075,124 @@ public class UserServiceImpl implements UserService  {
 				CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
 		if (cnt <= 0) {
 			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * 绑定邮箱发送激活邮件
+	 * @param userId
+	 * @param email
+	 * @return
+	 * @throws MQException
+	 */
+	@Override
+	public boolean sendEmailActive(Integer userId, String email) throws MQException {
+		UserVO user = amUserClient.findUserById(userId);
+		String activeCode = GetCode.getRandomCode(6);
+		
+		// 保存发送的激活邮件记录
+		BindEmailLogRequest request = new BindEmailLogRequest();
+		request.setCreatetime(new Date());
+		request.setEmailActiveCode(activeCode);
+		request.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
+		request.setUserEmail(email);
+		request.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		request.setUserId(userId);
+		int ret = amUserClient.insertBindEmailLog(request);
+		
+		// 发送激活邮件
+		activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
+		String url = systemConfig.webHost + "/web/user/bindEmail?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+		Map<String, String> replaceMap = new HashMap<String, String>();
+		replaceMap.put("url_name", url);
+		if (StringUtils.isNotBlank(user.getNickname())) {
+			replaceMap.put("username_name", user.getNickname());
+		} else {
+			replaceMap.put("username_name", user.getUsername());
+		}
+		
+		 MailMessage mailMessage = new MailMessage(null, replaceMap, "绑定邮箱激活", null, null, new String[] {email},
+                         CustomConstants.EMAILPARAM_TPL_BINDEMAIL, MessageConstant.MAILSENDFORMAILINGADDRESS);
+	     // 发送邮件
+	     mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));
+		
+		return true;
+	}
+	
+	/**
+	 * 发送激活邮件条件校验
+	 */
+	@Override
+	public void checkForEmailSend(String email, Integer userId) {
+		// 邮箱为空校验
+		if (StringUtils.isBlank(email)) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_EMPTY_ERROR);
+		}
+		// 邮箱格式校验
+		if (!Validator.isEmailAddress(email)) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_FORMAT_ERROR);
+		}
+		// 邮箱地址使用校验
+		boolean isExist = amUserClient.checkEmailUsed(userId);
+		if(isExist) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_USED_ERROR);
+		}
+		
+	}
+	
+	/**
+	 * 绑定邮箱激活条件校验
+	 * @param email
+	 * @param userId
+	 * @param activeCode
+	 */
+	@Override
+	public void checkForEmailBind(String email, String userId, String activeCode, WebViewUser user) {
+		// 邮箱为空校验
+		if (StringUtils.isBlank(email) || StringUtils.isBlank(activeCode) || StringUtils.isBlank(userId)) {
+			throw new ReturnMessageException(BindEmailError.REQUEST_PARAM_ERROR);
+		}
+		
+		// 校验激活是否用户本人
+		if(userId.equals(String.valueOf(user.getUserId()))){
+			throw new ReturnMessageException(BindEmailError.REQUEST_PARAM_ERROR);
+		}
+		
+		// 激活邮件存在性校验
+		BindEmailLogVO log = amUserClient.getBindEmailLog(Integer.parseInt(userId));
+		if(log == null) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR_4);
+		}
+		
+		// 激活邮件过期校验
+		if (new Date().after(log.getEmailActiveUrlDeadtime())) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR_3);
+		}
+		
+		// 激活校验
+		if(!userId.equals(log.getUserId()) || !email.equals(log.getUserEmail()) || !activeCode.equals(activeCode)) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR);
+		}
+	}
+	
+	/**
+	 * 绑定邮箱更新
+	 * @param userId
+	 * @param email
+	 * @return
+	 * @throws MQException
+	 */
+	@Override
+	public boolean updateEmail(Integer userId, String email) throws MQException {
+		BindEmailLogVO vo = amUserClient.getBindEmailLog(userId);
+		BindEmailLogRequest requestBean = new BindEmailLogRequest();
+		BeanUtils.copyProperties(vo, requestBean);
+		int cnt = amUserClient.updateBindEmail(requestBean);
+		
+		if (cnt <= 0) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR);
 		}
 		
 		return true;
