@@ -1,4 +1,4 @@
-package com.hyjf.am.borrow.mq;
+package com.hyjf.am.trade.mq;
 
 import java.util.List;
 
@@ -16,11 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.hyjf.am.borrow.dao.model.auto.Account;
-import com.hyjf.am.borrow.service.AccountService;
+import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.vo.borrow.AccountVO;
 
 /**
