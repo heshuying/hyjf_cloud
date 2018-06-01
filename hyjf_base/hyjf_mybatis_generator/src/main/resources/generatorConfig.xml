@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -439,6 +439,10 @@
 
         <!-- 卡BIN配置表 -->
         <table tableName="ht_card_bin" domainObjectName="CardBin">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 紧急联系人 -->
+        <table tableName="ht_users_contact" domainObjectName="usersContact">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
     </context>
