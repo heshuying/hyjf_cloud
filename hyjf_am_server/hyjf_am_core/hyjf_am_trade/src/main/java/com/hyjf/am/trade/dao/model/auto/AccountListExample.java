@@ -1,4 +1,4 @@
-package com.hyjf.am.borrow.dao.model.auto;
+package com.hyjf.am.trade.dao.model.auto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -1765,6 +1765,126 @@ public class AccountListExample {
             return (Criteria) this;
         }
 
+        public Criteria andTxDateIsNull() {
+            addCriterion("tx_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateIsNotNull() {
+            addCriterion("tx_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateEqualTo(Integer value) {
+            addCriterion("tx_date =", value, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateNotEqualTo(Integer value) {
+            addCriterion("tx_date <>", value, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateGreaterThan(Integer value) {
+            addCriterion("tx_date >", value, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("tx_date >=", value, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateLessThan(Integer value) {
+            addCriterion("tx_date <", value, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateLessThanOrEqualTo(Integer value) {
+            addCriterion("tx_date <=", value, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateIn(List<Integer> values) {
+            addCriterion("tx_date in", values, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateNotIn(List<Integer> values) {
+            addCriterion("tx_date not in", values, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateBetween(Integer value1, Integer value2) {
+            addCriterion("tx_date between", value1, value2, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxDateNotBetween(Integer value1, Integer value2) {
+            addCriterion("tx_date not between", value1, value2, "txDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeIsNull() {
+            addCriterion("tx_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeIsNotNull() {
+            addCriterion("tx_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeEqualTo(Integer value) {
+            addCriterion("tx_time =", value, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeNotEqualTo(Integer value) {
+            addCriterion("tx_time <>", value, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeGreaterThan(Integer value) {
+            addCriterion("tx_time >", value, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("tx_time >=", value, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeLessThan(Integer value) {
+            addCriterion("tx_time <", value, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("tx_time <=", value, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeIn(List<Integer> values) {
+            addCriterion("tx_time in", values, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeNotIn(List<Integer> values) {
+            addCriterion("tx_time not in", values, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeBetween(Integer value1, Integer value2) {
+            addCriterion("tx_time between", value1, value2, "txTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("tx_time not between", value1, value2, "txTime");
+            return (Criteria) this;
+        }
+
         public Criteria andSeqNoIsNull() {
             addCriterion("seq_no is null");
             return (Criteria) this;
@@ -1835,663 +1955,73 @@ public class AccountListExample {
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalIsNull() {
-            addCriterion("bank_total is null");
+        public Criteria andBankSeqNoIsNull() {
+            addCriterion("bank_seq_no is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalIsNotNull() {
-            addCriterion("bank_total is not null");
+        public Criteria andBankSeqNoIsNotNull() {
+            addCriterion("bank_seq_no is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalEqualTo(BigDecimal value) {
-            addCriterion("bank_total =", value, "bankTotal");
+        public Criteria andBankSeqNoEqualTo(String value) {
+            addCriterion("bank_seq_no =", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalNotEqualTo(BigDecimal value) {
-            addCriterion("bank_total <>", value, "bankTotal");
+        public Criteria andBankSeqNoNotEqualTo(String value) {
+            addCriterion("bank_seq_no <>", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalGreaterThan(BigDecimal value) {
-            addCriterion("bank_total >", value, "bankTotal");
+        public Criteria andBankSeqNoGreaterThan(String value) {
+            addCriterion("bank_seq_no >", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_total >=", value, "bankTotal");
+        public Criteria andBankSeqNoGreaterThanOrEqualTo(String value) {
+            addCriterion("bank_seq_no >=", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalLessThan(BigDecimal value) {
-            addCriterion("bank_total <", value, "bankTotal");
+        public Criteria andBankSeqNoLessThan(String value) {
+            addCriterion("bank_seq_no <", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_total <=", value, "bankTotal");
+        public Criteria andBankSeqNoLessThanOrEqualTo(String value) {
+            addCriterion("bank_seq_no <=", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalIn(List<BigDecimal> values) {
-            addCriterion("bank_total in", values, "bankTotal");
+        public Criteria andBankSeqNoLike(String value) {
+            addCriterion("bank_seq_no like", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalNotIn(List<BigDecimal> values) {
-            addCriterion("bank_total not in", values, "bankTotal");
+        public Criteria andBankSeqNoNotLike(String value) {
+            addCriterion("bank_seq_no not like", value, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_total between", value1, value2, "bankTotal");
+        public Criteria andBankSeqNoIn(List<String> values) {
+            addCriterion("bank_seq_no in", values, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankTotalNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_total not between", value1, value2, "bankTotal");
+        public Criteria andBankSeqNoNotIn(List<String> values) {
+            addCriterion("bank_seq_no not in", values, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankWaitRepayIsNull() {
-            addCriterion("bank_wait_repay is null");
+        public Criteria andBankSeqNoBetween(String value1, String value2) {
+            addCriterion("bank_seq_no between", value1, value2, "bankSeqNo");
             return (Criteria) this;
         }
 
-        public Criteria andBankWaitRepayIsNotNull() {
-            addCriterion("bank_wait_repay is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_repay =", value, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayNotEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_repay <>", value, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayGreaterThan(BigDecimal value) {
-            addCriterion("bank_wait_repay >", value, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_repay >=", value, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayLessThan(BigDecimal value) {
-            addCriterion("bank_wait_repay <", value, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_repay <=", value, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayIn(List<BigDecimal> values) {
-            addCriterion("bank_wait_repay in", values, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayNotIn(List<BigDecimal> values) {
-            addCriterion("bank_wait_repay not in", values, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_wait_repay between", value1, value2, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitRepayNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_wait_repay not between", value1, value2, "bankWaitRepay");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceIsNull() {
-            addCriterion("bank_balance is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceIsNotNull() {
-            addCriterion("bank_balance is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceEqualTo(BigDecimal value) {
-            addCriterion("bank_balance =", value, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceNotEqualTo(BigDecimal value) {
-            addCriterion("bank_balance <>", value, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceGreaterThan(BigDecimal value) {
-            addCriterion("bank_balance >", value, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_balance >=", value, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceLessThan(BigDecimal value) {
-            addCriterion("bank_balance <", value, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_balance <=", value, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceIn(List<BigDecimal> values) {
-            addCriterion("bank_balance in", values, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceNotIn(List<BigDecimal> values) {
-            addCriterion("bank_balance not in", values, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_balance between", value1, value2, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBalanceNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_balance not between", value1, value2, "bankBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostIsNull() {
-            addCriterion("bank_frost is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostIsNotNull() {
-            addCriterion("bank_frost is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostEqualTo(BigDecimal value) {
-            addCriterion("bank_frost =", value, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostNotEqualTo(BigDecimal value) {
-            addCriterion("bank_frost <>", value, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostGreaterThan(BigDecimal value) {
-            addCriterion("bank_frost >", value, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_frost >=", value, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostLessThan(BigDecimal value) {
-            addCriterion("bank_frost <", value, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_frost <=", value, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostIn(List<BigDecimal> values) {
-            addCriterion("bank_frost in", values, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostNotIn(List<BigDecimal> values) {
-            addCriterion("bank_frost not in", values, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_frost between", value1, value2, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankFrostNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_frost not between", value1, value2, "bankFrost");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalIsNull() {
-            addCriterion("bank_wait_capital is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalIsNotNull() {
-            addCriterion("bank_wait_capital is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_capital =", value, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalNotEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_capital <>", value, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalGreaterThan(BigDecimal value) {
-            addCriterion("bank_wait_capital >", value, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_capital >=", value, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalLessThan(BigDecimal value) {
-            addCriterion("bank_wait_capital <", value, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_capital <=", value, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalIn(List<BigDecimal> values) {
-            addCriterion("bank_wait_capital in", values, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalNotIn(List<BigDecimal> values) {
-            addCriterion("bank_wait_capital not in", values, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_wait_capital between", value1, value2, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitCapitalNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_wait_capital not between", value1, value2, "bankWaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestIsNull() {
-            addCriterion("bank_wait_interest is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestIsNotNull() {
-            addCriterion("bank_wait_interest is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_interest =", value, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestNotEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_interest <>", value, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestGreaterThan(BigDecimal value) {
-            addCriterion("bank_wait_interest >", value, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_interest >=", value, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestLessThan(BigDecimal value) {
-            addCriterion("bank_wait_interest <", value, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_wait_interest <=", value, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestIn(List<BigDecimal> values) {
-            addCriterion("bank_wait_interest in", values, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestNotIn(List<BigDecimal> values) {
-            addCriterion("bank_wait_interest not in", values, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_wait_interest between", value1, value2, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankWaitInterestNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_wait_interest not between", value1, value2, "bankWaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalIsNull() {
-            addCriterion("bank_await_capital is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalIsNotNull() {
-            addCriterion("bank_await_capital is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalEqualTo(BigDecimal value) {
-            addCriterion("bank_await_capital =", value, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalNotEqualTo(BigDecimal value) {
-            addCriterion("bank_await_capital <>", value, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalGreaterThan(BigDecimal value) {
-            addCriterion("bank_await_capital >", value, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_await_capital >=", value, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalLessThan(BigDecimal value) {
-            addCriterion("bank_await_capital <", value, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_await_capital <=", value, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalIn(List<BigDecimal> values) {
-            addCriterion("bank_await_capital in", values, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalNotIn(List<BigDecimal> values) {
-            addCriterion("bank_await_capital not in", values, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_await_capital between", value1, value2, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitCapitalNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_await_capital not between", value1, value2, "bankAwaitCapital");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestIsNull() {
-            addCriterion("bank_await_interest is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestIsNotNull() {
-            addCriterion("bank_await_interest is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestEqualTo(BigDecimal value) {
-            addCriterion("bank_await_interest =", value, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestNotEqualTo(BigDecimal value) {
-            addCriterion("bank_await_interest <>", value, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestGreaterThan(BigDecimal value) {
-            addCriterion("bank_await_interest >", value, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_await_interest >=", value, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestLessThan(BigDecimal value) {
-            addCriterion("bank_await_interest <", value, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_await_interest <=", value, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestIn(List<BigDecimal> values) {
-            addCriterion("bank_await_interest in", values, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestNotIn(List<BigDecimal> values) {
-            addCriterion("bank_await_interest not in", values, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_await_interest between", value1, value2, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitInterestNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_await_interest not between", value1, value2, "bankAwaitInterest");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitIsNull() {
-            addCriterion("bank_await is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitIsNotNull() {
-            addCriterion("bank_await is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitEqualTo(BigDecimal value) {
-            addCriterion("bank_await =", value, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitNotEqualTo(BigDecimal value) {
-            addCriterion("bank_await <>", value, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitGreaterThan(BigDecimal value) {
-            addCriterion("bank_await >", value, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_await >=", value, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitLessThan(BigDecimal value) {
-            addCriterion("bank_await <", value, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_await <=", value, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitIn(List<BigDecimal> values) {
-            addCriterion("bank_await in", values, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitNotIn(List<BigDecimal> values) {
-            addCriterion("bank_await not in", values, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_await between", value1, value2, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankAwaitNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_await not between", value1, value2, "bankAwait");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumIsNull() {
-            addCriterion("bank_interest_sum is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumIsNotNull() {
-            addCriterion("bank_interest_sum is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumEqualTo(BigDecimal value) {
-            addCriterion("bank_interest_sum =", value, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumNotEqualTo(BigDecimal value) {
-            addCriterion("bank_interest_sum <>", value, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumGreaterThan(BigDecimal value) {
-            addCriterion("bank_interest_sum >", value, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_interest_sum >=", value, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumLessThan(BigDecimal value) {
-            addCriterion("bank_interest_sum <", value, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_interest_sum <=", value, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumIn(List<BigDecimal> values) {
-            addCriterion("bank_interest_sum in", values, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumNotIn(List<BigDecimal> values) {
-            addCriterion("bank_interest_sum not in", values, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_interest_sum between", value1, value2, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInterestSumNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_interest_sum not between", value1, value2, "bankInterestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumIsNull() {
-            addCriterion("bank_invest_sum is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumIsNotNull() {
-            addCriterion("bank_invest_sum is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumEqualTo(BigDecimal value) {
-            addCriterion("bank_invest_sum =", value, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumNotEqualTo(BigDecimal value) {
-            addCriterion("bank_invest_sum <>", value, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumGreaterThan(BigDecimal value) {
-            addCriterion("bank_invest_sum >", value, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_invest_sum >=", value, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumLessThan(BigDecimal value) {
-            addCriterion("bank_invest_sum <", value, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("bank_invest_sum <=", value, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumIn(List<BigDecimal> values) {
-            addCriterion("bank_invest_sum in", values, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumNotIn(List<BigDecimal> values) {
-            addCriterion("bank_invest_sum not in", values, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_invest_sum between", value1, value2, "bankInvestSum");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankInvestSumNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("bank_invest_sum not between", value1, value2, "bankInvestSum");
+        public Criteria andBankSeqNoNotBetween(String value1, String value2) {
+            addCriterion("bank_seq_no not between", value1, value2, "bankSeqNo");
             return (Criteria) this;
         }
 
@@ -2615,193 +2145,663 @@ public class AccountListExample {
             return (Criteria) this;
         }
 
-        public Criteria andTxDateIsNull() {
-            addCriterion("tx_date is null");
+        public Criteria andBankTotalIsNull() {
+            addCriterion("bank_total is null");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateIsNotNull() {
-            addCriterion("tx_date is not null");
+        public Criteria andBankTotalIsNotNull() {
+            addCriterion("bank_total is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateEqualTo(Integer value) {
-            addCriterion("tx_date =", value, "txDate");
+        public Criteria andBankTotalEqualTo(BigDecimal value) {
+            addCriterion("bank_total =", value, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateNotEqualTo(Integer value) {
-            addCriterion("tx_date <>", value, "txDate");
+        public Criteria andBankTotalNotEqualTo(BigDecimal value) {
+            addCriterion("bank_total <>", value, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateGreaterThan(Integer value) {
-            addCriterion("tx_date >", value, "txDate");
+        public Criteria andBankTotalGreaterThan(BigDecimal value) {
+            addCriterion("bank_total >", value, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateGreaterThanOrEqualTo(Integer value) {
-            addCriterion("tx_date >=", value, "txDate");
+        public Criteria andBankTotalGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_total >=", value, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateLessThan(Integer value) {
-            addCriterion("tx_date <", value, "txDate");
+        public Criteria andBankTotalLessThan(BigDecimal value) {
+            addCriterion("bank_total <", value, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateLessThanOrEqualTo(Integer value) {
-            addCriterion("tx_date <=", value, "txDate");
+        public Criteria andBankTotalLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_total <=", value, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateIn(List<Integer> values) {
-            addCriterion("tx_date in", values, "txDate");
+        public Criteria andBankTotalIn(List<BigDecimal> values) {
+            addCriterion("bank_total in", values, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateNotIn(List<Integer> values) {
-            addCriterion("tx_date not in", values, "txDate");
+        public Criteria andBankTotalNotIn(List<BigDecimal> values) {
+            addCriterion("bank_total not in", values, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateBetween(Integer value1, Integer value2) {
-            addCriterion("tx_date between", value1, value2, "txDate");
+        public Criteria andBankTotalBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_total between", value1, value2, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxDateNotBetween(Integer value1, Integer value2) {
-            addCriterion("tx_date not between", value1, value2, "txDate");
+        public Criteria andBankTotalNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_total not between", value1, value2, "bankTotal");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeIsNull() {
-            addCriterion("tx_time is null");
+        public Criteria andBankBalanceIsNull() {
+            addCriterion("bank_balance is null");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeIsNotNull() {
-            addCriterion("tx_time is not null");
+        public Criteria andBankBalanceIsNotNull() {
+            addCriterion("bank_balance is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeEqualTo(Integer value) {
-            addCriterion("tx_time =", value, "txTime");
+        public Criteria andBankBalanceEqualTo(BigDecimal value) {
+            addCriterion("bank_balance =", value, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeNotEqualTo(Integer value) {
-            addCriterion("tx_time <>", value, "txTime");
+        public Criteria andBankBalanceNotEqualTo(BigDecimal value) {
+            addCriterion("bank_balance <>", value, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeGreaterThan(Integer value) {
-            addCriterion("tx_time >", value, "txTime");
+        public Criteria andBankBalanceGreaterThan(BigDecimal value) {
+            addCriterion("bank_balance >", value, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("tx_time >=", value, "txTime");
+        public Criteria andBankBalanceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_balance >=", value, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeLessThan(Integer value) {
-            addCriterion("tx_time <", value, "txTime");
+        public Criteria andBankBalanceLessThan(BigDecimal value) {
+            addCriterion("bank_balance <", value, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeLessThanOrEqualTo(Integer value) {
-            addCriterion("tx_time <=", value, "txTime");
+        public Criteria andBankBalanceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_balance <=", value, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeIn(List<Integer> values) {
-            addCriterion("tx_time in", values, "txTime");
+        public Criteria andBankBalanceIn(List<BigDecimal> values) {
+            addCriterion("bank_balance in", values, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeNotIn(List<Integer> values) {
-            addCriterion("tx_time not in", values, "txTime");
+        public Criteria andBankBalanceNotIn(List<BigDecimal> values) {
+            addCriterion("bank_balance not in", values, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeBetween(Integer value1, Integer value2) {
-            addCriterion("tx_time between", value1, value2, "txTime");
+        public Criteria andBankBalanceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_balance between", value1, value2, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andTxTimeNotBetween(Integer value1, Integer value2) {
-            addCriterion("tx_time not between", value1, value2, "txTime");
+        public Criteria andBankBalanceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_balance not between", value1, value2, "bankBalance");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoIsNull() {
-            addCriterion("bank_seq_no is null");
+        public Criteria andBankFrostIsNull() {
+            addCriterion("bank_frost is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoIsNotNull() {
-            addCriterion("bank_seq_no is not null");
+        public Criteria andBankFrostIsNotNull() {
+            addCriterion("bank_frost is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoEqualTo(String value) {
-            addCriterion("bank_seq_no =", value, "bankSeqNo");
+        public Criteria andBankFrostEqualTo(BigDecimal value) {
+            addCriterion("bank_frost =", value, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoNotEqualTo(String value) {
-            addCriterion("bank_seq_no <>", value, "bankSeqNo");
+        public Criteria andBankFrostNotEqualTo(BigDecimal value) {
+            addCriterion("bank_frost <>", value, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoGreaterThan(String value) {
-            addCriterion("bank_seq_no >", value, "bankSeqNo");
+        public Criteria andBankFrostGreaterThan(BigDecimal value) {
+            addCriterion("bank_frost >", value, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoGreaterThanOrEqualTo(String value) {
-            addCriterion("bank_seq_no >=", value, "bankSeqNo");
+        public Criteria andBankFrostGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_frost >=", value, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoLessThan(String value) {
-            addCriterion("bank_seq_no <", value, "bankSeqNo");
+        public Criteria andBankFrostLessThan(BigDecimal value) {
+            addCriterion("bank_frost <", value, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoLessThanOrEqualTo(String value) {
-            addCriterion("bank_seq_no <=", value, "bankSeqNo");
+        public Criteria andBankFrostLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_frost <=", value, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoLike(String value) {
-            addCriterion("bank_seq_no like", value, "bankSeqNo");
+        public Criteria andBankFrostIn(List<BigDecimal> values) {
+            addCriterion("bank_frost in", values, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoNotLike(String value) {
-            addCriterion("bank_seq_no not like", value, "bankSeqNo");
+        public Criteria andBankFrostNotIn(List<BigDecimal> values) {
+            addCriterion("bank_frost not in", values, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoIn(List<String> values) {
-            addCriterion("bank_seq_no in", values, "bankSeqNo");
+        public Criteria andBankFrostBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_frost between", value1, value2, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoNotIn(List<String> values) {
-            addCriterion("bank_seq_no not in", values, "bankSeqNo");
+        public Criteria andBankFrostNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_frost not between", value1, value2, "bankFrost");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoBetween(String value1, String value2) {
-            addCriterion("bank_seq_no between", value1, value2, "bankSeqNo");
+        public Criteria andBankWaitRepayIsNull() {
+            addCriterion("bank_wait_repay is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankSeqNoNotBetween(String value1, String value2) {
-            addCriterion("bank_seq_no not between", value1, value2, "bankSeqNo");
+        public Criteria andBankWaitRepayIsNotNull() {
+            addCriterion("bank_wait_repay is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_repay =", value, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayNotEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_repay <>", value, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayGreaterThan(BigDecimal value) {
+            addCriterion("bank_wait_repay >", value, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_repay >=", value, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayLessThan(BigDecimal value) {
+            addCriterion("bank_wait_repay <", value, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_repay <=", value, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayIn(List<BigDecimal> values) {
+            addCriterion("bank_wait_repay in", values, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayNotIn(List<BigDecimal> values) {
+            addCriterion("bank_wait_repay not in", values, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_wait_repay between", value1, value2, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitRepayNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_wait_repay not between", value1, value2, "bankWaitRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalIsNull() {
+            addCriterion("bank_wait_capital is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalIsNotNull() {
+            addCriterion("bank_wait_capital is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_capital =", value, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalNotEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_capital <>", value, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalGreaterThan(BigDecimal value) {
+            addCriterion("bank_wait_capital >", value, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_capital >=", value, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalLessThan(BigDecimal value) {
+            addCriterion("bank_wait_capital <", value, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_capital <=", value, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalIn(List<BigDecimal> values) {
+            addCriterion("bank_wait_capital in", values, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalNotIn(List<BigDecimal> values) {
+            addCriterion("bank_wait_capital not in", values, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_wait_capital between", value1, value2, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitCapitalNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_wait_capital not between", value1, value2, "bankWaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestIsNull() {
+            addCriterion("bank_wait_interest is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestIsNotNull() {
+            addCriterion("bank_wait_interest is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_interest =", value, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestNotEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_interest <>", value, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestGreaterThan(BigDecimal value) {
+            addCriterion("bank_wait_interest >", value, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_interest >=", value, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestLessThan(BigDecimal value) {
+            addCriterion("bank_wait_interest <", value, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_wait_interest <=", value, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestIn(List<BigDecimal> values) {
+            addCriterion("bank_wait_interest in", values, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestNotIn(List<BigDecimal> values) {
+            addCriterion("bank_wait_interest not in", values, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_wait_interest between", value1, value2, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankWaitInterestNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_wait_interest not between", value1, value2, "bankWaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumIsNull() {
+            addCriterion("bank_interest_sum is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumIsNotNull() {
+            addCriterion("bank_interest_sum is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumEqualTo(BigDecimal value) {
+            addCriterion("bank_interest_sum =", value, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumNotEqualTo(BigDecimal value) {
+            addCriterion("bank_interest_sum <>", value, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumGreaterThan(BigDecimal value) {
+            addCriterion("bank_interest_sum >", value, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_interest_sum >=", value, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumLessThan(BigDecimal value) {
+            addCriterion("bank_interest_sum <", value, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_interest_sum <=", value, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumIn(List<BigDecimal> values) {
+            addCriterion("bank_interest_sum in", values, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumNotIn(List<BigDecimal> values) {
+            addCriterion("bank_interest_sum not in", values, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_interest_sum between", value1, value2, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInterestSumNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_interest_sum not between", value1, value2, "bankInterestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumIsNull() {
+            addCriterion("bank_invest_sum is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumIsNotNull() {
+            addCriterion("bank_invest_sum is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumEqualTo(BigDecimal value) {
+            addCriterion("bank_invest_sum =", value, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumNotEqualTo(BigDecimal value) {
+            addCriterion("bank_invest_sum <>", value, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumGreaterThan(BigDecimal value) {
+            addCriterion("bank_invest_sum >", value, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_invest_sum >=", value, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumLessThan(BigDecimal value) {
+            addCriterion("bank_invest_sum <", value, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_invest_sum <=", value, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumIn(List<BigDecimal> values) {
+            addCriterion("bank_invest_sum in", values, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumNotIn(List<BigDecimal> values) {
+            addCriterion("bank_invest_sum not in", values, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_invest_sum between", value1, value2, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankInvestSumNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_invest_sum not between", value1, value2, "bankInvestSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitIsNull() {
+            addCriterion("bank_await is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitIsNotNull() {
+            addCriterion("bank_await is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitEqualTo(BigDecimal value) {
+            addCriterion("bank_await =", value, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitNotEqualTo(BigDecimal value) {
+            addCriterion("bank_await <>", value, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitGreaterThan(BigDecimal value) {
+            addCriterion("bank_await >", value, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_await >=", value, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitLessThan(BigDecimal value) {
+            addCriterion("bank_await <", value, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_await <=", value, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitIn(List<BigDecimal> values) {
+            addCriterion("bank_await in", values, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitNotIn(List<BigDecimal> values) {
+            addCriterion("bank_await not in", values, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_await between", value1, value2, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_await not between", value1, value2, "bankAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalIsNull() {
+            addCriterion("bank_await_capital is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalIsNotNull() {
+            addCriterion("bank_await_capital is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalEqualTo(BigDecimal value) {
+            addCriterion("bank_await_capital =", value, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalNotEqualTo(BigDecimal value) {
+            addCriterion("bank_await_capital <>", value, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalGreaterThan(BigDecimal value) {
+            addCriterion("bank_await_capital >", value, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_await_capital >=", value, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalLessThan(BigDecimal value) {
+            addCriterion("bank_await_capital <", value, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_await_capital <=", value, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalIn(List<BigDecimal> values) {
+            addCriterion("bank_await_capital in", values, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalNotIn(List<BigDecimal> values) {
+            addCriterion("bank_await_capital not in", values, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_await_capital between", value1, value2, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitCapitalNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_await_capital not between", value1, value2, "bankAwaitCapital");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestIsNull() {
+            addCriterion("bank_await_interest is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestIsNotNull() {
+            addCriterion("bank_await_interest is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestEqualTo(BigDecimal value) {
+            addCriterion("bank_await_interest =", value, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestNotEqualTo(BigDecimal value) {
+            addCriterion("bank_await_interest <>", value, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestGreaterThan(BigDecimal value) {
+            addCriterion("bank_await_interest >", value, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_await_interest >=", value, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestLessThan(BigDecimal value) {
+            addCriterion("bank_await_interest <", value, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_await_interest <=", value, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestIn(List<BigDecimal> values) {
+            addCriterion("bank_await_interest in", values, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestNotIn(List<BigDecimal> values) {
+            addCriterion("bank_await_interest not in", values, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_await_interest between", value1, value2, "bankAwaitInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankAwaitInterestNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_await_interest not between", value1, value2, "bankAwaitInterest");
             return (Criteria) this;
         }
 

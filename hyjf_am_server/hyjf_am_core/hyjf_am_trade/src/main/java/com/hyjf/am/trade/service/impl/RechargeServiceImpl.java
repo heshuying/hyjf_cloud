@@ -3,15 +3,16 @@ package com.hyjf.am.trade.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.hyjf.am.trade.dao.model.auto.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.trade.service.RechargeService;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 import com.hyjf.common.util.GetDate;
@@ -50,9 +51,9 @@ public class RechargeServiceImpl implements RechargeService {
 	@Override
     public int selectByOrdId(String ordId){
 		int ret = 0;
-		com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample accountRechargeExample = new com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample();
+		AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 		accountRechargeExample.createCriteria().andNidEqualTo(ordId == null ? "" : ordId);
-		List<com.hyjf.am.borrow.dao.model.auto.AccountRecharge> listAccountRecharge = this.accountRechargeMapper.selectByExample(accountRechargeExample);
+		List<AccountRecharge> listAccountRecharge = this.accountRechargeMapper.selectByExample(accountRechargeExample);
 		if (listAccountRecharge != null && listAccountRecharge.size() > 0) {
 			return ret;
 		}
@@ -64,7 +65,7 @@ public class RechargeServiceImpl implements RechargeService {
 		int nowTime = GetDate.getNowTime10();
 		String cardNo = bankRequest.getCardNo();
 		BigDecimal money = new BigDecimal(bankRequest.getTxAmount());
-		com.hyjf.am.borrow.dao.model.auto.AccountRecharge record = new com.hyjf.am.borrow.dao.model.auto.AccountRecharge();
+		AccountRecharge record = new AccountRecharge();
 		record.setNid(bankRequest.getLogOrderId());
 		record.setUserId(Integer.parseInt(bankRequest.getLogUserId()));
 		record.setUsername(bankRequest.getLogUserName());
@@ -105,35 +106,35 @@ public class RechargeServiceImpl implements RechargeService {
 	 * @return
 	 */
 	@Override
-    public com.hyjf.am.borrow.dao.model.auto.AccountRecharge selectByExample(com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample example) {
-		List<com.hyjf.am.borrow.dao.model.auto.AccountRecharge> accountRecharges = accountRechargeMapper.selectByExample(example);
+    public AccountRecharge selectByExample(AccountRechargeExample example) {
+		List<AccountRecharge> accountRecharges = accountRechargeMapper.selectByExample(example);
 		if (accountRecharges != null && accountRecharges.size() == 1) {
-			com.hyjf.am.borrow.dao.model.auto.AccountRecharge accountRecharge = accountRecharges.get(0);
+			AccountRecharge accountRecharge = accountRecharges.get(0);
 			return accountRecharge;
 		}
 		return null;
 	}
 
 	@Override
-    public int updateByExampleSelective(com.hyjf.am.borrow.dao.model.auto.AccountRecharge accountRecharge, com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample accountRechargeExample){
+    public int updateByExampleSelective(AccountRecharge accountRecharge, AccountRechargeExample accountRechargeExample){
 		int count = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
 		return count;
 	}
 
 	@Override
-    public int updateBankRechargeSuccess(com.hyjf.am.borrow.dao.model.auto.Account newAccount){
+    public int updateBankRechargeSuccess(Account newAccount){
 		int isAccountUpdateFlag = adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount);
 		return isAccountUpdateFlag;
 	}
 
 	@Override
-    public int insertSelective(com.hyjf.am.borrow.dao.model.auto.AccountList accountList){
+    public int insertSelective(AccountList accountList){
 		int isAccountListUpdateFlag = accountListMapper.insertSelective(accountList);
 		return isAccountListUpdateFlag;
 	}
 
 	@Override
-    public void updateByPrimaryKeySelective(com.hyjf.am.borrow.dao.model.auto.AccountRecharge accountRecharge){
+    public void updateByPrimaryKeySelective(AccountRecharge accountRecharge){
 		this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge);
 	}
 
@@ -145,27 +146,27 @@ public class RechargeServiceImpl implements RechargeService {
 			BigDecimal txAmount = new BigDecimal(accountRechargeVO.getTxAmount());
 			String accountId = accountRechargeVO.getAccountId();
 			int nowTime = GetDate.getNowTime10();
-			com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample accountRechargeExample = new com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample();
+			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRechargeVO.getStatus());
-			com.hyjf.am.borrow.dao.model.auto.AccountRecharge accountRecharge = new com.hyjf.am.borrow.dao.model.auto.AccountRecharge();
+			AccountRecharge accountRecharge = new AccountRecharge();
 			BeanUtils.copyProperties(accountRechargeVO,accountRecharge);
 			int isAccountRechargeFlag = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);
-			com.hyjf.am.borrow.dao.model.auto.Account newAccount = new com.hyjf.am.borrow.dao.model.auto.Account();
+			Account newAccount = new Account();
 			// 更新账户信息
 			newAccount.setUserId(userId);// 用户Id
 			newAccount.setBankTotal(txAmount); // 累加到账户总资产
 			newAccount.setBankBalance(txAmount); // 累加可用余额
 			newAccount.setBankBalanceCash(txAmount);// 银行账户可用户
 			int isAccountUpdateFlag = this.adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount);
-			com.hyjf.am.borrow.dao.model.auto.AccountExample example = new com.hyjf.am.borrow.dao.model.auto.AccountExample();
-			com.hyjf.am.borrow.dao.model.auto.AccountExample.Criteria criteria = example.createCriteria();
+			AccountExample example = new AccountExample();
+			AccountExample.Criteria criteria = example.createCriteria();
 			criteria.andUserIdEqualTo(userId);
-			List<com.hyjf.am.borrow.dao.model.auto.Account> listAccount = accountMapper.selectByExample(example);
-			com.hyjf.am.borrow.dao.model.auto.Account account = new com.hyjf.am.borrow.dao.model.auto.Account();
+			List<Account> listAccount = accountMapper.selectByExample(example);
+			Account account = new Account();
 			if (listAccount != null && listAccount.size() > 0) {
 				 account = listAccount.get(0);
 			}
-			com.hyjf.am.borrow.dao.model.auto.AccountList accountList = new com.hyjf.am.borrow.dao.model.auto.AccountList();
+			AccountList accountList = new AccountList();
 			accountList.setNid(orderId);
 			accountList.setUserId(userId);
 			accountList.setAmount(txAmount);

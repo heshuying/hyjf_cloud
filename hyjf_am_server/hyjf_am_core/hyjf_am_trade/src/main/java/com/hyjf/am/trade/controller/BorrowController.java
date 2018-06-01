@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.borrow.dao.model.auto.HjhInstConfig;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.UserService;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.vo.user.HjhInstConfigVO;

@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.service;
 
-import com.hyjf.am.borrow.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.Account;
 
 /**
  * @author xiasq

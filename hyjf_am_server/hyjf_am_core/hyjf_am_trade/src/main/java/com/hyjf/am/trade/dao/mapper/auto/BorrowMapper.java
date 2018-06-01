@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import com.hyjf.am.borrow.dao.model.auto.Borrow;
-import com.hyjf.am.borrow.dao.model.auto.BorrowExample;
-import com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

@@ -18,7 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hyjf.am.borrow.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.vo.borrow.AccountVO;
 

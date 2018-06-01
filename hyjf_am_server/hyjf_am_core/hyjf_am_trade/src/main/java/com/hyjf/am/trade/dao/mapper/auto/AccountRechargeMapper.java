@@ -1,10 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
-import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
-import org.apache.ibatis.annotations.Param;
-
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
+import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AccountRechargeMapper {
     int countByExample(AccountRechargeExample example);

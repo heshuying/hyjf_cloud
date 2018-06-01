@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.borrow.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.Account;
 
 /**
  * @author xiasq

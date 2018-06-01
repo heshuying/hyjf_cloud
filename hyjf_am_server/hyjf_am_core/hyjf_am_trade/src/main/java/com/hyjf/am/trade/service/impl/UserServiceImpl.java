@@ -3,14 +3,14 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
-import com.hyjf.am.borrow.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.borrow.dao.model.auto.HjhInstConfigExample;
-import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
-import com.hyjf.am.trade.service.UserService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
+import com.hyjf.am.trade.service.UserService;
 
 /**
  * @author zhangqingqing

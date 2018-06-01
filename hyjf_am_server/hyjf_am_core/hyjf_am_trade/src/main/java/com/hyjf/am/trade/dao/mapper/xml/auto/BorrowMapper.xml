@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.Borrow" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.Borrow" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="applicant" property="applicant" jdbcType="VARCHAR" />
@@ -231,7 +231,7 @@
     <result column="publish_inst_code" property="publishInstCode" jdbcType="VARCHAR" />
     <result column="is_engine_used" property="isEngineUsed" jdbcType="TINYINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs" extends="BaseResultMap" >
     <result column="account_contents" property="accountContents" jdbcType="LONGVARCHAR" />
     <result column="borrow_contents" property="borrowContents" jdbcType="LONGVARCHAR" />
     <result column="borrow_upfiles" property="borrowUpfiles" jdbcType="LONGVARCHAR" />
@@ -362,7 +362,7 @@
     borrow_company_scope, borrow_company_business, files, borrow_company_instruction, 
     borrow_operating_process
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowExample" >
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
     select
     <if test="distinct" >
       distinct
@@ -370,7 +370,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from huiyingdai_borrow
+    from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -381,13 +381,13 @@
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from huiyingdai_borrow
+    from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -403,24 +403,24 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from huiyingdai_borrow
+    from ht_borrow
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from huiyingdai_borrow
+    delete from ht_borrow
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowExample" >
-    delete from huiyingdai_borrow
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
+    delete from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs" >
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_borrow (user_id, applicant, repay_org_name, 
+    insert into ht_borrow (user_id, applicant, repay_org_name, 
       is_repay_org_flag, repay_org_user_id, `name`, 
       `status`, borrow_pic, hits, 
       comment_count, litpic, flag, 
@@ -599,11 +599,11 @@
       #{files,jdbcType=LONGVARCHAR}, #{borrowCompanyInstruction,jdbcType=LONGVARCHAR}, 
       #{borrowOperatingProcess,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_borrow
+    insert into ht_borrow
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
@@ -2079,14 +2079,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowExample" resultType="java.lang.Integer" >
-    select count(*) from huiyingdai_borrow
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update huiyingdai_borrow
+    update ht_borrow
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -2832,7 +2832,7 @@
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update huiyingdai_borrow
+    update ht_borrow
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       applicant = #{record.applicant,jdbcType=VARCHAR},
@@ -3084,7 +3084,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update huiyingdai_borrow
+    update ht_borrow
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       applicant = #{record.applicant,jdbcType=VARCHAR},
@@ -3317,8 +3317,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs" >
-    update huiyingdai_borrow
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs" >
+    update ht_borrow
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -4058,8 +4058,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs" >
-    update huiyingdai_borrow
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs" >
+    update ht_borrow
     set user_id = #{userId,jdbcType=INTEGER},
       applicant = #{applicant,jdbcType=VARCHAR},
       repay_org_name = #{repayOrgName,jdbcType=VARCHAR},
@@ -4307,8 +4307,8 @@
       borrow_operating_process = #{borrowOperatingProcess,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.Borrow" >
-    update huiyingdai_borrow
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
+    update ht_borrow
     set user_id = #{userId,jdbcType=INTEGER},
       applicant = #{applicant,jdbcType=VARCHAR},
       repay_org_name = #{repayOrgName,jdbcType=VARCHAR},

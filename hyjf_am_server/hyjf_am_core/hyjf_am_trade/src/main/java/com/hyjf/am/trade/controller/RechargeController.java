@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.borrow.dao.model.auto.Account;
-import com.hyjf.am.borrow.dao.model.auto.AccountList;
-import com.hyjf.am.borrow.dao.model.auto.AccountRecharge;
-import com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
+import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.RechargeService;
 import com.hyjf.am.response.borrow.AccountRechargeResponse;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.mybatis.mapper.auto.HjhInstConfigMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.mybatis.model.auto.HjhInstConfig" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
     <result column="inst_name" property="instName" jdbcType="VARCHAR" />
@@ -77,13 +77,13 @@
     id, inst_code, inst_name, inst_type, capital_toplimit, commission_fee, remark, create_user, 
     create_time, update_user, update_time, del_flg
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.mybatis.model.auto.HjhInstConfigExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from hyjf_hjh_inst_config
+    from ht_hjh_inst_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -97,24 +97,24 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from hyjf_hjh_inst_config
+    from ht_hjh_inst_config
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from hyjf_hjh_inst_config
+    delete from ht_hjh_inst_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.auto.HjhInstConfigExample" >
-    delete from hyjf_hjh_inst_config
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample" >
+    delete from ht_hjh_inst_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.mybatis.model.auto.HjhInstConfig" >
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_hjh_inst_config (inst_code, inst_name, inst_type, 
+    insert into ht_hjh_inst_config (inst_code, inst_name, inst_type, 
       capital_toplimit, commission_fee, remark, 
       create_user, create_time, update_user, 
       update_time, del_flg)
@@ -123,11 +123,11 @@
       #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
       #{updateTime,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.mybatis.model.auto.HjhInstConfig" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_hjh_inst_config
+    insert into ht_hjh_inst_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="instCode != null" >
         inst_code,
@@ -199,14 +199,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.mybatis.model.auto.HjhInstConfigExample" resultType="java.lang.Integer" >
-    select count(*) from hyjf_hjh_inst_config
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_inst_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update hyjf_hjh_inst_config
+    update ht_hjh_inst_config
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -250,7 +250,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update hyjf_hjh_inst_config
+    update ht_hjh_inst_config
     set id = #{record.id,jdbcType=INTEGER},
       inst_code = #{record.instCode,jdbcType=VARCHAR},
       inst_name = #{record.instName,jdbcType=VARCHAR},
@@ -267,8 +267,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.auto.HjhInstConfig" >
-    update hyjf_hjh_inst_config
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
+    update ht_hjh_inst_config
     <set >
       <if test="instCode != null" >
         inst_code = #{instCode,jdbcType=VARCHAR},
@@ -306,8 +306,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.auto.HjhInstConfig" >
-    update hyjf_hjh_inst_config
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhInstConfig" >
+    update ht_hjh_inst_config
     set inst_code = #{instCode,jdbcType=VARCHAR},
       inst_name = #{instName,jdbcType=VARCHAR},
       inst_type = #{instType,jdbcType=TINYINT},

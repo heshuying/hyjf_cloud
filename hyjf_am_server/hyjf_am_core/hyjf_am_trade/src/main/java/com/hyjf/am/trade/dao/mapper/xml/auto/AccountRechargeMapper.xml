@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.AccountRecharge" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.AccountRecharge" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="nid" property="nid" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
@@ -103,13 +103,13 @@
     `operator`, verify_time, verify_remark, addtime, addip, isok, client, nok, isok11, 
     flag, activity_flag, cardid, dianfu_fee, fee_from, message, version
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from huiyingdai_account_recharge
+    from ht_account_recharge
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -121,55 +121,55 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
+    select 
     <include refid="Base_Column_List" />
-    from huiyingdai_account_recharge
+    from ht_account_recharge
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from huiyingdai_account_recharge
+    delete from ht_account_recharge
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample" >
-    delete from huiyingdai_account_recharge
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample" >
+    delete from ht_account_recharge
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountRecharge" >
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRecharge" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_account_recharge (nid, user_id, username,
-    account_id, tx_date, tx_time,
-    seq_no, bank_seq_no, is_bank,
-    `status`, money, fee,
-    balance, payment, gate_type,
-    `type`, remark, create_time,
-    update_time, `operator`, verify_time,
-    verify_remark, addtime, addip,
-    isok, client, nok,
-    isok11, flag, activity_flag,
-    cardid, dianfu_fee, fee_from,
-    message, version)
-    values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=CHAR},
-    #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER},
-    #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{isBank,jdbcType=TINYINT},
-    #{status,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL},
-    #{balance,jdbcType=DECIMAL}, #{payment,jdbcType=VARCHAR}, #{gateType,jdbcType=VARCHAR},
-    #{type,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER},
-    #{updateTime,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{verifyTime,jdbcType=VARCHAR},
-    #{verifyRemark,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR},
-    #{isok,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{nok,jdbcType=TINYINT},
-    #{isok11,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}, #{activityFlag,jdbcType=TINYINT},
-    #{cardid,jdbcType=VARCHAR}, #{dianfuFee,jdbcType=DECIMAL}, #{feeFrom,jdbcType=VARCHAR},
-    #{message,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL})
+    insert into ht_account_recharge (nid, user_id, username, 
+      account_id, tx_date, tx_time, 
+      seq_no, bank_seq_no, is_bank, 
+      `status`, money, fee, 
+      balance, payment, gate_type, 
+      `type`, remark, create_time, 
+      update_time, `operator`, verify_time, 
+      verify_remark, addtime, addip, 
+      isok, client, nok, 
+      isok11, flag, activity_flag, 
+      cardid, dianfu_fee, fee_from, 
+      message, version)
+    values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=CHAR}, 
+      #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
+      #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{isBank,jdbcType=TINYINT}, 
+      #{status,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
+      #{balance,jdbcType=DECIMAL}, #{payment,jdbcType=VARCHAR}, #{gateType,jdbcType=VARCHAR}, 
+      #{type,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{verifyTime,jdbcType=VARCHAR}, 
+      #{verifyRemark,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, 
+      #{isok,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{nok,jdbcType=TINYINT}, 
+      #{isok11,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}, #{activityFlag,jdbcType=TINYINT}, 
+      #{cardid,jdbcType=VARCHAR}, #{dianfuFee,jdbcType=DECIMAL}, #{feeFrom,jdbcType=VARCHAR}, 
+      #{message,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountRecharge" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRecharge" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_account_recharge
+    insert into ht_account_recharge
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="nid != null" >
         nid,
@@ -385,14 +385,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountRechargeExample" resultType="java.lang.Integer" >
-    select count(*) from huiyingdai_account_recharge
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_account_recharge
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update huiyingdai_account_recharge
+    update ht_account_recharge
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -508,49 +508,49 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update huiyingdai_account_recharge
+    update ht_account_recharge
     set id = #{record.id,jdbcType=INTEGER},
-    nid = #{record.nid,jdbcType=VARCHAR},
-    user_id = #{record.userId,jdbcType=INTEGER},
-    username = #{record.username,jdbcType=CHAR},
-    account_id = #{record.accountId,jdbcType=VARCHAR},
-    tx_date = #{record.txDate,jdbcType=INTEGER},
-    tx_time = #{record.txTime,jdbcType=INTEGER},
-    seq_no = #{record.seqNo,jdbcType=INTEGER},
-    bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
-    is_bank = #{record.isBank,jdbcType=TINYINT},
-    `status` = #{record.status,jdbcType=INTEGER},
-    money = #{record.money,jdbcType=DECIMAL},
-    fee = #{record.fee,jdbcType=DECIMAL},
-    balance = #{record.balance,jdbcType=DECIMAL},
-    payment = #{record.payment,jdbcType=VARCHAR},
-    gate_type = #{record.gateType,jdbcType=VARCHAR},
-    `type` = #{record.type,jdbcType=TINYINT},
-    remark = #{record.remark,jdbcType=VARCHAR},
-    create_time = #{record.createTime,jdbcType=INTEGER},
-    update_time = #{record.updateTime,jdbcType=INTEGER},
-    `operator` = #{record.operator,jdbcType=VARCHAR},
-    verify_time = #{record.verifyTime,jdbcType=VARCHAR},
-    verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
-    addtime = #{record.addtime,jdbcType=VARCHAR},
-    addip = #{record.addip,jdbcType=VARCHAR},
-    isok = #{record.isok,jdbcType=TINYINT},
-    client = #{record.client,jdbcType=TINYINT},
-    nok = #{record.nok,jdbcType=TINYINT},
-    isok11 = #{record.isok11,jdbcType=TINYINT},
-    flag = #{record.flag,jdbcType=TINYINT},
-    activity_flag = #{record.activityFlag,jdbcType=TINYINT},
-    cardid = #{record.cardid,jdbcType=VARCHAR},
-    dianfu_fee = #{record.dianfuFee,jdbcType=DECIMAL},
-    fee_from = #{record.feeFrom,jdbcType=VARCHAR},
-    message = #{record.message,jdbcType=VARCHAR},
-    version = #{record.version,jdbcType=DECIMAL}
+      nid = #{record.nid,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=CHAR},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
+      tx_date = #{record.txDate,jdbcType=INTEGER},
+      tx_time = #{record.txTime,jdbcType=INTEGER},
+      seq_no = #{record.seqNo,jdbcType=INTEGER},
+      bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
+      is_bank = #{record.isBank,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=INTEGER},
+      money = #{record.money,jdbcType=DECIMAL},
+      fee = #{record.fee,jdbcType=DECIMAL},
+      balance = #{record.balance,jdbcType=DECIMAL},
+      payment = #{record.payment,jdbcType=VARCHAR},
+      gate_type = #{record.gateType,jdbcType=VARCHAR},
+      `type` = #{record.type,jdbcType=TINYINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      `operator` = #{record.operator,jdbcType=VARCHAR},
+      verify_time = #{record.verifyTime,jdbcType=VARCHAR},
+      verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
+      addtime = #{record.addtime,jdbcType=VARCHAR},
+      addip = #{record.addip,jdbcType=VARCHAR},
+      isok = #{record.isok,jdbcType=TINYINT},
+      client = #{record.client,jdbcType=TINYINT},
+      nok = #{record.nok,jdbcType=TINYINT},
+      isok11 = #{record.isok11,jdbcType=TINYINT},
+      flag = #{record.flag,jdbcType=TINYINT},
+      activity_flag = #{record.activityFlag,jdbcType=TINYINT},
+      cardid = #{record.cardid,jdbcType=VARCHAR},
+      dianfu_fee = #{record.dianfuFee,jdbcType=DECIMAL},
+      fee_from = #{record.feeFrom,jdbcType=VARCHAR},
+      message = #{record.message,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=DECIMAL}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountRecharge" >
-    update huiyingdai_account_recharge
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRecharge" >
+    update ht_account_recharge
     <set >
       <if test="nid != null" >
         nid = #{nid,jdbcType=VARCHAR},
@@ -660,8 +660,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.AccountRecharge" >
-    update huiyingdai_account_recharge
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRecharge" >
+    update ht_account_recharge
     set nid = #{nid,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       username = #{username,jdbcType=CHAR},

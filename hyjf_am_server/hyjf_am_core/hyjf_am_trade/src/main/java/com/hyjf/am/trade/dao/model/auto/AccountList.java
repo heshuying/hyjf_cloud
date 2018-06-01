@@ -1,4 +1,4 @@
-package com.hyjf.am.borrow.dao.model.auto;
+package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -56,39 +56,39 @@ public class AccountList implements Serializable {
 
     private String accountId;
 
+    private Integer txDate;
+
+    private Integer txTime;
+
     private String seqNo;
 
-    private BigDecimal bankTotal;
-
-    private BigDecimal bankWaitRepay;
-
-    private BigDecimal bankBalance;
-
-    private BigDecimal bankFrost;
-
-    private BigDecimal bankWaitCapital;
-
-    private BigDecimal bankWaitInterest;
-
-    private BigDecimal bankAwaitCapital;
-
-    private BigDecimal bankAwaitInterest;
-
-    private BigDecimal bankAwait;
-
-    private BigDecimal bankInterestSum;
-
-    private BigDecimal bankInvestSum;
+    private String bankSeqNo;
 
     private Integer checkStatus;
 
     private Integer tradeStatus;
 
-    private Integer txDate;
+    private BigDecimal bankTotal;
 
-    private Integer txTime;
+    private BigDecimal bankBalance;
 
-    private String bankSeqNo;
+    private BigDecimal bankFrost;
+
+    private BigDecimal bankWaitRepay;
+
+    private BigDecimal bankWaitCapital;
+
+    private BigDecimal bankWaitInterest;
+
+    private BigDecimal bankInterestSum;
+
+    private BigDecimal bankInvestSum;
+
+    private BigDecimal bankAwait;
+
+    private BigDecimal bankAwaitCapital;
+
+    private BigDecimal bankAwaitInterest;
 
     private Integer checkDate;
 
@@ -306,6 +306,22 @@ public class AccountList implements Serializable {
         this.accountId = accountId == null ? null : accountId.trim();
     }
 
+    public Integer getTxDate() {
+        return txDate;
+    }
+
+    public void setTxDate(Integer txDate) {
+        this.txDate = txDate;
+    }
+
+    public Integer getTxTime() {
+        return txTime;
+    }
+
+    public void setTxTime(Integer txTime) {
+        this.txTime = txTime;
+    }
+
     public String getSeqNo() {
         return seqNo;
     }
@@ -314,92 +330,12 @@ public class AccountList implements Serializable {
         this.seqNo = seqNo == null ? null : seqNo.trim();
     }
 
-    public BigDecimal getBankTotal() {
-        return bankTotal;
+    public String getBankSeqNo() {
+        return bankSeqNo;
     }
 
-    public void setBankTotal(BigDecimal bankTotal) {
-        this.bankTotal = bankTotal;
-    }
-
-    public BigDecimal getBankWaitRepay() {
-        return bankWaitRepay;
-    }
-
-    public void setBankWaitRepay(BigDecimal bankWaitRepay) {
-        this.bankWaitRepay = bankWaitRepay;
-    }
-
-    public BigDecimal getBankBalance() {
-        return bankBalance;
-    }
-
-    public void setBankBalance(BigDecimal bankBalance) {
-        this.bankBalance = bankBalance;
-    }
-
-    public BigDecimal getBankFrost() {
-        return bankFrost;
-    }
-
-    public void setBankFrost(BigDecimal bankFrost) {
-        this.bankFrost = bankFrost;
-    }
-
-    public BigDecimal getBankWaitCapital() {
-        return bankWaitCapital;
-    }
-
-    public void setBankWaitCapital(BigDecimal bankWaitCapital) {
-        this.bankWaitCapital = bankWaitCapital;
-    }
-
-    public BigDecimal getBankWaitInterest() {
-        return bankWaitInterest;
-    }
-
-    public void setBankWaitInterest(BigDecimal bankWaitInterest) {
-        this.bankWaitInterest = bankWaitInterest;
-    }
-
-    public BigDecimal getBankAwaitCapital() {
-        return bankAwaitCapital;
-    }
-
-    public void setBankAwaitCapital(BigDecimal bankAwaitCapital) {
-        this.bankAwaitCapital = bankAwaitCapital;
-    }
-
-    public BigDecimal getBankAwaitInterest() {
-        return bankAwaitInterest;
-    }
-
-    public void setBankAwaitInterest(BigDecimal bankAwaitInterest) {
-        this.bankAwaitInterest = bankAwaitInterest;
-    }
-
-    public BigDecimal getBankAwait() {
-        return bankAwait;
-    }
-
-    public void setBankAwait(BigDecimal bankAwait) {
-        this.bankAwait = bankAwait;
-    }
-
-    public BigDecimal getBankInterestSum() {
-        return bankInterestSum;
-    }
-
-    public void setBankInterestSum(BigDecimal bankInterestSum) {
-        this.bankInterestSum = bankInterestSum;
-    }
-
-    public BigDecimal getBankInvestSum() {
-        return bankInvestSum;
-    }
-
-    public void setBankInvestSum(BigDecimal bankInvestSum) {
-        this.bankInvestSum = bankInvestSum;
+    public void setBankSeqNo(String bankSeqNo) {
+        this.bankSeqNo = bankSeqNo == null ? null : bankSeqNo.trim();
     }
 
     public Integer getCheckStatus() {
@@ -418,28 +354,92 @@ public class AccountList implements Serializable {
         this.tradeStatus = tradeStatus;
     }
 
-    public Integer getTxDate() {
-        return txDate;
+    public BigDecimal getBankTotal() {
+        return bankTotal;
     }
 
-    public void setTxDate(Integer txDate) {
-        this.txDate = txDate;
+    public void setBankTotal(BigDecimal bankTotal) {
+        this.bankTotal = bankTotal;
     }
 
-    public Integer getTxTime() {
-        return txTime;
+    public BigDecimal getBankBalance() {
+        return bankBalance;
     }
 
-    public void setTxTime(Integer txTime) {
-        this.txTime = txTime;
+    public void setBankBalance(BigDecimal bankBalance) {
+        this.bankBalance = bankBalance;
     }
 
-    public String getBankSeqNo() {
-        return bankSeqNo;
+    public BigDecimal getBankFrost() {
+        return bankFrost;
     }
 
-    public void setBankSeqNo(String bankSeqNo) {
-        this.bankSeqNo = bankSeqNo == null ? null : bankSeqNo.trim();
+    public void setBankFrost(BigDecimal bankFrost) {
+        this.bankFrost = bankFrost;
+    }
+
+    public BigDecimal getBankWaitRepay() {
+        return bankWaitRepay;
+    }
+
+    public void setBankWaitRepay(BigDecimal bankWaitRepay) {
+        this.bankWaitRepay = bankWaitRepay;
+    }
+
+    public BigDecimal getBankWaitCapital() {
+        return bankWaitCapital;
+    }
+
+    public void setBankWaitCapital(BigDecimal bankWaitCapital) {
+        this.bankWaitCapital = bankWaitCapital;
+    }
+
+    public BigDecimal getBankWaitInterest() {
+        return bankWaitInterest;
+    }
+
+    public void setBankWaitInterest(BigDecimal bankWaitInterest) {
+        this.bankWaitInterest = bankWaitInterest;
+    }
+
+    public BigDecimal getBankInterestSum() {
+        return bankInterestSum;
+    }
+
+    public void setBankInterestSum(BigDecimal bankInterestSum) {
+        this.bankInterestSum = bankInterestSum;
+    }
+
+    public BigDecimal getBankInvestSum() {
+        return bankInvestSum;
+    }
+
+    public void setBankInvestSum(BigDecimal bankInvestSum) {
+        this.bankInvestSum = bankInvestSum;
+    }
+
+    public BigDecimal getBankAwait() {
+        return bankAwait;
+    }
+
+    public void setBankAwait(BigDecimal bankAwait) {
+        this.bankAwait = bankAwait;
+    }
+
+    public BigDecimal getBankAwaitCapital() {
+        return bankAwaitCapital;
+    }
+
+    public void setBankAwaitCapital(BigDecimal bankAwaitCapital) {
+        this.bankAwaitCapital = bankAwaitCapital;
+    }
+
+    public BigDecimal getBankAwaitInterest() {
+        return bankAwaitInterest;
+    }
+
+    public void setBankAwaitInterest(BigDecimal bankAwaitInterest) {
+        this.bankAwaitInterest = bankAwaitInterest;
     }
 
     public Integer getCheckDate() {
