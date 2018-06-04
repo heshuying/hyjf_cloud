@@ -376,5 +376,34 @@ public class WebUserController {
 		
 		return result;
 	}
+	
+	/**
+	 * 添加、修改紧急联系人
+	 * @param token
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
+	@PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
+	public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+		ApiResult<Object> result = new ApiResult<Object>();
+
+		String relationId = request.getParameter("relationId");
+		String rlName = request.getParameter("rlName");
+		String rlPhone = request.getParameter("rlPhone");
+		
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		userService.checkForContractSave(relationId, rlName, rlPhone, user);
+		
+		try {
+			userService.saveContract(relationId, rlName, rlPhone, user);
+		} catch (MQException e) {
+			logger.error("紧急联系人保存失败", e);
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc("紧急联系人保存失败");
+		}
+		
+		return result;
+	}
 
 }

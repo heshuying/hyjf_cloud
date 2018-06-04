@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.AccountChinapnrVO;
@@ -66,6 +67,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.BindEmailError;
+import com.hyjf.cs.user.constants.ContractSetError;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
@@ -974,7 +976,10 @@ public class UserServiceImpl implements UserService  {
 		request.setUserEmail(email);
 		request.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		request.setUserId(userId);
-		int ret = amUserClient.insertBindEmailLog(request);
+		int cnt = amUserClient.insertBindEmailLog(request);
+		if (cnt <= 0) {
+			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_SEND_ERROR);
+		}
 		
 		// 发送激活邮件
 		activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
@@ -1067,6 +1072,44 @@ public class UserServiceImpl implements UserService  {
 		
 		if (cnt <= 0) {
 			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * 紧急联系人参数校验
+	 */
+	@Override
+	public void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUser user) {
+		// 请求参数空值校验
+		if (StringUtils.isBlank(relationId) || StringUtils.isBlank(rlName) || StringUtils.isBlank(rlPhone)) {
+			throw new ReturnMessageException(ContractSetError.REQUEST_PARAM_ERROR);
+		}
+		// 姓名格式校验
+		if (rlName.length() < 2 || rlName.length() > 4) {
+			throw new ReturnMessageException(ContractSetError.NAME_FORMAT_ERROR);
+		}
+		// 手机号码格式校验
+		if (rlPhone.length() != 11 || !Validator.isMobile(rlPhone)) {
+			throw new ReturnMessageException(ContractSetError.PHONE_FORMAT_ERROR);
+		}
+	}
+	
+	/**
+	 * 保存紧急联系人
+	 */
+	@Override
+	public boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUser user) throws MQException {
+		UsersContractRequest requestBean = new UsersContractRequest();
+		requestBean.setRelation(Integer.parseInt(relationId));
+		requestBean.setRlName(rlName);
+		requestBean.setRlPhone(rlPhone);
+		requestBean.setUserId(user.getUserId());
+		int cnt = amUserClient.updateUserContract(requestBean);
+		
+		if (cnt <= 0) {
+			throw new ReturnMessageException(ContractSetError.CONTRACT_SAVE_ERROR);
 		}
 		
 		return true;

@@ -126,4 +126,8 @@ public interface UserService {
 	boolean updateEmail(Integer userId, String email) throws MQException;
 
 	void checkForEmailBind(String email, String userId, String activeCode, WebViewUser user);
+
+	void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUser user);
+
+	boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUser user) throws MQException;
 }

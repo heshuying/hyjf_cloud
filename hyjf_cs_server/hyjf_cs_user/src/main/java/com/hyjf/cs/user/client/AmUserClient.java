@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
 
@@ -59,5 +60,7 @@ public interface AmUserClient {
 	BindEmailLogVO getBindEmailLog(Integer userId);
 
 	int insertBindEmailLog(BindEmailLogRequest bean);
+
+	int updateUserContract(UsersContractRequest bean);
 
 }
