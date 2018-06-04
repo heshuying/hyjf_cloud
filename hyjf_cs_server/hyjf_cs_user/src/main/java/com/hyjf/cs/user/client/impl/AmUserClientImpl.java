@@ -26,6 +26,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.AccountChinapnrVO;
 import com.hyjf.am.vo.user.BindEmailLogVO;
@@ -334,6 +335,18 @@ public class AmUserClientImpl implements AmUserClient {
 		// TODO: 微服务待实现
 		int result = restTemplate
 				.postForEntity("http://AM-USER/am-user/user/updateBindEmail/",  bean, int.class).getBody();
+		return result;
+	}
+	
+	/**
+	 * 保存、更新紧急联系人
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public int updateUserContract(UsersContractRequest bean) {
+		int result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/updateUserContract/",  bean, int.class).getBody();
 		return result;
 	}
 }

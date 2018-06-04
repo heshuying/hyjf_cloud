@@ -7,6 +7,7 @@ public enum BindEmailError implements ErrorCode{
 	 	EMAIL_EMPTY_ERROR("1", "待绑定的邮箱不能为空"),
 	 	EMAIL_USED_ERROR("1", "邮箱已被占用"),
 		EMAIL_FORMAT_ERROR("1", "邮箱格式不正确"),
+		EMAIL_ACTIVE_SEND_ERROR("1", "发送激活邮件失败"),
 		
 	    EMAIL_ACTIVE_ERROR_1("1", "激活邮件未验证"),
 	    EMAIL_ACTIVE_ERROR_2("1", "激活邮件已验证"),
