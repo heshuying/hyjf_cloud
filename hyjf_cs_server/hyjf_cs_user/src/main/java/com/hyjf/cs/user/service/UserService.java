@@ -1,7 +1,13 @@
 package com.hyjf.cs.user.service;
 
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.BaseBean;
@@ -9,9 +15,6 @@ import com.hyjf.cs.user.beans.BaseMapBean;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
-import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -115,4 +118,12 @@ public interface UserService {
 	MobileModifyResultBean queryForMobileModify(Integer userId);
 
 	boolean checkForMobileModify(String newMobile, String smsCode);
+
+	void checkForEmailSend(String email, Integer userId);
+
+	boolean sendEmailActive(Integer userId, String email) throws MQException;
+
+	boolean updateEmail(Integer userId, String email) throws MQException;
+
+	void checkForEmailBind(String email, String userId, String activeCode, WebViewUser user);
 }

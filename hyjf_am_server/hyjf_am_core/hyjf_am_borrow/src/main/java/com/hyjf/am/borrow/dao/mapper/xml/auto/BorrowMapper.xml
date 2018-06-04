@@ -370,7 +370,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from huiyingdai_borrow
+    from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -387,7 +387,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from huiyingdai_borrow
+    from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -403,15 +403,15 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from huiyingdai_borrow
+    from ht_borrow
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from huiyingdai_borrow
+    delete from ht_borrow
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowExample" >
-    delete from huiyingdai_borrow
+    delete from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -420,7 +420,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_borrow (user_id, applicant, repay_org_name, 
+    insert into ht_borrow (user_id, applicant, repay_org_name, 
       is_repay_org_flag, repay_org_user_id, `name`, 
       `status`, borrow_pic, hits, 
       comment_count, litpic, flag, 
@@ -603,7 +603,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_borrow
+    insert into ht_borrow
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
@@ -2080,13 +2080,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowExample" resultType="java.lang.Integer" >
-    select count(*) from huiyingdai_borrow
+    select count(*) from ht_borrow
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update huiyingdai_borrow
+    update ht_borrow
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -2832,7 +2832,7 @@
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update huiyingdai_borrow
+    update ht_borrow
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       applicant = #{record.applicant,jdbcType=VARCHAR},
@@ -3084,7 +3084,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update huiyingdai_borrow
+    update ht_borrow
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       applicant = #{record.applicant,jdbcType=VARCHAR},
@@ -3318,7 +3318,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs" >
-    update huiyingdai_borrow
+    update ht_borrow
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -4059,7 +4059,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowWithBLOBs" >
-    update huiyingdai_borrow
+    update ht_borrow
     set user_id = #{userId,jdbcType=INTEGER},
       applicant = #{applicant,jdbcType=VARCHAR},
       repay_org_name = #{repayOrgName,jdbcType=VARCHAR},
@@ -4308,7 +4308,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.Borrow" >
-    update huiyingdai_borrow
+    update ht_borrow
     set user_id = #{userId,jdbcType=INTEGER},
       applicant = #{applicant,jdbcType=VARCHAR},
       repay_org_name = #{repayOrgName,jdbcType=VARCHAR},

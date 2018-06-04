@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: AM-TRADE
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:1111/eureka/
+  instance:
+    preferIpAddress: true
+server:
+  port: 8093
+
+logging:
+  file: am-trade.log

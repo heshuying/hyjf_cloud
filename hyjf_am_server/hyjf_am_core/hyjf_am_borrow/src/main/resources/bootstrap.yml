@@ -9,7 +9,7 @@ eureka:
   instance:
     preferIpAddress: true
 server:
-  port: 8093
+  port: 8096
 
 logging:
   file: am-borrow.log
