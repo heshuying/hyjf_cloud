@@ -115,4 +115,11 @@ public interface UserService {
 	MobileModifyResultBean queryForMobileModify(Integer userId);
 
 	boolean checkForMobileModify(String newMobile, String smsCode);
+
+	/**
+	 * 根据token查询user信息
+	 * @param token
+	 * @return
+	 */
+	UserVO getUsersByToken(String token);
 }

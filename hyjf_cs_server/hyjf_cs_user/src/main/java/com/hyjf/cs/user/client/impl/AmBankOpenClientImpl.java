@@ -9,6 +9,7 @@ import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,73 @@ public class AmBankOpenClientImpl implements AmBankOpenClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 修改开户日志表的状态
+	 * @param userId
+	 * @param logOrderId
+	 * @param state
+	 */
+	@Override
+	public Integer updateUserAccountLogState(int userId, String logOrderId, int state) {
+		BankOpenRequest request = new BankOpenRequest();
+		request.setOrderId(logOrderId);
+		request.setUserId(userId);
+		request.setStatus(state);
+		Integer result = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankopen/updateUserAccountLogStatus", request, Integer.class).getBody();
+		if (result != null) {
+			return result;
+		}
+		return 0;
+	}
+
+	/**
+	 * 保存用户的开户信息
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public Integer saveUserAccount(BankCallBean bean) {
+		BankOpenRequest request = new BankOpenRequest();
+		request.setOrderId(bean.getLogOrderId());
+		request.setUserId(Integer.parseInt(bean.getLogUserId()));
+		request.setAccountId(bean.getAccountId());
+		request.setBankAccountEsb(bean.getLogClient());
+		request.setTrueName(bean.getName());
+		request.setIdNo(bean.getIdNo());
+		request.setMobile(bean.getMobile());
+
+		Integer result = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankopen/updateUserAccount", request, Integer.class).getBody();
+		if (result != null) {
+			return result;
+		}
+		return 0;
+	}
+
+	/**
+	 * 开户成功保存银行卡信息
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public Integer saveCardNoToBank(BankCallBean bean) {
+		BankOpenRequest request = new BankOpenRequest();
+		request.setOrderId(bean.getLogOrderId());
+		request.setUserId(Integer.parseInt(bean.getLogUserId()));
+		request.setAccountId(bean.getAccountId());
+		request.setBankAccountEsb(bean.getLogClient());
+		request.setTrueName(bean.getName());
+		request.setIdNo(bean.getIdNo());
+		request.setMobile(bean.getMobile());
+		Integer result = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankopen/updateCardNoToBank", request, Integer.class).getBody();
+		if (result != null) {
+			return result;
+		}
+		return 0;
 	}
 
 }

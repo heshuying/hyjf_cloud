@@ -928,5 +928,19 @@ public class UserServiceImpl implements UserService  {
 		return true;
 	}
 
+	/**
+	 * 根据token查询用户信息
+	 * @param token
+	 * @return
+	 */
+	@Override
+	public UserVO getUsersByToken(String token) {
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		if (user == null || user.getUserId() == null) {
+			return null;
+		}
+		return queryUserByUserId(user.getUserId());
+	}
+
 
 }
