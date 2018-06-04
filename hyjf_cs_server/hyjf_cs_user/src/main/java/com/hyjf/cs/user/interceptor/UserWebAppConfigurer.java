@@ -16,7 +16,7 @@ public class UserWebAppConfigurer extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //这里可以添加多个拦截器
-        registry.addInterceptor(new BankOpenAccountInterceptor()).addPathPatterns("/**");
+      //  registry.addInterceptor(new BankOpenAccountInterceptor()).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
 }
