@@ -24,7 +24,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import com.hyjf.am.trade.config.ds.DynamicDataSourceContextHolder.DbType;
+import com.hyjf.am.borrow.config.ds.DynamicDataSourceContextHolder.DbType;
 
 @Configuration
 @MapperScan("com.hyjf.am.borrow.dao.mapper")

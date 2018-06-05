@@ -103,4 +103,6 @@ public interface UserService {
 	AccountChinapnr getAccountChinapnr(Integer userId);
 
 	int updateUserContact(UsersContractRequest record);
+
+	UsersContact selectUserContact(Integer userId);
 }

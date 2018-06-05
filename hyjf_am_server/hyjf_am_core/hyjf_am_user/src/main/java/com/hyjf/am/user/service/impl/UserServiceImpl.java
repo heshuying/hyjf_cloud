@@ -885,11 +885,27 @@ public class UserServiceImpl implements UserService {
 		if(record.getUserId() == null) {
 			return 0;
 		}
-		
 		UsersContact contact = new UsersContact();
 		BeanUtils.copyProperties(record, contact);
 		usersMapper.deleteByPrimaryKey(record.getUserId());
 		return usersContactMapper.insertSelective(contact);
 	}
+
+	/**
+	 * @Author: zhangqingqing
+	 * @Desc :查询紧急联系人
+	 * @Param: * @param userId
+	 * @Date: 14:09 2018/6/4
+	 * @Return: com.hyjf.am.user.dao.model.auto.UsersContact
+	 */
+	@Override
+	public UsersContact selectUserContact(Integer userId){
+		if(userId == null) {
+			return null;
+		}
+		UsersContact result = usersContactMapper.selectByPrimaryKey(userId);
+		return result;
+	}
+
 
 }
