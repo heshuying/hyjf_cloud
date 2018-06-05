@@ -25,6 +25,7 @@ import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
 import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserBindEmailLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserEvalationResultMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserLogMapper;
@@ -41,6 +42,8 @@ import com.hyjf.am.user.dao.model.auto.PreRegist;
 import com.hyjf.am.user.dao.model.auto.PreRegistExample;
 import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserBindEmailLog;
+import com.hyjf.am.user.dao.model.auto.UserBindEmailLogExample;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
 import com.hyjf.am.user.dao.model.auto.UserExample;
@@ -60,6 +63,7 @@ import com.hyjf.am.user.utils.UploadFileUtils;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.GetCode;
@@ -111,6 +115,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UsersContactMapper usersContactMapper;
+	
+	@Autowired
+	UserBindEmailLogMapper userBindEmailLogMapper;
 
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
@@ -907,5 +914,82 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
+	/**
+	 * 检查邮箱是否已使用
+	 * @param email
+	 * @return
+	 */
+	@Override
+	public boolean checkEmailUsed(String email) {
+		UserExample example1 = new UserExample();
+		example1.createCriteria().andEmailEqualTo(email);
+		int size = usersMapper.countByExample(example1);
+		if (size > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * 插入绑定邮箱日志
+	 * @param log
+	 */
+	@Override
+	public void insertEmailBindLog(UserBindEmailLog log) {
+		// 将之前的邮件失效
+		UserBindEmailLogExample example = new UserBindEmailLogExample();
+		example.createCriteria().andUserIdEqualTo(log.getUserId()).andUserEmailStatusEqualTo(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		List<UserBindEmailLog> bingEmailLogList = userBindEmailLogMapper.selectByExample(example);
+		if (bingEmailLogList != null && bingEmailLogList.size() > 0) {
+			for (int i = 0; i < bingEmailLogList.size(); i++) {
+				bingEmailLogList.get(i).setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_3);
+				userBindEmailLogMapper.updateByPrimaryKeySelective(bingEmailLogList.get(i));
+			}
+		}
+		// 插入新的邮件
+		log.setCreatetime(new Date());
+		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
+		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		userBindEmailLogMapper.insertSelective(log);
+	}
+	
+	/**
+	 * 查询绑定邮箱日志
+	 * @param userid
+	 * @return
+	 */
+	@Override
+	public UserBindEmailLog getUserBindEmail(Integer userid) {
+		UserBindEmailLogExample example = new UserBindEmailLogExample();
+		example.createCriteria().andUserIdEqualTo(userid).andUserEmailStatusEqualTo(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		List<UserBindEmailLog> userBindEmailLogList = userBindEmailLogMapper.selectByExample(example);
+		if (userBindEmailLogList != null && userBindEmailLogList.size() > 0) {
+			return userBindEmailLogList.get(0);
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * 绑定邮箱更新
+	 * @param userid
+	 * @param email
+	 * @param log
+	 */
+	@Override
+	public void updateBindEmail(Integer userid, String email) {
+		UserExample example = new UserExample();
+		example.createCriteria().andUserIdEqualTo(userid);
+		List<User> usersList = usersMapper.selectByExample(example);
+		User u = usersList.get(0);
+		u.setEmail(email);
+		
+		UserBindEmailLog log = new UserBindEmailLog();
+		log.setUserId(userid);
+		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
+		userBindEmailLogMapper.updateByPrimaryKey(log);
+		usersMapper.updateByPrimaryKeySelective(u);
+	}
 
 }
