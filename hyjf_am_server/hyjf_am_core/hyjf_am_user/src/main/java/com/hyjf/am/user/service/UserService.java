@@ -105,4 +105,12 @@ public interface UserService {
 	int updateUserContact(UsersContractRequest record);
 
 	UsersContact selectUserContact(Integer userId);
+
+	boolean checkEmailUsed(String email);
+
+	void insertEmailBindLog(UserBindEmailLog log);
+
+	UserBindEmailLog getUserBindEmail(Integer userid);
+
+	void updateBindEmail(Integer userid, String email);
 }
