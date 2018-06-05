@@ -339,7 +339,7 @@ public class BankOpenServiceImpl implements BankOpenService {
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
                     String bankId = amConfigClient.getBankIdByCardNo(bank.getCardNo());
-                    if (!StringUtils.isEmpty(usrCardInfolist)) {
+                    if (!StringUtils.isEmpty(bankId)) {
                         bank.setBankId(Integer.parseInt(bankId));
                         BanksConfigVO banksConfigVO = amConfigClient.getBankNameByBankId(bankId);
                         if (banksConfigVO != null) {
