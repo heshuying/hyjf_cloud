@@ -55,11 +55,11 @@ public interface AmUserClient {
 
 	boolean checkEmailUsed(Integer userId);
 
-	int updateBindEmail(BindEmailLogRequest bean);
+	void updateBindEmail(BindEmailLogRequest bean);
 
 	BindEmailLogVO getBindEmailLog(Integer userId);
 
-	int insertBindEmailLog(BindEmailLogRequest bean);
+	void insertBindEmailLog(BindEmailLogRequest bean);
 
 	int updateUserContract(UsersContractRequest bean);
 

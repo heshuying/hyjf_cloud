@@ -435,66 +435,6 @@ public class AccountChinapnrExample {
             return (Criteria) this;
         }
 
-        public Criteria andEggsIsokIsNull() {
-            addCriterion("eggs_isok is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokIsNotNull() {
-            addCriterion("eggs_isok is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokEqualTo(Boolean value) {
-            addCriterion("eggs_isok =", value, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokNotEqualTo(Boolean value) {
-            addCriterion("eggs_isok <>", value, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokGreaterThan(Boolean value) {
-            addCriterion("eggs_isok >", value, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("eggs_isok >=", value, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokLessThan(Boolean value) {
-            addCriterion("eggs_isok <", value, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokLessThanOrEqualTo(Boolean value) {
-            addCriterion("eggs_isok <=", value, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokIn(List<Boolean> values) {
-            addCriterion("eggs_isok in", values, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokNotIn(List<Boolean> values) {
-            addCriterion("eggs_isok not in", values, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokBetween(Boolean value1, Boolean value2) {
-            addCriterion("eggs_isok between", value1, value2, "eggsIsok");
-            return (Criteria) this;
-        }
-
-        public Criteria andEggsIsokNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("eggs_isok not between", value1, value2, "eggsIsok");
-            return (Criteria) this;
-        }
-
         public Criteria andCreateIpIsNull() {
             addCriterion("create_ip is null");
             return (Criteria) this;

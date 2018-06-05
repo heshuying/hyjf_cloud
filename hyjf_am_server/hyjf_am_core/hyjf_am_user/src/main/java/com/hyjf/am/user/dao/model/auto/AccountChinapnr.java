@@ -14,8 +14,6 @@ public class AccountChinapnr implements Serializable {
 
     private Boolean isok;
 
-    private Boolean eggsIsok;
-
     private String createIp;
 
     private Date createTime;
@@ -62,14 +60,6 @@ public class AccountChinapnr implements Serializable {
 
     public void setIsok(Boolean isok) {
         this.isok = isok;
-    }
-
-    public Boolean getEggsIsok() {
-        return eggsIsok;
-    }
-
-    public void setEggsIsok(Boolean eggsIsok) {
-        this.eggsIsok = eggsIsok;
     }
 
     public String getCreateIp() {

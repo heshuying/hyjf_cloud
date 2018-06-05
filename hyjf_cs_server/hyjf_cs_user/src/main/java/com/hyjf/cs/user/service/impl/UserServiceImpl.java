@@ -969,10 +969,7 @@ public class UserServiceImpl implements UserService  {
 		request.setUserEmail(email);
 		request.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		request.setUserId(userId);
-		int cnt = amUserClient.insertBindEmailLog(request);
-		if (cnt <= 0) {
-			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_SEND_ERROR);
-		}
+		amUserClient.insertBindEmailLog(request);
 		
 		// 发送激活邮件
 		activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
@@ -1061,12 +1058,7 @@ public class UserServiceImpl implements UserService  {
 		BindEmailLogVO vo = amUserClient.getBindEmailLog(userId);
 		BindEmailLogRequest requestBean = new BindEmailLogRequest();
 		BeanUtils.copyProperties(vo, requestBean);
-		int cnt = amUserClient.updateBindEmail(requestBean);
-		
-		if (cnt <= 0) {
-			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR);
-		}
-		
+		amUserClient.updateBindEmail(requestBean);
 		return true;
 	}
 	

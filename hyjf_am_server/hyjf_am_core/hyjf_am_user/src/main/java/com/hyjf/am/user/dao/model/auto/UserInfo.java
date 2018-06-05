@@ -8,16 +8,6 @@ public class UserInfo implements Serializable {
 
     private Integer roleId;
 
-    private Integer isStaff;
-
-    private Integer departmentId;
-
-    private Integer parentId;
-
-    private Integer is51;
-
-    private String nickname;
-
     private String birthday;
 
     private Integer sex;
@@ -32,8 +22,6 @@ public class UserInfo implements Serializable {
 
     private Integer emailIsapprove;
 
-    private String education;
-
     private String province;
 
     private String city;
@@ -42,23 +30,9 @@ public class UserInfo implements Serializable {
 
     private String address;
 
-    private String intro;
-
-    private String interest;
-
     private Integer attribute;
 
-    private Integer promoteway;
-
     private Boolean isContact;
-
-    private Integer vipId;
-
-    private Integer vipValue;
-
-    private Integer vipExpDate;
-
-    private Byte vipPlatform;
 
     private Integer borrowerType;
 
@@ -80,46 +54,6 @@ public class UserInfo implements Serializable {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
-    }
-
-    public Integer getIsStaff() {
-        return isStaff;
-    }
-
-    public void setIsStaff(Integer isStaff) {
-        this.isStaff = isStaff;
-    }
-
-    public Integer getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(Integer departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
-    public Integer getIs51() {
-        return is51;
-    }
-
-    public void setIs51(Integer is51) {
-        this.is51 = is51;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
     }
 
     public String getBirthday() {
@@ -178,14 +112,6 @@ public class UserInfo implements Serializable {
         this.emailIsapprove = emailIsapprove;
     }
 
-    public String getEducation() {
-        return education;
-    }
-
-    public void setEducation(String education) {
-        this.education = education == null ? null : education.trim();
-    }
-
     public String getProvince() {
         return province;
     }
@@ -218,22 +144,6 @@ public class UserInfo implements Serializable {
         this.address = address == null ? null : address.trim();
     }
 
-    public String getIntro() {
-        return intro;
-    }
-
-    public void setIntro(String intro) {
-        this.intro = intro == null ? null : intro.trim();
-    }
-
-    public String getInterest() {
-        return interest;
-    }
-
-    public void setInterest(String interest) {
-        this.interest = interest == null ? null : interest.trim();
-    }
-
     public Integer getAttribute() {
         return attribute;
     }
@@ -242,52 +152,12 @@ public class UserInfo implements Serializable {
         this.attribute = attribute;
     }
 
-    public Integer getPromoteway() {
-        return promoteway;
-    }
-
-    public void setPromoteway(Integer promoteway) {
-        this.promoteway = promoteway;
-    }
-
     public Boolean getIsContact() {
         return isContact;
     }
 
     public void setIsContact(Boolean isContact) {
         this.isContact = isContact;
-    }
-
-    public Integer getVipId() {
-        return vipId;
-    }
-
-    public void setVipId(Integer vipId) {
-        this.vipId = vipId;
-    }
-
-    public Integer getVipValue() {
-        return vipValue;
-    }
-
-    public void setVipValue(Integer vipValue) {
-        this.vipValue = vipValue;
-    }
-
-    public Integer getVipExpDate() {
-        return vipExpDate;
-    }
-
-    public void setVipExpDate(Integer vipExpDate) {
-        this.vipExpDate = vipExpDate;
-    }
-
-    public Byte getVipPlatform() {
-        return vipPlatform;
-    }
-
-    public void setVipPlatform(Byte vipPlatform) {
-        this.vipPlatform = vipPlatform;
     }
 
     public Integer getBorrowerType() {
