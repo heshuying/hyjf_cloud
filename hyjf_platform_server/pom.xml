@@ -16,5 +16,6 @@
         <module>hyjf_admin</module>
         <module>hyjf_batch</module>
         <module>hyjf_pay</module>
+        <module>hyjf_callcenter</module>
     </modules>
 </project>
