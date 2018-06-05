@@ -332,6 +332,7 @@ public class BankOpenServiceImpl implements BankOpenService {
                     try {
                         bank.setCreateTime(sdf.parse(obj.getString("txnDate") + obj.getString("txnTime")));
                     } catch (ParseException e) {
+                        logger.error("银行返回日期格式化失败，userId:{}", userId);
                     }
                     bank.setCreateUserId(userId);
                     bank.setCreateUsername(user.getUsername());
