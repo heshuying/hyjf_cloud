@@ -11,11 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.cs.user.constants.BindCardError;
+import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.BindCardService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -37,24 +40,27 @@ public class WebBindCardController {
 	private static final Logger logger = LoggerFactory.getLogger(WebBindCardController.class);
 	
 	@Autowired
+	private RedisUtil redisUtil;
+	 
+	@Autowired
 	BindCardService bindCardService;
 	
 	@ApiOperation(value = "用户绑卡", notes = "用户绑卡")
 	@PostMapping(value = "/bindCard", produces = "application/json; charset=utf-8")
-	public ApiResult<Object> bindCard(@RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
+	public ApiResult<Object> bindCard(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		logger.info("绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		ApiResult<Object> result = new ApiResult<Object>();
 		
-        Integer userId = Integer.parseInt(request.getParameter("userId"));
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
         String userIp = GetCilentIP.getIpAddr(request);
         
-        bindCardService.checkParamBindCard(bindCardVO, userId);
+        bindCardService.checkParamBindCard(bindCardVO, user.getUserId());
         
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
 		try {
-			bankBean = bindCardService.callBankBindCard(bindCardVO, userId, userIp);
+			bankBean = bindCardService.callBankBindCard(bindCardVO, user.getUserId(), userIp);
 		} catch (Exception e) {
 			result.setStatus(ApiResult.STATUS_FAIL);
 			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
@@ -81,19 +87,19 @@ public class WebBindCardController {
 	
 	@ApiOperation(value = "用户解绑卡", notes = "用户解绑卡")
 	@PostMapping(value = "/unBindCard", produces = "application/json; charset=utf-8")
-	public ApiResult<Object> unBindCard(@RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
+	public ApiResult<Object> unBindCard(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		ApiResult<Object> result = new ApiResult<Object>();
 		
-        Integer userId = Integer.parseInt(request.getParameter("userId"));
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
         
-        bindCardService.checkParamUnBindCard(bindCardVO, userId);
+        bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
         
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
 		try {
-			bankBean = bindCardService.callBankUnBindCard(bindCardVO, userId);
+			bankBean = bindCardService.callBankUnBindCard(bindCardVO, user.getUserId());
 		} catch (Exception e) {
 			result.setStatus(ApiResult.STATUS_FAIL);
 			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
