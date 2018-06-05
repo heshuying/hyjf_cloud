@@ -1,34 +1,19 @@
 package com.hyjf.cs.user.controller.user;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.redis.RedisUtil;
+import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.UserService;
@@ -38,9 +23,19 @@ import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.time.Instant;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -59,6 +54,9 @@ public class WebUserController {
 
     @Autowired
     SystemConfig systemConfig;
+
+    @Autowired
+    private StringRedisUtil stringRedisUtil;
 
     /**
      * @param request
@@ -284,10 +282,19 @@ public class WebUserController {
      * @Return: java.lang.String
      */
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
-    @GetMapping(value = "init")
-    public String init(@RequestHeader(value = "token") String token) {
+    @PostMapping(value = "accountSet")
+    public ApiResult<String> accountSet(/*@RequestHeader(value = "token") String token*/) {
+        Map map = ImmutableMap.of("userId", String.valueOf(4), "username", "hyjf225650", "ts",
+                String.valueOf(Instant.now().getEpochSecond()));
+        String token = JwtHelper.genToken(map);
+        ApiResult<String> apiResult = new ApiResult<>();
         String result = userService.safeInit(token);
-        return result;
+        if (null == result){
+            apiResult.setStatus(ApiResult.STATUS_FAIL);
+            apiResult.setStatusDesc("账户设置查询失败");
+        }
+        apiResult.setResult(result);
+        return apiResult;
     }
 
 	/**
@@ -405,5 +412,27 @@ public class WebUserController {
 		
 		return result;
 	}
+
+    /**
+     * @Author: zhangqingqing
+     * @Desc : 退出登录
+     * @Param: * @param token
+     * @Date: 16:29 2018/6/5
+     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     */
+    @PostMapping(value = "logout")
+    public ApiResult<String> loginout(@RequestHeader(value = "token") String token){
+        ModelAndView modelAndView = new ModelAndView("index");
+        ApiResult<String> result = new ApiResult<>();
+        // 退出到首页
+        result.setResult("index");
+        try {
+            stringRedisUtil.delete(RedisKey.USER_TOKEN_REDIS + token);
+        }catch (Exception e){
+            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatusDesc("退出失败");
+        }
+        return result;
+    }
 
 }

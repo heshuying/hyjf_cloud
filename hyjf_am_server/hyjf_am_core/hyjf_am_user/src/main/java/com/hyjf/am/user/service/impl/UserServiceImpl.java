@@ -307,7 +307,6 @@ public class UserServiceImpl implements UserService {
 		UserInfo usersInfo = userInfoService.findUserInfoById(userVO.getUserId());
 		if (usersInfo != null) {
 			userVO.setSex(usersInfo.getSex());
-			userVO.setNickname(usersInfo.getNickname());
 			userVO.setTruename(usersInfo.getTruename());
 			userVO.setIdcard(usersInfo.getIdcard());
 			userVO.setRoleId(usersInfo.getRoleId() + "");
@@ -481,7 +480,6 @@ public class UserServiceImpl implements UserService {
 		user.setInvestflag(0);
 		user.setInvestSms(0);
 		user.setRecieveSms(0);
-		user.setVersion(new BigDecimal("0"));
 		user.setUserType(0);
 		user.setIsSetPassword(0);
 		int time = GetDate.getNowTime10();
@@ -491,15 +489,9 @@ public class UserServiceImpl implements UserService {
 		user.setRegTime(new Date());
 		user.setStatus(0);
 		user.setSalt(codeSalt);
-		user.setBorrowSms(0);
-		user.setPid(0);
-		user.setUsernamep("");
-		user.setPtype(0);
+
 		user.setOpenAccount(0);
 		user.setBankOpenAccount(0);
-
-		user.setReferrer(refferUserId);
-		user.setReferrerUserName(refferUsername);
 
 		if (StringUtils.isNotBlank(platform)) {
 			user.setRegEsb(Integer.parseInt(platform));
@@ -530,22 +522,12 @@ public class UserServiceImpl implements UserService {
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
 		userInfo.setUpdateTime(new Date());
-		userInfo.setPromoteway(0);
-		userInfo.setIs51(0);
-		userInfo.setIsStaff(0);
-		userInfo.setDepartmentId(0);
-		userInfo.setNickname("");
 		userInfo.setBirthday("");
 		userInfo.setSex(1);
 		userInfo.setIdcard("");
-		userInfo.setEducation("");
 		userInfo.setAddress("");
-		userInfo.setIntro("");
-		userInfo.setInterest("");
-		userInfo.setParentId(0);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
-		userInfo.setPromoteway(0);
 		userInfo.setIsContact(false);
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
