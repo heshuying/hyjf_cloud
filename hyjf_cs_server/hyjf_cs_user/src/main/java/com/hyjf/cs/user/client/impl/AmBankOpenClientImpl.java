@@ -3,6 +3,7 @@ package com.hyjf.cs.user.client.impl;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserEvalationResultResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
@@ -127,21 +128,13 @@ public class AmBankOpenClientImpl implements AmBankOpenClient {
 
 	/**
 	 * 开户成功保存银行卡信息
-	 * @param bean
+	 * @param request
 	 * @return
 	 */
 	@Override
-	public Integer saveCardNoToBank(BankCallBean bean) {
-		BankOpenRequest request = new BankOpenRequest();
-		request.setOrderId(bean.getLogOrderId());
-		request.setUserId(Integer.parseInt(bean.getLogUserId()));
-		request.setAccountId(bean.getAccountId());
-		request.setBankAccountEsb(bean.getLogClient());
-		request.setTrueName(bean.getName());
-		request.setIdNo(bean.getIdNo());
-		request.setMobile(bean.getMobile());
+	public Integer saveCardNoToBank(BankCardRequest request) {
 		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankopen/updateCardNoToBank", request, Integer.class).getBody();
+				.postForEntity("http://AM-USER/am-user/bankopen/saveCardNoToBank", request, Integer.class).getBody();
 		if (result != null) {
 			return result;
 		}

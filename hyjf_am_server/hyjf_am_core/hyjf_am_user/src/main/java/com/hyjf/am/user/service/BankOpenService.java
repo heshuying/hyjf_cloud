@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 
 public interface BankOpenService {
@@ -50,4 +51,11 @@ public interface BankOpenService {
 	 * @return
 	 */
 	CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
+
+	/**
+	 * 开户成功后保存用户银行卡信息
+	 * @param request
+	 * @return
+	 */
+	boolean saveCardNoToBank(BankCardRequest request);
 }

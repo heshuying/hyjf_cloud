@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
@@ -40,8 +41,8 @@ public interface AmBankOpenClient {
 
 	/**
 	 * 开户成功后保存银行卡信息
-	 * @param bean
+	 * @param request
 	 * @return
 	 */
-	Integer saveCardNoToBank(BankCallBean bean);
+	Integer saveCardNoToBank(BankCardRequest request);
 }
