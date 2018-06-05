@@ -1,7 +1,13 @@
 package com.hyjf.cs.user.service;
 
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.BaseBean;
@@ -115,6 +121,18 @@ public interface UserService {
 	MobileModifyResultBean queryForMobileModify(Integer userId);
 
 	boolean checkForMobileModify(String newMobile, String smsCode);
+
+	void checkForEmailSend(String email, Integer userId);
+
+	boolean sendEmailActive(Integer userId, String email) throws MQException;
+
+	boolean updateEmail(Integer userId, String email) throws MQException;
+
+	void checkForEmailBind(String email, String userId, String activeCode, WebViewUser user);
+
+	void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUser user);
+
+	boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUser user) throws MQException;
 
 	/**
 	 * 根据token查询user信息

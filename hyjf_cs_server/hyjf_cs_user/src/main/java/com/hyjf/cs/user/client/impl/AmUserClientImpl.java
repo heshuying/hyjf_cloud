@@ -2,6 +2,7 @@ package com.hyjf.cs.user.client.impl;
 
 import java.io.UnsupportedEncodingException;
 
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.vo.user.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -15,10 +16,11 @@ import org.springframework.web.client.RestTemplate;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -269,4 +271,89 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	
+	/**
+	 * 校验邮箱是否存在
+	 */
+	@Override
+	public boolean checkEmailUsed(Integer userId) {
+		// TODO: 微服务待实现
+		boolean result = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + userId, boolean.class).getBody();
+		return result;
+	}
+	
+	/**
+	 * 插入绑卡记录
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public int insertBindEmailLog(BindEmailLogRequest bean) {
+		// TODO: 微服务待实现
+		int result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/insertBindEmailLog/",  bean, int.class).getBody();
+		return result;
+	}
+	
+	/**
+	 * 获取绑定邮箱记录
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BindEmailLogVO getBindEmailLog(Integer userId) {
+		// TODO: 微服务待实现
+		BindEmailLogResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + userId, BindEmailLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+	
+	/**
+	 * 更新绑定邮箱
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public int updateBindEmail(BindEmailLogRequest bean) {
+		// TODO: 微服务待实现
+		int result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/updateBindEmail/",  bean, int.class).getBody();
+		return result;
+	}
+	
+	/**
+	 * 保存、更新紧急联系人
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public int updateUserContract(UsersContractRequest bean) {
+		int result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/updateUserContract/",  bean, int.class).getBody();
+		return result;
+	}
+
+	/**
+	 * @Author: zhangqingqing
+	 * @Desc : 查询紧急联系人
+	 * @Param: * @param userId
+	 * @Date: 14:25 2018/6/4
+	 * @Return: com.hyjf.am.vo.user.UsersContactVO
+	 */
+	@Override
+	public UsersContactVO selectUserContact(Integer userId) {
+		UsersContactResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUserContact/" + userId, UsersContactResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+
 }

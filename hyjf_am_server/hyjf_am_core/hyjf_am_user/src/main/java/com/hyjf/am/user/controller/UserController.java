@@ -5,6 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.*;
@@ -293,4 +294,34 @@ public class UserController {
 		}
 		return response;
 	}
+	
+	/**
+	 * 保存紧急联系人信息
+	 * @param bean
+	 * @return
+	 */
+	@RequestMapping("/updateUserContract")
+	public int updateUserContract(@RequestBody UsersContractRequest bean){
+		return userService.updateUserContact(bean);
+	}
+
+	/**
+	 * @Author: zhangqingqing
+	 * @Desc : 查询紧急联系人
+	 * @Param: * @param userId
+	 * @Date: 14:21 2018/6/4
+	 * @Return: com.hyjf.am.response.user.UsersContactResponse
+	 */
+	@RequestMapping("/selectUserContact")
+	public UsersContactResponse selectUserContact(Integer userId){
+		UsersContactResponse response = new UsersContactResponse();
+		UsersContact usersContact = userService.selectUserContact(userId);
+		if (null != usersContact){
+			UsersContactVO usersContactVO = new UsersContactVO();
+			BeanUtils.copyProperties(usersContact,usersContactVO);
+			response.setResult(usersContactVO);
+		}
+		return response;
+	}
+
 }

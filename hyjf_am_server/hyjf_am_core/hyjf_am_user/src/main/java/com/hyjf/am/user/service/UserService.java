@@ -2,6 +2,7 @@ package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
@@ -100,4 +101,8 @@ public interface UserService {
 	UserEvalationResult selectUserEvalationResultByUserId(Integer userId);
 
 	AccountChinapnr getAccountChinapnr(Integer userId);
+
+	int updateUserContact(UsersContractRequest record);
+
+	UsersContact selectUserContact(Integer userId);
 }

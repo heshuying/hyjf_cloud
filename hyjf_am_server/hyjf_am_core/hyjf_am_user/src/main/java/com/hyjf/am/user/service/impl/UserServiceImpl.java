@@ -1,11 +1,56 @@
 package com.hyjf.am.user.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.user.dao.mapper.auto.*;
-import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.user.dao.mapper.auto.AccountChinapnrMapper;
+import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthLogMapper;
+import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
+import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
+import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserEvalationResultMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserLogMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserLoginLogMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UsersContactMapper;
+import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
+import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthExample;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample;
+import com.hyjf.am.user.dao.model.auto.PreRegist;
+import com.hyjf.am.user.dao.model.auto.PreRegistExample;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
+import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
+import com.hyjf.am.user.dao.model.auto.UserExample;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.dao.model.auto.UserLog;
+import com.hyjf.am.user.dao.model.auto.UserLoginLog;
+import com.hyjf.am.user.dao.model.auto.UserLoginLogExample;
+import com.hyjf.am.user.dao.model.auto.UsersContact;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
 import com.hyjf.am.user.service.UserInfoService;
@@ -21,19 +66,6 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author xiasq
@@ -76,6 +108,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	AccountChinapnrMapper accountChinapnrMapper;
+	
+	@Autowired
+	UsersContactMapper usersContactMapper;
 
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
@@ -839,5 +874,38 @@ public class UserServiceImpl implements UserService {
 		}
 		return accountChinapnr;
 	}
+	
+	/**
+	 * 保存紧急联系人信息
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int updateUserContact(UsersContractRequest record){
+		if(record.getUserId() == null) {
+			return 0;
+		}
+		UsersContact contact = new UsersContact();
+		BeanUtils.copyProperties(record, contact);
+		usersMapper.deleteByPrimaryKey(record.getUserId());
+		return usersContactMapper.insertSelective(contact);
+	}
+
+	/**
+	 * @Author: zhangqingqing
+	 * @Desc :查询紧急联系人
+	 * @Param: * @param userId
+	 * @Date: 14:09 2018/6/4
+	 * @Return: com.hyjf.am.user.dao.model.auto.UsersContact
+	 */
+	@Override
+	public UsersContact selectUserContact(Integer userId){
+		if(userId == null) {
+			return null;
+		}
+		UsersContact result = usersContactMapper.selectByPrimaryKey(userId);
+		return result;
+	}
+
 
 }

@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
@@ -323,6 +324,83 @@ public class WebUserController {
 			userVO.setUserId(user.getUserId());
 			userVO.setMobile(newMobile);
 			userService.updateUserByUserId(userVO);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 发送激活邮件
+	 */
+	@ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
+	@PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
+	public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String email, HttpServletRequest request) {
+		ApiResult<Object> result = new ApiResult<Object>();
+
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		userService.checkForEmailSend(email, user.getUserId());
+		
+		try {
+			userService.sendEmailActive(user.getUserId(), email);
+		} catch (MQException e) {
+			logger.error("发送激活邮件失败", e);
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc("发送激活邮件失败");
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 绑定邮箱
+	 */
+	@ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
+	@PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
+	public ApiResult<Object> bindEmail(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+		ApiResult<Object> result = new ApiResult<Object>();
+
+		String key = request.getParameter("key");
+		String value = request.getParameter("value");
+		String email = request.getParameter("email");
+		
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		userService.checkForEmailBind(email, key, value, user);
+		
+		try {
+			userService.updateEmail(user.getUserId(), email);
+		} catch (MQException e) {
+			logger.error("邮箱激活失败", e);
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc("邮箱激活失败");
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 添加、修改紧急联系人
+	 * @param token
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
+	@PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
+	public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+		ApiResult<Object> result = new ApiResult<Object>();
+
+		String relationId = request.getParameter("relationId");
+		String rlName = request.getParameter("rlName");
+		String rlPhone = request.getParameter("rlPhone");
+		
+		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		userService.checkForContractSave(relationId, rlName, rlPhone, user);
+		
+		try {
+			userService.saveContract(relationId, rlName, rlPhone, user);
+		} catch (MQException e) {
+			logger.error("紧急联系人保存失败", e);
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc("紧急联系人保存失败");
 		}
 		
 		return result;
