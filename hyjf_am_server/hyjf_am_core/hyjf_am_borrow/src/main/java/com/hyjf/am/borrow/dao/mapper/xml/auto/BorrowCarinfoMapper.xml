@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BorrowCarinfoMapper">
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="brand" jdbcType="VARCHAR" property="brand" />
-    <result column="model" jdbcType="VARCHAR" property="model" />
-    <result column="carseries" jdbcType="VARCHAR" property="carseries" />
-    <result column="number" jdbcType="VARCHAR" property="number" />
-    <result column="color" jdbcType="VARCHAR" property="color" />
-    <result column="year" jdbcType="VARCHAR" property="year" />
-    <result column="place" jdbcType="VARCHAR" property="place" />
-    <result column="volume" jdbcType="VARCHAR" property="volume" />
-    <result column="buytime" jdbcType="INTEGER" property="buytime" />
-    <result column="is_safe" jdbcType="INTEGER" property="isSafe" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="toprice" jdbcType="DECIMAL" property="toprice" />
-    <result column="borrow_nid" jdbcType="VARCHAR" property="borrowNid" />
-    <result column="borrow_pre_nid" jdbcType="VARCHAR" property="borrowPreNid" />
-    <result column="registration" jdbcType="VARCHAR" property="registration" />
-    <result column="vin" jdbcType="VARCHAR" property="vin" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BorrowCarinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="carseries" property="carseries" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="place" property="place" jdbcType="VARCHAR" />
+    <result column="volume" property="volume" jdbcType="VARCHAR" />
+    <result column="buytime" property="buytime" jdbcType="INTEGER" />
+    <result column="is_safe" property="isSafe" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="toprice" property="toprice" jdbcType="DECIMAL" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_pre_nid" property="borrowPreNid" jdbcType="VARCHAR" />
+    <result column="registration" property="registration" jdbcType="VARCHAR" />
+    <result column="vin" property="vin" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -49,25 +49,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -78,45 +78,45 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     id, brand, model, carseries, `number`, color, `year`, place, volume, buytime, is_safe, 
     price, toprice, borrow_nid, borrow_pre_nid, registration, vin
   </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample" resultMap="BaseResultMap">
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
     from ht_borrow_carinfo
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
-    <if test="limitStart &gt;= 0">
+    <if test="limitStart >= 0" >
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from ht_borrow_carinfo
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_borrow_carinfo
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample">
+  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample" >
     delete from ht_borrow_carinfo
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_borrow_carinfo (brand, model, carseries, 
@@ -132,178 +132,178 @@
       #{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=VARCHAR}, #{registration,jdbcType=VARCHAR}, 
       #{vin,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_borrow_carinfo
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="brand != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="brand != null" >
         brand,
       </if>
-      <if test="model != null">
+      <if test="model != null" >
         model,
       </if>
-      <if test="carseries != null">
+      <if test="carseries != null" >
         carseries,
       </if>
-      <if test="number != null">
+      <if test="number != null" >
         `number`,
       </if>
-      <if test="color != null">
+      <if test="color != null" >
         color,
       </if>
-      <if test="year != null">
+      <if test="year != null" >
         `year`,
       </if>
-      <if test="place != null">
+      <if test="place != null" >
         place,
       </if>
-      <if test="volume != null">
+      <if test="volume != null" >
         volume,
       </if>
-      <if test="buytime != null">
+      <if test="buytime != null" >
         buytime,
       </if>
-      <if test="isSafe != null">
+      <if test="isSafe != null" >
         is_safe,
       </if>
-      <if test="price != null">
+      <if test="price != null" >
         price,
       </if>
-      <if test="toprice != null">
+      <if test="toprice != null" >
         toprice,
       </if>
-      <if test="borrowNid != null">
+      <if test="borrowNid != null" >
         borrow_nid,
       </if>
-      <if test="borrowPreNid != null">
+      <if test="borrowPreNid != null" >
         borrow_pre_nid,
       </if>
-      <if test="registration != null">
+      <if test="registration != null" >
         registration,
       </if>
-      <if test="vin != null">
+      <if test="vin != null" >
         vin,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="brand != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="brand != null" >
         #{brand,jdbcType=VARCHAR},
       </if>
-      <if test="model != null">
+      <if test="model != null" >
         #{model,jdbcType=VARCHAR},
       </if>
-      <if test="carseries != null">
+      <if test="carseries != null" >
         #{carseries,jdbcType=VARCHAR},
       </if>
-      <if test="number != null">
+      <if test="number != null" >
         #{number,jdbcType=VARCHAR},
       </if>
-      <if test="color != null">
+      <if test="color != null" >
         #{color,jdbcType=VARCHAR},
       </if>
-      <if test="year != null">
+      <if test="year != null" >
         #{year,jdbcType=VARCHAR},
       </if>
-      <if test="place != null">
+      <if test="place != null" >
         #{place,jdbcType=VARCHAR},
       </if>
-      <if test="volume != null">
+      <if test="volume != null" >
         #{volume,jdbcType=VARCHAR},
       </if>
-      <if test="buytime != null">
+      <if test="buytime != null" >
         #{buytime,jdbcType=INTEGER},
       </if>
-      <if test="isSafe != null">
+      <if test="isSafe != null" >
         #{isSafe,jdbcType=INTEGER},
       </if>
-      <if test="price != null">
+      <if test="price != null" >
         #{price,jdbcType=DECIMAL},
       </if>
-      <if test="toprice != null">
+      <if test="toprice != null" >
         #{toprice,jdbcType=DECIMAL},
       </if>
-      <if test="borrowNid != null">
+      <if test="borrowNid != null" >
         #{borrowNid,jdbcType=VARCHAR},
       </if>
-      <if test="borrowPreNid != null">
+      <if test="borrowPreNid != null" >
         #{borrowPreNid,jdbcType=VARCHAR},
       </if>
-      <if test="registration != null">
+      <if test="registration != null" >
         #{registration,jdbcType=VARCHAR},
       </if>
-      <if test="vin != null">
+      <if test="vin != null" >
         #{vin,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample" resultType="java.lang.Integer" >
     select count(*) from ht_borrow_carinfo
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map" >
     update ht_borrow_carinfo
-    <set>
-      <if test="record.id != null">
+    <set >
+      <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.brand != null">
+      <if test="record.brand != null" >
         brand = #{record.brand,jdbcType=VARCHAR},
       </if>
-      <if test="record.model != null">
+      <if test="record.model != null" >
         model = #{record.model,jdbcType=VARCHAR},
       </if>
-      <if test="record.carseries != null">
+      <if test="record.carseries != null" >
         carseries = #{record.carseries,jdbcType=VARCHAR},
       </if>
-      <if test="record.number != null">
+      <if test="record.number != null" >
         `number` = #{record.number,jdbcType=VARCHAR},
       </if>
-      <if test="record.color != null">
+      <if test="record.color != null" >
         color = #{record.color,jdbcType=VARCHAR},
       </if>
-      <if test="record.year != null">
+      <if test="record.year != null" >
         `year` = #{record.year,jdbcType=VARCHAR},
       </if>
-      <if test="record.place != null">
+      <if test="record.place != null" >
         place = #{record.place,jdbcType=VARCHAR},
       </if>
-      <if test="record.volume != null">
+      <if test="record.volume != null" >
         volume = #{record.volume,jdbcType=VARCHAR},
       </if>
-      <if test="record.buytime != null">
+      <if test="record.buytime != null" >
         buytime = #{record.buytime,jdbcType=INTEGER},
       </if>
-      <if test="record.isSafe != null">
+      <if test="record.isSafe != null" >
         is_safe = #{record.isSafe,jdbcType=INTEGER},
       </if>
-      <if test="record.price != null">
+      <if test="record.price != null" >
         price = #{record.price,jdbcType=DECIMAL},
       </if>
-      <if test="record.toprice != null">
+      <if test="record.toprice != null" >
         toprice = #{record.toprice,jdbcType=DECIMAL},
       </if>
-      <if test="record.borrowNid != null">
+      <if test="record.borrowNid != null" >
         borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       </if>
-      <if test="record.borrowPreNid != null">
+      <if test="record.borrowPreNid != null" >
         borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
       </if>
-      <if test="record.registration != null">
+      <if test="record.registration != null" >
         registration = #{record.registration,jdbcType=VARCHAR},
       </if>
-      <if test="record.vin != null">
+      <if test="record.vin != null" >
         vin = #{record.vin,jdbcType=VARCHAR},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
+  <update id="updateByExample" parameterType="map" >
     update ht_borrow_carinfo
     set id = #{record.id,jdbcType=INTEGER},
       brand = #{record.brand,jdbcType=VARCHAR},
@@ -322,464 +322,65 @@
       borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
       registration = #{record.registration,jdbcType=VARCHAR},
       vin = #{record.vin,jdbcType=VARCHAR}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo" >
     update ht_borrow_carinfo
-    <set>
-      <if test="brand != null">
+    <set >
+      <if test="brand != null" >
         brand = #{brand,jdbcType=VARCHAR},
       </if>
-      <if test="model != null">
+      <if test="model != null" >
         model = #{model,jdbcType=VARCHAR},
       </if>
-      <if test="carseries != null">
+      <if test="carseries != null" >
         carseries = #{carseries,jdbcType=VARCHAR},
       </if>
-      <if test="number != null">
+      <if test="number != null" >
         `number` = #{number,jdbcType=VARCHAR},
       </if>
-      <if test="color != null">
+      <if test="color != null" >
         color = #{color,jdbcType=VARCHAR},
       </if>
-      <if test="year != null">
+      <if test="year != null" >
         `year` = #{year,jdbcType=VARCHAR},
       </if>
-      <if test="place != null">
+      <if test="place != null" >
         place = #{place,jdbcType=VARCHAR},
       </if>
-      <if test="volume != null">
+      <if test="volume != null" >
         volume = #{volume,jdbcType=VARCHAR},
       </if>
-      <if test="buytime != null">
+      <if test="buytime != null" >
         buytime = #{buytime,jdbcType=INTEGER},
       </if>
-      <if test="isSafe != null">
+      <if test="isSafe != null" >
         is_safe = #{isSafe,jdbcType=INTEGER},
       </if>
-      <if test="price != null">
+      <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
       </if>
-      <if test="toprice != null">
+      <if test="toprice != null" >
         toprice = #{toprice,jdbcType=DECIMAL},
       </if>
-      <if test="borrowNid != null">
+      <if test="borrowNid != null" >
         borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       </if>
-      <if test="borrowPreNid != null">
+      <if test="borrowPreNid != null" >
         borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
       </if>
-      <if test="registration != null">
+      <if test="registration != null" >
         registration = #{registration,jdbcType=VARCHAR},
       </if>
-      <if test="vin != null">
+      <if test="vin != null" >
         vin = #{vin,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    update ht_borrow_carinfo
-    set brand = #{brand,jdbcType=VARCHAR},
-      model = #{model,jdbcType=VARCHAR},
-      carseries = #{carseries,jdbcType=VARCHAR},
-      `number` = #{number,jdbcType=VARCHAR},
-      color = #{color,jdbcType=VARCHAR},
-      `year` = #{year,jdbcType=VARCHAR},
-      place = #{place,jdbcType=VARCHAR},
-      volume = #{volume,jdbcType=VARCHAR},
-      buytime = #{buytime,jdbcType=INTEGER},
-      is_safe = #{isSafe,jdbcType=INTEGER},
-      price = #{price,jdbcType=DECIMAL},
-      toprice = #{toprice,jdbcType=DECIMAL},
-      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
-      borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
-      registration = #{registration,jdbcType=VARCHAR},
-      vin = #{vin,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="brand" jdbcType="VARCHAR" property="brand" />
-    <result column="model" jdbcType="VARCHAR" property="model" />
-    <result column="carseries" jdbcType="VARCHAR" property="carseries" />
-    <result column="number" jdbcType="VARCHAR" property="number" />
-    <result column="color" jdbcType="VARCHAR" property="color" />
-    <result column="year" jdbcType="VARCHAR" property="year" />
-    <result column="place" jdbcType="VARCHAR" property="place" />
-    <result column="volume" jdbcType="VARCHAR" property="volume" />
-    <result column="buytime" jdbcType="INTEGER" property="buytime" />
-    <result column="is_safe" jdbcType="INTEGER" property="isSafe" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="toprice" jdbcType="DECIMAL" property="toprice" />
-    <result column="borrow_nid" jdbcType="VARCHAR" property="borrowNid" />
-    <result column="borrow_pre_nid" jdbcType="VARCHAR" property="borrowPreNid" />
-    <result column="registration" jdbcType="VARCHAR" property="registration" />
-    <result column="vin" jdbcType="VARCHAR" property="vin" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
-    id, brand, model, carseries, `number`, color, `year`, place, volume, buytime, is_safe, 
-    price, toprice, borrow_nid, borrow_pre_nid, registration, vin
-  </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from ht_borrow_carinfo
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-    <if test="limitStart &gt;= 0">
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ht_borrow_carinfo
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ht_borrow_carinfo
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample">
-    delete from ht_borrow_carinfo
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_carinfo (brand, model, carseries, 
-      `number`, color, `year`, 
-      place, volume, buytime, 
-      is_safe, price, toprice, 
-      borrow_nid, borrow_pre_nid, registration, 
-      vin)
-    values (#{brand,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{carseries,jdbcType=VARCHAR}, 
-      #{number,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, 
-      #{place,jdbcType=VARCHAR}, #{volume,jdbcType=VARCHAR}, #{buytime,jdbcType=INTEGER}, 
-      #{isSafe,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{toprice,jdbcType=DECIMAL}, 
-      #{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=VARCHAR}, #{registration,jdbcType=VARCHAR}, 
-      #{vin,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_carinfo
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="brand != null">
-        brand,
-      </if>
-      <if test="model != null">
-        model,
-      </if>
-      <if test="carseries != null">
-        carseries,
-      </if>
-      <if test="number != null">
-        `number`,
-      </if>
-      <if test="color != null">
-        color,
-      </if>
-      <if test="year != null">
-        `year`,
-      </if>
-      <if test="place != null">
-        place,
-      </if>
-      <if test="volume != null">
-        volume,
-      </if>
-      <if test="buytime != null">
-        buytime,
-      </if>
-      <if test="isSafe != null">
-        is_safe,
-      </if>
-      <if test="price != null">
-        price,
-      </if>
-      <if test="toprice != null">
-        toprice,
-      </if>
-      <if test="borrowNid != null">
-        borrow_nid,
-      </if>
-      <if test="borrowPreNid != null">
-        borrow_pre_nid,
-      </if>
-      <if test="registration != null">
-        registration,
-      </if>
-      <if test="vin != null">
-        vin,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="brand != null">
-        #{brand,jdbcType=VARCHAR},
-      </if>
-      <if test="model != null">
-        #{model,jdbcType=VARCHAR},
-      </if>
-      <if test="carseries != null">
-        #{carseries,jdbcType=VARCHAR},
-      </if>
-      <if test="number != null">
-        #{number,jdbcType=VARCHAR},
-      </if>
-      <if test="color != null">
-        #{color,jdbcType=VARCHAR},
-      </if>
-      <if test="year != null">
-        #{year,jdbcType=VARCHAR},
-      </if>
-      <if test="place != null">
-        #{place,jdbcType=VARCHAR},
-      </if>
-      <if test="volume != null">
-        #{volume,jdbcType=VARCHAR},
-      </if>
-      <if test="buytime != null">
-        #{buytime,jdbcType=INTEGER},
-      </if>
-      <if test="isSafe != null">
-        #{isSafe,jdbcType=INTEGER},
-      </if>
-      <if test="price != null">
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="toprice != null">
-        #{toprice,jdbcType=DECIMAL},
-      </if>
-      <if test="borrowNid != null">
-        #{borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowPreNid != null">
-        #{borrowPreNid,jdbcType=VARCHAR},
-      </if>
-      <if test="registration != null">
-        #{registration,jdbcType=VARCHAR},
-      </if>
-      <if test="vin != null">
-        #{vin,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfoExample" resultType="java.lang.Integer">
-    select count(*) from ht_borrow_carinfo
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update ht_borrow_carinfo
-    <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.brand != null">
-        brand = #{record.brand,jdbcType=VARCHAR},
-      </if>
-      <if test="record.model != null">
-        model = #{record.model,jdbcType=VARCHAR},
-      </if>
-      <if test="record.carseries != null">
-        carseries = #{record.carseries,jdbcType=VARCHAR},
-      </if>
-      <if test="record.number != null">
-        `number` = #{record.number,jdbcType=VARCHAR},
-      </if>
-      <if test="record.color != null">
-        color = #{record.color,jdbcType=VARCHAR},
-      </if>
-      <if test="record.year != null">
-        `year` = #{record.year,jdbcType=VARCHAR},
-      </if>
-      <if test="record.place != null">
-        place = #{record.place,jdbcType=VARCHAR},
-      </if>
-      <if test="record.volume != null">
-        volume = #{record.volume,jdbcType=VARCHAR},
-      </if>
-      <if test="record.buytime != null">
-        buytime = #{record.buytime,jdbcType=INTEGER},
-      </if>
-      <if test="record.isSafe != null">
-        is_safe = #{record.isSafe,jdbcType=INTEGER},
-      </if>
-      <if test="record.price != null">
-        price = #{record.price,jdbcType=DECIMAL},
-      </if>
-      <if test="record.toprice != null">
-        toprice = #{record.toprice,jdbcType=DECIMAL},
-      </if>
-      <if test="record.borrowNid != null">
-        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="record.borrowPreNid != null">
-        borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
-      </if>
-      <if test="record.registration != null">
-        registration = #{record.registration,jdbcType=VARCHAR},
-      </if>
-      <if test="record.vin != null">
-        vin = #{record.vin,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update ht_borrow_carinfo
-    set id = #{record.id,jdbcType=INTEGER},
-      brand = #{record.brand,jdbcType=VARCHAR},
-      model = #{record.model,jdbcType=VARCHAR},
-      carseries = #{record.carseries,jdbcType=VARCHAR},
-      `number` = #{record.number,jdbcType=VARCHAR},
-      color = #{record.color,jdbcType=VARCHAR},
-      `year` = #{record.year,jdbcType=VARCHAR},
-      place = #{record.place,jdbcType=VARCHAR},
-      volume = #{record.volume,jdbcType=VARCHAR},
-      buytime = #{record.buytime,jdbcType=INTEGER},
-      is_safe = #{record.isSafe,jdbcType=INTEGER},
-      price = #{record.price,jdbcType=DECIMAL},
-      toprice = #{record.toprice,jdbcType=DECIMAL},
-      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
-      borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
-      registration = #{record.registration,jdbcType=VARCHAR},
-      vin = #{record.vin,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
-    update ht_borrow_carinfo
-    <set>
-      <if test="brand != null">
-        brand = #{brand,jdbcType=VARCHAR},
-      </if>
-      <if test="model != null">
-        model = #{model,jdbcType=VARCHAR},
-      </if>
-      <if test="carseries != null">
-        carseries = #{carseries,jdbcType=VARCHAR},
-      </if>
-      <if test="number != null">
-        `number` = #{number,jdbcType=VARCHAR},
-      </if>
-      <if test="color != null">
-        color = #{color,jdbcType=VARCHAR},
-      </if>
-      <if test="year != null">
-        `year` = #{year,jdbcType=VARCHAR},
-      </if>
-      <if test="place != null">
-        place = #{place,jdbcType=VARCHAR},
-      </if>
-      <if test="volume != null">
-        volume = #{volume,jdbcType=VARCHAR},
-      </if>
-      <if test="buytime != null">
-        buytime = #{buytime,jdbcType=INTEGER},
-      </if>
-      <if test="isSafe != null">
-        is_safe = #{isSafe,jdbcType=INTEGER},
-      </if>
-      <if test="price != null">
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="toprice != null">
-        toprice = #{toprice,jdbcType=DECIMAL},
-      </if>
-      <if test="borrowNid != null">
-        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowPreNid != null">
-        borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
-      </if>
-      <if test="registration != null">
-        registration = #{registration,jdbcType=VARCHAR},
-      </if>
-      <if test="vin != null">
-        vin = #{vin,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo">
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCarinfo" >
     update ht_borrow_carinfo
     set brand = #{brand,jdbcType=VARCHAR},
       model = #{model,jdbcType=VARCHAR},
