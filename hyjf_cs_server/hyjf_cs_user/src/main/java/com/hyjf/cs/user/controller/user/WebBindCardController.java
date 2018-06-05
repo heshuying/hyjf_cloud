@@ -41,10 +41,10 @@ public class WebBindCardController {
 	
 	@ApiOperation(value = "用户绑卡", notes = "用户绑卡")
 	@PostMapping(value = "/bindCard", produces = "application/json; charset=utf-8")
-	public ApiResult bindCard(@RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
+	public ApiResult<Object> bindCard(@RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		logger.info("绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
-		ApiResult result = new ApiResult();
+		ApiResult<Object> result = new ApiResult<Object>();
 		
         Integer userId = Integer.parseInt(request.getParameter("userId"));
         String userIp = GetCilentIP.getIpAddr(request);
@@ -81,13 +81,12 @@ public class WebBindCardController {
 	
 	@ApiOperation(value = "用户解绑卡", notes = "用户解绑卡")
 	@PostMapping(value = "/unBindCard", produces = "application/json; charset=utf-8")
-	public ApiResult unBindCard(@RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
+	public ApiResult<Object> unBindCard(@RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
-		ApiResult result = new ApiResult();
+		ApiResult<Object> result = new ApiResult<Object>();
 		
         Integer userId = Integer.parseInt(request.getParameter("userId"));
-        String userIp = GetCilentIP.getIpAddr(request);
         
         bindCardService.checkParamUnBindCard(bindCardVO, userId);
         
