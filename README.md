@@ -14,6 +14,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 ├── hyjf_cloud_server           -- spring cloud 组件
 |     ├── hyjf_eureka           -- 注册中心[端口:1111]
 |     ├── hyjf_config           -- 配置中心[端口:2222]
+|     ├── hyjf_spring_boot_admin-- 服务监控[端口:18080]
 |     └── hyjf_zuul             -- 服务网关[端口:8080]
 ├── hyjf_base                   -- 基础模块
 |   ├── hyjf-common             -- 公共模块 被依赖
@@ -51,7 +52,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
     6. 启动服务网关zuul ,zuul启动之前必须启动am_config
         zuul 统一访问 http://localhost:8080
     7. batch 访问： http://localhost:9091
-    
+    8.监控  http://localhost:18080
     
     ps:
         本地配置host文件 （样例）：

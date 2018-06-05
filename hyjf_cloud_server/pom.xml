@@ -23,6 +23,7 @@
 		<module>hyjf_config</module>
 		<module>hyjf_eureka</module>
 		<module>hyjf_zuul</module>
+        <module>hyjf_spring_boot_admin</module>
     </modules>
 
 </project>

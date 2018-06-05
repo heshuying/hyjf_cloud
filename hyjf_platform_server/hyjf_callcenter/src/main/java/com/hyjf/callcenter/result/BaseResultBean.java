@@ -70,4 +70,14 @@ public class BaseResultBean implements Serializable {
 	public void setRequest(String request) {
 		this.request = request;
 	}
+	
+    /**
+     * 设定返回状态和状态信息
+     * @param status
+     * @param statusDesc
+     */
+	public void statusMessage(String status,String statusDesc) {
+		this.status = status;
+		this.statusDesc = statusDesc;
+	}
 }

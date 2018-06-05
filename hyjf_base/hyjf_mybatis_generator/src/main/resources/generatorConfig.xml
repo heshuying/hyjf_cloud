@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_borrow.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -376,7 +376,38 @@
             <columnOverride column="appoint_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="tender_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        <!-- 汇计划资产表 -->
+        <table tableName="ht_hjh_plan_asset" domainObjectName="HjhPlanAsset">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="asset_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="verify_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="age" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="marriage" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="entrusted_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_month" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 资产来源的产品（资产）类型配置表 -->
+        <table tableName="ht_hjh_asset_type" domainObjectName="HjhAssetType">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="asset_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 资产与标的类型映射表 -->
+        <table tableName="ht_hjh_asset_borrowtype" domainObjectName="HjhAssetBorrowType">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="asset_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="borrow_cd" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_open" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_add" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_record" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_bail" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_audit" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auto_review" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_associate_plan" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
         <!-- 4. hyjf_trade -->
         <!-- 用户账户表 -->
@@ -440,19 +471,6 @@
         <!-- 卡BIN配置表 -->
         <table tableName="ht_card_bin" domainObjectName="CardBin">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-        <!-- 紧急联系人 -->
-        <table tableName="ht_users_contact" domainObjectName="UsersContact">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-        <!-- 用户绑定邮箱记录表 -->
-        <table tableName="ht_user_bind_email_log" domainObjectName="UserBindEmailLog">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-        <!-- 银行验证码授权表 -->
-        <table tableName="ht_bank_sms_auth_code" domainObjectName="BankSmsAuthCode">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
     </context>
 </generatorConfiguration>

@@ -1,19 +1,18 @@
 spring:
   application:
-    name: AM-CONFIG
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:18080
+    name: SPRING-BOOT-ADMIN
 
 eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://127.0.0.1:1111/eureka/
   instance:
     preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 10
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://127.0.0.1:1111/eureka/
+
 server:
-  port: 8091
+  port: 18080
 
 management:
   endpoints:
@@ -23,8 +22,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-
-
-logging:
-  file: am-config.log
