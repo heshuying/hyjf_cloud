@@ -26,6 +26,9 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 import com.hyjf.am.borrow.config.ds.DynamicDataSourceContextHolder.DbType;
 
+
+import com.hyjf.am.borrow.config.ds.DynamicDataSourceContextHolder.DbType;
+
 @Configuration
 @MapperScan("com.hyjf.am.borrow.dao.mapper")
 @AutoConfigureAfter({ DataSourceAutoConfiguration.class})
