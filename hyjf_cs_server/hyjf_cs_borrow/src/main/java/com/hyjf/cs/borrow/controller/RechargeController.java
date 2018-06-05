@@ -2,12 +2,16 @@ package com.hyjf.cs.borrow.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.borrow.config.SystemConfig;
+import com.hyjf.cs.borrow.constants.RechargeError;
 import com.hyjf.cs.borrow.service.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -60,24 +65,30 @@ public class RechargeController{
 	 * @return
 	 */
 	@RequestMapping("/page")
-	public ModelAndView userAuthInves(HttpServletRequest request, HttpServletResponse response, String mobile, String money) {
+	public ModelAndView recharge(@RequestHeader(value = "token") String token,HttpServletRequest request, String mobile, String money) throws Exception {
 		logger.info("充值服务");
-		ModelAndView modelAndView = userRechargeService.userAuthInves(request,response,mobile,money);
+		String ipAddr = CustomUtil.getIpAddr(request);
+		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,mobile,money);
+		ModelAndView modelAndView = new ModelAndView();
+		try {
+			modelAndView = BankCallUtils.callApi(bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ReturnMessageException(RechargeError.CALL_BANK_ERROR);
+		}
 		return modelAndView;
 	}
 
 	/**
-	 *
-	 * 页面充值同步
-	 * @author sunss
-	 * @param request
-	 * @param response
+	 * @Author: zhangqingqing
+	 * @Desc :页面充值同步
+	 * @Param: * @param request
 	 * @param bean
-	 * @return
+	 * @Date: 12:40 2018/6/5
+	 * @Return: org.springframework.web.servlet.ModelAndView
 	 */
 	@RequestMapping("/return")
-	public ModelAndView pageReturn(HttpServletRequest request, HttpServletResponse response,
-								   @ModelAttribute BankCallBean bean) {
+	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
 		ModelAndView modelAndView = new ModelAndView();
 		String money = request.getParameter("txAmount");
 		String frontParams = request.getParameter("frontParams");
@@ -112,16 +123,16 @@ public class RechargeController{
 	}
 
 	/**
-	 * 页面充值异步回调
-	 *
-	 * @param request
-	 * @param response
-	 * @return
+	 * @Author: zhangqingqing
+	 * @Desc :页面充值异步回调
+	 * @Param: * @param request
+	 * @param bean
+	 * @Date: 12:40 2018/6/5
+	 * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
 	 */
 	@ResponseBody
 	@RequestMapping("/bgreturn")
-	public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response,
-								   @ModelAttribute BankCallBean bean) {
+	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
 		logger.info("[缴费授权异步回调开始]");
 		String phone = request.getParameter("phone");

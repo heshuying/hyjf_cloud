@@ -2,6 +2,8 @@ package com.hyjf.cs.user.client.impl;
 
 import java.io.UnsupportedEncodingException;
 
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.vo.user.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,27 +16,12 @@ import org.springframework.web.client.RestTemplate;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.user.AccountChinapnrResponse;
-import com.hyjf.am.response.user.BindEmailLogResponse;
-import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.response.user.HjhUserAuthLogResponse;
-import com.hyjf.am.response.user.HjhUserAuthResponse;
-import com.hyjf.am.response.user.SmsCodeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BindEmailLogVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
 
@@ -349,4 +336,24 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-USER/am-user/user/updateUserContract/",  bean, int.class).getBody();
 		return result;
 	}
+
+	/**
+	 * @Author: zhangqingqing
+	 * @Desc : 查询紧急联系人
+	 * @Param: * @param userId
+	 * @Date: 14:25 2018/6/4
+	 * @Return: com.hyjf.am.vo.user.UsersContactVO
+	 */
+	@Override
+	public UsersContactVO selectUserContact(Integer userId) {
+		UsersContactResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUserContact/" + userId, UsersContactResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+
 }

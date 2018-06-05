@@ -1,4 +1,4 @@
-package com.hyjf.am.borrow.trade;
+package com.hyjf.am.trade;
 
 /**
  * @author xiasq

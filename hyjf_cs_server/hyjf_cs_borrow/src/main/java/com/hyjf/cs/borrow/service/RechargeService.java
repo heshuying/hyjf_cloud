@@ -1,9 +1,5 @@
 package com.hyjf.cs.borrow.service;
 
-import java.util.Map;
-
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.borrow.BankCardVO;
@@ -12,8 +8,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.borrow.bean.UserDirectRechargeBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * 用户充值Service
@@ -63,8 +58,8 @@ public interface RechargeService extends BaseService{
 	 * @param TxCode
 	 * @return
 	 */
-	 ModelAndView insertGetMV(UserDirectRechargeBean rechargeBean) throws Exception;
+	 BankCallBean insertGetMV(UserDirectRechargeBean rechargeBean) throws Exception;
 
 
-    ModelAndView userAuthInves(HttpServletRequest request, HttpServletResponse response, String mobile, String money);
+	BankCallBean rechargeService(String token, String ipAddr, String mobile, String money) throws Exception;
 }

@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.vo.user.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +31,6 @@ import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.BindEmailLogVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -219,6 +210,8 @@ public class UserServiceImpl implements UserService  {
 		resultMap.put("isSetPassword", user.getIsSetPassword());
 		// 紧急联系人类型
 		// TODO: 2018/5/29 紧急联系人
+		 UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
+		resultMap.put("usersContract",usersContactVO);
 		/*List<ParamName> paramList = safeService.getParamNameList("USER_RELATION");
 		JSONArray result = new JSONArray();
 		for (int i = 0; i < paramList.size(); i++) {
