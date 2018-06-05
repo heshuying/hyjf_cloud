@@ -7,7 +7,6 @@
     <result column="chinapnr_usrid" property="chinapnrUsrid" jdbcType="VARCHAR" />
     <result column="chinapnr_usrcustid" property="chinapnrUsrcustid" jdbcType="BIGINT" />
     <result column="isok" property="isok" jdbcType="BIT" />
-    <result column="eggs_isok" property="eggsIsok" jdbcType="BIT" />
     <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -71,8 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, chinapnr_usrid, chinapnr_usrcustid, isok, eggs_isok, create_ip, create_time, 
-    update_time
+    id, user_id, chinapnr_usrid, chinapnr_usrcustid, isok, create_ip, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AccountChinapnrExample" >
     select
@@ -112,10 +110,10 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_account_chinapnr (id, chinapnr_usrid, chinapnr_usrcustid, 
-      isok, eggs_isok, create_ip, create_time, 
+      isok, create_ip, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{chinapnrUsrid,jdbcType=VARCHAR}, #{chinapnrUsrcustid,jdbcType=BIGINT}, 
-      #{isok,jdbcType=BIT}, #{eggsIsok,jdbcType=BIT}, #{createIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isok,jdbcType=BIT}, #{createIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountChinapnr" >
@@ -135,9 +133,6 @@
       </if>
       <if test="isok != null" >
         isok,
-      </if>
-      <if test="eggsIsok != null" >
-        eggs_isok,
       </if>
       <if test="createIp != null" >
         create_ip,
@@ -161,9 +156,6 @@
       </if>
       <if test="isok != null" >
         #{isok,jdbcType=BIT},
-      </if>
-      <if test="eggsIsok != null" >
-        #{eggsIsok,jdbcType=BIT},
       </if>
       <if test="createIp != null" >
         #{createIp,jdbcType=VARCHAR},
@@ -200,9 +192,6 @@
       <if test="record.isok != null" >
         isok = #{record.isok,jdbcType=BIT},
       </if>
-      <if test="record.eggsIsok != null" >
-        eggs_isok = #{record.eggsIsok,jdbcType=BIT},
-      </if>
       <if test="record.createIp != null" >
         create_ip = #{record.createIp,jdbcType=VARCHAR},
       </if>
@@ -224,7 +213,6 @@
       chinapnr_usrid = #{record.chinapnrUsrid,jdbcType=VARCHAR},
       chinapnr_usrcustid = #{record.chinapnrUsrcustid,jdbcType=BIGINT},
       isok = #{record.isok,jdbcType=BIT},
-      eggs_isok = #{record.eggsIsok,jdbcType=BIT},
       create_ip = #{record.createIp,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
@@ -247,9 +235,6 @@
       <if test="isok != null" >
         isok = #{isok,jdbcType=BIT},
       </if>
-      <if test="eggsIsok != null" >
-        eggs_isok = #{eggsIsok,jdbcType=BIT},
-      </if>
       <if test="createIp != null" >
         create_ip = #{createIp,jdbcType=VARCHAR},
       </if>
@@ -268,7 +253,6 @@
       chinapnr_usrid = #{chinapnrUsrid,jdbcType=VARCHAR},
       chinapnr_usrcustid = #{chinapnrUsrcustid,jdbcType=BIGINT},
       isok = #{isok,jdbcType=BIT},
-      eggs_isok = #{eggsIsok,jdbcType=BIT},
       create_ip = #{createIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
