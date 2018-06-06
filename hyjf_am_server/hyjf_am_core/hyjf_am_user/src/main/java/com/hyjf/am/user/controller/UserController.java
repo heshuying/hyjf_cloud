@@ -354,8 +354,8 @@ public class UserController {
 	 * @param email
 	 * @return
 	 */
-	@RequestMapping("/checkEmailUsed")
-	public boolean checkEmailUsed(String email) {
+	@RequestMapping("/checkEmailUsed/{email}")
+	public boolean checkEmailUsed(@PathVariable String email) {
 		return userService.checkEmailUsed(email);
 	}
 	
@@ -364,7 +364,7 @@ public class UserController {
 	 * @param log
 	 */
 	@RequestMapping("/insertBindEmailLog")
-	public void insertEmailBindLog(BindEmailLogRequest log) {
+	public void insertEmailBindLog(@RequestBody BindEmailLogRequest log) {
 		UserBindEmailLog bean = new UserBindEmailLog();
 		BeanUtils.copyProperties(log, bean);
 		userService.insertEmailBindLog(bean);
@@ -375,8 +375,8 @@ public class UserController {
 	 * @param userid
 	 * @return
 	 */
-	@RequestMapping("/getBindEmailLog")
-	public BindEmailLogResponse getUserBindEmail(Integer userid) {
+	@RequestMapping("/getBindEmailLog/{userid}")
+	public BindEmailLogResponse getUserBindEmail(@PathVariable Integer userid) {
 		BindEmailLogResponse response = new BindEmailLogResponse();
 		UserBindEmailLog log = userService.getUserBindEmail(userid);
 		if(log != null) {
@@ -393,8 +393,8 @@ public class UserController {
 	 * @param email
 	 * @param log
 	 */
-	@RequestMapping("/updateBindEmail")
-	public void updateBindEmail(Integer userid, String email) {
+	@RequestMapping("/updateBindEmail/{userid}/{email}")
+	public void updateBindEmail(@PathVariable Integer userid, @PathVariable String email) {
 		userService.updateBindEmail(userid, email);
 	}
 

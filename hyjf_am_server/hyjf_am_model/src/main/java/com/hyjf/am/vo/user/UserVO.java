@@ -11,7 +11,10 @@ import java.io.Serializable;
 public class UserVO extends BaseVO implements Serializable {
 
 
-
+	/**
+	 * token 登录生成令牌
+	 */
+	private String token;
 	private Integer userId;
 	private String username;
 	private String mobile;
@@ -101,6 +104,14 @@ public class UserVO extends BaseVO implements Serializable {
 	private String salt;
 	private String password;
 	private Integer status;
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	public Integer getStatus() {
 		return status;

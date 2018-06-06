@@ -73,7 +73,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -83,7 +83,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO findUserInfoById(int userId) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById" + userId, UserInfoResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -276,9 +276,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * 校验邮箱是否存在
 	 */
 	@Override
-	public boolean checkEmailUsed(Integer userId) {
+	public boolean checkEmailUsed(String email) {
 		boolean result = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + userId, boolean.class).getBody();
+				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + email, boolean.class).getBody();
 		return result;
 	}
 	
@@ -299,7 +299,6 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BindEmailLogVO getBindEmailLog(Integer userId) {
-		// TODO: 微服务待实现
 		BindEmailLogResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/getBindEmailLog/" + userId, BindEmailLogResponse.class).getBody();
 		if (response != null) {
@@ -315,7 +314,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public void updateBindEmail(BindEmailLogRequest bean) {
-		restTemplate.postForEntity("http://AM-USER/am-user/user/updateBindEmail/",  bean, int.class).getBody();
+		restTemplate.postForEntity("http://AM-USER/am-user/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, int.class).getBody();
 	}
 	
 	/**

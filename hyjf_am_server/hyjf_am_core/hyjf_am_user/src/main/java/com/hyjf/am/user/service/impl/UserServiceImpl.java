@@ -966,12 +966,13 @@ public class UserServiceImpl implements UserService {
 		List<User> usersList = usersMapper.selectByExample(example);
 		User u = usersList.get(0);
 		u.setEmail(email);
-		
-		UserBindEmailLog log = new UserBindEmailLog();
-		log.setUserId(userid);
-		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
-		userBindEmailLogMapper.updateByPrimaryKey(log);
 		usersMapper.updateByPrimaryKeySelective(u);
+		
+		UserBindEmailLog log = this.getUserBindEmail(userid);
+		if(log != null) {
+			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
+			userBindEmailLogMapper.updateByPrimaryKey(log);
+		}
 	}
 
 }

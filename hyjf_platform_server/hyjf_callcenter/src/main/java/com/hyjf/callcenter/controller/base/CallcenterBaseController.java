@@ -1,8 +1,10 @@
 package com.hyjf.callcenter.controller.base;
 
+import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hyjf.am.user.dao.model.auto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,7 +13,6 @@ import org.springframework.validation.BindException;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.callcenter.beans.BaseFormBean;
 import com.hyjf.callcenter.beans.UserBean;
-import com.hyjf.callcenter.beans.Users;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.UserService;
 import com.hyjf.callcenter.util.ValidatorCheckUtil;
@@ -40,8 +41,8 @@ public class CallcenterBaseController {
 	 * @param result
 	 * @return
 	 */
-	protected Users getUser(UserBean bean, BaseResultBean result) {
-		Users user = null;
+	protected User getUser(UserBean bean, BaseResultBean result) {
+		User user = null;
 		
 		//唯一识别号验证
 		if (!checkUniqueNo(bean, result)) {
@@ -59,15 +60,13 @@ public class CallcenterBaseController {
 		}
 		
 		//查询用户信息
-		user = userService.getUser(bean);
-		return user;
+		return userService.getUser(bean);
 	}
 	
 	/**
 	 * 唯一识别号验证
 	 * @param bean
 	 * @param result
-	 * @param user
 	 */
 	protected boolean checkUniqueNo(BaseFormBean bean, BaseResultBean result) {
 		String uniqueNo = bean.getUniqueNo();
@@ -88,7 +87,6 @@ public class CallcenterBaseController {
 	 * 分页验证
 	 * @param bean
 	 * @param result
-	 * @param user
 	 */
 	protected boolean checkLimit(UserBean bean, BaseResultBean result) {
 		Integer limitStart = bean.getLimitStart();
