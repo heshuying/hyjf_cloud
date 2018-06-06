@@ -53,7 +53,7 @@ public interface AmUserClient {
 
     AccountChinapnrVO getAccountChinapnr(Integer userId);
 
-	boolean checkEmailUsed(Integer userId);
+	boolean checkEmailUsed(String email);
 
 	void updateBindEmail(BindEmailLogRequest bean);
 

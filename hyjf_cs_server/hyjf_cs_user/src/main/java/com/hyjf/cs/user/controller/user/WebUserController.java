@@ -353,6 +353,8 @@ public class WebUserController {
 		ApiResult<Object> result = new ApiResult<Object>();
 
 		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		user = new WebViewUser();
+		user.setUserId(1);
 		userService.checkForEmailSend(email, user.getUserId());
 		
 		try {
@@ -371,14 +373,14 @@ public class WebUserController {
 	 */
 	@ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
 	@PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-	public ApiResult<Object> bindEmail(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+	public ApiResult<Object> bindEmail(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String key, @RequestParam(required=true) String value, @RequestParam(required=true) String email, HttpServletRequest request) {
 		ApiResult<Object> result = new ApiResult<Object>();
 
-		String key = request.getParameter("key");
-		String value = request.getParameter("value");
-		String email = request.getParameter("email");
-		
 		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		
+		user = new WebViewUser();
+		user.setUserId(1);
+		
 		userService.checkForEmailBind(email, key, value, user);
 		
 		try {
