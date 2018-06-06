@@ -1,6 +1,6 @@
 package com.hyjf.callcenter.beans.customizebean;
 
-import com.hyjf.mybatis.model.auto.Accountwithdraw;
+import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
 
 import java.io.Serializable;
 

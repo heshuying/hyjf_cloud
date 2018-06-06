@@ -85,6 +85,13 @@
 			<artifactId>hyjf_pay_lib</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.hyjf</groupId>
+			<artifactId>hyjf_am_trade</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
