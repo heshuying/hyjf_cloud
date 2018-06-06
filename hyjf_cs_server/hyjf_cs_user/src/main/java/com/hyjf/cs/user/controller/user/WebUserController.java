@@ -1,8 +1,21 @@
 package com.hyjf.cs.user.controller.user;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -10,8 +23,6 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
-import com.hyjf.cs.user.redis.RedisUtil;
-import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.UserService;
@@ -21,18 +32,9 @@ import com.hyjf.cs.user.vo.RegisterVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -47,14 +49,9 @@ public class WebUserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private RedisUtil redisUtil;
 
     @Autowired
     SystemConfig systemConfig;
-
-    @Autowired
-    private StringRedisUtil stringRedisUtil;
 
     /**
      * @param request
@@ -236,7 +233,7 @@ public class WebUserController {
     public ApiResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-        WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         UserVO userVO = userService.queryUserByUserId(user.getUserId());
         result.setResult(userVO);
 
@@ -259,7 +256,7 @@ public class WebUserController {
         logger.info("用戶通知設置, userVO :{}", JSONObject.toJSONString(userVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-        WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         userVO.setUserId(user.getUserId());
         int ret = userService.updateUserByUserId(userVO);
 
@@ -286,7 +283,7 @@ public class WebUserController {
       /*  Map map = ImmutableMap.of("userId", String.valueOf(4), "username", "hyjf225650", "ts",
                 String.valueOf(Instant.now().getEpochSecond()));
          token = JwtHelper.genToken(map);*/
-        WebViewUser webViewUser = (WebViewUser) redisUtil.get(RedisKey.USER_TOKEN_REDIS+token);
+        WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         if (null == webViewUser){
             apiResult.setStatus(ApiResult.STATUS_FAIL);
             apiResult.setStatusDesc("账户设置查询失败");
@@ -315,7 +312,7 @@ public class WebUserController {
 	public ApiResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
 		ApiResult<MobileModifyResultBean> result = new ApiResult<MobileModifyResultBean>();
 
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 		MobileModifyResultBean resultBean = userService.queryForMobileModify(user.getUserId());
 		result.setResult(resultBean);
 		
@@ -332,7 +329,7 @@ public class WebUserController {
 		logger.info("用户手机号码修改, newMobile :{}, smsCode:{}", newMobile, smsCode);
 		ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 		boolean checkRet = userService.checkForMobileModify(newMobile, smsCode);
 		if(checkRet) {
 			UserVO userVO = new UserVO();
@@ -352,8 +349,7 @@ public class WebUserController {
 	public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String email, HttpServletRequest request) {
 		ApiResult<Object> result = new ApiResult<Object>();
 
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
-		user = new WebViewUser();
+        WebViewUser user = new WebViewUser();
 		user.setUserId(1);
 		userService.checkForEmailSend(email, user.getUserId());
 		
@@ -376,9 +372,7 @@ public class WebUserController {
 	public ApiResult<Object> bindEmail(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String key, @RequestParam(required=true) String value, @RequestParam(required=true) String email, HttpServletRequest request) {
 		ApiResult<Object> result = new ApiResult<Object>();
 
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
-		
-		user = new WebViewUser();
+		WebViewUser user  = new WebViewUser();
 		user.setUserId(1);
 		
 		userService.checkForEmailBind(email, key, value, user);
@@ -408,8 +402,8 @@ public class WebUserController {
 		String relationId = request.getParameter("relationId");
 		String rlName = request.getParameter("rlName");
 		String rlPhone = request.getParameter("rlPhone");
-		
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 		userService.checkForContractSave(relationId, rlName, rlPhone, user);
 		
 		try {
@@ -432,12 +426,11 @@ public class WebUserController {
      */
     @PostMapping(value = "logout")
     public ApiResult<String> loginout(@RequestHeader(value = "token") String token){
-        ModelAndView modelAndView = new ModelAndView("index");
         ApiResult<String> result = new ApiResult<>();
         // 退出到首页
         result.setResult("index");
         try {
-            stringRedisUtil.delete(RedisKey.USER_TOKEN_REDIS + token);
+            RedisUtils.del(RedisKey.USER_TOKEN_REDIS + token);
         }catch (Exception e){
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc("退出失败");

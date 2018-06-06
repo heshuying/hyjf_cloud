@@ -7,13 +7,11 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
-import com.hyjf.am.vo.user.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,23 +29,14 @@ import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.constants.UserConstant;
+import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.ApiSignUtil;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.PropUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.BaseBean;
@@ -56,17 +45,11 @@ import com.hyjf.cs.user.beans.BaseResultBean;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.AuthorizedError;
-import com.hyjf.cs.user.constants.BindEmailError;
-import com.hyjf.cs.user.constants.ContractSetError;
-import com.hyjf.cs.user.constants.LoginError;
-import com.hyjf.cs.user.constants.RegisterError;
+import com.hyjf.cs.user.constants.*;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
-import com.hyjf.cs.user.redis.RedisUtil;
-import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.ActivityService;
 import com.hyjf.cs.user.service.UserService;
@@ -103,12 +86,6 @@ public class UserServiceImpl implements UserService  {
 	
 	@Autowired
     private MailProducer mailProducer;
-
-	@Autowired
-	private RedisUtil redisUtil;
-
-	@Autowired
-	private StringRedisUtil stringRedisUtil;
 
 	@Autowired
 	SystemConfig systemConfig;
@@ -315,7 +292,7 @@ public class UserServiceImpl implements UserService  {
 			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
 		}
 		// 获取密码错误次数
-		String errCount = stringRedisUtil.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+		String errCount = RedisUtils.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
 		if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
 			throw new ReturnMessageException(LoginError.PWD_ERROR_TOO_MANEY_ERROR);
 		}
@@ -352,21 +329,21 @@ public class UserServiceImpl implements UserService  {
 			amUserClient.updateLoginUser(userId, ip);
 
 			// 1. 登录成功将登陆密码错误次数的key删除
-			stringRedisUtil.delete(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+			RedisUtils.del(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
 
 			// 2. 缓存
 			String token = generatorToken(userVO.getUserId(), userVO.getUsername());
 			WebViewUser webViewUser = new WebViewUser();
 			BeanUtils.copyProperties(userVO,webViewUser);
 			userVO.setToken(token);
-			redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
+			RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60);
 
 			// 3. todo 登录时自动同步线下充值记录
 
 			return userVO;
 		} else {
 			// 密码错误，增加错误次数
-			stringRedisUtil.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+			RedisUtils.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
 			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
 		}
 	}
@@ -467,7 +444,7 @@ public class UserServiceImpl implements UserService  {
 		BeanUtils.copyProperties(userVO,webViewUser);
 		webViewUser.setToken(token);
 		userVO.setToken(token);
-		redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
+		RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60);
 
 		// 2. 投之家用户注册送券活动
 		// 活动有效期校验
@@ -542,7 +519,7 @@ public class UserServiceImpl implements UserService  {
 	 */
 	@Override
 	public BankCallBean userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode) {
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		//检查用户信息
 		UserVO users = this.checkUserMessage(user,lastSrvAuthCode,smsCode);
 		// 判断是否授权过
@@ -723,7 +700,7 @@ public class UserServiceImpl implements UserService  {
 		Map<String,String> resultMap = new HashMap<>();
 		resultMap.put("status", "success");
 		bean.convert();
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		if (user == null) {
 			throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
 		}
