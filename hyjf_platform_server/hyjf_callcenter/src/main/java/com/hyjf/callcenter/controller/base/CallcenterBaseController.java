@@ -4,7 +4,7 @@ import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
+import com.hyjf.am.user.dao.model.auto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,7 +13,6 @@ import org.springframework.validation.BindException;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.callcenter.beans.BaseFormBean;
 import com.hyjf.callcenter.beans.UserBean;
-import com.hyjf.callcenter.beans.Users;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.UserService;
 import com.hyjf.callcenter.util.ValidatorCheckUtil;
@@ -42,8 +41,8 @@ public class CallcenterBaseController {
 	 * @param result
 	 * @return
 	 */
-	protected UserVO getUser(UserBean bean, BaseResultBean result) {
-		UserVO user = null;
+	protected User getUser(UserBean bean, BaseResultBean result) {
+		User user = null;
 		
 		//唯一识别号验证
 		if (!checkUniqueNo(bean, result)) {
