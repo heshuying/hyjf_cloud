@@ -1,13 +1,11 @@
 package com.hyjf.cs.user.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.LoginError;
@@ -34,7 +32,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.time.Instant;
 import java.util.Map;
 
 /**
@@ -42,6 +39,7 @@ import java.util.Map;
  * @version WebUserController, v0.1 2018/4/21 15:06
  */
 @Api(value = "web端用户接口")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
 public class WebUserController {
@@ -283,17 +281,27 @@ public class WebUserController {
      */
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
     @PostMapping(value = "accountSet")
-    public ApiResult<String> accountSet(/*@RequestHeader(value = "token") String token*/) {
-        Map map = ImmutableMap.of("userId", String.valueOf(4), "username", "hyjf225650", "ts",
-                String.valueOf(Instant.now().getEpochSecond()));
-        String token = JwtHelper.genToken(map);
+    public ApiResult<String> accountSet(@RequestHeader(value = "token",required = false) String token) {
         ApiResult<String> apiResult = new ApiResult<>();
-        String result = userService.safeInit(token);
-        if (null == result){
+      /*  Map map = ImmutableMap.of("userId", String.valueOf(4), "username", "hyjf225650", "ts",
+                String.valueOf(Instant.now().getEpochSecond()));
+         token = JwtHelper.genToken(map);*/
+        WebViewUser webViewUser = (WebViewUser) redisUtil.get(RedisKey.USER_TOKEN_REDIS+token);
+        if (null == webViewUser){
             apiResult.setStatus(ApiResult.STATUS_FAIL);
             apiResult.setStatusDesc("账户设置查询失败");
+            apiResult.setLoginFlag(ApiResult.STATUS_FAIL);
+        }else{
+            String result = userService.safeInit(webViewUser);
+            if (null == result){
+                apiResult.setStatus(ApiResult.STATUS_FAIL);
+                apiResult.setStatusDesc("账户设置查询失败");
+            }
+            apiResult.setResult(result);
         }
-        apiResult.setResult(result);
+
+
+
         return apiResult;
     }
 

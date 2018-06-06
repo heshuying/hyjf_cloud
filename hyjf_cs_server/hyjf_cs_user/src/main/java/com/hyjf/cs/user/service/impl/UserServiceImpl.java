@@ -184,10 +184,9 @@ public class UserServiceImpl implements UserService  {
 	 * @Return: java.lang.String
 	 */
 	@Override
-	public String safeInit(String token) {
+	public String safeInit(WebViewUser webViewUser) {
 		Map<String,Object> resultMap = new HashMap<>();
 		resultMap.put("url","user/safe/account-setting-index");
-		WebViewUser webViewUser = (WebViewUser) redisUtil.get(token);
 		resultMap.put("webViewUser", webViewUser);
 		if (webViewUser.getTruename() != null && webViewUser.getTruename().length() >= 1) {
 			resultMap.put("truename", webViewUser.getTruename().substring(0, 1) + "**");
@@ -315,7 +314,6 @@ public class UserServiceImpl implements UserService  {
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
 		}
-
 		// 获取密码错误次数
 		String errCount = stringRedisUtil.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
 		if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
@@ -360,7 +358,7 @@ public class UserServiceImpl implements UserService  {
 			String token = generatorToken(userVO.getUserId(), userVO.getUsername());
 			WebViewUser webViewUser = new WebViewUser();
 			BeanUtils.copyProperties(userVO,webViewUser);
-			webViewUser.setToken(token);
+			userVO.setToken(token);
 			redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
 
 			// 3. todo 登录时自动同步线下充值记录
@@ -468,6 +466,7 @@ public class UserServiceImpl implements UserService  {
 		WebViewUser webViewUser = new WebViewUser();
 		BeanUtils.copyProperties(userVO,webViewUser);
 		webViewUser.setToken(token);
+		userVO.setToken(token);
 		redisUtil.setEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60, TimeUnit.SECONDS);
 
 		// 2. 投之家用户注册送券活动
