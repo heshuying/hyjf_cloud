@@ -1003,7 +1003,7 @@ public class UserServiceImpl implements UserService  {
 			throw new ReturnMessageException(BindEmailError.EMAIL_FORMAT_ERROR);
 		}
 		// 邮箱地址使用校验
-		boolean isExist = amUserClient.checkEmailUsed(userId);
+		boolean isExist = amUserClient.checkEmailUsed(email);
 		if(isExist) {
 			throw new ReturnMessageException(BindEmailError.EMAIL_USED_ERROR);
 		}
@@ -1024,7 +1024,7 @@ public class UserServiceImpl implements UserService  {
 		}
 		
 		// 校验激活是否用户本人
-		if(userId.equals(String.valueOf(user.getUserId()))){
+		if(!userId.equals(String.valueOf(user.getUserId()))){
 			throw new ReturnMessageException(BindEmailError.REQUEST_PARAM_ERROR);
 		}
 		
@@ -1040,7 +1040,7 @@ public class UserServiceImpl implements UserService  {
 		}
 		
 		// 激活校验
-		if(!userId.equals(log.getUserId()) || !email.equals(log.getUserEmail()) || !activeCode.equals(activeCode)) {
+		if(!userId.equals(String.valueOf(log.getUserId())) || !email.equals(log.getUserEmail()) || !activeCode.equals(log.getEmailActiveCode())) {
 			throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR);
 		}
 	}
