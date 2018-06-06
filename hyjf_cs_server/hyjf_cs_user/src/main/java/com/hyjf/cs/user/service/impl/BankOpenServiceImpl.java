@@ -12,6 +12,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmConfigClient;
@@ -22,6 +23,7 @@ import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.BankOpenService;
 import com.hyjf.cs.user.util.ClientConstant;
+import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -393,6 +395,121 @@ public class BankOpenServiceImpl implements BankOpenService {
             resultMap.put("status", "success");
         }
         return resultMap;
+    }
+
+    @Override
+    public Map<String, String> checkApiParam(ApiBankOpenRequestBean requestBean) {
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("status", "0");
+        if (Validator.isNull(requestBean.getInstCode())) {
+            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "机构编号不能为空");
+            return resultMap;
+        }
+        // 手机号
+        if (Validator.isNull(requestBean.getMobile())) {
+            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "手机号不能为空");
+            return resultMap;
+        }
+        if (Validator.isNull(requestBean.getRetUrl())) {
+            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "同步地址不能为空");
+            return resultMap;
+        }
+        if (Validator.isNull(requestBean.getBgRetUrl())) {
+            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "异步地址不能为空");
+            return resultMap;
+        }
+        // 姓名
+        if (Validator.isNull(requestBean.getTrueName())) {
+            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "真实姓名不能为空");
+            return resultMap;
+        }
+        // 身份证号
+        if (Validator.isNull(requestBean.getIdNo())) {
+            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "身份证号不能为空");
+            return resultMap;
+        }
+        // 渠道
+        if (Validator.isNull(requestBean.getChannel())) {
+            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "渠道号不能为空");
+            return resultMap;
+        }
+        // 验签
+        /*if (!this.verifyRequestSign(payRequestBean, "/server/autoPlus/userAuthInves")) {
+            payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
+            logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
+            return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000002);
+        }*/
+        // 判断真实姓名是否包含特殊字符
+        if (!ValidatorCheckUtil.verfiyChinaFormat(requestBean.getTrueName())) {
+            logger.info("真实姓名包含特殊字符[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "真实姓名包含特殊字符");
+            return resultMap;
+        }
+        // 判断真实姓名的长度,不能超过10位
+        if (requestBean.getTrueName().length() > 10) {
+            logger.info("真实姓名不能超过10位[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "真实姓名不能超过10位");
+            return resultMap;
+        }
+        // 判断身份属性
+        if (Validator.isNull(requestBean.getIdentity()) || (!"1".equals(requestBean.getIdentity())
+                && !"2".equals(requestBean.getIdentity()) && !"3".equals(requestBean.getIdentity()))) {
+            logger.info("身份属性参数错误[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "身份属性参数错误");
+            return resultMap;
+        }
+
+        if (requestBean.getIdNo().length() != 18) {
+            logger.info("身份证(18位)校验位错误[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
+            resultMap.put("mess", "身份证(18位)校验位错误");
+            return resultMap;
+        }
+        String replaceIdNo = replaceIdNo(requestBean.getIdNo());
+        requestBean.setIdNo(replaceIdNo);
+        // 检查用户身份证号是否在汇盈已经存在
+        UserInfoVO userInfo = amUserClient.getUserByIdNo(requestBean.getIdNo());
+        if (userInfo!=null) {
+            logger.info("身份证已存在[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
+            resultMap.put("mess", "身份证已存在");
+            return resultMap;
+        }
+        // 根据手机号查询用户
+        UserVO user = this.amUserClient.findUserByMobile(requestBean.getMobile());
+        if (user == null) {
+            logger.info("根据手机号查询用户失败[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
+            resultMap.put("mess", "根据手机号查询用户失败");
+            return resultMap;
+        }
+        resultMap.put("status", "1");
+        return resultMap;
+    }
+
+    private String replaceIdNo(String idNo) {
+        String lastString = idNo.substring(idNo.length() - 1);
+        if ("x".equalsIgnoreCase(lastString)) {
+            idNo = idNo.replace(idNo.charAt(idNo.length() - 1) + "", "X");
+        }
+        return idNo;
     }
 
 }

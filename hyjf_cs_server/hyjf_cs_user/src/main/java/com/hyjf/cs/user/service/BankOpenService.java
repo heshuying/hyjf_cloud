@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.service;
 
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -34,4 +35,6 @@ public interface BankOpenService {
 	BankCallResult openAccountBgReturn(BankCallBean bean);
 
 	Map<String,String> openAccountReturn(String token, String isSuccess);
+
+    Map<String,String> checkApiParam(ApiBankOpenRequestBean requestBean);
 }

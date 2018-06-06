@@ -34,4 +34,16 @@ public class UserInfoController {
 		}
 		return response;
 	}
+
+	@RequestMapping("/findByIdNo/{idNo}")
+	public UserInfoResponse findUserInfoByIdNo(@PathVariable String idNo) {
+		UserInfoResponse response = new UserInfoResponse();
+		UserInfo usersInfo = userInfoService.findUserInfoByIdNo(idNo);
+		if (usersInfo != null) {
+			UserInfoVO userInfoVO = new UserInfoVO();
+			BeanUtils.copyProperties(usersInfo, userInfoVO);
+			response.setResult(userInfoVO);
+		}
+		return response;
+	}
 }

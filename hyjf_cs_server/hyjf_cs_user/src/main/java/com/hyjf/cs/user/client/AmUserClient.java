@@ -64,4 +64,6 @@ public interface AmUserClient {
 	int updateUserContract(UsersContractRequest bean);
 
     UsersContactVO selectUserContact(Integer userId);
+
+	UserInfoVO getUserByIdNo(String idNo);
 }

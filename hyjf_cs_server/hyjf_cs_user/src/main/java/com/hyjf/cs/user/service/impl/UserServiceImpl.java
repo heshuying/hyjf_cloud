@@ -1122,5 +1122,20 @@ public class UserServiceImpl implements UserService  {
 		return queryUserByUserId(user.getUserId());
 	}
 
+	/**
+	 * @param mobile
+	 * @Description 根据手机号查询用户
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/6 14:26
+	 */
+	@Override
+	public UserVO getUsersByMobile(String mobile) {
+		if (StringUtils.isBlank(mobile)) {
+			return null;
+		}
+		return amUserClient.findUserByMobile(mobile);
+	}
+
 
 }

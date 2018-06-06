@@ -140,4 +140,12 @@ public interface UserService {
 	 * @return
 	 */
 	UserVO getUsersByToken(String token);
+
+	/**
+	 * @Description 根据手机号查询用户
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/6 14:26
+	 */
+	UserVO getUsersByMobile(String mobile);
 }
