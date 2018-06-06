@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_borrow.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -471,6 +471,12 @@
         <!-- 卡BIN配置表 -->
         <table tableName="ht_card_bin" domainObjectName="CardBin">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 汇直投项目类型设置 -->
+        <table tableName="ht_borrow_project_type" domainObjectName="BorrowProjectType">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
     </context>
 </generatorConfiguration>
