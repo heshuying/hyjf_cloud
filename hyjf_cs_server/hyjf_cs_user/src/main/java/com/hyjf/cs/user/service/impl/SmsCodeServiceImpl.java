@@ -1,9 +1,21 @@
 package com.hyjf.cs.user.service.impl;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -17,21 +29,8 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
-import com.hyjf.cs.user.redis.RedisUtil;
-import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.service.SmsCodeService;
 import com.hyjf.cs.user.service.UserService;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiasq
@@ -43,10 +42,6 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 
 	@Autowired
 	private AmUserClient amUserClient;
-	@Autowired
-	private StringRedisUtil stringRedisUtil;
-	@Autowired
-	private RedisUtil redisUtil;
 	@Autowired
 	private SmsProducer smsProducer;
 	@Autowired
@@ -111,7 +106,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		}
 
 		if (StringUtils.isNotEmpty(token)) {
-			WebViewUser webViewUser = (WebViewUser) redisUtil.get(token);
+			WebViewUser webViewUser = RedisUtils.getObj(token, WebViewUser.class);
 			if (webViewUser != null) {
 				// 验证原手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
@@ -133,28 +128,28 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 					}
 				}
 			} else {
-                throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
-            }
+				throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
+			}
 		}
 
 		// 判断发送间隔时间
-		String intervalTime = stringRedisUtil.get(mobile + ":" + validCodeType + ":IntervalTime");
+		String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
 		logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
 		if (StringUtils.isNotBlank(intervalTime)) {
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_FAST_ERROR);
 		}
 
-		String ipCount = stringRedisUtil.get(ip + ":MaxIpCount");
+		String ipCount = RedisUtils.get(ip + ":MaxIpCount");
 		if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
 			ipCount = "0";
-			stringRedisUtil.set(ip + ":MaxIpCount", "0");
+			RedisUtils.set(ip + ":MaxIpCount", "0");
 		}
 		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
 
 		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
 		if (smsConfig == null) {
-            throw new ReturnMessageException(RegisterError.FIND_SMSCONFIG_ERROR);
-        }
+			throw new ReturnMessageException(RegisterError.FIND_SMSCONFIG_ERROR);
+		}
 
 		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
 			if (Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount())) {
@@ -175,17 +170,16 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 				} catch (Exception e) {
 					throw new ReturnMessageException(RegisterError.IP_VISIT_TOO_MANNY_ERROR);
 				}
-				stringRedisUtil.setEx(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60,
-						TimeUnit.SECONDS);
+				RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
 			}
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 		}
 
 		// 判断最大发送数max_phone_count
-		String count = stringRedisUtil.get(mobile + ":MaxPhoneCount");
+		String count = RedisUtils.get(mobile + ":MaxPhoneCount");
 		if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
 			count = "0";
-			stringRedisUtil.set(mobile + ":MaxPhoneCount", "0");
+			RedisUtils.set(mobile + ":MaxPhoneCount", "0");
 		}
 		logger.info(mobile + "----------MaxPhoneCount-----------" + count);
 		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
@@ -207,15 +201,14 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 				} catch (Exception e) {
 					throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 				}
-				stringRedisUtil.setEx(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60,
-						TimeUnit.SECONDS);
+				RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
 			}
 			throw new ReturnMessageException(RegisterError.SEND_SMSCODE_TOO_MANNY_ERROR);
 		}
 
 		// 发送checkCode最大时间间隔，默认60秒
-		stringRedisUtil.setEx(mobile + ":" + validCodeType + ":IntervalTime", mobile,
-				smsConfig.getMaxIntervalTime() == null ? 60 : smsConfig.getMaxIntervalTime(), TimeUnit.SECONDS);
+		RedisUtils.set(mobile + ":" + validCodeType + ":IntervalTime", mobile,
+				smsConfig.getMaxIntervalTime() == null ? 60 : smsConfig.getMaxIntervalTime());
 	}
 
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -12,8 +13,6 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.constants.RegisterError;
-import com.hyjf.cs.user.redis.RedisUtil;
-import com.hyjf.cs.user.redis.StringRedisUtil;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.UserService;
@@ -49,14 +48,9 @@ public class WebUserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private RedisUtil redisUtil;
 
     @Autowired
     SystemConfig systemConfig;
-
-    @Autowired
-    private StringRedisUtil stringRedisUtil;
 
     /**
      * @param request
@@ -238,7 +232,7 @@ public class WebUserController {
     public ApiResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-        WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         UserVO userVO = userService.queryUserByUserId(user.getUserId());
         result.setResult(userVO);
 
@@ -261,7 +255,7 @@ public class WebUserController {
         logger.info("用戶通知設置, userVO :{}", JSONObject.toJSONString(userVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-        WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         userVO.setUserId(user.getUserId());
         int ret = userService.updateUserByUserId(userVO);
 
@@ -307,7 +301,7 @@ public class WebUserController {
 	public ApiResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
 		ApiResult<MobileModifyResultBean> result = new ApiResult<MobileModifyResultBean>();
 
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		MobileModifyResultBean resultBean = userService.queryForMobileModify(user.getUserId());
 		result.setResult(resultBean);
 		
@@ -324,7 +318,7 @@ public class WebUserController {
 		logger.info("用户手机号码修改, newMobile :{}, smsCode:{}", newMobile, smsCode);
 		ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		boolean checkRet = userService.checkForMobileModify(newMobile, smsCode);
 		if(checkRet) {
 			UserVO userVO = new UserVO();
@@ -344,7 +338,7 @@ public class WebUserController {
 	public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String email, HttpServletRequest request) {
 		ApiResult<Object> result = new ApiResult<Object>();
 
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		userService.checkForEmailSend(email, user.getUserId());
 		
 		try {
@@ -369,8 +363,8 @@ public class WebUserController {
 		String key = request.getParameter("key");
 		String value = request.getParameter("value");
 		String email = request.getParameter("email");
-		
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		userService.checkForEmailBind(email, key, value, user);
 		
 		try {
@@ -398,8 +392,8 @@ public class WebUserController {
 		String relationId = request.getParameter("relationId");
 		String rlName = request.getParameter("rlName");
 		String rlPhone = request.getParameter("rlPhone");
-		
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		userService.checkForContractSave(relationId, rlName, rlPhone, user);
 		
 		try {
@@ -427,7 +421,7 @@ public class WebUserController {
         // 退出到首页
         result.setResult("index");
         try {
-            stringRedisUtil.delete(RedisKey.USER_TOKEN_REDIS + token);
+            RedisUtils.del(RedisKey.USER_TOKEN_REDIS + token);
         }catch (Exception e){
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc("退出失败");

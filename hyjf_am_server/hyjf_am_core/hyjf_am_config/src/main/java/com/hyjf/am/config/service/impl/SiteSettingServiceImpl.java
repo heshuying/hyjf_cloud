@@ -3,18 +3,18 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.SiteSettingMapper;
-import com.hyjf.am.config.dao.model.auto.SiteSetting;
-import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
-import com.hyjf.am.config.redis.RedisUtil;
-import com.hyjf.am.config.service.SiteSettingService;
-import com.hyjf.common.constants.RedisKey;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import com.hyjf.am.config.dao.mapper.auto.SiteSettingMapper;
+import com.hyjf.am.config.dao.model.auto.SiteSetting;
+import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
+import com.hyjf.am.config.service.SiteSettingService;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.RedisKey;
 
 /**
  * @author fuqiang
@@ -22,25 +22,21 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class SiteSettingServiceImpl implements SiteSettingService {
+	@Autowired
+	private SiteSettingMapper SiteSettingMapper;
 
-    @Autowired
-    private RedisUtil redisUtil;
-
-    @Autowired
-    private SiteSettingMapper SiteSettingMapper;
-
-    @Override
-    public SiteSetting findOne() {
-        SiteSetting SiteSetting = null;
-        if (SiteSetting == null) {
-            SiteSettingExample example = new SiteSettingExample();
-            List<SiteSetting> SiteSettingList = SiteSettingMapper.selectByExample(example);
-            if (!CollectionUtils.isEmpty(SiteSettingList)) {
-                SiteSetting = SiteSettingList.get(0);
-                redisUtil.setEx(RedisKey.SITE_SETTINGS, SiteSetting, 1, TimeUnit.DAYS);
-                return SiteSetting;
-            }
-        }
-        return SiteSetting;
-    }
+	@Override
+	public SiteSetting findOne() {
+		SiteSetting SiteSetting = null;
+		if (SiteSetting == null) {
+			SiteSettingExample example = new SiteSettingExample();
+			List<SiteSetting> SiteSettingList = SiteSettingMapper.selectByExample(example);
+			if (!CollectionUtils.isEmpty(SiteSettingList)) {
+				SiteSetting = SiteSettingList.get(0);
+				RedisUtils.setObjEx(RedisKey.SITE_SETTINGS, SiteSetting, 24 * 60 * 60);
+				return SiteSetting;
+			}
+		}
+		return SiteSetting;
+	}
 }

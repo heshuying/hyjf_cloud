@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 
 import com.hyjf.common.spring.SpringUtils;
@@ -13,11 +15,10 @@ import com.hyjf.common.util.GetDate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
-
 /**
- * Redis操作接口
- *
- * @author 加内特
+ * redis工具类
+ * @author dxj
+ * @version RedisUtils, v0.1 2018/3/27 15:43
  */
 public class RedisUtils {
     private static JedisPool pool = null;
@@ -96,7 +97,6 @@ public class RedisUtils {
 
     /**
      * 获取数据
-     * 
      * @param key
      * @return
      */
@@ -119,6 +119,36 @@ public class RedisUtils {
         }
 
         return value;
+    }
+
+    /**
+     * 获取数据
+     * @param key
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T getObj(String key, Class<T> clazz) {
+        String value = null;
+
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            value = jedis.get(key);
+
+            return JSON.parseObject(value, clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+
+        return null;
     }
 
     /**
@@ -313,9 +343,9 @@ public class RedisUtils {
 
     /**
      * 赋值数据
-     * 
+     *
      * @param key
-     * @return
+     * @return 成功返回OK ，失败返回null
      */
     public static String set(String key, String value) {
         String result = null;
@@ -336,6 +366,61 @@ public class RedisUtils {
 
         return result;
     }
+
+    /**
+     * 赋值数据
+     * @param key
+     * @param value
+     * @return
+     */
+    public static String setObj(String key, Object value) {
+        String result = null;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            result = jedis.set(key, JSONObject.toJSONString(value));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+
+        return result;
+    }
+
+    /**
+     * 赋值数据
+     * @param key
+     * @param value
+     * @param expireSeconds  过期时间 秒
+     * @return
+     */
+    public static Long setObjEx(String key, Object value, int expireSeconds) {
+        Long result = null;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            jedis.set(key, JSONObject.toJSONString(value));
+            result = jedis.expire(key, expireSeconds);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+
+        return result;
+    }
+
 
     /**
      * 赋值数据
@@ -730,5 +815,5 @@ public class RedisUtils {
         }
         return result;
     }
-    
+
 }

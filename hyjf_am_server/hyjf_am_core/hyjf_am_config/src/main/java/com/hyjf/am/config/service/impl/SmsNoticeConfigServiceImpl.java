@@ -3,18 +3,18 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.SmsNoticeConfigMapper;
-import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
-import com.hyjf.am.config.dao.model.auto.SmsNoticeConfigExample;
-import com.hyjf.am.config.redis.RedisUtil;
-import com.hyjf.am.config.service.SmsNoticeConfigService;
-import com.hyjf.common.constants.RedisKey;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import com.hyjf.am.config.dao.mapper.auto.SmsNoticeConfigMapper;
+import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
+import com.hyjf.am.config.dao.model.auto.SmsNoticeConfigExample;
+import com.hyjf.am.config.service.SmsNoticeConfigService;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.RedisKey;
 
 /**
  * @author fuqiang
@@ -22,27 +22,23 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class SmsNoticeConfigServiceImpl implements SmsNoticeConfigService {
+	@Autowired
+	private SmsNoticeConfigMapper smsNoticeConfigMapper;
 
-    @Autowired
-    private RedisUtil redisUtil;
-
-    @Autowired
-    private SmsNoticeConfigMapper smsNoticeConfigMapper;
-
-    @Override
-    public SmsNoticeConfig findSmsNoticeByCode(String tplCode) {
-        SmsNoticeConfig smsNoticeConfig = (SmsNoticeConfig) redisUtil.get(RedisKey.SMS_NOTICE_CONFIG);
-        if (smsNoticeConfig == null) {
-            SmsNoticeConfigExample example = new SmsNoticeConfigExample();
-            SmsNoticeConfigExample.Criteria criteria = example.createCriteria();
-            criteria.andNameEqualTo(tplCode);
-            List<SmsNoticeConfig> smsNoticeConfigList = smsNoticeConfigMapper.selectByExample(example);
-            if (!CollectionUtils.isEmpty(smsNoticeConfigList)) {
-                smsNoticeConfig = smsNoticeConfigList.get(0);
-                redisUtil.setEx(RedisKey.SMS_NOTICE_CONFIG, smsNoticeConfig, 1, TimeUnit.DAYS);
-                return smsNoticeConfig;
-            }
-        }
-        return smsNoticeConfig;
-    }
+	@Override
+	public SmsNoticeConfig findSmsNoticeByCode(String tplCode) {
+		SmsNoticeConfig smsNoticeConfig = RedisUtils.getObj(RedisKey.SMS_NOTICE_CONFIG, SmsNoticeConfig.class);
+		if (smsNoticeConfig == null) {
+			SmsNoticeConfigExample example = new SmsNoticeConfigExample();
+			SmsNoticeConfigExample.Criteria criteria = example.createCriteria();
+			criteria.andNameEqualTo(tplCode);
+			List<SmsNoticeConfig> smsNoticeConfigList = smsNoticeConfigMapper.selectByExample(example);
+			if (!CollectionUtils.isEmpty(smsNoticeConfigList)) {
+				smsNoticeConfig = smsNoticeConfigList.get(0);
+				RedisUtils.setObjEx(RedisKey.SMS_NOTICE_CONFIG, smsNoticeConfig, 24 * 60 * 60);
+				return smsNoticeConfig;
+			}
+		}
+		return smsNoticeConfig;
+	}
 }
