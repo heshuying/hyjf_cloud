@@ -1,0 +1,34 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.callcenter.serviceImpl;
+
+import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.callcenter.client.AccountBankClient;
+import com.hyjf.callcenter.service.AccountBankService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @author wangjun
+ * @version AccountBankServiceImpl, v0.1 2018/6/6 13:47
+ */
+@Service
+public class AccountBankServiceImpl implements AccountBankService {
+    /**
+     * 按照用户名/手机号查询江西银行绑卡关系
+     * @param user
+     * @return List<BankCard>
+     * @author 王骏
+     */
+    @Autowired
+    private AccountBankClient accountBankClient;
+
+    @Override
+    public List<BankCard> getTiedCardOfAccountBank(User user) {
+        return accountBankClient.getTiedCardOfAccountBank(user);
+    }
+}
