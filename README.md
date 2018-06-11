@@ -15,6 +15,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 |     ├── hyjf_eureka           -- 注册中心[端口:1111]
 |     ├── hyjf_config           -- 配置中心[端口:2222]
 |     ├── hyjf_spring_boot_admin-- 服务监控[端口:18080]
+|     ├── hyjf_zipkin           -- 全链路监控[端口:9411]
 |     └── hyjf_zuul             -- 服务网关[端口:8080]
 ├── hyjf_base                   -- 基础模块
 |   ├── hyjf-common             -- 公共模块 被依赖
@@ -24,8 +25,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 |   ├── hyjf_am_model           -- 原子层统一数据模型 request vo response
 |   ├── hyjf_am_util            -- 原子层工具
 |   └── hyjf_am_core            -- 原子层核心服务
-|       ├── hyjf_am_borrow      -- 标的微服务[端口:8096]
-|   |   ├── hyjf_am_trade       -- 交易、资金、资产微服务[端口:8093]
+|   |   ├── hyjf_am_borrow      -- 标的、交易、资金、资产微服务[端口:8096]
 |   |   ├── hyjf_am_config      -- 公用配置微服务[端口:8091]
 |   |   ├── hyjf_am_market      -- 市场微服务[端口:8094] 包含活动、券等
 |   |   ├── hyjf_am_stattistics -- 统计中心微服务[端口:8095] 统计数据

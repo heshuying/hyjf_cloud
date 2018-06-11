@@ -16,7 +16,6 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <modules>
-        <module>hyjf_am_trade</module>
         <module>hyjf_am_config</module>
         <module>hyjf_am_market</module>
         <module>hyjf_am_user</module>
