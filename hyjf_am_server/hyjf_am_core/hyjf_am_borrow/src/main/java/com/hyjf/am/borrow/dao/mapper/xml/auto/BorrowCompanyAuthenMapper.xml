@@ -1,33 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BorrowCompanyAuthenMapper">
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="authen_name" jdbcType="VARCHAR" property="authenName" />
-    <result column="authen_time" jdbcType="VARCHAR" property="authenTime" />
-    <result column="authen_sort_key" jdbcType="INTEGER" property="authenSortKey" />
-    <result column="borrow_nid" jdbcType="VARCHAR" property="borrowNid" />
-    <result column="borrow_pre_nid" jdbcType="VARCHAR" property="borrowPreNid" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.BorrowCompanyAuthenMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="authen_name" property="authenName" jdbcType="VARCHAR" />
+    <result column="authen_time" property="authenTime" jdbcType="VARCHAR" />
+    <result column="authen_sort_key" property="authenSortKey" jdbcType="INTEGER" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_pre_nid" property="borrowPreNid" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -38,25 +38,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -67,44 +67,44 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     id, authen_name, authen_time, authen_sort_key, borrow_nid, borrow_pre_nid
   </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample" resultMap="BaseResultMap">
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
     from ht_borrow_company_authen
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
-    <if test="limitStart &gt;= 0">
+    <if test="limitStart >= 0" >
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from ht_borrow_company_authen
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_borrow_company_authen
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample">
+  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample" >
     delete from ht_borrow_company_authen
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_borrow_company_authen (authen_name, authen_time, authen_sort_key, 
@@ -112,79 +112,79 @@
     values (#{authenName,jdbcType=VARCHAR}, #{authenTime,jdbcType=VARCHAR}, #{authenSortKey,jdbcType=INTEGER}, 
       #{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_borrow_company_authen
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="authenName != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="authenName != null" >
         authen_name,
       </if>
-      <if test="authenTime != null">
+      <if test="authenTime != null" >
         authen_time,
       </if>
-      <if test="authenSortKey != null">
+      <if test="authenSortKey != null" >
         authen_sort_key,
       </if>
-      <if test="borrowNid != null">
+      <if test="borrowNid != null" >
         borrow_nid,
       </if>
-      <if test="borrowPreNid != null">
+      <if test="borrowPreNid != null" >
         borrow_pre_nid,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="authenName != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="authenName != null" >
         #{authenName,jdbcType=VARCHAR},
       </if>
-      <if test="authenTime != null">
+      <if test="authenTime != null" >
         #{authenTime,jdbcType=VARCHAR},
       </if>
-      <if test="authenSortKey != null">
+      <if test="authenSortKey != null" >
         #{authenSortKey,jdbcType=INTEGER},
       </if>
-      <if test="borrowNid != null">
+      <if test="borrowNid != null" >
         #{borrowNid,jdbcType=VARCHAR},
       </if>
-      <if test="borrowPreNid != null">
+      <if test="borrowPreNid != null" >
         #{borrowPreNid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample" resultType="java.lang.Integer" >
     select count(*) from ht_borrow_company_authen
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map" >
     update ht_borrow_company_authen
-    <set>
-      <if test="record.id != null">
+    <set >
+      <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.authenName != null">
+      <if test="record.authenName != null" >
         authen_name = #{record.authenName,jdbcType=VARCHAR},
       </if>
-      <if test="record.authenTime != null">
+      <if test="record.authenTime != null" >
         authen_time = #{record.authenTime,jdbcType=VARCHAR},
       </if>
-      <if test="record.authenSortKey != null">
+      <if test="record.authenSortKey != null" >
         authen_sort_key = #{record.authenSortKey,jdbcType=INTEGER},
       </if>
-      <if test="record.borrowNid != null">
+      <if test="record.borrowNid != null" >
         borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       </if>
-      <if test="record.borrowPreNid != null">
+      <if test="record.borrowPreNid != null" >
         borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
+  <update id="updateByExample" parameterType="map" >
     update ht_borrow_company_authen
     set id = #{record.id,jdbcType=INTEGER},
       authen_name = #{record.authenName,jdbcType=VARCHAR},
@@ -192,257 +192,32 @@
       authen_sort_key = #{record.authenSortKey,jdbcType=INTEGER},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen" >
     update ht_borrow_company_authen
-    <set>
-      <if test="authenName != null">
+    <set >
+      <if test="authenName != null" >
         authen_name = #{authenName,jdbcType=VARCHAR},
       </if>
-      <if test="authenTime != null">
+      <if test="authenTime != null" >
         authen_time = #{authenTime,jdbcType=VARCHAR},
       </if>
-      <if test="authenSortKey != null">
+      <if test="authenSortKey != null" >
         authen_sort_key = #{authenSortKey,jdbcType=INTEGER},
       </if>
-      <if test="borrowNid != null">
+      <if test="borrowNid != null" >
         borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       </if>
-      <if test="borrowPreNid != null">
+      <if test="borrowPreNid != null" >
         borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    update ht_borrow_company_authen
-    set authen_name = #{authenName,jdbcType=VARCHAR},
-      authen_time = #{authenTime,jdbcType=VARCHAR},
-      authen_sort_key = #{authenSortKey,jdbcType=INTEGER},
-      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
-      borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="authen_name" jdbcType="VARCHAR" property="authenName" />
-    <result column="authen_time" jdbcType="VARCHAR" property="authenTime" />
-    <result column="authen_sort_key" jdbcType="INTEGER" property="authenSortKey" />
-    <result column="borrow_nid" jdbcType="VARCHAR" property="borrowNid" />
-    <result column="borrow_pre_nid" jdbcType="VARCHAR" property="borrowPreNid" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
-    id, authen_name, authen_time, authen_sort_key, borrow_nid, borrow_pre_nid
-  </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from ht_borrow_company_authen
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-    <if test="limitStart &gt;= 0">
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ht_borrow_company_authen
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ht_borrow_company_authen
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample">
-    delete from ht_borrow_company_authen
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_company_authen (authen_name, authen_time, authen_sort_key, 
-      borrow_nid, borrow_pre_nid)
-    values (#{authenName,jdbcType=VARCHAR}, #{authenTime,jdbcType=VARCHAR}, #{authenSortKey,jdbcType=INTEGER}, 
-      #{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_company_authen
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="authenName != null">
-        authen_name,
-      </if>
-      <if test="authenTime != null">
-        authen_time,
-      </if>
-      <if test="authenSortKey != null">
-        authen_sort_key,
-      </if>
-      <if test="borrowNid != null">
-        borrow_nid,
-      </if>
-      <if test="borrowPreNid != null">
-        borrow_pre_nid,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="authenName != null">
-        #{authenName,jdbcType=VARCHAR},
-      </if>
-      <if test="authenTime != null">
-        #{authenTime,jdbcType=VARCHAR},
-      </if>
-      <if test="authenSortKey != null">
-        #{authenSortKey,jdbcType=INTEGER},
-      </if>
-      <if test="borrowNid != null">
-        #{borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowPreNid != null">
-        #{borrowPreNid,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthenExample" resultType="java.lang.Integer">
-    select count(*) from ht_borrow_company_authen
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update ht_borrow_company_authen
-    <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.authenName != null">
-        authen_name = #{record.authenName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.authenTime != null">
-        authen_time = #{record.authenTime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.authenSortKey != null">
-        authen_sort_key = #{record.authenSortKey,jdbcType=INTEGER},
-      </if>
-      <if test="record.borrowNid != null">
-        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="record.borrowPreNid != null">
-        borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update ht_borrow_company_authen
-    set id = #{record.id,jdbcType=INTEGER},
-      authen_name = #{record.authenName,jdbcType=VARCHAR},
-      authen_time = #{record.authenTime,jdbcType=VARCHAR},
-      authen_sort_key = #{record.authenSortKey,jdbcType=INTEGER},
-      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
-      borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
-    update ht_borrow_company_authen
-    <set>
-      <if test="authenName != null">
-        authen_name = #{authenName,jdbcType=VARCHAR},
-      </if>
-      <if test="authenTime != null">
-        authen_time = #{authenTime,jdbcType=VARCHAR},
-      </if>
-      <if test="authenSortKey != null">
-        authen_sort_key = #{authenSortKey,jdbcType=INTEGER},
-      </if>
-      <if test="borrowNid != null">
-        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowPreNid != null">
-        borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen">
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.BorrowCompanyAuthen" >
     update ht_borrow_company_authen
     set authen_name = #{authenName,jdbcType=VARCHAR},
       authen_time = #{authenTime,jdbcType=VARCHAR},

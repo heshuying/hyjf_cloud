@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.HjhUserAuthMapper">
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="auto_inves_status" jdbcType="TINYINT" property="autoInvesStatus" />
-    <result column="auto_credit_status" jdbcType="TINYINT" property="autoCreditStatus" />
-    <result column="auto_withdraw_status" jdbcType="TINYINT" property="autoWithdrawStatus" />
-    <result column="auto_consume_status" jdbcType="TINYINT" property="autoConsumeStatus" />
-    <result column="auto_create_time" jdbcType="INTEGER" property="autoCreateTime" />
-    <result column="auto_order_id" jdbcType="VARCHAR" property="autoOrderId" />
-    <result column="auto_credit_order_id" jdbcType="VARCHAR" property="autoCreditOrderId" />
-    <result column="auto_credit_time" jdbcType="INTEGER" property="autoCreditTime" />
-    <result column="auto_bid_time" jdbcType="INTEGER" property="autoBidTime" />
-    <result column="create_time" jdbcType="INTEGER" property="createTime" />
-    <result column="create_user" jdbcType="INTEGER" property="createUser" />
-    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
-    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
-    <result column="del_flg" jdbcType="TINYINT" property="delFlg" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.borrow.dao.mapper.auto.HjhUserAuthMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="auto_inves_status" property="autoInvesStatus" jdbcType="TINYINT" />
+    <result column="auto_credit_status" property="autoCreditStatus" jdbcType="TINYINT" />
+    <result column="auto_withdraw_status" property="autoWithdrawStatus" jdbcType="TINYINT" />
+    <result column="auto_consume_status" property="autoConsumeStatus" jdbcType="TINYINT" />
+    <result column="auto_create_time" property="autoCreateTime" jdbcType="INTEGER" />
+    <result column="auto_order_id" property="autoOrderId" jdbcType="VARCHAR" />
+    <result column="auto_credit_order_id" property="autoCreditOrderId" jdbcType="VARCHAR" />
+    <result column="auto_credit_time" property="autoCreditTime" jdbcType="INTEGER" />
+    <result column="auto_bid_time" property="autoBidTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -49,25 +49,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -78,46 +78,46 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     id, user_id, user_name, auto_inves_status, auto_credit_status, auto_withdraw_status, 
     auto_consume_status, auto_create_time, auto_order_id, auto_credit_order_id, auto_credit_time, 
     auto_bid_time, create_time, create_user, update_time, update_user, del_flg
   </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample" resultMap="BaseResultMap">
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
     from ht_hjh_user_auth
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
-    <if test="limitStart &gt;= 0">
+    <if test="limitStart >= 0" >
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from ht_hjh_user_auth
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_hjh_user_auth
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample">
+  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample" >
     delete from ht_hjh_user_auth
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_hjh_user_auth (user_id, user_name, auto_inves_status, 
@@ -133,178 +133,178 @@
       #{createUser,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
       #{delFlg,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_hjh_user_auth
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
         user_id,
       </if>
-      <if test="userName != null">
+      <if test="userName != null" >
         user_name,
       </if>
-      <if test="autoInvesStatus != null">
+      <if test="autoInvesStatus != null" >
         auto_inves_status,
       </if>
-      <if test="autoCreditStatus != null">
+      <if test="autoCreditStatus != null" >
         auto_credit_status,
       </if>
-      <if test="autoWithdrawStatus != null">
+      <if test="autoWithdrawStatus != null" >
         auto_withdraw_status,
       </if>
-      <if test="autoConsumeStatus != null">
+      <if test="autoConsumeStatus != null" >
         auto_consume_status,
       </if>
-      <if test="autoCreateTime != null">
+      <if test="autoCreateTime != null" >
         auto_create_time,
       </if>
-      <if test="autoOrderId != null">
+      <if test="autoOrderId != null" >
         auto_order_id,
       </if>
-      <if test="autoCreditOrderId != null">
+      <if test="autoCreditOrderId != null" >
         auto_credit_order_id,
       </if>
-      <if test="autoCreditTime != null">
+      <if test="autoCreditTime != null" >
         auto_credit_time,
       </if>
-      <if test="autoBidTime != null">
+      <if test="autoBidTime != null" >
         auto_bid_time,
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time,
       </if>
-      <if test="createUser != null">
+      <if test="createUser != null" >
         create_user,
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="updateUser != null">
+      <if test="updateUser != null" >
         update_user,
       </if>
-      <if test="delFlg != null">
+      <if test="delFlg != null" >
         del_flg,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="userName != null">
+      <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="autoInvesStatus != null">
+      <if test="autoInvesStatus != null" >
         #{autoInvesStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoCreditStatus != null">
+      <if test="autoCreditStatus != null" >
         #{autoCreditStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoWithdrawStatus != null">
+      <if test="autoWithdrawStatus != null" >
         #{autoWithdrawStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoConsumeStatus != null">
+      <if test="autoConsumeStatus != null" >
         #{autoConsumeStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoCreateTime != null">
+      <if test="autoCreateTime != null" >
         #{autoCreateTime,jdbcType=INTEGER},
       </if>
-      <if test="autoOrderId != null">
+      <if test="autoOrderId != null" >
         #{autoOrderId,jdbcType=VARCHAR},
       </if>
-      <if test="autoCreditOrderId != null">
+      <if test="autoCreditOrderId != null" >
         #{autoCreditOrderId,jdbcType=VARCHAR},
       </if>
-      <if test="autoCreditTime != null">
+      <if test="autoCreditTime != null" >
         #{autoCreditTime,jdbcType=INTEGER},
       </if>
-      <if test="autoBidTime != null">
+      <if test="autoBidTime != null" >
         #{autoBidTime,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         #{createTime,jdbcType=INTEGER},
       </if>
-      <if test="createUser != null">
+      <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         #{updateTime,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null">
+      <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null">
+      <if test="delFlg != null" >
         #{delFlg,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample" resultType="java.lang.Integer" >
     select count(*) from ht_hjh_user_auth
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map" >
     update ht_hjh_user_auth
-    <set>
-      <if test="record.id != null">
+    <set >
+      <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.userId != null">
+      <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
-      <if test="record.userName != null">
+      <if test="record.userName != null" >
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
-      <if test="record.autoInvesStatus != null">
+      <if test="record.autoInvesStatus != null" >
         auto_inves_status = #{record.autoInvesStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.autoCreditStatus != null">
+      <if test="record.autoCreditStatus != null" >
         auto_credit_status = #{record.autoCreditStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.autoWithdrawStatus != null">
+      <if test="record.autoWithdrawStatus != null" >
         auto_withdraw_status = #{record.autoWithdrawStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.autoConsumeStatus != null">
+      <if test="record.autoConsumeStatus != null" >
         auto_consume_status = #{record.autoConsumeStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.autoCreateTime != null">
+      <if test="record.autoCreateTime != null" >
         auto_create_time = #{record.autoCreateTime,jdbcType=INTEGER},
       </if>
-      <if test="record.autoOrderId != null">
+      <if test="record.autoOrderId != null" >
         auto_order_id = #{record.autoOrderId,jdbcType=VARCHAR},
       </if>
-      <if test="record.autoCreditOrderId != null">
+      <if test="record.autoCreditOrderId != null" >
         auto_credit_order_id = #{record.autoCreditOrderId,jdbcType=VARCHAR},
       </if>
-      <if test="record.autoCreditTime != null">
+      <if test="record.autoCreditTime != null" >
         auto_credit_time = #{record.autoCreditTime,jdbcType=INTEGER},
       </if>
-      <if test="record.autoBidTime != null">
+      <if test="record.autoBidTime != null" >
         auto_bid_time = #{record.autoBidTime,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
+      <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=INTEGER},
       </if>
-      <if test="record.createUser != null">
+      <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
-      <if test="record.updateTime != null">
+      <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUser != null">
+      <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
-      <if test="record.delFlg != null">
+      <if test="record.delFlg != null" >
         del_flg = #{record.delFlg,jdbcType=TINYINT},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
+  <update id="updateByExample" parameterType="map" >
     update ht_hjh_user_auth
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
@@ -323,465 +323,65 @@
       update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
       del_flg = #{record.delFlg,jdbcType=TINYINT}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth" >
     update ht_hjh_user_auth
-    <set>
-      <if test="userId != null">
+    <set >
+      <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="userName != null">
+      <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="autoInvesStatus != null">
+      <if test="autoInvesStatus != null" >
         auto_inves_status = #{autoInvesStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoCreditStatus != null">
+      <if test="autoCreditStatus != null" >
         auto_credit_status = #{autoCreditStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoWithdrawStatus != null">
+      <if test="autoWithdrawStatus != null" >
         auto_withdraw_status = #{autoWithdrawStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoConsumeStatus != null">
+      <if test="autoConsumeStatus != null" >
         auto_consume_status = #{autoConsumeStatus,jdbcType=TINYINT},
       </if>
-      <if test="autoCreateTime != null">
+      <if test="autoCreateTime != null" >
         auto_create_time = #{autoCreateTime,jdbcType=INTEGER},
       </if>
-      <if test="autoOrderId != null">
+      <if test="autoOrderId != null" >
         auto_order_id = #{autoOrderId,jdbcType=VARCHAR},
       </if>
-      <if test="autoCreditOrderId != null">
+      <if test="autoCreditOrderId != null" >
         auto_credit_order_id = #{autoCreditOrderId,jdbcType=VARCHAR},
       </if>
-      <if test="autoCreditTime != null">
+      <if test="autoCreditTime != null" >
         auto_credit_time = #{autoCreditTime,jdbcType=INTEGER},
       </if>
-      <if test="autoBidTime != null">
+      <if test="autoBidTime != null" >
         auto_bid_time = #{autoBidTime,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time = #{createTime,jdbcType=INTEGER},
       </if>
-      <if test="createUser != null">
+      <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null">
+      <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null">
+      <if test="delFlg != null" >
         del_flg = #{delFlg,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    update ht_hjh_user_auth
-    set user_id = #{userId,jdbcType=INTEGER},
-      user_name = #{userName,jdbcType=VARCHAR},
-      auto_inves_status = #{autoInvesStatus,jdbcType=TINYINT},
-      auto_credit_status = #{autoCreditStatus,jdbcType=TINYINT},
-      auto_withdraw_status = #{autoWithdrawStatus,jdbcType=TINYINT},
-      auto_consume_status = #{autoConsumeStatus,jdbcType=TINYINT},
-      auto_create_time = #{autoCreateTime,jdbcType=INTEGER},
-      auto_order_id = #{autoOrderId,jdbcType=VARCHAR},
-      auto_credit_order_id = #{autoCreditOrderId,jdbcType=VARCHAR},
-      auto_credit_time = #{autoCreditTime,jdbcType=INTEGER},
-      auto_bid_time = #{autoBidTime,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
-      create_user = #{createUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      update_user = #{updateUser,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=TINYINT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <resultMap id="BaseResultMap" type="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="auto_inves_status" jdbcType="TINYINT" property="autoInvesStatus" />
-    <result column="auto_credit_status" jdbcType="TINYINT" property="autoCreditStatus" />
-    <result column="auto_withdraw_status" jdbcType="TINYINT" property="autoWithdrawStatus" />
-    <result column="auto_consume_status" jdbcType="TINYINT" property="autoConsumeStatus" />
-    <result column="auto_create_time" jdbcType="INTEGER" property="autoCreateTime" />
-    <result column="auto_order_id" jdbcType="VARCHAR" property="autoOrderId" />
-    <result column="auto_credit_order_id" jdbcType="VARCHAR" property="autoCreditOrderId" />
-    <result column="auto_credit_time" jdbcType="INTEGER" property="autoCreditTime" />
-    <result column="auto_bid_time" jdbcType="INTEGER" property="autoBidTime" />
-    <result column="create_time" jdbcType="INTEGER" property="createTime" />
-    <result column="create_user" jdbcType="INTEGER" property="createUser" />
-    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
-    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
-    <result column="del_flg" jdbcType="TINYINT" property="delFlg" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
-    id, user_id, user_name, auto_inves_status, auto_credit_status, auto_withdraw_status, 
-    auto_consume_status, auto_create_time, auto_order_id, auto_credit_order_id, auto_credit_time, 
-    auto_bid_time, create_time, create_user, update_time, update_user, del_flg
-  </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from ht_hjh_user_auth
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-    <if test="limitStart &gt;= 0">
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ht_hjh_user_auth
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ht_hjh_user_auth
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample">
-    delete from ht_hjh_user_auth
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_hjh_user_auth (user_id, user_name, auto_inves_status, 
-      auto_credit_status, auto_withdraw_status, auto_consume_status, 
-      auto_create_time, auto_order_id, auto_credit_order_id, 
-      auto_credit_time, auto_bid_time, create_time, 
-      create_user, update_time, update_user, 
-      del_flg)
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{autoInvesStatus,jdbcType=TINYINT}, 
-      #{autoCreditStatus,jdbcType=TINYINT}, #{autoWithdrawStatus,jdbcType=TINYINT}, #{autoConsumeStatus,jdbcType=TINYINT}, 
-      #{autoCreateTime,jdbcType=INTEGER}, #{autoOrderId,jdbcType=VARCHAR}, #{autoCreditOrderId,jdbcType=VARCHAR}, 
-      #{autoCreditTime,jdbcType=INTEGER}, #{autoBidTime,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
-      #{createUser,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
-      #{delFlg,jdbcType=TINYINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_hjh_user_auth
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="userName != null">
-        user_name,
-      </if>
-      <if test="autoInvesStatus != null">
-        auto_inves_status,
-      </if>
-      <if test="autoCreditStatus != null">
-        auto_credit_status,
-      </if>
-      <if test="autoWithdrawStatus != null">
-        auto_withdraw_status,
-      </if>
-      <if test="autoConsumeStatus != null">
-        auto_consume_status,
-      </if>
-      <if test="autoCreateTime != null">
-        auto_create_time,
-      </if>
-      <if test="autoOrderId != null">
-        auto_order_id,
-      </if>
-      <if test="autoCreditOrderId != null">
-        auto_credit_order_id,
-      </if>
-      <if test="autoCreditTime != null">
-        auto_credit_time,
-      </if>
-      <if test="autoBidTime != null">
-        auto_bid_time,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="createUser != null">
-        create_user,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="updateUser != null">
-        update_user,
-      </if>
-      <if test="delFlg != null">
-        del_flg,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="autoInvesStatus != null">
-        #{autoInvesStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoCreditStatus != null">
-        #{autoCreditStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoWithdrawStatus != null">
-        #{autoWithdrawStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoConsumeStatus != null">
-        #{autoConsumeStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoCreateTime != null">
-        #{autoCreateTime,jdbcType=INTEGER},
-      </if>
-      <if test="autoOrderId != null">
-        #{autoOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="autoCreditOrderId != null">
-        #{autoCreditOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="autoCreditTime != null">
-        #{autoCreditTime,jdbcType=INTEGER},
-      </if>
-      <if test="autoBidTime != null">
-        #{autoBidTime,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="createUser != null">
-        #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateUser != null">
-        #{updateUser,jdbcType=INTEGER},
-      </if>
-      <if test="delFlg != null">
-        #{delFlg,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuthExample" resultType="java.lang.Integer">
-    select count(*) from ht_hjh_user_auth
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update ht_hjh_user_auth
-    <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=INTEGER},
-      </if>
-      <if test="record.userName != null">
-        user_name = #{record.userName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.autoInvesStatus != null">
-        auto_inves_status = #{record.autoInvesStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.autoCreditStatus != null">
-        auto_credit_status = #{record.autoCreditStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.autoWithdrawStatus != null">
-        auto_withdraw_status = #{record.autoWithdrawStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.autoConsumeStatus != null">
-        auto_consume_status = #{record.autoConsumeStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.autoCreateTime != null">
-        auto_create_time = #{record.autoCreateTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.autoOrderId != null">
-        auto_order_id = #{record.autoOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.autoCreditOrderId != null">
-        auto_credit_order_id = #{record.autoCreditOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.autoCreditTime != null">
-        auto_credit_time = #{record.autoCreditTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.autoBidTime != null">
-        auto_bid_time = #{record.autoBidTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.createUser != null">
-        create_user = #{record.createUser,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUser != null">
-        update_user = #{record.updateUser,jdbcType=INTEGER},
-      </if>
-      <if test="record.delFlg != null">
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update ht_hjh_user_auth
-    set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
-      user_name = #{record.userName,jdbcType=VARCHAR},
-      auto_inves_status = #{record.autoInvesStatus,jdbcType=TINYINT},
-      auto_credit_status = #{record.autoCreditStatus,jdbcType=TINYINT},
-      auto_withdraw_status = #{record.autoWithdrawStatus,jdbcType=TINYINT},
-      auto_consume_status = #{record.autoConsumeStatus,jdbcType=TINYINT},
-      auto_create_time = #{record.autoCreateTime,jdbcType=INTEGER},
-      auto_order_id = #{record.autoOrderId,jdbcType=VARCHAR},
-      auto_credit_order_id = #{record.autoCreditOrderId,jdbcType=VARCHAR},
-      auto_credit_time = #{record.autoCreditTime,jdbcType=INTEGER},
-      auto_bid_time = #{record.autoBidTime,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      create_user = #{record.createUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      update_user = #{record.updateUser,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
-    update ht_hjh_user_auth
-    <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="userName != null">
-        user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="autoInvesStatus != null">
-        auto_inves_status = #{autoInvesStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoCreditStatus != null">
-        auto_credit_status = #{autoCreditStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoWithdrawStatus != null">
-        auto_withdraw_status = #{autoWithdrawStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoConsumeStatus != null">
-        auto_consume_status = #{autoConsumeStatus,jdbcType=TINYINT},
-      </if>
-      <if test="autoCreateTime != null">
-        auto_create_time = #{autoCreateTime,jdbcType=INTEGER},
-      </if>
-      <if test="autoOrderId != null">
-        auto_order_id = #{autoOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="autoCreditOrderId != null">
-        auto_credit_order_id = #{autoCreditOrderId,jdbcType=VARCHAR},
-      </if>
-      <if test="autoCreditTime != null">
-        auto_credit_time = #{autoCreditTime,jdbcType=INTEGER},
-      </if>
-      <if test="autoBidTime != null">
-        auto_bid_time = #{autoBidTime,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateUser != null">
-        update_user = #{updateUser,jdbcType=INTEGER},
-      </if>
-      <if test="delFlg != null">
-        del_flg = #{delFlg,jdbcType=TINYINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth">
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.borrow.dao.model.auto.HjhUserAuth" >
     update ht_hjh_user_auth
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
