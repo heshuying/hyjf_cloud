@@ -3,9 +3,9 @@
  */
 package com.hyjf.callcenter.clientImpl;
 
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.response.user.BankCardResponse;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.client.AccountBankClient;
 import com.hyjf.ribbon.EurekaInvokeClient;
 import org.slf4j.Logger;
@@ -25,12 +25,12 @@ public class AccountBankClientImpl implements AccountBankClient {
     private static final Logger logger = LoggerFactory.getLogger(AmCallcenterBaseClientImpl.class);
     private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
     @Override
-    public List<BankCard> getTiedCardOfAccountBank(User user) {
-        List<BankCard> bankCardList = restTemplate
-                .getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/" + user.getUserId(), List.class)
+    public List<BankCardVO> getTiedCardOfAccountBank(UserVO user) {
+        BankCardResponse bankCardResponse = restTemplate
+                .getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/" + user.getUserId(), BankCardResponse.class)
                 .getBody();
-        if (bankCardList != null && bankCardList.size()>0) {
-            return bankCardList;
+        if (bankCardResponse != null) {
+            return bankCardResponse.getResultList();
         }
         return null;
     }

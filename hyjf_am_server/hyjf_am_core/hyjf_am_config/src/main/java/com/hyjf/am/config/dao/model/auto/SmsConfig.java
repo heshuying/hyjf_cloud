@@ -28,9 +28,9 @@ public class SmsConfig implements Serializable {
 
     private String fullMobiles;
 
-    private Integer createUserid;
+    private Integer createUserId;
 
-    private Integer updateUserid;
+    private Integer updateUserId;
 
     private Date createTime;
 
@@ -134,20 +134,20 @@ public class SmsConfig implements Serializable {
         this.fullMobiles = fullMobiles == null ? null : fullMobiles.trim();
     }
 
-    public Integer getCreateUserid() {
-        return createUserid;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setCreateUserid(Integer createUserid) {
-        this.createUserid = createUserid;
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public Integer getUpdateUserid() {
-        return updateUserid;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdateUserid(Integer updateUserid) {
-        this.updateUserid = updateUserid;
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

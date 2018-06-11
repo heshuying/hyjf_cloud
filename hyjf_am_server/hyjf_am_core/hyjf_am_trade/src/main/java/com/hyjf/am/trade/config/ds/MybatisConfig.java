@@ -26,6 +26,9 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 import com.hyjf.am.trade.config.ds.DynamicDataSourceContextHolder.DbType;
 
+
+import com.hyjf.am.trade.config.ds.DynamicDataSourceContextHolder.DbType;
+
 @Configuration
 @MapperScan("com.hyjf.am.trade.dao.mapper")
 @AutoConfigureAfter({ DataSourceAutoConfiguration.class})
@@ -54,19 +57,19 @@ public class MybatisConfig {
 	 */
 	@Bean("dynamicDataSource")
 	public DynamicDataSource dynamicDataSource(@Qualifier("writeDataSource") DataSource writeDataSource,
-			@Qualifier("readDataSource1") DataSource readDataSource1) {
-		
+                                               @Qualifier("readDataSource1") DataSource readDataSource1) {
+
 		Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
 		targetDataSources.put(DbType.WRITE, writeDataSource);
 		targetDataSources.put(DbType.READ1, readDataSource1);
-		
+
 		// 将数据源的 key 放到数据源上下文的 key 集合中，用于切换时判断数据源是否有效
         DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.WRITE.name());
         DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.READ1.name());
         // 将 Slave 数据源的 key 放在集合中，用于轮循
         DynamicDataSourceContextHolder.slaveDataSourceKeys.add(DbType.READ1.name());
-		
-		
+
+
 		DynamicDataSource dataSource = new DynamicDataSource();
 		// 该方法是AbstractRoutingDataSource的方法
 		dataSource.setTargetDataSources(targetDataSources);
@@ -76,9 +79,9 @@ public class MybatisConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * 根据数据源创建SqlSessionFactory
-	 * 
+	 *
 	 */
 	@Bean
 	public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicDataSource") DynamicDataSource dynamicDataSource,

@@ -8,8 +8,8 @@
     <result column="value" property="value" jdbcType="VARCHAR" />
     <result column="pvalue" property="pvalue" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
-    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -74,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `name`, title, `value`, pvalue, content, create_userid, update_userid, create_time, 
+    id, `name`, title, `value`, pvalue, content, create_user_id, update_user_id, create_time, 
     update_time, remark, `status`
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.SmsNoticeConfigExample" >
@@ -117,12 +117,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_sms_notice_config (`name`, title, `value`, 
-      pvalue, content, create_userid, 
-      update_userid, create_time, update_time, 
+      pvalue, content, create_user_id, 
+      update_user_id, create_time, update_time, 
       remark, `status`)
     values (#{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
-      #{pvalue,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createUserid,jdbcType=INTEGER}, 
-      #{updateUserid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{pvalue,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsNoticeConfig" >
@@ -146,11 +146,11 @@
       <if test="content != null" >
         content,
       </if>
-      <if test="createUserid != null" >
-        create_userid,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updateUserid != null" >
-        update_userid,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -181,11 +181,11 @@
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
       </if>
-      <if test="createUserid != null" >
-        #{createUserid,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserid != null" >
-        #{updateUserid,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -228,11 +228,11 @@
       <if test="record.content != null" >
         content = #{record.content,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserid != null" >
-        create_userid = #{record.createUserid,jdbcType=INTEGER},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUserid != null" >
-        update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -259,8 +259,8 @@
       `value` = #{record.value,jdbcType=VARCHAR},
       pvalue = #{record.pvalue,jdbcType=VARCHAR},
       content = #{record.content,jdbcType=VARCHAR},
-      create_userid = #{record.createUserid,jdbcType=INTEGER},
-      update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR},
@@ -284,11 +284,11 @@
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="createUserid != null" >
-        create_userid = #{createUserid,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserid != null" >
-        update_userid = #{updateUserid,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -312,8 +312,8 @@
       `value` = #{value,jdbcType=VARCHAR},
       pvalue = #{pvalue,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
-      create_userid = #{createUserid,jdbcType=INTEGER},
-      update_userid = #{updateUserid,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},

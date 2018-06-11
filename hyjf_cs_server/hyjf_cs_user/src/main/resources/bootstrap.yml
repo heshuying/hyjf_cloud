@@ -5,6 +5,9 @@ spring:
     admin:
       client:
         url: http://127.0.0.1:18080
+  zipkin:
+    base-url: http://127.0.0.1:9411
+
 eureka:
   client:
     serviceUrl:

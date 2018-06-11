@@ -5,6 +5,9 @@ spring:
     admin:
       client:
         url: http://127.0.0.1:18080
+  zipkin:
+    base-url: http://127.0.0.1:9411
+
 eureka:
   client:
     serviceUrl:
@@ -15,4 +18,4 @@ server:
   port: 8082
 
 logging:
-  file: cs-borrow.log
+  file: cs-trade.log

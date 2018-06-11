@@ -3,18 +3,20 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.service.UserService;
-import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+import com.hyjf.am.trade.service.UserService;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author zhangqingqing

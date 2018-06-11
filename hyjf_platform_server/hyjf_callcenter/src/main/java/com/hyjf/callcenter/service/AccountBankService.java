@@ -3,8 +3,9 @@
  */
 package com.hyjf.callcenter.service;
 
-import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.User;
+
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.UserVO;
 
 import java.util.List;
 
@@ -18,5 +19,5 @@ public interface AccountBankService {
      * @param user
      * @return
      */
-    List<BankCard> getTiedCardOfAccountBank(User user);
+    List<BankCardVO> getTiedCardOfAccountBank(UserVO user);
 }

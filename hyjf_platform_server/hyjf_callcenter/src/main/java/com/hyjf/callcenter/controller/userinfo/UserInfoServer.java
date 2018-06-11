@@ -73,7 +73,6 @@ public class UserInfoServer extends CallcenterBaseController {
 			returnBean.setUserName(recordBean.getUserName());
 			//手机号
 			returnBean.setMobile(recordBean.getMobile());		
-			
 			result.getDataList().add(returnBean);
 		}
 		result.statusMessage(BaseResultBean.STATUS_SUCCESS, BaseResultBean.STATUS_SUCCESS_DESC);

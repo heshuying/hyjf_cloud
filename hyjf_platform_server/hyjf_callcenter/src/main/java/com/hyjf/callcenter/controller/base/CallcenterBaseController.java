@@ -4,7 +4,6 @@ import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hyjf.am.user.dao.model.auto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,8 +40,8 @@ public class CallcenterBaseController {
 	 * @param result
 	 * @return
 	 */
-	protected User getUser(UserBean bean, BaseResultBean result) {
-		User user = null;
+	protected UserVO getUser(UserBean bean, BaseResultBean result) {
+		UserVO user = null;
 		
 		//唯一识别号验证
 		if (!checkUniqueNo(bean, result)) {

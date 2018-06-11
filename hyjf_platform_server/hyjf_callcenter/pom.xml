@@ -32,12 +32,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.hyjf</groupId>
-			<artifactId>hyjf_am_user</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
@@ -87,12 +81,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.hyjf</groupId>
-			<artifactId>hyjf_am_trade</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.9.3</version>
@@ -119,8 +107,8 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-		
-	</dependencies>
+
+    </dependencies>
 
 	<build>
 		<plugins>

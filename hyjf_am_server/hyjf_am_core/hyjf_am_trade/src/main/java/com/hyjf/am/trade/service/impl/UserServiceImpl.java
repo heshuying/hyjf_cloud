@@ -6,12 +6,12 @@ package com.hyjf.am.trade.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
 import com.hyjf.am.trade.service.UserService;
-import org.springframework.stereotype.Service;
 
 /**
  * @author zhangqingqing

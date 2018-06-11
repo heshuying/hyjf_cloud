@@ -51,6 +51,8 @@ datasource:
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
 
+
+
 # Redis
 redis:
   ip: 123.56.216.212
