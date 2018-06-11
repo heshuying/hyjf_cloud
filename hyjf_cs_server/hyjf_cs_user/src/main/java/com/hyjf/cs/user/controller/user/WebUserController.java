@@ -256,7 +256,7 @@ public class WebUserController {
         logger.info("用戶通知設置, userVO :{}", JSONObject.toJSONString(userVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         userVO.setUserId(user.getUserId());
         int ret = userService.updateUserByUserId(userVO);
 
@@ -374,7 +374,7 @@ public class WebUserController {
 
 		WebViewUser user  = new WebViewUser();
 		user.setUserId(1);
-		
+
 		userService.checkForEmailBind(email, key, value, user);
 		
 		try {

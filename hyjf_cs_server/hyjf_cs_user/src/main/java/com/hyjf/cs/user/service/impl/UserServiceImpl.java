@@ -221,13 +221,15 @@ public class UserServiceImpl implements UserService  {
 			resultMap.put("ifEvaluation", 0);
 		}
 		HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(webViewUser.getUserId());
-		resultMap.put("hjhUserAuth", getUserAuthState(hjhUserAuth));
+		if (null != hjhUserAuth){
+			resultMap.put("hjhUserAuth", getUserAuthState(hjhUserAuth));
+		}
 		// 获得是否授权
 		// 获取用户上传头像
 		String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
 		imghost = imghost.substring(0, imghost.length() - 1);
 		// 实际物理路径前缀2
-		String fileUploadTempPath = UploadFileUtils.getDoPath(PropUtils.getSystem("file.upload.head.path"));
+		String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
 		if(org.apache.commons.lang3.StringUtils.isNotEmpty( user.getIconurl())){
 			resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconurl());
 		}
@@ -519,7 +521,7 @@ public class UserServiceImpl implements UserService  {
 	 */
 	@Override
 	public BankCallBean userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode,String smsCode) {
-		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 		//检查用户信息
 		UserVO users = this.checkUserMessage(user,lastSrvAuthCode,smsCode);
 		// 判断是否授权过
@@ -700,7 +702,7 @@ public class UserServiceImpl implements UserService  {
 		Map<String,String> resultMap = new HashMap<>();
 		resultMap.put("status", "success");
 		bean.convert();
-		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 		if (user == null) {
 			throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
 		}

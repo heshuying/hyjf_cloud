@@ -26,6 +26,17 @@ public class SystemConfig {
     @Value("${file.upload.real.path}")
     public String fileUpload;
 
+    @Value("${file.upload.head.path}")
+    public String uploadHeadPath;
+
+    public String getUploadHeadPath() {
+        return uploadHeadPath;
+    }
+
+    public void setUploadHeadPath(String uploadHeadPath) {
+        this.uploadHeadPath = uploadHeadPath;
+    }
+
     public String getWebHost() {
         return webHost;
     }

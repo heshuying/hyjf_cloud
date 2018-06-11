@@ -59,16 +59,13 @@ public class UserAliasController {
      * @return
      */
     @RequestMapping("/findAliasesByMobiles")
-    public List<UserAliasResponse> findAliasesByMobiles(List<String> mobiles) {
+    public UserAliasResponse findAliasesByMobiles(List<String> mobiles) {
         logger.info("根据手机号查询推送别名 - 批量开始... mobiles is :{}", mobiles);
         List<UserAliasResponse> list = new ArrayList<>();
         List<UserAliasVO> userAliasVOList = userAliasService.findAliasByMobiles(mobiles);
-        for (UserAliasVO userAliasVO : userAliasVOList) {
-            UserAliasResponse response = new UserAliasResponse();
-            response.setResult(userAliasVO);
-            list.add(response);
-        }
-        return list;
+        UserAliasResponse response = new UserAliasResponse();
+        response.setResultList(userAliasVOList);
+        return response;
     }
 
     /**
