@@ -298,6 +298,9 @@ public class UserController {
 
 	@RequestMapping("/selectUserEvalationResultByUserId/{userId}")
 	public UserEvalationResultResponse selectUserEvalationResultByUserId(Integer userId) {
+		if(null == userId){
+			return null;
+		}
 		UserEvalationResultResponse response = new UserEvalationResultResponse();
 		UserEvalationResult userEvalationResult = userService.selectUserEvalationResultByUserId(userId);
 		if (null != userEvalationResult){
@@ -337,7 +340,7 @@ public class UserController {
 	 * @Date: 14:21 2018/6/4
 	 * @Return: com.hyjf.am.response.user.UsersContactResponse
 	 */
-	@RequestMapping("/selectUserContact")
+	@RequestMapping("/selectUserContact/{userId}")
 	public UsersContactResponse selectUserContact(Integer userId){
 		UsersContactResponse response = new UsersContactResponse();
 		UsersContact usersContact = userService.selectUserContact(userId);

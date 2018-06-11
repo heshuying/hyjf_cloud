@@ -73,7 +73,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -83,7 +83,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO findUserInfoById(int userId) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById" + userId, UserInfoResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
