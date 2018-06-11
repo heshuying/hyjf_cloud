@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.user.web.autoup;
+package com.hyjf.cs.user.controller.user.web.autoplus;
 
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.config.SystemConfig;
