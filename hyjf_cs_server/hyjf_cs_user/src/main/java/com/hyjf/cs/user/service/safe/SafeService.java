@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.safe;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.exception.MQException;
@@ -57,4 +58,6 @@ public interface SafeService {
     boolean checkForMobileModify(String newMobile, String smsCode);
 
     MobileModifyResultBean queryForMobileModify(Integer userId);
+
+    int updateUserNoticeSet(UserNoticeSetRequest requestBean);
 }

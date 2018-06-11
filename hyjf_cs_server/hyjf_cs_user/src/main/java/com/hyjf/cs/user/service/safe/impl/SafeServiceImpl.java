@@ -6,6 +6,7 @@ package com.hyjf.cs.user.service.safe.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.user.*;
@@ -240,7 +241,7 @@ public class SafeServiceImpl implements SafeService {
 
         // 发送激活邮件
         activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
-        String url = systemConfig.webHost + "/web/user/bindEmail?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+        String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
         Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.put("url_name", url);
         if (StringUtils.isNotBlank(user.getNickname())) {
@@ -400,6 +401,17 @@ public class SafeServiceImpl implements SafeService {
         }
 
         return result;
+    }
+
+
+    /**
+     * 更新用户信息
+     * @param userVO
+     * @return
+     */
+    @Override
+    public int updateUserNoticeSet(UserNoticeSetRequest requestBean) {
+        return amUserClient.updateUserNoticeSet(requestBean);
     }
 
 }

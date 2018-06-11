@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.user.web.safe;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
@@ -12,10 +13,12 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.safe.SafeService;
+import com.hyjf.cs.user.vo.UserNoticeSetVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,6 +90,7 @@ public class WebSafeController {
         return result;
     }
 
+
     /**
      * 保存用户通知设置
      *
@@ -98,14 +102,17 @@ public class WebSafeController {
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserVO userVO, HttpServletRequest request,
+    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO, HttpServletRequest request,
                                                    HttpServletResponse response) {
-        logger.info("用戶通知設置, userVO :{}", JSONObject.toJSONString(userVO));
+        logger.info("用戶通知設置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        userVO.setUserId(user.getUserId());
-        int ret = safeService.updateUserByUserId(userVO);
+
+        UserNoticeSetRequest noticeSetRequest = new UserNoticeSetRequest();
+        BeanUtils.copyProperties(userNoticeSetVO, noticeSetRequest);
+        noticeSetRequest.setUserId(user.getUserId());
+        int ret = safeService.updateUserNoticeSet(noticeSetRequest);
 
         if (ret <= 0) {
             logger.error("保存用户通知设置失败");
@@ -210,12 +217,9 @@ public class WebSafeController {
      */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String relationId,
+                                          @RequestParam(required=true) String rlName, @RequestParam(required=true) String rlPhone, HttpServletRequest request) {
         ApiResult<Object> result = new ApiResult<Object>();
-
-        String relationId = request.getParameter("relationId");
-        String rlName = request.getParameter("rlName");
-        String rlPhone = request.getParameter("rlPhone");
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         safeService.checkForContractSave(relationId, rlName, rlPhone, user);
