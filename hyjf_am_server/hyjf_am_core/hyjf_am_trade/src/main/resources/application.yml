@@ -13,7 +13,7 @@ datasource:
   type: com.alibaba.druid.pool.DruidDataSource
 #主库
   write:
-    url: jdbc:mysql://123.56.216.212:7777/hyjf_borrow?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://123.56.216.212:7777/hyjf_trade?useUnicode=true&characterEncoding=utf-8
     username: hyjf_developer
     password: QD@hyjfdev2000
     driver-class-name: com.mysql.jdbc.Driver
@@ -32,7 +32,7 @@ datasource:
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
   read1:
-    url: jdbc:mysql://123.56.216.212:7777/hyjf_borrow?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://123.56.216.212:7777/hyjf_trade?useUnicode=true&characterEncoding=utf-8
     username: hyjf_developer
     password: QD@hyjfdev2000
     driver-class-name: com.mysql.jdbc.Driver
