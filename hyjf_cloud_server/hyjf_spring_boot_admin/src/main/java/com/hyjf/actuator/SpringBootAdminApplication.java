@@ -21,16 +21,4 @@ public class SpringBootAdminApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootAdminApplication.class, args);
 	}
-
-	/**
-	 * 禁用安全性
-	 */
-//	@Configuration
-//	public static class SecurityPermitAllConfig extends WebSecurityConfigurerAdapter {
-//		@Override
-//		protected void configure(HttpSecurity http) throws Exception {
-//			http.authorizeRequests().anyRequest().permitAll()
-//					.and().csrf().disable();
-//		}
-//	}
 }

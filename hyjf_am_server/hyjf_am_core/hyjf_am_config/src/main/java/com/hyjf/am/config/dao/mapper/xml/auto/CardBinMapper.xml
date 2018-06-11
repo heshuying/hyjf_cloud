@@ -1,40 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hyjf.am.config.dao.mapper.auto.CardBinMapper">
-  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.CardBin">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="issuing_bank_name" jdbcType="VARCHAR" property="issuingBankName" />
-    <result column="card_name" jdbcType="VARCHAR" property="cardName" />
-    <result column="card_length" jdbcType="INTEGER" property="cardLength" />
-    <result column="card_num_format" jdbcType="VARCHAR" property="cardNumFormat" />
-    <result column="bin_length" jdbcType="INTEGER" property="binLength" />
-    <result column="bin_value" jdbcType="VARCHAR" property="binValue" />
-    <result column="card_type" jdbcType="VARCHAR" property="cardType" />
-    <result column="bank_id" jdbcType="VARCHAR" property="bankId" />
-    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
-    <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.CardBinMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.CardBin" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="issuing_bank_name" property="issuingBankName" jdbcType="VARCHAR" />
+    <result column="card_name" property="cardName" jdbcType="VARCHAR" />
+    <result column="card_length" property="cardLength" jdbcType="INTEGER" />
+    <result column="card_num_format" property="cardNumFormat" jdbcType="VARCHAR" />
+    <result column="bin_length" property="binLength" jdbcType="INTEGER" />
+    <result column="bin_value" property="binValue" jdbcType="VARCHAR" />
+    <result column="card_type" property="cardType" jdbcType="VARCHAR" />
+    <result column="bank_id" property="bankId" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -45,25 +45,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -74,45 +74,45 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     id, issuing_bank_name, card_name, card_length, card_num_format, bin_length, bin_value, 
     card_type, bank_id, create_user_id, update_user_id, create_time, update_time
   </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample" resultMap="BaseResultMap">
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
     from ht_card_bin
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
-    <if test="limitStart &gt;= 0">
+    <if test="limitStart >= 0" >
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from ht_card_bin
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_card_bin
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample">
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample" >
     delete from ht_card_bin
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.CardBin" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_card_bin (issuing_bank_name, card_name, card_length, 
@@ -126,142 +126,142 @@
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.CardBin" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_card_bin
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="issuingBankName != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="issuingBankName != null" >
         issuing_bank_name,
       </if>
-      <if test="cardName != null">
+      <if test="cardName != null" >
         card_name,
       </if>
-      <if test="cardLength != null">
+      <if test="cardLength != null" >
         card_length,
       </if>
-      <if test="cardNumFormat != null">
+      <if test="cardNumFormat != null" >
         card_num_format,
       </if>
-      <if test="binLength != null">
+      <if test="binLength != null" >
         bin_length,
       </if>
-      <if test="binValue != null">
+      <if test="binValue != null" >
         bin_value,
       </if>
-      <if test="cardType != null">
+      <if test="cardType != null" >
         card_type,
       </if>
-      <if test="bankId != null">
+      <if test="bankId != null" >
         bank_id,
       </if>
-      <if test="createUserId != null">
+      <if test="createUserId != null" >
         create_user_id,
       </if>
-      <if test="updateUserId != null">
+      <if test="updateUserId != null" >
         update_user_id,
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time,
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="issuingBankName != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="issuingBankName != null" >
         #{issuingBankName,jdbcType=VARCHAR},
       </if>
-      <if test="cardName != null">
+      <if test="cardName != null" >
         #{cardName,jdbcType=VARCHAR},
       </if>
-      <if test="cardLength != null">
+      <if test="cardLength != null" >
         #{cardLength,jdbcType=INTEGER},
       </if>
-      <if test="cardNumFormat != null">
+      <if test="cardNumFormat != null" >
         #{cardNumFormat,jdbcType=VARCHAR},
       </if>
-      <if test="binLength != null">
+      <if test="binLength != null" >
         #{binLength,jdbcType=INTEGER},
       </if>
-      <if test="binValue != null">
+      <if test="binValue != null" >
         #{binValue,jdbcType=VARCHAR},
       </if>
-      <if test="cardType != null">
+      <if test="cardType != null" >
         #{cardType,jdbcType=VARCHAR},
       </if>
-      <if test="bankId != null">
+      <if test="bankId != null" >
         #{bankId,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null">
+      <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserId != null">
+      <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample" resultType="java.lang.Integer" >
     select count(*) from ht_card_bin
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map" >
     update ht_card_bin
-    <set>
-      <if test="record.id != null">
+    <set >
+      <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.issuingBankName != null">
+      <if test="record.issuingBankName != null" >
         issuing_bank_name = #{record.issuingBankName,jdbcType=VARCHAR},
       </if>
-      <if test="record.cardName != null">
+      <if test="record.cardName != null" >
         card_name = #{record.cardName,jdbcType=VARCHAR},
       </if>
-      <if test="record.cardLength != null">
+      <if test="record.cardLength != null" >
         card_length = #{record.cardLength,jdbcType=INTEGER},
       </if>
-      <if test="record.cardNumFormat != null">
+      <if test="record.cardNumFormat != null" >
         card_num_format = #{record.cardNumFormat,jdbcType=VARCHAR},
       </if>
-      <if test="record.binLength != null">
+      <if test="record.binLength != null" >
         bin_length = #{record.binLength,jdbcType=INTEGER},
       </if>
-      <if test="record.binValue != null">
+      <if test="record.binValue != null" >
         bin_value = #{record.binValue,jdbcType=VARCHAR},
       </if>
-      <if test="record.cardType != null">
+      <if test="record.cardType != null" >
         card_type = #{record.cardType,jdbcType=VARCHAR},
       </if>
-      <if test="record.bankId != null">
+      <if test="record.bankId != null" >
         bank_id = #{record.bankId,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserId != null">
+      <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUserId != null">
+      <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
+      <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updateTime != null">
+      <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
+  <update id="updateByExample" parameterType="map" >
     update ht_card_bin
     set id = #{record.id,jdbcType=INTEGER},
       issuing_bank_name = #{record.issuingBankName,jdbcType=VARCHAR},
@@ -276,390 +276,53 @@
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.CardBin" >
     update ht_card_bin
-    <set>
-      <if test="issuingBankName != null">
+    <set >
+      <if test="issuingBankName != null" >
         issuing_bank_name = #{issuingBankName,jdbcType=VARCHAR},
       </if>
-      <if test="cardName != null">
+      <if test="cardName != null" >
         card_name = #{cardName,jdbcType=VARCHAR},
       </if>
-      <if test="cardLength != null">
+      <if test="cardLength != null" >
         card_length = #{cardLength,jdbcType=INTEGER},
       </if>
-      <if test="cardNumFormat != null">
+      <if test="cardNumFormat != null" >
         card_num_format = #{cardNumFormat,jdbcType=VARCHAR},
       </if>
-      <if test="binLength != null">
+      <if test="binLength != null" >
         bin_length = #{binLength,jdbcType=INTEGER},
       </if>
-      <if test="binValue != null">
+      <if test="binValue != null" >
         bin_value = #{binValue,jdbcType=VARCHAR},
       </if>
-      <if test="cardType != null">
+      <if test="cardType != null" >
         card_type = #{cardType,jdbcType=VARCHAR},
       </if>
-      <if test="bankId != null">
+      <if test="bankId != null" >
         bank_id = #{bankId,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null">
+      <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserId != null">
+      <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
-    update ht_card_bin
-    set issuing_bank_name = #{issuingBankName,jdbcType=VARCHAR},
-      card_name = #{cardName,jdbcType=VARCHAR},
-      card_length = #{cardLength,jdbcType=INTEGER},
-      card_num_format = #{cardNumFormat,jdbcType=VARCHAR},
-      bin_length = #{binLength,jdbcType=INTEGER},
-      bin_value = #{binValue,jdbcType=VARCHAR},
-      card_type = #{cardType,jdbcType=VARCHAR},
-      bank_id = #{bankId,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.CardBin">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="issuing_bank_name" jdbcType="VARCHAR" property="issuingBankName" />
-    <result column="card_name" jdbcType="VARCHAR" property="cardName" />
-    <result column="card_length" jdbcType="INTEGER" property="cardLength" />
-    <result column="card_num_format" jdbcType="VARCHAR" property="cardNumFormat" />
-    <result column="bin_length" jdbcType="INTEGER" property="binLength" />
-    <result column="bin_value" jdbcType="VARCHAR" property="binValue" />
-    <result column="card_type" jdbcType="VARCHAR" property="cardType" />
-    <result column="bank_id" jdbcType="VARCHAR" property="bankId" />
-    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
-    <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
-    id, issuing_bank_name, card_name, card_length, card_num_format, bin_length, bin_value, 
-    card_type, bank_id, create_user_id, update_user_id, create_time, update_time
-  </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from ht_card_bin
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-    <if test="limitStart &gt;= 0">
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ht_card_bin
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ht_card_bin
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample">
-    delete from ht_card_bin
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_card_bin (issuing_bank_name, card_name, card_length, 
-      card_num_format, bin_length, bin_value, 
-      card_type, bank_id, create_user_id, 
-      update_user_id, create_time, update_time
-      )
-    values (#{issuingBankName,jdbcType=VARCHAR}, #{cardName,jdbcType=VARCHAR}, #{cardLength,jdbcType=INTEGER}, 
-      #{cardNumFormat,jdbcType=VARCHAR}, #{binLength,jdbcType=INTEGER}, #{binValue,jdbcType=VARCHAR}, 
-      #{cardType,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_card_bin
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="issuingBankName != null">
-        issuing_bank_name,
-      </if>
-      <if test="cardName != null">
-        card_name,
-      </if>
-      <if test="cardLength != null">
-        card_length,
-      </if>
-      <if test="cardNumFormat != null">
-        card_num_format,
-      </if>
-      <if test="binLength != null">
-        bin_length,
-      </if>
-      <if test="binValue != null">
-        bin_value,
-      </if>
-      <if test="cardType != null">
-        card_type,
-      </if>
-      <if test="bankId != null">
-        bank_id,
-      </if>
-      <if test="createUserId != null">
-        create_user_id,
-      </if>
-      <if test="updateUserId != null">
-        update_user_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="issuingBankName != null">
-        #{issuingBankName,jdbcType=VARCHAR},
-      </if>
-      <if test="cardName != null">
-        #{cardName,jdbcType=VARCHAR},
-      </if>
-      <if test="cardLength != null">
-        #{cardLength,jdbcType=INTEGER},
-      </if>
-      <if test="cardNumFormat != null">
-        #{cardNumFormat,jdbcType=VARCHAR},
-      </if>
-      <if test="binLength != null">
-        #{binLength,jdbcType=INTEGER},
-      </if>
-      <if test="binValue != null">
-        #{binValue,jdbcType=VARCHAR},
-      </if>
-      <if test="cardType != null">
-        #{cardType,jdbcType=VARCHAR},
-      </if>
-      <if test="bankId != null">
-        #{bankId,jdbcType=VARCHAR},
-      </if>
-      <if test="createUserId != null">
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null">
-        #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.CardBinExample" resultType="java.lang.Integer">
-    select count(*) from ht_card_bin
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update ht_card_bin
-    <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.issuingBankName != null">
-        issuing_bank_name = #{record.issuingBankName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.cardName != null">
-        card_name = #{record.cardName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.cardLength != null">
-        card_length = #{record.cardLength,jdbcType=INTEGER},
-      </if>
-      <if test="record.cardNumFormat != null">
-        card_num_format = #{record.cardNumFormat,jdbcType=VARCHAR},
-      </if>
-      <if test="record.binLength != null">
-        bin_length = #{record.binLength,jdbcType=INTEGER},
-      </if>
-      <if test="record.binValue != null">
-        bin_value = #{record.binValue,jdbcType=VARCHAR},
-      </if>
-      <if test="record.cardType != null">
-        card_type = #{record.cardType,jdbcType=VARCHAR},
-      </if>
-      <if test="record.bankId != null">
-        bank_id = #{record.bankId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createUserId != null">
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserId != null">
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update ht_card_bin
-    set id = #{record.id,jdbcType=INTEGER},
-      issuing_bank_name = #{record.issuingBankName,jdbcType=VARCHAR},
-      card_name = #{record.cardName,jdbcType=VARCHAR},
-      card_length = #{record.cardLength,jdbcType=INTEGER},
-      card_num_format = #{record.cardNumFormat,jdbcType=VARCHAR},
-      bin_length = #{record.binLength,jdbcType=INTEGER},
-      bin_value = #{record.binValue,jdbcType=VARCHAR},
-      card_type = #{record.cardType,jdbcType=VARCHAR},
-      bank_id = #{record.bankId,jdbcType=VARCHAR},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
-    update ht_card_bin
-    <set>
-      <if test="issuingBankName != null">
-        issuing_bank_name = #{issuingBankName,jdbcType=VARCHAR},
-      </if>
-      <if test="cardName != null">
-        card_name = #{cardName,jdbcType=VARCHAR},
-      </if>
-      <if test="cardLength != null">
-        card_length = #{cardLength,jdbcType=INTEGER},
-      </if>
-      <if test="cardNumFormat != null">
-        card_num_format = #{cardNumFormat,jdbcType=VARCHAR},
-      </if>
-      <if test="binLength != null">
-        bin_length = #{binLength,jdbcType=INTEGER},
-      </if>
-      <if test="binValue != null">
-        bin_value = #{binValue,jdbcType=VARCHAR},
-      </if>
-      <if test="cardType != null">
-        card_type = #{cardType,jdbcType=VARCHAR},
-      </if>
-      <if test="bankId != null">
-        bank_id = #{bankId,jdbcType=VARCHAR},
-      </if>
-      <if test="createUserId != null">
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null">
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.CardBin">
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.CardBin" >
     update ht_card_bin
     set issuing_bank_name = #{issuingBankName,jdbcType=VARCHAR},
       card_name = #{cardName,jdbcType=VARCHAR},

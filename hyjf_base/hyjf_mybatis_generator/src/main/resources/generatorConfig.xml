@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_borrow.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
