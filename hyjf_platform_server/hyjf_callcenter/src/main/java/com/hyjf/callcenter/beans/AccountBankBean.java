@@ -2,9 +2,9 @@
  * Description:按照用户名/手机号查询江西银行绑卡关系用接口返回类 	
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
- * @author: 刘彬
+ * @author: wangjun
  * @version: 1.0
- *           Created at: 2017年07月07日 下午2:33:39
+ *           Created at: 2018年06月11日 10:16
  *           Modification History:
  *           Modified by :
  */
