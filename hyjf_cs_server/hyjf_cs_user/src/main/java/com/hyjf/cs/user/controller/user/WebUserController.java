@@ -363,8 +363,7 @@ public class WebUserController {
 		ApiResult<Object> result = new ApiResult<Object>();
 
 		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-//        WebViewUser user = new WebViewUser();
-//		user.setUserId(1);
+		
 		userService.checkForEmailSend(email, user.getUserId());
 		
 		try {
@@ -387,8 +386,6 @@ public class WebUserController {
 		ApiResult<Object> result = new ApiResult<Object>();
 
 		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-//		WebViewUser user  = new WebViewUser();
-//		user.setUserId(1);
 		
 		userService.checkForEmailBind(email, key, value, user);
 		
@@ -411,12 +408,9 @@ public class WebUserController {
 	 */
 	@ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
 	@PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-	public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+	public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String relationId, 
+			@RequestParam(required=true) String rlName, @RequestParam(required=true) String rlPhone, HttpServletRequest request) {
 		ApiResult<Object> result = new ApiResult<Object>();
-
-		String relationId = request.getParameter("relationId");
-		String rlName = request.getParameter("rlName");
-		String rlPhone = request.getParameter("rlPhone");
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 		userService.checkForContractSave(relationId, rlName, rlPhone, user);
