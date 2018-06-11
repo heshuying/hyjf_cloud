@@ -260,7 +260,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public HjhInstConfigVO selectInstConfigByInstCode(String instCode) {
 		HjhInstConfigResponse response = restTemplate
-				.getForEntity("http://AM-BORROW/am-borrow/borrow/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
+				.getForEntity("http://AM-BORROW/am-trade/trade/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();

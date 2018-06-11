@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.AccountwithdrawMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.Accountwithdraw" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="nid" property="nid" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="bank" property="bank" jdbcType="VARCHAR" />
+    <result column="bank_id" property="bankId" jdbcType="INTEGER" />
+    <result column="branch" property="branch" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="credited" property="credited" jdbcType="DECIMAL" />
+    <result column="fee" property="fee" jdbcType="VARCHAR" />
+    <result column="verify_userid" property="verifyUserid" jdbcType="INTEGER" />
+    <result column="verify_time" property="verifyTime" jdbcType="INTEGER" />
+    <result column="verify_remark" property="verifyRemark" jdbcType="VARCHAR" />
+    <result column="addtime" property="addtime" jdbcType="VARCHAR" />
+    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="client" property="client" jdbcType="TINYINT" />
+    <result column="isok" property="isok" jdbcType="TINYINT" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="activity_flag" property="activityFlag" jdbcType="TINYINT" />
+    <result column="bank_flag" property="bankFlag" jdbcType="TINYINT" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="tx_date" property="txDate" jdbcType="INTEGER" />
+    <result column="tx_time" property="txTime" jdbcType="INTEGER" />
+    <result column="seq_no" property="seqNo" jdbcType="INTEGER" />
+    <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
+    <result column="withdraw_type" property="withdrawType" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, nid, `status`, account, bank, bank_id, branch, province, city, total, 
+    credited, fee, verify_userid, verify_time, verify_remark, addtime, addip, remark, 
+    update_time, client, isok, reason, activity_flag, bank_flag, account_id, tx_date, 
+    tx_time, seq_no, bank_seq_no, withdraw_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountwithdrawExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_account_withdraw
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_account_withdraw
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_account_withdraw
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountwithdrawExample" >
+    delete from ht_account_withdraw
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.Accountwithdraw" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account_withdraw (user_id, nid, `status`, 
+      account, bank, bank_id, 
+      branch, province, city, 
+      total, credited, fee, 
+      verify_userid, verify_time, verify_remark, 
+      addtime, addip, remark, 
+      update_time, client, isok, 
+      reason, activity_flag, bank_flag, 
+      account_id, tx_date, tx_time, 
+      seq_no, bank_seq_no, withdraw_type
+      )
+    values (#{userId,jdbcType=INTEGER}, #{nid,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{account,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, #{bankId,jdbcType=INTEGER}, 
+      #{branch,jdbcType=VARCHAR}, #{province,jdbcType=INTEGER}, #{city,jdbcType=INTEGER}, 
+      #{total,jdbcType=DECIMAL}, #{credited,jdbcType=DECIMAL}, #{fee,jdbcType=VARCHAR}, 
+      #{verifyUserid,jdbcType=INTEGER}, #{verifyTime,jdbcType=INTEGER}, #{verifyRemark,jdbcType=VARCHAR}, 
+      #{addtime,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=INTEGER}, #{client,jdbcType=TINYINT}, #{isok,jdbcType=TINYINT}, 
+      #{reason,jdbcType=VARCHAR}, #{activityFlag,jdbcType=TINYINT}, #{bankFlag,jdbcType=TINYINT}, 
+      #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
+      #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{withdrawType,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Accountwithdraw" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account_withdraw
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="nid != null" >
+        nid,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="bank != null" >
+        bank,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="branch != null" >
+        branch,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="credited != null" >
+        credited,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="verifyUserid != null" >
+        verify_userid,
+      </if>
+      <if test="verifyTime != null" >
+        verify_time,
+      </if>
+      <if test="verifyRemark != null" >
+        verify_remark,
+      </if>
+      <if test="addtime != null" >
+        addtime,
+      </if>
+      <if test="addip != null" >
+        addip,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="client != null" >
+        client,
+      </if>
+      <if test="isok != null" >
+        isok,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="activityFlag != null" >
+        activity_flag,
+      </if>
+      <if test="bankFlag != null" >
+        bank_flag,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="txDate != null" >
+        tx_date,
+      </if>
+      <if test="txTime != null" >
+        tx_time,
+      </if>
+      <if test="seqNo != null" >
+        seq_no,
+      </if>
+      <if test="bankSeqNo != null" >
+        bank_seq_no,
+      </if>
+      <if test="withdrawType != null" >
+        withdraw_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="nid != null" >
+        #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=INTEGER},
+      </if>
+      <if test="branch != null" >
+        #{branch,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=INTEGER},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="credited != null" >
+        #{credited,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyUserid != null" >
+        #{verifyUserid,jdbcType=INTEGER},
+      </if>
+      <if test="verifyTime != null" >
+        #{verifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="verifyRemark != null" >
+        #{verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="addip != null" >
+        #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="client != null" >
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="isok != null" >
+        #{isok,jdbcType=TINYINT},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="activityFlag != null" >
+        #{activityFlag,jdbcType=TINYINT},
+      </if>
+      <if test="bankFlag != null" >
+        #{bankFlag,jdbcType=TINYINT},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="txDate != null" >
+        #{txDate,jdbcType=INTEGER},
+      </if>
+      <if test="txTime != null" >
+        #{txTime,jdbcType=INTEGER},
+      </if>
+      <if test="seqNo != null" >
+        #{seqNo,jdbcType=INTEGER},
+      </if>
+      <if test="bankSeqNo != null" >
+        #{bankSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawType != null" >
+        #{withdrawType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountwithdrawExample" resultType="java.lang.Integer" >
+    select count(*) from ht_account_withdraw
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_account_withdraw
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.nid != null" >
+        nid = #{record.nid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bank != null" >
+        bank = #{record.bank,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankId != null" >
+        bank_id = #{record.bankId,jdbcType=INTEGER},
+      </if>
+      <if test="record.branch != null" >
+        branch = #{record.branch,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province,jdbcType=INTEGER},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=INTEGER},
+      </if>
+      <if test="record.total != null" >
+        total = #{record.total,jdbcType=DECIMAL},
+      </if>
+      <if test="record.credited != null" >
+        credited = #{record.credited,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fee != null" >
+        fee = #{record.fee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.verifyUserid != null" >
+        verify_userid = #{record.verifyUserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.verifyTime != null" >
+        verify_time = #{record.verifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.verifyRemark != null" >
+        verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addtime != null" >
+        addtime = #{record.addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addip != null" >
+        addip = #{record.addip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.client != null" >
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.isok != null" >
+        isok = #{record.isok,jdbcType=TINYINT},
+      </if>
+      <if test="record.reason != null" >
+        reason = #{record.reason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityFlag != null" >
+        activity_flag = #{record.activityFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.bankFlag != null" >
+        bank_flag = #{record.bankFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.accountId != null" >
+        account_id = #{record.accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.txDate != null" >
+        tx_date = #{record.txDate,jdbcType=INTEGER},
+      </if>
+      <if test="record.txTime != null" >
+        tx_time = #{record.txTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.seqNo != null" >
+        seq_no = #{record.seqNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.bankSeqNo != null" >
+        bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.withdrawType != null" >
+        withdraw_type = #{record.withdrawType,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_account_withdraw
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      nid = #{record.nid,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=INTEGER},
+      account = #{record.account,jdbcType=VARCHAR},
+      bank = #{record.bank,jdbcType=VARCHAR},
+      bank_id = #{record.bankId,jdbcType=INTEGER},
+      branch = #{record.branch,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=INTEGER},
+      city = #{record.city,jdbcType=INTEGER},
+      total = #{record.total,jdbcType=DECIMAL},
+      credited = #{record.credited,jdbcType=DECIMAL},
+      fee = #{record.fee,jdbcType=VARCHAR},
+      verify_userid = #{record.verifyUserid,jdbcType=INTEGER},
+      verify_time = #{record.verifyTime,jdbcType=INTEGER},
+      verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
+      addtime = #{record.addtime,jdbcType=VARCHAR},
+      addip = #{record.addip,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      client = #{record.client,jdbcType=TINYINT},
+      isok = #{record.isok,jdbcType=TINYINT},
+      reason = #{record.reason,jdbcType=VARCHAR},
+      activity_flag = #{record.activityFlag,jdbcType=TINYINT},
+      bank_flag = #{record.bankFlag,jdbcType=TINYINT},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
+      tx_date = #{record.txDate,jdbcType=INTEGER},
+      tx_time = #{record.txTime,jdbcType=INTEGER},
+      seq_no = #{record.seqNo,jdbcType=INTEGER},
+      bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
+      withdraw_type = #{record.withdrawType,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.Accountwithdraw" >
+    update ht_account_withdraw
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="nid != null" >
+        nid = #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=INTEGER},
+      </if>
+      <if test="branch != null" >
+        branch = #{branch,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=INTEGER},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="credited != null" >
+        credited = #{credited,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyUserid != null" >
+        verify_userid = #{verifyUserid,jdbcType=INTEGER},
+      </if>
+      <if test="verifyTime != null" >
+        verify_time = #{verifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="verifyRemark != null" >
+        verify_remark = #{verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        addtime = #{addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="addip != null" >
+        addip = #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="client != null" >
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="isok != null" >
+        isok = #{isok,jdbcType=TINYINT},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="activityFlag != null" >
+        activity_flag = #{activityFlag,jdbcType=TINYINT},
+      </if>
+      <if test="bankFlag != null" >
+        bank_flag = #{bankFlag,jdbcType=TINYINT},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="txDate != null" >
+        tx_date = #{txDate,jdbcType=INTEGER},
+      </if>
+      <if test="txTime != null" >
+        tx_time = #{txTime,jdbcType=INTEGER},
+      </if>
+      <if test="seqNo != null" >
+        seq_no = #{seqNo,jdbcType=INTEGER},
+      </if>
+      <if test="bankSeqNo != null" >
+        bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawType != null" >
+        withdraw_type = #{withdrawType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.Accountwithdraw" >
+    update ht_account_withdraw
+    set user_id = #{userId,jdbcType=INTEGER},
+      nid = #{nid,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      account = #{account,jdbcType=VARCHAR},
+      bank = #{bank,jdbcType=VARCHAR},
+      bank_id = #{bankId,jdbcType=INTEGER},
+      branch = #{branch,jdbcType=VARCHAR},
+      province = #{province,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      total = #{total,jdbcType=DECIMAL},
+      credited = #{credited,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=VARCHAR},
+      verify_userid = #{verifyUserid,jdbcType=INTEGER},
+      verify_time = #{verifyTime,jdbcType=INTEGER},
+      verify_remark = #{verifyRemark,jdbcType=VARCHAR},
+      addtime = #{addtime,jdbcType=VARCHAR},
+      addip = #{addip,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      client = #{client,jdbcType=TINYINT},
+      isok = #{isok,jdbcType=TINYINT},
+      reason = #{reason,jdbcType=VARCHAR},
+      activity_flag = #{activityFlag,jdbcType=TINYINT},
+      bank_flag = #{bankFlag,jdbcType=TINYINT},
+      account_id = #{accountId,jdbcType=VARCHAR},
+      tx_date = #{txDate,jdbcType=INTEGER},
+      tx_time = #{txTime,jdbcType=INTEGER},
+      seq_no = #{seqNo,jdbcType=INTEGER},
+      bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
+      withdraw_type = #{withdrawType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,10 +1,11 @@
 package com.hyjf.callcenter.beans.customizebean;
 
-import com.hyjf.am.borrow.dao.model.auto.Accountwithdraw;
 
 import java.io.Serializable;
 
-public class CallcenterWithdrawCustomize extends Accountwithdraw implements Serializable {
+// 不要继承数据库的bean,需要什么属性写一份  todo xiashuqing
+//public class CallcenterWithdrawCustomize extends Accountwithdraw implements Serializable {
+public class CallcenterWithdrawCustomize implements Serializable {
 
 	/**
 	 * serialVersionUID
@@ -325,12 +326,10 @@ public class CallcenterWithdrawCustomize extends Accountwithdraw implements Seri
 		this.referrerDepartmentName = referrerDepartmentName;
 	}
 
-	@Override
 	public String getReason() {
 		return reason;
 	}
 
-	@Override
 	public void setReason(String reason) {
 		this.reason = reason;
 	}

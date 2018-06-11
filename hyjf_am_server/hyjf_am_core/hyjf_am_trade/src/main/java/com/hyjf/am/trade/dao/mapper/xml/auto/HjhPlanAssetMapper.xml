@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhPlanAssetMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="asset_id" property="assetId" jdbcType="VARCHAR" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="truename" property="truename" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="DECIMAL" />
+    <result column="is_month" property="isMonth" jdbcType="TINYINT" />
+    <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
+    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    <result column="verify_status" property="verifyStatus" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="recieve_time" property="recieveTime" jdbcType="INTEGER" />
+    <result column="label_id" property="labelId" jdbcType="INTEGER" />
+    <result column="label_name" property="labelName" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="age" property="age" jdbcType="TINYINT" />
+    <result column="marriage" property="marriage" jdbcType="TINYINT" />
+    <result column="entrusted_flg" property="entrustedFlg" jdbcType="TINYINT" />
+    <result column="entrusted_user_id" property="entrustedUserId" jdbcType="INTEGER" />
+    <result column="entrusted_user_name" property="entrustedUserName" jdbcType="VARCHAR" />
+    <result column="entrusted_account_id" property="entrustedAccountId" jdbcType="VARCHAR" />
+    <result column="work_city" property="workCity" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="domicile" property="domicile" jdbcType="VARCHAR" />
+    <result column="credit_level" property="creditLevel" jdbcType="VARCHAR" />
+    <result column="useage" property="useage" jdbcType="VARCHAR" />
+    <result column="monthly_income" property="monthlyIncome" jdbcType="VARCHAR" />
+    <result column="first_payment" property="firstPayment" jdbcType="VARCHAR" />
+    <result column="second_payment" property="secondPayment" jdbcType="VARCHAR" />
+    <result column="cost_introdution" property="costIntrodution" jdbcType="VARCHAR" />
+    <result column="overdue_times" property="overdueTimes" jdbcType="VARCHAR" />
+    <result column="overdue_amount" property="overdueAmount" jdbcType="VARCHAR" />
+    <result column="litigation" property="litigation" jdbcType="VARCHAR" />
+    <result column="asset_info" property="assetInfo" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="annual_income" property="annualIncome" jdbcType="VARCHAR" />
+    <result column="overdue_report" property="overdueReport" jdbcType="VARCHAR" />
+    <result column="debt_situation" property="debtSituation" jdbcType="VARCHAR" />
+    <result column="other_borrowed" property="otherBorrowed" jdbcType="VARCHAR" />
+    <result column="is_funds" property="isFunds" jdbcType="VARCHAR" />
+    <result column="is_managed" property="isManaged" jdbcType="VARCHAR" />
+    <result column="is_ability" property="isAbility" jdbcType="VARCHAR" />
+    <result column="is_overdue" property="isOverdue" jdbcType="VARCHAR" />
+    <result column="is_complaint" property="isComplaint" jdbcType="VARCHAR" />
+    <result column="is_punished" property="isPunished" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, asset_id, inst_code, asset_type, borrow_nid, plan_nid, user_name, user_id, mobile, 
+    account_id, truename, idcard, account, is_month, borrow_period, borrow_style, verify_status, 
+    `status`, recieve_time, label_id, label_name, sex, age, marriage, entrusted_flg, 
+    entrusted_user_id, entrusted_user_name, entrusted_account_id, work_city, `position`, 
+    domicile, credit_level, useage, monthly_income, first_payment, second_payment, cost_introdution, 
+    overdue_times, overdue_amount, litigation, asset_info, create_user_id, create_time, 
+    update_user_id, update_time, annual_income, overdue_report, debt_situation, other_borrowed, 
+    is_funds, is_managed, is_ability, is_overdue, is_complaint, is_punished
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_plan_asset
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_plan_asset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_plan_asset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample" >
+    delete from ht_hjh_plan_asset
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_plan_asset (asset_id, inst_code, asset_type, 
+      borrow_nid, plan_nid, user_name, 
+      user_id, mobile, account_id, 
+      truename, idcard, account, 
+      is_month, borrow_period, borrow_style, 
+      verify_status, `status`, recieve_time, 
+      label_id, label_name, sex, 
+      age, marriage, entrusted_flg, 
+      entrusted_user_id, entrusted_user_name, entrusted_account_id, 
+      work_city, `position`, domicile, 
+      credit_level, useage, monthly_income, 
+      first_payment, second_payment, cost_introdution, 
+      overdue_times, overdue_amount, litigation, 
+      asset_info, create_user_id, create_time, 
+      update_user_id, update_time, annual_income, 
+      overdue_report, debt_situation, other_borrowed, 
+      is_funds, is_managed, is_ability, 
+      is_overdue, is_complaint, is_punished
+      )
+    values (#{assetId,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
+      #{borrowNid,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER}, #{mobile,jdbcType=CHAR}, #{accountId,jdbcType=VARCHAR}, 
+      #{truename,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{account,jdbcType=DECIMAL}, 
+      #{isMonth,jdbcType=TINYINT}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, 
+      #{verifyStatus,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{recieveTime,jdbcType=INTEGER}, 
+      #{labelId,jdbcType=INTEGER}, #{labelName,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
+      #{age,jdbcType=TINYINT}, #{marriage,jdbcType=TINYINT}, #{entrustedFlg,jdbcType=TINYINT}, 
+      #{entrustedUserId,jdbcType=INTEGER}, #{entrustedUserName,jdbcType=VARCHAR}, #{entrustedAccountId,jdbcType=VARCHAR}, 
+      #{workCity,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{domicile,jdbcType=VARCHAR}, 
+      #{creditLevel,jdbcType=VARCHAR}, #{useage,jdbcType=VARCHAR}, #{monthlyIncome,jdbcType=VARCHAR}, 
+      #{firstPayment,jdbcType=VARCHAR}, #{secondPayment,jdbcType=VARCHAR}, #{costIntrodution,jdbcType=VARCHAR}, 
+      #{overdueTimes,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=VARCHAR}, #{litigation,jdbcType=VARCHAR}, 
+      #{assetInfo,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{annualIncome,jdbcType=VARCHAR}, 
+      #{overdueReport,jdbcType=VARCHAR}, #{debtSituation,jdbcType=VARCHAR}, #{otherBorrowed,jdbcType=VARCHAR}, 
+      #{isFunds,jdbcType=VARCHAR}, #{isManaged,jdbcType=VARCHAR}, #{isAbility,jdbcType=VARCHAR}, 
+      #{isOverdue,jdbcType=VARCHAR}, #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_plan_asset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="assetId != null" >
+        asset_id,
+      </if>
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="assetType != null" >
+        asset_type,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="truename != null" >
+        truename,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="isMonth != null" >
+        is_month,
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period,
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style,
+      </if>
+      <if test="verifyStatus != null" >
+        verify_status,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="recieveTime != null" >
+        recieve_time,
+      </if>
+      <if test="labelId != null" >
+        label_id,
+      </if>
+      <if test="labelName != null" >
+        label_name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="marriage != null" >
+        marriage,
+      </if>
+      <if test="entrustedFlg != null" >
+        entrusted_flg,
+      </if>
+      <if test="entrustedUserId != null" >
+        entrusted_user_id,
+      </if>
+      <if test="entrustedUserName != null" >
+        entrusted_user_name,
+      </if>
+      <if test="entrustedAccountId != null" >
+        entrusted_account_id,
+      </if>
+      <if test="workCity != null" >
+        work_city,
+      </if>
+      <if test="position != null" >
+        `position`,
+      </if>
+      <if test="domicile != null" >
+        domicile,
+      </if>
+      <if test="creditLevel != null" >
+        credit_level,
+      </if>
+      <if test="useage != null" >
+        useage,
+      </if>
+      <if test="monthlyIncome != null" >
+        monthly_income,
+      </if>
+      <if test="firstPayment != null" >
+        first_payment,
+      </if>
+      <if test="secondPayment != null" >
+        second_payment,
+      </if>
+      <if test="costIntrodution != null" >
+        cost_introdution,
+      </if>
+      <if test="overdueTimes != null" >
+        overdue_times,
+      </if>
+      <if test="overdueAmount != null" >
+        overdue_amount,
+      </if>
+      <if test="litigation != null" >
+        litigation,
+      </if>
+      <if test="assetInfo != null" >
+        asset_info,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="annualIncome != null" >
+        annual_income,
+      </if>
+      <if test="overdueReport != null" >
+        overdue_report,
+      </if>
+      <if test="debtSituation != null" >
+        debt_situation,
+      </if>
+      <if test="otherBorrowed != null" >
+        other_borrowed,
+      </if>
+      <if test="isFunds != null" >
+        is_funds,
+      </if>
+      <if test="isManaged != null" >
+        is_managed,
+      </if>
+      <if test="isAbility != null" >
+        is_ability,
+      </if>
+      <if test="isOverdue != null" >
+        is_overdue,
+      </if>
+      <if test="isComplaint != null" >
+        is_complaint,
+      </if>
+      <if test="isPunished != null" >
+        is_punished,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="assetId != null" >
+        #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="truename != null" >
+        #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="isMonth != null" >
+        #{isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="borrowPeriod != null" >
+        #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyStatus != null" >
+        #{verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="recieveTime != null" >
+        #{recieveTime,jdbcType=INTEGER},
+      </if>
+      <if test="labelId != null" >
+        #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="labelName != null" >
+        #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=TINYINT},
+      </if>
+      <if test="marriage != null" >
+        #{marriage,jdbcType=TINYINT},
+      </if>
+      <if test="entrustedFlg != null" >
+        #{entrustedFlg,jdbcType=TINYINT},
+      </if>
+      <if test="entrustedUserId != null" >
+        #{entrustedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="entrustedUserName != null" >
+        #{entrustedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustedAccountId != null" >
+        #{entrustedAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="workCity != null" >
+        #{workCity,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="domicile != null" >
+        #{domicile,jdbcType=VARCHAR},
+      </if>
+      <if test="creditLevel != null" >
+        #{creditLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="useage != null" >
+        #{useage,jdbcType=VARCHAR},
+      </if>
+      <if test="monthlyIncome != null" >
+        #{monthlyIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPayment != null" >
+        #{firstPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="secondPayment != null" >
+        #{secondPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="costIntrodution != null" >
+        #{costIntrodution,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueTimes != null" >
+        #{overdueTimes,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueAmount != null" >
+        #{overdueAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="litigation != null" >
+        #{litigation,jdbcType=VARCHAR},
+      </if>
+      <if test="assetInfo != null" >
+        #{assetInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="annualIncome != null" >
+        #{annualIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueReport != null" >
+        #{overdueReport,jdbcType=VARCHAR},
+      </if>
+      <if test="debtSituation != null" >
+        #{debtSituation,jdbcType=VARCHAR},
+      </if>
+      <if test="otherBorrowed != null" >
+        #{otherBorrowed,jdbcType=VARCHAR},
+      </if>
+      <if test="isFunds != null" >
+        #{isFunds,jdbcType=VARCHAR},
+      </if>
+      <if test="isManaged != null" >
+        #{isManaged,jdbcType=VARCHAR},
+      </if>
+      <if test="isAbility != null" >
+        #{isAbility,jdbcType=VARCHAR},
+      </if>
+      <if test="isOverdue != null" >
+        #{isOverdue,jdbcType=VARCHAR},
+      </if>
+      <if test="isComplaint != null" >
+        #{isComplaint,jdbcType=VARCHAR},
+      </if>
+      <if test="isPunished != null" >
+        #{isPunished,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_plan_asset
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_plan_asset
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.assetId != null" >
+        asset_id = #{record.assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetType != null" >
+        asset_type = #{record.assetType,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=CHAR},
+      </if>
+      <if test="record.accountId != null" >
+        account_id = #{record.accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.truename != null" >
+        truename = #{record.truename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idcard != null" >
+        idcard = #{record.idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=DECIMAL},
+      </if>
+      <if test="record.isMonth != null" >
+        is_month = #{record.isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowPeriod != null" >
+        borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowStyle != null" >
+        borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.verifyStatus != null" >
+        verify_status = #{record.verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.recieveTime != null" >
+        recieve_time = #{record.recieveTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelId != null" >
+        label_id = #{record.labelId,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelName != null" >
+        label_name = #{record.labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=TINYINT},
+      </if>
+      <if test="record.age != null" >
+        age = #{record.age,jdbcType=TINYINT},
+      </if>
+      <if test="record.marriage != null" >
+        marriage = #{record.marriage,jdbcType=TINYINT},
+      </if>
+      <if test="record.entrustedFlg != null" >
+        entrusted_flg = #{record.entrustedFlg,jdbcType=TINYINT},
+      </if>
+      <if test="record.entrustedUserId != null" >
+        entrusted_user_id = #{record.entrustedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.entrustedUserName != null" >
+        entrusted_user_name = #{record.entrustedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entrustedAccountId != null" >
+        entrusted_account_id = #{record.entrustedAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workCity != null" >
+        work_city = #{record.workCity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.position != null" >
+        `position` = #{record.position,jdbcType=VARCHAR},
+      </if>
+      <if test="record.domicile != null" >
+        domicile = #{record.domicile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creditLevel != null" >
+        credit_level = #{record.creditLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useage != null" >
+        useage = #{record.useage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.monthlyIncome != null" >
+        monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="record.firstPayment != null" >
+        first_payment = #{record.firstPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secondPayment != null" >
+        second_payment = #{record.secondPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.costIntrodution != null" >
+        cost_introdution = #{record.costIntrodution,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueTimes != null" >
+        overdue_times = #{record.overdueTimes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueAmount != null" >
+        overdue_amount = #{record.overdueAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.litigation != null" >
+        litigation = #{record.litigation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetInfo != null" >
+        asset_info = #{record.assetInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.annualIncome != null" >
+        annual_income = #{record.annualIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueReport != null" >
+        overdue_report = #{record.overdueReport,jdbcType=VARCHAR},
+      </if>
+      <if test="record.debtSituation != null" >
+        debt_situation = #{record.debtSituation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherBorrowed != null" >
+        other_borrowed = #{record.otherBorrowed,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isFunds != null" >
+        is_funds = #{record.isFunds,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isManaged != null" >
+        is_managed = #{record.isManaged,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isAbility != null" >
+        is_ability = #{record.isAbility,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isOverdue != null" >
+        is_overdue = #{record.isOverdue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isComplaint != null" >
+        is_complaint = #{record.isComplaint,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPunished != null" >
+        is_punished = #{record.isPunished,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_plan_asset
+    set id = #{record.id,jdbcType=INTEGER},
+      asset_id = #{record.assetId,jdbcType=VARCHAR},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      asset_type = #{record.assetType,jdbcType=TINYINT},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      mobile = #{record.mobile,jdbcType=CHAR},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
+      truename = #{record.truename,jdbcType=VARCHAR},
+      idcard = #{record.idcard,jdbcType=VARCHAR},
+      account = #{record.account,jdbcType=DECIMAL},
+      is_month = #{record.isMonth,jdbcType=TINYINT},
+      borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      verify_status = #{record.verifyStatus,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=TINYINT},
+      recieve_time = #{record.recieveTime,jdbcType=INTEGER},
+      label_id = #{record.labelId,jdbcType=INTEGER},
+      label_name = #{record.labelName,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=TINYINT},
+      age = #{record.age,jdbcType=TINYINT},
+      marriage = #{record.marriage,jdbcType=TINYINT},
+      entrusted_flg = #{record.entrustedFlg,jdbcType=TINYINT},
+      entrusted_user_id = #{record.entrustedUserId,jdbcType=INTEGER},
+      entrusted_user_name = #{record.entrustedUserName,jdbcType=VARCHAR},
+      entrusted_account_id = #{record.entrustedAccountId,jdbcType=VARCHAR},
+      work_city = #{record.workCity,jdbcType=VARCHAR},
+      `position` = #{record.position,jdbcType=VARCHAR},
+      domicile = #{record.domicile,jdbcType=VARCHAR},
+      credit_level = #{record.creditLevel,jdbcType=VARCHAR},
+      useage = #{record.useage,jdbcType=VARCHAR},
+      monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
+      first_payment = #{record.firstPayment,jdbcType=VARCHAR},
+      second_payment = #{record.secondPayment,jdbcType=VARCHAR},
+      cost_introdution = #{record.costIntrodution,jdbcType=VARCHAR},
+      overdue_times = #{record.overdueTimes,jdbcType=VARCHAR},
+      overdue_amount = #{record.overdueAmount,jdbcType=VARCHAR},
+      litigation = #{record.litigation,jdbcType=VARCHAR},
+      asset_info = #{record.assetInfo,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      annual_income = #{record.annualIncome,jdbcType=VARCHAR},
+      overdue_report = #{record.overdueReport,jdbcType=VARCHAR},
+      debt_situation = #{record.debtSituation,jdbcType=VARCHAR},
+      other_borrowed = #{record.otherBorrowed,jdbcType=VARCHAR},
+      is_funds = #{record.isFunds,jdbcType=VARCHAR},
+      is_managed = #{record.isManaged,jdbcType=VARCHAR},
+      is_ability = #{record.isAbility,jdbcType=VARCHAR},
+      is_overdue = #{record.isOverdue,jdbcType=VARCHAR},
+      is_complaint = #{record.isComplaint,jdbcType=VARCHAR},
+      is_punished = #{record.isPunished,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
+    update ht_hjh_plan_asset
+    <set >
+      <if test="assetId != null" >
+        asset_id = #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        asset_type = #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="truename != null" >
+        truename = #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="isMonth != null" >
+        is_month = #{isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyStatus != null" >
+        verify_status = #{verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="recieveTime != null" >
+        recieve_time = #{recieveTime,jdbcType=INTEGER},
+      </if>
+      <if test="labelId != null" >
+        label_id = #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="labelName != null" >
+        label_name = #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=TINYINT},
+      </if>
+      <if test="marriage != null" >
+        marriage = #{marriage,jdbcType=TINYINT},
+      </if>
+      <if test="entrustedFlg != null" >
+        entrusted_flg = #{entrustedFlg,jdbcType=TINYINT},
+      </if>
+      <if test="entrustedUserId != null" >
+        entrusted_user_id = #{entrustedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="entrustedUserName != null" >
+        entrusted_user_name = #{entrustedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustedAccountId != null" >
+        entrusted_account_id = #{entrustedAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="workCity != null" >
+        work_city = #{workCity,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        `position` = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="domicile != null" >
+        domicile = #{domicile,jdbcType=VARCHAR},
+      </if>
+      <if test="creditLevel != null" >
+        credit_level = #{creditLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="useage != null" >
+        useage = #{useage,jdbcType=VARCHAR},
+      </if>
+      <if test="monthlyIncome != null" >
+        monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPayment != null" >
+        first_payment = #{firstPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="secondPayment != null" >
+        second_payment = #{secondPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="costIntrodution != null" >
+        cost_introdution = #{costIntrodution,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueTimes != null" >
+        overdue_times = #{overdueTimes,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueAmount != null" >
+        overdue_amount = #{overdueAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="litigation != null" >
+        litigation = #{litigation,jdbcType=VARCHAR},
+      </if>
+      <if test="assetInfo != null" >
+        asset_info = #{assetInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="annualIncome != null" >
+        annual_income = #{annualIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueReport != null" >
+        overdue_report = #{overdueReport,jdbcType=VARCHAR},
+      </if>
+      <if test="debtSituation != null" >
+        debt_situation = #{debtSituation,jdbcType=VARCHAR},
+      </if>
+      <if test="otherBorrowed != null" >
+        other_borrowed = #{otherBorrowed,jdbcType=VARCHAR},
+      </if>
+      <if test="isFunds != null" >
+        is_funds = #{isFunds,jdbcType=VARCHAR},
+      </if>
+      <if test="isManaged != null" >
+        is_managed = #{isManaged,jdbcType=VARCHAR},
+      </if>
+      <if test="isAbility != null" >
+        is_ability = #{isAbility,jdbcType=VARCHAR},
+      </if>
+      <if test="isOverdue != null" >
+        is_overdue = #{isOverdue,jdbcType=VARCHAR},
+      </if>
+      <if test="isComplaint != null" >
+        is_complaint = #{isComplaint,jdbcType=VARCHAR},
+      </if>
+      <if test="isPunished != null" >
+        is_punished = #{isPunished,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
+    update ht_hjh_plan_asset
+    set asset_id = #{assetId,jdbcType=VARCHAR},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      asset_type = #{assetType,jdbcType=TINYINT},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      plan_nid = #{planNid,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      mobile = #{mobile,jdbcType=CHAR},
+      account_id = #{accountId,jdbcType=VARCHAR},
+      truename = #{truename,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      account = #{account,jdbcType=DECIMAL},
+      is_month = #{isMonth,jdbcType=TINYINT},
+      borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      verify_status = #{verifyStatus,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
+      recieve_time = #{recieveTime,jdbcType=INTEGER},
+      label_id = #{labelId,jdbcType=INTEGER},
+      label_name = #{labelName,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      age = #{age,jdbcType=TINYINT},
+      marriage = #{marriage,jdbcType=TINYINT},
+      entrusted_flg = #{entrustedFlg,jdbcType=TINYINT},
+      entrusted_user_id = #{entrustedUserId,jdbcType=INTEGER},
+      entrusted_user_name = #{entrustedUserName,jdbcType=VARCHAR},
+      entrusted_account_id = #{entrustedAccountId,jdbcType=VARCHAR},
+      work_city = #{workCity,jdbcType=VARCHAR},
+      `position` = #{position,jdbcType=VARCHAR},
+      domicile = #{domicile,jdbcType=VARCHAR},
+      credit_level = #{creditLevel,jdbcType=VARCHAR},
+      useage = #{useage,jdbcType=VARCHAR},
+      monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
+      first_payment = #{firstPayment,jdbcType=VARCHAR},
+      second_payment = #{secondPayment,jdbcType=VARCHAR},
+      cost_introdution = #{costIntrodution,jdbcType=VARCHAR},
+      overdue_times = #{overdueTimes,jdbcType=VARCHAR},
+      overdue_amount = #{overdueAmount,jdbcType=VARCHAR},
+      litigation = #{litigation,jdbcType=VARCHAR},
+      asset_info = #{assetInfo,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      annual_income = #{annualIncome,jdbcType=VARCHAR},
+      overdue_report = #{overdueReport,jdbcType=VARCHAR},
+      debt_situation = #{debtSituation,jdbcType=VARCHAR},
+      other_borrowed = #{otherBorrowed,jdbcType=VARCHAR},
+      is_funds = #{isFunds,jdbcType=VARCHAR},
+      is_managed = #{isManaged,jdbcType=VARCHAR},
+      is_ability = #{isAbility,jdbcType=VARCHAR},
+      is_overdue = #{isOverdue,jdbcType=VARCHAR},
+      is_complaint = #{isComplaint,jdbcType=VARCHAR},
+      is_punished = #{isPunished,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

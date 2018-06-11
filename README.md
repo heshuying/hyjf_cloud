@@ -25,7 +25,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 |   ├── hyjf_am_model           -- 原子层统一数据模型 request vo response
 |   ├── hyjf_am_util            -- 原子层工具
 |   └── hyjf_am_core            -- 原子层核心服务
-|   |   ├── hyjf_am_borrow      -- 标的、交易、资金、资产微服务[端口:8096]
+|   |   ├── hyjf_am_trade      -- 标的、交易、资金、资产微服务[端口:8096]
 |   |   ├── hyjf_am_config      -- 公用配置微服务[端口:8091]
 |   |   ├── hyjf_am_market      -- 市场微服务[端口:8094] 包含活动、券等
 |   |   ├── hyjf_am_stattistics -- 统计中心微服务[端口:8095] 统计数据

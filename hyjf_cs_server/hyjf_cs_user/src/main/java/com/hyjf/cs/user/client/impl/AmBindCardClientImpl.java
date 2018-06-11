@@ -148,7 +148,7 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	@Override
 	public AccountVO getAccount(Integer userId) {
         AccountResponse response = restTemplate
-                .getForEntity("http://AM-BORROW/am-borrow/recharge/getAccount/" + userId, AccountResponse.class).getBody();
+                .getForEntity("http://AM-BORROW/am-trade/recharge/getAccount/" + userId, AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

@@ -113,11 +113,6 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-        <dependency>
-            <groupId>com.hyjf</groupId>
-            <artifactId>hyjf_am_borrow</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
 
     </dependencies>
 

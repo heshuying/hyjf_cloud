@@ -20,7 +20,7 @@
         <module>hyjf_am_market</module>
         <module>hyjf_am_user</module>
         <module>hyjf_am_data_center</module>
-        <module>hyjf_am_borrow</module>
+        <module>hyjf_am_trade</module>
     </modules>
 
 
