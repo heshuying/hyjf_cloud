@@ -8,11 +8,20 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
@@ -29,6 +38,7 @@ import com.hyjf.cs.user.service.UserService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
+import com.hyjf.cs.user.vo.UserNoticeSetVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -251,14 +261,17 @@ public class WebUserController {
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserVO userVO, HttpServletRequest request,
+    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO, HttpServletRequest request,
                                                    HttpServletResponse response) {
-        logger.info("用戶通知設置, userVO :{}", JSONObject.toJSONString(userVO));
+        logger.info("用戶通知設置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        userVO.setUserId(user.getUserId());
-        int ret = userService.updateUserByUserId(userVO);
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        
+        UserNoticeSetRequest noticeSetRequest = new UserNoticeSetRequest();
+        BeanUtils.copyProperties(userNoticeSetVO, noticeSetRequest);
+        noticeSetRequest.setUserId(user.getUserId());
+        int ret = userService.updateUserNoticeSet(noticeSetRequest);
 
         if (ret <= 0) {
             logger.error("保存用户通知设置失败");
@@ -349,8 +362,9 @@ public class WebUserController {
 	public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String email, HttpServletRequest request) {
 		ApiResult<Object> result = new ApiResult<Object>();
 
-        WebViewUser user = new WebViewUser();
-		user.setUserId(1);
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+//        WebViewUser user = new WebViewUser();
+//		user.setUserId(1);
 		userService.checkForEmailSend(email, user.getUserId());
 		
 		try {
@@ -372,9 +386,10 @@ public class WebUserController {
 	public ApiResult<Object> bindEmail(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String key, @RequestParam(required=true) String value, @RequestParam(required=true) String email, HttpServletRequest request) {
 		ApiResult<Object> result = new ApiResult<Object>();
 
-		WebViewUser user  = new WebViewUser();
-		user.setUserId(1);
-
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+//		WebViewUser user  = new WebViewUser();
+//		user.setUserId(1);
+		
 		userService.checkForEmailBind(email, key, value, user);
 		
 		try {

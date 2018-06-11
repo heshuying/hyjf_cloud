@@ -26,17 +26,39 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.BindEmailLogVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UsersContactVO;
+import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.*;
+import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.common.util.AsteriskProcessUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.BaseBean;
@@ -45,7 +67,11 @@ import com.hyjf.cs.user.beans.BaseResultBean;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.*;
+import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.BindEmailError;
+import com.hyjf.cs.user.constants.ContractSetError;
+import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
@@ -1076,6 +1102,16 @@ public class UserServiceImpl implements UserService  {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * 更新用户信息
+	 * @param userVO
+	 * @return
+	 */
+	@Override
+	public int updateUserNoticeSet(UserNoticeSetRequest requestBean) {
+		return amUserClient.updateUserNoticeSet(requestBean);
 	}
 
 
