@@ -39,73 +39,7 @@
 		</where>
 	</sql>
 
-	<resultMap id="AccountListPOMap"
-			   type="com.hyjf.am.borrow.dao.model.auto.AdminAccountListCustomize">
-		<id column="user_id" property="userId" jdbcType="INTEGER" />
-		<result column="username" property="userName" jdbcType="VARCHAR" />
-		<result column="real_name" property="realName" jdbcType="VARCHAR" />
-		<result column="id_card" property="idCard" jdbcType="VARCHAR" />
-		<result column="user_property" property="userProperty" jdbcType="VARCHAR" />
-		<result column="account" property="account" jdbcType="VARCHAR" />
-		<result column="customer_account" property="customerAccount"
-				jdbcType="VARCHAR" />
-		<result column="account_status_name" property="accountStatusName"
-				jdbcType="VARCHAR" />
-		<result column="open_account_plat" property="openAccountPlat"
-				jdbcType="INTEGER" />
-		<result column="open_time" property="openTime" jdbcType="TIMESTAMP" />
-		<result column="sex" property="sex"  jdbcType="VARCHAR" />
-		<result column="birthday" property="birthday"  jdbcType="VARCHAR" />
-		<result column="regist_area" property="registArea"  jdbcType="VARCHAR" />
-		<result column="idcard" property="idcard"  jdbcType="VARCHAR" />
-	</resultMap>
-	<select id="selectAccountList" resultMap="AccountListPOMap"
-			parameterType="Map">
-		SELECT
-		h.user_id,
-		h.username,
-		h.truename AS real_name,
-		h.idcard AS id_card,
-		h.attribute,
-		h.birthday,
-		h.sex,
-		h.idcard,
-		concat( province,city,area) as regist_area,
-		pna.`name` AS user_property,
-		pnoap.`name` AS account_status_name,
-		h.chinapnr_usrid AS account,
-		h.chinapnr_usrcustid AS customer_account,
-		pnoa.`name` AS open_account_plat,
-		FROM_UNIXTIME( h.addtime, '%Y-%m-%d %H:%i:%s' ) AS open_time
-		FROM
-		(SELECT
-		hydu.user_id,
-		hydu.username,
-		hydui.truename,
-		hydui.idcard,
-		hydui.attribute,
-		hydui.birthday,
-		hydui.sex,
-		province, city, area,
-		hydac.chinapnr_usrid,
-		hydac.chinapnr_usrcustid,
-		hydac.addtime,
-		hydu.open_account,
-		hydu.account_esb
-		FROM
-		huiyingdai_users hydu
-		LEFT JOIN huiyingdai_users_info hydui ON hydu.user_id = hydui.user_id
-		LEFT JOIN huiyingdai_account_chinapnr hydac ON hydac.user_id = hydu.user_id
-		<include refid="Where_Clause" />
-		ORDER BY hydac.addtime DESC
-		<if test="limitStart != null and limitEnd !=null" >
-			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-		</if>
-		) h
-		LEFT JOIN hyjf_param_name pna ON cast(h.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
-		LEFT JOIN hyjf_param_name pnoap ON CAST(h.open_account AS CHAR) = pnoap.name_cd AND pnoap.name_class = 'ACCOUNT_STATUS'
-		LEFT JOIN hyjf_param_name pnoa ON CAST(h.account_esb AS CHAR) = pnoa.name_cd AND pnoa.name_class = 'CLIENT'
-	</select>
+	 
 	<select id="countRecordTotal" resultType="java.lang.Integer"
 			parameterType="Map">
 		<choose>
@@ -131,7 +65,7 @@
 	</select>
 
 
-	<update id="updateOfLoansTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfLoansTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -145,7 +79,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateOfLoansTenderHjh" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfLoansTenderHjh" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -157,7 +91,7 @@
 
 	<!-- 计划放款后投资人金额变化  -->
 	<!-- 汇计划二期去掉bank_frost_cash操作 bank_frost_cash = IFNULL(bank_frost_cash,0) - #{bankFrostCash,jdbcType=DECIMAL},-->
-	<update id="updateOfPlanLoansTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanLoansTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_frost = IFNULL(plan_frost,0) - #{planFrost,jdbcType=DECIMAL}
@@ -168,7 +102,7 @@
 
 
 
-	<update id="updateOfRTBLoansTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRTBLoansTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -177,7 +111,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfDebtInvest" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfDebtInvest" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_frost = IFNULL(plan_frost,0) - #{planFrost,jdbcType=DECIMAL},
@@ -186,7 +120,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfLoansBorrow" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfLoansBorrow" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -200,7 +134,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfRepayTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -214,7 +148,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	<!-- 汇计划还款投资人金额变化 -->
-	<update id="updateOfRepayPlanTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayPlanTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_balance_cash = IFNULL(bank_balance_cash,0) + #{bankBalanceCash,jdbcType=DECIMAL},
@@ -228,7 +162,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateOfRepayCouponHtj" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayCouponHtj" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		total = IFNULL(total,0) + #{total,jdbcType=DECIMAL},
@@ -242,7 +176,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfRepayCouponHjh" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayCouponHjh" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_balance = IFNULL(bank_balance,0) + #{bankBalance,jdbcType=DECIMAL},
@@ -253,7 +187,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanRepayTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanRepayTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		total = IFNULL(total,0) + #{total,jdbcType=DECIMAL},
@@ -262,7 +196,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfRepayBorrow" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayBorrow" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		total = IFNULL(total,0) - #{total,jdbcType=DECIMAL},
@@ -272,7 +206,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfRepayBorrowFreeze" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayBorrowFreeze" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_balance = IFNULL(bank_balance,0) - #{bankBalance,jdbcType=DECIMAL},
@@ -282,7 +216,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfRepayBorrowUser" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayBorrowUser" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) - #{bankTotal,jdbcType=DECIMAL},
@@ -296,7 +230,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	<!-- modify by cwyang 垫付机构还款成功后,想应的冻结金额和总额减少 -->
-	<update id="updateOfRepayOrgUser" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayOrgUser" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) - #{bankTotal,jdbcType=DECIMAL},
@@ -308,7 +242,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfRepayOrgBorrowUser" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfRepayOrgBorrowUser" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_wait_repay = IFNULL(bank_wait_repay,0) + #{bankWaitRepay,jdbcType=DECIMAL},
@@ -319,7 +253,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	<!--modify by cwyang 去除投资完成后对银行可提现账户余额bank_frost_cash的变更,此账户余额应该扣减  2017-4-28-->
-	<update id="updateOfTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_balance = IFNULL(bank_balance,0) - #{bankBalance,jdbcType=DECIMAL},
@@ -329,7 +263,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfTransfer" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfTransfer" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		balance = IFNULL(balance,0) - #{balance,jdbcType=DECIMAL},
@@ -337,7 +271,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateAppointAccount" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateAppointAccount" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		balance = IFNULL(balance,0) + #{balance,jdbcType=DECIMAL},
@@ -345,7 +279,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_accede_frost = IFNULL(plan_accede_frost,0) + #{planAccedeFrost,jdbcType=DECIMAL},
@@ -358,7 +292,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 		AND version = #{version,jdbcType=DECIMAL}
 	</update>
-	<update id="updateOfPlanCreditAssign" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanCreditAssign" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_balance = IFNULL(plan_balance,0) - #{planBalance,jdbcType=DECIMAL},
@@ -367,14 +301,14 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanCreditSeller" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanCreditSeller" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_balance = IFNULL(plan_balance,0) + #{planBalance,jdbcType=DECIMAL}
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanUnFreeze" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanUnFreeze" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_frost = IFNULL(plan_frost,0) - #{planFrost,jdbcType=DECIMAL},
@@ -382,7 +316,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanRepayUnFreeze" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanRepayUnFreeze" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_balance = IFNULL(plan_balance,0) + #{planBalance,jdbcType=DECIMAL},
@@ -390,7 +324,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanRepay" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanRepay" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_balance = IFNULL(plan_balance,0) - #{planBalance,jdbcType=DECIMAL},
@@ -400,7 +334,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanRepayAll" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanRepayAll" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		await =CASE WHEN await=#{await,jdbcType=DECIMAL} THEN 0 ELSE
@@ -417,7 +351,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanFreeze" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanFreeze" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_frost = IFNULL(plan_frost,0) + #{planFrost,jdbcType=DECIMAL},
@@ -425,7 +359,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanJoin" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanJoin" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -435,7 +369,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateOfPlanBalance" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanBalance" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		plan_balance = IFNULL(plan_balance,0) + #{planBalance,jdbcType=DECIMAL}
@@ -448,7 +382,7 @@
 	</update>
 
 	<!-- 进入锁定期后 修改账户总资产 待收收益-->
-	<update id="updateBankTotalForLockPlan" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateBankTotalForLockPlan" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -498,55 +432,7 @@
 		</where>
 	</sql>
 
-	<resultMap id="BankAccountListPOMap"
-			   type="com.hyjf.am.borrow.dao.model.auto.AdminAccountListCustomize">
-		<id column="user_id" property="userId" jdbcType="INTEGER" />
-		<result column="username" property="userName" jdbcType="VARCHAR" />
-		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
-		<result column="real_name" property="realName" jdbcType="VARCHAR" />
 
-
-		<result column="id_card" property="idCard" jdbcType="VARCHAR" />
-		<result column="account" property="account" jdbcType="VARCHAR" />
-		<result column="customer_account" property="customerAccount"
-				jdbcType="VARCHAR" />
-		<result column="account_status_name" property="accountStatusName"
-				jdbcType="VARCHAR" />
-		<result column="open_account_plat" property="openAccountPlat"
-				jdbcType="INTEGER" />
-		<result column="open_time" property="openTime" jdbcType="TIMESTAMP" />
-	</resultMap>
-	<select id="selectBankAccountList" resultMap="BankAccountListPOMap"
-			parameterType="Map">
-		SELECT
-		hydu.user_id,
-		hydu.username,
-		hydu.mobile,
-		hydui.truename AS real_name,
-		hydui.idcard AS id_card,
-		pnoap.`name` AS account_status_name,
-		hbc.card_no AS account,
-		hboa.account AS customer_account,
-		pnoa.`name` AS open_account_plat,
-		date_format(hboa.create_time,'%Y-%m-%d %H:%i:%s') AS open_time
-		FROM
-		huiyingdai_users hydu
-		LEFT JOIN huiyingdai_users_info hydui ON hydu.user_id =
-		hydui.user_id
-		INNER JOIN hyjf_bank_open_account hboa ON hboa.user_id =
-		hydu.user_id
-		LEFT JOIN hyjf_bank_card hbc ON hbc.user_id = hydu.user_id
-		LEFT JOIN hyjf_param_name pnoap ON CAST(hydu.open_account AS CHAR) =
-		pnoap.name_cd AND pnoap.name_class = 'ACCOUNT_STATUS'
-		LEFT JOIN
-		hyjf_param_name pnoa ON CAST(hydu.bank_account_esb AS CHAR) = pnoa.name_cd
-		AND pnoa.name_class = 'CLIENT'
-		<include refid="Bank_Where_Clause" />
-		ORDER BY hboa.create_time DESC
-		<if test="limitStart != null and limitEnd !=null">
-			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-		</if>
-	</select>
 	<select id="countBankRecordTotal" resultType="java.lang.Integer"
 			parameterType="Map">
 		SELECT
@@ -566,7 +452,7 @@
 		<include refid="Bank_Where_Clause" />
 	</select>
 
-	<update id="updateOfSynBalance" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfSynBalance" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -576,7 +462,7 @@
 	</update>
 
 
-	<update id="updateOfBankMerchantAccountSynBalance" parameterType="com.hyjf.am.borrow.dao.model.auto.BankMerchantAccount">
+	<update id="updateOfBankMerchantAccountSynBalance" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccount">
 		update hyjf_bank_merchant_account
 		set
 		account_balance = IFNULL(account_balance,0) + #{accountBalance,jdbcType=DECIMAL},
@@ -586,7 +472,7 @@
 		account_code = #{accountCode,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateUserWithdrawSuccess" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateUserWithdrawSuccess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		total = IFNULL(total,0) - #{total,jdbcType=DECIMAL},
@@ -596,7 +482,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateUserWithdrawFail" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateUserWithdrawFail" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		total = IFNULL(total,0) + #{total,jdbcType=DECIMAL},
@@ -606,7 +492,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateBankRechargeSuccess" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateBankRechargeSuccess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -615,7 +501,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<update id="updateBankWithdrawSuccess" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateBankWithdrawSuccess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) - #{bankTotal,jdbcType=DECIMAL},
@@ -625,7 +511,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateManualReverseSuccess" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateManualReverseSuccess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -635,7 +521,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateCreditSellerSuccess" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateCreditSellerSuccess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -649,7 +535,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateCreditAssignSuccess" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateCreditAssignSuccess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -663,7 +549,7 @@
 	</update>
 
 	<!-- 债权迁移后,更新加息投资用户的待收总额,待收利息,账户总资产-->
-	<update id="updateTenderUserAccount" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateTenderUserAccount" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -673,7 +559,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	<!-- 债权迁移后,更新用户的累计投资 -->
-	<update id="updateUserAccountInvestSum" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateUserAccountInvestSum" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_invest_sum = IFNULL(bank_invest_sum,0) + #{bankInvestSum,jdbcType=DECIMAL}
@@ -682,7 +568,7 @@
 	</update>
 
 	<!-- 债权迁移后,更新用户的累计收益 -->
-	<update id="updateUserAccountInterestSum" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateUserAccountInterestSum" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_interest_sum = IFNULL(bank_interest_sum,0) + IFNULL(plan_repay_interest,0) + #{bankInterestSum,jdbcType=DECIMAL}
@@ -691,7 +577,7 @@
 	</update>
 
 	<!-- 债权迁移后,更新借款人的待还总额 -->
-	<update id="updateBorrowUserBankWaitRepay" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateBorrowUserBankWaitRepay" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_wait_repay = IFNULL(bank_wait_repay,0) + #{bankWaitRepay,jdbcType=DECIMAL}
@@ -699,7 +585,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	<!-- 债权迁移后,更新借款人的账户总资产 -->
-	<update id="updateBankTotal" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateBankTotal" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_balance,0) + IFNULL(bank_frost,0) + IFNULL(bank_await,0)
@@ -707,7 +593,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	<!-- 债权迁移后,更新加息投资用户的待收总额,待收利息,账户总资产-->
-	<update id="updateIncreaseInterestSubtract" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateIncreaseInterestSubtract" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) - #{bankTotal,jdbcType=DECIMAL},
@@ -717,7 +603,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateOfPlanAccedeTender" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanAccedeTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -731,7 +617,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateAccountForHjhProcess" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateAccountForHjhProcess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		<set>
 			<if test="bankTotal != null">
@@ -768,7 +654,7 @@
 	</update>
 
 	<!-- 变更计划还款账户数据 add by cwyang 2017-8-25-->
-	<update id="updateOfPlanRepayAccount" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfPlanRepayAccount" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
@@ -784,7 +670,7 @@
 	</update>
 
 	<!-- 账户分佣,更新转出用户账户信息 -->
-	<update id="updateOfSubCommissionTransfer" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfSubCommissionTransfer" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update huiyingdai_account
 		set
 		bank_total = IFNULL(bank_total,0) - #{bankTotal,jdbcType=DECIMAL},
@@ -793,7 +679,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	<!-- 账户分佣,更新转入用户账户信息 -->
-	<update id="updateOfSubCommissionTransferIn" parameterType="com.hyjf.am.borrow.dao.model.auto.Account">
+	<update id="updateOfSubCommissionTransferIn" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
         update huiyingdai_account
         set
         bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},

@@ -4,9 +4,9 @@
 package com.hyjf.cs.user.interceptor;
 
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.WebUtils;
-import com.hyjf.cs.user.redis.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,9 +19,6 @@ import javax.servlet.http.HttpServletResponse;
  * @version BankOpenAccountInterceptor, v0.1 2018/5/31 16:02
  */
 public class BankOpenAccountInterceptor implements HandlerInterceptor {
-
-    @Autowired
-    private RedisUtil redisUtil;
 
     /**
      * 在DispatcherServlet完全处理完请求后被调用
@@ -50,7 +47,7 @@ public class BankOpenAccountInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String token = request.getHeader("token");
-        WebViewUser webViewUser = (WebViewUser) redisUtil.get(RedisKey.USER_TOKEN_REDIS + token);
+        WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUser.class);
         // 获取登录的用户
         if (null == webViewUser) {
             // 如果用户没有登录

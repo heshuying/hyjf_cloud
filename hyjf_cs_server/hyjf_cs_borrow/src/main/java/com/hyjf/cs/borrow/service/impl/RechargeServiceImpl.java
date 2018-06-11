@@ -29,7 +29,6 @@ import com.hyjf.cs.borrow.constants.RechargeError;
 import com.hyjf.cs.borrow.mq.AppMessageProducer;
 import com.hyjf.cs.borrow.mq.Producer;
 import com.hyjf.cs.borrow.mq.SmsProducer;
-import com.hyjf.cs.borrow.redis.RedisUtil;
 import com.hyjf.cs.borrow.service.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -68,9 +67,6 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 	@Autowired
 	SmsProducer smsProducer;
-
-	@Autowired
-	private RedisUtil redisUtil;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -344,7 +340,7 @@ public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeSe
 
 	@Override
 	public BankCallBean rechargeService(String  token, String ipAddr, String mobile, String money) throws Exception {
-		WebViewUser user = (WebViewUser) redisUtil.get(token);
+		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
 		Integer userId = user.getUserId();
 		// 信息校验
 		BankCardVO bankCard = this.selectBankCardByUserId(userId);

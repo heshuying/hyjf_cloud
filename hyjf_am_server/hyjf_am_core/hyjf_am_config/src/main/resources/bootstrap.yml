@@ -12,6 +12,7 @@ eureka:
       defaultZone: http://127.0.0.1:1111/eureka/
   instance:
     preferIpAddress: true
+
 server:
   port: 8091
 
@@ -23,8 +24,6 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-
 
 logging:
   file: am-config.log

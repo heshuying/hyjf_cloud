@@ -11,11 +11,13 @@ import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
 import com.hyjf.am.trade.service.UserService;
+import org.springframework.stereotype.Service;
 
 /**
  * @author zhangqingqing
  * @version UserServiceImpl, v0.1 2018/5/28 12:53
  */
+@Service
 public class UserServiceImpl implements UserService {
 
 

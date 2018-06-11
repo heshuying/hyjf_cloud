@@ -1,34 +1,29 @@
 package com.hyjf.zuul.filter;
 
-import com.hyjf.am.vo.user.WebViewUser;
-import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.util.SignValue;
-import com.hyjf.zuul.redis.RedisUtil;
-import com.netflix.zuul.ZuulFilter;
-import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.exception.ZuulException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 
-import javax.servlet.http.HttpServletRequest;
+import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.util.SignValue;
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
 
 /**
  * @author xiasq
- * @version AccessFilter, v0.1 2018/4/25 16:40 
- * 渠道过滤器，包含app pc api-web wechat
- *  功能：url增加前缀，区分渠道（按照域名）; 
- *       必要参数检查(渠道特有)
+ * @version AccessFilter, v0.1 2018/4/25 16:40 渠道过滤器，包含app pc api-web wechat
+ *          功能：url增加前缀，区分渠道（按照域名）; 必要参数检查(渠道特有)
  */
 public class AccessFilter extends ZuulFilter {
 	private static Logger logger = LoggerFactory.getLogger(AccessFilter.class);
 
-	@Autowired
-	private RedisUtil redisUtil;
-	
 	@Value("${ignore.urls.app.user}")
 	private String appIgnoreUrls;
 	@Value("${ignore.urls.app.key}")
@@ -84,7 +79,7 @@ public class AccessFilter extends ZuulFilter {
 					ctx.setResponseBody("sign is empty");
 					return null;
 				}
-				SignValue signValue = (SignValue) redisUtil.get(sign);
+				SignValue signValue = RedisUtils.getObj(sign, SignValue.class);
 				ctx.addZuulRequestHeader("key", signValue.getKey());
 				ctx.addZuulRequestHeader("initKey", signValue.getInitKey());
 			}
@@ -120,7 +115,7 @@ public class AccessFilter extends ZuulFilter {
 			ctx.setResponseBody("token is empty");
 			return;
 		}
-		WebViewUser webViewUser = (WebViewUser) redisUtil.get(RedisKey.USER_TOKEN_REDIS + token);
+		WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUser.class);
 		if (webViewUser == null) {
 			logger.error("user is not exist...");
 			ctx.setResponseBody("user is not exist");

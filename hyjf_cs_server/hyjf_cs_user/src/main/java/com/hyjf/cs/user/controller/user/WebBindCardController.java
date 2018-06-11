@@ -10,16 +10,12 @@ import com.hyjf.common.constants.RedisKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.user.constants.BindCardError;
-import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.BindCardService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -39,10 +35,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/web/card")
 public class WebBindCardController {
 	private static final Logger logger = LoggerFactory.getLogger(WebBindCardController.class);
-	
-	@Autowired
-	private RedisUtil redisUtil;
-	 
+
 	@Autowired
 	BindCardService bindCardService;
 	
@@ -53,7 +46,7 @@ public class WebBindCardController {
 		logger.info("绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		ApiResult<Object> result = new ApiResult<Object>();
 		
-		WebViewUser user = (WebViewUser) redisUtil.get(RedisKey.USER_TOKEN_REDIS+token);
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         String userIp = GetCilentIP.getIpAddr(request);
         
         bindCardService.checkParamBindCard(bindCardVO, user.getUserId());
@@ -93,7 +86,7 @@ public class WebBindCardController {
 		logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		ApiResult<Object> result = new ApiResult<Object>();
 		
-		WebViewUser user = (WebViewUser) redisUtil.get(RedisKey.USER_TOKEN_REDIS+token);
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         
         bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
         

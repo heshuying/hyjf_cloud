@@ -15,17 +15,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hyjf.am.util.redis.StringRedisUtil;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.GetDate;
 
 public class GetOrderIdUtils {
-
-	@Autowired
-	private static StringRedisUtil redisUtil;
 
 	/**
 	 * 根据用户id获取订单id 规则：用户id加1000000,拼接yyMMddHHmmss再拼接0-9一位随机数
@@ -250,12 +246,12 @@ public class GetOrderIdUtils {
 	 */
 	public static synchronized String getBatchNo() {
 		int batchNo = 100000;
-		String batchNoStr = redisUtil.get(RedisKey.BATCH_NO);
+		String batchNoStr = RedisUtils.get(RedisKey.BATCH_NO);
 		if (StringUtils.isNotBlank(batchNoStr)) {
-			long result = redisUtil.incr(RedisKey.BATCH_NO);
+			long result = RedisUtils.incr(RedisKey.BATCH_NO);
 			return result + "";
 		} else {
-			redisUtil.set(RedisKey.BATCH_NO, String.valueOf(batchNo));
+			RedisUtils.set(RedisKey.BATCH_NO, String.valueOf(batchNo));
 			batchNoStr = String.valueOf(batchNo);
 		}
 		return batchNoStr;
@@ -268,12 +264,12 @@ public class GetOrderIdUtils {
 	 */
 	public static synchronized String getDataBatchNo() {
 		int batchNo = 100000;
-		String batchNoStr = redisUtil.get(RedisKey.DATA_BATCH_NO);
+		String batchNoStr = RedisUtils.get(RedisKey.DATA_BATCH_NO);
 		if (StringUtils.isNotBlank(batchNoStr)) {
-			long result = redisUtil.incr(RedisKey.DATA_BATCH_NO);
+			long result = RedisUtils.incr(RedisKey.DATA_BATCH_NO);
 			return result + "";
 		} else {
-			redisUtil.set(RedisKey.DATA_BATCH_NO, String.valueOf(batchNo));
+			RedisUtils.set(RedisKey.DATA_BATCH_NO, String.valueOf(batchNo));
 			batchNoStr = String.valueOf(batchNo);
 		}
 		return batchNoStr;
@@ -287,7 +283,7 @@ public class GetOrderIdUtils {
 	 */
 	public static String getCurrentBatchId() {
 
-		int batchNoStr = Integer.valueOf(redisUtil.get("dataBatchNo")) - 1;
+		int batchNoStr = Integer.valueOf(RedisUtils.get("dataBatchNo")) - 1;
 
 		return String.valueOf(batchNoStr);
 	}
