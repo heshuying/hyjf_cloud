@@ -31,7 +31,7 @@ public class WebSmsCodeController {
 
 	/**
 	 * 发送短信验证码 范围：注册，修改手机号(验证原手机，修改新手机)
-	 * @param validCodeType
+	 * @param validCodeType 消息模板
 	 * @param mobile
 	 * @param token
 	 * @param request

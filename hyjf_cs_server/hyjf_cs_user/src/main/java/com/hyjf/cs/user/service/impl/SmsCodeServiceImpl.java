@@ -19,6 +19,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
@@ -106,7 +107,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		}
 
 		if (StringUtils.isNotEmpty(token)) {
-			WebViewUser webViewUser = RedisUtils.getObj(token, WebViewUser.class);
+			WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 			if (webViewUser != null) {
 				// 验证原手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {

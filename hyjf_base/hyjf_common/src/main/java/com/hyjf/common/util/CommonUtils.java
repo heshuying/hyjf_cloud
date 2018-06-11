@@ -8,8 +8,10 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hyjf.common.validator.Validator;
+import org.springframework.beans.BeanUtils;
 
 /**
  * @author xiasq
@@ -293,4 +296,42 @@ public class CommonUtils {
 		Matcher match = pattern.matcher(amount);
 		return match.matches();
 	}
+
+	/**
+	 * list数据循环copyProperties
+	 * @param sources
+	 * @param clazz
+	 * @param <S>
+	 * @param <T>
+	 * @return
+	 * @author zhangyk
+	 * @date 2018年6月6日14:57:50
+	 */
+	public static <S, T> List<T> convertBeanList(List<S> sources, Class<T> clazz) {
+		return sources.stream().map(source -> convertBean(source, clazz)).collect(Collectors.toList());
+	}
+
+	/**
+	 * 简单属性copy
+	 * @param s
+	 * @param clazz
+	 * @param <S>
+	 * @param <T>
+	 * @author zhangyk
+	 * @date 2018年6月6日14:57:50
+	 */
+	private static <S, T> T convertBean(S s, Class<T> clazz) {
+		if (s == null) {
+			return null;
+		}
+		try {
+			T t = clazz.newInstance();
+			BeanUtils.copyProperties(s, t);
+			return t;
+		} catch (InstantiationException | IllegalAccessException e) {
+			logger.error("拷贝属性异常", e);
+			throw new RuntimeException("拷贝属性异常");
+		}
+	}
+
 }

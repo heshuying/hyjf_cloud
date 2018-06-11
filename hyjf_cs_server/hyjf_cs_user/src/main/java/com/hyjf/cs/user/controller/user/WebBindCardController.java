@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.hyjf.common.constants.RedisKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class WebBindCardController {
 		logger.info("绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		ApiResult<Object> result = new ApiResult<Object>();
 		
-		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         String userIp = GetCilentIP.getIpAddr(request);
         
         bindCardService.checkParamBindCard(bindCardVO, user.getUserId());
@@ -85,7 +86,7 @@ public class WebBindCardController {
 		logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		ApiResult<Object> result = new ApiResult<Object>();
 		
-		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         
         bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
         

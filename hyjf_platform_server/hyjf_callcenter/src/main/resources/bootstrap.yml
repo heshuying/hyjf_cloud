@@ -12,4 +12,4 @@ server:
   port: 9093
 
 logging:
-  file: cs-user.log
+  file: callcenter.log
