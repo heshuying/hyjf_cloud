@@ -266,7 +266,7 @@ public class WebUserController {
         logger.info("用戶通知設置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         
         UserNoticeSetRequest noticeSetRequest = new UserNoticeSetRequest();
         BeanUtils.copyProperties(userNoticeSetVO, noticeSetRequest);
