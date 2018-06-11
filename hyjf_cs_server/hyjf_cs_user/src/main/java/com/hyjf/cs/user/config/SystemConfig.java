@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 public class SystemConfig {
     @Value("${hyjf.web.host}")
     public String webHost;
+    
+    @Value("{hyjf.web.ui.bindemail}")
+    public String webUIBindEmail;
 
     @Value("${http.hyjf.web.host}")
     public String httpWebHost;
@@ -92,4 +95,12 @@ public class SystemConfig {
     public void setFileUpload(String fileUpload) {
         this.fileUpload = fileUpload;
     }
+
+	public String getWebUIBindEmail() {
+		return webUIBindEmail;
+	}
+
+	public void setWebUIBindEmail(String webUIBindEmail) {
+		this.webUIBindEmail = webUIBindEmail;
+	}
 }

@@ -977,7 +977,7 @@ public class UserServiceImpl implements UserService  {
 		
 		// 发送激活邮件
 		activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
-		String url = systemConfig.webHost + "/web/user/bindEmail?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+		String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
 		Map<String, String> replaceMap = new HashMap<String, String>();
 		replaceMap.put("url_name", url);
 		if (StringUtils.isNotBlank(user.getNickname())) {
