@@ -3,6 +3,13 @@
  */
 package com.hyjf.cs.borrow.client.impl;
 
+import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.response.borrow.BorrowProjectRepayReponse;
+import com.hyjf.am.response.borrow.HjhAssetBorrowTypeResponse;
+import com.hyjf.am.response.borrow.STZHWhiteListResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
 import com.hyjf.am.vo.borrow.BorrowProjectRepayVO;
@@ -30,37 +37,61 @@ public class ApiAssetClientImpl implements ApiAssetClient {
     @Override
     public HjhAssetBorrowTypeVO selectAssetBorrowType(String instCode, Integer assetType) {
         String url = "http://AM-BORROW/am-borrow/assetPush/selectAssetBorrowType/" + instCode + "/" + assetType;
-        return restTemplate.getForEntity(url, HjhAssetBorrowTypeVO.class).getBody();
+        HjhAssetBorrowTypeResponse response = restTemplate.getForEntity(url, HjhAssetBorrowTypeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
     @Override
     public List<BorrowProjectRepayVO> selectProjectRepay(String borrowcCd) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/selectAssetBorrowType/" + borrowcCd;
-        return restTemplate.getForEntity(url, List.class).getBody();
+        String url = "http://AM-BORROW/am-borrow/assetPush/selectProjectRepay/" + borrowcCd;
+        BorrowProjectRepayReponse response = restTemplate.getForEntity(url, BorrowProjectRepayReponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
     }
 
     @Override
     public UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/selectUserInfoByNameAndCard/" + truename + "/" + idcard;
-        return restTemplate.getForEntity(url, UserInfoVO.class).getBody();
+        String url = "http://AM-USER/am-user/userInfo/selectUserInfoByNameAndCard/" + truename + "/" + idcard;
+        UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
     @Override
     public BankOpenAccountVO selectBankAccountById(Integer userId) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/selectUserInfoByNameAndCard/" + userId;
-        return restTemplate.getForEntity(url, BankOpenAccountVO.class).getBody();
+        String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
+        BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
     @Override
     public UserVO selectUsersById(Integer userId) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/selectUsersById/" + userId;
-        return restTemplate.getForEntity(url, UserVO.class).getBody();
+        String url = "http://AM-USER/am-user/user/findById/" + userId;
+        UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
     @Override
     public STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId) {
         String url = "http://AM-BORROW/am-borrow/assetPush/selectStzfWhiteList/" + instCode + "/" + entrustedAccountId;
-        return restTemplate.getForEntity(url, STZHWhiteListVO.class).getBody();
+        STZHWhiteListResponse response = restTemplate.getForEntity(url, STZHWhiteListResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
     @Override
@@ -71,5 +102,11 @@ public class ApiAssetClientImpl implements ApiAssetClient {
             return 0;
         }
         return result;
+    }
+
+    @Override
+    public void insertRiskInfo(List<InfoBean> riskInfo) {
+        String url = "http://AM-BORROW/am-borrow/assetPush/insertRiskInfo";
+        restTemplate.postForEntity(url, riskInfo, Integer.class).getBody();
     }
 }

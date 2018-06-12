@@ -3,76 +3,27 @@
  */
 package com.hyjf.cs.borrow.service;
 
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.borrow.HjhPlanAssetVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-
-import java.util.List;
+import com.hyjf.cs.borrow.bean.assetpush.PushRequestBean;
+import com.hyjf.cs.borrow.bean.assetpush.PushResultBean;
 
 /**
  * @author fuqiang
  * @version ApiAssetPushService, v0.1 2018/6/11 18:06
  */
 public interface ApiAssetPushService {
-    /**
-     * 获取机构信息
-     * @param instCode
-     * @param assetType
-     * @return
-     */
-    HjhAssetBorrowTypeVO selectAssetBorrowType(String instCode, Integer assetType);
-
-    /**
-     * 根据项目类型去还款方式
-     * @param borrowcCd
-     * @return
-     */
-    List<BorrowProjectRepayVO> selectProjectRepay(String borrowcCd);
-
-    /**
-     * 获取用户信息
-     * @param truename
-     * @param idcard
-     * @return
-     */
-    UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard);
-
-    /**
-     * 获取开户的数据
-     * @param userId
-     * @return
-     */
-    BankOpenAccountVO selectBankAccountById(Integer userId);
-
-    /**
-     * 获取用户的数据
-     * @param userId
-     * @return
-     */
-    UserVO selectUsersById(Integer userId);
-
-    /**
-     * 获取受托支付电子账户列表
-     * @param instCode
-     * @param entrustedAccountId
-     * @return
-     */
-    STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId);
-
-    /**
-     * 插入资产表
-     * @param record
-     * @return
-     */
-    int insertAssert(HjhPlanAssetVO record);
 
     /**
      * 发送消息
+     *
      * @param record
      */
     void sendToMQ(HjhPlanAssetVO record);
+
+    /**
+     * 资产推送
+     *
+     * @param pushRequestBean
+     */
+    PushResultBean assetPush(PushRequestBean pushRequestBean);
 }

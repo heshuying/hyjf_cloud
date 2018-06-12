@@ -1214,52 +1214,52 @@ public class STZHWhiteListExample {
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgEqualTo(Boolean value) {
+        public Criteria andDelFlgEqualTo(Integer value) {
             addCriterion("del_flg =", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotEqualTo(Boolean value) {
+        public Criteria andDelFlgNotEqualTo(Integer value) {
             addCriterion("del_flg <>", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThan(Boolean value) {
+        public Criteria andDelFlgGreaterThan(Integer value) {
             addCriterion("del_flg >", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andDelFlgGreaterThanOrEqualTo(Integer value) {
             addCriterion("del_flg >=", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThan(Boolean value) {
+        public Criteria andDelFlgLessThan(Integer value) {
             addCriterion("del_flg <", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThanOrEqualTo(Boolean value) {
+        public Criteria andDelFlgLessThanOrEqualTo(Integer value) {
             addCriterion("del_flg <=", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIn(List<Boolean> values) {
+        public Criteria andDelFlgIn(List<Integer> values) {
             addCriterion("del_flg in", values, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotIn(List<Boolean> values) {
+        public Criteria andDelFlgNotIn(List<Integer> values) {
             addCriterion("del_flg not in", values, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgBetween(Boolean value1, Boolean value2) {
+        public Criteria andDelFlgBetween(Integer value1, Integer value2) {
             addCriterion("del_flg between", value1, value2, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andDelFlgNotBetween(Integer value1, Integer value2) {
             addCriterion("del_flg not between", value1, value2, "delFlg");
             return (Criteria) this;
         }

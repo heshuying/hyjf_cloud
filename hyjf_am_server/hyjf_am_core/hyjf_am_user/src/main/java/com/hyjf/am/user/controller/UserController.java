@@ -1,37 +1,31 @@
 package com.hyjf.am.user.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.BindEmailLogRequest;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.BindEmailLogRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.user.service.UserService;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.validator.Validator;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author xiasq
