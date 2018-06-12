@@ -9,8 +9,8 @@ import org.springframework.util.CollectionUtils;
 import com.hyjf.am.config.dao.mapper.auto.SmsConfigMapper;
 import com.hyjf.am.config.dao.model.auto.SmsConfig;
 import com.hyjf.am.config.dao.model.auto.SmsConfigExample;
-import com.hyjf.am.config.redis.RedisUtil;
 import com.hyjf.am.config.service.SmsConfigService;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 
 /**
@@ -22,17 +22,14 @@ public class SmsConfigServiceImpl implements SmsConfigService {
 	@Autowired
 	private SmsConfigMapper smsConfigMapper;
 
-	@Autowired
-	private RedisUtil redisUtil;
-
 	@Override
 	public SmsConfig findOne() {
-		SmsConfig smsConfig = (SmsConfig) redisUtil.get(RedisKey.SMS_CONFIG);
+		SmsConfig smsConfig = RedisUtils.getObj(RedisKey.SMS_CONFIG, SmsConfig.class);
 		if (smsConfig == null) {
 			List<SmsConfig> list = smsConfigMapper.selectByExample(new SmsConfigExample());
-			if (!CollectionUtils.isEmpty(list)){
+			if (!CollectionUtils.isEmpty(list)) {
 				smsConfig = list.get(0);
-				redisUtil.set(RedisKey.SMS_CONFIG, smsConfig);
+				RedisUtils.setObjEx(RedisKey.SMS_CONFIG, smsConfig, 24 * 60 * 60);
 				return smsConfig;
 			}
 		}

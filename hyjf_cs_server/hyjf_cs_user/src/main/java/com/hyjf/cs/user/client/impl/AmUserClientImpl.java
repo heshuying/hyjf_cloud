@@ -2,8 +2,6 @@ package com.hyjf.cs.user.client.impl;
 
 import java.io.UnsupportedEncodingException;
 
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.vo.user.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,12 +14,30 @@ import org.springframework.web.client.RestTemplate;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.user.AccountChinapnrResponse;
+import com.hyjf.am.response.user.BindEmailLogResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.response.user.HjhUserAuthLogResponse;
+import com.hyjf.am.response.user.HjhUserAuthResponse;
+import com.hyjf.am.response.user.SmsCodeResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.user.UsersContactResponse;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BindEmailLogVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UsersContactVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
 
@@ -73,7 +89,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -83,7 +99,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO findUserInfoById(int userId) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById" + userId, UserInfoResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -244,7 +260,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public HjhInstConfigVO selectInstConfigByInstCode(String instCode) {
 		HjhInstConfigResponse response = restTemplate
-				.getForEntity("http://AM-BORROW/am-borrow/borrow/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
+				.getForEntity("http://AM-BORROW/am-trade/trade/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();
@@ -276,10 +292,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * 校验邮箱是否存在
 	 */
 	@Override
-	public boolean checkEmailUsed(Integer userId) {
-		// TODO: 微服务待实现
+	public boolean checkEmailUsed(String email) {
 		boolean result = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + userId, boolean.class).getBody();
+				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + email, boolean.class).getBody();
 		return result;
 	}
 	
@@ -289,11 +304,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public int insertBindEmailLog(BindEmailLogRequest bean) {
-		// TODO: 微服务待实现
-		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/insertBindEmailLog/",  bean, int.class).getBody();
-		return result;
+	public void insertBindEmailLog(BindEmailLogRequest bean) {
+		restTemplate.postForEntity("http://AM-USER/am-user/user/insertBindEmailLog/",  bean, int.class).getBody();
 	}
 	
 	/**
@@ -303,9 +315,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BindEmailLogVO getBindEmailLog(Integer userId) {
-		// TODO: 微服务待实现
 		BindEmailLogResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + userId, BindEmailLogResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/user/getBindEmailLog/" + userId, BindEmailLogResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -318,11 +329,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public int updateBindEmail(BindEmailLogRequest bean) {
-		// TODO: 微服务待实现
-		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/updateBindEmail/",  bean, int.class).getBody();
-		return result;
+	public void updateBindEmail(BindEmailLogRequest bean) {
+		restTemplate.postForEntity("http://AM-USER/am-user/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, int.class).getBody();
 	}
 	
 	/**
@@ -354,6 +362,23 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 根据userId修改
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public int updateUserNoticeSet(UserNoticeSetRequest requestBean) {
+		if(requestBean == null || requestBean.getUserId() == null){
+			return 0;
+		}
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", requestBean, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
 	/**
 	 * @Description 根据身份证号查询用户
 	 * @Author sunss

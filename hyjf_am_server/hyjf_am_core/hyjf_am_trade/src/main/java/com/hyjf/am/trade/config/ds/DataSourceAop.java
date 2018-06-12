@@ -1,11 +1,7 @@
 package com.hyjf.am.trade.config.ds;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -13,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class DataSourceAop {
 	
 //	private static final Logger logger = LoggerFactory.getLogger(DataSourceAop.class);
-
+    
     private final String[] QUERY_PREFIX = {"select","query","count","search","get","find","check"};
 
 //    @Pointcut("execution( * com.hyjf.am.user.service..*.*(..))")

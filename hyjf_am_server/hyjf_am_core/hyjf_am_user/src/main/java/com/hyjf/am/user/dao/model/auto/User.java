@@ -1,7 +1,6 @@
 package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class User implements Serializable {
@@ -15,29 +14,17 @@ public class User implements Serializable {
 
     private String password;
 
-    private String paypassword;
-
-    private Integer referrer;
-
-    private String referrerUserName;
-
     private String salt;
 
     private Integer status;
 
     private Integer openAccount;
 
-    private Integer borrowSms;
-
     private Integer rechargeSms;
 
     private Integer withdrawSms;
 
     private Boolean ifReceiveNotice;
-
-    private String iconurl;
-
-    private BigDecimal version;
 
     private Integer investSms;
 
@@ -49,15 +36,9 @@ public class User implements Serializable {
 
     private Integer sendSms;
 
-    private Integer pid;
-
-    private String usernamep;
-
     private Integer isInstFlag;
 
     private String instCode;
-
-    private Integer ptype;
 
     private Integer accountEsb;
 
@@ -65,27 +46,13 @@ public class User implements Serializable {
 
     private Integer userType;
 
-    private Boolean authType;
-
-    private Boolean authStatus;
-
     private Boolean paymentAuthStatus;
-
-    private Date authTime;
-
-    private Byte recodTotal;
-
-    private Date recodTime;
-
-    private Date recodTruncateTime;
 
     private Integer isSetPassword;
 
     private Integer bankOpenAccount;
 
     private Integer bankAccountEsb;
-
-    private Integer isDataUpdate;
 
     private Integer isEvaluationFlag;
 
@@ -143,30 +110,6 @@ public class User implements Serializable {
         this.password = password == null ? null : password.trim();
     }
 
-    public String getPaypassword() {
-        return paypassword;
-    }
-
-    public void setPaypassword(String paypassword) {
-        this.paypassword = paypassword == null ? null : paypassword.trim();
-    }
-
-    public Integer getReferrer() {
-        return referrer;
-    }
-
-    public void setReferrer(Integer referrer) {
-        this.referrer = referrer;
-    }
-
-    public String getReferrerUserName() {
-        return referrerUserName;
-    }
-
-    public void setReferrerUserName(String referrerUserName) {
-        this.referrerUserName = referrerUserName == null ? null : referrerUserName.trim();
-    }
-
     public String getSalt() {
         return salt;
     }
@@ -191,14 +134,6 @@ public class User implements Serializable {
         this.openAccount = openAccount;
     }
 
-    public Integer getBorrowSms() {
-        return borrowSms;
-    }
-
-    public void setBorrowSms(Integer borrowSms) {
-        this.borrowSms = borrowSms;
-    }
-
     public Integer getRechargeSms() {
         return rechargeSms;
     }
@@ -221,22 +156,6 @@ public class User implements Serializable {
 
     public void setIfReceiveNotice(Boolean ifReceiveNotice) {
         this.ifReceiveNotice = ifReceiveNotice;
-    }
-
-    public String getIconurl() {
-        return iconurl;
-    }
-
-    public void setIconurl(String iconurl) {
-        this.iconurl = iconurl == null ? null : iconurl.trim();
-    }
-
-    public BigDecimal getVersion() {
-        return version;
-    }
-
-    public void setVersion(BigDecimal version) {
-        this.version = version;
     }
 
     public Integer getInvestSms() {
@@ -279,22 +198,6 @@ public class User implements Serializable {
         this.sendSms = sendSms;
     }
 
-    public Integer getPid() {
-        return pid;
-    }
-
-    public void setPid(Integer pid) {
-        this.pid = pid;
-    }
-
-    public String getUsernamep() {
-        return usernamep;
-    }
-
-    public void setUsernamep(String usernamep) {
-        this.usernamep = usernamep == null ? null : usernamep.trim();
-    }
-
     public Integer getIsInstFlag() {
         return isInstFlag;
     }
@@ -309,14 +212,6 @@ public class User implements Serializable {
 
     public void setInstCode(String instCode) {
         this.instCode = instCode == null ? null : instCode.trim();
-    }
-
-    public Integer getPtype() {
-        return ptype;
-    }
-
-    public void setPtype(Integer ptype) {
-        this.ptype = ptype;
     }
 
     public Integer getAccountEsb() {
@@ -343,60 +238,12 @@ public class User implements Serializable {
         this.userType = userType;
     }
 
-    public Boolean getAuthType() {
-        return authType;
-    }
-
-    public void setAuthType(Boolean authType) {
-        this.authType = authType;
-    }
-
-    public Boolean getAuthStatus() {
-        return authStatus;
-    }
-
-    public void setAuthStatus(Boolean authStatus) {
-        this.authStatus = authStatus;
-    }
-
     public Boolean getPaymentAuthStatus() {
         return paymentAuthStatus;
     }
 
     public void setPaymentAuthStatus(Boolean paymentAuthStatus) {
         this.paymentAuthStatus = paymentAuthStatus;
-    }
-
-    public Date getAuthTime() {
-        return authTime;
-    }
-
-    public void setAuthTime(Date authTime) {
-        this.authTime = authTime;
-    }
-
-    public Byte getRecodTotal() {
-        return recodTotal;
-    }
-
-    public void setRecodTotal(Byte recodTotal) {
-        this.recodTotal = recodTotal;
-    }
-
-    public Date getRecodTime() {
-        return recodTime;
-    }
-
-    public void setRecodTime(Date recodTime) {
-        this.recodTime = recodTime;
-    }
-
-    public Date getRecodTruncateTime() {
-        return recodTruncateTime;
-    }
-
-    public void setRecodTruncateTime(Date recodTruncateTime) {
-        this.recodTruncateTime = recodTruncateTime;
     }
 
     public Integer getIsSetPassword() {
@@ -421,14 +268,6 @@ public class User implements Serializable {
 
     public void setBankAccountEsb(Integer bankAccountEsb) {
         this.bankAccountEsb = bankAccountEsb;
-    }
-
-    public Integer getIsDataUpdate() {
-        return isDataUpdate;
-    }
-
-    public void setIsDataUpdate(Integer isDataUpdate) {
-        this.isDataUpdate = isDataUpdate;
     }
 
     public Integer getIsEvaluationFlag() {

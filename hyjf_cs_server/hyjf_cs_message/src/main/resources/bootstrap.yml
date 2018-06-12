@@ -1,7 +1,10 @@
 spring:
   application:
     name: CS-MESSAGE
-
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:18080
 eureka:
   client:
     serviceUrl:

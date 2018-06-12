@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
-import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.borrow.AccountRechargeVO;
 
 /**
@@ -21,7 +21,7 @@ public interface RechargeService {
 
 	 AccountRecharge selectByExample(AccountRechargeExample example);
 
-	 int updateByExampleSelective(AccountRecharge accountRecharge,AccountRechargeExample accountRechargeExample);
+	 int updateByExampleSelective(AccountRecharge accountRecharge, AccountRechargeExample accountRechargeExample);
 
 	 int updateBankRechargeSuccess(Account newAccount);
 

@@ -11,12 +11,12 @@
 
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
-import java.util.Map;
-
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
+import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountListCustomize;
 
-//import com.hyjf.am.trade.dao.model.auto.AdminAccountListCustomize;
+import java.util.List;
+import java.util.Map;
 
 public interface AdminAccountCustomizeMapper {
 
@@ -26,7 +26,7 @@ public interface AdminAccountCustomizeMapper {
 	 * @param accountUser
 	 * @return
 	 */
-	//List<AdminAccountListCustomize> selectAccountList(Map<String, Object> accountUser);
+	List<AdminAccountListCustomize> selectAccountList(Map<String, Object> accountUser);
 
 	/**
 	 * @param userListCustomizeBean
@@ -203,7 +203,7 @@ public interface AdminAccountCustomizeMapper {
 	 * @param accountUser
 	 * @return
 	 */
-	//List<AdminAccountListCustomize> selectBankAccountList(Map<String, Object> accountUser);
+	List<AdminAccountListCustomize> selectBankAccountList(Map<String, Object> accountUser);
 
 	/**
 	 * @param userListCustomizeBean

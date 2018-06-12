@@ -5,6 +5,7 @@ import java.util.Date;
 import com.hyjf.am.vo.BaseVO;
 
 /**
+ * 银行卡绑定
  * @author hesy
  */
 public class BankCardRequest extends BaseVO {

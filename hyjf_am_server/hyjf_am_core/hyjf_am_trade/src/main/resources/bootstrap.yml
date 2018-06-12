@@ -1,7 +1,10 @@
 spring:
   application:
-    name: AM-TRADE
-
+    name: AM-BORROW
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:18080
 eureka:
   client:
     serviceUrl:
@@ -9,7 +12,7 @@ eureka:
   instance:
     preferIpAddress: true
 server:
-  port: 8093
+  port: 8096
 
 logging:
   file: am-trade.log

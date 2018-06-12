@@ -14,11 +14,13 @@ public class ApiResult<T> {
 	public ApiResult() {
 		this.status = STATUS_SUCCESS;
 		this.statusDesc = STATUS_SUCCESS_DESC;
+		this.loginFlag = STATUS_SUCCESS;
 	}
 
-	public ApiResult(String status, String statusDesc) {
+	public ApiResult(String status, String statusDesc,String loginFlag) {
 		this.status = status;
 		this.statusDesc = statusDesc;
+		this.loginFlag = loginFlag;
 	}
 
 	private T result;
@@ -26,6 +28,16 @@ public class ApiResult<T> {
 	private String status;
 
 	private String statusDesc;
+
+	private String loginFlag;
+
+	public String getLoginFlag() {
+		return loginFlag;
+	}
+
+	public void setLoginFlag(String loginFlag) {
+		this.loginFlag = loginFlag;
+	}
 
 	public T getResult() {
 		return result;

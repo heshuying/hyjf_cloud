@@ -1,10 +1,28 @@
 package com.hyjf.am.user.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.mq.AccountProducer;
+import com.hyjf.am.user.mq.Producer;
+import com.hyjf.am.user.service.UserInfoService;
+import com.hyjf.am.user.service.UserService;
+import com.hyjf.am.user.utils.BankCallConstant;
+import com.hyjf.am.user.utils.UploadFileUtils;
+import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,57 +33,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.user.dao.mapper.auto.AccountChinapnrMapper;
-import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
-import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserEvalationResultMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserLoginLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UsersContactMapper;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthExample;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample;
-import com.hyjf.am.user.dao.model.auto.PreRegist;
-import com.hyjf.am.user.dao.model.auto.PreRegistExample;
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoExample;
-import com.hyjf.am.user.dao.model.auto.UserLog;
-import com.hyjf.am.user.dao.model.auto.UserLoginLog;
-import com.hyjf.am.user.dao.model.auto.UserLoginLogExample;
-import com.hyjf.am.user.dao.model.auto.UsersContact;
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.mq.AccountProducer;
-import com.hyjf.am.user.mq.Producer;
-import com.hyjf.am.user.service.UserInfoService;
-import com.hyjf.am.user.service.UserService;
-import com.hyjf.am.user.utils.BankCallConstant;
-import com.hyjf.am.user.utils.UploadFileUtils;
-import com.hyjf.am.vo.borrow.AccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.validator.Validator;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -111,6 +82,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UsersContactMapper usersContactMapper;
+	
+	@Autowired
+	UserBindEmailLogMapper userBindEmailLogMapper;
 
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
@@ -300,7 +274,6 @@ public class UserServiceImpl implements UserService {
 		UserInfo usersInfo = userInfoService.findUserInfoById(userVO.getUserId());
 		if (usersInfo != null) {
 			userVO.setSex(usersInfo.getSex());
-			userVO.setNickname(usersInfo.getNickname());
 			userVO.setTruename(usersInfo.getTruename());
 			userVO.setIdcard(usersInfo.getIdcard());
 			userVO.setRoleId(usersInfo.getRoleId() + "");
@@ -474,7 +447,6 @@ public class UserServiceImpl implements UserService {
 		user.setInvestflag(0);
 		user.setInvestSms(0);
 		user.setRecieveSms(0);
-		user.setVersion(new BigDecimal("0"));
 		user.setUserType(0);
 		user.setIsSetPassword(0);
 		int time = GetDate.getNowTime10();
@@ -484,15 +456,9 @@ public class UserServiceImpl implements UserService {
 		user.setRegTime(new Date());
 		user.setStatus(0);
 		user.setSalt(codeSalt);
-		user.setBorrowSms(0);
-		user.setPid(0);
-		user.setUsernamep("");
-		user.setPtype(0);
+
 		user.setOpenAccount(0);
 		user.setBankOpenAccount(0);
-
-		user.setReferrer(refferUserId);
-		user.setReferrerUserName(refferUsername);
 
 		if (StringUtils.isNotBlank(platform)) {
 			user.setRegEsb(Integer.parseInt(platform));
@@ -523,22 +489,12 @@ public class UserServiceImpl implements UserService {
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
 		userInfo.setUpdateTime(new Date());
-		userInfo.setPromoteway(0);
-		userInfo.setIs51(0);
-		userInfo.setIsStaff(0);
-		userInfo.setDepartmentId(0);
-		userInfo.setNickname("");
 		userInfo.setBirthday("");
 		userInfo.setSex(1);
 		userInfo.setIdcard("");
-		userInfo.setEducation("");
 		userInfo.setAddress("");
-		userInfo.setIntro("");
-		userInfo.setInterest("");
-		userInfo.setParentId(0);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
-		userInfo.setPromoteway(0);
 		userInfo.setIsContact(false);
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
@@ -684,7 +640,10 @@ public class UserServiceImpl implements UserService {
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		} else {
-			return null;
+			HjhUserAuth hjhUserAuth=new HjhUserAuth();
+			hjhUserAuth.setAutoInvesStatus(0);
+			hjhUserAuth.setAutoCreditStatus(0);
+			return hjhUserAuth;
 		}
 	}
 
@@ -907,5 +866,83 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
+	/**
+	 * 检查邮箱是否已使用
+	 * @param email
+	 * @return
+	 */
+	@Override
+	public boolean checkEmailUsed(String email) {
+		UserExample example1 = new UserExample();
+		example1.createCriteria().andEmailEqualTo(email);
+		int size = usersMapper.countByExample(example1);
+		if (size > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * 插入绑定邮箱日志
+	 * @param log
+	 */
+	@Override
+	public void insertEmailBindLog(UserBindEmailLog log) {
+		// 将之前的邮件失效
+		UserBindEmailLogExample example = new UserBindEmailLogExample();
+		example.createCriteria().andUserIdEqualTo(log.getUserId()).andUserEmailStatusEqualTo(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		List<UserBindEmailLog> bingEmailLogList = userBindEmailLogMapper.selectByExample(example);
+		if (bingEmailLogList != null && bingEmailLogList.size() > 0) {
+			for (int i = 0; i < bingEmailLogList.size(); i++) {
+				bingEmailLogList.get(i).setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_3);
+				userBindEmailLogMapper.updateByPrimaryKeySelective(bingEmailLogList.get(i));
+			}
+		}
+		// 插入新的邮件
+		log.setCreatetime(new Date());
+		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
+		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		userBindEmailLogMapper.insertSelective(log);
+	}
+	
+	/**
+	 * 查询绑定邮箱日志
+	 * @param userid
+	 * @return
+	 */
+	@Override
+	public UserBindEmailLog getUserBindEmail(Integer userid) {
+		UserBindEmailLogExample example = new UserBindEmailLogExample();
+		example.createCriteria().andUserIdEqualTo(userid).andUserEmailStatusEqualTo(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		List<UserBindEmailLog> userBindEmailLogList = userBindEmailLogMapper.selectByExample(example);
+		if (userBindEmailLogList != null && userBindEmailLogList.size() > 0) {
+			return userBindEmailLogList.get(0);
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * 绑定邮箱更新
+	 * @param userid
+	 * @param email
+	 * @param log
+	 */
+	@Override
+	public void updateBindEmail(Integer userid, String email) {
+		UserExample example = new UserExample();
+		example.createCriteria().andUserIdEqualTo(userid);
+		List<User> usersList = usersMapper.selectByExample(example);
+		User u = usersList.get(0);
+		u.setEmail(email);
+		usersMapper.updateByPrimaryKeySelective(u);
+		
+		UserBindEmailLog log = this.getUserBindEmail(userid);
+		if(log != null) {
+			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
+			userBindEmailLogMapper.updateByPrimaryKey(log);
+		}
+	}
 
 }

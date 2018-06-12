@@ -14,8 +14,8 @@
     <result column="notice_to_time" property="noticeToTime" jdbcType="INTEGER" />
     <result column="repay_mobiles" property="repayMobiles" jdbcType="VARCHAR" />
     <result column="full_mobiles" property="fullMobiles" jdbcType="VARCHAR" />
-    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
-    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -80,7 +80,7 @@
   <sql id="Base_Column_List" >
     id, max_ip_count, max_machine_count, max_browser_count, max_phone_count, max_interval_time, 
     max_valid_time, notice_to_phone, notice_to_email, notice_to_time, repay_mobiles, 
-    full_mobiles, create_userid, update_userid, create_time, update_time
+    full_mobiles, create_user_id, update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" >
     select
@@ -120,13 +120,13 @@
       max_browser_count, max_phone_count, max_interval_time, 
       max_valid_time, notice_to_phone, notice_to_email, 
       notice_to_time, repay_mobiles, full_mobiles, 
-      create_userid, update_userid, create_time, 
+      create_user_id, update_user_id, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{maxIpCount,jdbcType=INTEGER}, #{maxMachineCount,jdbcType=INTEGER}, 
       #{maxBrowserCount,jdbcType=INTEGER}, #{maxPhoneCount,jdbcType=INTEGER}, #{maxIntervalTime,jdbcType=INTEGER}, 
       #{maxValidTime,jdbcType=INTEGER}, #{noticeToPhone,jdbcType=VARCHAR}, #{noticeToEmail,jdbcType=VARCHAR}, 
       #{noticeToTime,jdbcType=INTEGER}, #{repayMobiles,jdbcType=VARCHAR}, #{fullMobiles,jdbcType=VARCHAR}, 
-      #{createUserid,jdbcType=INTEGER}, #{updateUserid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
@@ -168,11 +168,11 @@
       <if test="fullMobiles != null" >
         full_mobiles,
       </if>
-      <if test="createUserid != null" >
-        create_userid,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updateUserid != null" >
-        update_userid,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -218,11 +218,11 @@
       <if test="fullMobiles != null" >
         #{fullMobiles,jdbcType=VARCHAR},
       </if>
-      <if test="createUserid != null" >
-        #{createUserid,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserid != null" >
-        #{updateUserid,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -277,11 +277,11 @@
       <if test="record.fullMobiles != null" >
         full_mobiles = #{record.fullMobiles,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserid != null" >
-        create_userid = #{record.createUserid,jdbcType=INTEGER},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUserid != null" >
-        update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -308,8 +308,8 @@
       notice_to_time = #{record.noticeToTime,jdbcType=INTEGER},
       repay_mobiles = #{record.repayMobiles,jdbcType=VARCHAR},
       full_mobiles = #{record.fullMobiles,jdbcType=VARCHAR},
-      create_userid = #{record.createUserid,jdbcType=INTEGER},
-      update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -352,11 +352,11 @@
       <if test="fullMobiles != null" >
         full_mobiles = #{fullMobiles,jdbcType=VARCHAR},
       </if>
-      <if test="createUserid != null" >
-        create_userid = #{createUserid,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserid != null" >
-        update_userid = #{updateUserid,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -380,8 +380,8 @@
       notice_to_time = #{noticeToTime,jdbcType=INTEGER},
       repay_mobiles = #{repayMobiles,jdbcType=VARCHAR},
       full_mobiles = #{fullMobiles,jdbcType=VARCHAR},
-      create_userid = #{createUserid,jdbcType=INTEGER},
-      update_userid = #{updateUserid,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

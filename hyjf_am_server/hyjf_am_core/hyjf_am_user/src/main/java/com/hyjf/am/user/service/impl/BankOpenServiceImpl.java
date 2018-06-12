@@ -152,7 +152,6 @@ public class BankOpenServiceImpl implements BankOpenService {
         user.setWithdrawSms(0);
         user.setUserType(0);
         user.setMobile(mobile);
-        user.setVersion(user.getVersion().add(BigDecimal.ONE));
         // 更新相应的用户表
         boolean usersFlag = usersMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
         if (!usersFlag) {

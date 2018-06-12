@@ -15,8 +15,8 @@
     <result column="fee_withdraw" property="feeWithdraw" jdbcType="DECIMAL" />
     <result column="sort_id" property="sortId" jdbcType="SMALLINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_userid" property="createUserid" jdbcType="INTEGER" />
-    <result column="update_userid" property="updateUserid" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
@@ -82,7 +82,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, bank_id, bank_name, pay_alliance_code, bank_code, bank_icon, bank_logo, quick_payment, 
-    single_quota, single_card_quota, fee_withdraw, sort_id, remark, create_userid, update_userid, 
+    single_quota, single_card_quota, fee_withdraw, sort_id, remark, create_user_id, update_user_id, 
     create_time, update_time, del_flg, month_card_quota
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.BankConfigExample" >
@@ -126,14 +126,14 @@
       bank_code, bank_icon, bank_logo, 
       quick_payment, single_quota, single_card_quota, 
       fee_withdraw, sort_id, remark, 
-      create_userid, update_userid, create_time, 
+      create_user_id, update_user_id, create_time, 
       update_time, del_flg, month_card_quota
       )
     values (#{bankId,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, #{payAllianceCode,jdbcType=VARCHAR}, 
       #{bankCode,jdbcType=VARCHAR}, #{bankIcon,jdbcType=VARCHAR}, #{bankLogo,jdbcType=VARCHAR}, 
       #{quickPayment,jdbcType=TINYINT}, #{singleQuota,jdbcType=DECIMAL}, #{singleCardQuota,jdbcType=DECIMAL}, 
       #{feeWithdraw,jdbcType=DECIMAL}, #{sortId,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, 
-      #{createUserid,jdbcType=INTEGER}, #{updateUserid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{delFlg,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}
       )
   </insert>
@@ -179,11 +179,11 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="createUserid != null" >
-        create_userid,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updateUserid != null" >
-        update_userid,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -235,11 +235,11 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createUserid != null" >
-        #{createUserid,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserid != null" >
-        #{updateUserid,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -303,11 +303,11 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserid != null" >
-        create_userid = #{record.createUserid,jdbcType=INTEGER},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUserid != null" >
-        update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -341,8 +341,8 @@
       fee_withdraw = #{record.feeWithdraw,jdbcType=DECIMAL},
       sort_id = #{record.sortId,jdbcType=SMALLINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_userid = #{record.createUserid,jdbcType=INTEGER},
-      update_userid = #{record.updateUserid,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       del_flg = #{record.delFlg,jdbcType=TINYINT},
@@ -390,11 +390,11 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createUserid != null" >
-        create_userid = #{createUserid,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserid != null" >
-        update_userid = #{updateUserid,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -425,8 +425,8 @@
       fee_withdraw = #{feeWithdraw,jdbcType=DECIMAL},
       sort_id = #{sortId,jdbcType=SMALLINT},
       remark = #{remark,jdbcType=VARCHAR},
-      create_userid = #{createUserid,jdbcType=INTEGER},
-      update_userid = #{updateUserid,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       del_flg = #{delFlg,jdbcType=TINYINT},

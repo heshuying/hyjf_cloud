@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
@@ -16,6 +17,7 @@ import com.hyjf.am.trade.service.UserService;
  * @author zhangqingqing
  * @version UserServiceImpl, v0.1 2018/5/28 12:53
  */
+@Service
 public class UserServiceImpl implements UserService {
 
 

@@ -4,9 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BindEmailLogVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.HjhUserAuthLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UsersContactVO;
 
 /**
  * @author xiasq
@@ -53,17 +61,19 @@ public interface AmUserClient {
 
     AccountChinapnrVO getAccountChinapnr(Integer userId);
 
-	boolean checkEmailUsed(Integer userId);
+	boolean checkEmailUsed(String email);
 
-	int updateBindEmail(BindEmailLogRequest bean);
+	void updateBindEmail(BindEmailLogRequest bean);
 
 	BindEmailLogVO getBindEmailLog(Integer userId);
 
-	int insertBindEmailLog(BindEmailLogRequest bean);
+	void insertBindEmailLog(BindEmailLogRequest bean);
 
 	int updateUserContract(UsersContractRequest bean);
 
     UsersContactVO selectUserContact(Integer userId);
+
+    int updateUserNoticeSet(UserNoticeSetRequest requestBean);
 
 	UserInfoVO getUserByIdNo(String idNo);
 }
