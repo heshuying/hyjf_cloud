@@ -3,8 +3,8 @@
  */
 package com.hyjf.callcenter.controller.account.bank;
 
-import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.AccountBankBean;
 import com.hyjf.callcenter.beans.AccountBankDefine;
 import com.hyjf.callcenter.beans.ResultListBean;
@@ -48,14 +48,8 @@ public class AccountBankServer extends CallcenterBaseController {
                                                   @RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();
 
-        //验签
-//			if (!this.checkSign(bean)) {
-//				result.statusMessage(result.STATUS_FAIL,"验签失败！");
-//				return result;
-//			}
-
         //根据用户名或手机号取得用户信息
-        User user = this.getUser(bean, result);
+        UserVO user = this.getUser(bean, result);
         if (user == null) {
             if (result.getStatus()!=BaseResultBean.STATUS_FAIL) {
                 result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户不存在！");
@@ -65,14 +59,14 @@ public class AccountBankServer extends CallcenterBaseController {
 
         //*************各自业务开始***************
         //根据用户信息查询江西银行绑卡关系
-        List<BankCard> recordList = accountBankService.getTiedCardOfAccountBank(user);
+        List<BankCardVO> recordList = accountBankService.getTiedCardOfAccountBank(user);
         if (recordList == null) {
             result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户在江西银行未绑卡！");
             return result;
         }
 
         //编辑返回信息
-        for (BankCard recordBean : recordList) {
+        for (BankCardVO recordBean : recordList) {
             AccountBankBean returnBean = new AccountBankBean();
 
             //检索bean→返回bean
@@ -82,10 +76,9 @@ public class AccountBankServer extends CallcenterBaseController {
             //手机号
             returnBean.setMobile(user.getMobile());
             //添加时间
-            if (recordBean.getCreateTime()==null) {
-                returnBean.setCreateTime(null);
+            if (recordBean.getCreateTime()!=null) {
+                returnBean.setCreateTime(GetDate.formatDateTime(recordBean.getCreateTime().getTime()));
             }
-            returnBean.setCreateTime(GetDate.formatDateTime(recordBean.getCreateTime().getTime()));
 
             result.getDataList().add(returnBean);
         }

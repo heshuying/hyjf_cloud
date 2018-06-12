@@ -1,6 +1,6 @@
 package com.hyjf.callcenter.service;
 
-import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.UserBean;
 
 /**
@@ -15,6 +15,6 @@ public interface UserService {
 	 * @version v0.1
 	 * @since v0.1 2018/6/5
 	 */
-	User getUser(UserBean bean);
+	UserVO getUser(UserBean bean);
 
 }
