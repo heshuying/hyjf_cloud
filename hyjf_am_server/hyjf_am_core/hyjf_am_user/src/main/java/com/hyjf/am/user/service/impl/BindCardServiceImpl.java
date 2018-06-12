@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
+import com.hyjf.am.user.dao.mapper.auto.BankSmsAuthCodeMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import com.hyjf.am.user.dao.model.auto.BankCardLog;
+import com.hyjf.am.user.dao.model.auto.BankSmsAuthCode;
+import com.hyjf.am.user.dao.model.auto.BankSmsAuthCodeExample;
+import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.service.BindCardService;
 
 /**
@@ -21,9 +27,13 @@ import com.hyjf.am.user.service.BindCardService;
 public class BindCardServiceImpl implements BindCardService {
 
 	@Autowired
+	private UserMapper userMapper;
+	@Autowired
 	private BankCardMapper bankCardMapper;
 	@Autowired
 	private BankCardLogMapper bankCardLogMapper;
+	@Autowired
+	private BankSmsAuthCodeMapper bankSmsAuthCodeMapper;
 
 	/**
 	 * 查询用户已绑定的有效卡
@@ -116,6 +126,54 @@ public class BindCardServiceImpl implements BindCardService {
 	@Override
 	public int insertBindCardLog(BankCardLog bankCardLog) {
 		return this.bankCardLogMapper.insertSelective(bankCardLog);
+	}
+	
+	/**
+	 * 保存绑卡相应的授权码
+	 * @param userId
+	 * @param srvTxCode
+	 * @param srvAuthCode
+	 * @return
+	 */
+	@Override
+	public boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode) {
+		Date nowDate = new Date();
+		User user = userMapper.selectByPrimaryKey(userId);
+		BankSmsAuthCodeExample example = new BankSmsAuthCodeExample();
+		example.createCriteria().andUserIdEqualTo(userId).andSrvTxCodeEqualTo(srvTxCode);
+		List<BankSmsAuthCode> smsAuthCodeList = bankSmsAuthCodeMapper.selectByExample(example);
+		if (smsAuthCodeList != null && smsAuthCodeList.size() == 1) {
+			BankSmsAuthCode smsAuthCode = smsAuthCodeList.get(0);
+			smsAuthCode.setSrvAuthCode(srvAuthCode);
+			smsAuthCode.setUpdateTime(nowDate);
+			smsAuthCode.setUpdateUserId(userId);
+			smsAuthCode.setUpdateUserName(user.getUsername());
+			boolean smsAuthCodeUpdateFlag = this.bankSmsAuthCodeMapper.updateByPrimaryKeySelective(smsAuthCode) > 0 ? true : false;
+			if (smsAuthCodeUpdateFlag) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			this.bankSmsAuthCodeMapper.deleteByExample(example);
+			BankSmsAuthCode smsAuthCode = new BankSmsAuthCode();
+			smsAuthCode.setUserId(userId);
+			smsAuthCode.setSrvTxCode(srvTxCode);
+			smsAuthCode.setSrvAuthCode(srvAuthCode);
+			smsAuthCode.setStatus(1);
+			smsAuthCode.setCreateTime(nowDate);
+			smsAuthCode.setCreateUserId(userId);
+			smsAuthCode.setCreateUserName(user.getUsername());
+			smsAuthCode.setUpdateTime(nowDate);
+			smsAuthCode.setUpdateUserId(userId);
+			smsAuthCode.setUpdateUserName(user.getUsername());
+			boolean smsAuthCodeInsertFlag = this.bankSmsAuthCodeMapper.insertSelective(smsAuthCode) > 0 ? true : false;
+			if (smsAuthCodeInsertFlag) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 	
 	

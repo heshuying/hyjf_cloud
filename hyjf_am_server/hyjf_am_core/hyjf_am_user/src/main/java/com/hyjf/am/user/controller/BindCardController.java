@@ -2,12 +2,14 @@ package com.hyjf.am.user.controller;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.user.BankCardResponse;
@@ -115,5 +117,21 @@ public class BindCardController {
 		BeanUtils.copyProperties(bankCardLogRequest, bankCardLog);
 		int cnt = bindCardService.insertBindCardLog(bankCardLog);
 		return cnt;
+	}
+	
+	/**
+	 * 更新绑卡授权记录
+	 * @param userId
+	 * @param srvTxCode
+	 * @param srvAuthCode
+	 * @return
+	 */
+	@RequestMapping(value = "/updateBankSmsLog", method = RequestMethod.POST)
+	public boolean updateBankSmsLog(@RequestParam String userId, @RequestParam String srvTxCode, @RequestParam String srvAuthCode) {
+		if(StringUtils.isBlank(userId) || StringUtils.isBlank(srvTxCode) || StringUtils.isBlank(srvAuthCode)) {
+			return false;
+		}
+		
+		return bindCardService.updateBankSmsLog(Integer.parseInt(userId), srvTxCode, srvAuthCode);
 	}
 }
