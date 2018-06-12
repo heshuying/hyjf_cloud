@@ -3,8 +3,6 @@ package com.hyjf.am.user.controller;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.UserInfoService;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

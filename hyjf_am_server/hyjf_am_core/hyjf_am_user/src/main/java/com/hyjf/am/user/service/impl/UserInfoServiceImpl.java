@@ -1,9 +1,6 @@
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
 import com.hyjf.am.user.service.UserInfoService;
