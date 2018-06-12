@@ -3,6 +3,7 @@ package com.hyjf.callcenter.client;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
 import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 
 /**
@@ -16,18 +17,18 @@ public interface AmCallcenterUserInfoClient {
 	 * @param user
 	 * @return
 	 */
-	List<CallcenterUserBaseCustomize> selectNoServiceFuTouUsersList(Map<String, Object> user);
+	List<CallCenterUserBaseVO> selectNoServiceFuTouUsersList(Map<String, Object> conditionMap);
 	/**
 	 * 查询呼叫中心未分配客服的用户（流失用户筛选）
 	 * @param user
 	 * @return
 	 */
-	List<CallcenterUserBaseCustomize> selectNoServiceLiuShiUsersList(Map<String, Object> user);
+	List<CallCenterUserBaseVO> selectNoServiceLiuShiUsersList(Map<String, Object> conditionMap);
 	/**
 	 * 查询呼叫中心未分配客服的用户
 	 * @param user
 	 * @return
 	 */
-	List<CallcenterUserBaseCustomize> selectNoServiceUsersList(Map<String, Object> user);
+	List<CallCenterUserBaseVO> selectNoServiceUsersList(Map<String, Object> conditionMap);
 
 }

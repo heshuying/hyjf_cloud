@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
 import com.hyjf.callcenter.beans.ResultListBean;
 import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.beans.UserInfoBean;
@@ -61,13 +62,13 @@ public class UserInfoServer extends CallcenterBaseController {
 			return result;
 		}
 		//取得分配客服的用户名和手机号
-		List<CallcenterUserBaseCustomize> userList = this.userInfoService.getNoServiceUsersList(bean);
+		List<CallCenterUserBaseVO> userList = this.userInfoService.getNoServiceUsersList(bean);
 		if (userList == null) {
 			result.statusMessage(BaseResultBean.STATUS_FAIL,"未查询到该用户基本信息！");
 			return result;
 		}
 		//编辑返回结果
-		for (CallcenterUserBaseCustomize recordBean : userList) {
+		for (CallCenterUserBaseVO recordBean : userList) {
 			UserInfoBean returnBean = new UserInfoBean();
 			//用户名
 			returnBean.setUserName(recordBean.getUserName());

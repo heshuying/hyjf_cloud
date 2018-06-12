@@ -2,8 +2,8 @@ package com.hyjf.callcenter.service;
 
 import java.util.List;
 
+import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
 import com.hyjf.callcenter.beans.UserBean;
-import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 
 /**
  * @author libin
@@ -17,6 +17,6 @@ public interface UserInfoService {
 	 * @return List<CallcenterUserBaseCustomize>
 	 * @author libin
 	 */
-	public List<CallcenterUserBaseCustomize> getNoServiceUsersList(UserBean bean);
+	public List<CallCenterUserBaseVO> getNoServiceUsersList(UserBean bean);
 
 }
