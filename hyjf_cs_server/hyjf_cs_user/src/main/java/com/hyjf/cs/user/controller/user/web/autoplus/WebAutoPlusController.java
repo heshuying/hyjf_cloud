@@ -96,7 +96,7 @@ public class WebAutoPlusController {
      * @Return: java.util.Map<java.lang.String,java.lang.String>
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
-    @RequestMapping("/userAuthInvesReturn")
+    @PostMapping("/userAuthInvesReturn")
     public Map<String, String> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, BankCallBean bean) {
         logger.info("userAuthInvesReturn:" + "[投资人自动投标签约增强同步回调开始]");
         String isSuccess = request.getParameter("isSuccess");
@@ -114,7 +114,7 @@ public class WebAutoPlusController {
      * @Return: java.util.Map<java.lang.String,java.lang.String>
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
-    @RequestMapping("/credituserAuthInvesReturn")
+    @PostMapping("/credituserAuthInvesReturn")
     public Map<String, String> userCreditAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
                                                          @ModelAttribute BankCallBean bean) {
         logger.info("[投资人自动债转签约增强同步回调开始]");
@@ -130,7 +130,7 @@ public class WebAutoPlusController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
-    @RequestMapping("/userAuthInvesBgreturn")
+    @PostMapping("/userAuthInvesBgreturn")
     public String userAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean);
         return result;
@@ -144,7 +144,7 @@ public class WebAutoPlusController {
      * @Return: java.lang.String
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @RequestMapping("/credituserAuthInvesBgreturn")
+    @PostMapping("/credituserAuthInvesBgreturn")
     public String userCreditAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean);
         return result;

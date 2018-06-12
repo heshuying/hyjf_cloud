@@ -17,10 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +45,7 @@ public class WeChatAutoPlusController {
      * @Return: org.springframework.web.servlet.ModelAndView
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
-    @RequestMapping("/userAuthCredit")
+    @PostMapping("/userAuthCredit")
     public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
@@ -72,7 +69,7 @@ public class WeChatAutoPlusController {
      * @Return: org.springframework.web.servlet.ModelAndView
      */
     @ApiOperation(value = "自动投资授权接口", notes = "自动投资授权接口")
-    @RequestMapping("/userAuthInves")
+    @PostMapping("/userAuthInves")
     public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request){
 
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
@@ -98,7 +95,7 @@ public class WeChatAutoPlusController {
      * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
-    @RequestMapping("/userAuthCreditReturn")
+    @PostMapping("/userAuthCreditReturn")
     public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, BankCallBean bean, HttpServletRequest request) {
         ApiResult<Object> apiResult  = new ApiResult<>();
         String sign = request.getHeader("sign");
@@ -118,7 +115,7 @@ public class WeChatAutoPlusController {
      * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
-    @RequestMapping("/userAuthInvesReturn")
+    @PostMapping("/userAuthInvesReturn")
     public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token") String token,BankCallBean bean, HttpServletRequest request) {
         ApiResult<Object> apiResult  = new ApiResult<>();
         String sign = request.getHeader("sign");
@@ -137,7 +134,7 @@ public class WeChatAutoPlusController {
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
-    @RequestMapping("/userAuthInvesBgreturn")
+    @PostMapping("/userAuthInvesBgreturn")
     public String userAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean);
         return result;
@@ -151,7 +148,7 @@ public class WeChatAutoPlusController {
      * @Return: java.lang.String
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @RequestMapping("/userAuthCreditBgreturn")
+    @PostMapping("/userAuthCreditBgreturn")
     public String userCreditAuthInvesBgreturn(BankCallBean bean) {
 
         String result = autoPlusService.userBgreturn(bean);
