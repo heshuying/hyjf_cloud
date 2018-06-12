@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.CallCenterCustomizeMapper">
 
 <!-- 复投用户筛选 -->
-<select id="findNoServiceFuTouUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="Map">
+<select id="findNoServiceFuTouUsersList" resultType="com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize" parameterType="Map">
 	SELECT
 		hydu.user_id,
 		hydu.username,
@@ -47,7 +47,7 @@
 
 
 	<!-- 流失用户筛选 -->
-	<select id="findNoServiceLiuShiUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="Map">
+	<select id="findNoServiceLiuShiUsersList" resultType="com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize" parameterType="Map">
 		SELECT
 			hydu.user_id,
 			hydu.username,
