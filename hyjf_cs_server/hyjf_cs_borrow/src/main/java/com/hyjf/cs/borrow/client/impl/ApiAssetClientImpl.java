@@ -10,6 +10,7 @@ import com.hyjf.am.vo.borrow.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.cs.borrow.bean.assetpush.InfoBean;
 import com.hyjf.cs.borrow.client.ApiAssetClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -71,5 +72,11 @@ public class ApiAssetClientImpl implements ApiAssetClient {
             return 0;
         }
         return result;
+    }
+
+    @Override
+    public void insertRiskInfo(List<InfoBean> riskInfo) {
+        String url = "http://AM-BORROW/am-borrow/assetPush/insertRiskInfo";
+        restTemplate.postForEntity(url, riskInfo, Integer.class).getBody();
     }
 }
