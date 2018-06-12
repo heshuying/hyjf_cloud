@@ -47,6 +47,7 @@ public class SmsServiceImpl implements SmsService {
 		smsCode.setCheckfor(MD5.toMD5Code(mobile + verificationCode + verificationType + platform));
 		smsCode.setMobile(mobile);
 		smsCode.setCheckcode(verificationCode);
+		smsCode.setPosttime((int) (System.currentTimeMillis()/1000));
 		smsCode.setCreateTime(new Date());
 		smsCode.setStatus(status);
 		smsCode.setUserId(0);
@@ -113,6 +114,7 @@ public class SmsServiceImpl implements SmsService {
 		smsCode.setCheckfor(MD5.toMD5Code(mobile + verificationCode + verificationType + platform));
 		smsCode.setMobile(mobile);
 		smsCode.setCheckcode(verificationCode);
+		smsCode.setPosttime((int) (System.currentTimeMillis()/1000));
 		smsCode.setCreateTime(new Date());
 		smsCode.setStatus(status);
 		smsCode.setUserId(0);

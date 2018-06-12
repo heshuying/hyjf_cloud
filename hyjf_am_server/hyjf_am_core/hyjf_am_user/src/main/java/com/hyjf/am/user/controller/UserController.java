@@ -368,13 +368,30 @@ public class UserController {
 	
 	/**
 	 * 绑定邮箱更新
-	 * @param userid
+	 * @param userId
 	 * @param email
-	 * @param log
+	 * @param
 	 */
-	@RequestMapping("/updateBindEmail/{userid}/{email}")
-	public void updateBindEmail(@PathVariable Integer userid, @PathVariable String email) {
-		userService.updateBindEmail(userid, email);
+	@RequestMapping("/updateBindEmail/{userId}/{email}")
+	public void updateBindEmail(@PathVariable Integer userId, @PathVariable String email) {
+		userService.updateBindEmail(userId, email);
 	}
 
+	/**
+	 * 用户登录日志
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/getUserLoginById/{userId}")
+	public UserLoginLogResponse getUserLoginById(@PathVariable Integer userId){
+		UserLoginLogResponse response = new UserLoginLogResponse();
+		UserLoginLog userLoginLog = userService.selectByPrimaryKey(userId);
+		if (null != userLoginLog){
+			UserLoginLogVO userLoginLogVO = new UserLoginLogVO();
+			BeanUtils.copyProperties(userLoginLog,userLoginLogVO);
+			response.setResult(userLoginLogVO);
+		}
+		return response;
+
+	}
 }
