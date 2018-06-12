@@ -24,7 +24,6 @@
 		<module>hyjf_eureka</module>
 		<module>hyjf_zuul</module>
         <module>hyjf_spring_boot_admin</module>
-        <module>hyjf_zipkin</module>
     </modules>
 
 </project>
