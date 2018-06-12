@@ -28,6 +28,8 @@ public interface AmBindCardClient {
 
 	AccountVO getAccount(Integer userId);
 
+	boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode);
+
 }
 
 	

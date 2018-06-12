@@ -21,6 +21,11 @@ public interface BindCardService {
 
 	BankCallBean callBankUnBindCard(BindCardVO bindCardVO, Integer userId);
 
+	void checkParamSendcode(Integer userId, String mobile, String cardNo);
+
+	BankCallBean callSendCode(Integer userId, String cardNo, String mobile);
+
+	boolean updateAfterSendCode(BankCallBean bean);
 }
 
 	

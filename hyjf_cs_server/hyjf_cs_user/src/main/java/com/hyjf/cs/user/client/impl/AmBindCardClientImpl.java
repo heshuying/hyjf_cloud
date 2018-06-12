@@ -154,6 +154,17 @@ public class AmBindCardClientImpl implements AmBindCardClient{
         }
         return null;
     }
+	
+	/**
+	 * 
+	 * 更新绑卡验证码
+	 */
+	@Override
+	public boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode) {
+		boolean result = restTemplate
+				.postForEntity("http://AM-USER/am-user/card/updateBankSmsLog", null, Boolean.class, String.valueOf(userId), srvTxCode, srvAuthCode).getBody();
+		return result;
+	}
 }
 
 	
