@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,7 +34,7 @@ public class WebSmsCodeController {
 	 * @return
 	 * @throws MQException
 	 */
-	@RequestMapping(value = "/send")
+	@PostMapping(value = "/send")
 	public BaseResultBean sendSmsCode(@RequestParam String validCodeType,
 									  @RequestParam String mobile,
 									  @RequestHeader(value = "token", required = false) String token,

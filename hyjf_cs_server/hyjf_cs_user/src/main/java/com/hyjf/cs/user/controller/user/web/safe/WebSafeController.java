@@ -129,7 +129,7 @@ public class WebSafeController {
      * @param request
      * @return
      */
-    @RequestMapping("/mobileModifyInit")
+    @PostMapping("/mobileModifyInit")
     public ApiResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         ApiResult<MobileModifyResultBean> result = new ApiResult<MobileModifyResultBean>();
 

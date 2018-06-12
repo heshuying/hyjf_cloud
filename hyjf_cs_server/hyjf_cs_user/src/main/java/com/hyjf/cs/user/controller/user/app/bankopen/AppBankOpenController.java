@@ -69,7 +69,7 @@ public class AppBankOpenController {
     }
 
     @ApiOperation(value = "app端用户开户", notes = "app端用户开户")
-    @RequestMapping(value = "/openBankAccount")
+    @PostMapping(value = "/openBankAccount")
     public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         String platform = request.getParameter("platform");
@@ -123,7 +123,7 @@ public class AppBankOpenController {
      * @return
      */
     @ApiOperation(value = "app端用户同步回调", notes = "app端用户开户")
-    @RequestMapping(value = "/return")
+    @PostMapping(value = "/return")
     public Map<String, String> returnPage(HttpServletRequest request, @RequestHeader(value = "token", required = true) String token) {
         String isSuccess = request.getParameter("isSuccess");
         if (StringUtils.isEmpty(token)) {
@@ -142,7 +142,7 @@ public class AppBankOpenController {
      * @return
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
-    @RequestMapping("/bgReturn")
+    @PostMapping("/bgReturn")
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);

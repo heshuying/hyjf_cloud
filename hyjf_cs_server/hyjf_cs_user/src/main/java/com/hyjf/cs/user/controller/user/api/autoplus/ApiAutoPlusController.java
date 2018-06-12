@@ -10,6 +10,7 @@ import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -88,7 +89,7 @@ public class ApiAutoPlusController {
         }
         BankCallBean bean = autoPlusService.apiUserAuth(ClientConstants.CREDIT_AUTO_TYPE, paramMap.get("smsSeq"), payRequestBean);
         try {
-            modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
+            modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("调用银行接口失败！" + e.getMessage());
@@ -109,7 +110,7 @@ public class ApiAutoPlusController {
      * @Date: 10:11 2018/5/31
      * @Return: org.springframework.web.servlet.ModelAndView
      */
-    @RequestMapping("/userAuthInvesReturn")
+    @PostMapping("/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -128,7 +129,7 @@ public class ApiAutoPlusController {
      * @Date: 10:11 2018/5/31
      * @Return: org.springframework.web.servlet.ModelAndView
      */
-    @RequestMapping("/userCreditAuthInvesReturn")
+    @PostMapping("/userCreditAuthInvesReturn")
     public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -148,7 +149,7 @@ public class ApiAutoPlusController {
      * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
      */
     @ResponseBody
-    @RequestMapping("/userAuthInvesBgreturn")
+    @PostMapping("/userAuthInvesBgreturn")
     public BankCallResult userAuthInvesBgreturn(HttpServletRequest request, BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
@@ -165,7 +166,7 @@ public class ApiAutoPlusController {
      * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
      */
     @ResponseBody
-    @RequestMapping("/userCreditAuthInvesBgreturn")
+    @PostMapping("/userCreditAuthInvesBgreturn")
     public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request, BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
