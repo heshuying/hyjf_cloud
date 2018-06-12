@@ -11,7 +11,6 @@ import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
 import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
-import com.hyjf.am.user.utils.BankCallConstant;
 import com.hyjf.am.user.utils.UploadFileUtils;
 import com.hyjf.am.vo.borrow.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -19,6 +18,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5Utils;
@@ -739,43 +739,43 @@ public class UserServiceImpl implements UserService {
 	private void setAuthType(HjhUserAuth hjhUserAuth, BankRequest bean) {
 		// 授权类型
 		String txcode = bean.getTxCode();
-		if(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS.equals(txcode)){
+		if(ClientConstants.TXCODE_AUTO_BID_AUTH_PLUS.equals(txcode)){
 			hjhUserAuth.setAutoInvesStatus(1);
 			hjhUserAuth.setAutoOrderId(bean.getOrderId());
 			hjhUserAuth.setAutoBidTime(GetDate.getNowTime10());
 			hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
 			hjhUserAuth.setAutoBidEndTime(bean.getDeadline());
-		}else if(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS.equals(txcode)){
+		}else if(ClientConstants.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS.equals(txcode)){
 			hjhUserAuth.setAutoCreditStatus(1);
 			hjhUserAuth.setAutoCreditOrderId(bean.getOrderId());
 			hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
 			hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
-		}else if(BankCallConstant.TXCODE_CREDIT_AUTH_QUERY.equals(txcode)){
+		}else if(ClientConstants.TXCODE_CREDIT_AUTH_QUERY.equals(txcode)){
 			//根据银行查询投资人签约状态
-			if(BankCallConstant.QUERY_TYPE_1.equals(bean.getType())){
+			if(ClientConstants.QUERY_TYPE_1.equals(bean.getType())){
 				hjhUserAuth.setAutoInvesStatus(1);
 				hjhUserAuth.setAutoOrderId(bean.getOrderId());
 				hjhUserAuth.setAutoBidTime(GetDate.getNowTime10());
 				hjhUserAuth.setAutoBidEndTime(bean.getBidDeadline());
-			}else if(BankCallConstant.QUERY_TYPE_2.equals(bean.getType())){
+			}else if(ClientConstants.QUERY_TYPE_2.equals(bean.getType())){
 				hjhUserAuth.setAutoCreditStatus(1);
 				hjhUserAuth.setAutoCreditOrderId(bean.getOrderId());
 				hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
 			}
 		}
 		// 新增缴费授权和还款授权
-		else if(BankCallConstant.TXCODE_PAYMENT_AUTH_PAGE.equals(txcode)){
+		else if(ClientConstants.TXCODE_PAYMENT_AUTH_PAGE.equals(txcode)){
 			hjhUserAuth.setAutoPaymentStatus(1);
 			hjhUserAuth.setAutoPaymentEndTime(bean.getDeadline());
 			hjhUserAuth.setAutoPaymentTime(GetDate.getNowTime10());
-		}else if(BankCallConstant.TXCODE_REPAY_AUTH_PAGE.equals(txcode)){
+		}else if(ClientConstants.TXCODE_REPAY_AUTH_PAGE.equals(txcode)){
 			hjhUserAuth.setAutoRepayStatus(1);
 			hjhUserAuth.setAutoRepayEndTime(bean.getDeadline());
 			hjhUserAuth.setAutoRepayTime(GetDate.getNowTime10());
 		}
 
 		// 客户授权功能查询接口
-		else if(BankCallConstant.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
+		else if(ClientConstants.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
 			//自动投标功能开通标志
 			String autoBidStatus = bean.getAutoBid();
 			//自动债转功能开通标志
@@ -927,7 +927,7 @@ public class UserServiceImpl implements UserService {
 	 * 绑定邮箱更新
 	 * @param userid
 	 * @param email
-	 * @param log
+	 * @param
 	 */
 	@Override
 	public void updateBindEmail(Integer userid, String email) {

@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.user.api.bankopen;
+package com.hyjf.cs.user.controller.user.web.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,12 +35,12 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * 
- * @author Administrator
+ * @author sunss
  *
  */
-@Api(value = "用户开户接口")
+@Api(value = "web端用户开户接口")
 @Controller
-@RequestMapping("/api/secure/open")
+@RequestMapping("/web/secure/open")
 public class BankOpenController {
 	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
 
@@ -52,29 +53,25 @@ public class BankOpenController {
 	}
 
 	/**
-	 * 开户
-	 * 
-	 * @param registerVO
-	 * @param request
-	 * @param response
-	 * @return
+	 * @Description 开户
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/12 10:17
 	 */
-    @ApiOperation(value = "开户", notes = "用户开户")
+    @ApiOperation(value = "web端用户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
-	public ModelAndView openBankAccount(@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
+	public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
         logger.info("openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
 		
 		ModelAndView reuslt = new ModelAndView("bankopen/error");
 
-        // 获取登陆用户userId
-        Integer userId = bankOpenVO.getUserId();
         // 验证请求参数
-        if (userId != null) {
+        if (token == null) {
         	model.addAttribute("message", "用户未登陆，请先登陆！");
             return reuslt;
         }
         
-        UserVO user = this.bankOpenService.getUsers(userId);
+        UserVO user = this.bankOpenService.getUsers(token);
         
         if (user == null) {
         	model.addAttribute("message", "获取用户信息失败！");
@@ -166,7 +163,7 @@ public class BankOpenController {
 		}
         
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
-        openBean.setUserId(userId);
+        openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
         // 同步 异步
         openBean.setRetUrl(retUrl);
@@ -187,9 +184,9 @@ public class BankOpenController {
         openBean.setIdentity("1");
         reuslt = getCallbankMV(openBean);
         //保存开户日志
-        int uflag = this.bankOpenService.updateUserAccountLog(userId, user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
         if (uflag == 0) {
-            logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + userId + "]");
+            logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             model.addAttribute("message", "操作失败！");
             return reuslt;
         }

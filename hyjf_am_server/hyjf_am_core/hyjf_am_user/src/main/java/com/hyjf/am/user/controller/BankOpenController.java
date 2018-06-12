@@ -5,6 +5,7 @@ import com.hyjf.am.response.borrow.BankCardResponse;
 import com.hyjf.am.response.borrow.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BankOpenService;
@@ -179,4 +180,15 @@ public class BankOpenController {
 		return response;
 	}
 
+	/**
+	 * 开户成功后保存银行卡信息
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/saveCardNoToBank")
+	public int saveCardNoToBank(@RequestBody @Valid BankCardRequest request) {
+		logger.info("saveCardNoToBank...param is :{}", JSONObject.toJSONString(request));
+		boolean result = this.bankOpenService.saveCardNoToBank(request);
+		return result ? 1 : 0;
+	}
 }

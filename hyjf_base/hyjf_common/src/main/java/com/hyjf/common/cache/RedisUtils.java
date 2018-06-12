@@ -3,6 +3,7 @@ package com.hyjf.common.cache;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -805,6 +806,80 @@ public class RedisUtils {
             if(loginCount > count){//如果1秒之内登录次数大于5就就将这个IP加入黑名单
                 result = true;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @param key
+     * @param hash
+     * @return
+     */
+    public static String hmset(String key,Map<String, String> hash) {
+        String result = null;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            result = jedis.hmset(key, hash);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @param key
+     * @param field
+     * @return
+     */
+    public static String hget(String key,String field) {
+        String result = null;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            result = jedis.hget(key, field);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @param key
+     * @return
+     */
+    public static Map<String, String> hgetall(String key) {
+    	Map<String, String> result = null;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            result = jedis.hgetAll(key);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

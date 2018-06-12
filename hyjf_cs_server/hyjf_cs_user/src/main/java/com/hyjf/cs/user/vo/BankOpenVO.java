@@ -15,6 +15,8 @@ public class BankOpenVO {
 	
 	private Integer userId;
 
+	private Integer platform;
+
 	@Override
 	public String toString() {
 		return "BankOpenVO{" +
@@ -75,4 +77,11 @@ public class BankOpenVO {
 		this.userId = userId;
 	}
 
+	public Integer getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(Integer platform) {
+		this.platform = platform;
+	}
 }

@@ -1,6 +1,7 @@
 package com.hyjf.pay.lib.bank.bean;
 
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.PropUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 
 import java.io.Serializable;
@@ -85,8 +86,56 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
         setBankCallLog(userId);
     }
 
+	/**
+	 * 创建调用江西银行的实体  接口调用
+	 * @author sunss
+	 * @param userId
+	 * @param txCode
+	 * @param client
+	 */
+	public BankCallBean(Integer userId, String txCode, Integer client) {
+		super();
+		setCallCommon(userId, txCode, client);
+	}
 
-    /**
+	/**
+	 * 创建调用江西银行的实体  页面调用
+	 * @author sunss
+	 * @param userId
+	 * @param txCode
+	 * @param client
+	 */
+	public BankCallBean(Integer userId, String txCode, Integer client,String logBankDetailUrl) {
+		super();
+		setCallCommon(userId, txCode, client);
+		// 页面调用必传   页面地址
+		this.logBankDetailUrl = logBankDetailUrl;
+	}
+
+	private void setCallCommon(Integer userId, String txCode, Integer client) {
+		String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
+		String bankInstCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String txDate = GetOrderIdUtils.getTxDate();
+		String txTime = GetOrderIdUtils.getTxTime();
+		String seqNo = GetOrderIdUtils.getSeqNo(6);
+		String orderId = GetOrderIdUtils.getOrderId2(userId);
+		// 调用开户接口
+		this.version = BankCallConstant.VERSION_10;
+		this.txCode = txCode;
+		this.instCode = bankInstCode;
+		this.bankCode = bankCode;
+		this.txDate = txDate;
+		// 交易时间
+		this.txTime = txTime;
+		this.seqNo = seqNo;
+		this.logOrderId = orderId;
+		this.logOrderDate = orderDate;
+		this.logUserId = userId+"";
+		this.logClient = client;
+	}
+
+	/**
      * 构造体用设置共通字段
      * @author
      * @param version

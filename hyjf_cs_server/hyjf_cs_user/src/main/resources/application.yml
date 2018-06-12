@@ -15,3 +15,13 @@ redis:
 rocketMQ:
   namesrvAddr: 123.56.216.212:5555
 
+am:
+  config:
+    service:
+      name: AM-CONFIG
+  user:
+    service:
+      name: AM-USER
+  trade:
+    service:
+      name: AM-TRADE

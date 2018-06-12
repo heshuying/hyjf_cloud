@@ -18,7 +18,6 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -61,7 +60,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
      * @param token
      * @param client 0web 1wechat 2app
      * @param type 1表示投资 2表示债转
-     * @param request
+     * @param
      * @return
      */
     @Override
@@ -70,7 +69,6 @@ public class AutoPlusServiceImpl implements AutoPlusService {
         //检查用户信息
         UserVO users = this.checkUserMessage(user,lastSrvAuthCode,smsCode);
         // 判断是否授权过
-        // TODO: 2018/5/24 判断授权方法有不同处理
         HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
         if(hjhUserAuth!=null&&hjhUserAuth.getAutoCreditStatus().intValue()==1){
             throw new ReturnMessageException(AuthorizedError.CANNOT_REPEAT_ERROR);
@@ -87,7 +85,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
      * @param token
      * @param bean
      * @param userAutoType 1债转 0投资
-     * @param request
+     * @param
      * @return
      */
     @Override
@@ -97,8 +95,8 @@ public class AutoPlusServiceImpl implements AutoPlusService {
         // 用户ID
         Integer userId = Integer.parseInt(bean.getLogUserId());
         HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(userId);
-        if (isSuccess == null || !"1".equals(isSuccess)|| hjhUserAuth == null||hjhUserAuth.getAutoCreditStatus()!=1) {
-            if (ClientConstant.INVES_AUTO_TYPE.equals(userAutoType)){
+        if (isSuccess == null || !ClientConstants.ISSUCCESS.equals(isSuccess)|| hjhUserAuth == null||hjhUserAuth.getAutoCreditStatus()!=1) {
+            if (ClientConstants.INVES_AUTO_TYPE.equals(userAutoType)){
                 result = getErrorMap(ResultEnum.USER_ERROR_204,sign,userAutoType, hjhUserAuth);
             }else {
                 result = getErrorMap(ResultEnum.USER_ERROR_205,sign,userAutoType, hjhUserAuth);
@@ -135,8 +133,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
      * 组装跳转成功页面MV
      * @param sign
      * @param type
-     * @param autoInvesStatus
-     * @param autoCreditStatus
+     * @param hjhUserAuth
      * @return
      */
     private Map<String,BaseMapBean> getSuccessMap(String sign, String type, HjhUserAuthVO hjhUserAuth) {
@@ -158,7 +155,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
      * web自动投资授权同步回调
      * @param token
      * @param bean
-     * @param request
+     * @param
      * @return
      */
     @Override
@@ -170,7 +167,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
         if (user == null) {
             throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
         }
-        if (isSuccess == null || !"1".equals(isSuccess)) {
+        if (isSuccess == null || !ClientConstants.ISSUCCESS.equals(isSuccess)) {
             resultMap.put("status", "fail");
         }
         logger.info("自动投资授权同步回调调用查询接口查询状态结束  结果为:" + (bean == null ? "空" : bean.getRetCode()));
@@ -224,8 +221,8 @@ public class AutoPlusServiceImpl implements AutoPlusService {
     private BankCallBean getCommonBankCallBean(WebViewUser users,String type,Integer client, String channel,String lastSrvAuthCode,String smsCode) {
         String remark = "";
         String txcode = "";
-        String retUrl = systemConfig.getWebHost()+ ClientConstant.CLIENT_HEADER_MAP.get(client)+"/user";
-        String bgRetUrl = systemConfig.getWebHost()+ClientConstant.CLIENT_HEADER_MAP.get(client)+"/user";
+        String retUrl = systemConfig.getWebHost()+ ClientConstants.CLIENT_HEADER_MAP.get(client)+"/user";
+        String bgRetUrl = systemConfig.getWebHost()+ClientConstants.CLIENT_HEADER_MAP.get(client)+"/user";
         BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,txcode,users.getUserId(),channel);
         if(BankCallConstant.QUERY_TYPE_1.equals(type)){
             remark = "投资人自动投标签约增强";
@@ -562,6 +559,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
         result.setStatus(true);
         return result;
     }
+
     public BankCallBean getUserAuthQUery(Integer userId,String type) {
         // 调用查询投资人签约状态查询
         BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(userId);
