@@ -105,8 +105,7 @@ public class ApiAssetPushController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            _log.error(e.getMessage());
+            _log.error(e.getMessage(), e);
             return resultBean;
         }
 
@@ -304,8 +303,7 @@ public class ApiAssetPushController {
 
             } catch (Exception e) {
                 // ZT000008
-                _log.error(e.getMessage());
-                e.printStackTrace();
+                _log.error(e.getMessage(), e);
                 if (e instanceof DuplicateKeyException) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
                     pushBean.setRetMsg("资产已入库");
