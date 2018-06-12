@@ -11,6 +11,7 @@ import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
@@ -24,7 +25,6 @@ import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.BaseServiceImpl;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
-import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -217,10 +217,10 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         openAccoutBean.setAcctUse(openBean.getAcctUse());
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
-        String retUrl = systemConfig.getWebHost() + ClientConstant.CLIENT_HEADER_MAP.get(openBean.getPlatform()) + "/user/open/return?phone=" + openBean.getMobile();
+        String retUrl = systemConfig.getWebHost() + ClientConstants.CLIENT_HEADER_MAP.get(openBean.getPlatform()) + "/user/open/return?phone=" + openBean.getMobile();
         String successUrl = retUrl + "&isSuccess=1";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + ClientConstant.CLIENT_HEADER_MAP.get(openBean.getPlatform()) + "/user/open/bgReturn.do?phone=" + openBean.getMobile();
+        String bgRetUrl = systemConfig.getWebHost() + ClientConstants.CLIENT_HEADER_MAP.get(openBean.getPlatform()) + "/user/open/bgReturn.do?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
