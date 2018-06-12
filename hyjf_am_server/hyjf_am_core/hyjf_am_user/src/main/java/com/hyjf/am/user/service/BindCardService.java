@@ -22,4 +22,6 @@ public interface BindCardService {
 	int updateUserCard(BankCard bankCard);
 
 	int insertBindCardLog(BankCardLog bankCardLog);
+	
+	boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode);
 }

@@ -74,6 +74,86 @@ public class BindCardServiceImpl implements BindCardService{
 	}
 	
 	/**
+	 * 发送验证码请求参数校验
+	 * @param bindCardVO
+	 * @param userId
+	 */
+	@Override
+	public void checkParamSendcode(Integer userId, String mobile, String cardNo) {
+        // 手机号校验
+        if(StringUtils.isBlank(mobile)) {
+        	throw new ReturnMessageException(BindCardError.MOBILE_ERROR);
+        }
+        // 银行卡号校验
+        if(StringUtils.isEmpty(cardNo)) {
+        	throw new ReturnMessageException(BindCardError.CARD_NO_ERROR);
+        }
+
+        // 开户校验
+        if (!this.checkIsOpen(userId)) {
+        	throw new ReturnMessageException(BindCardError.BANK_NOT_OPEN_ERROR);
+        }
+	}
+	
+	/**
+	 * 请求验证码接口
+	 * @param userId
+	 * @param cardNo
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public BankCallBean callSendCode(Integer userId, String cardNo, String mobile) {
+		// 调用存管接口发送验证码
+		BankCallBean retBean = null;
+        BankCallBean bean = new BankCallBean();
+        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+        bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);// 交易代码cardBind
+        bean.setTxDate(GetOrderIdUtils.getOrderDate());// 交易日期
+        bean.setTxTime(GetOrderIdUtils.getOrderTime());// 交易时间
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
+        bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道000001手机APP 000002网页
+        bean.setReqType("1");
+        bean.setCardNo(cardNo);
+        bean.setSrvTxCode("cardBindPlus");
+        bean.setMobile(mobile);// 交易渠道
+        bean.setSmsType("1");
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));// 订单号
+        bean.setLogUserId(String.valueOf(userId));// 请求用户名
+        
+        try {
+            retBean  = BankCallUtils.callApiBg(bean);
+        } catch (Exception e) {
+            logger.info("绑卡请求银行接口失败", e);
+            return null;
+        }
+        
+        if (Validator.isNull(retBean)) {
+            return null;
+        }
+        // 短信发送返回结果码
+        String retCode = retBean.getRetCode();
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
+            return null;
+        }
+        if (Validator.isNull(retBean.getSrvAuthCode()) && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
+            return null;
+        }
+        
+        return retBean;
+	}
+	
+	/**
+	 * 更新绑卡短信验证码
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public boolean updateAfterSendCode(BankCallBean bean) {
+		return amBindCardClient.updateBankSmsLog(Integer.parseInt(bean.getLogUserId()), bean.getTxCode(), bean.getSrvAuthCode());
+	}
+	
+	/**
 	 * 请求参数校验
 	 * @param bindCardVO
 	 * @param userId

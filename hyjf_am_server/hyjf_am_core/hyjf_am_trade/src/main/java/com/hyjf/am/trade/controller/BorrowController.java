@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "根据机构编号检索机构信息")
 @RestController
-@RequestMapping("/am-borrow/borrow")
+@RequestMapping("/am-trade/trade")
 public class BorrowController {
 
     @Autowired

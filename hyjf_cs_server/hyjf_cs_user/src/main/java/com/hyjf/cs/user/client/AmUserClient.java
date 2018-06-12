@@ -72,6 +72,8 @@ public interface AmUserClient {
 	int updateUserContract(UsersContractRequest bean);
 
     UsersContactVO selectUserContact(Integer userId);
-    
+
     int updateUserNoticeSet(UserNoticeSetRequest requestBean);
+
+	UserInfoVO getUserByIdNo(String idNo);
 }

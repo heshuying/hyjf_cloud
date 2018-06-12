@@ -3,6 +3,8 @@ package com.hyjf.am.user.controller;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.UserInfoService;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,18 @@ public class UserInfoController {
 	public UserInfoResponse findUserInfoById(@PathVariable int userId) {
 		UserInfoResponse response = new UserInfoResponse();
 		UserInfo usersInfo = userInfoService.findUserInfoById(userId);
+		if (usersInfo != null) {
+			UserInfoVO userInfoVO = new UserInfoVO();
+			BeanUtils.copyProperties(usersInfo, userInfoVO);
+			response.setResult(userInfoVO);
+		}
+		return response;
+	}
+
+	@RequestMapping("/findByIdNo/{idNo}")
+	public UserInfoResponse findUserInfoByIdNo(@PathVariable String idNo) {
+		UserInfoResponse response = new UserInfoResponse();
+		UserInfo usersInfo = userInfoService.findUserInfoByIdNo(idNo);
 		if (usersInfo != null) {
 			UserInfoVO userInfoVO = new UserInfoVO();
 			BeanUtils.copyProperties(usersInfo, userInfoVO);

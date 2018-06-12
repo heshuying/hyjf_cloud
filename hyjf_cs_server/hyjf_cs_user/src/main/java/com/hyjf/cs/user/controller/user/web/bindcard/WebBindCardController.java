@@ -36,6 +36,45 @@ public class WebBindCardController {
 	@Autowired
 	BindCardService bindCardService;
 	
+	@ApiOperation(value = "用户绑卡发送短信验证码", notes = "用户绑卡发送短信验证码")
+	@PostMapping(value = "/bindCardSendCode", produces = "application/json; charset=utf-8")
+	public ApiResult<Object> bindCardSendCode(@RequestHeader(value = "token", required = true) String token, @RequestParam String mobile, @RequestParam String cardNo, HttpServletRequest request,
+			HttpServletResponse response) {
+		logger.info("绑卡发送验证码开始, mobile :{}，cardNo:{}", mobile, cardNo);
+		ApiResult<Object> result = new ApiResult<Object>();
+		
+		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        
+        bindCardService.checkParamSendcode(user.getUserId(), mobile, cardNo);
+        
+        // 请求银行绑卡接口
+        BankCallBean bankBean = null;
+		try {
+			bankBean = bindCardService.callSendCode(user.getUserId(), cardNo, mobile);
+		} catch (Exception e) {
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			logger.error("请求绑卡验证码接口发生异常", e);
+		}
+        
+        if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
+        	result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			logger.error("请求绑卡验证码接口失败");
+        }
+        
+        // 绑卡请求后业务处理
+        try {
+			bindCardService.updateAfterSendCode(bankBean);
+		} catch (Exception e) {
+			result.setStatus(ApiResult.STATUS_FAIL);
+			result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMessage());
+			logger.error("绑卡发送验证码后处理异常", e);
+		}
+        
+		return result;
+	}
+	
 	@ApiOperation(value = "用户绑卡", notes = "用户绑卡")
 	@PostMapping(value = "/bindCard", produces = "application/json; charset=utf-8")
 	public ApiResult<Object> bindCard(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,

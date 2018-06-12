@@ -24,13 +24,28 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Autowired
 	private UserInfoMapper userInfoMapper;
 
-	@Autowired
-	private BankOpenAccountMapper bankOpenAccountMapper;
-
 	@Override
 	public UserInfo findUserInfoById(int userId) {
 		UserInfoExample UserInfoExample = new UserInfoExample();
 		UserInfoExample.createCriteria().andUserIdEqualTo(userId);
+		List<UserInfo> usersList = userInfoMapper.selectByExample(UserInfoExample);
+		if (!CollectionUtils.isEmpty(usersList)) {
+			return usersList.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * @param idNo
+	 * @Description 根据身份证号查询用户信息
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/6 11:43
+	 */
+	@Override
+	public UserInfo findUserInfoByIdNo(String idNo) {
+		UserInfoExample UserInfoExample = new UserInfoExample();
+		UserInfoExample.createCriteria().andIdcardEqualTo(idNo);
 		List<UserInfo> usersList = userInfoMapper.selectByExample(UserInfoExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);

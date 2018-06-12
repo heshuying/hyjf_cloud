@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AppChannelStatisticsDetailProducer;
@@ -15,6 +16,7 @@ import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -335,5 +337,18 @@ public class BankOpenServiceImpl implements BankOpenService {
         return null;
     }
 
+    /**
+     * @Description  开户成功后保存银行卡信息
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/5 14:02
+     */
+    @Override
+    public boolean saveCardNoToBank(BankCardRequest request) {
+        BankCard card = new BankCard();
+        BeanUtils.copyProperties(request,card);
+        boolean bankCardFlag = this.bankCardMapper.insertSelective(card) > 0 ? true : false;
+        return bankCardFlag;
+    }
 
 }

@@ -3,14 +3,13 @@
  */
 package com.hyjf.cs.user.controller.user.api.autoplus;
 
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.AutoPlusRetBean;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -52,13 +51,13 @@ public class ApiAutoPlusController {
     public ModelAndView userAuthInves(AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
-        if ("false".equals(paramMap.get("isSuccess"))) {
+        if (ClientConstants.FAIL.equals(paramMap.get("isSuccess"))) {
             modelAndView.addObject("callBackForm", paramMap);
             return modelAndView;
         }
-        BankCallBean bean = autoPlusService.apiUserAuth(ClientConstant.INVES_AUTO_TYPE, paramMap.get("smsSeq"), payRequestBean);
+        BankCallBean bean = autoPlusService.apiUserAuth(ClientConstants.INVES_AUTO_TYPE, paramMap.get("smsSeq"), payRequestBean);
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("调用银行接口失败！" + e.getMessage());
@@ -83,13 +82,13 @@ public class ApiAutoPlusController {
     public ModelAndView userAuthCredit(AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
-        if ("false".equals(paramMap.get("isSuccess"))) {
+        if (ClientConstants.FAIL.equals(paramMap.get("isSuccess"))) {
             modelAndView.addObject("callBackForm", paramMap);
             return modelAndView;
         }
-        BankCallBean bean = autoPlusService.apiUserAuth(ClientConstant.CREDIT_AUTO_TYPE, paramMap.get("smsSeq"), payRequestBean);
+        BankCallBean bean = autoPlusService.apiUserAuth(ClientConstants.CREDIT_AUTO_TYPE, paramMap.get("smsSeq"), payRequestBean);
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("调用银行接口失败！" + e.getMessage());
@@ -115,7 +114,7 @@ public class ApiAutoPlusController {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
-        AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes,ClientConstant.QUERY_TYPE_1);
+        AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes, ClientConstants.QUERY_TYPE_1);
         modelAndView.addObject("callBackForm", repwdResult);
         return modelAndView;
 
@@ -134,7 +133,7 @@ public class ApiAutoPlusController {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
-        AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes,ClientConstant.QUERY_TYPE_2);
+        AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes, ClientConstants.QUERY_TYPE_2);
         modelAndView.addObject("callBackForm", repwdResult);
         return modelAndView;
 
