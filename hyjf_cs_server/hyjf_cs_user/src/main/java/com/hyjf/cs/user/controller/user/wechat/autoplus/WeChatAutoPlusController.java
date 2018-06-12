@@ -4,11 +4,11 @@
 package com.hyjf.cs.user.controller.user.wechat.autoplus;
 
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.beans.BaseMapBean;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -52,7 +52,7 @@ public class WeChatAutoPlusController {
     public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
-        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstants.CHANNEL_WEI,lastSrvAuthCode,smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
@@ -77,7 +77,7 @@ public class WeChatAutoPlusController {
 
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
-        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstant.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstant.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstants.CHANNEL_WEI,lastSrvAuthCode,smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
@@ -103,7 +103,7 @@ public class WeChatAutoPlusController {
         ApiResult<Object> apiResult  = new ApiResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
-        Map<String, BaseMapBean> result = autoPlusService.userAuthCreditReturn(token, bean, ClientConstant.CREDIT_AUTO_TYPE, sign, isSuccess);
+        Map<String, BaseMapBean> result = autoPlusService.userAuthCreditReturn(token, bean, ClientConstants.CREDIT_AUTO_TYPE, sign, isSuccess);
         apiResult.setResult(result);
         return apiResult;
     }
@@ -123,7 +123,7 @@ public class WeChatAutoPlusController {
         ApiResult<Object> apiResult  = new ApiResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
-        Map<String, BaseMapBean> result = autoPlusService.userAuthCreditReturn(token, bean, ClientConstant.INVES_AUTO_TYPE, sign, isSuccess);
+        Map<String, BaseMapBean> result = autoPlusService.userAuthCreditReturn(token, bean, ClientConstants.INVES_AUTO_TYPE, sign, isSuccess);
         apiResult.setResult(result);
         return apiResult;
     }

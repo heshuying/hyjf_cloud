@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "充值接口")
 @RestController
-@RequestMapping("/am-borrow/recharge")
+@RequestMapping("am-trade/trad")
 public class RechargeController {
     private static Logger logger = LoggerFactory.getLogger(RechargeController.class);
 
@@ -56,7 +56,7 @@ public class RechargeController {
 
     /**
      * 查询充值记录
-     * @param example
+     * @param
      * @return
      */
     @ApiOperation(value = " 查询充值记录", notes = " 查询充值记录")

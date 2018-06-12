@@ -8,15 +8,82 @@
  * Modification History:
  * Modified by :
  */
-package com.hyjf.am.user.utils;
+package com.hyjf.common.util;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class BankCallConstant implements Serializable {
+public class ClientConstants implements Serializable {
 	/**
 	 * 序列化id
 	 */
 	private static final long serialVersionUID = -7131277696965280498L;
+
+	public static final String FAIL = "false";
+
+	public static final String ISSUCCESS = "1";
+	/**
+	 * web端
+	 */
+	public static final int WEB_CLIENT = 0;
+
+	/**
+	 * 微信端
+	 */
+	public static final int WECHAT_CLIENT = 1;
+
+	/**
+	 * APP端
+	 */
+	public static final int APP_CLIENT = 2;
+
+	/**
+	 * 用户授权自动债转
+	 */
+	public static final String CREDIT_AUTO_TYPE = "1";
+
+	/**
+	 * 用户授权自动投资
+	 */
+	public static final String INVES_AUTO_TYPE = "0";
+
+	/** 自动投标签约 签约状态查询 */
+	public static final String QUERY_TYPE_1 = "1";
+
+	/** 自动债转签约签约状态查询 */
+	public static final String QUERY_TYPE_2 = "2";
+
+	/**
+	 * 自动债转URL_TYPE
+	 */
+	public static final String CREDIT_URL_TYPE = "1";
+
+	/**
+	 * 自动投资URL_TYPE
+	 */
+	public static final String INVES_URL_TYPE = "2";
+
+	/** 存管渠道 app */
+	public static final String CHANNEL_APP = "000001";
+
+	/** 存管渠道 pc*/
+	public static final String CHANNEL_PC = "000002";
+
+	/** 存管渠道 wechat*/
+	public static final String CHANNEL_WEI = "000003";
+
+	/** 存管渠道柜面 */
+	public static final String CHANNEL_OTHER = "000004";
+
+	/**
+	 * url header获取
+	 */
+	public static final Map<Integer,String> CLIENT_HEADER_MAP = new HashMap<Integer, String>(){{
+		put(WEB_CLIENT,"web");
+		put(WECHAT_CLIENT,"wechat");
+		put(APP_CLIENT,"app");
+	}};
 
 	// 版本号
 	/** 版本号:10 */
@@ -25,15 +92,6 @@ public class BankCallConstant implements Serializable {
 	public static final String VERSION_20 = "20";
 	/** 版本号:30 */
 	public static final String VERSION_30 = "30";
-
-	/** 存管渠道 app */
-	public static final String CHANNEL_APP = "000001";
-	/** 存管渠道 pc*/
-	public static final String CHANNEL_PC = "000002";
-	/** 存管渠道 wechat*/
-	public static final String CHANNEL_WEI = "000003";
-	/** 存管渠道柜面 */
-	public static final String CHANNEL_OTHER = "000004";
 
 	/** 账户用途 */
 	/** 普通账户 */
@@ -69,10 +127,6 @@ public class BankCallConstant implements Serializable {
 	public static final String BANK_URL_DIRECT_RECHARGE_PAGE = "/p2p/page/directRechargePage";
 	public static final String BANK_URL_PAYMENT_AUTH_PAGE = "/p2p/page/paymentAuthPage";
 	public static final String BANK_URL_REPAY_AUTH_PAGE = "/p2p/page/repayAuthPage";
-	/** 签约状态查询 1 自动投标签约 */
-	public static final String QUERY_TYPE_1 = "1";
-	/** 签约状态查询 2 自动债转签约*/
-	public static final String QUERY_TYPE_2 = "2";
 
 	/** 提现手续费 */
 	public static final String BANK_FEE = "hyjf.bank.fee";

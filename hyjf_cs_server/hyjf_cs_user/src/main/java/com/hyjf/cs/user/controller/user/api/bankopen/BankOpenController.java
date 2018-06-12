@@ -51,14 +51,13 @@ public class BankOpenController {
 		return "bankopen/init";
 	}
 
-	/**
-	 * 开户
-	 * 
-	 * @param registerVO
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+    /**
+     * 开户
+     * @param bankOpenVO
+     * @param request
+     * @param model
+     * @return
+     */
     @ApiOperation(value = "开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
 	public ModelAndView openBankAccount(@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
