@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.borrow.controller;
+package com.hyjf.cs.borrow.controller.api;
 
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;

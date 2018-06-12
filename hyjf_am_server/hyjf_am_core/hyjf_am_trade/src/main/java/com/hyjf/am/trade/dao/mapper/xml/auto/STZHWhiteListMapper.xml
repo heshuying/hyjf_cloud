@@ -18,7 +18,7 @@
     <result column="createuser" property="createuser" jdbcType="VARCHAR" />
     <result column="updatetime" property="updatetime" jdbcType="VARCHAR" />
     <result column="updateuser" property="updateuser" jdbcType="VARCHAR" />
-    <result column="del_flg" property="delFlg" jdbcType="BIT" />
+    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
     <result column="approval_name" property="approvalName" jdbcType="VARCHAR" />
     <result column="approval_time" property="approvalTime" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -138,7 +138,7 @@
       #{stUserName,jdbcType=VARCHAR}, #{stAccountid,jdbcType=VARCHAR}, #{stMobile,jdbcType=VARCHAR}, 
       #{stCustomerName,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{createtime,jdbcType=VARCHAR}, 
       #{createuser,jdbcType=VARCHAR}, #{updatetime,jdbcType=VARCHAR}, #{updateuser,jdbcType=VARCHAR}, 
-      #{delFlg,jdbcType=BIT}, #{approvalName,jdbcType=VARCHAR}, #{approvalTime,jdbcType=VARCHAR}, 
+      #{delFlg,jdbcType=TINYINT}, #{approvalName,jdbcType=VARCHAR}, #{approvalTime,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{instcode,jdbcType=VARCHAR}, #{instname,jdbcType=VARCHAR}
       )
   </insert>
@@ -259,7 +259,7 @@
         #{updateuser,jdbcType=VARCHAR},
       </if>
       <if test="delFlg != null" >
-        #{delFlg,jdbcType=BIT},
+        #{delFlg,jdbcType=TINYINT},
       </if>
       <if test="approvalName != null" >
         #{approvalName,jdbcType=VARCHAR},
@@ -336,7 +336,7 @@
         updateuser = #{record.updateuser,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=BIT},
+        del_flg = #{record.delFlg,jdbcType=TINYINT},
       </if>
       <if test="record.approvalName != null" >
         approval_name = #{record.approvalName,jdbcType=VARCHAR},
@@ -376,7 +376,7 @@
       `createuser` = #{record.createuser,jdbcType=VARCHAR},
       updatetime = #{record.updatetime,jdbcType=VARCHAR},
       updateuser = #{record.updateuser,jdbcType=VARCHAR},
-      del_flg = #{record.delFlg,jdbcType=BIT},
+      del_flg = #{record.delFlg,jdbcType=TINYINT},
       approval_name = #{record.approvalName,jdbcType=VARCHAR},
       approval_time = #{record.approvalTime,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
@@ -435,7 +435,7 @@
         updateuser = #{updateuser,jdbcType=VARCHAR},
       </if>
       <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=BIT},
+        del_flg = #{delFlg,jdbcType=TINYINT},
       </if>
       <if test="approvalName != null" >
         approval_name = #{approvalName,jdbcType=VARCHAR},
@@ -472,7 +472,7 @@
       `createuser` = #{createuser,jdbcType=VARCHAR},
       updatetime = #{updatetime,jdbcType=VARCHAR},
       updateuser = #{updateuser,jdbcType=VARCHAR},
-      del_flg = #{delFlg,jdbcType=BIT},
+      del_flg = #{delFlg,jdbcType=TINYINT},
       approval_name = #{approvalName,jdbcType=VARCHAR},
       approval_time = #{approvalTime,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},

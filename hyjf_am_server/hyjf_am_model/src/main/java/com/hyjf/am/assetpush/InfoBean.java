@@ -1,4 +1,4 @@
-package com.hyjf.cs.borrow.bean.assetpush;
+package com.hyjf.am.assetpush;
 
 import java.io.Serializable;
 

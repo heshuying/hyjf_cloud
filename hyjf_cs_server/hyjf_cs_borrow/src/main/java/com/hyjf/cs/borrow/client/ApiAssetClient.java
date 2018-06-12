@@ -10,7 +10,7 @@ import com.hyjf.am.vo.borrow.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.borrow.bean.assetpush.InfoBean;
+import com.hyjf.am.assetpush.InfoBean;
 
 import java.util.List;
 

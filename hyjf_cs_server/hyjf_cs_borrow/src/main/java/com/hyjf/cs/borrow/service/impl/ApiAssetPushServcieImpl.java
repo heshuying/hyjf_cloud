@@ -17,7 +17,7 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.borrow.bean.assetpush.InfoBean;
+import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.cs.borrow.bean.assetpush.PushBean;
 import com.hyjf.cs.borrow.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.borrow.bean.assetpush.PushResultBean;
