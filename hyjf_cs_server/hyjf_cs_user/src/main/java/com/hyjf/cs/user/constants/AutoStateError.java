@@ -11,12 +11,12 @@ import com.hyjf.common.constants.ErrorCode;
  */
 public enum AutoStateError implements ErrorCode {
 
-    PARAM_ERROR("CE000001", "请求参数非法"),
-    CHECK_ERROR("CE000002", "验签失败！"),
-    CHECK_USER_INFO_ERROR("CE000004", "根据电子账户号查询用户信息失败"),
-    GET_USER_ERROR("CE000007", "查询用户失败"),
-    NOT_PASSWD_ERROR("TP000002", "未设置交易密码"),
-    AUTH_ERROR("CE999999", "授权状态查询接口失败！");
+    PARAM_ERROR("1", "请求参数非法"),
+    CHECK_ERROR("1", "验签失败！"),
+    CHECK_USER_INFO_ERROR("1", "根据电子账户号查询用户信息失败"),
+    GET_USER_ERROR("1", "查询用户失败"),
+    NOT_PASSWD_ERROR("1", "未设置交易密码"),
+    AUTH_ERROR("1", "授权状态查询接口失败！");
 
 
     private String errCode;

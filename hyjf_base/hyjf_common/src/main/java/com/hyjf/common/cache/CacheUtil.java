@@ -13,7 +13,7 @@ public class CacheUtil {
 
 	/**
 	 * 获取param 制定类型所有key-value
-	 * @param key
+	 * @param
 	 * @return
 	 */
 	public static Map<String, String> getParamNameMap(String nameClass) {

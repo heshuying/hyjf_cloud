@@ -15,14 +15,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.borrow.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
 
@@ -391,4 +391,13 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public BankOpenAccountVO selectById(int userId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }
