@@ -121,12 +121,14 @@ public class SafeServiceImpl implements SafeService {
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() -2) + "@" + emails[1]);
         }
         UserVO user = amUserClient.findUserById(webViewUser.getUserId());
+        UserLoginLogVO userLogin = amUserClient.getUserLoginById(webViewUser.getUserId());
+
         // 用户角色
         UserInfoVO userInfo = this.amUserClient.findUsersInfoById(webViewUser.getUserId());
         resultMap.put("roleId", userInfo.getRoleId());
         // 是否设置交易密码
         resultMap.put("isSetPassword", user.getIsSetPassword());
-        //resultMap.put("lastTime", user.getLastTime());
+        resultMap.put("lastTime", userLogin.getLastTime());
         // 紧急联系人类型
         // TODO: 2018/5/29 紧急联系人类型
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
@@ -406,7 +408,7 @@ public class SafeServiceImpl implements SafeService {
 
     /**
      * 更新用户信息
-     * @param userVO
+     * @param requestBean
      * @return
      */
     @Override

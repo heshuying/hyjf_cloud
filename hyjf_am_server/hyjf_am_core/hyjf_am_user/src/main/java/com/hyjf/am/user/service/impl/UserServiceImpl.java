@@ -945,4 +945,11 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public UserLoginLog selectByPrimaryKey(Integer userId){
+		UserLoginLog userLoginLog = userLoginLogMapper.selectByPrimaryKey(userId);
+		return userLoginLog;
+
+	}
+
 }

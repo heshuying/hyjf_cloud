@@ -17,6 +17,7 @@ import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.service.BaseServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.util.ResultEnum;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @version AutoPlusServiceImpl, v0.1 2018/6/11 15:39
  */
 @Service
-public class AutoPlusServiceImpl implements AutoPlusService {
+public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusService  {
     private static final Logger logger = LoggerFactory.getLogger(AutoPlusServiceImpl.class);
 
     @Autowired
@@ -330,31 +331,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
         amUserClient.insertUserAuthLog(hjhUserAuthLog);
     }
 
-    /**
-     * 验证外部请求签名
-     *
-     * @param paramBean
-     * @return
-     */
-    @Override
-    public boolean verifyRequestSign(BaseBean paramBean, String methodName) {
 
-        String sign = StringUtils.EMPTY;
-
-        // 机构编号必须参数
-        String instCode = paramBean.getInstCode();
-        if (StringUtils.isEmpty(instCode)) {
-            return false;
-        }
-
-        if (BaseDefine.METHOD_BORROW_AUTH_INVES.equals(methodName)) {
-            // 自动投资 增强
-            AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
-            sign = bean.getInstCode() + bean.getAccountId() + bean.getSmsCode() + bean.getTimestamp();
-        }
-
-        return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
-    }
 
     @Override
     public Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status) {
@@ -379,7 +356,7 @@ public class AutoPlusServiceImpl implements AutoPlusService {
             return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000001);
         }
         // 验签
-        if (!this.verifyRequestSign(payRequestBean, "/server/autoPlus/userAuthInves")) {
+        if (!this.verifyRequestSign(payRequestBean, BaseDefine.METHOD_BORROW_AUTH_INVES)) {
             payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
             logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
             return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000002);

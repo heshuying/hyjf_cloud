@@ -7,14 +7,7 @@ import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BindEmailLogVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UsersContactVO;
+import com.hyjf.am.vo.user.*;
 
 /**
  * @author xiasq
@@ -76,4 +69,6 @@ public interface AmUserClient {
     int updateUserNoticeSet(UserNoticeSetRequest requestBean);
 
 	UserInfoVO getUserByIdNo(String idNo);
+
+    UserLoginLogVO getUserLoginById(Integer userId);
 }

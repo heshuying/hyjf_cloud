@@ -6,6 +6,9 @@ import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.vo.user.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,32 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.AccountChinapnrResponse;
-import com.hyjf.am.response.user.BindEmailLogResponse;
-import com.hyjf.am.response.user.HjhUserAuthLogResponse;
-import com.hyjf.am.response.user.HjhUserAuthResponse;
-import com.hyjf.am.response.user.UserEvalationResultResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.response.user.UsersContactResponse;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserBindEmailLog;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
-import com.hyjf.am.user.dao.model.auto.UsersContact;
 import com.hyjf.am.user.service.UserService;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BindEmailLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UsersContactVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.MD5Utils;
@@ -392,13 +374,30 @@ public class UserController {
 	
 	/**
 	 * 绑定邮箱更新
-	 * @param userid
+	 * @param userId
 	 * @param email
-	 * @param log
+	 * @param
 	 */
-	@RequestMapping("/updateBindEmail/{userid}/{email}")
-	public void updateBindEmail(@PathVariable Integer userid, @PathVariable String email) {
-		userService.updateBindEmail(userid, email);
+	@RequestMapping("/updateBindEmail/{userId}/{email}")
+	public void updateBindEmail(@PathVariable Integer userId, @PathVariable String email) {
+		userService.updateBindEmail(userId, email);
 	}
 
+	/**
+	 * 用户登录日志
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/getUserLoginById/{userId}")
+	public UserLoginLogResponse getUserLoginById(@PathVariable Integer userId){
+		UserLoginLogResponse response = new UserLoginLogResponse();
+		UserLoginLog userLoginLog = userService.selectByPrimaryKey(userId);
+		if (null != userLoginLog){
+			UserLoginLogVO userLoginLogVO = new UserLoginLogVO();
+			BeanUtils.copyProperties(userLoginLog,userLoginLogVO);
+			response.setResult(userLoginLogVO);
+		}
+		return response;
+
+	}
 }
