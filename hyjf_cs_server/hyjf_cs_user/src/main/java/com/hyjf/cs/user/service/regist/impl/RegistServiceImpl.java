@@ -13,6 +13,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.RedisKey;
@@ -80,8 +81,8 @@ public class RegistServiceImpl implements RegistService{
     /**
      * 1. 必要参数检查 2. 注册 3. 注册后处理
      * @param registerVO
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @return
      * @throws ReturnMessageException
      */
@@ -189,13 +190,12 @@ public class RegistServiceImpl implements RegistService{
         if (!m.matches()) {
             throw new ReturnMessageException(RegisterError.PASSWORD_FORMAT_ERROR);
         }
-		/*
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-		int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
-				CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-		if (cnt == 0) {
-			throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
-		}*/
+        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        if (cnt == 0) {
+            throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
+        }
         String reffer = registerVO.getReffer();
         if (isNotBlank(reffer) && amUserClient.countUserByRecommendName(reffer) <= 0) {
             throw new ReturnMessageException(RegisterError.REFFER_INVALID_ERROR);

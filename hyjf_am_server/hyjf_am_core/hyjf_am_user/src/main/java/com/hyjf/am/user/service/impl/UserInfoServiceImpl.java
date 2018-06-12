@@ -1,15 +1,14 @@
 package com.hyjf.am.user.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
 import com.hyjf.am.user.service.UserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -20,13 +19,13 @@ import com.hyjf.am.user.service.UserInfoService;
 public class UserInfoServiceImpl implements UserInfoService {
 
 	@Autowired
-	private UserInfoMapper UserInfoMapper;
+	private UserInfoMapper userInfoMapper;
 
 	@Override
 	public UserInfo findUserInfoById(int userId) {
 		UserInfoExample UserInfoExample = new UserInfoExample();
 		UserInfoExample.createCriteria().andUserIdEqualTo(userId);
-		List<UserInfo> usersList = UserInfoMapper.selectByExample(UserInfoExample);
+		List<UserInfo> usersList = userInfoMapper.selectByExample(UserInfoExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -44,10 +43,25 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public UserInfo findUserInfoByIdNo(String idNo) {
 		UserInfoExample UserInfoExample = new UserInfoExample();
 		UserInfoExample.createCriteria().andIdcardEqualTo(idNo);
-		List<UserInfo> usersList = UserInfoMapper.selectByExample(UserInfoExample);
+		List<UserInfo> usersList = userInfoMapper.selectByExample(UserInfoExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
 		return null;
 	}
+
+	@Override
+	public UserInfo selectUserInfoByNameAndCard(String trueName, String idCrad) {
+		UserInfoExample example = new UserInfoExample();
+		UserInfoExample.Criteria crt = example.createCriteria();
+		crt.andTruenameEqualTo(trueName);
+		crt.andIdcardEqualTo(idCrad);
+		List<UserInfo> list = userInfoMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+
 }

@@ -3,11 +3,15 @@
  */
 package com.hyjf.am.vo.assetpush;
 
+import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
+
 /**
  * @author fuqiang
  * @version HjhAssetBorrowTypeVO, v0.1 2018/6/11 18:09
  */
-public class HjhAssetBorrowTypeVO {
+public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
 
     private Integer id;
 

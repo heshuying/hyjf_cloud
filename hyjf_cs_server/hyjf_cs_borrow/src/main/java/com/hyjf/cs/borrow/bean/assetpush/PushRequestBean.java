@@ -1,5 +1,6 @@
 package com.hyjf.cs.borrow.bean.assetpush;
 
+import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.cs.borrow.bean.BaseBean;
 
 import java.util.List;

@@ -1,15 +1,15 @@
 package com.hyjf.am.user.controller;
 
 import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.service.UserInfoService;
 
 /**
  * @author xiasq
@@ -46,4 +46,17 @@ public class UserInfoController {
 		}
 		return response;
 	}
+
+	@GetMapping("/selectUserInfoByNameAndCard/{truename}/{idcard}")
+	public UserInfoResponse selectUserInfoByNameAndCard(String truename, String idcard) {
+		UserInfoResponse response = new UserInfoResponse();
+		UserInfo userInfo = userInfoService.selectUserInfoByNameAndCard(truename, idcard);
+		UserInfoVO userInfoVO = new UserInfoVO();
+		if (userInfo != null) {
+			BeanUtils.copyProperties(userInfo, userInfoVO);
+			response.setResult(userInfoVO);
+		}
+		return response;
+	}
+
 }

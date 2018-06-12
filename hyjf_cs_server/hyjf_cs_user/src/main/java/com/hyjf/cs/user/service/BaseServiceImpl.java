@@ -1,11 +1,16 @@
 package com.hyjf.cs.user.service;
 
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.user.beans.AutoPlusRequestBean;
+import com.hyjf.cs.user.beans.AutoStateQueryRequest;
+import com.hyjf.cs.user.beans.BaseBean;
+import com.hyjf.cs.user.beans.BaseDefine;
 import com.hyjf.cs.user.client.AmUserClient;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +75,35 @@ public class BaseServiceImpl implements BaseService {
 	public UserVO getUsersById(Integer userId) {
 		UserVO userVO = amUserClient.findUserById(userId);
 		return userVO;
+	}
+
+	/**
+	 * 验证外部请求签名
+	 *
+	 * @param paramBean
+	 * @return
+	 */
+	@Override
+	public boolean verifyRequestSign(BaseBean paramBean, String methodName) {
+
+		String sign = StringUtils.EMPTY;
+
+		// 机构编号必须参数
+		String instCode = paramBean.getInstCode();
+		if (StringUtils.isEmpty(instCode)) {
+			return false;
+		}
+
+		if (BaseDefine.METHOD_BORROW_AUTH_INVES.equals(methodName)) {
+			// 自动投资 增强
+			AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getSmsCode() + bean.getTimestamp();
+		} else if (BaseDefine.METHOD_BORROW_AUTH_STATE.equals(methodName)) {
+			// 授权状态查询
+			AutoStateQueryRequest bean = (AutoStateQueryRequest) paramBean;
+			sign = bean.getInstCode() +bean.getAccountId() + bean.getTimestamp();
+		}
+
+		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
 	}
 }

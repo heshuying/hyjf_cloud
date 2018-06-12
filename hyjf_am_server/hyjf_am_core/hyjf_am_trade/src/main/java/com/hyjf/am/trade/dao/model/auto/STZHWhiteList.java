@@ -35,7 +35,7 @@ public class STZHWhiteList implements Serializable {
 
     private String updateuser;
 
-    private Boolean delFlg;
+    private Integer delFlg;
 
     private String approvalName;
 
@@ -177,11 +177,11 @@ public class STZHWhiteList implements Serializable {
         this.updateuser = updateuser == null ? null : updateuser.trim();
     }
 
-    public Boolean getDelFlg() {
+    public Integer getDelFlg() {
         return delFlg;
     }
 
-    public void setDelFlg(Boolean delFlg) {
+    public void setDelFlg(Integer delFlg) {
         this.delFlg = delFlg;
     }
 

@@ -3,13 +3,16 @@
  */
 package com.hyjf.am.vo.borrow;
 
+import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author fuqiang
  * @version BorrowProjectRepayVO, v0.1 2018/6/11 18:28
  */
-public class BorrowProjectRepayVO {
+public class BorrowProjectRepayVO extends BaseVO implements Serializable {
     private Integer id;
 
     private String borrowClass;

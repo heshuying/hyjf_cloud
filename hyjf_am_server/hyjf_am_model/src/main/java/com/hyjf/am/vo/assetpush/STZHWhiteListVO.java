@@ -3,11 +3,15 @@
  */
 package com.hyjf.am.vo.assetpush;
 
+import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
+
 /**
  * @author fuqiang
  * @version STZHWhiteListVO, v0.1 2018/6/11 19:16
  */
-public class STZHWhiteListVO {
+public class STZHWhiteListVO extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer userId;

@@ -1,7 +1,6 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
 
 /**
  * @author xiasq
@@ -17,4 +16,12 @@ public interface UserInfoService {
      * @Date 2018/6/6 11:43
      */
     UserInfo findUserInfoByIdNo(String idNo);
+
+    /**
+     * 获取用户信息
+     * @param truename
+     * @param idcard
+     * @return
+     */
+    UserInfo selectUserInfoByNameAndCard(String truename, String idcard);
 }
