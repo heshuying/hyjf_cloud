@@ -12,7 +12,7 @@
 
 hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 ├── hyjf_cloud_server           -- spring cloud 组件
-|     ├── hyjf_eureka           -- 注册中心[端口:1111]
+|     ├── hyjf_eureka           -- 注册中心[端口:8888]
 |     ├── hyjf_config           -- 配置中心[端口:2222]
 |     ├── hyjf_spring_boot_admin-- 服务监控[端口:18080]
 |     ├── hyjf_zipkin           -- 全链路监控[端口:9411]

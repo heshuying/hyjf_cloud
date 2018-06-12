@@ -116,10 +116,11 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setPlatform(platform);
 		SmsCodeResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/smsCode/save", request, SmsCodeResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getCnt();
+		} else {
+			throw new RuntimeException("发送验证码失败...");
 		}
-		return 0;
 	}
 
 	@Override
