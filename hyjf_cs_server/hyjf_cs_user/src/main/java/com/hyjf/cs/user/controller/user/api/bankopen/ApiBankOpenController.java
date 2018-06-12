@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +41,7 @@ public class ApiBankOpenController {
     SystemConfig systemConfig;
 
     @ApiOperation(value = "第三方用户开户", notes = "第三方用户开户")
-    @RequestMapping(value = "/openBankAccount")
+    @PostMapping(value = "/openBankAccount")
     public ModelAndView openBankAccount(@RequestBody ApiBankOpenRequestBean requestBean , HttpServletRequest request) {
         logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();
@@ -88,7 +89,7 @@ public class ApiBankOpenController {
      * @return
      */
     @ApiOperation(value = "第三方端用户同步回调", notes = "第三方端用户开户")
-    @RequestMapping(value = "/return")
+    @PostMapping(value = "/return")
     public Map<String, String> returnPage(HttpServletRequest request) {
         String isSuccess = request.getParameter("isSuccess");
 
@@ -111,7 +112,7 @@ public class ApiBankOpenController {
      * @return
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
-    @RequestMapping("/bgReturn")
+    @PostMapping("/bgReturn")
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
