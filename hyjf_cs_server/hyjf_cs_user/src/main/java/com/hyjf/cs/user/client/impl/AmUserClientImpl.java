@@ -379,5 +379,21 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return result;
 	}
+	/**
+	 * @Description 根据身份证号查询用户
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/6 11:33
+	 */
+	@Override
+	public UserInfoVO getUserByIdNo(String idNo) {
+		UserInfoResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/userInfo/" + idNo, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 
 }

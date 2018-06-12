@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.STZHWhiteListMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.STZHWhiteList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="accountid" property="accountid" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="st_user_id" property="stUserId" jdbcType="INTEGER" />
+    <result column="st_user_name" property="stUserName" jdbcType="VARCHAR" />
+    <result column="st_accountid" property="stAccountid" jdbcType="VARCHAR" />
+    <result column="st_mobile" property="stMobile" jdbcType="VARCHAR" />
+    <result column="st_customer_name" property="stCustomerName" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="VARCHAR" />
+    <result column="createuser" property="createuser" jdbcType="VARCHAR" />
+    <result column="updatetime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="updateuser" property="updateuser" jdbcType="VARCHAR" />
+    <result column="del_flg" property="delFlg" jdbcType="BIT" />
+    <result column="approval_name" property="approvalName" jdbcType="VARCHAR" />
+    <result column="approval_time" property="approvalTime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="instCode" property="instcode" jdbcType="VARCHAR" />
+    <result column="instName" property="instname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, user_name, accountid, mobile, customer_name, st_user_id, st_user_name, 
+    st_accountid, st_mobile, st_customer_name, `state`, createtime, `createuser`, updatetime, 
+    updateuser, del_flg, approval_name, approval_time, remark, instCode, instName
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.STZHWhiteListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_stzh_white_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_stzh_white_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_stzh_white_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.STZHWhiteListExample" >
+    delete from ht_stzh_white_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.STZHWhiteList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_stzh_white_list (user_id, user_name, accountid, 
+      mobile, customer_name, st_user_id, 
+      st_user_name, st_accountid, st_mobile, 
+      st_customer_name, `state`, createtime, 
+      `createuser`, updatetime, updateuser, 
+      del_flg, approval_name, approval_time, 
+      remark, instCode, instName
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{accountid,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{stUserId,jdbcType=INTEGER}, 
+      #{stUserName,jdbcType=VARCHAR}, #{stAccountid,jdbcType=VARCHAR}, #{stMobile,jdbcType=VARCHAR}, 
+      #{stCustomerName,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{createtime,jdbcType=VARCHAR}, 
+      #{createuser,jdbcType=VARCHAR}, #{updatetime,jdbcType=VARCHAR}, #{updateuser,jdbcType=VARCHAR}, 
+      #{delFlg,jdbcType=BIT}, #{approvalName,jdbcType=VARCHAR}, #{approvalTime,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{instcode,jdbcType=VARCHAR}, #{instname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.STZHWhiteList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_stzh_white_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="accountid != null" >
+        accountid,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="stUserId != null" >
+        st_user_id,
+      </if>
+      <if test="stUserName != null" >
+        st_user_name,
+      </if>
+      <if test="stAccountid != null" >
+        st_accountid,
+      </if>
+      <if test="stMobile != null" >
+        st_mobile,
+      </if>
+      <if test="stCustomerName != null" >
+        st_customer_name,
+      </if>
+      <if test="state != null" >
+        `state`,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="createuser != null" >
+        `createuser`,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="updateuser != null" >
+        updateuser,
+      </if>
+      <if test="delFlg != null" >
+        del_flg,
+      </if>
+      <if test="approvalName != null" >
+        approval_name,
+      </if>
+      <if test="approvalTime != null" >
+        approval_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="instcode != null" >
+        instCode,
+      </if>
+      <if test="instname != null" >
+        instName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountid != null" >
+        #{accountid,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="stUserId != null" >
+        #{stUserId,jdbcType=INTEGER},
+      </if>
+      <if test="stUserName != null" >
+        #{stUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="stAccountid != null" >
+        #{stAccountid,jdbcType=VARCHAR},
+      </if>
+      <if test="stMobile != null" >
+        #{stMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="stCustomerName != null" >
+        #{stCustomerName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null" >
+        #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateuser != null" >
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlg != null" >
+        #{delFlg,jdbcType=BIT},
+      </if>
+      <if test="approvalName != null" >
+        #{approvalName,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalTime != null" >
+        #{approvalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="instcode != null" >
+        #{instcode,jdbcType=VARCHAR},
+      </if>
+      <if test="instname != null" >
+        #{instname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.STZHWhiteListExample" resultType="java.lang.Integer" >
+    select count(*) from ht_stzh_white_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_stzh_white_list
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountid != null" >
+        accountid = #{record.accountid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerName != null" >
+        customer_name = #{record.customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stUserId != null" >
+        st_user_id = #{record.stUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.stUserName != null" >
+        st_user_name = #{record.stUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stAccountid != null" >
+        st_accountid = #{record.stAccountid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stMobile != null" >
+        st_mobile = #{record.stMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stCustomerName != null" >
+        st_customer_name = #{record.stCustomerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null" >
+        `state` = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createuser != null" >
+        `createuser` = #{record.createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateuser != null" >
+        updateuser = #{record.updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.delFlg != null" >
+        del_flg = #{record.delFlg,jdbcType=BIT},
+      </if>
+      <if test="record.approvalName != null" >
+        approval_name = #{record.approvalName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.approvalTime != null" >
+        approval_time = #{record.approvalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instcode != null" >
+        instCode = #{record.instcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instname != null" >
+        instName = #{record.instname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_stzh_white_list
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      accountid = #{record.accountid,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      customer_name = #{record.customerName,jdbcType=VARCHAR},
+      st_user_id = #{record.stUserId,jdbcType=INTEGER},
+      st_user_name = #{record.stUserName,jdbcType=VARCHAR},
+      st_accountid = #{record.stAccountid,jdbcType=VARCHAR},
+      st_mobile = #{record.stMobile,jdbcType=VARCHAR},
+      st_customer_name = #{record.stCustomerName,jdbcType=VARCHAR},
+      `state` = #{record.state,jdbcType=INTEGER},
+      createtime = #{record.createtime,jdbcType=VARCHAR},
+      `createuser` = #{record.createuser,jdbcType=VARCHAR},
+      updatetime = #{record.updatetime,jdbcType=VARCHAR},
+      updateuser = #{record.updateuser,jdbcType=VARCHAR},
+      del_flg = #{record.delFlg,jdbcType=BIT},
+      approval_name = #{record.approvalName,jdbcType=VARCHAR},
+      approval_time = #{record.approvalTime,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      instCode = #{record.instcode,jdbcType=VARCHAR},
+      instName = #{record.instname,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.STZHWhiteList" >
+    update ht_stzh_white_list
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountid != null" >
+        accountid = #{accountid,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="stUserId != null" >
+        st_user_id = #{stUserId,jdbcType=INTEGER},
+      </if>
+      <if test="stUserName != null" >
+        st_user_name = #{stUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="stAccountid != null" >
+        st_accountid = #{stAccountid,jdbcType=VARCHAR},
+      </if>
+      <if test="stMobile != null" >
+        st_mobile = #{stMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="stCustomerName != null" >
+        st_customer_name = #{stCustomerName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null" >
+        `createuser` = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateuser != null" >
+        updateuser = #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlg != null" >
+        del_flg = #{delFlg,jdbcType=BIT},
+      </if>
+      <if test="approvalName != null" >
+        approval_name = #{approvalName,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalTime != null" >
+        approval_time = #{approvalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="instcode != null" >
+        instCode = #{instcode,jdbcType=VARCHAR},
+      </if>
+      <if test="instname != null" >
+        instName = #{instname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.STZHWhiteList" >
+    update ht_stzh_white_list
+    set user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      accountid = #{accountid,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      st_user_id = #{stUserId,jdbcType=INTEGER},
+      st_user_name = #{stUserName,jdbcType=VARCHAR},
+      st_accountid = #{stAccountid,jdbcType=VARCHAR},
+      st_mobile = #{stMobile,jdbcType=VARCHAR},
+      st_customer_name = #{stCustomerName,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=VARCHAR},
+      `createuser` = #{createuser,jdbcType=VARCHAR},
+      updatetime = #{updatetime,jdbcType=VARCHAR},
+      updateuser = #{updateuser,jdbcType=VARCHAR},
+      del_flg = #{delFlg,jdbcType=BIT},
+      approval_name = #{approvalName,jdbcType=VARCHAR},
+      approval_time = #{approvalTime,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      instCode = #{instcode,jdbcType=VARCHAR},
+      instName = #{instname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
