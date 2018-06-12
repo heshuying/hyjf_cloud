@@ -39,7 +39,7 @@ public class AppSafeController {
      * 修改登陆密码
      *
      * @param request
-     * @param response
+     * @param
      * @return
      */
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")

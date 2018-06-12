@@ -4,13 +4,11 @@
 package com.hyjf.cs.user.controller.user.web.autoplus;
 
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -53,10 +51,10 @@ public class WebAutoPlusController {
     public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
-        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_1, ClientConstant.CHANNEL_PC, lastSrvAuthCode, smsCode);
+        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.WEB_CLIENT, ClientConstants.QUERY_TYPE_1, ClientConstants.CHANNEL_PC, lastSrvAuthCode, smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
@@ -77,10 +75,10 @@ public class WebAutoPlusController {
     public ModelAndView creditUserAuthInves(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
-        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstant.WEB_CLIENT, BankCallConstant.QUERY_TYPE_2, ClientConstant.CHANNEL_PC, lastSrvAuthCode, smsCode);
+        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.WEB_CLIENT, ClientConstants.QUERY_TYPE_2, ClientConstants.CHANNEL_PC, lastSrvAuthCode, smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
@@ -102,7 +100,7 @@ public class WebAutoPlusController {
     public Map<String, String> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, BankCallBean bean) {
         logger.info("userAuthInvesReturn:" + "[投资人自动投标签约增强同步回调开始]");
         String isSuccess = request.getParameter("isSuccess");
-        Map<String, String> result = autoPlusService.userAuthReturn(token, bean, ClientConstant.INVES_URL_TYPE, isSuccess);
+        Map<String, String> result = autoPlusService.userAuthReturn(token, bean, ClientConstants.INVES_URL_TYPE, isSuccess);
         return result;
     }
 
@@ -121,7 +119,7 @@ public class WebAutoPlusController {
                                                          @ModelAttribute BankCallBean bean) {
         logger.info("[投资人自动债转签约增强同步回调开始]");
         String isSuccess = request.getParameter("isSuccess");
-        Map<String, String> result = autoPlusService.userAuthReturn(token, bean, ClientConstant.CREDIT_URL_TYPE, isSuccess);
+        Map<String, String> result = autoPlusService.userAuthReturn(token, bean, ClientConstants.CREDIT_URL_TYPE, isSuccess);
         return result;
     }
 

@@ -43,6 +43,9 @@ am:
   user:
     service:
       name: AM-USER
+  trade:
+    service:
+      name: AM-TRADE
 
 env:
   test : true

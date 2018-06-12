@@ -78,10 +78,10 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 				.getForEntity("http://AM-USER//am-user/card/deleteUserCardByCardNo/" + cardNo, Integer.class).getBody();
 		return result;
 	}
-	
+
 	/**
 	 * 保存用户绑定的银行卡
-	 * @param bankCardRequest
+	 * @param request
 	 * @return
 	 */
 	@Override
@@ -90,10 +90,10 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 				.postForEntity("http://AM-USER/am-user/card/insertUserCard", request, Integer.class).getBody();
 		return result;
 	}
-	
+
 	/**
 	 * 更新用户绑定的银行卡
-	 * @param bankCardRequest
+	 * @param request
 	 * @return
 	 */
 	@Override
@@ -111,7 +111,7 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	@Override
 	public String queryBankIdByCardNo(String cardNo) {
 		String result = restTemplate
-				.getForEntity("http://AM-CONFIG/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+				.getForEntity("http://AM-CONFIG/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
 		return result;
 	}
 	
@@ -148,7 +148,7 @@ public class AmBindCardClientImpl implements AmBindCardClient{
 	@Override
 	public AccountVO getAccount(Integer userId) {
         AccountResponse response = restTemplate
-                .getForEntity("http://AM-BORROW/am-trade/recharge/getAccount/" + userId, AccountResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/trade/recharge/getAccount/" + userId, AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
