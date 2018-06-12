@@ -4,6 +4,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
 import com.hyjf.cs.user.result.AppResult;
+import com.hyjf.cs.user.service.BaseService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -17,11 +18,9 @@ import java.util.Map;
  *
  */
 
-public interface BankOpenService {
+public interface BankOpenService extends BaseService {
 
 	boolean existUser(String mobile);
-
-	UserVO getUsers(Integer userId);
 
 	boolean checkIdNo(String idNo);
 

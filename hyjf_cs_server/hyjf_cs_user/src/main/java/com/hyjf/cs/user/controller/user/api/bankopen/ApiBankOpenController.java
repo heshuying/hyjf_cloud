@@ -1,36 +1,26 @@
-package com.hyjf.cs.user.controller.user;
+package com.hyjf.cs.user.controller.user.api.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.constants.RegisterError;
-import com.hyjf.cs.user.result.ApiResult;
-import com.hyjf.cs.user.result.AppResult;
-import com.hyjf.cs.user.service.BankOpenService;
-import com.hyjf.cs.user.service.UserService;
-import com.hyjf.cs.user.util.ClientConstant;
-import com.hyjf.cs.user.vo.BankOpenVO;
+import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,9 +37,6 @@ public class ApiBankOpenController {
     private BankOpenService bankOpenService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     SystemConfig systemConfig;
 
     @ApiOperation(value = "第三方用户开户", notes = "第三方用户开户")
@@ -62,7 +49,7 @@ public class ApiBankOpenController {
             modelAndView.addObject("callBackForm", paramMap);
             return modelAndView;
         }
-        UserVO user = this.userService.getUsersByMobile(requestBean.getMobile());
+        UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
 

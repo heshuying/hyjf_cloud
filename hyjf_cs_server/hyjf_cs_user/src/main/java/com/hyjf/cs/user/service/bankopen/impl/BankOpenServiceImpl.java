@@ -1,15 +1,15 @@
-package com.hyjf.cs.user.service.impl;
+package com.hyjf.cs.user.service.bankopen.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardRequest;
-package com.hyjf.cs.user.service.bankopen.impl;
-
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.borrow.BanksConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
@@ -21,9 +21,9 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.redis.RedisUtil;
 import com.hyjf.cs.user.result.AppResult;
-import com.hyjf.cs.user.service.BankOpenService;
+import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.util.ClientConstant;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -42,11 +42,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-import com.hyjf.cs.user.service.bankopen.BankOpenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author xiasq
@@ -54,8 +49,8 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class BankOpenServiceImpl implements BankOpenService {
-
+public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService   {
+	
 	private static final Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 
     @Autowired
@@ -68,22 +63,7 @@ public class BankOpenServiceImpl implements BankOpenService {
     SystemConfig systemConfig;
 
     @Autowired
-    private RedisUtil redisUtil;
-
-    @Autowired
     private AmConfigClient amConfigClient;
-
-    /**
-     * @param userId
-     * @return
-     */
-    @Override
-    public UserVO getUsers(Integer userId) {
-
-        UserVO userVO = amUserClient.findUserById(userId);
-
-        return userVO;
-    }
 
     @Override
     public boolean existUser(String mobile) {
@@ -302,7 +282,7 @@ public class BankOpenServiceImpl implements BankOpenService {
      */
     private Integer saveCardNoToBank(BankCallBean bean) {
         Integer userId = Integer.parseInt(bean.getLogUserId());
-        UserVO user = getUsers(userId);
+        UserVO user = this.getUsersById(userId);
         // 调用江西银行接口查询用户绑定的银行卡
         BankCallBean cardBean = new BankCallBean(userId, BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE, bean.getLogClient());
         cardBean.setChannel(bean.getChannel());// 交易渠道
@@ -392,7 +372,7 @@ public class BankOpenServiceImpl implements BankOpenService {
     public Map<String, String> openAccountReturn(String token, String isSuccess) {
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
-        WebViewUser user = (WebViewUser) redisUtil.get(token);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         if (user == null) {
             throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
         }

@@ -1,18 +1,14 @@
-package com.hyjf.cs.user.controller.user;
+package com.hyjf.cs.user.controller.user.app.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.PropUtils;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.AppResult;
-import com.hyjf.cs.user.service.BankOpenService;
-import com.hyjf.cs.user.service.UserService;
-import com.hyjf.cs.user.util.ClientConstant;
+import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -44,8 +40,6 @@ public class AppBankOpenController {
     @Autowired
     private BankOpenService bankOpenService;
 
-    @Autowired
-    private UserService userService;
 
     /**
      * 获取开户信息
@@ -58,7 +52,7 @@ public class AppBankOpenController {
     public AppResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         logger.info("openAccount userInfo start, token is :{}", token);
         AppResult<String> result = new AppResult<String>();
-        UserVO userVO = userService.getUsersByToken(token);
+        UserVO userVO = bankOpenService.getUsers(token);
         if (userVO != null) {
             logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
@@ -84,7 +78,7 @@ public class AppBankOpenController {
         // TODO: 2018/5/31 跳转前端统一地址
         ModelAndView reuslt = new ModelAndView("bankopen/error");
         // 获取登录信息
-        UserVO user = userService.getUsersByToken(token);
+        UserVO user = bankOpenService.getUsers(token);
         // 检查参数
         appResult = bankOpenService.checkRequestParam(user, bankOpenVO);
         if (!OpenAccountError.SUCCESS.getErrCode().equals(appResult.getStatus())) {
