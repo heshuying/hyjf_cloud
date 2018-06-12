@@ -16,5 +16,7 @@ public interface CallCenterBankService {
     List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(Map<String, Object> conditionMap);
     
     List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(Map<String, Object> conditionMap);
+    
+    List<CallcenterUserBaseCustomize> getNoServiceUsersList(Map<String, Object> conditionMap);
 
 }

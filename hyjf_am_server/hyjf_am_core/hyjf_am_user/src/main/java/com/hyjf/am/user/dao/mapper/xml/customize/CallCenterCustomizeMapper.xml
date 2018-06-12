@@ -98,5 +98,24 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
+	
+
+	<select id="findNoServiceUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="Map">
+		SELECT
+			hydu.user_id,
+			hydu.username,
+			hydu.mobile
+		FROM
+			ht_user hydu
+		WHERE 
+			NOT EXISTS (SELECT 1 
+						FROM ht_callcenter_service_users csu 
+						WHERE hydu.username = csu.username 
+						AND csu.assigned != 0)
+		ORDER BY hydu.reg_time DESC
+		<if test="limitStart != null and limitEnd !=null">
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
 
 </mapper>

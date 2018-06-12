@@ -74,4 +74,16 @@ public class CallCenterBankController {
         return callCenterUserBaseResponse;
     }
     
+    
+    @RequestMapping("/getNoServiceUsersList/{conditionMap}")
+    public CallCenterUserBaseResponse getNoServiceUsersList(@RequestBody @Valid Map<String, Object> conditionMap){
+    	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
+        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceUsersList(conditionMap);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
+            callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
+        }
+        return callCenterUserBaseResponse;
+    }
+    
 }

@@ -48,4 +48,10 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceLiuShiUsersList(conditionMap);
 		return CallcenterUserBaseCustomizeList;
 	}
+
+	@Override
+	public List<CallcenterUserBaseCustomize> getNoServiceUsersList(Map<String, Object> conditionMap) {
+		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceUsersList(conditionMap);
+		return CallcenterUserBaseCustomizeList;
+	}
 }

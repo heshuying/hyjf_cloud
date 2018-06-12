@@ -22,5 +22,11 @@ public interface CallCenterCustomizeMapper {
      * @return
      */
     List<CallcenterUserBaseCustomize> findNoServiceLiuShiUsersList(Map<String, Object> conditionMap);
+    
+    /**
+     * @param mobiles
+     * @return
+     */
+    List<CallcenterUserBaseCustomize> findNoServiceUsersList(Map<String, Object> conditionMap);
 
 }
