@@ -298,7 +298,8 @@
         </table>
 
 
-        <!-- 3. hyjf_borrow -->
+        <!-- 3. hyjf_trade -->
+
         <!-- 标的详情 -->
         <table tableName="ht_borrow" domainObjectName="Borrow">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
@@ -409,7 +410,7 @@
             <columnOverride column="is_associate_plan" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <!-- 4. hyjf_trade -->
+
         <!-- 用户账户表 -->
         <table tableName="ht_account" domainObjectName="Account">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
