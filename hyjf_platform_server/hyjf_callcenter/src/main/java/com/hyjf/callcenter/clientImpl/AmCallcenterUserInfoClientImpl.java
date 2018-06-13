@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.hyjf.am.response.callcenter.CallCenterUserBaseResponse;
+import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
 import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 import com.hyjf.callcenter.client.AmCallcenterUserInfoClient;
 import com.hyjf.ribbon.EurekaInvokeClient;
@@ -19,29 +21,36 @@ public class AmCallcenterUserInfoClientImpl implements AmCallcenterUserInfoClien
     private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
     
 	@Override
-	public List<CallcenterUserBaseCustomize> selectNoServiceFuTouUsersList(Map<String, Object> user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	@Override
-	public List<CallcenterUserBaseCustomize> selectNoServiceLiuShiUsersList(Map<String, Object> user) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CallCenterUserBaseVO> selectNoServiceFuTouUsersList(Map<String, Object> conditionMap) {
+		CallCenterUserBaseResponse callCenterUserBaseResponse = restTemplate
+                .postForEntity("http://AM-USER//am-user/callcenter/getNoServiceFuTouUsersList/",conditionMap, CallCenterUserBaseResponse.class)
+                .getBody();
+        if (callCenterUserBaseResponse != null) {
+            return callCenterUserBaseResponse.getResultList();
+        }
+        return null;
 	}
 
 	@Override
-	public List<CallcenterUserBaseCustomize> selectNoServiceUsersList(Map<String, Object> user) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CallCenterUserBaseVO> selectNoServiceLiuShiUsersList(Map<String, Object> conditionMap) {
+		CallCenterUserBaseResponse callCenterUserBaseResponse = restTemplate
+                .postForEntity("http://AM-USER//am-user/callcenter/getNoServiceLiuShiUsersList/",conditionMap, CallCenterUserBaseResponse.class)
+                .getBody();
+        if (callCenterUserBaseResponse != null) {
+            return callCenterUserBaseResponse.getResultList();
+        }
+        return null;
+	}
+
+	@Override
+	public List<CallCenterUserBaseVO> selectNoServiceUsersList(Map<String, Object> conditionMap) {
+		CallCenterUserBaseResponse callCenterUserBaseResponse = restTemplate
+                .postForEntity("http://AM-USER//am-user/callcenter/getNoServiceUsersList/",conditionMap, CallCenterUserBaseResponse.class)
+                .getBody();
+        if (callCenterUserBaseResponse != null) {
+            return callCenterUserBaseResponse.getResultList();
+        }
+        return null;
 	}
 
 }

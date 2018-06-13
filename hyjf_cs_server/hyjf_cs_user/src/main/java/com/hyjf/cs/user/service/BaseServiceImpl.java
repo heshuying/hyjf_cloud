@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service;
 
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
@@ -21,6 +22,8 @@ public class BaseServiceImpl implements BaseService {
 
 	@Autowired
 	AmUserClient amUserClient;
+
+
 
 	/**
 	 * @param token
@@ -105,5 +108,16 @@ public class BaseServiceImpl implements BaseService {
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
+	}
+
+	/**
+	 * 获取用户在银行的开户信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
+		BankOpenAccountVO bankAccount = this.amUserClient.selectById(userId);
+		return bankAccount;
 	}
 }

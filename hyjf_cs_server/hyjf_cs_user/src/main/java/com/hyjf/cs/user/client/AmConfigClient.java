@@ -1,6 +1,6 @@
 package com.hyjf.cs.user.client;
 
-import com.hyjf.am.vo.borrow.BanksConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
 
 /**

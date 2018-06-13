@@ -5,7 +5,7 @@ package com.hyjf.cs.user.service.autoplus.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
@@ -601,6 +601,35 @@ public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusServ
         bean.setLogRemark(remark);
 
         return bean;
+    }
+
+    @Override
+    public BankCallBean getTermsAuthQuery(int userId, String channel) {
+        BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(userId);
+        // 调用查询投资人签约状态查询
+        BankCallBean selectbean = new BankCallBean();
+        // 接口版本号
+        selectbean.setVersion(BankCallConstant.VERSION_10);
+        selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);
+        // 机构代码
+        selectbean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE));
+        selectbean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE));
+        selectbean.setTxDate(GetOrderIdUtils.getTxDate());
+        selectbean.setTxTime(GetOrderIdUtils.getTxTime());
+        selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+        selectbean.setChannel(channel);
+        // 电子账号
+        selectbean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
+        selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        // 操作者ID
+        selectbean.setLogUserId(String.valueOf(userId));
+        selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        selectbean.setLogClient(0);
+        // 返回参数
+        BankCallBean retBean = null;
+        // 调用接口
+        retBean = BankCallUtils.callApiBg(selectbean);
+        return retBean;
     }
 
     public String getBankRetMsg(String retCode) {

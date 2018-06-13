@@ -1,7 +1,7 @@
 package com.hyjf.cs.user.client.impl;
 
-import com.hyjf.am.response.borrow.BanksConfigResponse;
-import com.hyjf.am.vo.borrow.BanksConfigVO;
+import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

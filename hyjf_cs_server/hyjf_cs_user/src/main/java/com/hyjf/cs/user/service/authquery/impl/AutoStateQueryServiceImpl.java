@@ -15,7 +15,9 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.AutoStateError;
 import com.hyjf.cs.user.service.BaseServiceImpl;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
+import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,10 @@ public class AutoStateQueryServiceImpl extends BaseServiceImpl implements AutoSt
 
     @Autowired
     AmUserClient amUserClient;
+
+    @Autowired
+    AutoPlusService autoPlusService;
+
     @Override
     public AutoStateQueryResultBean queryStatus(AutoStateQueryRequest autoStateQuery) {
         AutoStateQueryResultBean resultBean = new AutoStateQueryResultBean();
@@ -72,7 +78,7 @@ public class AutoStateQueryServiceImpl extends BaseServiceImpl implements AutoSt
             logger.info("-------------------未设置交易密码！"+autoStateQuery.getAccountId()+"！--------------------status"+user.getIsSetPassword());
             throw new ReturnMessageException(AutoStateError.NOT_PASSWD_ERROR);
         }
-        /*BankCallBean retBean=autoPlusService.getTermsAuthQuery(userId,channel);
+        BankCallBean retBean=autoPlusService.getTermsAuthQuery(userId,channel);
         logger.info("调用江西银行授权状态查询接口:"+(retBean==null?"空":retBean.getPaymentAuth()));
         if(retBean==null){
             logger.info("银行返回为空,accountId:["+accountId+"]");
@@ -83,10 +89,32 @@ public class AutoStateQueryServiceImpl extends BaseServiceImpl implements AutoSt
             logger.info("授权状态查询接口失败,accountId:["+accountId+"]返回码["+retCode+"]！");
             throw new ReturnMessageException(AutoStateError.AUTH_ERROR);
         }
-        resultBean = getResultJosn(resultBean,retBean);*/
+        resultBean = getResultJosn(resultBean,retBean);
         logger.info("授权状态查询第三方返回参数："+ JSONObject.toJSONString(resultBean));
         resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
         resultBean.setStatusDesc("授权状态查询成功");
+        return resultBean;
+    }
+
+
+    /**
+     * @Author: zhangqingqing
+     * @Desc : 拼接返回参数
+     * @Param: * @param resultBean
+     * @param retBean
+     * @Date: 18:31 2018/6/12
+     * @Return: com.hyjf.cs.user.beans.AutoStateQueryResultBean
+     */
+    private AutoStateQueryResultBean getResultJosn(AutoStateQueryResultBean resultBean, BankCallBean retBean) {
+        resultBean.setAccountId(retBean.getAccountId());
+        resultBean.setAgreeWithdrawStatus(retBean.getAgreeWithdraw());
+        resultBean.setAutoBidDeadline(retBean.getAutoBidDeadline());
+        resultBean.setAutoBidStatus(retBean.getAutoBid());
+        resultBean.setAutoTransferStatus(retBean.getAutoTransfer());
+        resultBean.setPaymentAuthStatus(retBean.getPaymentAuth());
+        resultBean.setPaymentDeadline(retBean.getPaymentDeadline());
+        resultBean.setRepayAuthStatus(retBean.getRepayAuth());
+        resultBean.setRepayDeadline(retBean.getRepayDeadline());
         return resultBean;
     }
 }

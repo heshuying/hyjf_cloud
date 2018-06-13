@@ -6,7 +6,7 @@ import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.vo.borrow.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
 
 /**
@@ -71,4 +71,6 @@ public interface AmUserClient {
 	UserInfoVO getUserByIdNo(String idNo);
 
     UserLoginLogVO getUserLoginById(Integer userId);
+
+	BankOpenAccountVO selectById(int userId);
 }

@@ -16,8 +16,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.vo.borrow.AccountVO;
-import com.hyjf.am.vo.borrow.BanksConfigVO;
+import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -75,7 +75,7 @@ public class BindCardServiceImpl implements BindCardService{
 	
 	/**
 	 * 发送验证码请求参数校验
-	 * @param bindCardVO
+	 * @param
 	 * @param userId
 	 */
 	@Override
