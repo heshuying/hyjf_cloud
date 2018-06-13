@@ -1,6 +1,6 @@
 spring:
   application:
-    name: AM-BORROW
+    name: AM-TRADE
   boot:
     admin:
       client:
