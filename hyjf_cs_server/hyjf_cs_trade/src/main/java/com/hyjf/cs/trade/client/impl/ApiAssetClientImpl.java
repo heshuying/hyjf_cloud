@@ -36,7 +36,7 @@ public class ApiAssetClientImpl implements ApiAssetClient {
 
     @Override
     public HjhAssetBorrowTypeVO selectAssetBorrowType(String instCode, Integer assetType) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/selectAssetBorrowType/" + instCode + "/" + assetType;
+        String url = "http://AM-TRADE/am-trade/assetPush/selectAssetBorrowType/" + instCode + "/" + assetType;
         HjhAssetBorrowTypeResponse response = restTemplate.getForEntity(url, HjhAssetBorrowTypeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -46,7 +46,7 @@ public class ApiAssetClientImpl implements ApiAssetClient {
 
     @Override
     public List<BorrowProjectRepayVO> selectProjectRepay(String borrowcCd) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/selectProjectRepay/" + borrowcCd;
+        String url = "http://AM-TRADE/am-trade/assetPush/selectProjectRepay/" + borrowcCd;
         BorrowProjectRepayReponse response = restTemplate.getForEntity(url, BorrowProjectRepayReponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -86,7 +86,7 @@ public class ApiAssetClientImpl implements ApiAssetClient {
 
     @Override
     public STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/selectStzfWhiteList/" + instCode + "/" + entrustedAccountId;
+        String url = "http://AM-TRADE/am-trade/assetPush/selectStzfWhiteList/" + instCode + "/" + entrustedAccountId;
         STZHWhiteListResponse response = restTemplate.getForEntity(url, STZHWhiteListResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -96,7 +96,7 @@ public class ApiAssetClientImpl implements ApiAssetClient {
 
     @Override
     public int insertAssert(HjhPlanAssetVO record) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/insertAssert";
+        String url = "http://AM-TRADE/am-trade/assetPush/insertAssert";
         Integer result = restTemplate.postForEntity(url, record, Integer.class).getBody();
         if (result == null) {
             return 0;
@@ -106,7 +106,7 @@ public class ApiAssetClientImpl implements ApiAssetClient {
 
     @Override
     public void insertRiskInfo(List<InfoBean> riskInfo) {
-        String url = "http://AM-BORROW/am-borrow/assetPush/insertRiskInfo";
+        String url = "http://AM-TRADE/am-trade/assetPush/insertRiskInfo";
         restTemplate.postForEntity(url, riskInfo, Integer.class).getBody();
     }
 }

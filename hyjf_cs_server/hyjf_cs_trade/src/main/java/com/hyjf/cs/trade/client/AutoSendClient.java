@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.vo.borrow.*;
 import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -30,7 +31,7 @@ public interface AutoSendClient {
      * @param instCode
      * @return
      */
-    List<HjhInstConfigVO> selectHjhInstConfigByHjhPlanAsset(String instCode);
+    List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode);
 
     /**
      * 更新资产表
@@ -50,14 +51,10 @@ public interface AutoSendClient {
     /**
      * 根据项目类型，期限，获取借款利率
      *
-     * @param borrowClass
-     * @param instCode
-     * @param assetType
-     * @param queryBorrowStyle
-     * @param borrowPeriod
+     * @param request
      * @return
      */
-    BorrowFinmanNewChargeVO selectBorrowApr(String borrowClass, String instCode, Integer assetType, String queryBorrowStyle, Integer borrowPeriod);
+    BorrowFinmanNewChargeVO selectBorrowApr(BorrowFinmanNewChargeRequest request);
 
     /**
      * 根据垫付机构用户名检索垫付机构用户
@@ -85,11 +82,9 @@ public interface AutoSendClient {
     /**
      * 个人信息
      *
-     * @param borrowNid
-     * @param hjhPlanAssetVO
-     * @param borrow
+     * @param borrowManinfoVO
      */
-    void insertBorrowManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAssetVO, BorrowWithBLOBsVO borrow);
+    void insertBorrowManinfo(BorrowManinfoVO borrowManinfoVO);
 
     /**
      * 更新资产表
