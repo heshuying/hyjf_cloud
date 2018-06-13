@@ -845,6 +845,31 @@ public class RedisUtils {
     /**
      * 
      * @param key
+     * @param hash
+     * @return
+     */
+    public static Long hset(String key,String field, String value) {
+        Long result = null;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            result = jedis.hset(key, field, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @param key
      * @param field
      * @return
      */

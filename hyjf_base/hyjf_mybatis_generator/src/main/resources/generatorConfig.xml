@@ -296,6 +296,10 @@
             <columnOverride column="is_end" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="newuser_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+		<!-- 数据字典表 -->
+		<table tableName="ht_param_name" domainObjectName="ParamName">
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+		</table>
 
 
         <!-- 3. hyjf_trade -->
