@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -56,7 +57,7 @@ public class BankOpenController {
 	 */
     @ApiOperation(value = "web端用户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
-	public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
+	public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
         logger.info("openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
 		
 		ModelAndView reuslt = new ModelAndView("bankopen/error");
@@ -193,7 +194,7 @@ public class BankOpenController {
 	}
 	
 
-    public ModelAndView getCallbankMV(OpenAccountPageBean openBean) {
+    public ModelAndView getCallbankMV(@RequestBody @Valid OpenAccountPageBean openBean) {
         ModelAndView mv = new ModelAndView();
         // 根据身份证号码获取性别
         String gender = "";

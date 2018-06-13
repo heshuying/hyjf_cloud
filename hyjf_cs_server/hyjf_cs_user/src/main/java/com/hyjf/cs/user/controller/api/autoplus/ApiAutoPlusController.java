@@ -16,13 +16,11 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -49,7 +47,7 @@ public class ApiAutoPlusController {
      */
     @ApiOperation(value = "自动投资授权", notes = "自动投资授权")
     @PostMapping(value = "/userAuthInves")
-    public ModelAndView userAuthInves(AutoPlusRequestBean payRequestBean) {
+    public ModelAndView userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
         if (ClientConstants.FAIL.equals(paramMap.get("isSuccess"))) {
@@ -80,7 +78,7 @@ public class ApiAutoPlusController {
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
     @PostMapping("/userAuthCredit")
-    public ModelAndView userAuthCredit(AutoPlusRequestBean payRequestBean) {
+    public ModelAndView userAuthCredit(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
         if (ClientConstants.FAIL.equals(paramMap.get("isSuccess"))) {
@@ -111,7 +109,7 @@ public class ApiAutoPlusController {
      * @Return: org.springframework.web.servlet.ModelAndView
      */
     @PostMapping("/userAuthInvesReturn")
-    public ModelAndView userAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
+    public ModelAndView userAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
@@ -130,7 +128,7 @@ public class ApiAutoPlusController {
      * @Return: org.springframework.web.servlet.ModelAndView
      */
     @PostMapping("/userCreditAuthInvesReturn")
-    public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
+    public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
@@ -150,7 +148,7 @@ public class ApiAutoPlusController {
      */
     @ResponseBody
     @PostMapping("/userAuthInvesBgreturn")
-    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request, BankCallBean bean) {
+    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);
@@ -167,7 +165,7 @@ public class ApiAutoPlusController {
      */
     @ResponseBody
     @PostMapping("/userCreditAuthInvesBgreturn")
-    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request, BankCallBean bean) {
+    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);
