@@ -60,6 +60,8 @@
 			<artifactId>jolokia-core</artifactId>
 		</dependency>
 		<!-- spring boot admin end -->
+
+
 		<!-- zipkin start -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -71,8 +73,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream-binder-kafka</artifactId>
+			<artifactId>spring-cloud-stream-binder-rabbit</artifactId>
 		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>org.springframework.cloud</groupId>-->
+		<!--<artifactId>spring-cloud-stream-binder-kafka</artifactId>-->
+		<!--</dependency>-->
+
 		<!-- zipkin end -->
 
 		<dependency>
