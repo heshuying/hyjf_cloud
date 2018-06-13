@@ -28,7 +28,7 @@ public class RepaymentDetailClientImpl implements RepaymentDetailClient {
     @Override
     public List<CallCenterHztRepaymentDetailVO> getHztRepaymentDetailList(CallCenterRepaymentRequest callCenterRepaymentRequest) {
         CallCenterHztRepaymentResponse callCenterHztRepaymentResponse = restTemplate
-                .postForEntity("http://AM-BORROW//am-trade/callcenter/getHztRepaymentDetailList/",callCenterRepaymentRequest, CallCenterHztRepaymentResponse.class)
+                .postForEntity("http://AM-TRADE/am-trade/callcenter/getHztRepaymentDetailList/",callCenterRepaymentRequest, CallCenterHztRepaymentResponse.class)
                 .getBody();
         if (callCenterHztRepaymentResponse != null) {
             return callCenterHztRepaymentResponse.getResultList();
@@ -39,7 +39,7 @@ public class RepaymentDetailClientImpl implements RepaymentDetailClient {
     @Override
     public List<CallCenterHtjRepaymentDetailVO> getHtjRepaymentDetailList(CallCenterRepaymentRequest callCenterRepaymentRequest){
         CallCenterHtjRepaymentResponse callCenterHtjRepaymentResponse = restTemplate
-                .postForEntity("http://AM-BORROW//am-trade/callcenter/getHtjRepaymentDetailList/",callCenterRepaymentRequest, CallCenterHtjRepaymentResponse.class)
+                .postForEntity("http://AM-TRADE/am-trade/callcenter/getHtjRepaymentDetailList/",callCenterRepaymentRequest, CallCenterHtjRepaymentResponse.class)
                 .getBody();
         if (callCenterHtjRepaymentResponse != null) {
             return callCenterHtjRepaymentResponse.getResultList();
