@@ -7,6 +7,7 @@ import com.hyjf.am.response.callcenter.CallCenterHztRepaymentResponse;
 import com.hyjf.am.response.callcenter.CallCenterUserBaseResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
+import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
 import com.hyjf.am.user.service.CallCenterBankService;
@@ -52,9 +53,9 @@ public class CallCenterBankController {
     
     
     @RequestMapping("/getNoServiceFuTouUsersList/{conditionMap}")
-    public CallCenterUserBaseResponse getNoServiceFuTouUsersList(@RequestBody @Valid Map<String, Object> conditionMap){
+    public CallCenterUserBaseResponse getNoServiceFuTouUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
     	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
-        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceFuTouUsersList(conditionMap);
+        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceFuTouUsersList(callCenterUserInfoRequest);
         if(!CollectionUtils.isEmpty(list)){
             List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
             callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
@@ -64,9 +65,9 @@ public class CallCenterBankController {
     
     
     @RequestMapping("/getNoServiceLiuShiUsersList/{conditionMap}")
-    public CallCenterUserBaseResponse getNoServiceLiuShiUsersList(@RequestBody @Valid Map<String, Object> conditionMap){
+    public CallCenterUserBaseResponse getNoServiceLiuShiUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
     	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
-        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceLiuShiUsersList(conditionMap);
+        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceLiuShiUsersList(callCenterUserInfoRequest);
         if(!CollectionUtils.isEmpty(list)){
             List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
             callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
@@ -76,9 +77,9 @@ public class CallCenterBankController {
     
     
     @RequestMapping("/getNoServiceUsersList/{conditionMap}")
-    public CallCenterUserBaseResponse getNoServiceUsersList(@RequestBody @Valid Map<String, Object> conditionMap){
+    public CallCenterUserBaseResponse getNoServiceUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
     	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
-        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceUsersList(conditionMap);
+        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceUsersList(callCenterUserInfoRequest);
         if(!CollectionUtils.isEmpty(list)){
             List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
             callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);

@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
 
@@ -13,10 +14,10 @@ import java.util.Map;
 public interface CallCenterBankService {
     List<BankCard> getTiedCardOfAccountBank(Integer userId);
     
-    List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(Map<String, Object> conditionMap);
+    List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
     
-    List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(Map<String, Object> conditionMap);
+    List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
     
-    List<CallcenterUserBaseCustomize> getNoServiceUsersList(Map<String, Object> conditionMap);
+    List<CallcenterUserBaseCustomize> getNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
 }
