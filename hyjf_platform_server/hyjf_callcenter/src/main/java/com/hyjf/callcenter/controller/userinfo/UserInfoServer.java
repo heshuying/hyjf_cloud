@@ -118,5 +118,21 @@ public class UserInfoServer extends CallcenterBaseController {
 		result.statusMessage(BaseResultBean.STATUS_SUCCESS, BaseResultBean.STATUS_SUCCESS_DESC+"。操作记录数："+rowCount);
 		return result;
 	}
+	
+	
+    /**
+     * @param request,response,UserBean
+     * @Author: libin
+     * @Desc :查询会员资料调用入口
+     * @Date: 16:39 2018/6/13
+     * @Return: ResultListBean
+     */
+    @ApiOperation(value = "查询会员资料调用入口", notes = "查询会员资料调用入口")
+    @PostMapping(value = "/getUserInfo", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public ResultListBean getUserInfo(HttpServletRequest request, HttpServletResponse response,@RequestBody UserBean bean) {
+		return null;
+    }
+	
 
 }

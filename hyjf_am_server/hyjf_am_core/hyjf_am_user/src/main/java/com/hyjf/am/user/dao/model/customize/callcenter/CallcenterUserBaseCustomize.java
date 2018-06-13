@@ -1,4 +1,4 @@
-package com.hyjf.am.user.dao.model.customize;
+package com.hyjf.am.user.dao.model.customize.callcenter;
 
 import java.io.Serializable;
 

@@ -1,13 +1,11 @@
-package com.hyjf.am.user.service;
+package com.hyjf.am.user.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
-import com.hyjf.am.vo.callcenter.CallCenterServiceUsersVO;
+import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun

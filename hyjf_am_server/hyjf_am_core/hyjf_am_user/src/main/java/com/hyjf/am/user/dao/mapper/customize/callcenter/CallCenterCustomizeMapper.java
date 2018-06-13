@@ -1,10 +1,10 @@
-package com.hyjf.am.user.dao.mapper.customize;
+package com.hyjf.am.user.dao.mapper.customize.callcenter;
 
 import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
-import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
+import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
 
 /**
  * @author libin

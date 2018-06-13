@@ -1,19 +1,19 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service.impl;
+package com.hyjf.am.user.service.impl.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.mapper.auto.CallcenterServiceUsersMapper;
-import com.hyjf.am.user.dao.mapper.customize.CallCenterCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.callcenter.CallCenterCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsers;
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsersExample;
-import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
-import com.hyjf.am.user.service.CallCenterBankService;
+import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
+import com.hyjf.am.user.service.callcenter.CallCenterBankService;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
