@@ -4,9 +4,11 @@
 package com.hyjf.am.user.controller;
 
 import com.hyjf.am.response.callcenter.CallCenterHztRepaymentResponse;
+import com.hyjf.am.response.callcenter.CallCenterServiceUsersResponse;
 import com.hyjf.am.response.callcenter.CallCenterUserBaseResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
+import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
@@ -52,7 +54,7 @@ public class CallCenterBankController {
     }
     
     
-    @RequestMapping("/getNoServiceFuTouUsersList/{conditionMap}")
+    @RequestMapping("/getNoServiceFuTouUsersList")
     public CallCenterUserBaseResponse getNoServiceFuTouUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
     	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
         List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceFuTouUsersList(callCenterUserInfoRequest);
@@ -64,7 +66,7 @@ public class CallCenterBankController {
     }
     
     
-    @RequestMapping("/getNoServiceLiuShiUsersList/{conditionMap}")
+    @RequestMapping("/getNoServiceLiuShiUsersList")
     public CallCenterUserBaseResponse getNoServiceLiuShiUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
     	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
         List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceLiuShiUsersList(callCenterUserInfoRequest);
@@ -76,7 +78,7 @@ public class CallCenterBankController {
     }
     
     
-    @RequestMapping("/getNoServiceUsersList/{conditionMap}")
+    @RequestMapping("/getNoServiceUsersList")
     public CallCenterUserBaseResponse getNoServiceUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
     	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
         List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceUsersList(callCenterUserInfoRequest);
@@ -85,6 +87,12 @@ public class CallCenterBankController {
             callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
         }
         return callCenterUserBaseResponse;
+    }
+
+    @RequestMapping("/executeRecord")
+    public Integer executeRecord(@RequestBody @Valid CallCenterServiceUsersRequest callCenterServiceUsersRequest){
+        CallCenterServiceUsersResponse callCenterServiceUsersResponse = new CallCenterServiceUsersResponse();
+        return callCenterBankService.updateRecord(callCenterServiceUsersRequest);
     }
     
 }

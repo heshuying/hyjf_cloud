@@ -3,18 +3,23 @@
  */
 package com.hyjf.am.user.service.impl;
 
+import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
+import com.hyjf.am.user.dao.mapper.auto.CallcenterServiceUsersMapper;
 import com.hyjf.am.user.dao.mapper.customize.CallCenterCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
+import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsers;
+import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsersExample;
 import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
 import com.hyjf.am.user.service.CallCenterBankService;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -26,6 +31,9 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
     private BankCardMapper bankCardMapper;
     @Autowired
     private CallCenterCustomizeMapper callCenterCustomizeMapper;
+
+    @Autowired
+	private CallcenterServiceUsersMapper callcenterServiceUsersMapper;
 
     public List<BankCard> getTiedCardOfAccountBank(Integer userId){
         BankCardExample example = new BankCardExample();
@@ -54,5 +62,32 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 	public List<CallcenterUserBaseCustomize> getNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceUsersList(callCenterUserInfoRequest);
 		return CallcenterUserBaseCustomizeList;
+	}
+
+	@Override
+	public Integer updateRecord(CallCenterServiceUsersRequest callCenterServiceUsersRequest){
+		//当前时间
+		Date nowDate = new Date();
+		//操作记录数
+		int rowCound = 0;
+		List<CallcenterServiceUsers> centerServiceUsersList =
+				CommonUtils.convertBeanList(callCenterServiceUsersRequest.getCallCenterServiceUsersVOList(),CallcenterServiceUsers.class);
+		for (CallcenterServiceUsers bean : centerServiceUsersList) {
+			//检索条件
+			CallcenterServiceUsersExample example = new CallcenterServiceUsersExample();
+			example.createCriteria().andUsernameEqualTo(bean.getUsername());
+			//检索
+			List<CallcenterServiceUsers> list = callcenterServiceUsersMapper.selectByExample(example);
+			if (list.size() > 0) {
+				//更新
+				bean.setUpddate(nowDate);//更新时间
+				rowCound += this.callcenterServiceUsersMapper.updateByExampleSelective(bean, example);
+			}else{
+				//登陆
+				bean.setInsdate(nowDate);//登陆时间
+				rowCound += callcenterServiceUsersMapper.insertSelective(bean);
+			}
+		}
+		return rowCound;
 	}
 }
