@@ -25,8 +25,7 @@ public class SynParamController {
 
     
     /**
-     * 获取银行卡配置信息
-     * @param bankId
+     *  同步param到redis
      * @return
      */
     @GetMapping("/synParam")
