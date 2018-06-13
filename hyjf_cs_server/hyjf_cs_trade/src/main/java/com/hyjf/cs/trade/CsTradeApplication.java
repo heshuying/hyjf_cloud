@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages={"com.hyjf.common", "com.hyjf.cs.trade","com.hyjf.pay"})
-public class CsBorrowApplication {
+public class CsTradeApplication {
 
 	@Bean
 	@LoadBalanced
@@ -20,6 +20,6 @@ public class CsBorrowApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(CsBorrowApplication.class, args);
+		SpringApplication.run(CsTradeApplication.class, args);
 	}
 }
