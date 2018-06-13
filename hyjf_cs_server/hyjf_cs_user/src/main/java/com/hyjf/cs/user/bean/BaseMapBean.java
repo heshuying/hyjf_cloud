@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.beans;
+package com.hyjf.cs.user.bean;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.common.util.GetterUtil;

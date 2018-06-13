@@ -4,8 +4,8 @@
 package com.hyjf.cs.user.controller.api.autoplus;
 
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.cs.user.beans.AutoPlusRequestBean;
-import com.hyjf.cs.user.beans.AutoPlusRetBean;
+import com.hyjf.cs.user.bean.AutoPlusRequestBean;
+import com.hyjf.cs.user.bean.AutoPlusRetBean;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;

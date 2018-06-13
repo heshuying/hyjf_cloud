@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.beans;
+package com.hyjf.cs.user.bean;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;

@@ -1,9 +1,8 @@
-package com.hyjf.cs.user.beans;
+package com.hyjf.cs.user.bean;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;

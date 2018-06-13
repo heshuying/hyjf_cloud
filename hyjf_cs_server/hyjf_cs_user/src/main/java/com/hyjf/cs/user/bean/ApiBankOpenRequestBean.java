@@ -1,11 +1,4 @@
-package com.hyjf.cs.user.beans;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.hyjf.cs.user.bean;
 
 public class ApiBankOpenRequestBean extends BaseBean{
 
