@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.dao.mapper.customize;
+package com.hyjf.am.user.dao.mapper.customize.batch;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;

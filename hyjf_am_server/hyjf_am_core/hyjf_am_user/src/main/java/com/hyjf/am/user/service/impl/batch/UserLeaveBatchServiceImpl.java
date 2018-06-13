@@ -1,13 +1,12 @@
-package com.hyjf.am.user.service.impl;
+package com.hyjf.am.user.service.impl.batch;
 
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserEntryCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.batch.UserLeaveCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.UserUpdateParamCustomize;
-import com.hyjf.am.user.service.UserLeaveBatchService;
+import com.hyjf.am.user.dao.model.customize.batch.UserUpdateParamCustomize;
+import com.hyjf.am.user.service.batch.UserLeaveBatchService;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

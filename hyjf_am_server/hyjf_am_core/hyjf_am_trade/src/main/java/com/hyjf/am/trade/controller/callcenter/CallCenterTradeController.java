@@ -1,14 +1,14 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.callcenter;
 
 import com.hyjf.am.response.callcenter.CallCenterHtjRepaymentResponse;
 import com.hyjf.am.response.callcenter.CallCenterHztRepaymentResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
-import com.hyjf.am.trade.service.CallCenterTradeService;
+import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
 import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
 import com.hyjf.common.util.CommonUtils;

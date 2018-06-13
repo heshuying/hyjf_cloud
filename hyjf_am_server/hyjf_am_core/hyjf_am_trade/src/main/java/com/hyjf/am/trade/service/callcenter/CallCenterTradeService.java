@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;

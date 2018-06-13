@@ -145,17 +145,17 @@ public class WebSafeController {
      */
     @ApiOperation(value = "手机号码修改", notes = "手机号码修改")
     @PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String newMobile, @RequestParam(required=true) String smsCode, HttpServletRequest request,
+    public ApiResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request,
                                           HttpServletResponse response) {
-        logger.info("用户手机号码修改, newMobile :{}, smsCode:{}", newMobile, smsCode);
+        logger.info("用户手机号码修改, paraMap :{}",paraMap);
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        boolean checkRet = safeService.checkForMobileModify(newMobile, smsCode);
+        boolean checkRet = safeService.checkForMobileModify(paraMap.get("newMobile"), paraMap.get("smsCode"));
         if(checkRet) {
             UserVO userVO = new UserVO();
             userVO.setUserId(user.getUserId());
-            userVO.setMobile(newMobile);
+            userVO.setMobile(paraMap.get("newMobile"));
             safeService.updateUserByUserId(userVO);
         }
 
@@ -216,15 +216,14 @@ public class WebSafeController {
      */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String relationId,
-                                          @RequestParam(required=true) String rlName, @RequestParam(required=true) String rlPhone, HttpServletRequest request) {
+    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap, HttpServletRequest request) {
         ApiResult<Object> result = new ApiResult<Object>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        safeService.checkForContractSave(relationId, rlName, rlPhone, user);
+        safeService.checkForContractSave(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
 
         try {
-            safeService.saveContract(relationId, rlName, rlPhone, user);
+            safeService.saveContract(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
         } catch (MQException e) {
             logger.error("紧急联系人保存失败", e);
             result.setStatus(ApiResult.STATUS_FAIL);

@@ -1,4 +1,4 @@
-package com.hyjf.am.user.service;
+package com.hyjf.am.user.service.batch;
 
 /**
  * @author wangjun
