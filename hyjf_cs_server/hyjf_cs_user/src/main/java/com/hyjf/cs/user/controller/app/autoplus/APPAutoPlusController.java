@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -41,12 +42,12 @@ public class APPAutoPlusController {
      * 用户授权自动债转
      * @param token
      * @param request
-     * @param response
+     * @param
      * @return
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
     @PostMapping("/userAuthCredit")
-    public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
         BankCallBean bean =  autoPlusService.userCreditAuthInves(token, ClientConstants.APP_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstants.CHANNEL_APP,lastSrvAuthCode,smsCode);
@@ -69,7 +70,7 @@ public class APPAutoPlusController {
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
     @PostMapping("/userAuthCreditReturn")
-    public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, BankCallBean bean) {
+    public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
         ApiResult<Object> apiResult = new ApiResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
@@ -80,15 +81,12 @@ public class APPAutoPlusController {
 
     /**
      * 用户授权自动债转异步回调
-     * @param request
-     * @param response
      * @param bean
      * @return
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping("/userAuthCreditBgreturn")
-    public String userCreditAuthInvesBgreturn(HttpServletRequest request, HttpServletResponse response,
-                                              BankCallBean bean) {
+    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean);
         return result;
     }
@@ -97,12 +95,12 @@ public class APPAutoPlusController {
      * 用户授权自动投资
      * @param token
      * @param request
-     * @param response
+     * @param
      * @return
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping("/userAuthInves")
-    public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request) {
         String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
         String smsCode = request.getParameter("smsCode");
         BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.APP_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstants.CHANNEL_APP,lastSrvAuthCode,smsCode);
@@ -127,7 +125,7 @@ public class APPAutoPlusController {
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping("/userAuthInvesReturn")
-    public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,BankCallBean bean) {
+    public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
         ApiResult<Object> apiResult = new ApiResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
@@ -146,7 +144,7 @@ public class APPAutoPlusController {
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
     @PostMapping("/userAuthInvesBgreturn")
-    public String userAuthInvesBgreturn(BankCallBean bean) {
+    public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
 
         String result = autoPlusService.userBgreturn(bean);
         return result;

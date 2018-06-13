@@ -2,8 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.CallCenterCustomizeMapper">
 
+	<resultMap id="CallcenterUserBaseCustomize" type="com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize">
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="vip_type" property="vipType" jdbcType="VARCHAR" />
+		<result column="user_role" property="userRole" jdbcType="VARCHAR" />
+		<result column="user_type" property="userType" jdbcType="VARCHAR" />
+		<result column="user_property" property="userProperty" jdbcType="VARCHAR" />
+		<result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
+		<result column="open_account" property="openAccount" jdbcType="VARCHAR" />
+		<result column="bank_open_account" property="bankOpenAccount" jdbcType="VARCHAR" />
+		<result column="bank_open_time" property="bankOpenTime" jdbcType="VARCHAR" />
+		<result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+		<result column="is51" property="is51" jdbcType="INTEGER" />
+		<result column="user_status" property="userStatus" jdbcType="VARCHAR" />
+		<result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
+		<result column="regist_plat" property="registPlat" jdbcType="VARCHAR" />
+		<result column="reg_time" property="regTime" jdbcType="VARCHAR" />
+		<result column="regionName" property="regionName" /> <!-- 大区 -->
+		<result column="branchName" property="branchName" /> <!-- 分公司  -->
+		<result column="departmentName" property="departmentName" /> <!-- 部门  -->
+		<result column="borrower_type" property="borrowerType"  jdbcType="INTEGER" />
+		<result column="sex" property="sex"  jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday"  jdbcType="VARCHAR" />
+		<result column="regist_area" property="registArea"  jdbcType="VARCHAR" />
+		<result column="idcard" property="idcard"  jdbcType="VARCHAR" />
+	</resultMap>
 <!-- 复投用户筛选 -->
-<select id="findNoServiceFuTouUsersList" resultType="com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize" parameterType="Map">
+<select id="findNoServiceFuTouUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
 	SELECT
 		hydu.user_id,
 		hydu.username,
@@ -30,24 +58,24 @@
 	) 
 	<!-- #有投资是在还款中 此处跨库关联 -->
 	AND EXISTS (
-		SELECT
-			tender.user_id
-		FROM
-			`hyjf_trade`.`ht_borrow_tender` tender
-			`hyjf_trade`.`ht_borrow` borrow
-		WHERE
-			tender.user_id = hydu.user_id
-		AND tender.borrow_nid = borrow.borrow_nid
-		AND borrow.`status` = 4
+    SELECT
+      tender.user_id
+    FROM
+      hyjf_trade.ht_borrow_tender tender
+	JOIN
+      hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+	JOIN
+	  ht_user  hydu ON tender.user_id = hydu.user_id
+    WHERE  borrow.`status` = 4
 	)
-	<if test="limitStart != null and limitEnd !=null">
-		LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+	<if test="limitStart != null and limitSize !=null">
+		LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
 	</if>
 </select>
 
 
 	<!-- 流失用户筛选 -->
-	<select id="findNoServiceLiuShiUsersList" resultType="com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize" parameterType="Map">
+	<select id="findNoServiceLiuShiUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
 		SELECT
 			hydu.user_id,
 			hydu.username,
@@ -57,7 +85,7 @@
 		<!-- #关联用户信息 -->
 		JOIN ht_user_info info ON hydu.user_id = info.user_id 
 		<!-- #关联用户账户的信息 -->
-		JOIN `hyjf_trade`.`ht_account`  account ON account.user_id = hydu.user_id 
+		JOIN hyjf_trade.ht_account  account ON account.user_id = hydu.user_id 
 		WHERE
 			NOT EXISTS (
 				SELECT
@@ -74,28 +102,46 @@
 		AND account.bank_total <![CDATA[<=]]> 50 
 		<!-- #还款状态为“还款中”的用户不传 -->
 		AND NOT EXISTS (
-			SELECT
-				tender.user_id
-			FROM
-			   `hyjf_trade`.`ht_borrow_tender` tender
-			   `hyjf_trade`.`ht_borrow` borrow
-				
-			WHERE
-				tender.user_id = hydu.user_id
-			AND tender.borrow_nid = borrow.borrow_nid
-			AND borrow.`status` = 4
+	    SELECT
+	      tender.user_id
+	    FROM
+	      hyjf_trade.ht_borrow_tender tender
+		JOIN
+	      hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+		JOIN
+		  ht_user  hydu ON tender.user_id = hydu.user_id
+	    WHERE  borrow.`status` = 4
 		) 
 		<!-- #累计投资金额≥5000 -->
 		AND (
 			SELECT
 				SUM(t.account)
 			FROM
-				`hyjf_trade`.`ht_borrow_tender` t
+				hyjf_trade.ht_borrow_tender t
 			WHERE
 				t.user_id = hydu.user_id
 		) <![CDATA[>=]]> 5000
-		<if test="limitStart != null and limitEnd !=null">
-			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		<if test="limitStart != null and limitSize !=null">
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
+		</if>
+	</select>
+	
+
+	<select id="findNoServiceUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
+		SELECT
+			hydu.user_id,
+			hydu.username,
+			hydu.mobile
+		FROM
+			ht_user hydu
+		WHERE 
+			NOT EXISTS (SELECT 1 
+						FROM ht_callcenter_service_users csu 
+						WHERE hydu.username = csu.username 
+						AND csu.assigned != 0)
+		ORDER BY hydu.reg_time DESC
+		<if test="limitStart != null and limitSize !=null">
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
 		</if>
 	</select>
 

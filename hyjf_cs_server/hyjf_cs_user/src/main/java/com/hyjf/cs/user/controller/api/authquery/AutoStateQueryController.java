@@ -11,8 +11,11 @@ import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * @author zhangqingqing
@@ -28,7 +31,7 @@ public class AutoStateQueryController {
     AutoStateQueryService autoStateQueryService;
 
     @PostMapping(value = "query", produces = "application/json; charset=utf-8")
-    public  ApiResult<AutoStateQueryResultBean> queryStatus(AutoStateQueryRequest autoStateQuery) {
+    public  ApiResult<AutoStateQueryResultBean> queryStatus(@RequestBody @Valid AutoStateQueryRequest autoStateQuery) {
         ApiResult<AutoStateQueryResultBean> result = new ApiResult<>();
         AutoStateQueryResultBean resultBean = autoStateQueryService.queryStatus(autoStateQuery);
         if (null != resultBean) {

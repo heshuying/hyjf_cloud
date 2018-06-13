@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class ApiBankOpenController {
 
     @ApiOperation(value = "第三方用户开户", notes = "第三方用户开户")
     @PostMapping(value = "/openBankAccount")
-    public ModelAndView openBankAccount(@RequestBody ApiBankOpenRequestBean requestBean , HttpServletRequest request) {
+    public ModelAndView openBankAccount(@RequestBody @Valid ApiBankOpenRequestBean requestBean , HttpServletRequest request) {
         logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = bankOpenService.checkApiParam(requestBean);
@@ -66,7 +67,7 @@ public class ApiBankOpenController {
         return modelAndView;
     }
 
-    private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
+    private OpenAccountPageBean getOpenAccountPageBean(@RequestBody @Valid ApiBankOpenRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
         // 同步调用路径
@@ -113,7 +114,7 @@ public class ApiBankOpenController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
-    public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
+    public BankCallResult openAccountBgReturn(@RequestBody @Valid  BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);

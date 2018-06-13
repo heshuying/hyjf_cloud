@@ -9,9 +9,9 @@ public interface BankOpenService {
 	 * 保存用户的初始开户记录
 	 * @param userId
 	 * @param userName
-	 * @param orderId
+	 * @param
 	 * @param clientPc
-	 * @param clientPc2 
+	 * @param
 	 * @return
 	 */
 	public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc,String name,String idno,String cardNo);
@@ -39,7 +39,6 @@ public interface BankOpenService {
 	/**
 	 * 根据用户Id,银行卡号检索用户银行卡信息
 	 * @param userId
-	 * @param cardNo
 	 * @return
 	 */
 	BankCard selectBankCardByUserId(Integer userId);

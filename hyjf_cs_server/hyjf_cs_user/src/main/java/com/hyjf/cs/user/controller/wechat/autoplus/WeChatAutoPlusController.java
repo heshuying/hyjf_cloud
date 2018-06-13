@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -96,7 +97,7 @@ public class WeChatAutoPlusController {
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
     @PostMapping("/userAuthCreditReturn")
-    public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, BankCallBean bean, HttpServletRequest request) {
+    public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankCallBean bean, HttpServletRequest request) {
         ApiResult<Object> apiResult  = new ApiResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
@@ -116,7 +117,7 @@ public class WeChatAutoPlusController {
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping("/userAuthInvesReturn")
-    public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token") String token,BankCallBean bean, HttpServletRequest request) {
+    public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token") String token,@RequestBody @Valid BankCallBean bean, HttpServletRequest request) {
         ApiResult<Object> apiResult  = new ApiResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
@@ -135,7 +136,7 @@ public class WeChatAutoPlusController {
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
     @PostMapping("/userAuthInvesBgreturn")
-    public String userAuthInvesBgreturn(BankCallBean bean) {
+    public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean);
         return result;
     }
@@ -149,7 +150,7 @@ public class WeChatAutoPlusController {
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping("/userAuthCreditBgreturn")
-    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
+    public String userCreditAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
 
         String result = autoPlusService.userBgreturn(bean);
         return result;

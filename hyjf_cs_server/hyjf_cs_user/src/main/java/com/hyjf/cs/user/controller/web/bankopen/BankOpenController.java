@@ -9,6 +9,7 @@ import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -43,6 +45,9 @@ public class BankOpenController {
 	@Autowired
 	private BankOpenService bankOpenService;
 
+	@Autowired
+	SystemConfig systemConfig;
+
 	@GetMapping(value = "/init")
 	public String init(Model model) {
 		return "bankopen/init";
@@ -56,7 +61,7 @@ public class BankOpenController {
 	 */
     @ApiOperation(value = "web端用户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
-	public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
+	public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request, Model model) {
         logger.info("openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
 		
 		ModelAndView reuslt = new ModelAndView("bankopen/error");
@@ -142,9 +147,9 @@ public class BankOpenController {
         }
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + "/api/secure/open/";
+        String retUrl = systemConfig.getWebHost() + "/web/secure/open/bankOpenReturn";
         // 异步调用路
-        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + "/api/secure/open/" + ".do?phone="+bankOpenVO.getMobile();
+        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bankOpenBgreturn" + "?phone="+bankOpenVO.getMobile();
 
         OpenAccountPageBean openBean = new OpenAccountPageBean();
         
@@ -193,7 +198,7 @@ public class BankOpenController {
 	}
 	
 
-    public ModelAndView getCallbankMV(OpenAccountPageBean openBean) {
+    public ModelAndView getCallbankMV(@RequestBody @Valid OpenAccountPageBean openBean) {
         ModelAndView mv = new ModelAndView();
         // 根据身份证号码获取性别
         String gender = "";

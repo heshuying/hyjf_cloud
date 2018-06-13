@@ -3,6 +3,7 @@ package com.hyjf.am.user.dao.mapper.customize;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
 
 /**
@@ -15,12 +16,18 @@ public interface CallCenterCustomizeMapper {
      * @param mobiles
      * @return
      */
-    List<CallcenterUserBaseCustomize> findNoServiceFuTouUsersList(Map<String, Object> conditionMap);
+    List<CallcenterUserBaseCustomize> findNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
     
     /**
      * @param mobiles
      * @return
      */
-    List<CallcenterUserBaseCustomize> findNoServiceLiuShiUsersList(Map<String, Object> conditionMap);
+    List<CallcenterUserBaseCustomize> findNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+    
+    /**
+     * @param mobiles
+     * @return
+     */
+    List<CallcenterUserBaseCustomize> findNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
 }
