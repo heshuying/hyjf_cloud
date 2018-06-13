@@ -1,5 +1,6 @@
-package com.hyjf.batch.job;
+package com.hyjf.batch.job.activity;
 
+import com.hyjf.batch.job.BaseJob;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

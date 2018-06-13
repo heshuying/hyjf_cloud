@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.impl;
 
+import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.mapper.customize.CallCenterCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
@@ -38,14 +39,20 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
     }
 
 	@Override
-	public List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(Map<String, Object> conditionMap) {
-		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceFuTouUsersList(conditionMap);
+	public List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
+		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceFuTouUsersList(callCenterUserInfoRequest);
 		return CallcenterUserBaseCustomizeList;
 	}
 
 	@Override
-	public List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(Map<String, Object> conditionMap) {
-		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceLiuShiUsersList(conditionMap);
+	public List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
+		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceLiuShiUsersList(callCenterUserInfoRequest);
+		return CallcenterUserBaseCustomizeList;
+	}
+
+	@Override
+	public List<CallcenterUserBaseCustomize> getNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
+		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceUsersList(callCenterUserInfoRequest);
 		return CallcenterUserBaseCustomizeList;
 	}
 }
