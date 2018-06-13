@@ -3,7 +3,7 @@ package com.hyjf.cs.user.service;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
-import com.hyjf.cs.user.beans.BaseBean;
+import com.hyjf.cs.user.bean.BaseBean;
 
 
 public interface BaseService {

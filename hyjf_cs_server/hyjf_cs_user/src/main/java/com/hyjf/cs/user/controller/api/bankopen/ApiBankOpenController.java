@@ -2,8 +2,8 @@ package com.hyjf.cs.user.controller.api.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
-import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
+import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;

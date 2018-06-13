@@ -70,17 +70,17 @@
             </dependency>
 
             <!-- zipkin start -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-stream-binder-kafka</artifactId>
-                <version>1.2.1.RELEASE</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.cloud</groupId>-->
+                <!--<artifactId>spring-cloud-stream-binder-kafka</artifactId>-->
+                <!--<version>1.2.1.RELEASE</version>-->
+            <!--</dependency>-->
 
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-sleuth-stream</artifactId>
-                <version>1.2.6.RELEASE</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.cloud</groupId>-->
+                <!--<artifactId>spring-cloud-sleuth-stream</artifactId>-->
+                <!--<version>1.2.6.RELEASE</version>-->
+            <!--</dependency>-->
             <!-- zipkin end -->
 
             <!-- sping mybatis -->

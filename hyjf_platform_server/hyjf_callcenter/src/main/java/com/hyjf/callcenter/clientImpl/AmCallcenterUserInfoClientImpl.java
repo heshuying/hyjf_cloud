@@ -3,6 +3,7 @@ package com.hyjf.callcenter.clientImpl;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -54,4 +55,11 @@ public class AmCallcenterUserInfoClientImpl implements AmCallcenterUserInfoClien
         return null;
 	}
 
+	@Override
+    public Integer executeRecord(CallCenterServiceUsersRequest callCenterServiceUsersRequest){
+        Integer response = restTemplate
+                .postForEntity("http://AM-USER//am-user/callcenter/executeRecord/",callCenterServiceUsersRequest, Integer.class)
+                .getBody();
+        return response;
+    }
 }
