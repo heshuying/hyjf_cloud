@@ -1,10 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.dao.mapper.customize;
+package com.hyjf.am.user.dao.mapper.customize.batch;
 
 import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.customize.UserUpdateParamCustomize;
+import com.hyjf.am.user.dao.model.customize.batch.UserUpdateParamCustomize;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

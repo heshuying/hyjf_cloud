@@ -1,6 +1,6 @@
-package com.hyjf.am.user.controller;
+package com.hyjf.am.user.controller.batch;
 
-import com.hyjf.am.user.service.UserEntryBatchService;
+import com.hyjf.am.user.service.batch.UserEntryBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
