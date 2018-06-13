@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -129,19 +130,13 @@ public class SafeServiceImpl implements SafeService {
         // 是否设置交易密码
         resultMap.put("isSetPassword", user.getIsSetPassword());
         resultMap.put("lastTime", userLogin.getLastTime());
-        // 紧急联系人类型
-        // TODO: 2018/5/29 紧急联系人类型
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
         resultMap.put("usersContract",usersContactVO);
-		/*List<ParamName> paramList = safeService.getParamNameList("USER_RELATION");
-		JSONArray result = new JSONArray();
-		for (int i = 0; i < paramList.size(); i++) {
-			JSONObject json = new JSONObject();
-			json.put("name", paramList.get(i).getName());
-			json.put("value", paramList.get(i).getNameCd());
-			result.add(json);
-		}
-		resultMap.put("userRelation", result);*/
+        
+        // 紧急联系人类型 
+        Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
+		resultMap.put("userRelation", result);
+		
         BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(webViewUser.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(webViewUser.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);

@@ -12,5 +12,6 @@ import com.hyjf.cs.user.service.BaseService;
  * @version AutoStateQueryService, v0.1 2018/6/12 14:00
  */
 public interface AutoStateQueryService extends BaseService {
+
     AutoStateQueryResultBean queryStatus(AutoStateQueryRequest autoStateQuery);
 }

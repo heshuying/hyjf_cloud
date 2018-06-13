@@ -45,8 +45,6 @@ public class TestRedis {
 		
 		Map<String,String> hash2 = RedisUtils.hgetall(key);
 		
-		
-		
 		for (Entry<String,String>  onekey : hash2.entrySet()) {
 			System.out.println(onekey.getKey()+"  "+onekey.getValue());
 		

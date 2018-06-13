@@ -5,6 +5,8 @@ package com.hyjf.cs.user.controller.api.authquery;
 
 import com.hyjf.cs.user.beans.AutoStateQueryRequest;
 import com.hyjf.cs.user.beans.AutoStateQueryResultBean;
+import com.hyjf.cs.user.constants.RegisterError;
+import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,16 @@ public class AutoStateQueryController {
     AutoStateQueryService autoStateQueryService;
 
     @PostMapping(value = "query", produces = "application/json; charset=utf-8")
-    public AutoStateQueryResultBean queryStatus(AutoStateQueryRequest autoStateQuery) {
+    public  ApiResult<AutoStateQueryResultBean> queryStatus(AutoStateQueryRequest autoStateQuery) {
+        ApiResult<AutoStateQueryResultBean> result = new ApiResult<>();
         AutoStateQueryResultBean resultBean = autoStateQueryService.queryStatus(autoStateQuery);
-        return null;
+        if (null != resultBean) {
+            result.setResult(resultBean);
+        } else {
+            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+        }
+        return result;
     }
 
 }

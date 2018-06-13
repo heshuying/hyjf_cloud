@@ -67,4 +67,6 @@ public interface AutoPlusService extends BaseService {
 
     BankCallResult userAuthInvesBgreturn(BankCallBean bean, String callback, String acqRes);
 
+    BankCallBean getTermsAuthQuery(int userId,String channel);
+
 }

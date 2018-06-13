@@ -169,8 +169,7 @@ public class WebSafeController {
     public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String email, HttpServletRequest request) {
         ApiResult<Object> result = new ApiResult<Object>();
 
-        WebViewUser user = new WebViewUser();
-        user.setUserId(1);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         safeService.checkForEmailSend(email, user.getUserId());
 
         try {
@@ -192,8 +191,7 @@ public class WebSafeController {
     public ApiResult<Object> bindEmail(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String key, @RequestParam(required=true) String value, @RequestParam(required=true) String email, HttpServletRequest request) {
         ApiResult<Object> result = new ApiResult<Object>();
 
-        WebViewUser user  = new WebViewUser();
-        user.setUserId(1);
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 
         safeService.checkForEmailBind(email, key, value, user);
 
