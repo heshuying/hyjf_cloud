@@ -432,6 +432,8 @@
             <columnOverride column="base_update" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_bank" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="check_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="trade_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <!-- 用户充值记录表 -->
@@ -478,5 +480,12 @@
             <columnOverride column="interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+
+        <!-- 借款满标日志表 -->
+        <table tableName="ht_account_borrow" domainObjectName="AccountBorrow">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>
