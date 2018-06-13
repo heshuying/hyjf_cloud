@@ -114,8 +114,8 @@
 			'未还款'
 			end status
 		FROM
-			hyjf_debt_plan_accede dpa
-		left join hyjf_debt_plan dp on dpa.plan_nid=dp.debt_plan_nid
+			ht_debt_plan_accede dpa
+		left join ht_debt_plan dp on dpa.plan_nid=dp.debt_plan_nid
 		<include refid="Where_Clause_Htj" />
 		
 		ORDER BY create_time DESC
