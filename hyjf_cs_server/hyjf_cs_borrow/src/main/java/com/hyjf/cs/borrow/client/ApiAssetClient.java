@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.borrow.client;
 
+import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
 import com.hyjf.am.vo.borrow.BorrowProjectRepayVO;
@@ -10,7 +11,6 @@ import com.hyjf.am.vo.borrow.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.assetpush.InfoBean;
 
 import java.util.List;
 
@@ -84,4 +84,5 @@ public interface ApiAssetClient {
      * @param riskInfo
      */
     void insertRiskInfo(List<InfoBean> riskInfo);
+
 }

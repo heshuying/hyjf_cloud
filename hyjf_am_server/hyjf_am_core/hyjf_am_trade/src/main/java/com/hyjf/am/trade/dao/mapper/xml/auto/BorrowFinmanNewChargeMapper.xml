@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
+    <id column="man_charge_cd" property="manChargeCd" jdbcType="VARCHAR" />
+    <result column="man_charge_type" property="manChargeType" jdbcType="VARCHAR" />
+    <result column="man_charge_time" property="manChargeTime" jdbcType="INTEGER" />
+    <result column="man_charge_time_type" property="manChargeTimeType" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="VARCHAR" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+    <result column="auto_borrow_apr" property="autoBorrowApr" jdbcType="VARCHAR" />
+    <result column="charge_mode" property="chargeMode" jdbcType="TINYINT" />
+    <result column="charge_rate" property="chargeRate" jdbcType="VARCHAR" />
+    <result column="man_charge_rate" property="manChargeRate" jdbcType="VARCHAR" />
+    <result column="return_rate" property="returnRate" jdbcType="VARCHAR" />
+    <result column="late_interest" property="lateInterest" jdbcType="VARCHAR" />
+    <result column="service_fee_total" property="serviceFeeTotal" jdbcType="DECIMAL" />
+    <result column="late_free_days" property="lateFreeDays" jdbcType="TINYINT" />
+    <result column="auto_repay" property="autoRepay" jdbcType="TINYINT" />
+    <result column="repayer_type" property="repayerType" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    man_charge_cd, man_charge_type, man_charge_time, man_charge_time_type, project_type, 
+    inst_code, asset_type, auto_borrow_apr, charge_mode, charge_rate, man_charge_rate, 
+    return_rate, late_interest, service_fee_total, late_free_days, auto_repay, repayer_type, 
+    `status`, remark, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_borrow_finman_new_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_borrow_finman_new_charge
+    where man_charge_cd = #{manChargeCd,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ht_borrow_finman_new_charge
+    where man_charge_cd = #{manChargeCd,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample" >
+    delete from ht_borrow_finman_new_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
+    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_finman_new_charge (man_charge_type, man_charge_time, man_charge_time_type, 
+      project_type, inst_code, asset_type, 
+      auto_borrow_apr, charge_mode, charge_rate, 
+      man_charge_rate, return_rate, late_interest, 
+      service_fee_total, late_free_days, auto_repay, 
+      repayer_type, `status`, remark, 
+      create_time, update_time)
+    values (#{manChargeType,jdbcType=VARCHAR}, #{manChargeTime,jdbcType=INTEGER}, #{manChargeTimeType,jdbcType=VARCHAR}, 
+      #{projectType,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
+      #{autoBorrowApr,jdbcType=VARCHAR}, #{chargeMode,jdbcType=TINYINT}, #{chargeRate,jdbcType=VARCHAR}, 
+      #{manChargeRate,jdbcType=VARCHAR}, #{returnRate,jdbcType=VARCHAR}, #{lateInterest,jdbcType=VARCHAR}, 
+      #{serviceFeeTotal,jdbcType=DECIMAL}, #{lateFreeDays,jdbcType=TINYINT}, #{autoRepay,jdbcType=TINYINT}, 
+      #{repayerType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
+    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_finman_new_charge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="manChargeType != null" >
+        man_charge_type,
+      </if>
+      <if test="manChargeTime != null" >
+        man_charge_time,
+      </if>
+      <if test="manChargeTimeType != null" >
+        man_charge_time_type,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="assetType != null" >
+        asset_type,
+      </if>
+      <if test="autoBorrowApr != null" >
+        auto_borrow_apr,
+      </if>
+      <if test="chargeMode != null" >
+        charge_mode,
+      </if>
+      <if test="chargeRate != null" >
+        charge_rate,
+      </if>
+      <if test="manChargeRate != null" >
+        man_charge_rate,
+      </if>
+      <if test="returnRate != null" >
+        return_rate,
+      </if>
+      <if test="lateInterest != null" >
+        late_interest,
+      </if>
+      <if test="serviceFeeTotal != null" >
+        service_fee_total,
+      </if>
+      <if test="lateFreeDays != null" >
+        late_free_days,
+      </if>
+      <if test="autoRepay != null" >
+        auto_repay,
+      </if>
+      <if test="repayerType != null" >
+        repayer_type,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="manChargeType != null" >
+        #{manChargeType,jdbcType=VARCHAR},
+      </if>
+      <if test="manChargeTime != null" >
+        #{manChargeTime,jdbcType=INTEGER},
+      </if>
+      <if test="manChargeTimeType != null" >
+        #{manChargeTimeType,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="autoBorrowApr != null" >
+        #{autoBorrowApr,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeMode != null" >
+        #{chargeMode,jdbcType=TINYINT},
+      </if>
+      <if test="chargeRate != null" >
+        #{chargeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="manChargeRate != null" >
+        #{manChargeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="returnRate != null" >
+        #{returnRate,jdbcType=VARCHAR},
+      </if>
+      <if test="lateInterest != null" >
+        #{lateInterest,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceFeeTotal != null" >
+        #{serviceFeeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="lateFreeDays != null" >
+        #{lateFreeDays,jdbcType=TINYINT},
+      </if>
+      <if test="autoRepay != null" >
+        #{autoRepay,jdbcType=TINYINT},
+      </if>
+      <if test="repayerType != null" >
+        #{repayerType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow_finman_new_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_borrow_finman_new_charge
+    <set >
+      <if test="record.manChargeCd != null" >
+        man_charge_cd = #{record.manChargeCd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manChargeType != null" >
+        man_charge_type = #{record.manChargeType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manChargeTime != null" >
+        man_charge_time = #{record.manChargeTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.manChargeTimeType != null" >
+        man_charge_time_type = #{record.manChargeTimeType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetType != null" >
+        asset_type = #{record.assetType,jdbcType=TINYINT},
+      </if>
+      <if test="record.autoBorrowApr != null" >
+        auto_borrow_apr = #{record.autoBorrowApr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.chargeMode != null" >
+        charge_mode = #{record.chargeMode,jdbcType=TINYINT},
+      </if>
+      <if test="record.chargeRate != null" >
+        charge_rate = #{record.chargeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manChargeRate != null" >
+        man_charge_rate = #{record.manChargeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.returnRate != null" >
+        return_rate = #{record.returnRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lateInterest != null" >
+        late_interest = #{record.lateInterest,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceFeeTotal != null" >
+        service_fee_total = #{record.serviceFeeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lateFreeDays != null" >
+        late_free_days = #{record.lateFreeDays,jdbcType=TINYINT},
+      </if>
+      <if test="record.autoRepay != null" >
+        auto_repay = #{record.autoRepay,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayerType != null" >
+        repayer_type = #{record.repayerType,jdbcType=TINYINT},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_borrow_finman_new_charge
+    set man_charge_cd = #{record.manChargeCd,jdbcType=VARCHAR},
+      man_charge_type = #{record.manChargeType,jdbcType=VARCHAR},
+      man_charge_time = #{record.manChargeTime,jdbcType=INTEGER},
+      man_charge_time_type = #{record.manChargeTimeType,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=VARCHAR},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      asset_type = #{record.assetType,jdbcType=TINYINT},
+      auto_borrow_apr = #{record.autoBorrowApr,jdbcType=VARCHAR},
+      charge_mode = #{record.chargeMode,jdbcType=TINYINT},
+      charge_rate = #{record.chargeRate,jdbcType=VARCHAR},
+      man_charge_rate = #{record.manChargeRate,jdbcType=VARCHAR},
+      return_rate = #{record.returnRate,jdbcType=VARCHAR},
+      late_interest = #{record.lateInterest,jdbcType=VARCHAR},
+      service_fee_total = #{record.serviceFeeTotal,jdbcType=DECIMAL},
+      late_free_days = #{record.lateFreeDays,jdbcType=TINYINT},
+      auto_repay = #{record.autoRepay,jdbcType=TINYINT},
+      repayer_type = #{record.repayerType,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=TINYINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
+    update ht_borrow_finman_new_charge
+    <set >
+      <if test="manChargeType != null" >
+        man_charge_type = #{manChargeType,jdbcType=VARCHAR},
+      </if>
+      <if test="manChargeTime != null" >
+        man_charge_time = #{manChargeTime,jdbcType=INTEGER},
+      </if>
+      <if test="manChargeTimeType != null" >
+        man_charge_time_type = #{manChargeTimeType,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        asset_type = #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="autoBorrowApr != null" >
+        auto_borrow_apr = #{autoBorrowApr,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeMode != null" >
+        charge_mode = #{chargeMode,jdbcType=TINYINT},
+      </if>
+      <if test="chargeRate != null" >
+        charge_rate = #{chargeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="manChargeRate != null" >
+        man_charge_rate = #{manChargeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="returnRate != null" >
+        return_rate = #{returnRate,jdbcType=VARCHAR},
+      </if>
+      <if test="lateInterest != null" >
+        late_interest = #{lateInterest,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceFeeTotal != null" >
+        service_fee_total = #{serviceFeeTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="lateFreeDays != null" >
+        late_free_days = #{lateFreeDays,jdbcType=TINYINT},
+      </if>
+      <if test="autoRepay != null" >
+        auto_repay = #{autoRepay,jdbcType=TINYINT},
+      </if>
+      <if test="repayerType != null" >
+        repayer_type = #{repayerType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where man_charge_cd = #{manChargeCd,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
+    update ht_borrow_finman_new_charge
+    set man_charge_type = #{manChargeType,jdbcType=VARCHAR},
+      man_charge_time = #{manChargeTime,jdbcType=INTEGER},
+      man_charge_time_type = #{manChargeTimeType,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=VARCHAR},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      asset_type = #{assetType,jdbcType=TINYINT},
+      auto_borrow_apr = #{autoBorrowApr,jdbcType=VARCHAR},
+      charge_mode = #{chargeMode,jdbcType=TINYINT},
+      charge_rate = #{chargeRate,jdbcType=VARCHAR},
+      man_charge_rate = #{manChargeRate,jdbcType=VARCHAR},
+      return_rate = #{returnRate,jdbcType=VARCHAR},
+      late_interest = #{lateInterest,jdbcType=VARCHAR},
+      service_fee_total = #{serviceFeeTotal,jdbcType=DECIMAL},
+      late_free_days = #{lateFreeDays,jdbcType=TINYINT},
+      auto_repay = #{autoRepay,jdbcType=TINYINT},
+      repayer_type = #{repayerType,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER}
+    where man_charge_cd = #{manChargeCd,jdbcType=VARCHAR}
+  </update>
+</mapper>
