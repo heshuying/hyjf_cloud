@@ -12,7 +12,7 @@ import com.hyjf.am.user.mq.Producer;
 import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.user.utils.UploadFileUtils;
-import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.trade.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
@@ -943,6 +943,13 @@ public class UserServiceImpl implements UserService {
 			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
 			userBindEmailLogMapper.updateByPrimaryKey(log);
 		}
+	}
+
+	@Override
+	public UserLoginLog selectByPrimaryKey(Integer userId){
+		UserLoginLog userLoginLog = userLoginLogMapper.selectByPrimaryKey(userId);
+		return userLoginLog;
+
 	}
 
 }

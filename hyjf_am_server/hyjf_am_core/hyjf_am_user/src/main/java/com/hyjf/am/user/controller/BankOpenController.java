@@ -1,7 +1,7 @@
 package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.borrow.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankCardRequest;
@@ -11,7 +11,7 @@ import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.BankOpenService;
-import com.hyjf.am.vo.borrow.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.slf4j.Logger;

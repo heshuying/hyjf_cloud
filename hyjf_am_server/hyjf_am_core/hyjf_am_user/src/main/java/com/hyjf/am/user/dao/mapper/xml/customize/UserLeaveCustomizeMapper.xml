@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper">
+	<resultMap id="employeeMapResult" type="com.hyjf.am.user.dao.model.auto.User">
+		<result column="userId" property="userId" /> <!-- 用户ID -->
+	</resultMap>
+
+	<select id="queryEmployeeList" resultMap="employeeMapResult" parameterType="java.lang.Integer">
+		SELECT
+			oau.hyd_id AS userId
+		FROM
+			hyjf_crm.oa_users oau
+			INNER JOIN hyjf_crm.oa_department oad ON oau.departmentid = oad.id
+		WHERE
+			oau.user_status = 'Q'
+			AND oau.user_type=2
+	</select>
+
+	<update id="updateSpreadAttribute" parameterType="java.lang.Integer">
+		UPDATE ht_user_info u
+		inner join ht_spreads_user s on u.user_id=s.user_id
+		SET u.attribute = 0
+		WHERE
+		 spreads_user_id = #{referrer}
+	</update>
+
+	<resultMap id="userAndDepartmentMapResult" type="com.hyjf.am.user.dao.model.customize.UserUpdateParamCustomize">
+		<result column="userId" property="userId" />
+		<result column="username" property="username" />
+		<result column="truename" property="truename" />
+		<result column="cuttype" property="cuttype" />
+	</resultMap>
+
+	<select id="queryUserAndDepartment" resultMap="userAndDepartmentMapResult" parameterType="java.lang.Integer">
+		SELECT
+			ou.hyd_id AS userId,
+			hu.username AS username,
+			ou.user_realname AS truename,
+			od.cuttype AS cuttype
+		FROM
+			huiyingdai_users hu
+		LEFT JOIN hyjf_crm.oa_users ou ON hu.user_id = ou.hyd_id
+		LEFT JOIN hyjf_crm.oa_department od ON ou.departmentid = od.id
+		WHERE
+			hyd_id IS NOT NULL
+		AND ou.hyd_id = #{userId} 
+		AND ou.user_status IN ('E', 'Q1', 'Q2', 'Q11', 'Q21')
+	</select>
+	
+	<select id="queryEmployeeById" resultMap="employeeMapResult" parameterType="java.lang.String">
+		SELECT
+			oau.hyd_id AS userId
+		FROM
+			hyjf_crm.oa_users oau
+			INNER JOIN hyjf_crm.oa_department oad ON oau.departmentid = oad.id
+		WHERE
+			oau.user_status = 'Q'
+			AND oau.user_type=2
+			AND oau.id = #{userId}
+	</select>
+
+</mapper>
+

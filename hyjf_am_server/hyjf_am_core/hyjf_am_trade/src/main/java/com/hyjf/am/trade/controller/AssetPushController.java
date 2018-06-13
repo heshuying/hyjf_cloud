@@ -4,9 +4,9 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.assetpush.InfoBean;
-import com.hyjf.am.response.borrow.BorrowProjectRepayReponse;
-import com.hyjf.am.response.borrow.HjhAssetBorrowTypeResponse;
-import com.hyjf.am.response.borrow.STZHWhiteListResponse;
+import com.hyjf.am.response.trade.BorrowProjectRepayReponse;
+import com.hyjf.am.response.trade.HjhAssetBorrowTypeResponse;
+import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
@@ -14,8 +14,8 @@ import com.hyjf.am.trade.dao.model.auto.STZHWhiteList;
 import com.hyjf.am.trade.service.AssetPushService;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.borrow.BorrowProjectRepayVO;
-import com.hyjf.am.vo.borrow.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.BorrowProjectRepayVO;
+import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

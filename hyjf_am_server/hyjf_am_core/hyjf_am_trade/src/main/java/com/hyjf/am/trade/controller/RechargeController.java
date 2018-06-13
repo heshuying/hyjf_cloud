@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.borrow.AccountRechargeResponse;
-import com.hyjf.am.response.borrow.AccountResponse;
+import com.hyjf.am.response.trade.AccountRechargeResponse;
+import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
@@ -17,8 +17,8 @@ import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.RechargeService;
-import com.hyjf.am.vo.borrow.AccountRechargeVO;
-import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.trade.AccountRechargeVO;
+import com.hyjf.am.vo.trade.AccountVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

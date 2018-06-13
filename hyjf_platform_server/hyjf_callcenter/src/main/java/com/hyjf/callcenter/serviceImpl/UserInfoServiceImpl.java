@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
+import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
 import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 import com.hyjf.callcenter.client.AmCallcenterUserInfoClient;
@@ -28,34 +30,27 @@ public class UserInfoServiceImpl implements UserInfoService {
     private AmCallcenterUserInfoClient amCallcenterUserInfoClient;
     
 	@Override
-	public List<CallcenterUserBaseCustomize> getNoServiceUsersList(UserBean bean) {
+	public List<CallCenterUserBaseVO> getNoServiceUsersList(UserBean bean) {
 		// 封装查询条件
-		Map<String, Object> conditionMap = new HashMap<String, Object>();
+		CallCenterUserInfoRequest callCenterUserInfoRequest = new CallCenterUserInfoRequest();
+		callCenterUserInfoRequest.setLimitStart(bean.getLimitStart());
+		callCenterUserInfoRequest.setLimitSize(bean.getLimitSize());
+/*		Map<String, Object> conditionMap = new HashMap<String, Object>();
 		conditionMap.put("limitStart", bean.getLimitStart());
-		conditionMap.put("limitEnd", bean.getLimitSize());
-		List<CallcenterUserBaseCustomize> users = null;
-		
-		
-		
-		
-		
-		
-		/*暂时停工涉及到跨库查询，目前没有定论，暂时先做到这一步  start*/
+		conditionMap.put("limitEnd", bean.getLimitSize());*/
+		List<CallCenterUserBaseVO> users = null;
+		/*此接口情况特殊，直接是跨库查询  start*/
 		if (bean.getFlag().equals("1")) {
 			// 复投用户筛选---参考  CallcenterUserInfoCustomizeMapper.xml 的 selectNoServiceFuTouUsersList 查询
-			users = this.amCallcenterUserInfoClient.selectNoServiceFuTouUsersList(conditionMap);
+			users = this.amCallcenterUserInfoClient.selectNoServiceFuTouUsersList(callCenterUserInfoRequest);
 		}else if(bean.getFlag().equals("2")){
 			// 流失用户筛选
-			users = this.amCallcenterUserInfoClient.selectNoServiceLiuShiUsersList(conditionMap);
+			users = this.amCallcenterUserInfoClient.selectNoServiceLiuShiUsersList(callCenterUserInfoRequest);
 		} else {
 			// 查询用户列表
-			users = this.amCallcenterUserInfoClient.selectNoServiceUsersList(conditionMap);
+			users = this.amCallcenterUserInfoClient.selectNoServiceUsersList(callCenterUserInfoRequest);
 		}
-		/*暂时停工涉及到跨库查询，目前没有定论，暂时先做到这一步  end*/
-		
-		
-		
-		
+		/*此接口情况特殊，直接是跨库查询  start*/
 		return users;
 	}
 

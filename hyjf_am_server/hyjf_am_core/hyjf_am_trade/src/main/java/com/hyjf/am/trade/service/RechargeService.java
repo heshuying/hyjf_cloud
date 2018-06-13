@@ -5,7 +5,7 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
-import com.hyjf.am.vo.borrow.AccountRechargeVO;
+import com.hyjf.am.vo.trade.AccountRechargeVO;
 
 /**
  * 用户充值Service

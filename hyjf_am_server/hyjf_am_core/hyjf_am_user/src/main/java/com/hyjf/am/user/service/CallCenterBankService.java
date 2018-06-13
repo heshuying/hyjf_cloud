@@ -1,8 +1,11 @@
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wangjun
@@ -10,4 +13,11 @@ import java.util.List;
  */
 public interface CallCenterBankService {
     List<BankCard> getTiedCardOfAccountBank(Integer userId);
+    
+    List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+    
+    List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+    
+    List<CallcenterUserBaseCustomize> getNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+
 }

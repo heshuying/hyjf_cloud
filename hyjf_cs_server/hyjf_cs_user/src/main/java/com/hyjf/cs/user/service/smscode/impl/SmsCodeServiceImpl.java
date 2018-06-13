@@ -103,31 +103,32 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 				throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
 			}
 		}
+		if(validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)||validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
+			if (StringUtils.isNotEmpty(token)) {
+				WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+				if (webViewUser != null) {
+					// 验证原手机号校验
+					if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
+						if (StringUtils.isBlank(webViewUser.getMobile())) {
+							throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
+						}
+						if (!webViewUser.getMobile().equals(mobile)) {
+							throw new ReturnMessageException(RegisterError.MOBILE_NEED_SAME_ERROR);
+						}
+					}
 
-		if (StringUtils.isNotEmpty(token)) {
-			WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-			if (webViewUser != null) {
-				// 验证原手机号校验
-				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
-					if (StringUtils.isBlank(webViewUser.getMobile())) {
-						throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
+					// 绑定新手机号校验
+					if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
+						if (webViewUser.equals(mobile)) {
+							throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
+						}
+						if (existUser(mobile)) {
+							throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
+						}
 					}
-					if (!webViewUser.getMobile().equals(mobile)) {
-						throw new ReturnMessageException(RegisterError.MOBILE_NEED_SAME_ERROR);
-					}
+				} else {
+					throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
 				}
-
-				// 绑定新手机号校验
-				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-					if (webViewUser.equals(mobile)) {
-						throw new ReturnMessageException(RegisterError.MOBILE_MODIFY_ERROR);
-					}
-					if (existUser(mobile)) {
-						throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
-					}
-				}
-			} else {
-				throw new ReturnMessageException(RegisterError.USER_NOT_EXISTS_ERROR);
 			}
 		}
 

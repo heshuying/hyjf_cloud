@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.AccountService;
-import com.hyjf.am.vo.borrow.AccountVO;
+import com.hyjf.am.vo.trade.AccountVO;
 import com.hyjf.common.constants.MQConstant;
 
 /**

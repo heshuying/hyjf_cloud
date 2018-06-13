@@ -3,6 +3,7 @@ package com.hyjf.cs.user.service;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.cs.user.beans.BaseBean;
 
 
 public interface BaseService {
@@ -38,4 +39,8 @@ public interface BaseService {
 	 * @Date 2018/6/12 10:37
 	 */
 	UserVO getUsersById(Integer userId);
+
+	boolean verifyRequestSign(BaseBean paramBean, String methodName);
+
+    BankOpenAccountVO getBankOpenAccount(Integer userId);
 }

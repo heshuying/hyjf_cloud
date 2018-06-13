@@ -5,8 +5,8 @@ package com.hyjf.cs.user.service.autoplus;
 
 import com.hyjf.cs.user.beans.AutoPlusRequestBean;
 import com.hyjf.cs.user.beans.AutoPlusRetBean;
-import com.hyjf.cs.user.beans.BaseBean;
 import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AutoPlusService, v0.1 2018/6/11 15:38
  */
-public interface AutoPlusService {
+public interface AutoPlusService extends BaseService {
 
     /**
      * 授权自动债转、投资
@@ -57,9 +57,6 @@ public interface AutoPlusService {
      */
     String userBgreturn(BankCallBean bean);
 
-
-    boolean verifyRequestSign(BaseBean paramBean, String methodName);
-
     Map<String,String> checkParam(AutoPlusRequestBean payRequestBean);
 
     Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status);
@@ -69,5 +66,7 @@ public interface AutoPlusService {
     AutoPlusRetBean userAuthCreditReturn(BankCallBean bean, String callback, String acqRes, String type);
 
     BankCallResult userAuthInvesBgreturn(BankCallBean bean, String callback, String acqRes);
+
+    BankCallBean getTermsAuthQuery(int userId,String channel);
 
 }

@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -121,25 +122,21 @@ public class SafeServiceImpl implements SafeService {
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() -2) + "@" + emails[1]);
         }
         UserVO user = amUserClient.findUserById(webViewUser.getUserId());
+        UserLoginLogVO userLogin = amUserClient.getUserLoginById(webViewUser.getUserId());
+
         // 用户角色
         UserInfoVO userInfo = this.amUserClient.findUsersInfoById(webViewUser.getUserId());
         resultMap.put("roleId", userInfo.getRoleId());
         // 是否设置交易密码
         resultMap.put("isSetPassword", user.getIsSetPassword());
-        //resultMap.put("lastTime", user.getLastTime());
-        // 紧急联系人类型
-        // TODO: 2018/5/29 紧急联系人类型
+        resultMap.put("lastTime", userLogin.getLastTime());
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
         resultMap.put("usersContract",usersContactVO);
-		/*List<ParamName> paramList = safeService.getParamNameList("USER_RELATION");
-		JSONArray result = new JSONArray();
-		for (int i = 0; i < paramList.size(); i++) {
-			JSONObject json = new JSONObject();
-			json.put("name", paramList.get(i).getName());
-			json.put("value", paramList.get(i).getNameCd());
-			result.add(json);
-		}
-		resultMap.put("userRelation", result);*/
+        
+        // 紧急联系人类型 
+        Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
+		resultMap.put("userRelation", result);
+		
         BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(webViewUser.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(webViewUser.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);
@@ -406,7 +403,7 @@ public class SafeServiceImpl implements SafeService {
 
     /**
      * 更新用户信息
-     * @param userVO
+     * @param requestBean
      * @return
      */
     @Override

@@ -113,4 +113,6 @@ public interface UserService {
 	UserBindEmailLog getUserBindEmail(Integer userid);
 
 	void updateBindEmail(Integer userid, String email);
+
+    UserLoginLog selectByPrimaryKey(Integer userId);
 }

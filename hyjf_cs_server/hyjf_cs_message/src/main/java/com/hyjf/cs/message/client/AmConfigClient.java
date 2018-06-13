@@ -1,6 +1,5 @@
 package com.hyjf.cs.message.client;
 
-import com.hyjf.am.response.borrow.BankCardResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.SmsTemplateResponse;
 import org.springframework.beans.factory.annotation.Autowired;

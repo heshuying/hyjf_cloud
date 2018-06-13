@@ -326,4 +326,7 @@ public class BaseDefine {
 
     //查询用户信息
     public static final String METHOD_SERVER_SYNCUSERINFO = "/server/user/syncUserInfo";
+
+    //授权状态查询
+    public static final String METHOD_BORROW_AUTH_STATE = "/server/authState/query";
 }
