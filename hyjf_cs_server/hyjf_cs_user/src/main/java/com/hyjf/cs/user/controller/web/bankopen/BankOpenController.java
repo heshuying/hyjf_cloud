@@ -9,6 +9,7 @@ import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -43,6 +44,9 @@ public class BankOpenController {
 
 	@Autowired
 	private BankOpenService bankOpenService;
+
+	@Autowired
+	SystemConfig systemConfig;
 
 	@GetMapping(value = "/init")
 	public String init(Model model) {
@@ -143,9 +147,9 @@ public class BankOpenController {
         }
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + "/api/secure/open/";
+        String retUrl = systemConfig.getWebHost() + "/web/secure/open/bankOpenReturn";
         // 异步调用路
-        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + "/api/secure/open/" + ".do?phone="+bankOpenVO.getMobile();
+        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bankOpenBgreturn" + "?phone="+bankOpenVO.getMobile();
 
         OpenAccountPageBean openBean = new OpenAccountPageBean();
         
