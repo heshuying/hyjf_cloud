@@ -59,7 +59,7 @@
     </sql>
 
     <!-- 项目列表 ResultMap-->
-    <resultMap id="ProjectListNewMap" type="com.hyjf.mybatis.model.customize.web.WebProjectListCustomize">
+    <resultMap id="ProjectListNewMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize">
         <id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
         <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
         <result column="project_name" property="projectName" jdbcType="VARCHAR" />
