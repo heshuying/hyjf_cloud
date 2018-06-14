@@ -9,6 +9,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.service.ApiAssetPushService;
 import com.hyjf.cs.trade.service.AutoSendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ public class AutoSendMessageHandle {
 
     @Autowired
     private AutoSendService autoSendService;
+
+    @Autowired
+    private ApiAssetPushService apiAssetPushService;
 
     public void sendMessage(String assetId, String instCode) {
         // 资产自动录标
@@ -77,7 +81,7 @@ public class AutoSendMessageHandle {
             _log.info("自动录标失败！" + "[资产编号：" + hjhPlanAssetVO.getAssetId() + "]");
         } else {
             // 成功后到备案队列
-            this.autoSendService.sendToMQ(hjhPlanAssetVO, MQConstant.BORROW_RECORD_GROUP);
+            this.apiAssetPushService.sendToMQ(hjhPlanAssetVO, MQConstant.BORROW_RECORD_GROUP);
         }
 
         _log.info(hjhPlanAssetVO.getAssetId() + " 结束自动录标");

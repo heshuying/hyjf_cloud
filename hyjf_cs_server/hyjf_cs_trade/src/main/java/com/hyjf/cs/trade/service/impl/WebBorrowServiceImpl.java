@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version WebBorrowServiceImpl, v0.1 2018/6/5 9:50
  */
+@Service
 public class WebBorrowServiceImpl implements WebBorrowService {
     private static final Logger logger = LoggerFactory.getLogger(WebBorrowServiceImpl.class);
 

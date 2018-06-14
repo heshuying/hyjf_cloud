@@ -15,6 +15,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.service.ApiAssetPushService;
 import com.hyjf.cs.trade.service.AutoSendService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import java.util.List;
  * @version AutoSendServiceImpl, v0.1 2018/6/12 17:05
  */
 @Service
-public class AutoSendServiceImpl extends ApiAssetPushServcieImpl implements AutoSendService {
+public class AutoSendServiceImpl implements AutoSendService {
 
     private static final Logger _log = LoggerFactory.getLogger(AutoSendServiceImpl.class);
 
@@ -44,6 +45,9 @@ public class AutoSendServiceImpl extends ApiAssetPushServcieImpl implements Auto
 
     @Autowired
     private AutoSendClient autoSendClient;
+
+    @Autowired
+    private ApiAssetPushService apiAssetPushService;
 
     @Override
     public boolean insertSendBorrow(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO) throws Exception {
@@ -159,7 +163,7 @@ public class AutoSendServiceImpl extends ApiAssetPushServcieImpl implements Auto
 
 
         // 获取标签ID
-        HjhLabelVO label = this.getLabelId(borrowVO, hjhPlanAssetVO);
+        HjhLabelVO label = apiAssetPushService.getLabelId(borrowVO, hjhPlanAssetVO);
         if (label == null || label.getId() == null) {
             _log.info(hjhPlanAssetVO.getAssetId() + " 没有获取到标签");
             return result;
