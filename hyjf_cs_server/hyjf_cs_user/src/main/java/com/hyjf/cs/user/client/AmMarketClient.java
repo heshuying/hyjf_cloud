@@ -1,6 +1,6 @@
 package com.hyjf.cs.user.client;
 
-import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.am.vo.market.AdsVO;
 
 /**
  * @author xiasq
@@ -12,5 +12,5 @@ public interface AmMarketClient {
      * @param integer
      * @return
      */
-    ActivityListVO findActivityById(Integer integer);
+    AdsVO findAdsById(Integer activityId);
 }

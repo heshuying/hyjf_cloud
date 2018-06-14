@@ -2,32 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.market.dao.mapper.auto.AdsMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.Ads" >
-    <id column="id" property="id" jdbcType="SMALLINT" />
-    <result column="name" property="name" jdbcType="CHAR" />
-    <result column="typeid" property="typeid" jdbcType="TINYINT" />
-    <result column="url" property="url" jdbcType="CHAR" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="image" property="image" jdbcType="CHAR" />
-    <result column="order" property="order" jdbcType="SMALLINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="order" property="order" jdbcType="INTEGER" />
     <result column="hits" property="hits" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="share_url" property="shareUrl" jdbcType="VARCHAR" />
     <result column="share_image" property="shareImage" jdbcType="VARCHAR" />
-    <result column="is_index" property="isIndex" jdbcType="SMALLINT" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="is_index" property="isIndex" jdbcType="TINYINT" />
     <result column="start_time" property="startTime" jdbcType="VARCHAR" />
     <result column="end_time" property="endTime" jdbcType="VARCHAR" />
     <result column="is_end" property="isEnd" jdbcType="TINYINT" />
     <result column="share_title" property="shareTitle" jdbcType="VARCHAR" />
     <result column="activiti_image" property="activitiImage" jdbcType="VARCHAR" />
     <result column="activiti_desc" property="activitiDesc" jdbcType="VARCHAR" />
+    <result column="share_content" property="shareContent" jdbcType="VARCHAR" />
     <result column="client_type" property="clientType" jdbcType="TINYINT" />
-    <result column="newuser_show" property="newuserShow" jdbcType="TINYINT" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" extends="BaseResultMap" >
-    <result column="content" property="content" jdbcType="LONGVARCHAR" />
-    <result column="share_content" property="shareContent" jdbcType="LONGVARCHAR" />
+    <result column="new_user_show" property="newUserShow" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -88,39 +88,18 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `name`, typeid, url, code, image, `order`, hits, `status`, share_url, share_image, 
-    is_index, create_time, update_time, start_time, end_time, is_end, share_title, activiti_image, 
-    activiti_desc, client_type, newuser_show
+    id, `name`, type_id, url, code, content, image, `order`, hits, `status`, share_url, 
+    share_image, is_index, start_time, end_time, is_end, share_title, activiti_image, 
+    activiti_desc, share_content, client_type, new_user_show, create_user_id, update_user_id, 
+    create_time, update_time
   </sql>
-  <sql id="Blob_Column_List" >
-    content, share_content
-  </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from huiyingdai_ads
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-    <if test="limitStart >= 0" >
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from huiyingdai_ads
+    from ht_ads
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -131,62 +110,65 @@
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Short" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from huiyingdai_ads
-    where id = #{id,jdbcType=SMALLINT}
+    from ht_ads
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
-    delete from huiyingdai_ads
-    where id = #{id,jdbcType=SMALLINT}
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_ads
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" >
-    delete from huiyingdai_ads
+    delete from ht_ads
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" >
-    <selectKey resultType="java.lang.Short" keyProperty="id" order="AFTER" >
+  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.Ads" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_ads (`name`, typeid, url, 
-      code, image, `order`, hits, 
-      `status`, share_url, share_image, 
-      is_index, create_time, update_time, 
+    insert into ht_ads (`name`, type_id, url, 
+      code, content, image, 
+      `order`, hits, `status`, 
+      share_url, share_image, is_index, 
       start_time, end_time, is_end, 
       share_title, activiti_image, activiti_desc, 
-      client_type, newuser_show, content, 
-      share_content)
-    values (#{name,jdbcType=CHAR}, #{typeid,jdbcType=TINYINT}, #{url,jdbcType=CHAR}, 
-      #{code,jdbcType=VARCHAR}, #{image,jdbcType=CHAR}, #{order,jdbcType=SMALLINT}, #{hits,jdbcType=INTEGER}, 
-      #{status,jdbcType=SMALLINT}, #{shareUrl,jdbcType=VARCHAR}, #{shareImage,jdbcType=VARCHAR}, 
-      #{isIndex,jdbcType=SMALLINT}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
+      share_content, client_type, new_user_show, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{name,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, 
+      #{order,jdbcType=INTEGER}, #{hits,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
+      #{shareUrl,jdbcType=VARCHAR}, #{shareImage,jdbcType=VARCHAR}, #{isIndex,jdbcType=TINYINT}, 
       #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, #{isEnd,jdbcType=TINYINT}, 
       #{shareTitle,jdbcType=VARCHAR}, #{activitiImage,jdbcType=VARCHAR}, #{activitiDesc,jdbcType=VARCHAR}, 
-      #{clientType,jdbcType=TINYINT}, #{newuserShow,jdbcType=TINYINT}, #{content,jdbcType=LONGVARCHAR}, 
-      #{shareContent,jdbcType=LONGVARCHAR})
+      #{shareContent,jdbcType=VARCHAR}, #{clientType,jdbcType=TINYINT}, #{newUserShow,jdbcType=TINYINT}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" >
-    <selectKey resultType="java.lang.Short" keyProperty="id" order="AFTER" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.Ads" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into huiyingdai_ads
+    insert into ht_ads
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="name != null" >
         `name`,
       </if>
-      <if test="typeid != null" >
-        typeid,
+      <if test="typeId != null" >
+        type_id,
       </if>
       <if test="url != null" >
         url,
       </if>
       <if test="code != null" >
         code,
+      </if>
+      <if test="content != null" >
+        content,
       </if>
       <if test="image != null" >
         image,
@@ -209,12 +191,6 @@
       <if test="isIndex != null" >
         is_index,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="startTime != null" >
         start_time,
       </if>
@@ -233,43 +209,55 @@
       <if test="activitiDesc != null" >
         activiti_desc,
       </if>
+      <if test="shareContent != null" >
+        share_content,
+      </if>
       <if test="clientType != null" >
         client_type,
       </if>
-      <if test="newuserShow != null" >
-        newuser_show,
+      <if test="newUserShow != null" >
+        new_user_show,
       </if>
-      <if test="content != null" >
-        content,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="shareContent != null" >
-        share_content,
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="name != null" >
-        #{name,jdbcType=CHAR},
+        #{name,jdbcType=VARCHAR},
       </if>
-      <if test="typeid != null" >
-        #{typeid,jdbcType=TINYINT},
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
       </if>
       <if test="url != null" >
-        #{url,jdbcType=CHAR},
+        #{url,jdbcType=VARCHAR},
       </if>
       <if test="code != null" >
         #{code,jdbcType=VARCHAR},
       </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
       <if test="image != null" >
-        #{image,jdbcType=CHAR},
+        #{image,jdbcType=VARCHAR},
       </if>
       <if test="order != null" >
-        #{order,jdbcType=SMALLINT},
+        #{order,jdbcType=INTEGER},
       </if>
       <if test="hits != null" >
         #{hits,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=SMALLINT},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="shareUrl != null" >
         #{shareUrl,jdbcType=VARCHAR},
@@ -278,13 +266,7 @@
         #{shareImage,jdbcType=VARCHAR},
       </if>
       <if test="isIndex != null" >
-        #{isIndex,jdbcType=SMALLINT},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{isIndex,jdbcType=TINYINT},
       </if>
       <if test="startTime != null" >
         #{startTime,jdbcType=VARCHAR},
@@ -304,55 +286,67 @@
       <if test="activitiDesc != null" >
         #{activitiDesc,jdbcType=VARCHAR},
       </if>
+      <if test="shareContent != null" >
+        #{shareContent,jdbcType=VARCHAR},
+      </if>
       <if test="clientType != null" >
         #{clientType,jdbcType=TINYINT},
       </if>
-      <if test="newuserShow != null" >
-        #{newuserShow,jdbcType=TINYINT},
+      <if test="newUserShow != null" >
+        #{newUserShow,jdbcType=TINYINT},
       </if>
-      <if test="content != null" >
-        #{content,jdbcType=LONGVARCHAR},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="shareContent != null" >
-        #{shareContent,jdbcType=LONGVARCHAR},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsExample" resultType="java.lang.Integer" >
-    select count(*) from huiyingdai_ads
+    select count(*) from ht_ads
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update huiyingdai_ads
+    update ht_ads
     <set >
       <if test="record.id != null" >
-        id = #{record.id,jdbcType=SMALLINT},
+        id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.name != null" >
-        `name` = #{record.name,jdbcType=CHAR},
+        `name` = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.typeid != null" >
-        typeid = #{record.typeid,jdbcType=TINYINT},
+      <if test="record.typeId != null" >
+        type_id = #{record.typeId,jdbcType=INTEGER},
       </if>
       <if test="record.url != null" >
-        url = #{record.url,jdbcType=CHAR},
+        url = #{record.url,jdbcType=VARCHAR},
       </if>
       <if test="record.code != null" >
         code = #{record.code,jdbcType=VARCHAR},
       </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
       <if test="record.image != null" >
-        image = #{record.image,jdbcType=CHAR},
+        image = #{record.image,jdbcType=VARCHAR},
       </if>
       <if test="record.order != null" >
-        `order` = #{record.order,jdbcType=SMALLINT},
+        `order` = #{record.order,jdbcType=INTEGER},
       </if>
       <if test="record.hits != null" >
         hits = #{record.hits,jdbcType=INTEGER},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=SMALLINT},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.shareUrl != null" >
         share_url = #{record.shareUrl,jdbcType=VARCHAR},
@@ -361,13 +355,7 @@
         share_image = #{record.shareImage,jdbcType=VARCHAR},
       </if>
       <if test="record.isIndex != null" >
-        is_index = #{record.isIndex,jdbcType=SMALLINT},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        is_index = #{record.isIndex,jdbcType=TINYINT},
       </if>
       <if test="record.startTime != null" >
         start_time = #{record.startTime,jdbcType=VARCHAR},
@@ -387,107 +375,93 @@
       <if test="record.activitiDesc != null" >
         activiti_desc = #{record.activitiDesc,jdbcType=VARCHAR},
       </if>
+      <if test="record.shareContent != null" >
+        share_content = #{record.shareContent,jdbcType=VARCHAR},
+      </if>
       <if test="record.clientType != null" >
         client_type = #{record.clientType,jdbcType=TINYINT},
       </if>
-      <if test="record.newuserShow != null" >
-        newuser_show = #{record.newuserShow,jdbcType=TINYINT},
+      <if test="record.newUserShow != null" >
+        new_user_show = #{record.newUserShow,jdbcType=TINYINT},
       </if>
-      <if test="record.content != null" >
-        content = #{record.content,jdbcType=LONGVARCHAR},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.shareContent != null" >
-        share_content = #{record.shareContent,jdbcType=LONGVARCHAR},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update huiyingdai_ads
-    set id = #{record.id,jdbcType=SMALLINT},
-      `name` = #{record.name,jdbcType=CHAR},
-      typeid = #{record.typeid,jdbcType=TINYINT},
-      url = #{record.url,jdbcType=CHAR},
-      code = #{record.code,jdbcType=VARCHAR},
-      image = #{record.image,jdbcType=CHAR},
-      `order` = #{record.order,jdbcType=SMALLINT},
-      hits = #{record.hits,jdbcType=INTEGER},
-      `status` = #{record.status,jdbcType=SMALLINT},
-      share_url = #{record.shareUrl,jdbcType=VARCHAR},
-      share_image = #{record.shareImage,jdbcType=VARCHAR},
-      is_index = #{record.isIndex,jdbcType=SMALLINT},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      start_time = #{record.startTime,jdbcType=VARCHAR},
-      end_time = #{record.endTime,jdbcType=VARCHAR},
-      is_end = #{record.isEnd,jdbcType=TINYINT},
-      share_title = #{record.shareTitle,jdbcType=VARCHAR},
-      activiti_image = #{record.activitiImage,jdbcType=VARCHAR},
-      activiti_desc = #{record.activitiDesc,jdbcType=VARCHAR},
-      client_type = #{record.clientType,jdbcType=TINYINT},
-      newuser_show = #{record.newuserShow,jdbcType=TINYINT},
-      content = #{record.content,jdbcType=LONGVARCHAR},
-      share_content = #{record.shareContent,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByExample" parameterType="map" >
-    update huiyingdai_ads
-    set id = #{record.id,jdbcType=SMALLINT},
-      `name` = #{record.name,jdbcType=CHAR},
-      typeid = #{record.typeid,jdbcType=TINYINT},
-      url = #{record.url,jdbcType=CHAR},
+    update ht_ads
+    set id = #{record.id,jdbcType=INTEGER},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      type_id = #{record.typeId,jdbcType=INTEGER},
+      url = #{record.url,jdbcType=VARCHAR},
       code = #{record.code,jdbcType=VARCHAR},
-      image = #{record.image,jdbcType=CHAR},
-      `order` = #{record.order,jdbcType=SMALLINT},
+      content = #{record.content,jdbcType=VARCHAR},
+      image = #{record.image,jdbcType=VARCHAR},
+      `order` = #{record.order,jdbcType=INTEGER},
       hits = #{record.hits,jdbcType=INTEGER},
-      `status` = #{record.status,jdbcType=SMALLINT},
+      `status` = #{record.status,jdbcType=TINYINT},
       share_url = #{record.shareUrl,jdbcType=VARCHAR},
       share_image = #{record.shareImage,jdbcType=VARCHAR},
-      is_index = #{record.isIndex,jdbcType=SMALLINT},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
+      is_index = #{record.isIndex,jdbcType=TINYINT},
       start_time = #{record.startTime,jdbcType=VARCHAR},
       end_time = #{record.endTime,jdbcType=VARCHAR},
       is_end = #{record.isEnd,jdbcType=TINYINT},
       share_title = #{record.shareTitle,jdbcType=VARCHAR},
       activiti_image = #{record.activitiImage,jdbcType=VARCHAR},
       activiti_desc = #{record.activitiDesc,jdbcType=VARCHAR},
+      share_content = #{record.shareContent,jdbcType=VARCHAR},
       client_type = #{record.clientType,jdbcType=TINYINT},
-      newuser_show = #{record.newuserShow,jdbcType=TINYINT}
+      new_user_show = #{record.newUserShow,jdbcType=TINYINT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" >
-    update huiyingdai_ads
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.Ads" >
+    update ht_ads
     <set >
       <if test="name != null" >
-        `name` = #{name,jdbcType=CHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="typeid != null" >
-        typeid = #{typeid,jdbcType=TINYINT},
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
       </if>
       <if test="url != null" >
-        url = #{url,jdbcType=CHAR},
+        url = #{url,jdbcType=VARCHAR},
       </if>
       <if test="code != null" >
         code = #{code,jdbcType=VARCHAR},
       </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
       <if test="image != null" >
-        image = #{image,jdbcType=CHAR},
+        image = #{image,jdbcType=VARCHAR},
       </if>
       <if test="order != null" >
-        `order` = #{order,jdbcType=SMALLINT},
+        `order` = #{order,jdbcType=INTEGER},
       </if>
       <if test="hits != null" >
         hits = #{hits,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=SMALLINT},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="shareUrl != null" >
         share_url = #{shareUrl,jdbcType=VARCHAR},
@@ -496,13 +470,7 @@
         share_image = #{shareImage,jdbcType=VARCHAR},
       </if>
       <if test="isIndex != null" >
-        is_index = #{isIndex,jdbcType=SMALLINT},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        is_index = #{isIndex,jdbcType=TINYINT},
       </if>
       <if test="startTime != null" >
         start_time = #{startTime,jdbcType=VARCHAR},
@@ -522,71 +490,57 @@
       <if test="activitiDesc != null" >
         activiti_desc = #{activitiDesc,jdbcType=VARCHAR},
       </if>
+      <if test="shareContent != null" >
+        share_content = #{shareContent,jdbcType=VARCHAR},
+      </if>
       <if test="clientType != null" >
         client_type = #{clientType,jdbcType=TINYINT},
       </if>
-      <if test="newuserShow != null" >
-        newuser_show = #{newuserShow,jdbcType=TINYINT},
+      <if test="newUserShow != null" >
+        new_user_show = #{newUserShow,jdbcType=TINYINT},
       </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="shareContent != null" >
-        share_content = #{shareContent,jdbcType=LONGVARCHAR},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=SMALLINT}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.market.dao.model.auto.AdsWithBLOBs" >
-    update huiyingdai_ads
-    set `name` = #{name,jdbcType=CHAR},
-      typeid = #{typeid,jdbcType=TINYINT},
-      url = #{url,jdbcType=CHAR},
-      code = #{code,jdbcType=VARCHAR},
-      image = #{image,jdbcType=CHAR},
-      `order` = #{order,jdbcType=SMALLINT},
-      hits = #{hits,jdbcType=INTEGER},
-      `status` = #{status,jdbcType=SMALLINT},
-      share_url = #{shareUrl,jdbcType=VARCHAR},
-      share_image = #{shareImage,jdbcType=VARCHAR},
-      is_index = #{isIndex,jdbcType=SMALLINT},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      start_time = #{startTime,jdbcType=VARCHAR},
-      end_time = #{endTime,jdbcType=VARCHAR},
-      is_end = #{isEnd,jdbcType=TINYINT},
-      share_title = #{shareTitle,jdbcType=VARCHAR},
-      activiti_image = #{activitiImage,jdbcType=VARCHAR},
-      activiti_desc = #{activitiDesc,jdbcType=VARCHAR},
-      client_type = #{clientType,jdbcType=TINYINT},
-      newuser_show = #{newuserShow,jdbcType=TINYINT},
-      content = #{content,jdbcType=LONGVARCHAR},
-      share_content = #{shareContent,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.Ads" >
-    update huiyingdai_ads
-    set `name` = #{name,jdbcType=CHAR},
-      typeid = #{typeid,jdbcType=TINYINT},
-      url = #{url,jdbcType=CHAR},
+    update ht_ads
+    set `name` = #{name,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
-      image = #{image,jdbcType=CHAR},
-      `order` = #{order,jdbcType=SMALLINT},
+      content = #{content,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      `order` = #{order,jdbcType=INTEGER},
       hits = #{hits,jdbcType=INTEGER},
-      `status` = #{status,jdbcType=SMALLINT},
+      `status` = #{status,jdbcType=TINYINT},
       share_url = #{shareUrl,jdbcType=VARCHAR},
       share_image = #{shareImage,jdbcType=VARCHAR},
-      is_index = #{isIndex,jdbcType=SMALLINT},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
+      is_index = #{isIndex,jdbcType=TINYINT},
       start_time = #{startTime,jdbcType=VARCHAR},
       end_time = #{endTime,jdbcType=VARCHAR},
       is_end = #{isEnd,jdbcType=TINYINT},
       share_title = #{shareTitle,jdbcType=VARCHAR},
       activiti_image = #{activitiImage,jdbcType=VARCHAR},
       activiti_desc = #{activitiDesc,jdbcType=VARCHAR},
+      share_content = #{shareContent,jdbcType=VARCHAR},
       client_type = #{clientType,jdbcType=TINYINT},
-      newuser_show = #{newuserShow,jdbcType=TINYINT}
-    where id = #{id,jdbcType=SMALLINT}
+      new_user_show = #{newUserShow,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

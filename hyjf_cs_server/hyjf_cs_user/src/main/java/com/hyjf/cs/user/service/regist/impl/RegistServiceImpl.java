@@ -3,11 +3,26 @@
  */
 package com.hyjf.cs.user.service.regist.impl;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -34,20 +49,6 @@ import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.vo.RegisterVO;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author zhangqingqing
@@ -69,10 +70,9 @@ public class RegistServiceImpl implements RegistService{
 
     @Autowired
     SystemConfig systemConfig;
-    @Value("${hyjf.activity.regist.tzj.id}")
-    private String activityIdTzj;
+
     @Value("${hyjf.activity.888.id}")
-    private String activityId;
+    private Integer activityId;
 
     /**
      * 1. 必要参数检查 2. 注册 3. 注册后处理
@@ -282,20 +282,20 @@ public class RegistServiceImpl implements RegistService{
     private AmMarketClient amMarketClient;
 
     @Override
-    public boolean checkActivityIfAvailable(String activityId) {
+    public boolean checkActivityIfAvailable(Integer activityId) {
         if (activityId == null) {
             return false;
         }
 
-        ActivityListVO activityVO = amMarketClient.findActivityById(new Integer(activityId));
+        AdsVO adsVO = amMarketClient.findAdsById(activityId);
 
-        if (activityVO == null) {
+        if (adsVO == null) {
             return false;
         }
-        if (activityVO.getTimeStart() > GetDate.getNowTime10()) {
+        if (adsVO.getTimeStart() > GetDate.getNowTime10()) {
             return false;
         }
-        if (activityVO.getTimeEnd() < GetDate.getNowTime10()) {
+        if (adsVO.getTimeEnd() < GetDate.getNowTime10()) {
             return false;
         }
 

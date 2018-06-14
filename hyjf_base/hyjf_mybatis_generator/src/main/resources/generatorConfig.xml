@@ -291,10 +291,16 @@
         <!-- 广告表 -->
         <table tableName="ht_ads" domainObjectName="Ads">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="typeid" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_end" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="newuser_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="new_user_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 广告类型表 -->
+        <table tableName="ht_ads_type" domainObjectName="AdsType">
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 		<!-- 数据字典表 -->
 		<table tableName="ht_param_name" domainObjectName="ParamName">
