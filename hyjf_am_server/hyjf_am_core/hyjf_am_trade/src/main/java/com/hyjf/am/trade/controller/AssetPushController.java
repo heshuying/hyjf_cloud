@@ -38,7 +38,7 @@ public class AssetPushController {
      * @return
      */
     @GetMapping("/selectAssetBorrowType/{instCode}/{assetType}")
-    public HjhAssetBorrowTypeResponse selectAssetBorrowType(String instCode, int assetType) {
+    public HjhAssetBorrowTypeResponse selectAssetBorrowType(@PathVariable String instCode, @PathVariable int assetType) {
         HjhAssetBorrowTypeResponse response = new HjhAssetBorrowTypeResponse();
         HjhAssetBorrowType hjhAssetBorrowType = assetPushService.selectAssetBorrowType(instCode, assetType);
         if (hjhAssetBorrowType != null) {
@@ -55,7 +55,7 @@ public class AssetPushController {
      * @return
      */
     @GetMapping("/selectProjectRepay/{borrowcCd}")
-    public BorrowProjectRepayReponse selectProjectRepay(String borrowcCd) {
+    public BorrowProjectRepayReponse selectProjectRepay(@PathVariable String borrowcCd) {
         BorrowProjectRepayReponse response = new BorrowProjectRepayReponse();
         List<BorrowProjectRepay> repayList = assetPushService.selectProjectRepay(borrowcCd);
         if (!CollectionUtils.isEmpty(repayList)) {
@@ -72,7 +72,7 @@ public class AssetPushController {
      * @return
      */
     @GetMapping("/selectStzfWhiteList/{instCode}/{entrustedAccountId}")
-    public STZHWhiteListResponse selectStzfWhiteList(String instCode, String entrustedAccountId) {
+    public STZHWhiteListResponse selectStzfWhiteList(@PathVariable String instCode, @PathVariable String entrustedAccountId) {
         STZHWhiteListResponse response = new STZHWhiteListResponse();
         STZHWhiteList stzhWhiteList =  assetPushService.selectStzfWhiteList(instCode, entrustedAccountId);
         if (stzhWhiteList != null) {
@@ -115,7 +115,7 @@ public class AssetPushController {
      * @return
      */
     @RequestMapping("/selectPlanAsset/{assetId}/{isntCode}")
-    public HjhPlanAssetResponse selectPlanAsset(String assetId, String instCode) {
+    public HjhPlanAssetResponse selectPlanAsset(@PathVariable String assetId, @PathVariable String instCode) {
         HjhPlanAssetResponse response = new HjhPlanAssetResponse();
         HjhPlanAsset hjhPlanAsset = assetPushService.selectPlanAsset(assetId, instCode);
         if (hjhPlanAsset != null) {
@@ -141,7 +141,7 @@ public class AssetPushController {
      * @return
      */
     @RequestMapping("/selectBorrowProjectByBorrowCd/{borrowCd}")
-    public BorrowProjectTypeResponse selectBorrowProjectByBorrowCd(String borrowCd) {
+    public BorrowProjectTypeResponse selectBorrowProjectByBorrowCd(@PathVariable String borrowCd) {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         List<BorrowProjectType> borrowProjectTypeList = assetPushService.selectBorrowProjectByBorrowCd(borrowCd);
         if (!CollectionUtils.isEmpty(borrowProjectTypeList)) {

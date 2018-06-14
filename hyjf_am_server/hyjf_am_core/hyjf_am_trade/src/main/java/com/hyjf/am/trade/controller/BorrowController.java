@@ -80,7 +80,7 @@ public class BorrowController {
      * @return
      */
     @RequestMapping("/getBorrowConfig/{configCd}")
-    public BorrowConfigResponse getBorrowConfig(String configCd) {
+    public BorrowConfigResponse getBorrowConfig(@PathVariable String configCd) {
         BorrowConfigResponse response = new BorrowConfigResponse();
         BorrowConfig borrowConfig = borrowService.getBorrowConfigByConfigCd(configCd);
         if (borrowConfig != null) {

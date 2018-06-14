@@ -48,7 +48,7 @@ public class UserInfoController {
 	}
 
 	@GetMapping("/selectUserInfoByNameAndCard/{truename}/{idcard}")
-	public UserInfoResponse selectUserInfoByNameAndCard(String truename, String idcard) {
+	public UserInfoResponse selectUserInfoByNameAndCard(@PathVariable String truename, @PathVariable String idcard) {
 		UserInfoResponse response = new UserInfoResponse();
 		UserInfo userInfo = userInfoService.selectUserInfoByNameAndCard(truename, idcard);
 		UserInfoVO userInfoVO = new UserInfoVO();
