@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
 import com.hyjf.am.vo.borrow.BorrowVO;
 
@@ -20,12 +21,16 @@ public interface AutoRecordClient {
 
     /**
      * 更新相应的标的状态为备案中
-     * @param borrowVO
-     * @param i
-     * @param i1
+     * @param request
      * @return
      */
-    boolean updateBorrowRegist(BorrowVO borrowVO, int i, int i1);
+    boolean updateBorrowRegist(BorrowRegistRequest request);
 
+    /**
+     * 获取受托支付电子账户列表
+     * @param entrustedUserId
+     * @param instCode
+     * @return
+     */
     STZHWhiteListVO selectSTZHWhiteList(Integer entrustedUserId, String instCode);
 }
