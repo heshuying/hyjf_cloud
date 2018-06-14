@@ -3,8 +3,11 @@
  */
 package com.hyjf.am.trade.service.impl.callcenter;
 
+import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
+import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterAccountDetailCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterRepaymentDetailCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterAccountDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
@@ -23,6 +26,9 @@ import java.util.Map;
 public class CallCenterTradeServiceImpl implements CallCenterTradeService {
     @Autowired
     private CallCenterRepaymentDetailCustomizeMapper callCenterRepaymentDetailCustomizeMapper;
+
+    @Autowired
+    private CallCenterAccountDetailCustomizeMapper callCenterAccountDetailCustomizeMapper;
 
     /**
      *
@@ -53,5 +59,17 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
         paraMap.put("limitStart", callCenterRepaymentRequest.getLimitStart());
         paraMap.put("limitEnd", callCenterRepaymentRequest.getLimitEnd());
         return callCenterRepaymentDetailCustomizeMapper.getHtjRepaymentDetailList(paraMap);
+    }
+
+    /**
+     *
+     * 查询资金明细
+     * @author wangjun
+     * @param callCenterAccountDetailRequest
+     * @return
+     */
+    @Override
+    public List<CallCenterAccountDetailCustomize> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest) {
+        return callCenterAccountDetailCustomizeMapper.queryAccountDetails(callCenterAccountDetailRequest);
     }
 }
