@@ -4,16 +4,12 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.assetpush.InfoBean;
-import com.hyjf.am.response.trade.BorrowProjectRepayReponse;
-import com.hyjf.am.response.trade.HjhAssetBorrowTypeResponse;
-import com.hyjf.am.response.trade.STZHWhiteListResponse;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
-import com.hyjf.am.trade.dao.model.auto.STZHWhiteList;
+import com.hyjf.am.response.trade.*;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.AssetPushService;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
+import com.hyjf.am.vo.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 import com.hyjf.common.util.CommonUtils;
@@ -29,7 +25,7 @@ import java.util.List;
  * @version AssetPushController, v0.1 2018/6/12 10:04
  */
 @RestController
-@RequestMapping("/am-borrow/assetPush")
+@RequestMapping("/am-trade/assetPush")
 public class AssetPushController {
 
     @Autowired
@@ -112,4 +108,60 @@ public class AssetPushController {
         assetPushService.insertRiskInfo(infobeans);
     }
 
+    /**
+     * 查询资产表
+     * @param assetId
+     * @param instCode
+     * @return
+     */
+    @RequestMapping("/selectPlanAsset/{assetId}/{isntCode}")
+    public HjhPlanAssetResponse selectPlanAsset(String assetId, String instCode) {
+        HjhPlanAssetResponse response = new HjhPlanAssetResponse();
+        HjhPlanAsset hjhPlanAsset = assetPushService.selectPlanAsset(assetId, instCode);
+        if (hjhPlanAsset != null) {
+            HjhPlanAssetVO hjhPlanAssetVO = new HjhPlanAssetVO();
+            BeanUtils.copyProperties(hjhPlanAsset, hjhPlanAssetVO);
+            response.setResult(hjhPlanAssetVO);
+        }
+        return response;
+    }
+
+    /**
+     * 更新资产表
+     * @param planAssetVO
+     */
+    @RequestMapping("/updatePlanAsset")
+    public void updatePlanAsset(HjhPlanAssetVO planAssetVO) {
+        assetPushService.updatePlanAsset(planAssetVO);
+    }
+
+    /**
+     * 获取项目类型
+     * @param borrowCd
+     * @return
+     */
+    @RequestMapping("/selectBorrowProjectByBorrowCd/{borrowCd}")
+    public BorrowProjectTypeResponse selectBorrowProjectByBorrowCd(String borrowCd) {
+        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
+        List<BorrowProjectType> borrowProjectTypeList = assetPushService.selectBorrowProjectByBorrowCd(borrowCd);
+        if (!CollectionUtils.isEmpty(borrowProjectTypeList)) {
+            List<BorrowProjectTypeVO> voList = CommonUtils.convertBeanList(borrowProjectTypeList, BorrowProjectTypeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 更新资产表
+     * @param hjhPlanAssetVO
+     * @return
+     */
+    public int updateHjhPlanAssetnew(HjhPlanAssetVO hjhPlanAssetVO) {
+        if (hjhPlanAssetVO != null) {
+            HjhPlanAsset hjhPlanAsset = new HjhPlanAsset();
+            BeanUtils.copyProperties(hjhPlanAssetVO, hjhPlanAsset);
+           return assetPushService.updateHjhPlanAssetnew(hjhPlanAsset);
+        }
+        return 0;
+    }
 }
