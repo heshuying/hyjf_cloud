@@ -8,6 +8,8 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
+import java.util.List;
+
 /**
  * @author xiasq
  * @version UserService, v0.1 2018/1/21 22:42
@@ -115,4 +117,11 @@ public interface UserService {
 	void updateBindEmail(Integer userid, String email);
 
     UserLoginLog selectByPrimaryKey(Integer userId);
+
+	/**
+	 * 根据垫付机构用户名检索垫付机构用户
+	 * @param repayOrgName
+	 * @return
+	 */
+	List<User> selectUserByUsername(String repayOrgName);
 }

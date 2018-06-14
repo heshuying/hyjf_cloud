@@ -12,6 +12,7 @@ import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.codec.binary.Base64;
@@ -20,10 +21,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -393,5 +396,21 @@ public class UserController {
 		}
 		return response;
 
+	}
+
+	/**
+	 * 根据垫付机构用户名检索垫付机构用户
+	 * @param repayOrgName
+	 * @return
+	 */
+	@RequestMapping("/selectUserByUsername/{repayOrgName}")
+	public UserResponse selectUserByUsername(String repayOrgName) {
+		UserResponse response = new UserResponse();
+		List<User> userList = userService.selectUserByUsername(repayOrgName);
+		if (!CollectionUtils.isEmpty(userList)) {
+			List<UserVO> voList = CommonUtils.convertBeanList(userList, UserVO.class);
+			response.setResultList(voList);
+		}
+		return response;
 	}
 }

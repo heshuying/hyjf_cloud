@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.borrow.*;
 import com.hyjf.am.vo.trade.HjhPlanAssetVO;
@@ -69,7 +70,13 @@ public class AutoSendServiceImpl extends ApiAssetPushServcieImpl implements Auto
         } else {
             queryBorrowStyle = "month";
         }
-        BorrowFinmanNewChargeVO borrowFinmanNewChargeVO = autoSendClient.selectBorrowApr(borrowClass, hjhPlanAssetVO.getInstCode(), hjhPlanAssetVO.getAssetType(), queryBorrowStyle, hjhPlanAssetVO.getBorrowPeriod());
+        BorrowFinmanNewChargeRequest request = new BorrowFinmanNewChargeRequest();
+        request.setBorrowClass(borrowClass);
+        request.setInstCode(hjhPlanAssetVO.getInstCode());
+        request.setAssetType(hjhPlanAssetVO.getAssetType());
+        request.setBorrowPeriod(hjhPlanAssetVO.getBorrowPeriod());
+        request.setQueryBorrowStyle(queryBorrowStyle);
+        BorrowFinmanNewChargeVO borrowFinmanNewChargeVO = autoSendClient.selectBorrowApr(request);
         if (borrowFinmanNewChargeVO == null || borrowFinmanNewChargeVO.getAutoBorrowApr() == null) {
             _log.info("资产编号：" + hjhPlanAssetVO.getAssetId() + " 录标失败 ,没有取到项目费率");
             return false;
@@ -93,7 +100,7 @@ public class AutoSendServiceImpl extends ApiAssetPushServcieImpl implements Auto
     private boolean checkAssetCanSend(HjhPlanAssetVO hjhPlanAssetVO) {
         String instCode = hjhPlanAssetVO.getInstCode();
         if (!RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_ + instCode)) {
-            List<HjhInstConfigVO> list = autoSendClient.selectHjhInstConfigByHjhPlanAsset(hjhPlanAssetVO.getInstCode());
+            List<HjhInstConfigVO> list = autoSendClient.selectHjhInstConfigByInstCode(hjhPlanAssetVO.getInstCode());
             BigDecimal capitalToplimit = null;
             if (list != null && list.size() > 0) {
                 capitalToplimit = list.get(0).getCapitalToplimit();
@@ -178,7 +185,7 @@ public class AutoSendServiceImpl extends ApiAssetPushServcieImpl implements Auto
         // 借款表插入
         autoSendClient.insertSelective(borrowVO);
         // 个人信息
-        autoSendClient.insertBorrowManinfo(borrowNid, hjhPlanAssetVO, borrowVO);
+        this.insertBorrowManinfo(borrowNid, hjhPlanAssetVO, borrowVO);
 
         // 更新资产表
         HjhPlanAssetVO hjhPlanAssetnewVO = new HjhPlanAssetVO();
@@ -199,6 +206,204 @@ public class AutoSendServiceImpl extends ApiAssetPushServcieImpl implements Auto
         }
 
         return result;
+    }
+
+    /**
+     * 个人信息
+     * @param borrowNid
+     * @param hjhPlanAssetVO
+     * @param borrowVO
+     */
+    private int insertBorrowManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAssetVO, BorrowWithBLOBsVO borrowVO) {
+        BorrowManinfoVO borrowManinfo = new BorrowManinfoVO();
+
+        borrowManinfo.setBorrowNid(borrowNid);
+        borrowManinfo.setBorrowPreNid(borrowVO.getBorrowPreNid());
+        // 姓名
+        if (StringUtils.isNotEmpty(hjhPlanAssetVO.getTruename())) {
+            borrowManinfo.setName(hjhPlanAssetVO.getTruename());
+        } else {
+            borrowManinfo.setName(StringUtils.EMPTY);
+        }
+        // 性别
+        if (hjhPlanAssetVO.getSex() != null) {
+            borrowManinfo.setSex(hjhPlanAssetVO.getSex());
+        } else {
+            borrowManinfo.setSex(0);
+        }
+        // 年龄
+        if (hjhPlanAssetVO.getAge() != null) {
+            borrowManinfo.setOld(hjhPlanAssetVO.getAge());
+        } else {
+            borrowManinfo.setOld(0);
+        }
+        // 婚姻
+        if (hjhPlanAssetVO.getMarriage() != null) {
+            borrowManinfo.setMerry(hjhPlanAssetVO.getMarriage());
+        } else {
+            borrowManinfo.setMerry(0);
+        }
+        // 岗位职业
+        if (StringUtils.isNotEmpty(hjhPlanAssetVO.getPosition())) {
+            borrowManinfo.setPosition(hjhPlanAssetVO.getPosition());
+        }
+        // 省
+//		if (StringUtils.isNotEmpty(hjhPlanAssetVO.getLocation_p())) {
+//			borrowManinfo.setPro(hjhPlanAssetVO.getLocation_p());
+//		} else {
+//			borrowManinfo.setPro(StringUtils.EMPTY);
+//		}
+        // 市
+        if (StringUtils.isNotEmpty(hjhPlanAssetVO.getWorkCity())) {
+            borrowManinfo.setCity(hjhPlanAssetVO.getWorkCity());
+        } else {
+            borrowManinfo.setCity(StringUtils.EMPTY);
+        }
+
+        // 公司规模
+        borrowManinfo.setSize(StringUtils.EMPTY);
+
+        // 公司月营业额
+        borrowManinfo.setBusiness(BigDecimal.ZERO);
+
+        // 行业
+//		if (StringUtils.isNotEmpty(borrowBean.getIndustry())) {
+//			borrowManinfo.setIndustry(borrowBean.getIndustry());
+//		} else {
+//			borrowManinfo.setIndustry(StringUtils.EMPTY);
+//		}
+
+        // 现单位工作时间
+//		if (StringUtils.isNotEmpty(borrowBean.getWtime())) {
+//			borrowManinfo.setWtime(borrowBean.getWtime());
+//		} else {
+//			borrowManinfo.setWtime(StringUtils.EMPTY);
+//		}
+
+        // 授信额度
+//		if (StringUtils.isNotEmpty(borrowBean.getUserCredit())) {
+//			borrowManinfo.setCredit(Integer.valueOf((borrowBean.getUserCredit())));
+//		} else {
+//			borrowManinfo.setCredit(0);
+//		}
+        //身份证号
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getIdcard())){
+            borrowManinfo.setCardNo(hjhPlanAssetVO.getIdcard());
+        }else{
+            borrowManinfo.setCardNo(StringUtils.EMPTY);
+        }
+        //户籍地
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getDomicile())){
+            borrowManinfo.setDomicile(hjhPlanAssetVO.getDomicile());
+        }else{
+            borrowManinfo.setDomicile(StringUtils.EMPTY);
+        }
+        //在平台逾期次数
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getOverdueTimes())){
+            borrowManinfo.setOverdueTimes(hjhPlanAssetVO.getOverdueTimes());
+        }else{
+            borrowManinfo.setOverdueTimes(StringUtils.EMPTY);
+        }
+        //在平台逾期金额
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getOverdueAmount())){
+            borrowManinfo.setOverdueAmount(hjhPlanAssetVO.getOverdueAmount());
+        }else{
+            borrowManinfo.setOverdueAmount(StringUtils.EMPTY);
+        }
+        //涉诉情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getLitigation())){
+            borrowManinfo.setLitigation(hjhPlanAssetVO.getLitigation());
+        }else{
+            borrowManinfo.setLitigation(StringUtils.EMPTY);
+        }
+
+
+        //个贷审核信息 身份证 0未审核 1已审核
+        borrowManinfo.setIsCard(1);
+        //个贷审核信息 收入状况 0未审核 1已审核
+        borrowManinfo.setIsIncome(1);
+        //个贷审核信息 信用状况 0未审核 1已审核
+        borrowManinfo.setIsCredit(1);
+        //个贷审核信息 婚姻状况 0未审核 1已审核
+        borrowManinfo.setIsMerry(1);
+        //个贷审核信息 工作状况 0未审核 1已审核
+        borrowManinfo.setIsWork(1);
+
+        //个贷审核信息 资产状况 0未审核 1已审核
+        borrowManinfo.setIsAsset(0);
+        //个贷审核信息 车辆状况0未审核 1已审核
+        borrowManinfo.setIsVehicle(0);
+        //个贷审核信息 行驶证 0未审核 1已审核
+        borrowManinfo.setIsDrivingLicense(0);
+        //个贷审核信息 车辆登记证 0未审核 1已审核
+        borrowManinfo.setIsVehicleRegistration(0);
+        //个贷审核信息 车辆登记证 0未审核 1已审核
+        borrowManinfo.setIsVehicleRegistration(0);
+        //个贷审核信息 户口本 0未审核 1已审核
+        borrowManinfo.setIsAccountBook(0);
+
+        //(个人)年收入
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getAnnualIncome())){
+            borrowManinfo.setAnnualIncome(hjhPlanAssetVO.getAnnualIncome());
+        }else{
+            borrowManinfo.setAnnualIncome("10万以内");
+        }
+        //(个人)征信报告逾期情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getOverdueReport())){
+            borrowManinfo.setOverdueReport(hjhPlanAssetVO.getOverdueReport());
+        }else{
+            borrowManinfo.setOverdueReport("暂无数据");
+        }
+        //(个人)重大负债状况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getDebtSituation())){
+            borrowManinfo.setDebtSituation(hjhPlanAssetVO.getDebtSituation());
+        }else{
+            borrowManinfo.setDebtSituation("无");
+        }
+        //(个人)其他平台借款情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getOtherBorrowed())){
+            borrowManinfo.setOtherBorrowed(hjhPlanAssetVO.getOtherBorrowed());
+        }else{
+            borrowManinfo.setOtherBorrowed("暂无数据");
+        }
+        //(个人)借款资金运用情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getIsFunds())){
+            borrowManinfo.setIsFunds(hjhPlanAssetVO.getIsFunds());
+        }else{
+            borrowManinfo.setIsFunds("正常");
+        }
+        //(个人)借款方经营状况及财务状况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getIsManaged())){
+            borrowManinfo.setIsManaged(hjhPlanAssetVO.getIsManaged());
+        }else{
+            borrowManinfo.setIsManaged("正常");
+        }
+        //(个人)借款方还款能力变化情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getIsAbility())){
+            borrowManinfo.setIsAbility(hjhPlanAssetVO.getIsAbility());
+        }else{
+            borrowManinfo.setIsAbility("正常");
+        }
+        //(个人)借款方逾期情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getIsOverdue())){
+            borrowManinfo.setIsOverdue(hjhPlanAssetVO.getIsOverdue());
+        }else{
+            borrowManinfo.setIsOverdue("暂无");
+        }
+        //(个人)借款方涉诉情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getIsComplaint())){
+            borrowManinfo.setIsComplaint(hjhPlanAssetVO.getIsComplaint());
+        }else{
+            borrowManinfo.setIsComplaint("暂无");
+        }
+        //(个人)借款方受行政处罚情况
+        if(StringUtils.isNotEmpty(hjhPlanAssetVO.getIsPunished())){
+            borrowManinfo.setIsPunished(hjhPlanAssetVO.getIsPunished());
+        }else{
+            borrowManinfo.setIsPunished("暂无");
+        }
+        autoSendClient.insertBorrowManinfo(borrowManinfo);
+        return 0;
     }
 
     /**
