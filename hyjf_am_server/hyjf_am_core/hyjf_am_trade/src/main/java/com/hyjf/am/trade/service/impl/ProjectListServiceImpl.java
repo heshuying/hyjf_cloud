@@ -50,4 +50,23 @@ public class ProjectListServiceImpl implements ProjectListService {
 
         return webProjectListCustomizeMapper.searchProjectList(params);
     }
+
+    @Override
+    public int countHomePageProjectList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        params.put("limitStart", limitStart);
+        params.put("limitEnd", limitEnd);
+
+        return webProjectListCustomizeMapper.countProjectList(params);
+    }
 }
