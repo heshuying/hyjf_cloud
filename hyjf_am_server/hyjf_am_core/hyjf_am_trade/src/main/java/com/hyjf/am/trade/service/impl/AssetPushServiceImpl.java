@@ -7,11 +7,14 @@ import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.AssetPushService;
+import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -133,5 +136,49 @@ public class AssetPushServiceImpl implements AssetPushService {
                 }
             }
         }
+    }
+
+    @Override
+    public HjhPlanAsset selectPlanAsset(String assetId, String instCode) {
+        HjhPlanAsset resultAsset = null;
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        HjhPlanAssetExample.Criteria crt = example.createCriteria();
+        crt.andAssetIdEqualTo(assetId);
+        crt.andInstCodeEqualTo(instCode);
+
+        List<HjhPlanAsset> list = this.hjhPlanAssetMapper.selectByExample(example);
+
+        if(list != null && list.size() > 0){
+            resultAsset = list.get(0);
+        }
+
+        return resultAsset;
+    }
+
+    @Override
+    public void updatePlanAsset(HjhPlanAssetVO planAssetVO) {
+        HjhPlanAsset planAsset = new HjhPlanAsset();
+        planAsset.setId(planAssetVO.getId());
+        planAsset.setStatus(1);//待补缴保证金
+        this.hjhPlanAssetMapper.updateByPrimaryKeySelective(planAsset);
+    }
+
+    @Override
+    public List<BorrowProjectType> selectBorrowProjectByBorrowCd(String borrowCd) {
+        BorrowProjectTypeExample example = new BorrowProjectTypeExample();
+        BorrowProjectTypeExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(CustomConstants.FLAG_NORMAL);
+        cra.andBorrowCdEqualTo(borrowCd);
+
+        List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public int updateHjhPlanAssetnew(HjhPlanAsset hjhPlanAsset) {
+        return hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset);
     }
 }

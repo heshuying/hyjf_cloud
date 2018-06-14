@@ -1,7 +1,9 @@
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public SmsConfigVO findSmsConfig() {
         SmsConfigResponse response = restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/smsConfig/findOne", SmsConfigResponse.class).getBody();
-        if (response != null) {
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
         return null;
@@ -41,12 +43,8 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public String getBankIdByCardNo(String cardNo) {
-        String response = restTemplate
+        return restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
     }
 
     /**
@@ -60,7 +58,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public BanksConfigVO getBankNameByBankId(String bankId) {
         BanksConfigResponse response = restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
-        if (response != null) {
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
         return null;

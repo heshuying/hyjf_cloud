@@ -38,6 +38,8 @@ public class ClientConstants implements Serializable {
 	 */
 	public static final int APP_CLIENT = 2;
 
+	public static final int API_CLIENT = 3;
+
 	/**
 	 * 用户授权自动债转
 	 */

@@ -9,6 +9,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
+import com.hyjf.cs.user.vo.BindEmailVO;
 
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public interface SafeService {
 
     void checkForEmailSend(String email, Integer userId);
 
-    void checkForEmailBind(String email, String userId, String activeCode, WebViewUser user);
+    void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUser user);
 
     boolean updateEmail(Integer userId, String email) throws MQException;
 

@@ -58,7 +58,7 @@ public class SmsCodeController {
 		String platform = request.getPlatform();
 		Integer status = request.getStatus();
 		Integer updateStatus = request.getUpdateStatus();
-		int result = smsService.checkMobileCode(mobile, verificationCode, verificationType, platform, status,
+		int result = smsService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, status,
 				updateStatus);
 		return result;
 	}

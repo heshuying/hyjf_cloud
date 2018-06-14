@@ -3,7 +3,9 @@
  */
 package com.hyjf.cs.user.controller.app.regist;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
@@ -20,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author zhangqingqing
@@ -42,30 +43,24 @@ public class AppRegistController {
     /**
      * 注册
      * @param key
-     * @param mobile
-     * @param verificationCode
-     * @param password
-     * @param reffer
+     * @param register
      * @param request
-     * @param response
      * @return
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> register(@RequestHeader String key, @RequestParam String mobile,
-                                      @RequestParam String verificationCode, @RequestParam String password,
-                                      @RequestParam(required = false) String reffer, HttpServletRequest request, HttpServletResponse response) {
-        logger.info("register start, mobile is :{}", mobile);
+    public ApiResult<UserVO> register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request) {
+        logger.info("web端注册接口, register is :{}", JSONObject.toJSONString(register));
         ApiResult<UserVO> result = new ApiResult<>();
-        String mobilephone = DES.decodeValue(key, mobile);
-        String smsCode = DES.decodeValue(key, verificationCode);
-        String pwd = DES.decodeValue(key, password);
-        reffer = DES.decodeValue(key, reffer);
+        String mobilephone = DES.decodeValue(key, register.getMobilephone());
+        String smsCode = DES.decodeValue(key,register.getSmsCode());
+        String pwd = DES.decodeValue(key, register.getPassword());
+        String reffer = DES.decodeValue(key, register.getReffer());
         if (StringUtils.isNotBlank(reffer)) {
             int count = amUserClient.countUserByRecommendName(reffer);
             if (count == 0) {
                 result.setStatus(ApiResult.STATUS_FAIL);
-                result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
+                result.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMessage());
             }
         }
         RegisterVO registerVO = new RegisterVO();
@@ -73,12 +68,12 @@ public class AppRegistController {
         registerVO.setPassword(pwd);
         registerVO.setReffer(reffer);
         registerVO.setSmsCode(smsCode);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
+        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request), ClientConstants.APP_CLIENT);
         result.setResult(userVO);
         if (userVO != null) {
-            logger.info("register success, userId is :{}", userVO.getUserId());
+            logger.info("web端注册成功, userId is :{}", userVO.getUserId());
         } else {
-            logger.error("register failed...");
+            logger.error("web端注册失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
         }

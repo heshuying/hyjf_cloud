@@ -1,5 +1,7 @@
 package com.hyjf.callcenter.controller.userinfo;
 
+import com.hyjf.am.vo.callcenter.CallCenterServiceUsersVO;
+import com.hyjf.callcenter.beans.JsonBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +15,6 @@ import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
 import com.hyjf.callcenter.beans.ResultListBean;
 import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.beans.UserInfoBean;
-import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 import com.hyjf.callcenter.controller.base.CallcenterBaseController;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.UserInfoService;
@@ -79,5 +80,59 @@ public class UserInfoServer extends CallcenterBaseController {
 		result.statusMessage(BaseResultBean.STATUS_SUCCESS, BaseResultBean.STATUS_SUCCESS_DESC);
 		return result;
     }
+
+	/**
+	 * @param request,response,UserBean
+	 * @Author: wangjun
+	 * @Desc :更新分配客服状态
+	 * @Date: 10:01 2018/6/13
+	 * @Return: ResultListBean
+	 */
+	@ApiOperation(value = "更新分配客服状态", notes = "更新分配客服状态")
+	@ResponseBody
+	@PostMapping(value = "/setServedUsers" ,produces = "application/json; charset=utf-8")
+	public BaseResultBean setServedUsers(HttpServletRequest request, HttpServletResponse response,
+										 @RequestBody JsonBean bean) {
+		BaseResultBean result = new BaseResultBean();
+
+		//参数非空判断
+		if (bean == null || bean.getUserJsonArray() == null) {
+			result.statusMessage(BaseResultBean.STATUS_FAIL,"传入参数为空！");
+			return result;
+		}
+
+		//唯一识别号验证
+		if (!this.checkUniqueNo(bean, result)) {
+			return result;
+		}
+
+		//解析json到list
+		List<CallCenterServiceUsersVO> userList = bean.getUserJsonArray();
+
+		//更新呼叫中心用户分配客服的状态
+		Integer rowCount = this.userInfoService.executeRecord(userList);
+		if (rowCount == null) {
+			result.statusMessage(BaseResultBean.STATUS_FAIL, "用户分配结果操作失败！");
+			return result;
+		}
+		result.statusMessage(BaseResultBean.STATUS_SUCCESS, BaseResultBean.STATUS_SUCCESS_DESC+"。操作记录数："+rowCount);
+		return result;
+	}
+	
+	
+    /**
+     * @param request,response,UserBean
+     * @Author: libin
+     * @Desc :查询会员资料调用入口
+     * @Date: 16:39 2018/6/13
+     * @Return: ResultListBean
+     */
+    @ApiOperation(value = "查询会员资料调用入口", notes = "查询会员资料调用入口")
+    @PostMapping(value = "/getUserInfo", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public ResultListBean getUserInfo(HttpServletRequest request, HttpServletResponse response,@RequestBody UserBean bean) {
+		return null;
+    }
+	
 
 }

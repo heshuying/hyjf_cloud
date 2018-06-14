@@ -27,10 +27,10 @@ public enum RegisterError implements ErrorCode {
 	INSTCODE_ERROR("1","机构编号错误"),
 	CODETYPE_INVALID_ERROR("1", "无效的验证码类型!"),
 	MOBILE_FORMAT_ERROR("1", "手机号格式不正确"),
-	USER_NOT_EXISTS_ERROR("1", "不存在用户")
-
-
-	;
+	USER_NOT_EXISTS_ERROR("1", "不存在用户"),
+	INST_CODE_ERROR("1", "机构编号不能为空"),
+	PLATEFORM_ERROR("1", "注册平台不能为空"),
+	UTMID_ERROR("1", "推广渠道不能为空")	;
 
 	private String errCode;
 	private String message;

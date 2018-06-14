@@ -40,6 +40,15 @@ public class RedisConstants {
     public static final String LOGIN_BLACK_LIST_APP = "login_black_list_app";
 
 
+    /**
+     * 风险保证金前缀
+     */
+    public static final String CAPITAL_TOPLIMIT_ = "CAPITAL_TOPLIMIT_";
+
+    /**
+     * 汇计划发标redis key
+     */
+    public static final String GEN_HJH_BORROW_NID = "gen_hjh_borrow_nid";
 
 
 }
