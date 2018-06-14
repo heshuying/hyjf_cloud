@@ -404,7 +404,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/selectUserByUsername/{repayOrgName}")
-	public UserResponse selectUserByUsername(String repayOrgName) {
+	public UserResponse selectUserByUsername(@PathVariable String repayOrgName) {
 		UserResponse response = new UserResponse();
 		List<User> userList = userService.selectUserByUsername(repayOrgName);
 		if (!CollectionUtils.isEmpty(userList)) {

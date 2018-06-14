@@ -13,6 +13,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ public class HjhPlanController {
      * @return
      */
     @RequestMapping("/selectHjhInstConfigByInstCode{instCode}")
-    public HjhInstConfigResponse selectHjhInstConfigByInstCode(String instCode) {
+    public HjhInstConfigResponse selectHjhInstConfigByInstCode(@PathVariable String instCode) {
         HjhInstConfigResponse response = new HjhInstConfigResponse();
         List<HjhInstConfig> hjhInstConfigList = hjhPlanService.selectHjhInstConfigByInstCode(instCode);
         if (!CollectionUtils.isEmpty(hjhInstConfigList)) {
@@ -53,7 +54,7 @@ public class HjhPlanController {
      * @return
      */
     @RequestMapping("/seleHjhLabel/{borrowStyle}")
-    public HjhLabelResponse seleHjhLabel(String borrowStyle) {
+    public HjhLabelResponse seleHjhLabel(@PathVariable String borrowStyle) {
         HjhLabelResponse response = new HjhLabelResponse();
         List<HjhLabel> list = hjhPlanService.seleHjhLabelByBorrowStyle(borrowStyle);
         if (!CollectionUtils.isEmpty(list)) {
