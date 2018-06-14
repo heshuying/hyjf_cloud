@@ -377,7 +377,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO getUserByIdNo(String idNo) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/userInfo/" + idNo, UserInfoResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userInfo/findByIdNo/" + idNo, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

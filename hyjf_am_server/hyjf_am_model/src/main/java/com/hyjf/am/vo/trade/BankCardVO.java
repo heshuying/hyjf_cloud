@@ -5,8 +5,14 @@ import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 import java.util.Date;
 
-public class BankCardVO extends BaseVO implements Serializable{
-    private Integer id;
+/**
+ * 用户绑定的银行卡VO
+ * @author hesy
+ */
+public class BankCardVO extends BaseVO implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
 
     private Integer userId;
 
@@ -26,135 +32,95 @@ public class BankCardVO extends BaseVO implements Serializable{
 
     private Date createTime;
 
-    private Integer createUserId;
-
-    private String createUserName;
-
     private Date updateTime;
 
-    private Integer updateUserId;
+	public Integer getId() {
+		return id;
+	}
 
-    private String updateUserName;
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    private static final long serialVersionUID = 1L;
+	public Integer getUserId() {
+		return userId;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public Integer getUserId() {
-        return userId;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+	public String getCardNo() {
+		return cardNo;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
-    }
+	public Integer getBankId() {
+		return bankId;
+	}
 
-    public String getCardNo() {
-        return cardNo;
-    }
+	public void setBankId(Integer bankId) {
+		this.bankId = bankId;
+	}
 
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo == null ? null : cardNo.trim();
-    }
+	public String getMobile() {
+		return mobile;
+	}
 
-    public Integer getBankId() {
-        return bankId;
-    }
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 
-    public void setBankId(Integer bankId) {
-        this.bankId = bankId;
-    }
+	public String getPayAllianceCode() {
+		return payAllianceCode;
+	}
 
-    public String getMobile() {
-        return mobile;
-    }
+	public void setPayAllianceCode(String payAllianceCode) {
+		this.payAllianceCode = payAllianceCode;
+	}
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile == null ? null : mobile.trim();
-    }
+	public String getBank() {
+		return bank;
+	}
 
-    public String getPayAllianceCode() {
-        return payAllianceCode;
-    }
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
 
-    public void setPayAllianceCode(String payAllianceCode) {
-        this.payAllianceCode = payAllianceCode == null ? null : payAllianceCode.trim();
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public String getBank() {
-        return bank;
-    }
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public void setBank(String bank) {
-        this.bank = bank == null ? null : bank.trim();
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public String getCreateUserName() {
-        return createUserName;
-    }
-
-    public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName == null ? null : createUserName.trim();
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
-    }
-
-    public String getUpdateUserName() {
-        return updateUserName;
-    }
-
-    public void setUpdateUserName(String updateUserName) {
-        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+    
+    
 }

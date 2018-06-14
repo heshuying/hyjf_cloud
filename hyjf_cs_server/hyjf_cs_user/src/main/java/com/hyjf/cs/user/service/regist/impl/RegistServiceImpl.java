@@ -17,6 +17,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
@@ -24,11 +25,11 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
@@ -83,20 +84,15 @@ public class RegistServiceImpl implements RegistService{
      * @throws ReturnMessageException
      */
     @Override
-    public UserVO register(RegisterVO registerVO, String ip,int client)
+    public UserVO register(RegisterVO registerVO, String ip)
             throws ReturnMessageException {
-        // 1. 参数检查
-        this.registerCheckParam(client,registerVO);
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         BeanUtils.copyProperties(registerVO, registerUserRequest);
         registerUserRequest.setLoginIp(ip);
         registerUserRequest.setInstCode(1);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
-        if (userVO == null) {
-            throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
-        }
-
+        CheckUtil.check(userVO != null, MsgEnum.REGISTER_ERROR);
         // 3.注册后处理
         this.afterRegisterHandle(userVO);
 
@@ -110,26 +106,19 @@ public class RegistServiceImpl implements RegistService{
      * @return
      */
     @Override
-    public UserVO apiRegister(RegisterVO registerVO, String ipAddr, int client) {
-        // 1. 参数检查
-        this.registerCheckParam(client,registerVO);
+    public UserVO apiRegister(RegisterVO registerVO, String ipAddr) {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         BeanUtils.copyProperties(registerVO, registerUserRequest);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
         HjhInstConfigVO instConfig = this.amUserClient.selectInstConfigByInstCode(registerVO.getInstCode());
         // 机构编号
-        if (instConfig == null) {
-            throw new ReturnMessageException(RegisterError.INSTCODE_ERROR);
-
-        }
+        CheckUtil.check(instConfig != null, MsgEnum.INSTCODE_ERROR);
         // TODO: 2018/5/28 验签
         registerUserRequest.setInstCode(instConfig.getInstType());
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
-        if (userVO == null) {
-            throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
-        }
+        CheckUtil.check(userVO != null, MsgEnum.REGISTER_ERROR);
         return userVO;
     }
 
@@ -139,7 +128,8 @@ public class RegistServiceImpl implements RegistService{
      *
      * @param registerVO
      */
-    private void registerCheckParam(int client,RegisterVO registerVO) {
+    @Override
+    public void registerCheckParam(int client, RegisterVO registerVO) {
         if(ClientConstants.API_CLIENT == client){
             // 机构编号
             String instCode = registerVO.getInstCode();
@@ -148,47 +138,22 @@ public class RegistServiceImpl implements RegistService{
             // 注册渠道
             String utmId = registerVO.getUtmId();
             // 机构编号
-            if (StringUtils.isEmpty(instCode)) {
-                throw new ReturnMessageException(RegisterError.INSTCODE_ERROR);
-            }
+            CheckUtil.check(StringUtils.isNotEmpty(instCode), MsgEnum.INSTCODE_ERROR);
             // 注册平台
-            if (StringUtils.isEmpty(platform)) {
-                throw new ReturnMessageException(RegisterError.PLATEFORM_ERROR);
-            }
+            CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.PLATEFORM_ERROR);
             // 推广渠道
-            if (StringUtils.isEmpty(utmId)) {
-                throw new ReturnMessageException(RegisterError.UTMID_ERROR);
-            }
-            if (registerVO == null) {
-                throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
-            }
+            CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.UTMID_ERROR);
+            CheckUtil.check(registerVO != null, MsgEnum.REGISTER_ERROR);
         }
         String mobile = registerVO.getMobilephone();
-        if (StringUtils.isEmpty(mobile)) {
-            throw new ReturnMessageException(RegisterError.MOBILE_IS_NOT_NULL_ERROR);
-        }
-
+        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.MOBILE_IS_NOT_NULL_ERROR);
         String smsCode = registerVO.getSmsCode();
-        if (StringUtils.isEmpty(smsCode)) {
-            throw new ReturnMessageException(RegisterError.SMSCODE_IS_NOT_NULL_ERROR);
-        }
-
+        CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.SMSCODE_IS_NOT_NULL_ERROR);
         String password = registerVO.getPassword();
-        if (StringUtils.isEmpty(password)) {
-            throw new ReturnMessageException(RegisterError.PASSWORD_IS_NOT_NULL_ERROR);
-        }
-
-        if (!Validator.isMobile(mobile)) {
-            throw new ReturnMessageException(RegisterError.MOBILE_IS_NOT_REAL_ERROR);
-        } else {
-            if (existUser(mobile)) {
-                throw new ReturnMessageException(RegisterError.MOBILE_EXISTS_ERROR);
-            }
-        }
-        if (password.length() < 6 || password.length() > 16) {
-            throw new ReturnMessageException(RegisterError.PASSWORD_LENGTH_ERROR);
-        }
-
+        CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.PASSWORD_IS_NOT_NULL_ERROR);
+        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.MOBILE_IS_NOT_REAL_ERROR);
+        CheckUtil.check(!existUser(mobile), MsgEnum.MOBILE_EXISTS_ERROR);
+        CheckUtil.check(password.length() >= 6 && password.length() <= 16, MsgEnum.PASSWORD_LENGTH_ERROR);
         boolean hasNumber = false;
         for (int i = 0; i < password.length(); i++) {
             if (Validator.isNumber(password.substring(i, i + 1))) {
@@ -196,25 +161,17 @@ public class RegistServiceImpl implements RegistService{
                 break;
             }
         }
-        if (!hasNumber) {
-            throw new ReturnMessageException(RegisterError.PASSWORD_NO_NUMBER_ERROR);
-        }
+        CheckUtil.check(hasNumber, MsgEnum.PASSWORD_NO_NUMBER_ERROR);
         String regEx = "^[a-zA-Z0-9]+$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
-        if (!m.matches()) {
-            throw new ReturnMessageException(RegisterError.PASSWORD_FORMAT_ERROR);
-        }
+        CheckUtil.check(m.matches(), MsgEnum.PASSWORD_FORMAT_ERROR);
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
         int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        if (cnt == 0) {
-            throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
-        }
+        CheckUtil.check(cnt != 0, MsgEnum.SMSCODE_INVALID_ERROR);
         String reffer = registerVO.getReffer();
-        if (isNotBlank(reffer) && amUserClient.countUserByRecommendName(reffer) <= 0) {
-            throw new ReturnMessageException(RegisterError.REFFER_INVALID_ERROR);
-        }
+        CheckUtil.check(isNotBlank(reffer) && amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.REFFER_INVALID_ERROR);
     }
 
     /**
@@ -316,6 +273,12 @@ public class RegistServiceImpl implements RegistService{
     public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
                                      Integer searchStatus, Integer updateStatus) {
         int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus);
+        return cnt;
+    }
+
+   @Override
+   public int countUserByRecommendName(String reffer){
+        int cnt = amUserClient.countUserByRecommendName(reffer);
         return cnt;
     }
 

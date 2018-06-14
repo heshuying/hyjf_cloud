@@ -5,8 +5,8 @@ package com.hyjf.cs.user.controller.api.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -49,14 +49,15 @@ public class ApiRegisterController {
     public ApiResult<UserVO> register(@RequestBody  RegisterVO registerVO, HttpServletRequest request) {
         logger.info("api端注册接口, registerVO is :{}", JSONObject.toJSONString(registerVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
-        UserVO userVO = registService.apiRegister(registerVO, GetCilentIP.getIpAddr(request), ClientConstants.API_CLIENT);
+        registService.registerCheckParam(ClientConstants.API_CLIENT,registerVO);
+        UserVO userVO = registService.apiRegister(registerVO, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
             logger.info("api端注册成功, userId is :{}", userVO.getUserId());
             result.setResult(userVO);
         } else {
             logger.error("api端注册失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            result.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
         }
         return result;
     }

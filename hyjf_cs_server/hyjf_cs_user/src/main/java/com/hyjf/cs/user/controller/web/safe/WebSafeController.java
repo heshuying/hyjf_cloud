@@ -16,6 +16,7 @@ import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import com.hyjf.cs.user.vo.UserNoticeSetVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,14 +97,13 @@ public class WebSafeController {
      * 保存用户通知设置
      * @param token
      * @param userNoticeSetVO
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @return
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO, HttpServletRequest request,
-                                                   HttpServletResponse response) {
+    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
         logger.info("用戶通知設置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
@@ -144,9 +144,9 @@ public class WebSafeController {
      * 用户手机号码修改
      */
     @ApiOperation(value = "手机号码修改", notes = "手机号码修改")
+    @ApiImplicitParam(name = "param",value = "{newMobile: string,smsCode: string}", dataType = "Map")
     @PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request,
-                                          HttpServletResponse response) {
+    public ApiResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
@@ -189,7 +189,7 @@ public class WebSafeController {
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
     @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> bindEmail(@RequestHeader(value = "token") String token, @RequestBody BindEmailVO bindEmailVO, HttpServletRequest request) {
+    public ApiResult<Object> bindEmail(@RequestHeader(value = "token") String token, @RequestBody BindEmailVO bindEmailVO) {
     	logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
     	ApiResult<Object> result = new ApiResult<Object>();
 
@@ -211,14 +211,14 @@ public class WebSafeController {
     /**
      * 添加、修改紧急联系人
      * @param token
-     * @param request
+     * @param
      * @return
      */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap, HttpServletRequest request) {
+    @ApiImplicitParam(name = "param",value = "{relationId:string,rlName:string}", dataType = "Map")
+    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap) {
         ApiResult<Object> result = new ApiResult<Object>();
-
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         safeService.checkForContractSave(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
 
@@ -231,6 +231,26 @@ public class WebSafeController {
         }
 
         return result;
+    }
+
+    /**
+     * @Author: zhangqingqing
+     * @Desc : 判断是否开户
+     * @Param: * @param token
+     * @Date: 11:11 2018/6/14
+     * @Return: boolean
+     */
+    @ApiOperation(value = "判断是否开户", notes = "判断是否开户")
+    @PostMapping(value = "/checkOpenAccount", produces = "application/json; charset=utf-8")
+    @ApiImplicitParam(name = "param",value = "{userId:string}", dataType = "Map")
+    public boolean checkOpenAccount(@RequestHeader(value = "token", required = true) String token){
+        logger.info("Web端判断是否开户");
+        UserVO user = safeService.getUsers(token);
+        if(null == user){
+            return false;
+        }else {
+            return 1==user.getOpenAccount()?true:false;
+        }
     }
 
 }

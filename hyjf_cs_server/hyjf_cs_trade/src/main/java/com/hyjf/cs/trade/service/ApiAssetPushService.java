@@ -29,6 +29,13 @@ public interface ApiAssetPushService {
      */
     PushResultBean assetPush(PushRequestBean pushRequestBean);
 
+    /**
+     * 查询标签
+     *
+     * @param borrowVO
+     * @param hjhPlanAssetVO
+     * @return
+     */
     HjhLabelVO getLabelId(BorrowWithBLOBsVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO);
 
     /**

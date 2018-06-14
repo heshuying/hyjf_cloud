@@ -15,20 +15,22 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.UserConstant;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.BindEmailError;
 import com.hyjf.cs.user.constants.ContractSetError;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
+import com.hyjf.cs.user.service.BaseServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 
@@ -48,7 +50,7 @@ import java.util.Map;
  * @version SafeServiceImpl, v0.1 2018/6/11 15:55
  */
 @Service
-public class SafeServiceImpl implements SafeService {
+public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
 
@@ -280,9 +282,9 @@ public class SafeServiceImpl implements SafeService {
 
     /**
      * 绑定邮箱激活条件校验
-     * @param email
-     * @param userId
-     * @param activeCode
+     * @param
+     * @param
+     * @param
      */
     @Override
     public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUser user) {
@@ -377,10 +379,7 @@ public class SafeServiceImpl implements SafeService {
         String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
         int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        if (cnt <= 0) {
-            throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
-        }
-
+        CheckUtil.check(cnt > 0, MsgEnum.SMSCODE_INVALID_ERROR);
         return true;
     }
 

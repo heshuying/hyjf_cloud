@@ -6,6 +6,7 @@ import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class WeChatSmsCodeController {
 	 * @throws MQException
 	 */
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
+	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string}", dataType = "Map")
 	public BaseResultBean sendSmsCode(@RequestBody Map<String,String> param,
 									  @RequestHeader(value = "token", required = false) String token,
 									  HttpServletRequest request)

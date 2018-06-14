@@ -60,7 +60,7 @@ public class BankCallController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "callApiPage.json")
+    @PostMapping(value = "callApiPage.json")
     @ResponseBody
     public Map<String,Object> callPageApi(@RequestBody BankCallBean bean) throws Exception {
 

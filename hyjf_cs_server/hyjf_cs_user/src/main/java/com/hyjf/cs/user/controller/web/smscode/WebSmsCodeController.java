@@ -37,7 +37,7 @@ public class WebSmsCodeController {
 	 * @throws MQException
 	 */
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
-	@ApiImplicitParam(name = "param",value = "{\"validCodeType\": \"string\",\"mobile\": \"string\"}", dataType = "Map")
+	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string}", dataType = "Map")
 	public BaseResultBean sendSmsCode(@RequestBody Map<String,String> param,
 									  @RequestHeader(value = "token", required = false) String token,
 									  HttpServletRequest request)

@@ -68,7 +68,8 @@ public class AppRegistController {
         registerVO.setPassword(pwd);
         registerVO.setReffer(reffer);
         registerVO.setSmsCode(smsCode);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request), ClientConstants.APP_CLIENT);
+        registService.registerCheckParam(ClientConstants.APP_CLIENT,registerVO);
+        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
         result.setResult(userVO);
         if (userVO != null) {
             logger.info("web端注册成功, userId is :{}", userVO.getUserId());
