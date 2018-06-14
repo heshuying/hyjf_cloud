@@ -22,9 +22,8 @@ public interface RegistService {
      * @return
      * @throws ReturnMessageException
      */
-    UserVO register(RegisterVO registerVO, String ip)
+    UserVO register(RegisterVO registerVO, String ip, int client)
             throws ReturnMessageException;
-
 
     boolean existUser(String mobile);
 
@@ -34,7 +33,7 @@ public interface RegistService {
      * @param ipAddr
      * @return
      */
-    UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr);
+    UserVO apiRegister(RegisterVO registerVO, String ipAddr, int client);
 
     /**
      * 检查活动是否有效
@@ -42,4 +41,6 @@ public interface RegistService {
      * @return
      */
     boolean checkActivityIfAvailable(String activityId);
+
+    int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
 }

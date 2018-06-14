@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.web.smscode;
+package com.hyjf.cs.user.controller.wechat.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;
@@ -6,7 +6,6 @@ import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,9 @@ import java.util.Map;
  */
 @Api(value = "验证码")
 @RestController
-@RequestMapping("/web/smsCode")
-public class WebSmsCodeController {
-	private static final Logger logger = LoggerFactory.getLogger(WebSmsCodeController.class);
+@RequestMapping("/weChat/smsCode")
+public class WeChatSmsCodeController {
+	private static final Logger logger = LoggerFactory.getLogger(WeChatSmsCodeController.class);
 
 	@Autowired
 	private SmsCodeService sendSmsCode;
@@ -37,12 +36,11 @@ public class WebSmsCodeController {
 	 * @throws MQException
 	 */
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
-	@ApiImplicitParam(name = "param",value = "{\"validCodeType\": \"string\",\"mobile\": \"string\"}", dataType = "Map")
 	public BaseResultBean sendSmsCode(@RequestBody Map<String,String> param,
 									  @RequestHeader(value = "token", required = false) String token,
 									  HttpServletRequest request)
 			throws MQException {
-		logger.info("web端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
+		logger.info("weChat端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
 		String validCodeType = param.get("validCodeType");
 		String mobile = param.get("mobile");
 		BaseResultBean resultBean = new BaseResultBean();
