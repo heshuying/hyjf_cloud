@@ -131,7 +131,7 @@ public class AppBankOpenController {
         }
         logger.info("app端开户同步请求,token:{},isSuccess:{}", token, isSuccess);
         Map<String, String> result = bankOpenService.openAccountReturn(token, isSuccess);
-        logger.info("app端开户同步请求返回值：", JSONObject.toJSONString(result));
+        logger.info("app端开户同步请求返回值：{}", JSONObject.toJSONString(result));
         return result;
     }
 
