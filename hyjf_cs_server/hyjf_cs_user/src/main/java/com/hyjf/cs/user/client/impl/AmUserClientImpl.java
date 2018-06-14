@@ -36,7 +36,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO findUserByMobile(String mobile) {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findByMobile/" + mobile, UserResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -49,7 +49,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public int countUserByRecommendName(String reffer) {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class).getBody();
-		if (response != null && response.getResult() != null) {
+		if (response != null  && response.getResult() != null) {
 			return 1;
 		}
 		return 0;
@@ -59,7 +59,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO register(RegisterUserRequest request) {
 		UserResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/user/register", request, UserResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -69,7 +69,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -79,7 +79,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserInfoVO findUserInfoById(int userId) {
 		UserInfoResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -135,7 +135,7 @@ public class AmUserClientImpl implements AmUserClient {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findByCondition/" + loginUserName, UserResponse.class)
 				.getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;

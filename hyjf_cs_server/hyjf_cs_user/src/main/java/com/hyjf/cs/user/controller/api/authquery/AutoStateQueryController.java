@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.user.controller.api.authquery;
 
-import com.hyjf.cs.user.beans.AutoStateQueryRequest;
-import com.hyjf.cs.user.beans.AutoStateQueryResultBean;
+import com.hyjf.cs.user.bean.AutoStateQueryRequest;
+import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;

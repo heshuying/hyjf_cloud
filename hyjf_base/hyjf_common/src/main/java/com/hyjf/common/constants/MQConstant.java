@@ -63,4 +63,10 @@ public interface MQConstant {
 	 */
 	String ASSET_PUSH_GROUP = "ASSET_PUSH_GROUP";
 	String ASSET_PUST_TOPIC = "ASSET_PUSH_TOPIC";
+
+	/**
+	 * 自动备案mq
+	 */
+	String BORROW_RECORD_GROUP = "BORROW_RECORD_GROUP";
+	String BORROW_RECORD_TOPIC = "BORROW_RECORD_TOPIC";
 }

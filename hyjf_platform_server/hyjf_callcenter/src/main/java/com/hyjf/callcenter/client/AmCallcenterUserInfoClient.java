@@ -1,11 +1,10 @@
 package com.hyjf.callcenter.client;
 
 import java.util.List;
-import java.util.Map;
 
+import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
-import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 
 /**
  * @author libin
@@ -31,5 +30,13 @@ public interface AmCallcenterUserInfoClient {
 	 * @return
 	 */
 	List<CallCenterUserBaseVO> selectNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+
+	/**
+	 * 更新呼叫中心用户分配客服的状态
+	 * @param callCenterServiceUsersRequest
+	 * @return Integer
+	 * @author wangjun
+	 */
+	Integer executeRecord(CallCenterServiceUsersRequest callCenterServiceUsersRequest);
 
 }

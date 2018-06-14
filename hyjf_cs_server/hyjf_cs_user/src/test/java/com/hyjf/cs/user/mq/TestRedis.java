@@ -33,6 +33,9 @@ public class TestRedis {
 		hash.put("0", "未开户");
 		hash.put("1", "已开户");
 		hash.put("12", "已开户11");
+		
+		
+		RedisUtils.hmset(key, hash);
 		hash.put("13", "已开户12");
 		hash.put("14", "已开户1212");
 		
@@ -40,7 +43,7 @@ public class TestRedis {
 		RedisUtils.hmset(key, hash);
 		
 		
-		String val1 = RedisUtils.hget(key, "12");
+		String val1 = RedisUtils.hget(key, "14");
 		System.out.println(val1);
 		
 		Map<String,String> hash2 = RedisUtils.hgetall(key);

@@ -7,9 +7,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.cs.user.beans.AutoStateQueryRequest;
-import com.hyjf.cs.user.beans.AutoStateQueryResultBean;
-import com.hyjf.cs.user.beans.BaseDefine;
+import com.hyjf.cs.user.bean.AutoStateQueryRequest;
+import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.AutoStateError;
@@ -103,7 +103,7 @@ public class AutoStateQueryServiceImpl extends BaseServiceImpl implements AutoSt
      * @Param: * @param resultBean
      * @param retBean
      * @Date: 18:31 2018/6/12
-     * @Return: com.hyjf.cs.user.beans.AutoStateQueryResultBean
+     * @Return: com.hyjf.cs.user.bean.AutoStateQueryResultBean
      */
     private AutoStateQueryResultBean getResultJosn(AutoStateQueryResultBean resultBean, BankCallBean retBean) {
         resultBean.setAccountId(retBean.getAccountId());

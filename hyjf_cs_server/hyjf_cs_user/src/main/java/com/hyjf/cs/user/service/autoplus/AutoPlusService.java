@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.user.service.autoplus;
 
-import com.hyjf.cs.user.beans.AutoPlusRequestBean;
-import com.hyjf.cs.user.beans.AutoPlusRetBean;
-import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.bean.AutoPlusRequestBean;
+import com.hyjf.cs.user.bean.AutoPlusRetBean;
+import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
