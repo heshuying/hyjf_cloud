@@ -1,9 +1,11 @@
 package com.hyjf.am.vo.trade;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class AccountListVO implements Serializable {
+public class AccountListVO extends BaseVO implements Serializable {
     private Integer id;
 
     private String nid;
