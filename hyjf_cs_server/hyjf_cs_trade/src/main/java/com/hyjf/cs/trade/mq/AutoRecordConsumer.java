@@ -6,7 +6,7 @@ package com.hyjf.cs.trade.mq;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.AutoSendMessageHandle;
+import com.hyjf.cs.trade.handle.AutoRecordMessageHandle;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -18,28 +18,25 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * 自动录标
- *
+ * 自动备案
  * @author fuqiang
- * @version AssetPushConsumer, v0.1 2018/6/12 15:24
+ * @version AutoRecordConsumer, v0.1 2018/6/14 9:57
  */
-@Component
-public class AssetPushConsumer extends Consumer {
+public class AutoRecordConsumer extends Consumer {
 
-    private static final Logger _log = LoggerFactory.getLogger(AssetPushConsumer.class);
+    private static final Logger _log = LoggerFactory.getLogger(AutoRecordConsumer.class);
 
     @Autowired
-    private AutoSendMessageHandle autoSendMessageHandle;
+    private AutoRecordMessageHandle autoRecordMessageHandle;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.ASSET_PUSH_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_RECORD_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
         defaultMQPushConsumer.subscribe(MQConstant.ASSET_PUST_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
@@ -47,10 +44,10 @@ public class AssetPushConsumer extends Consumer {
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        defaultMQPushConsumer.registerMessageListener(new MessageListener());
+        defaultMQPushConsumer.registerMessageListener(new AutoRecordConsumer.MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
         defaultMQPushConsumer.start();
-        _log.info("====assetPush consumer=====");
+        _log.info("====autoRecord consumer=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {
@@ -61,13 +58,13 @@ public class AssetPushConsumer extends Consumer {
             // --> 消息检查
             MessageExt msg = list.get(0);
             if(msg == null || msg.getBody() == null){
-                _log.error("【自动录标任务】接收到的消息为null");
+                _log.error("【自动备案任务】接收到的消息为null");
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
 
             // --> 消息转换
             String msgBody = new String(msg.getBody());
-            _log.info("【自动录标请求】接收到的消息：" + msgBody);
+            _log.info("【自动备案请求】接收到的消息：" + msgBody);
 
             HjhPlanAssetVO mqHjhPlanAsset;
             try {
@@ -81,7 +78,7 @@ public class AssetPushConsumer extends Consumer {
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             try {
-                autoSendMessageHandle.sendMessage(mqHjhPlanAsset.getAssetId(), mqHjhPlanAsset.getInstCode());
+                autoRecordMessageHandle.sendMessage(mqHjhPlanAsset.getAssetId(), mqHjhPlanAsset.getInstCode());
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e){
                 e.printStackTrace();
