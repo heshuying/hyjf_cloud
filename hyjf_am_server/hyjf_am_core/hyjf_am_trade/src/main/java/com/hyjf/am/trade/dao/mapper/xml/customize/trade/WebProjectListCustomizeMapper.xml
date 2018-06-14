@@ -85,7 +85,7 @@
         <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
     </resultMap>
     <!--Web端获取项目列表-->
-    <select id="selectProjectList" resultMap="ProjectListNewMap" parameterType="Map">
+    <select id="searchProjectList" resultMap="ProjectListNewMap" parameterType="Map">
         SELECT
             htb.borrow_nid,
             htb.borrow_nid AS project_name,
@@ -114,7 +114,7 @@
         INNER JOIN ht_borrow_info hbi on hbi.borrow_nid = htb.borrow_nid
         INNER JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = hbi.project_type
         LEFT JOIN ht_borrow_style htbs ON htb.borrow_style = htbs.nid
-        LEFT JOIN hyjf_param_name pn ON cast(htb.`status` AS CHAR) = pn.name_cd AND pn.name_class = 'BORROW_STATUS'
+
         <include refid = "Where_Clause_New" />
         ORDER BY
         htb.`status` ASC,
