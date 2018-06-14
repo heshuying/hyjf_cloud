@@ -91,7 +91,7 @@ public class WebBorrowServiceImpl implements WebBorrowService {
         // 取得手续费 默认1
         String fee = this.getWithdrawFee(user.getUserId(), cardNo);
         // 组装发往江西银行参数
-        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, ip, fee);
+        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", String.valueOf(user.getUserId()));
@@ -465,7 +465,7 @@ public class WebBorrowServiceImpl implements WebBorrowService {
      * @param fee
      * @return
      */
-    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String ip, String fee) {
+    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee) {
         BankCardVO bankCard = this.amBindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
         BankOpenAccountVO bankOpenAccountVO=amBankOpenClient.selectById(user.getUserId());
@@ -489,7 +489,7 @@ public class WebBorrowServiceImpl implements WebBorrowService {
         bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
         bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
         bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
-        bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
+        bean.setChannel(channel);// 交易渠道
         bean.setAccountId(bankOpenAccountVO.getAccount());// 存管平台分配的账号
         bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);// 证件类型01身份证
         bean.setIdNo(usersInfo.getIdcard());// 证件号
