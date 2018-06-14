@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
 import com.hyjf.am.vo.borrow.BorrowVO;
@@ -146,7 +147,8 @@ public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements Au
                 BankOpenAccountVO bankOpenAccount = apiAssetClient.selectBankAccountById(userId);
                 if (Validator.isNotNull(bankOpenAccount)) {
                     // 更新相应的标的状态为备案中
-                    boolean debtRegistingFlag = autoRecordClient.updateBorrowRegist(borrowVO, 0, 1);
+                    BorrowRegistRequest req = new BorrowRegistRequest(borrowVO, 0, 1);
+                    boolean debtRegistingFlag = autoRecordClient.updateBorrowRegist(req);
                     if (debtRegistingFlag) {
                         // 获取共同参数
                         String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
@@ -218,7 +220,7 @@ public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements Au
                                     status = 7;
                                 }
 
-                                boolean debtRegistedFlag = autoRecordClient.updateBorrowRegist(borrowVO, status, 2);
+                                boolean debtRegistedFlag = autoRecordClient.updateBorrowRegist(new BorrowRegistRequest(borrowVO, status, 2));
                                 if (debtRegistedFlag) {
                                     result.put("success", "0");
                                     result.put("msg", "备案成功！");
@@ -227,14 +229,14 @@ public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements Au
                                     result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                 }
                             } else {
-                                autoRecordClient.updateBorrowRegist(borrowVO, 0, 4);
+                                autoRecordClient.updateBorrowRegist(new BorrowRegistRequest(borrowVO, 0, 4));
                                 String message = registResult.getRetMsg();
                                 result.put("success", "1");
                                 result.put("msg", StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            autoRecordClient.updateBorrowRegist(borrowVO, 0, 4);
+                            autoRecordClient.updateBorrowRegist(new BorrowRegistRequest(borrowVO, 0, 4));
                             result.put("success", "1");
                             result.put("msg", "银行备案接口调用失败！");
                         }

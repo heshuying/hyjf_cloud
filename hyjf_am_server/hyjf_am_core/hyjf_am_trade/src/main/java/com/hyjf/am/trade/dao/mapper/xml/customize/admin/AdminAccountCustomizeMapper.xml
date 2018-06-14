@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper">
+
+	<update id="updateBankWithdrawSuccess" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
+		update ht_account
+		set
+		bank_total = IFNULL(bank_total,0) - #{bankTotal,jdbcType=DECIMAL},
+		bank_balance = IFNULL(bank_balance,0) - #{bankBalance,jdbcType=DECIMAL},
+		bank_balance_cash = IFNULL(bank_balance_cash,0) - #{bankBalanceCash,jdbcType=DECIMAL}
+		where
+		user_id = #{userId,jdbcType=INTEGER}
+	</update>
+</mapper>
+
