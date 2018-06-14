@@ -2,6 +2,7 @@ package com.hyjf.callcenter.service;
 
 import java.util.List;
 
+import com.hyjf.am.vo.callcenter.CallCenterServiceUsersVO;
 import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
 import com.hyjf.callcenter.beans.UserBean;
 
@@ -18,5 +19,13 @@ public interface UserInfoService {
 	 * @author libin
 	 */
 	public List<CallCenterUserBaseVO> getNoServiceUsersList(UserBean bean);
+
+	/**
+	 * 更新呼叫中心用户分配客服的状态
+	 * @param userList
+	 * @return Integer
+	 * @author wangjun
+	 */
+	Integer executeRecord(List<CallCenterServiceUsersVO> userList);
 
 }

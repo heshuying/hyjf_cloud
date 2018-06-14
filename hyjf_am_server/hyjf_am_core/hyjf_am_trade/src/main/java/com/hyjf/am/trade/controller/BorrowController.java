@@ -3,20 +3,23 @@
  */
 package com.hyjf.am.trade.controller;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.hyjf.am.response.trade.BorrowConfigResponse;
+import com.hyjf.am.response.trade.BorrowFinmanNewChargeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.trade.service.UserService;
+import com.hyjf.am.vo.borrow.BorrowConfigVO;
+import com.hyjf.am.vo.borrow.BorrowFinmanNewChargeVO;
+import com.hyjf.am.vo.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.borrow.BorrowWithBLOBsVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author zhangqingqing
@@ -30,6 +33,9 @@ public class BorrowController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private BorrowService borrowService;
 
     /**
      * @Author: zhangqingqing
@@ -49,5 +55,68 @@ public class BorrowController {
             response.setResult(hjhInstConfigVO);
         }
         return response;
+    }
+
+    /**
+     * 根据项目类型，期限，获取借款利率
+     * @param request
+     * @return
+     */
+    @RequestMapping("/selectBorrowApr")
+    public BorrowFinmanNewChargeResponse selectBorrowApr(@RequestBody BorrowFinmanNewChargeRequest request) {
+        BorrowFinmanNewChargeResponse response = new BorrowFinmanNewChargeResponse();
+        BorrowFinmanNewCharge borrowFinmanNewCharge = borrowService.selectBorrowApr(request);
+        if (borrowFinmanNewCharge != null) {
+            BorrowFinmanNewChargeVO borrowFinmanNewChargeVO = new BorrowFinmanNewChargeVO();
+            BeanUtils.copyProperties(borrowFinmanNewCharge, borrowFinmanNewChargeVO);
+            response.setResult(borrowFinmanNewChargeVO);
+        }
+        return response;
+    }
+
+    /**
+     * 获取系统配置
+     * @param configCd
+     * @return
+     */
+    @RequestMapping("/getBorrowConfig/{configCd}")
+    public BorrowConfigResponse getBorrowConfig(@PathVariable String configCd) {
+        BorrowConfigResponse response = new BorrowConfigResponse();
+        BorrowConfig borrowConfig = borrowService.getBorrowConfigByConfigCd(configCd);
+        if (borrowConfig != null) {
+            BorrowConfigVO borrowConfigVO = new BorrowConfigVO();
+            BeanUtils.copyProperties(borrowConfig, borrowConfigVO);
+            response.setResult(borrowConfigVO);
+        }
+        return response;
+    }
+
+    /**
+     * 借款表插入
+     * @param borrow
+     */
+    @RequestMapping("/insertBorrow")
+    public int insertBorrow(BorrowWithBLOBsVO borrow) {
+        BorrowWithBLOBs borrowWithBLOBs = new BorrowWithBLOBs();
+        if (borrow != null) {
+            BeanUtils.copyProperties(borrow, borrowWithBLOBs);
+            return borrowService.insertBorrow(borrowWithBLOBs);
+        }
+        return 0;
+    }
+
+    /**
+     * 个人信息
+     * @param borrowManinfoVO
+     * @return
+     */
+    @RequestMapping("/insertBorrowManinfo")
+    public int insertBorrowManinfo(BorrowManinfoVO borrowManinfoVO) {
+        BorrowManinfo borrowManinfo = new BorrowManinfo();
+        if (borrowManinfo != null) {
+            BeanUtils.copyProperties(borrowManinfoVO, borrowManinfo);
+            return borrowService.insertBorrowManinfo(borrowManinfo);
+        }
+        return 0;
     }
 }

@@ -1,19 +1,17 @@
 package com.hyjf.am.user.service.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.mapper.auto.SmsCodeMapper;
 import com.hyjf.am.user.dao.model.auto.SmsCode;
 import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.SmsService;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.MD5;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -55,41 +53,6 @@ public class SmsServiceImpl implements SmsService {
 	}
 
 	@Override
-	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus) {
-
-		SmsCodeExample example = new SmsCodeExample();
-		SmsCodeExample.Criteria cra = example.createCriteria();
-
-		Calendar can = Calendar.getInstance();
-		cra.andCreateTimeLessThanOrEqualTo(can.getTime());
-		can.add(Calendar.MINUTE, -15);
-		can.getTime();
-		cra.andCreateTimeGreaterThanOrEqualTo(can.getTime());
-
-		cra.andMobileEqualTo(mobile);
-		cra.andCheckcodeEqualTo(verificationCode);
-		List<Integer> list = new ArrayList<Integer>();
-		//短信验证码状态,新验证码
-		list.add(0);
-		list.add(status);
-		cra.andStatusIn(list);
-		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
-		if (codeList != null && codeList.size() > 0) {
-			for (SmsCode smsCode : codeList) {
-				if (smsCode.getCheckfor().equals(MD5.toMD5Code(mobile + verificationCode + verificationType + platform))) {
-					// 已验8或已读9
-					smsCode.setStatus(updateStatus);
-					smsCodeMapper.updateByPrimaryKey(smsCode);
-					return 1;
-				}
-			}
-			return 0;
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
 	public int saveSmsCode(String mobile, String verificationCode, String verificationType, Integer status, String platform) {
 		// 使之前的验证码无效
 		SmsCodeExample example = new SmsCodeExample();
@@ -120,4 +83,47 @@ public class SmsServiceImpl implements SmsService {
 		smsCode.setUserId(0);
 		return smsCodeMapper.insertSelective(smsCode);
 	}
+
+	/**
+	 * 检查短信验证码
+	 * @param mobile
+	 * @param verificationCode
+	 * @param verificationType
+	 * @param platform
+	 * @param searchStatus
+	 * @param updateStatus
+	 * @return
+	 */
+	@Override
+	public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+									 Integer searchStatus, Integer updateStatus) {
+		int time = (int) (System.currentTimeMillis()/1000);
+		// 15分钟有效 900
+		int timeAfter = time - 900;
+		SmsCodeExample example = new SmsCodeExample();
+		SmsCodeExample.Criteria cra = example.createCriteria();
+		cra.andPosttimeGreaterThanOrEqualTo(timeAfter);
+		cra.andPosttimeLessThanOrEqualTo(time);
+		cra.andMobileEqualTo(mobile);
+		cra.andCheckcodeEqualTo(verificationCode);
+		List<Integer> status = new ArrayList<Integer>();
+		status.add(CommonConstant.CKCODE_NEW);
+		status.add(searchStatus);
+		cra.andStatusIn(status);
+		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
+		if (codeList != null && codeList.size() > 0) {
+			for (SmsCode smsCode : codeList) {
+				if (smsCode.getCheckfor().equals(MD5.toMD5Code(mobile + verificationCode + verificationType + platform))) {
+					// 已验8或已读9
+					smsCode.setStatus(updateStatus);
+					smsCodeMapper.updateByPrimaryKey(smsCode);
+					return 1;
+				}
+			}
+			return 0;
+		} else {
+			return 0;
+		}
+	}
+
 }

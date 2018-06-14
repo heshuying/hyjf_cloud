@@ -5,7 +5,7 @@ package com.hyjf.cs.user.controller.app.autoplus;
 
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Map;
 

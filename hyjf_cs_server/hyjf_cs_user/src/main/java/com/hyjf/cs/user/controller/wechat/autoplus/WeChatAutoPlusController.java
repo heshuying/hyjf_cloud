@@ -5,7 +5,7 @@ package com.hyjf.cs.user.controller.wechat.autoplus;
 
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.cs.user.beans.BaseMapBean;
+import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;

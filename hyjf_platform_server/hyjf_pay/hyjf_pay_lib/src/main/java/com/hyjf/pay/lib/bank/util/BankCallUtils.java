@@ -10,19 +10,20 @@
  */
 package com.hyjf.pay.lib.bank.util;
 
+import java.io.Serializable;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.config.PaySystemConfig;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.io.Serializable;
-import java.util.Map;
 
 public class BankCallUtils implements Serializable {
 	private static Logger logger = LoggerFactory.getLogger(BankCallUtils.class);
@@ -45,6 +46,8 @@ public class BankCallUtils implements Serializable {
 	private static final String REQUEST_MAPPING_CALLAPIBG_FORQUERY = "/callApiBgForQuery.json";
 	
 	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+	
+	private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
 	/**
 	 * 调用接口(页面)
@@ -54,7 +57,6 @@ public class BankCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static ModelAndView callApi(BankCallBean bean) throws Exception {
-		String methodName = "callApi";
 		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		// 跳转页面
 		ModelAndView modelAndView = new ModelAndView(SEND_JSP);
@@ -90,7 +92,10 @@ public class BankCallUtils implements Serializable {
 				allParams.put("logBankDetailUrl", bean.getLogBankDetailUrl());
 			}
 			// 调用汇付接口
-			String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIPAGE, allParams);
+//			String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIPAGE, allParams);
+			String url = payurl + REQUEST_MAPPING_CALLAPIPAGE;
+			String result = restTemplate
+					 .postForEntity(url, allParams, String.class).getBody();
 			// 将返回字符串转换成Map
 			if (Validator.isNotNull(result)) {
 				@SuppressWarnings("unchecked")
@@ -114,8 +119,6 @@ public class BankCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static BankCallBean callApiBg(BankCallBean bean) {
-
-		String methodName = "callApiBg";
 		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		BankCallBean ret = null;
 		try {
@@ -154,7 +157,9 @@ public class BankCallUtils implements Serializable {
 			// 调用银行接口
 			String url = payurl + REQUEST_MAPPING_CALLAPIBG;
 			logger.info("调用银行接口url: {}", url);
-			String result = HttpDeal.post(url, allParams);
+//			String result = HttpDeal.post(url, allParams);
+			String result = restTemplate
+					 .postForEntity(url, allParams, String.class).getBody();
 			if (Validator.isNotNull(result)) {
 				// 将返回字符串转换成BankCallBean
 				ret = JSONObject.parseObject(result, BankCallBean.class);

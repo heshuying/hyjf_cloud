@@ -7,10 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.borrow.BorrowWithBLOBsVO;
 import com.hyjf.am.vo.borrow.HjhLabelVO;
-import com.hyjf.am.vo.borrow.HjhPlanAssetVO;
 import com.hyjf.am.vo.trade.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -22,21 +20,12 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.borrow.bean.assetpush.PushBean;
-import com.hyjf.cs.borrow.bean.assetpush.PushRequestBean;
-import com.hyjf.cs.borrow.bean.assetpush.PushResultBean;
-import com.hyjf.cs.borrow.client.ApiAssetClient;
-import com.hyjf.cs.borrow.client.AutoSendClient;
-import com.hyjf.cs.borrow.mq.AssetPushProducer;
-import com.hyjf.cs.borrow.mq.Producer;
-import com.hyjf.cs.borrow.service.ApiAssetPushService;
-import com.hyjf.cs.borrow.util.ErrorCodeConstant;
-import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.cs.trade.bean.assetpush.PushBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.client.ApiAssetClient;
-import com.hyjf.cs.trade.mq.AssetPushProducer;
+import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.mq.AutoSendProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.ApiAssetPushService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
@@ -71,7 +60,7 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
     private AutoSendClient autoSendClient;
 
     @Autowired
-    private AssetPushProducer assetPushProducer;
+    private AutoSendProducer autoSendProducer;
 
     @Override
     public void sendToMQ(HjhPlanAssetVO hjhPlanAsset) {
@@ -80,7 +69,7 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
-            assetPushProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, params));
+            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, params));
         } catch (MQException e) {
             _log.error("自动录标发送消息失败...", e);
         }
@@ -493,7 +482,7 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
         params.put("assetId", hjhPlanAssetVO.getAssetId());
         params.put("instCode", hjhPlanAssetVO.getInstCode());
         try {
-            assetPushProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_RECORD_TOPIC, params));
+            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_RECORD_TOPIC, params));
         } catch (MQException e) {
             e.printStackTrace();
             _log.error("自动备案送消息失败...", e);

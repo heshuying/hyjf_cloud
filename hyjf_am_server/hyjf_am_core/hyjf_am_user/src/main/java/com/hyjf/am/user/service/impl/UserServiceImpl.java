@@ -952,4 +952,18 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Override
+	public List<User> selectUserByUsername(String repayOrgName) {
+		// 根据垫付机构用户名检索垫付机构用户ID
+		UserExample usersExample = new UserExample();
+		UserExample.Criteria userCri = usersExample.createCriteria();
+		userCri.andUsernameEqualTo(repayOrgName);
+		userCri.andBankOpenAccountEqualTo(1);// 汇付已开户
+		List<User> ulist = this.usersMapper.selectByExample(usersExample);
+		if (!CollectionUtils.isEmpty(ulist)) {
+			return ulist;
+		}
+		return null;
+	}
+
 }

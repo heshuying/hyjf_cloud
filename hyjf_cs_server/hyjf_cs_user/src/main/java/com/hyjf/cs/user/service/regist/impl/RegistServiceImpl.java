@@ -20,6 +20,7 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -29,7 +30,6 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.CouponProducer;
-import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.service.regist.RegistService;
@@ -42,7 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.time.Instant;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -69,9 +68,6 @@ public class RegistServiceImpl implements RegistService{
     private SmsProducer smsProducer;
 
     @Autowired
-    private MailProducer mailProducer;
-
-    @Autowired
     SystemConfig systemConfig;
     @Value("${hyjf.activity.regist.tzj.id}")
     private String activityIdTzj;
@@ -87,10 +83,10 @@ public class RegistServiceImpl implements RegistService{
      * @throws ReturnMessageException
      */
     @Override
-    public UserVO register(RegisterVO registerVO, String ip)
+    public UserVO register(RegisterVO registerVO, String ip,int client)
             throws ReturnMessageException {
         // 1. 参数检查
-        this.registerCheckParam(registerVO);
+        this.registerCheckParam(client,registerVO);
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         BeanUtils.copyProperties(registerVO, registerUserRequest);
         registerUserRequest.setLoginIp(ip);
@@ -114,9 +110,9 @@ public class RegistServiceImpl implements RegistService{
      * @return
      */
     @Override
-    public UserVO apiRegister(@Valid RegisterVO registerVO, String ipAddr) {
+    public UserVO apiRegister(RegisterVO registerVO, String ipAddr, int client) {
         // 1. 参数检查
-        this.registerCheckParam(registerVO);
+        this.registerCheckParam(client,registerVO);
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         BeanUtils.copyProperties(registerVO, registerUserRequest);
         registerUserRequest.setLoginIp(ipAddr);
@@ -143,11 +139,30 @@ public class RegistServiceImpl implements RegistService{
      *
      * @param registerVO
      */
-    private void registerCheckParam(RegisterVO registerVO) {
-        if (registerVO == null) {
-            throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
+    private void registerCheckParam(int client,RegisterVO registerVO) {
+        if(ClientConstants.API_CLIENT == client){
+            // 机构编号
+            String instCode = registerVO.getInstCode();
+            // 注册平台
+            String platform = registerVO.getPlatform();
+            // 注册渠道
+            String utmId = registerVO.getUtmId();
+            // 机构编号
+            if (StringUtils.isEmpty(instCode)) {
+                throw new ReturnMessageException(RegisterError.INSTCODE_ERROR);
+            }
+            // 注册平台
+            if (StringUtils.isEmpty(platform)) {
+                throw new ReturnMessageException(RegisterError.PLATEFORM_ERROR);
+            }
+            // 推广渠道
+            if (StringUtils.isEmpty(utmId)) {
+                throw new ReturnMessageException(RegisterError.UTMID_ERROR);
+            }
+            if (registerVO == null) {
+                throw new ReturnMessageException(RegisterError.REGISTER_ERROR);
+            }
         }
-
         String mobile = registerVO.getMobilephone();
         if (StringUtils.isEmpty(mobile)) {
             throw new ReturnMessageException(RegisterError.MOBILE_IS_NOT_NULL_ERROR);
@@ -203,7 +218,7 @@ public class RegistServiceImpl implements RegistService{
     }
 
     /**
-     * 注册后处理: 1. 登录 2. 判断投之家着陆页送券 3. 注册送188红包
+     * 注册后处理: 1. 登录 2. 注册送188红包
      *
      * @param userVO
      */
@@ -217,31 +232,7 @@ public class RegistServiceImpl implements RegistService{
         webViewUser.setToken(token);
         userVO.setToken(token);
         RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60);
-
-        // 2. 投之家用户注册送券活动
-        // 活动有效期校验
-        if (!checkActivityIfAvailable(activityIdTzj)) {
-            // 投之家用户额外发两张加息券
-            if ("touzhijia".equals(userVO.getReferrerUserName())) {
-                // 发放两张加息券
-                JSONObject json = new JSONObject();
-                json.put("userId", userId);
-                json.put("couponSource", 2);
-                json.put("couponCode", "PJ2958703");
-                json.put("sendCount", 2);
-                json.put("activityId", Integer.parseInt(activityIdTzj));
-                json.put("remark", "投之家用户注册送加息券");
-                json.put("sendFlg", 0);
-                try {
-                    couponProducer.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC,
-                            MQConstant.TZJ_REGISTER_INTEREST_TAG, JSON.toJSONBytes(json)));
-                } catch (MQException e) {
-                    logger.error("投之家用户注册送券失败....userId is :" + userId, e);
-                }
-            }
-        }
-
-        // 3. 注册送188元新手红包
+        // 2. 注册送188元新手红包
         if (!checkActivityIfAvailable(activityId)) {
             try {
                 JSONObject params = new JSONObject();
@@ -310,4 +301,22 @@ public class RegistServiceImpl implements RegistService{
 
         return true;
     }
+
+    /**
+     * 检查短信验证码searchStatus:查询的短信状态,updateStatus:查询结束后的短信状态
+     * @param mobile
+     * @param verificationCode
+     * @param verificationType
+     * @param platform
+     * @param searchStatus
+     * @param updateStatus
+     * @return
+     */
+    @Override
+    public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+                                     Integer searchStatus, Integer updateStatus) {
+        int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus);
+        return cnt;
+    }
+
 }
