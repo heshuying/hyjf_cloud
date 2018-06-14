@@ -15,6 +15,12 @@ import javax.validation.Valid;
  */
 public interface RegistService {
 
+
+
+    void registerCheckParam(int client, RegisterVO registerVO);
+
+    boolean existUser(String mobile);
+
     /**
      * 注册
      * @param registerVO
@@ -22,10 +28,8 @@ public interface RegistService {
      * @return
      * @throws ReturnMessageException
      */
-    UserVO register(RegisterVO registerVO, String ip, int client)
+    UserVO register(RegisterVO registerVO, String ip)
             throws ReturnMessageException;
-
-    boolean existUser(String mobile);
 
     /**
      * api端注册
@@ -33,7 +37,7 @@ public interface RegistService {
      * @param ipAddr
      * @return
      */
-    UserVO apiRegister(RegisterVO registerVO, String ipAddr, int client);
+    UserVO apiRegister(RegisterVO registerVO, String ipAddr);
 
     /**
      * 检查活动是否有效
@@ -43,4 +47,6 @@ public interface RegistService {
     boolean checkActivityIfAvailable(String activityId);
 
     int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+
+    int countUserByRecommendName(String recommend);
 }

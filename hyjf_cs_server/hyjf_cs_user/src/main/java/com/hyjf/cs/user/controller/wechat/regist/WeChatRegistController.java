@@ -5,11 +5,11 @@ package com.hyjf.cs.user.controller.wechat.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -78,14 +78,15 @@ public class WeChatRegistController {
         registerVO.setPassword(pwd);
         registerVO.setReffer(reffer);
         registerVO.setSmsCode(smsCode);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request), ClientConstants.WECHAT_CLIENT);
+        registService.registerCheckParam(ClientConstants.WECHAT_CLIENT,registerVO);
+        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
 
         if (userVO != null) {
             logger.info("register success, userId is :{}", userVO.getUserId());
         } else {
             logger.error("register failed...");
             resultBean.setStatus("1");
-            resultBean.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            resultBean.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
         }
         return resultBean;
     }

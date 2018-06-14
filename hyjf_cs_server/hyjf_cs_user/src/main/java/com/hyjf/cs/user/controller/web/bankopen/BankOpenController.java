@@ -198,7 +198,7 @@ public class BankOpenController {
 	}
 	
 
-    public ModelAndView getCallbankMV(@RequestBody @Valid OpenAccountPageBean openBean) {
+    public ModelAndView getCallbankMV(OpenAccountPageBean openBean) {
         ModelAndView mv = new ModelAndView();
         // 根据身份证号码获取性别
         String gender = "";

@@ -7,12 +7,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.SmsCodeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.RandomValidateCode;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -57,14 +57,16 @@ public class WebRegistController {
     public ApiResult<UserVO> register(@RequestBody RegisterVO registerVO, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request), ClientConstants.WEB_CLIENT);
+        // 1. 参数检查
+        registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerVO);
+        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
             logger.info("Web端用户注册成功, userId is :{}", userVO.getUserId());
             result.setResult(userVO);
         } else {
             logger.error("Web端用户注册失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            result.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
         }
         return result;
     }
@@ -96,7 +98,6 @@ public class WebRegistController {
         } else if (!ValidatorCheckUtil.validateMobile(info, null, null, mobile, 11, false)) {
             return false;
         }
-
         // 短信验证码
         String code = request.getVerificationCode();
         if (!ValidatorCheckUtil.validateRequired(info, null, null, code)) {
@@ -122,11 +123,11 @@ public class WebRegistController {
     @ResponseBody
     @ApiOperation(value = "检查手机号是否已存在", notes = "检查手机号是否已存在")
     @PostMapping(value = "/checkPhone", produces = "application/json; charset=utf-8")
-    public boolean checkPhone(@RequestBody String mobile) {
-        logger.info("Web端检查手机号是否已存在, mobile is :{}",mobile);
-        if (mobile != null && !"".equals(mobile.trim())) {
-            if (Validator.isMobile(mobile)) {
-                if (registService.existUser(mobile)) {
+    public boolean checkPhone(@RequestBody Map<String,String> param) {
+        logger.info("Web端检查手机号是否已存在, mobile is :{}",JSONObject.toJSONString(param));
+        if (param.get("mobile") != null && !"".equals(param.get("mobile").trim())) {
+            if (Validator.isMobile(param.get("mobile"))) {
+                if (registService.existUser(param.get("mobile"))) {
                     // 存在用户,返回false
                     return false;
                 } else {
@@ -150,7 +151,7 @@ public class WebRegistController {
      */
     @ResponseBody
     @ApiOperation(value = "检查手机号码或用户名唯一性", notes = "检查手机号码或用户名唯一性")
-    @ApiImplicitParam(name = "param",value = "{\"name\": \"string\",\"param\": \"string\"}", dataType = "Map")
+    @ApiImplicitParam(name = "param",value = "{name:string,param:string}", dataType = "Map")
     @PostMapping(value = "/checkaction", produces = "application/json; charset=utf-8")
     public boolean checkAction(@RequestBody Map<String,String> param) {
         logger.info("Web端检查手机号码或用户名唯一性, param is :{}",JSONObject.toJSONString(param));
@@ -180,6 +181,24 @@ public class WebRegistController {
     public boolean checkcaptcha(HttpServletRequest request) {
         RandomValidateCode randomValidateCode = new RandomValidateCode();
         return randomValidateCode.checkRandomCode(request, request.getParameter("newRegVerifyCode"));
+    }
+
+    /**
+     * 判断推荐人是否存在 如果存在返回true，如果不存在返回false;
+     *
+     * @param param
+     * @param
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "checkRecommend", produces = "application/json; charset=utf-8")
+    public boolean checkRecommend(@RequestBody Map<String,String> param) {
+        logger.info("Web端判断推荐人是否存在, param is :{}",JSONObject.toJSONString(param));
+        String recommend = param.get("newRegReferree");
+        if (registService.countUserByRecommendName(recommend) <= 0) {
+            return false;
+        }
+        return true;
     }
 
 }
