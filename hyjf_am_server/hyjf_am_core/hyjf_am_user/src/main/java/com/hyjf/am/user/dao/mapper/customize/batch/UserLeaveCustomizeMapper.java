@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * @author wangjun
- * @version UserEntryCustomizeMapper, v0.1 2018/6/12 16:06
+ * @version UserLeaveCustomizeMapper, v0.1 2018/6/12 16:06
  */
 public interface UserLeaveCustomizeMapper {
 

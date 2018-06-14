@@ -93,7 +93,7 @@ public class BankCallApiImpl implements BankCallApi {
         }
         try {
             // 发送请求
-            String HTTP_URL = _systemConfig.getBankPageUrl();
+            String HTTP_URL = _systemConfig.getBankOnlineUrl();
             result = HttpDealBank.post(HTTP_URL, bean.getAllParams());
             log.debug( "[返回结果:" + result + "]");
         } catch (Exception e) {

@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -61,7 +62,7 @@ public class BankCallController extends BaseController {
      */
     @RequestMapping(value = "callApiPage.json")
     @ResponseBody
-    public Map<String,Object> callPageApi(@ModelAttribute BankCallBean bean) throws Exception {
+    public Map<String,Object> callPageApi(@RequestBody BankCallBean bean) throws Exception {
 
         logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         Map<String,Object> resultMap = new HashMap<String,Object>();
@@ -461,7 +462,7 @@ public class BankCallController extends BaseController {
      */
     @ResponseBody
     @PostMapping(value = "callApiBg.json")
-    public String callApiBg(HttpServletRequest request, @ModelAttribute BankCallBean bean) throws Exception {
+    public String callApiBg(HttpServletRequest request, @RequestBody BankCallBean bean) throws Exception {
         logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         String ret = "";
         String logOrderId = bean.getLogOrderId();

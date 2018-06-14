@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.controller.app.login;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
@@ -39,20 +41,19 @@ public class AppLoginController {
 
     /**
      * 登录
-     * @param key
-     * @param username
-     * @param password
-     * @param request
+     * @param user
+     * * @param request
      * @return
      */
     @ApiOperation(value = "登录", notes = "登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> login(@RequestHeader String key, @RequestParam String username, @RequestParam String password,
+    public ApiResult<UserVO> login(@RequestHeader String key,@RequestBody LoginRequestVO user,
                                    HttpServletRequest request) {
+        logger.info("App端登录接口, user is :{}", JSONObject.toJSONString(user));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
         // 账户密码解密
-        String loginUserName = DES.decodeValue(key, username);
-        String loginPassword = DES.decodeValue(key, password);
+        String loginUserName = DES.decodeValue(key, user.getUsername());
+        String loginPassword = DES.decodeValue(key, user.getPassword());
 
         if (Validator.isNull(loginUserName) || Validator.isNull(loginPassword)||!CommonUtils.isMobile(loginUserName)) {
             result.setStatus(ApiResult.STATUS_FAIL);

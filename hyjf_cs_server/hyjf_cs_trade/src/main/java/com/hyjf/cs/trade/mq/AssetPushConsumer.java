@@ -31,7 +31,7 @@ import java.util.List;
 @Component
 public class AssetPushConsumer extends Consumer {
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetPushConsumer.class);
+    private static final Logger _log = LoggerFactory.getLogger(AssetPushConsumer.class);
 
     @Autowired
     private AutoSendMessageHandle autoSendMessageHandle;
@@ -50,19 +50,43 @@ public class AssetPushConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
         defaultMQPushConsumer.start();
-        logger.info("====assetPush consumer=====");
+        _log.info("====assetPush consumer=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {
 
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
+
+            // --> 消息检查
             MessageExt msg = list.get(0);
-            HjhPlanAssetVO mqHjhPlanAsset = JSONObject.parseObject(msg.getBody(), HjhPlanAssetVO.class);
-            if (mqHjhPlanAsset != null) {
-                autoSendMessageHandle.sendMessage(mqHjhPlanAsset.getAssetId(), mqHjhPlanAsset.getInstCode());
+            if(msg == null || msg.getBody() == null){
+                _log.error("【自动录标任务】接收到的消息为null");
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
-            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+
+            // --> 消息转换
+            String msgBody = new String(msg.getBody());
+            _log.info("【自动录标请求】接收到的消息：" + msgBody);
+
+            HjhPlanAssetVO mqHjhPlanAsset;
+            try {
+                mqHjhPlanAsset = JSONObject.parseObject(msgBody, HjhPlanAssetVO.class);
+                if(mqHjhPlanAsset == null || mqHjhPlanAsset.getAssetId() == null){
+                    _log.info("解析为空：" + msgBody);
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+            try {
+                autoSendMessageHandle.sendMessage(mqHjhPlanAsset.getAssetId(), mqHjhPlanAsset.getInstCode());
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            } catch (Exception e){
+                e.printStackTrace();
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
         }
     }
 }

@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.controller.web.login;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
@@ -36,7 +38,7 @@ public class WebLoginController {
 
 
     /**
-     * @param loginPassword
+     * @param user
      * @param request
      * @Author: zhangqingqing
      * @Desc :登录
@@ -46,17 +48,18 @@ public class WebLoginController {
      */
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> login(@RequestParam String loginUserName,
-                                   @RequestParam String loginPassword,
+    public ApiResult<UserVO> login(@RequestBody LoginRequestVO user,
                                    HttpServletRequest request) {
-        logger.info("login start, loginUserName is :{}", loginUserName);
+        logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
+        String loginUserName = user.getUsername();
+        String loginPassword = user.getPassword();
         ApiResult<UserVO> result = new ApiResult<UserVO>();
         UserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
-            logger.info("login success, userId is :{}", userVO.getUserId());
+            logger.info("web端登录成功 userId is :{}", userVO.getUserId());
             result.setResult(userVO);
         } else {
-            logger.error("login failed...");
+            logger.error("web端登录失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
         }
