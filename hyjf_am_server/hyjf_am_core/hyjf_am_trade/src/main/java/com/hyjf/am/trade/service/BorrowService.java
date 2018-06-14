@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
 import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
@@ -36,4 +37,11 @@ public interface BorrowService {
     int insertBorrow(BorrowWithBLOBs borrow);
 
     int insertBorrowManinfo(BorrowManinfo borrowManinfo);
+
+    /**
+     * 更新相应的标的状态为备案中
+     * @param request
+     * @return
+     */
+    int updateBorrowRegist(BorrowRegistRequest request);
 }

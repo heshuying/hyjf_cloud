@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.BorrowConfigResponse;
 import com.hyjf.am.response.trade.BorrowFinmanNewChargeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
@@ -118,5 +119,10 @@ public class BorrowController {
             return borrowService.insertBorrowManinfo(borrowManinfo);
         }
         return 0;
+    }
+
+    @RequestMapping("/updateBorrowRegist")
+    public int updateBorrowRegist(@RequestBody BorrowRegistRequest request) {
+        return borrowService.updateBorrowRegist(request);
     }
 }
