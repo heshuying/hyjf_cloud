@@ -93,6 +93,7 @@
             htb.borrow_apr,
             htb.borrow_period,
             htb.account AS borrow_account,
+            TRUNCATE((htb.borrow_account_yes/htb.account)*100,2) AS borrow_schedule,
             CASE WHEN htb.`status` = 1 AND htb.verify_status = 3 THEN '10'
             WHEN htb.`status` = 2
             AND (htb.verify_time + (hbi.borrow_valid_time * 24 * 60 * 60) > UNIX_TIMESTAMP(NOW())) THEN
