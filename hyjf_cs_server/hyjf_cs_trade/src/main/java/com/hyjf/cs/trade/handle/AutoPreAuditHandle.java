@@ -3,8 +3,15 @@
  */
 package com.hyjf.cs.trade.handle;
 
+import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.bean.MQBorrow;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.service.AutoPreAuditService;
+import com.hyjf.cs.trade.service.AutoRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +33,14 @@ public class AutoPreAuditHandle {
     @Autowired
     private ApiAssetClient apiAssetClient;
 
+    @Autowired
+    private AutoRecordService autoRecordService;
+
+    @Autowired
+    private AutoPreAuditService autoPreAuditService;
+
     public void sendMessage(String assetId, String instCode) {
-       /* // 资产自动初审
+        // 资产自动初审
         _log.info(assetId+" 开始自动初审 "+ instCode);
         HjhPlanAssetVO hjhPlanAssetVO = this.autoSendClient.selectPlanAsset(assetId, instCode);
         if(hjhPlanAssetVO == null){
@@ -52,16 +65,16 @@ public class AutoPreAuditHandle {
 
         //判断该资产是否可以自动初审，是否关联计划
         HjhAssetBorrowTypeVO hjhAssetBorrowType = this.apiAssetClient.selectAssetBorrowType(hjhPlanAssetVO.getInstCode(), hjhPlanAssetVO.getAssetType());
-        boolean flag = this.autoPreAuditService.updateRecordBorrow(hjhPlanAssetVO,hjhAssetBorrowType);
+        boolean flag = this.autoRecordService.updateRecordBorrow(hjhPlanAssetVO,hjhAssetBorrowType);
         if (!flag) {
             _log.error("自动初审失败！" + "[资产编号：" + hjhPlanAssetVO.getAssetId() + "]");
         }else{
             // 成功后到关联计划队列
             MQBorrow mqBorrow = new MQBorrow();
             mqBorrow.setBorrowNid(hjhPlanAssetVO.getBorrowNid());
-            this.autoPreAuditService.sendToMQ(mqBorrow,  RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE);
-        }*/
+            this.autoPreAuditService.sendToMQ(mqBorrow,  MQConstant.HYJF_BORROW_ISSUE_GROUP);
+        }
 
-//        _log.info(hjhPlanAssetVO.getAssetId()+" 结束自动初审");
+        _log.info(hjhPlanAssetVO.getAssetId()+" 结束自动初审");
     }
 }
