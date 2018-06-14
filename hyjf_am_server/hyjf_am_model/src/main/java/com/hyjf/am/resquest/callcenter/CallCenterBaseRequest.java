@@ -9,10 +9,14 @@ import java.util.Date;
 
 /**
  * @author wangjun
- * @version CallCenterRepaymentRequest, v0.1 2018/6/11 17:52
+ * @version CallCenterBaseRequest, v0.1 2018/6/11 17:52
  */
-public class CallCenterRepaymentRequest extends BaseVO {
+public class CallCenterBaseRequest extends BaseVO {
 	private Integer userId;
+
+	private String userName;
+
+	private String mobile;
 
     private Integer limitStart;
 
@@ -24,6 +28,22 @@ public class CallCenterRepaymentRequest extends BaseVO {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public Integer getLimitStart() {

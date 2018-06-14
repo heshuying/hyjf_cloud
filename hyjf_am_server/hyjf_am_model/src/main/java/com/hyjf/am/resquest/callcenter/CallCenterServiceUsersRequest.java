@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * @author wangjun
- * @version CallCenterRepaymentRequest, v0.1 2018/6/13 11:01
+ * @version CallCenterServiceUsersRequest, v0.1 2018/6/13 11:01
  */
 public class CallCenterServiceUsersRequest extends BaseVO  {
 	private List<CallCenterServiceUsersVO> callCenterServiceUsersVOList;
