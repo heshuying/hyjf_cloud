@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResultBean<T> implements Serializable {
+public class BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String SUCCESS = "0";
 	public static final String ERROR = "-1";
@@ -29,22 +29,22 @@ public class ResultBean<T> implements Serializable {
 	private String status = SUCCESS;
 	private T data;
 
-	public ResultBean() {
+	public BaseResult() {
 		super();
 	}
 
-	public ResultBean(T data) {
+	public BaseResult(T data) {
 		super();
 		this.data = data;
 	}
 
-	public ResultBean(Throwable e) {
+	public BaseResult(Throwable e) {
 		super();
 		this.status = ERROR;
 		this.statusDesc = e.toString();
 	}
 
-	public ResultBean(String status, String statusDesc) {
+	public BaseResult(String status, String statusDesc) {
 		super();
 		this.status = status;
 		this.statusDesc = statusDesc;

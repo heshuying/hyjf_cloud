@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResultApiBean<T> extends ResultBean<T> implements Serializable {
+public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 5413541226545232L;
 	public static final String SUCCESS = "000";
 	
@@ -30,26 +30,26 @@ public class ResultApiBean<T> extends ResultBean<T> implements Serializable {
 
 	{
 		// 成功码变更 "0" → "000"
-		if (super.getStatus() == ResultBean.SUCCESS) {
-			super.setStatus(ResultApiBean.SUCCESS);
+		if (super.getStatus() == BaseResult.SUCCESS) {
+			super.setStatus(ApiResult.SUCCESS);
 		}
 		// 返回值加签
 		this.chkValue = ApiSignUtil.encryptByRSA(super.getStatus());
 	}
 
-	public ResultApiBean() {
+	public ApiResult() {
 		super();
 	}
 
-	public ResultApiBean(T data) {
+	public ApiResult(T data) {
 		super(data);
 	}
 
-	public ResultApiBean(Throwable e) {
+	public ApiResult(Throwable e) {
 		super(e);
 	}
 
-	public ResultApiBean(String status, String statusDesc) {
+	public ApiResult(String status, String statusDesc) {
 		super(status,statusDesc);
 	}
 
