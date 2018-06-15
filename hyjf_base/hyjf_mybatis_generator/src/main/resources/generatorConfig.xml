@@ -863,5 +863,52 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        <table tableName="ht_borrow_apicron" domainObjectName="BorrowApicron">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="web_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="api_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="credit_repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="extra_yield_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="extra_yield_repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_increase_interest_invest" domainObjectName="IncreaseInterestInvest">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="client" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="invest_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_increase_interest_loan" domainObjectName="IncreaseInterestLoan">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="remain_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_increase_interest_loan_detail" domainObjectName="IncreaseInterestLoanDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_increase_interest_repay" domainObjectName="IncreaseInterestRepay">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="remain_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="already_repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_increase_interest_repay_detail" domainObjectName="IncreaseInterestRepayDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_borrow_style" domainObjectName="BorrowStyle">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>
