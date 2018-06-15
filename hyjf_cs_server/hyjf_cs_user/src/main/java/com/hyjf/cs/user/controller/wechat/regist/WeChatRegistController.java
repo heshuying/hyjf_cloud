@@ -52,7 +52,7 @@ public class WeChatRegistController {
      * @param request
      * @param response
      * @Date: 16:34 2018/5/30
-     * @Return: com.hyjf.cs.user.result.BaseResultBean
+     * @Return: BaseResultBean
      */
 
     @ApiOperation(value = "用户注册", notes = "用户注册")

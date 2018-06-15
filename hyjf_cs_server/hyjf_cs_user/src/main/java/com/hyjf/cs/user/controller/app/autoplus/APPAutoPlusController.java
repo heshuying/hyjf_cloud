@@ -120,7 +120,7 @@ public class APPAutoPlusController {
      * @param request
      * @param bean
      * @Date: 16:45 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return: ApiResult
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
@@ -138,7 +138,7 @@ public class APPAutoPlusController {
      * @Desc :用户授权自动投资异步回调
      * @Param: * @param bean
      * @Date: 16:46 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody

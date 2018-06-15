@@ -27,12 +27,14 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
+import com.hyjf.cs.user.service.BaseServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.vo.RegisterVO;
 import org.apache.commons.lang3.StringUtils;
@@ -55,7 +57,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * @version RegistServiceImpl, v0.1 2018/6/11 15:10
  */
 @Service
-public class RegistServiceImpl implements RegistService{
+public class RegistServiceImpl extends BaseServiceImpl implements RegistService{
 
     private static final Logger logger = LoggerFactory.getLogger(RegistServiceImpl.class);
 
@@ -114,7 +116,8 @@ public class RegistServiceImpl implements RegistService{
         HjhInstConfigVO instConfig = this.amUserClient.selectInstConfigByInstCode(registerVO.getInstCode());
         // 机构编号
         CheckUtil.check(instConfig != null, MsgEnum.INSTCODE_ERROR);
-        // TODO: 2018/5/28 验签
+        // 验签
+        CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER),MsgEnum.STATUS_CE000002);
         registerUserRequest.setInstCode(instConfig.getInstType());
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);

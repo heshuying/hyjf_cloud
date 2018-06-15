@@ -103,7 +103,7 @@ public class AutoStateQueryServiceImpl extends BaseServiceImpl implements AutoSt
      * @Param: * @param resultBean
      * @param retBean
      * @Date: 18:31 2018/6/12
-     * @Return: com.hyjf.cs.user.bean.AutoStateQueryResultBean
+     * @Return: AutoStateQueryResultBean
      */
     private AutoStateQueryResultBean getResultJosn(AutoStateQueryResultBean resultBean, BankCallBean retBean) {
         resultBean.setAccountId(retBean.getAccountId());

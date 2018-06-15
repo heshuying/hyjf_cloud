@@ -43,7 +43,7 @@ public class BorrowController {
      * @Desc :根据机构编号检索机构信息
      * @Param: * @param instCode
      * @Date: 9:00 2018/5/31
-     * @Return: com.hyjf.am.response.user.HjhInstConfigResponse
+     * @Return: HjhInstConfigResponse
      */
     @ApiOperation(value = " 根据机构编号检索机构信息")
     @GetMapping("/selectInstConfigByInstCode/{instCode}")

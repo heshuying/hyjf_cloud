@@ -48,10 +48,10 @@ public class WebSafeController {
 
     /**
      * @Author: zhangqingqing
-     * @Desc :账户设置查询
+     * @Desc : 账户设置查询
      * @Param: * @param token
      * @Date: 16:43 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
     @PostMapping(value = "accountSet")
@@ -123,44 +123,6 @@ public class WebSafeController {
         return result;
     }
 
-    /**
-     * 用户手机号修改基础信息获取
-     * @param token
-     * @param request
-     * @return
-     */
-    @PostMapping("/mobileModifyInit")
-    public ApiResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        ApiResult<MobileModifyResultBean> result = new ApiResult<MobileModifyResultBean>();
-
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        MobileModifyResultBean resultBean = safeService.queryForMobileModify(user.getUserId());
-        result.setResult(resultBean);
-
-        return result;
-    }
-
-    /**
-     * 用户手机号码修改
-     */
-    @ApiOperation(value = "手机号码修改", notes = "手机号码修改")
-    @ApiImplicitParam(name = "param",value = "{newMobile: string,smsCode: string}", dataType = "Map")
-    @PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
-        logger.info("用户手机号码修改, paraMap :{}",paraMap);
-        ApiResult<UserVO> result = new ApiResult<UserVO>();
-
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        boolean checkRet = safeService.checkForMobileModify(paraMap.get("newMobile"), paraMap.get("smsCode"));
-        if(checkRet) {
-            UserVO userVO = new UserVO();
-            userVO.setUserId(user.getUserId());
-            userVO.setMobile(paraMap.get("newMobile"));
-            safeService.updateUserByUserId(userVO);
-        }
-
-        return result;
-    }
 
     /**
      * 发送激活邮件
@@ -229,28 +191,8 @@ public class WebSafeController {
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc("紧急联系人保存失败");
         }
-
         return result;
     }
 
-    /**
-     * @Author: zhangqingqing
-     * @Desc : 判断是否开户
-     * @Param: * @param token
-     * @Date: 11:11 2018/6/14
-     * @Return: boolean
-     */
-    @ApiOperation(value = "判断是否开户", notes = "判断是否开户")
-    @PostMapping(value = "/checkOpenAccount", produces = "application/json; charset=utf-8")
-    @ApiImplicitParam(name = "param",value = "{userId:string}", dataType = "Map")
-    public boolean checkOpenAccount(@RequestHeader(value = "token", required = true) String token){
-        logger.info("Web端判断是否开户");
-        UserVO user = safeService.getUsers(token);
-        if(null == user){
-            return false;
-        }else {
-            return 1==user.getOpenAccount()?true:false;
-        }
-    }
 
 }

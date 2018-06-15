@@ -79,15 +79,6 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
         return amUserClient.updatePassWd(userId, oldPW, newPW);
     }
 
-    /**
-     * 更新用户信息
-     * @param userVO
-     * @return
-     */
-    @Override
-    public int updateUserByUserId(UserVO userVO) {
-        return amUserClient.updateUserById(userVO);
-    }
 
     /**
      * 获取用户对象
@@ -105,7 +96,7 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
      * @Desc :账户设置信息查询
      * @Param: * @param token
      * @Date: 16:47 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @Override
     public Map<String,Object> safeInit(WebViewUser webViewUser) {
@@ -369,37 +360,7 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
         return true;
     }
 
-    /**
-     * 更换手机号条件校验
-     * @param newMobile
-     * @param smsCode
-     */
-    @Override
-    public boolean checkForMobileModify(String newMobile, String smsCode) {
-        String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
-        int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt > 0, MsgEnum.SMSCODE_INVALID_ERROR);
-        return true;
-    }
 
-    /**
-     * 用户手机号修改信息查询
-     * @param userId
-     * @return
-     */
-    @Override
-    public MobileModifyResultBean queryForMobileModify(Integer userId) {
-        MobileModifyResultBean result = new MobileModifyResultBean();
-        UserVO user = amUserClient.findUserById(userId);
-        if(user != null && StringUtils.isNotBlank(user.getMobile())) {
-            String hideMobile = user.getMobile().substring(0,user.getMobile().length()-(user.getMobile().substring(3)).length())+"****"+user.getMobile().substring(7);
-            result.setMobile(user.getMobile());
-            result.setHideMobile(hideMobile);
-        }
-
-        return result;
-    }
 
 
     /**

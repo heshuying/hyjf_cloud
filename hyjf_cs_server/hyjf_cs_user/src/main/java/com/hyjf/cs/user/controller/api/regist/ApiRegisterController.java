@@ -42,7 +42,7 @@ public class ApiRegisterController {
      * @Desc :注册
      * @Param: * @param registerVO
      * @Date: 16:44 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<com.hyjf.am.vo.user.UserVO>
+     * @Return
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")

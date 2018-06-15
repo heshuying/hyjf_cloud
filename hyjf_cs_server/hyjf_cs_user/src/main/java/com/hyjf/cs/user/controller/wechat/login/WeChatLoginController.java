@@ -40,7 +40,7 @@ public class WeChatLoginController {
      * @Param: * @param request
      * @param user
      * @Date: 16:35 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<com.hyjf.am.vo.user.UserVO>
+     * @Return:
      */
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
@@ -73,7 +73,7 @@ public class WeChatLoginController {
      * @Desc : 退出登录
      * @Param: * @param token
      * @Date: 16:29 2018/6/5
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return: ApiResult
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")

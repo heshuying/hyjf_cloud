@@ -53,7 +53,7 @@ public class WebAutoPlusController {
      * @Param: * @param token
      * @param request
      * @Date: 16:43 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping("/userAuthInves")
@@ -77,7 +77,7 @@ public class WebAutoPlusController {
      * @Param: * @param token
      * @param request
      * @Date: 16:42 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
     @PostMapping("/creditUserAuthInves")
@@ -102,7 +102,7 @@ public class WebAutoPlusController {
      * @param request
      * @param bean
      * @Date: 16:42 2018/5/30
-     * @Return: java.util.Map<java.lang.String,java.lang.String>
+     * @Return: Map
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
@@ -120,7 +120,7 @@ public class WebAutoPlusController {
      * @param request
      * @param bean
      * @Date: 16:42 2018/5/30
-     * @Return: java.util.Map<java.lang.String,java.lang.String>
+     * @Return: Map
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
     @PostMapping(value = "/credituserAuthInvesReturn", produces = "application/json; charset=utf-8")
@@ -150,7 +150,7 @@ public class WebAutoPlusController {
      * @Desc :用户授权自动债转异步回调
      * @Param: * @param bean
      * @Date: 16:43 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping(value = "/credituserAuthInvesBgreturn", produces = "application/json; charset=utf-8")
