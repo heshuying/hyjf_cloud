@@ -56,7 +56,7 @@ public class ProjectListController {
     public ProjectListResponse getHomePageProjecBorrowtList(@RequestBody  ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
 
-        Page page = Page.initPage(request.getPageNum(),request.getPageSize());
+        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
         int count = projectListService.countHomePageProjectList(request,page);
         if(count > 0){
             List<WebProjectListCustomize> list = projectListService.getHomePageProjectList(request,page);
