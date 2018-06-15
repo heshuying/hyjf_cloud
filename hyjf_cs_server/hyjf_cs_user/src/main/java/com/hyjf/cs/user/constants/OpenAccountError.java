@@ -24,6 +24,7 @@ public enum OpenAccountError implements ErrorCode {
 	MOBILE_FORMAT_ERROR("1", "手机号格式错误"),
 	MOBILE_USED_ERROR("1", "手机号码重复"),
 	MOBILE_ERROR("1", "手机号码输入错误"),
+	OPEN_ACCOUNTED_ERROR("1", "已开户")
 
 	;
 

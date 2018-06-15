@@ -233,4 +233,9 @@ public class ClientConstants implements Serializable {
 	 */
 	public static final String TXCODE_CREDIT_AUTH_QUERY = "creditAuthQuery";
 
+	//----------------回调端地址前缀
+	public static final String CLIENT_HEADER_PC = "web";
+	public static final String CLIENT_HEADER_APP = "app";
+	public static final String CLIENT_HEADER_API = "api";
+	public static final String CLIENT_HEADER_WX = "wechat";
 }

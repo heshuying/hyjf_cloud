@@ -27,7 +27,7 @@ public interface BankOpenService extends BaseService {
 	int updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name,
 			String idno, String cardNo);
 
-    AppResult<String> checkRequestParam(UserVO user, BankOpenVO bankOpenVO);
+	void checkRequestParam(UserVO user, BankOpenVO bankOpenVO);
 
 	ModelAndView getOpenAccountMV(OpenAccountPageBean openBean);
 

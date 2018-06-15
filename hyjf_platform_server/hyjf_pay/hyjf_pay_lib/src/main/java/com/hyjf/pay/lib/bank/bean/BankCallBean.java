@@ -2,8 +2,12 @@ package com.hyjf.pay.lib.bank.bean;
 
 import java.io.Serializable;
 
+import com.hyjf.common.spring.SpringUtils;
+import java.io.Serializable;
+
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 
 public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
@@ -129,11 +133,9 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	}
 
 	private void setCallCommon(Integer userId, String txCode, Integer client) {
-		//todo
-		//String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-		String bankCode ="";
-		//String bankInstCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
-		String bankInstCode = "";
+		PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+		String bankCode = paySystemConfig.getBankCode();
+		String bankInstCode = paySystemConfig.getBankInstcode();
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		String txDate = GetOrderIdUtils.getTxDate();
 		String txTime = GetOrderIdUtils.getTxTime();
