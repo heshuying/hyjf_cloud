@@ -8,7 +8,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -65,7 +64,7 @@ public class WeChatBankOpenController {
         } else {
             logger.error("openAccount userInfo failed...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            result.setStatusDesc(OpenAccountError.SYSTEM_ERROR.getMessage());
         }
         return result;
     }
@@ -106,25 +105,6 @@ public class WeChatBankOpenController {
     }
 
     /**
-     * 微信开户同步跳转地址
-     *
-     * @param request
-     * @return
-     */
-    @ApiOperation(value = "微信端用户同步回调", notes = "微信端用户开户")
-    @PostMapping(value = "/return")
-    public Map<String, String> returnPage(HttpServletRequest request, @RequestHeader(value = "token", required = true) String token) {
-        String isSuccess = request.getParameter("isSuccess");
-        if (StringUtils.isEmpty(token)) {
-            token = request.getParameter("token");
-        }
-        logger.info("微信端开户同步请求,token:{},isSuccess:{}", token, isSuccess);
-        Map<String, String> result = bankOpenService.openAccountReturn(token, isSuccess);
-        logger.info("微信端开户同步请求返回值：", JSONObject.toJSONString(result));
-        return result;
-    }
-
-    /**
      * 页面开户异步处理
      *
      * @param bean
@@ -132,7 +112,7 @@ public class WeChatBankOpenController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
-    public BankCallResult openAccountBgReturn(@RequestBody @Valid BankCallBean bean, @RequestParam("phone") String mobile) {
+    public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);

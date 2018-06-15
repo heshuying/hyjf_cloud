@@ -106,25 +106,6 @@ public class AppBankOpenController {
     }
 
     /**
-     * APP开户同步跳转地址
-     *
-     * @param request
-     * @return
-     */
-    @ApiOperation(value = "app端用户同步回调", notes = "app端用户开户")
-    @PostMapping(value = "/return")
-    public Map<String, String> returnPage(HttpServletRequest request, @RequestHeader(value = "token", required = true) String token) {
-        String isSuccess = request.getParameter("isSuccess");
-        if (StringUtils.isEmpty(token)) {
-            token = request.getParameter("token");
-        }
-        logger.info("app端开户同步请求,token:{},isSuccess:{}", token, isSuccess);
-        Map<String, String> result = bankOpenService.openAccountReturn(token, isSuccess);
-        logger.info("app端开户同步请求返回值：{}", JSONObject.toJSONString(result));
-        return result;
-    }
-
-    /**
      * 页面开户异步处理
      *
      * @param bean
@@ -132,7 +113,7 @@ public class AppBankOpenController {
      */
     @ApiOperation(value = "app端页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
-    public BankCallResult openAccountBgReturn(@RequestBody @Valid BankCallBean bean, @RequestParam("phone") String mobile) {
+    public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);
