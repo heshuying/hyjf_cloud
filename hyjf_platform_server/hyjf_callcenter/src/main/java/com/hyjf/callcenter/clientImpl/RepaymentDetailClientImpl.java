@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Service
 public class RepaymentDetailClientImpl implements RepaymentDetailClient {
-    private static final Logger logger = LoggerFactory.getLogger(AmCallcenterBaseClientImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RepaymentDetailClientImpl.class);
     private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
     @Override
     public List<CallCenterHztRepaymentDetailVO> getHztRepaymentDetailList(CallCenterBaseRequest callCenterBaseRequest) {

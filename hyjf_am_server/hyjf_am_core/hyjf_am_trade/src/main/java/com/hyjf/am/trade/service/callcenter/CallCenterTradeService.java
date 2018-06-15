@@ -2,10 +2,7 @@ package com.hyjf.am.trade.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterAccountDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterRechargeCustomize;
+import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 
 import java.util.List;
 
@@ -44,4 +41,12 @@ public interface CallCenterTradeService {
      * @author wangjun
      */
     List<CallCenterRechargeCustomize> queryRechargeList(CallCenterBaseRequest centerBaseRequest);
+
+    /**
+     * 查询提现明细
+     * @param centerBaseRequest
+     * @return List<CallCenterRechargeCustomize>
+     * @author wangjun
+     */
+    List<CallCenterWithdrawCustomize> getWithdrawRecordList(CallCenterBaseRequest centerBaseRequest);
 }

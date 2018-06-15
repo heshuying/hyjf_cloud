@@ -3,21 +3,12 @@
  */
 package com.hyjf.am.trade.controller.callcenter;
 
-import com.hyjf.am.response.callcenter.CallCenterAccountDetailResponse;
-import com.hyjf.am.response.callcenter.CallCenterHtjRepaymentResponse;
-import com.hyjf.am.response.callcenter.CallCenterHztRepaymentResponse;
-import com.hyjf.am.response.callcenter.CallCenterRechargeResponse;
+import com.hyjf.am.response.callcenter.*;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterAccountDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterRechargeCustomize;
+import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
-import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
-import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
-import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
-import com.hyjf.am.vo.callcenter.CallCenterRechargeVO;
+import com.hyjf.am.vo.callcenter.*;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,5 +100,22 @@ public class CallCenterTradeController {
             callCenterRechargeResponse.setResultList(callCenterRechargeVOS);
         }
         return callCenterRechargeResponse;
+    }
+
+    /**
+     * 查询提现明细
+     * @author wangjun
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getWithdrawRecordList", method = RequestMethod.POST)
+    public CallCenterWithdrawResponse getWithdrawRecordList(@RequestBody @Valid CallCenterBaseRequest request){
+        CallCenterWithdrawResponse callCenterWithdrawResponse = new CallCenterWithdrawResponse();
+        List<CallCenterWithdrawCustomize> list = callCenterTradeService.getWithdrawRecordList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterWithdrawVO> callCenterWithdrawVOS = CommonUtils.convertBeanList(list,CallCenterWithdrawVO.class);
+            callCenterWithdrawResponse.setResultList(callCenterWithdrawVOS);
+        }
+        return callCenterWithdrawResponse;
     }
 }

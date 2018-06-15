@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service
 public class SrchRechargeInfoClientImpl implements SrchRechargeInfoClient {
-    private static final Logger logger = LoggerFactory.getLogger(AmCallcenterBaseClientImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SrchRechargeInfoClientImpl.class);
     private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
 
     /**
