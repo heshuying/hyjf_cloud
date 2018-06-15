@@ -81,24 +81,24 @@ public class BankCallController extends BaseController {
                 throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
             }
             // 设置返回URL
-            if (Validator.isNotNull(bean.getRetUrl())) {
+            /*if (Validator.isNotNull(bean.getRetUrl())) {
                 String retUrl =  systemConfig.getReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setRetUrl(retUrl);
                 bean.set(BankCallConstant.PARAM_RETURL, retUrl);
-            }
+            }*/
             if (Validator.isNotNull(bean.getNotifyUrl())) {
                 String notifyUrl = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setNotifyUrl(notifyUrl);
                 bean.set(BankCallConstant.PARAM_NOTIFYURL, notifyUrl);
             }
-            if (Validator.isNotNull(bean.getSuccessfulUrl())) {
+           /* if (Validator.isNotNull(bean.getSuccessfulUrl())) {
                 String successfulUrl = systemConfig.getReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId()+ StringPool.AMPERSAND + BankCallConstant.PARAM_ISSUCCESS + StringPool.EQUAL+"1";
                 bean.setSuccessfulUrl(successfulUrl);
                 bean.set(BankCallConstant.PARAM_SUCCESSFUL_URL, successfulUrl);
-            }
+            }*/
             if (Validator.isNotNull(bean.getForgotPwdUrl())) {
                 String forgotPwdUrl = systemConfig.getForgotpwdUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();

@@ -76,6 +76,11 @@ public class OpenAccountPageBean {
      * 银行卡
      */
     private  String cardNo;
+
+    /**
+     * 跳转到哪一个前端
+     */
+    private  String clientHeader;
     
     public String getMobile() {
         return mobile;
@@ -175,5 +180,13 @@ public class OpenAccountPageBean {
     }
     public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
+    }
+
+    public String getClientHeader() {
+        return clientHeader;
+    }
+
+    public void setClientHeader(String clientHeader) {
+        this.clientHeader = clientHeader;
     }
 }

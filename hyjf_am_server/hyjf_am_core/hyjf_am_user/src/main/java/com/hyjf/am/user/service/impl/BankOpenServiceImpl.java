@@ -118,7 +118,18 @@ public class BankOpenServiceImpl implements BankOpenService {
         // 需要调用查询接口查询用户的银行卡号  手机号  绑卡关系查询接口&&&&&&&&&&&&&&&&&&&&&&&&&&&
         // 当前日期
         Date nowDate = new Date();
-        
+        // 查询开户记录表
+        BankOpenAccountLogExample example = new BankOpenAccountLogExample();
+        example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(orderId);
+        BankOpenAccountLog openAccountLog = null;
+        List<BankOpenAccountLog> bankOpenAccountLogs = this.bankOpenAccountLogMapper.selectByExample(example);
+        if (bankOpenAccountLogs != null && bankOpenAccountLogs.size() == 1) {
+            openAccountLog = bankOpenAccountLogs.get(0);
+        }
+        trueName = openAccountLog.getName();
+        idNo = openAccountLog.getIdNo();
+        mobile = openAccountLog.getMobile();
+
         BankOpenAccountLogExample accountLogExample = new BankOpenAccountLogExample();
         accountLogExample.createCriteria().andUserIdEqualTo(userId);
         boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;

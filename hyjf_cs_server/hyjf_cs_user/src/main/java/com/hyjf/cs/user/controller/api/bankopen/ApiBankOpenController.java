@@ -54,7 +54,7 @@ public class ApiBankOpenController {
         UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
-
+        openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
         modelAndView = bankOpenService.getOpenAccountMV(openAccountPageBean);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "");

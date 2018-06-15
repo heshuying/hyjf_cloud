@@ -2,6 +2,8 @@ package com.hyjf.cs.user.controller.wechat.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
@@ -72,18 +74,11 @@ public class WeChatBankOpenController {
     @PostMapping(value = "/openBankAccount")
     public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
-        // 返回给前端的值
-        AppResult<String> appResult = new AppResult<String>();
-        ModelAndView reuslt = new ModelAndView("bankopen/error");
+        ModelAndView reuslt = new ModelAndView();
         // 获取登录信息
         UserVO user = bankOpenService.getUsers(token);
         // 检查参数
-        appResult = bankOpenService.checkRequestParam(user, bankOpenVO);
-        if (!OpenAccountError.SUCCESS.getErrCode().equals(appResult.getStatus())) {
-            // 返回失败
-            reuslt.addObject("callback", appResult);
-            return reuslt;
-        }
+        bankOpenService.checkRequestParam(user, bankOpenVO);
         // 拼装参数 调用江西银行
         // 同步调用路径
         OpenAccountPageBean openBean = new OpenAccountPageBean();
@@ -97,18 +92,14 @@ public class WeChatBankOpenController {
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setCoinstName("汇盈金服");
-        /**1：出借角色2：借款角色3：代偿角色*/
-        openBean.setIdentity("1");
+        openBean.setClientHeader(ClientConstants.CLIENT_HEADER_WX);
         // 组装调用江西银行的MV
         reuslt = bankOpenService.getOpenAccountMV(openBean);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), CustomConstants.CLIENT_WECHAT, openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
-            appResult.setStatus(OpenAccountError.SYSTEM_ERROR.getErrCode());
-            appResult.setStatusDesc(OpenAccountError.SYSTEM_ERROR.getMessage());
-            reuslt.addObject("callback", appResult);
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.SYSTEM_ERROR);
         }
         logger.info("开户end");
         return reuslt;
