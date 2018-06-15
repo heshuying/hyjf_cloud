@@ -3,12 +3,19 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.response.trade.BorrowWithBLOBSResponse;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
+import com.hyjf.am.trade.service.BorrowApicronService;
+import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.rtbbatch.BorrowStyleVo;
+import com.hyjf.am.vo.rtbbatch.BorrowWithBLOBsVo;
+import com.hyjf.am.vo.trade.AccountVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
@@ -31,6 +38,9 @@ public class BorrowController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    BorrowService borrowService;
+
     /**
      * @Author: zhangqingqing
      * @Desc :根据机构编号检索机构信息
@@ -50,4 +60,30 @@ public class BorrowController {
         }
         return response;
     }
+
+    @GetMapping("/getBorrow/{borrowNid}")
+    public BorrowWithBLOBSResponse getBorrow(String borrowNid) {
+        BorrowWithBLOBSResponse response = new BorrowWithBLOBSResponse();
+        BorrowWithBLOBs borrowWithBLOBs = borrowService.getBobrrow(borrowNid);
+        if (borrowWithBLOBs != null) {
+            BorrowWithBLOBsVo borrowWithBLOBsVo = new BorrowWithBLOBsVo();
+            BeanUtils.copyProperties(borrowWithBLOBs,borrowWithBLOBsVo);
+            response.setResult(borrowWithBLOBsVo);
+        }
+        return response;
+    }
+
+    @GetMapping("/getborrowStyleByNid/{borrowStyle}")
+    public BorrowStyleResponse getborrowStyleByNid(String borrowStyle) {
+        BorrowStyleResponse response = new BorrowStyleResponse();
+        BorrowStyle borrowStyle1 = borrowService.getborrowStyleByNid(borrowStyle);
+        if (borrowStyle1 != null) {
+            BorrowStyleVo borrowStyleVo = new BorrowStyleVo();
+            BeanUtils.copyProperties(borrowStyle1,borrowStyleVo);
+            response.setResult(borrowStyleVo);
+        }
+        return response;
+    }
+
+
 }
