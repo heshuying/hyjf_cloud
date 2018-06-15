@@ -1,12 +1,9 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.trade.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
-
-import java.util.List;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 
 /**
  * @Description 

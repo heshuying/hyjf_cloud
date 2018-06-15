@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 
 /**
  * @author pangchengchao

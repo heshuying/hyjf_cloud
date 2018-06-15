@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
