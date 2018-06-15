@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseService;
 import com.hyjf.cs.user.vo.BindEmailVO;
@@ -51,4 +52,6 @@ public interface SafeService  extends BaseService {
     boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUser user) throws MQException;
 
     int updateUserNoticeSet(UserNoticeSetRequest requestBean);
+
+	ContractSetResultBean queryContractInfo(Integer userId);
 }

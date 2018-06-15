@@ -3,6 +3,22 @@
  */
 package com.hyjf.cs.user.controller.web.safe;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
@@ -11,23 +27,14 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.ApiResult;
-import com.hyjf.cs.user.result.MobileModifyResultBean;
+import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import com.hyjf.cs.user.vo.UserNoticeSetVO;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -176,9 +183,25 @@ public class WebSafeController {
      * @param
      * @return
      */
+    @ApiOperation(value = "加载紧急联系人信息", notes = "加载紧急联系人信息")
+    @PostMapping(value = "/contractInit", produces = "application/json; charset=utf-8")
+    public ContractSetResultBean contractInit(@RequestHeader(value = "token", required = true) String token) {
+    	logger.info("加载紧急联系人信息开始...");
+    	
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+
+        return safeService.queryContractInfo(user.getUserId());
+    }
+    
+    /**
+     * 添加、修改紧急联系人
+     * @param token
+     * @param
+     * @return
+     */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-    @ApiImplicitParam(name = "param",value = "{relationId:string,rlName:string}", dataType = "Map")
+    @ApiImplicitParam(name = "paraMap",value = "{relationId:int,rlName:string,rlPhone:string}", dataType = "Map")
     public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap) {
         ApiResult<Object> result = new ApiResult<Object>();
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
