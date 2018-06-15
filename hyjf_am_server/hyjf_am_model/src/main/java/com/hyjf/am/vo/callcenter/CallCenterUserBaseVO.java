@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.hyjf.am.vo.BaseVO;
 
 /**
- * Í¬²½ÁíÍâÊµÌåÀàAdminUserListCustomize
+ * åŒæ­¥å¦å¤–å®ä½“ç±»AdminUserListCustomize
  * @author libin
  */
 public class CallCenterUserBaseVO extends BaseVO implements Serializable {
@@ -14,52 +14,51 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	//ÓÃ‘ôid
-    public String userId;
-    //ÓÃ‘ôÃû
-    public String userName;
-    //ÕæÊµĞÕÃû
-    public String realName;
-    //ÓÃ»§ÊÖ»úºÅ
-    public String mobile;
-    //vipÀàĞÍ
-    public String vipType;
-    //ÓÃ‘ô½ÇÉ«
-    public String userRole;
-    //ÓÃ»§ÀàĞÍ
-    public String userType;
-    //ÓÃ‘ôÊôĞÔ
-    public String userProperty;
-    //ÍÆ¼öÈËÃû³Æ
-    public String recommendName;
-    //ÊÇ·ñ51ÀÏÓÃ»§
-    public String is51;
-    //¿ª»§×´Ì¬
-    public String accountStatus;
-    //ÓÃ»§×´Ì¬
-    public String userStatus;
-    //×¢²áÆ½Ì¨
-    public String registPlat;
-    //×¢²áÊ±¼ä
-    public String regTime;
-    //½è¿îÈËÀàĞÍ
-    public String borrowerType;
-    // ĞÔ±ğ
+	//ç”¨æˆ¶id
+	public String userId;
+	//ç”¨æˆ¶å
+	public String userName;
+	//çœŸå®å§“å
+	public String realName;
+	//ç”¨æˆ·æ‰‹æœºå·
+	public String mobile;
+	//vipç±»å‹
+	public String vipType;
+	//ç”¨æˆ¶è§’è‰²
+	public String userRole;
+	//ç”¨æˆ·ç±»å‹
+	public String userType;
+	//ç”¨æˆ¶å±æ€§
+	public String userProperty;
+	//æ¨èäººåç§°
+	public String recommendName;
+	//æ˜¯å¦51è€ç”¨æˆ·
+	public String is51;
+	//å¼€æˆ·çŠ¶æ€
+	public String accountStatus;
+	//ç”¨æˆ·çŠ¶æ€
+	public String userStatus;
+	//æ³¨å†Œå¹³å°
+	public String registPlat;
+	//æ³¨å†Œæ—¶é—´
+	public String regTime;
+	//å€Ÿæ¬¾äººç±»å‹
+	public String borrowerType;
+	// æ€§åˆ«
 	public String sex;
-	// ÉúÈÕ
+	// ç”Ÿæ—¥
 	public String birthday;
-	// ×¢²áËùÔÚµØ
+	// æ³¨å†Œæ‰€åœ¨åœ°
 	public String registArea;
-	// Éí·İÖ¤ºÅ
+	// èº«ä»½è¯å·
 	public String idcard;
-    private String openAccount;
-    
-    private String bankOpenAccount;
-    
-    private String bankOpenTime;
-    //½­Î÷ÒøĞĞµç×ÓÕËºÅ
-    private String bankAccount;
-    
+	private String openAccount;
+
+	private String bankOpenAccount;
+
+	private String bankOpenTime;
+	//æ±Ÿè¥¿é“¶è¡Œç”µå­è´¦å·
+	private String bankAccount;
 	public String getBorrowerType() {
 		return borrowerType;
 	}
@@ -68,19 +67,19 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 		this.borrowerType = borrowerType;
 	}
 
-	/** ´óÇø */
+	/** å¤§åŒº */
 	private String regionName;
-	/** ·Ö¹«Ë¾ */
+	/** åˆ†å…¬å¸ */
 	private String branchName;
-	/** ²¿ÃÅ */
+	/** éƒ¨é—¨ */
 	private String departmentName;
-	/** ²¿ÃÅ */
+	/** éƒ¨é—¨ */
 	private String combotreeSrch;
-	/** ²¿ÃÅ */
+	/** éƒ¨é—¨ */
 	private String[] combotreeListSrch;
 
 	/**
-	 * ¹¹Ôì·½·¨²»´ø²ÎÊı
+	 * æ„é€ æ–¹æ³•ä¸å¸¦å‚æ•°
 	 */
 
 	public CallCenterUserBaseVO() {
@@ -88,8 +87,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * »ñÈ¡ÓÃ»§id userId
-	 * 
+	 * è·å–ç”¨æˆ·id userId
+	 *
 	 * @return the userId
 	 */
 
@@ -98,8 +97,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * ÉèÖÃÓÃ»§id
-	 * 
+	 * è®¾ç½®ç”¨æˆ·id
+	 *
 	 * @param userId
 	 *            the userId to set
 	 */
@@ -109,8 +108,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * »ñÈ¡ÓÃ»§Ãû userName
-	 * 
+	 * è·å–ç”¨æˆ·å userName
+	 *
 	 * @return the userName
 	 */
 
@@ -119,8 +118,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * ÉèÖÃÓÃ»§Ãû
-	 * 
+	 * è®¾ç½®ç”¨æˆ·å
+	 *
 	 * @param userName
 	 *            the userName to set
 	 */
@@ -130,8 +129,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * »ñÈ¡ÓÃ»§½ÇÉ« userRole
-	 * 
+	 * è·å–ç”¨æˆ·è§’è‰² userRole
+	 *
 	 * @return the userRole
 	 */
 
@@ -140,8 +139,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * ÉèÖÃÓÃ»§½ÇÉ«
-	 * 
+	 * è®¾ç½®ç”¨æˆ·è§’è‰²
+	 *
 	 * @param userRole
 	 *            the userRole to set
 	 */
@@ -151,8 +150,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * »ñÈ¡ÓÃ»§ÊôĞÔ userProperty
-	 * 
+	 * è·å–ç”¨æˆ·å±æ€§ userProperty
+	 *
 	 * @return the userProperty
 	 */
 
@@ -161,8 +160,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * ÉèÖÃÓÃ»§ÊôĞÔ
-	 * 
+	 * è®¾ç½®ç”¨æˆ·å±æ€§
+	 *
 	 * @param userProperty
 	 *            the userProperty to set
 	 */
@@ -172,8 +171,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * »ñÈ¡ÍÆ¼öÈË recommendName
-	 * 
+	 * è·å–æ¨èäºº recommendName
+	 *
 	 * @return the recommendName
 	 */
 
@@ -182,8 +181,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * ÉèÖÃÍÆ¼öÈË
-	 * 
+	 * è®¾ç½®æ¨èäºº
+	 *
 	 * @param recommendName
 	 *            the recommendName to set
 	 */
@@ -194,7 +193,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * accountStatus
-	 * 
+	 *
 	 * @return the accountStatus
 	 */
 
@@ -213,7 +212,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * registPlat
-	 * 
+	 *
 	 * @return the registPlat
 	 */
 
@@ -231,8 +230,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * »ñÈ¡ÓÃ»§×¢²áÊ±¼ä regTime
-	 * 
+	 * è·å–ç”¨æˆ·æ³¨å†Œæ—¶é—´ regTime
+	 *
 	 * @return the regTime
 	 */
 
@@ -241,8 +240,8 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	}
 
 	/**
-	 * ÉèÖÃ×¢²áÊ±¼ä
-	 * 
+	 * è®¾ç½®æ³¨å†Œæ—¶é—´
+	 *
 	 * @param regTime
 	 *            the regTime to set
 	 */
@@ -253,7 +252,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * is51
-	 * 
+	 *
 	 * @return the is51
 	 */
 
@@ -272,7 +271,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * userStatus
-	 * 
+	 *
 	 * @return the userStatus
 	 */
 
@@ -291,7 +290,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * realName
-	 * 
+	 *
 	 * @return the realName
 	 */
 
@@ -318,7 +317,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * regionName
-	 * 
+	 *
 	 * @return the regionName
 	 */
 
@@ -337,7 +336,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * branchName
-	 * 
+	 *
 	 * @return the branchName
 	 */
 
@@ -356,7 +355,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * departmentName
-	 * 
+	 *
 	 * @return the departmentName
 	 */
 
@@ -375,7 +374,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * combotreeSrch
-	 * 
+	 *
 	 * @return the combotreeSrch
 	 */
 
@@ -394,7 +393,7 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 
 	/**
 	 * combotreeListSrch
-	 * 
+	 *
 	 * @return the combotreeListSrch
 	 */
 
@@ -427,30 +426,30 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 		this.userType = userType;
 	}
 
-    public String getBankOpenAccount() {
-        return bankOpenAccount;
-    }
+	public String getBankOpenAccount() {
+		return bankOpenAccount;
+	}
 
-    public void setBankOpenAccount(String bankOpenAccount) {
-        this.bankOpenAccount = bankOpenAccount;
-    }
+	public void setBankOpenAccount(String bankOpenAccount) {
+		this.bankOpenAccount = bankOpenAccount;
+	}
 
-    public String getBankOpenTime() {
-        return bankOpenTime;
-    }
+	public String getBankOpenTime() {
+		return bankOpenTime;
+	}
 
-    public void setBankOpenTime(String bankOpenTime) {
-        this.bankOpenTime = bankOpenTime;
-    }
+	public void setBankOpenTime(String bankOpenTime) {
+		this.bankOpenTime = bankOpenTime;
+	}
 
-    public String getOpenAccount() {
-        return openAccount;
-    }
+	public String getOpenAccount() {
+		return openAccount;
+	}
 
-    public void setOpenAccount(String openAccount) {
-        this.openAccount = openAccount;
-    }    
-	
+	public void setOpenAccount(String openAccount) {
+		this.openAccount = openAccount;
+	}
+
 
 	public String getSex() {
 		return sex;
@@ -491,5 +490,294 @@ public class CallCenterUserBaseVO extends BaseVO implements Serializable {
 	public void setBankAccount(String bankAccount) {
 		this.bankAccount = bankAccount;
 	}
+	/*---------------------åˆ†å‰²çº¿-------------------*/
+	//ä»¥ä¸‹æ˜¯ç”¨æˆ·è¯¦ç»†ä¿¡æ¯(ä¸åŸºæœ¬ä¿¡æ¯æœ‰å…±ç”¨éƒ¨åˆ†)
+	/*private String userId;*/
+	/*public String userName;*/
+	/** ç”¨æˆ·æ˜µç§° */
+	public String userNickName;
+	/*public String userProperty;*/
+	/*public String userType;*/
+	/**ç”¨æˆ·è§’è‰²*/
+	public String role;
+	/*public String recommendName;*/
+	/**æ¨èäººéƒ¨é—¨åç§°*/
+	public String departName;
+	/**æ³¨å†Œæ¸ é“åç§° ç¬¬ä¸‰æ–¹å¹³å°åç§°*/
+	public String registPidName;
+	/*public String registPlat;*/
+	/**å¼€æˆ·å¹³å° åŒ…æ‹¬pc android ios å¾®ä¿¡ */
+	public String openAccountPlat;
+	/** æ³¨å†ŒIP */
+	public String registIP;
+	/** æ³¨å†Œæ—¶é—´ */
+	public String registTime;
+	/** å¼€æˆ·æ—¶é—´æ—¶é—´ */
+	public String openAccountTime;
+	/** æœ€åç™»é™†æ—¶é—´ */
+	public String lastLoginTime;
+	/** æœ€åç™»é™†IP */
+	public String lastLoginIP;
+	/** ç´§æ€¥è”ç»œäººå…³ç³» */
+	public String emRealtion;
+	/** ç´§æ€¥è”ç»œäºº å§“å*/
+	public String emName;
+	/** ç´§æ€¥è”ç»œäººç”µè¯*/
+	public String emPhone;
+	/** äºŒç»´ç */
+	public String QRCode;
+	/** é‚€è¯·ç */
+	public String inviteCode;
+	/** é‚€è¯·é“¾æ¥*/
+	public String inviteURL;
+	/** ç”¨æˆ·é‚®ç®± */
+	public String email;
+	/** é‚®ç®±è®¤è¯çŠ¶æ€ */
+	public String emailStatus;
+	/*public String mobile;*/
+	/** æ‰‹æœºå·ç è®¤è¯çŠ¶æ€ */
+	public String mobileStatus;
+	/*public String realName;*/
+	/** å®åè®¤è¯çŠ¶æ€ */
+	public String realNameStatus;
+	/** è´¦æˆ·å· */
+	public String account;
+	/** å®¢æˆ·å· */
+	public String customerAccount;
+	/*public String accountStatus;*/
+	/** ç”¨æˆ·èº«ä»½è¯å·ç */
+	public String idCard;
+	/** å¤´åƒåœ°å€*/
+	public String iconUrl;
+	/** vipid*/
+	public Integer vipId;
+	/** vipè¿‡æœŸæ—¥æœŸ*/
+	public String vipExpDate;
+	/** vå€¼*/
+	public Integer vipValue;
+	/*public String borrowerType;*/
+	private Integer isSetPassword;
+	public String getUserNickName() {
+		return userNickName;
+	}
 
+	public void setUserNickName(String userNickName) {
+		this.userNickName = userNickName;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getDepartName() {
+		return departName;
+	}
+
+	public void setDepartName(String departName) {
+		this.departName = departName;
+	}
+
+	public String getRegistPidName() {
+		return registPidName;
+	}
+
+	public void setRegistPidName(String registPidName) {
+		this.registPidName = registPidName;
+	}
+
+	public String getOpenAccountPlat() {
+		return openAccountPlat;
+	}
+
+	public void setOpenAccountPlat(String openAccountPlat) {
+		this.openAccountPlat = openAccountPlat;
+	}
+
+	public String getRegistIP() {
+		return registIP;
+	}
+
+	public void setRegistIP(String registIP) {
+		this.registIP = registIP;
+	}
+
+	public String getRegistTime() {
+		return registTime;
+	}
+
+	public void setRegistTime(String registTime) {
+		this.registTime = registTime;
+	}
+
+	public String getOpenAccountTime() {
+		return openAccountTime;
+	}
+
+	public void setOpenAccountTime(String openAccountTime) {
+		this.openAccountTime = openAccountTime;
+	}
+
+	public String getLastLoginTime() {
+		return lastLoginTime;
+	}
+
+	public void setLastLoginTime(String lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+
+	public String getLastLoginIP() {
+		return lastLoginIP;
+	}
+
+	public void setLastLoginIP(String lastLoginIP) {
+		this.lastLoginIP = lastLoginIP;
+	}
+
+	public String getEmRealtion() {
+		return emRealtion;
+	}
+
+	public void setEmRealtion(String emRealtion) {
+		this.emRealtion = emRealtion;
+	}
+
+	public String getEmName() {
+		return emName;
+	}
+
+	public void setEmName(String emName) {
+		this.emName = emName;
+	}
+
+	public String getEmPhone() {
+		return emPhone;
+	}
+
+	public void setEmPhone(String emPhone) {
+		this.emPhone = emPhone;
+	}
+
+	public String getQRCode() {
+		return QRCode;
+	}
+
+	public void setQRCode(String qRCode) {
+		QRCode = qRCode;
+	}
+
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
+
+	public String getInviteURL() {
+		return inviteURL;
+	}
+
+	public void setInviteURL(String inviteURL) {
+		this.inviteURL = inviteURL;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmailStatus() {
+		return emailStatus;
+	}
+
+	public void setEmailStatus(String emailStatus) {
+		this.emailStatus = emailStatus;
+	}
+
+	public String getMobileStatus() {
+		return mobileStatus;
+	}
+
+	public void setMobileStatus(String mobileStatus) {
+		this.mobileStatus = mobileStatus;
+	}
+
+	public String getRealNameStatus() {
+		return realNameStatus;
+	}
+
+	public void setRealNameStatus(String realNameStatus) {
+		this.realNameStatus = realNameStatus;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(String customerAccount) {
+		this.customerAccount = customerAccount;
+	}
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+
+	public Integer getVipId() {
+		return vipId;
+	}
+
+	public void setVipId(Integer vipId) {
+		this.vipId = vipId;
+	}
+
+	public String getVipExpDate() {
+		return vipExpDate;
+	}
+
+	public void setVipExpDate(String vipExpDate) {
+		this.vipExpDate = vipExpDate;
+	}
+
+	public Integer getVipValue() {
+		return vipValue;
+	}
+
+	public void setVipValue(Integer vipValue) {
+		this.vipValue = vipValue;
+	}
+
+	public Integer getIsSetPassword() {
+		return isSetPassword;
+	}
+
+	public void setIsSetPassword(Integer isSetPassword) {
+		this.isSetPassword = isSetPassword;
+	}
 }
