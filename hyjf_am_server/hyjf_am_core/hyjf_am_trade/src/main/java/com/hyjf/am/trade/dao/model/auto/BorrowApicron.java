@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BorrowApicron implements Serializable {
     private Integer id;
@@ -19,10 +20,6 @@ public class BorrowApicron implements Serializable {
     private Integer apiType;
 
     private Integer repayStatus;
-
-    private Integer createTime;
-
-    private Integer updateTime;
 
     private Integer periodNow;
 
@@ -52,7 +49,7 @@ public class BorrowApicron implements Serializable {
 
     private Integer txCounts;
 
-    private Byte failTimes;
+    private Integer failTimes;
 
     private Integer sucCounts;
 
@@ -75,6 +72,10 @@ public class BorrowApicron implements Serializable {
     private String planNid;
 
     private String ordid;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private String data;
 
@@ -142,22 +143,6 @@ public class BorrowApicron implements Serializable {
 
     public void setRepayStatus(Integer repayStatus) {
         this.repayStatus = repayStatus;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
     }
 
     public Integer getPeriodNow() {
@@ -272,11 +257,11 @@ public class BorrowApicron implements Serializable {
         this.txCounts = txCounts;
     }
 
-    public Byte getFailTimes() {
+    public Integer getFailTimes() {
         return failTimes;
     }
 
-    public void setFailTimes(Byte failTimes) {
+    public void setFailTimes(Integer failTimes) {
         this.failTimes = failTimes;
     }
 
@@ -366,6 +351,22 @@ public class BorrowApicron implements Serializable {
 
     public void setOrdid(String ordid) {
         this.ordid = ordid == null ? null : ordid.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getData() {

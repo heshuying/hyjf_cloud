@@ -10,6 +10,7 @@ import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.trade.AccountWithdrawVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
  *//*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
+@Service
 public class AccountWithdrawServiceImpl implements AccountWithdrawService {
 
     // add by nxl 添加体现状态
@@ -138,13 +140,8 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
         // mod by liuyang 20180119 银行文件对账功能修改 end
         accountList.setAccountId(accountId);
         accountList.setRemark("网站提现");
-        accountList.setCreateTime(nowTime);
-        accountList.setBaseUpdate(nowTime);
         accountList.setOperator(userId+"");
         accountList.setIp(ip);
-        accountList.setIsUpdate(0);
-        accountList.setBaseUpdate(0);
-        accountList.setInterest(null);
         accountList.setIsBank(1);
         accountList.setWeb(0);
         accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账

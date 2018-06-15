@@ -11,7 +11,7 @@
 
 package com.hyjf.callcenter.beans;
 
-public class AccountBankDefine extends BaseDefine {
+public class AccountBankDefine {
 
     /** @RequestMapping值 */
     public static final String REQUEST_MAPPING = "/account/bank";

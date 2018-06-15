@@ -6,9 +6,9 @@
     <result column="config_name" property="configName" jdbcType="VARCHAR" />
     <result column="config_value" property="configValue" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -109,8 +109,8 @@
       remark, del_flag, create_time, 
       update_time)
     values (#{configCd,jdbcType=VARCHAR}, #{configName,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER})
+      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConfig" >
     insert into ht_borrow_config
@@ -151,13 +151,13 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=VARCHAR},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -183,13 +183,13 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=VARCHAR},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -202,9 +202,9 @@
       config_name = #{record.configName,jdbcType=VARCHAR},
       config_value = #{record.configValue,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -222,13 +222,13 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=VARCHAR},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where config_cd = #{configCd,jdbcType=VARCHAR}
@@ -238,9 +238,9 @@
     set config_name = #{configName,jdbcType=VARCHAR},
       config_value = #{configValue,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where config_cd = #{configCd,jdbcType=VARCHAR}
   </update>
 </mapper>

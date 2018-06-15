@@ -475,62 +475,52 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeEqualTo(String value) {
+        public Criteria andInvestUserTypeEqualTo(Integer value) {
             addCriterion("invest_user_type =", value, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeNotEqualTo(String value) {
+        public Criteria andInvestUserTypeNotEqualTo(Integer value) {
             addCriterion("invest_user_type <>", value, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeGreaterThan(String value) {
+        public Criteria andInvestUserTypeGreaterThan(Integer value) {
             addCriterion("invest_user_type >", value, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeGreaterThanOrEqualTo(String value) {
+        public Criteria andInvestUserTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("invest_user_type >=", value, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeLessThan(String value) {
+        public Criteria andInvestUserTypeLessThan(Integer value) {
             addCriterion("invest_user_type <", value, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeLessThanOrEqualTo(String value) {
+        public Criteria andInvestUserTypeLessThanOrEqualTo(Integer value) {
             addCriterion("invest_user_type <=", value, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeLike(String value) {
-            addCriterion("invest_user_type like", value, "investUserType");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestUserTypeNotLike(String value) {
-            addCriterion("invest_user_type not like", value, "investUserType");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestUserTypeIn(List<String> values) {
+        public Criteria andInvestUserTypeIn(List<Integer> values) {
             addCriterion("invest_user_type in", values, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeNotIn(List<String> values) {
+        public Criteria andInvestUserTypeNotIn(List<Integer> values) {
             addCriterion("invest_user_type not in", values, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeBetween(String value1, String value2) {
+        public Criteria andInvestUserTypeBetween(Integer value1, Integer value2) {
             addCriterion("invest_user_type between", value1, value2, "investUserType");
             return (Criteria) this;
         }
 
-        public Criteria andInvestUserTypeNotBetween(String value1, String value2) {
+        public Criteria andInvestUserTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("invest_user_type not between", value1, value2, "investUserType");
             return (Criteria) this;
         }
@@ -545,62 +535,52 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(String value) {
+        public Criteria andStatusEqualTo(Integer value) {
             addCriterion("`status` =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(String value) {
+        public Criteria andStatusNotEqualTo(Integer value) {
             addCriterion("`status` <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(String value) {
+        public Criteria andStatusGreaterThan(Integer value) {
             addCriterion("`status` >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(String value) {
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("`status` >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(String value) {
+        public Criteria andStatusLessThan(Integer value) {
             addCriterion("`status` <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(String value) {
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
             addCriterion("`status` <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLike(String value) {
-            addCriterion("`status` like", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusNotLike(String value) {
-            addCriterion("`status` not like", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusIn(List<String> values) {
+        public Criteria andStatusIn(List<Integer> values) {
             addCriterion("`status` in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<String> values) {
+        public Criteria andStatusNotIn(List<Integer> values) {
             addCriterion("`status` not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(String value1, String value2) {
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
             addCriterion("`status` between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(String value1, String value2) {
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("`status` not between", value1, value2, "status");
             return (Criteria) this;
         }
@@ -815,76 +795,6 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateGroupIdIsNull() {
-            addCriterion("create_group_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdIsNotNull() {
-            addCriterion("create_group_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdEqualTo(String value) {
-            addCriterion("create_group_id =", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdNotEqualTo(String value) {
-            addCriterion("create_group_id <>", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdGreaterThan(String value) {
-            addCriterion("create_group_id >", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdGreaterThanOrEqualTo(String value) {
-            addCriterion("create_group_id >=", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdLessThan(String value) {
-            addCriterion("create_group_id <", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdLessThanOrEqualTo(String value) {
-            addCriterion("create_group_id <=", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdLike(String value) {
-            addCriterion("create_group_id like", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdNotLike(String value) {
-            addCriterion("create_group_id not like", value, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdIn(List<String> values) {
-            addCriterion("create_group_id in", values, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdNotIn(List<String> values) {
-            addCriterion("create_group_id not in", values, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdBetween(String value1, String value2) {
-            addCriterion("create_group_id between", value1, value2, "createGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateGroupIdNotBetween(String value1, String value2) {
-            addCriterion("create_group_id not between", value1, value2, "createGroupId");
-            return (Criteria) this;
-        }
-
         public Criteria andCreateUserIdIsNull() {
             addCriterion("create_user_id is null");
             return (Criteria) this;
@@ -895,62 +805,52 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdEqualTo(String value) {
+        public Criteria andCreateUserIdEqualTo(Integer value) {
             addCriterion("create_user_id =", value, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdNotEqualTo(String value) {
+        public Criteria andCreateUserIdNotEqualTo(Integer value) {
             addCriterion("create_user_id <>", value, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdGreaterThan(String value) {
+        public Criteria andCreateUserIdGreaterThan(Integer value) {
             addCriterion("create_user_id >", value, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdGreaterThanOrEqualTo(String value) {
+        public Criteria andCreateUserIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("create_user_id >=", value, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdLessThan(String value) {
+        public Criteria andCreateUserIdLessThan(Integer value) {
             addCriterion("create_user_id <", value, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdLessThanOrEqualTo(String value) {
+        public Criteria andCreateUserIdLessThanOrEqualTo(Integer value) {
             addCriterion("create_user_id <=", value, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdLike(String value) {
-            addCriterion("create_user_id like", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdNotLike(String value) {
-            addCriterion("create_user_id not like", value, "createUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserIdIn(List<String> values) {
+        public Criteria andCreateUserIdIn(List<Integer> values) {
             addCriterion("create_user_id in", values, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdNotIn(List<String> values) {
+        public Criteria andCreateUserIdNotIn(List<Integer> values) {
             addCriterion("create_user_id not in", values, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdBetween(String value1, String value2) {
+        public Criteria andCreateUserIdBetween(Integer value1, Integer value2) {
             addCriterion("create_user_id between", value1, value2, "createUserId");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIdNotBetween(String value1, String value2) {
+        public Criteria andCreateUserIdNotBetween(Integer value1, Integer value2) {
             addCriterion("create_user_id not between", value1, value2, "createUserId");
             return (Criteria) this;
         }
@@ -1015,76 +915,6 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdateGroupIdIsNull() {
-            addCriterion("update_group_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdIsNotNull() {
-            addCriterion("update_group_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdEqualTo(String value) {
-            addCriterion("update_group_id =", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdNotEqualTo(String value) {
-            addCriterion("update_group_id <>", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdGreaterThan(String value) {
-            addCriterion("update_group_id >", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdGreaterThanOrEqualTo(String value) {
-            addCriterion("update_group_id >=", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdLessThan(String value) {
-            addCriterion("update_group_id <", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdLessThanOrEqualTo(String value) {
-            addCriterion("update_group_id <=", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdLike(String value) {
-            addCriterion("update_group_id like", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdNotLike(String value) {
-            addCriterion("update_group_id not like", value, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdIn(List<String> values) {
-            addCriterion("update_group_id in", values, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdNotIn(List<String> values) {
-            addCriterion("update_group_id not in", values, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdBetween(String value1, String value2) {
-            addCriterion("update_group_id between", value1, value2, "updateGroupId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateGroupIdNotBetween(String value1, String value2) {
-            addCriterion("update_group_id not between", value1, value2, "updateGroupId");
-            return (Criteria) this;
-        }
-
         public Criteria andUpdateUserIdIsNull() {
             addCriterion("update_user_id is null");
             return (Criteria) this;
@@ -1095,62 +925,52 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdEqualTo(String value) {
+        public Criteria andUpdateUserIdEqualTo(Integer value) {
             addCriterion("update_user_id =", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdNotEqualTo(String value) {
+        public Criteria andUpdateUserIdNotEqualTo(Integer value) {
             addCriterion("update_user_id <>", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdGreaterThan(String value) {
+        public Criteria andUpdateUserIdGreaterThan(Integer value) {
             addCriterion("update_user_id >", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdGreaterThanOrEqualTo(String value) {
+        public Criteria andUpdateUserIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("update_user_id >=", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdLessThan(String value) {
+        public Criteria andUpdateUserIdLessThan(Integer value) {
             addCriterion("update_user_id <", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdLessThanOrEqualTo(String value) {
+        public Criteria andUpdateUserIdLessThanOrEqualTo(Integer value) {
             addCriterion("update_user_id <=", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdLike(String value) {
-            addCriterion("update_user_id like", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdNotLike(String value) {
-            addCriterion("update_user_id not like", value, "updateUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateUserIdIn(List<String> values) {
+        public Criteria andUpdateUserIdIn(List<Integer> values) {
             addCriterion("update_user_id in", values, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdNotIn(List<String> values) {
+        public Criteria andUpdateUserIdNotIn(List<Integer> values) {
             addCriterion("update_user_id not in", values, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdBetween(String value1, String value2) {
+        public Criteria andUpdateUserIdBetween(Integer value1, Integer value2) {
             addCriterion("update_user_id between", value1, value2, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateUserIdNotBetween(String value1, String value2) {
+        public Criteria andUpdateUserIdNotBetween(Integer value1, Integer value2) {
             addCriterion("update_user_id not between", value1, value2, "updateUserId");
             return (Criteria) this;
         }

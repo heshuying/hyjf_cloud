@@ -58,11 +58,11 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     @Override
-    public BorrowWithBLOBs getBorrow(String borrowNid) {
+    public Borrow getBorrow(String borrowNid) {
         BorrowExample example = new BorrowExample();
         BorrowExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
-        List<BorrowWithBLOBs> list = this.borrowMapper.selectByExampleWithBLOBs(example);
+        List<Borrow> list = this.borrowMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list.get(0);
         }
@@ -84,7 +84,7 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     @Override
-    public int insertBorrow(BorrowWithBLOBs borrow) {
+    public int insertBorrow(Borrow borrow) {
         return borrowMapper.insertSelective(borrow);
     }
 
@@ -107,7 +107,7 @@ public class BorrowServiceImpl implements BorrowService {
         borrowVO.setRegistUserId(1);//TODO:id写死1
         borrowVO.setRegistUserName("AutoRecord");
         borrowVO.setRegistTime(nowDate);
-        BorrowWithBLOBs borrow = new BorrowWithBLOBs();
+        Borrow borrow = new Borrow();
         BeanUtils.copyProperties(borrowVO, borrow);
         return borrowMapper.updateByExampleSelective(borrow, example);
     }

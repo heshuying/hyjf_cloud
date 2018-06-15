@@ -10,7 +10,7 @@ import com.hyjf.am.response.trade.BorrowWithBLOBSResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.rtbbatch.BorrowStyleVo;
 import com.hyjf.am.vo.rtbbatch.BorrowWithBLOBsVo;
@@ -109,7 +109,7 @@ public class BorrowController {
      */
     @RequestMapping("/insertBorrow")
     public int insertBorrow(BorrowWithBLOBsVO borrow) {
-        BorrowWithBLOBs borrowWithBLOBs = new BorrowWithBLOBs();
+        Borrow borrowWithBLOBs = new Borrow();
         if (borrow != null) {
             BeanUtils.copyProperties(borrow, borrowWithBLOBs);
             return borrowService.insertBorrow(borrowWithBLOBs);
@@ -140,7 +140,7 @@ public class BorrowController {
     @GetMapping("/getBorrow/{borrowNid}")
     public BorrowWithBLOBSResponse getBorrow(String borrowNid) {
         BorrowWithBLOBSResponse response = new BorrowWithBLOBSResponse();
-        BorrowWithBLOBs borrowWithBLOBs = borrowService.getBorrow(borrowNid);
+        Borrow borrowWithBLOBs = borrowService.getBorrow(borrowNid);
         if (borrowWithBLOBs != null) {
             BorrowWithBLOBsVo borrowWithBLOBsVo = new BorrowWithBLOBsVo();
             BeanUtils.copyProperties(borrowWithBLOBs,borrowWithBLOBsVo);

@@ -9,9 +9,9 @@
     <result column="account_balance" property="accountBalance" jdbcType="DECIMAL" />
     <result column="available_balance" property="availableBalance" jdbcType="DECIMAL" />
     <result column="frost" property="frost" jdbcType="DECIMAL" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="is_set_password" property="isSetPassword" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_set_password" property="isSetPassword" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -118,7 +118,7 @@
       )
     values (#{accountName,jdbcType=VARCHAR}, #{accountType,jdbcType=VARCHAR}, #{accountCode,jdbcType=VARCHAR}, 
       #{accountBalance,jdbcType=DECIMAL}, #{availableBalance,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, 
-      #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{isSetPassword,jdbcType=INTEGER}
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isSetPassword,jdbcType=TINYINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccount" >
@@ -175,13 +175,13 @@
         #{frost,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="isSetPassword != null" >
-        #{isSetPassword,jdbcType=INTEGER},
+        #{isSetPassword,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -216,13 +216,13 @@
         frost = #{record.frost,jdbcType=DECIMAL},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.isSetPassword != null" >
-        is_set_password = #{record.isSetPassword,jdbcType=INTEGER},
+        is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -238,9 +238,9 @@
       account_balance = #{record.accountBalance,jdbcType=DECIMAL},
       available_balance = #{record.availableBalance,jdbcType=DECIMAL},
       frost = #{record.frost,jdbcType=DECIMAL},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      is_set_password = #{record.isSetPassword,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      is_set_password = #{record.isSetPassword,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -267,13 +267,13 @@
         frost = #{frost,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="isSetPassword != null" >
-        is_set_password = #{isSetPassword,jdbcType=INTEGER},
+        is_set_password = #{isSetPassword,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -286,9 +286,9 @@
       account_balance = #{accountBalance,jdbcType=DECIMAL},
       available_balance = #{availableBalance,jdbcType=DECIMAL},
       frost = #{frost,jdbcType=DECIMAL},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      is_set_password = #{isSetPassword,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_set_password = #{isSetPassword,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -5,22 +5,12 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="total" property="total" jdbcType="DECIMAL" />
-    <result column="income" property="income" jdbcType="DECIMAL" />
-    <result column="expend" property="expend" jdbcType="DECIMAL" />
     <result column="balance" property="balance" jdbcType="DECIMAL" />
     <result column="balance_cash" property="balanceCash" jdbcType="DECIMAL" />
     <result column="balance_frost" property="balanceFrost" jdbcType="DECIMAL" />
     <result column="frost" property="frost" jdbcType="DECIMAL" />
     <result column="await" property="await" jdbcType="DECIMAL" />
     <result column="repay" property="repay" jdbcType="DECIMAL" />
-    <result column="frost_cash" property="frostCash" jdbcType="DECIMAL" />
-    <result column="is_update" property="isUpdate" jdbcType="INTEGER" />
-    <result column="isok" property="isok" jdbcType="TINYINT" />
-    <result column="rec_money" property="recMoney" jdbcType="DECIMAL" />
-    <result column="fee" property="fee" jdbcType="DECIMAL" />
-    <result column="in_money" property="inMoney" jdbcType="DECIMAL" />
-    <result column="in_money_flag" property="inMoneyFlag" jdbcType="INTEGER" />
-    <result column="version" property="version" jdbcType="DECIMAL" />
     <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
     <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
     <result column="plan_frost" property="planFrost" jdbcType="DECIMAL" />
@@ -105,13 +95,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, total, income, expend, balance, balance_cash, balance_frost, frost, 
-    await, repay, frost_cash, is_update, isok, rec_money, fee, in_money, in_money_flag, 
-    version, plan_repay_interest, plan_balance, plan_frost, plan_accede_total, plan_accede_balance, 
-    plan_accede_frost, plan_account_wait, plan_capital_wait, plan_interest_wait, bank_total, 
-    bank_balance, bank_frost, bank_wait_repay, bank_wait_capital, bank_wait_interest, 
-    bank_wait_repay_org, bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, 
-    bank_await_interest, bank_await_org, bank_balance_cash, bank_frost_cash
+    id, user_id, total, balance, balance_cash, balance_frost, frost, await, repay, plan_repay_interest, 
+    plan_balance, plan_frost, plan_accede_total, plan_accede_balance, plan_accede_frost, 
+    plan_account_wait, plan_capital_wait, plan_interest_wait, bank_total, bank_balance, 
+    bank_frost, bank_wait_repay, bank_wait_capital, bank_wait_interest, bank_wait_repay_org, 
+    bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, bank_await_interest, 
+    bank_await_org, bank_balance_cash, bank_frost_cash
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountExample" >
     select
@@ -150,36 +139,28 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_account (user_id, total, income, 
-      expend, balance, balance_cash, 
-      balance_frost, frost, await, 
-      repay, frost_cash, is_update, 
-      isok, rec_money, fee, 
-      in_money, in_money_flag, version, 
-      plan_repay_interest, plan_balance, plan_frost, 
-      plan_accede_total, plan_accede_balance, plan_accede_frost, 
-      plan_account_wait, plan_capital_wait, plan_interest_wait, 
-      bank_total, bank_balance, bank_frost, 
-      bank_wait_repay, bank_wait_capital, bank_wait_interest, 
-      bank_wait_repay_org, bank_interest_sum, bank_invest_sum, 
-      bank_await, bank_await_capital, bank_await_interest, 
-      bank_await_org, bank_balance_cash, bank_frost_cash
-      )
-    values (#{userId,jdbcType=INTEGER}, #{total,jdbcType=DECIMAL}, #{income,jdbcType=DECIMAL}, 
-      #{expend,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{balanceCash,jdbcType=DECIMAL}, 
-      #{balanceFrost,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, #{await,jdbcType=DECIMAL}, 
-      #{repay,jdbcType=DECIMAL}, #{frostCash,jdbcType=DECIMAL}, #{isUpdate,jdbcType=INTEGER}, 
-      #{isok,jdbcType=TINYINT}, #{recMoney,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
-      #{inMoney,jdbcType=DECIMAL}, #{inMoneyFlag,jdbcType=INTEGER}, #{version,jdbcType=DECIMAL}, 
-      #{planRepayInterest,jdbcType=DECIMAL}, #{planBalance,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, 
-      #{planAccedeTotal,jdbcType=DECIMAL}, #{planAccedeBalance,jdbcType=DECIMAL}, #{planAccedeFrost,jdbcType=DECIMAL}, 
-      #{planAccountWait,jdbcType=DECIMAL}, #{planCapitalWait,jdbcType=DECIMAL}, #{planInterestWait,jdbcType=DECIMAL}, 
-      #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, #{bankFrost,jdbcType=DECIMAL}, 
-      #{bankWaitRepay,jdbcType=DECIMAL}, #{bankWaitCapital,jdbcType=DECIMAL}, #{bankWaitInterest,jdbcType=DECIMAL}, 
-      #{bankWaitRepayOrg,jdbcType=DECIMAL}, #{bankInterestSum,jdbcType=DECIMAL}, #{bankInvestSum,jdbcType=DECIMAL}, 
-      #{bankAwait,jdbcType=DECIMAL}, #{bankAwaitCapital,jdbcType=DECIMAL}, #{bankAwaitInterest,jdbcType=DECIMAL}, 
-      #{bankAwaitOrg,jdbcType=DECIMAL}, #{bankBalanceCash,jdbcType=DECIMAL}, #{bankFrostCash,jdbcType=DECIMAL}
-      )
+    insert into ht_account (user_id, total, balance, 
+      balance_cash, balance_frost, frost, 
+      await, repay, plan_repay_interest, 
+      plan_balance, plan_frost, plan_accede_total, 
+      plan_accede_balance, plan_accede_frost, plan_account_wait, 
+      plan_capital_wait, plan_interest_wait, bank_total, 
+      bank_balance, bank_frost, bank_wait_repay, 
+      bank_wait_capital, bank_wait_interest, bank_wait_repay_org, 
+      bank_interest_sum, bank_invest_sum, bank_await, 
+      bank_await_capital, bank_await_interest, bank_await_org, 
+      bank_balance_cash, bank_frost_cash)
+    values (#{userId,jdbcType=INTEGER}, #{total,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, 
+      #{balanceCash,jdbcType=DECIMAL}, #{balanceFrost,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, 
+      #{await,jdbcType=DECIMAL}, #{repay,jdbcType=DECIMAL}, #{planRepayInterest,jdbcType=DECIMAL}, 
+      #{planBalance,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, #{planAccedeTotal,jdbcType=DECIMAL}, 
+      #{planAccedeBalance,jdbcType=DECIMAL}, #{planAccedeFrost,jdbcType=DECIMAL}, #{planAccountWait,jdbcType=DECIMAL}, 
+      #{planCapitalWait,jdbcType=DECIMAL}, #{planInterestWait,jdbcType=DECIMAL}, #{bankTotal,jdbcType=DECIMAL}, 
+      #{bankBalance,jdbcType=DECIMAL}, #{bankFrost,jdbcType=DECIMAL}, #{bankWaitRepay,jdbcType=DECIMAL}, 
+      #{bankWaitCapital,jdbcType=DECIMAL}, #{bankWaitInterest,jdbcType=DECIMAL}, #{bankWaitRepayOrg,jdbcType=DECIMAL}, 
+      #{bankInterestSum,jdbcType=DECIMAL}, #{bankInvestSum,jdbcType=DECIMAL}, #{bankAwait,jdbcType=DECIMAL}, 
+      #{bankAwaitCapital,jdbcType=DECIMAL}, #{bankAwaitInterest,jdbcType=DECIMAL}, #{bankAwaitOrg,jdbcType=DECIMAL}, 
+      #{bankBalanceCash,jdbcType=DECIMAL}, #{bankFrostCash,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Account" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -192,12 +173,6 @@
       </if>
       <if test="total != null" >
         total,
-      </if>
-      <if test="income != null" >
-        income,
-      </if>
-      <if test="expend != null" >
-        expend,
       </if>
       <if test="balance != null" >
         balance,
@@ -216,30 +191,6 @@
       </if>
       <if test="repay != null" >
         repay,
-      </if>
-      <if test="frostCash != null" >
-        frost_cash,
-      </if>
-      <if test="isUpdate != null" >
-        is_update,
-      </if>
-      <if test="isok != null" >
-        isok,
-      </if>
-      <if test="recMoney != null" >
-        rec_money,
-      </if>
-      <if test="fee != null" >
-        fee,
-      </if>
-      <if test="inMoney != null" >
-        in_money,
-      </if>
-      <if test="inMoneyFlag != null" >
-        in_money_flag,
-      </if>
-      <if test="version != null" >
-        version,
       </if>
       <if test="planRepayInterest != null" >
         plan_repay_interest,
@@ -321,12 +272,6 @@
       <if test="total != null" >
         #{total,jdbcType=DECIMAL},
       </if>
-      <if test="income != null" >
-        #{income,jdbcType=DECIMAL},
-      </if>
-      <if test="expend != null" >
-        #{expend,jdbcType=DECIMAL},
-      </if>
       <if test="balance != null" >
         #{balance,jdbcType=DECIMAL},
       </if>
@@ -344,30 +289,6 @@
       </if>
       <if test="repay != null" >
         #{repay,jdbcType=DECIMAL},
-      </if>
-      <if test="frostCash != null" >
-        #{frostCash,jdbcType=DECIMAL},
-      </if>
-      <if test="isUpdate != null" >
-        #{isUpdate,jdbcType=INTEGER},
-      </if>
-      <if test="isok != null" >
-        #{isok,jdbcType=TINYINT},
-      </if>
-      <if test="recMoney != null" >
-        #{recMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="fee != null" >
-        #{fee,jdbcType=DECIMAL},
-      </if>
-      <if test="inMoney != null" >
-        #{inMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="inMoneyFlag != null" >
-        #{inMoneyFlag,jdbcType=INTEGER},
-      </if>
-      <if test="version != null" >
-        #{version,jdbcType=DECIMAL},
       </if>
       <if test="planRepayInterest != null" >
         #{planRepayInterest,jdbcType=DECIMAL},
@@ -461,12 +382,6 @@
       <if test="record.total != null" >
         total = #{record.total,jdbcType=DECIMAL},
       </if>
-      <if test="record.income != null" >
-        income = #{record.income,jdbcType=DECIMAL},
-      </if>
-      <if test="record.expend != null" >
-        expend = #{record.expend,jdbcType=DECIMAL},
-      </if>
       <if test="record.balance != null" >
         balance = #{record.balance,jdbcType=DECIMAL},
       </if>
@@ -484,30 +399,6 @@
       </if>
       <if test="record.repay != null" >
         repay = #{record.repay,jdbcType=DECIMAL},
-      </if>
-      <if test="record.frostCash != null" >
-        frost_cash = #{record.frostCash,jdbcType=DECIMAL},
-      </if>
-      <if test="record.isUpdate != null" >
-        is_update = #{record.isUpdate,jdbcType=INTEGER},
-      </if>
-      <if test="record.isok != null" >
-        isok = #{record.isok,jdbcType=TINYINT},
-      </if>
-      <if test="record.recMoney != null" >
-        rec_money = #{record.recMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="record.fee != null" >
-        fee = #{record.fee,jdbcType=DECIMAL},
-      </if>
-      <if test="record.inMoney != null" >
-        in_money = #{record.inMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="record.inMoneyFlag != null" >
-        in_money_flag = #{record.inMoneyFlag,jdbcType=INTEGER},
-      </if>
-      <if test="record.version != null" >
-        version = #{record.version,jdbcType=DECIMAL},
       </if>
       <if test="record.planRepayInterest != null" >
         plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
@@ -591,22 +482,12 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       total = #{record.total,jdbcType=DECIMAL},
-      income = #{record.income,jdbcType=DECIMAL},
-      expend = #{record.expend,jdbcType=DECIMAL},
       balance = #{record.balance,jdbcType=DECIMAL},
       balance_cash = #{record.balanceCash,jdbcType=DECIMAL},
       balance_frost = #{record.balanceFrost,jdbcType=DECIMAL},
       frost = #{record.frost,jdbcType=DECIMAL},
       await = #{record.await,jdbcType=DECIMAL},
       repay = #{record.repay,jdbcType=DECIMAL},
-      frost_cash = #{record.frostCash,jdbcType=DECIMAL},
-      is_update = #{record.isUpdate,jdbcType=INTEGER},
-      isok = #{record.isok,jdbcType=TINYINT},
-      rec_money = #{record.recMoney,jdbcType=DECIMAL},
-      fee = #{record.fee,jdbcType=DECIMAL},
-      in_money = #{record.inMoney,jdbcType=DECIMAL},
-      in_money_flag = #{record.inMoneyFlag,jdbcType=INTEGER},
-      version = #{record.version,jdbcType=DECIMAL},
       plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       plan_balance = #{record.planBalance,jdbcType=DECIMAL},
       plan_frost = #{record.planFrost,jdbcType=DECIMAL},
@@ -644,12 +525,6 @@
       <if test="total != null" >
         total = #{total,jdbcType=DECIMAL},
       </if>
-      <if test="income != null" >
-        income = #{income,jdbcType=DECIMAL},
-      </if>
-      <if test="expend != null" >
-        expend = #{expend,jdbcType=DECIMAL},
-      </if>
       <if test="balance != null" >
         balance = #{balance,jdbcType=DECIMAL},
       </if>
@@ -667,30 +542,6 @@
       </if>
       <if test="repay != null" >
         repay = #{repay,jdbcType=DECIMAL},
-      </if>
-      <if test="frostCash != null" >
-        frost_cash = #{frostCash,jdbcType=DECIMAL},
-      </if>
-      <if test="isUpdate != null" >
-        is_update = #{isUpdate,jdbcType=INTEGER},
-      </if>
-      <if test="isok != null" >
-        isok = #{isok,jdbcType=TINYINT},
-      </if>
-      <if test="recMoney != null" >
-        rec_money = #{recMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="fee != null" >
-        fee = #{fee,jdbcType=DECIMAL},
-      </if>
-      <if test="inMoney != null" >
-        in_money = #{inMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="inMoneyFlag != null" >
-        in_money_flag = #{inMoneyFlag,jdbcType=INTEGER},
-      </if>
-      <if test="version != null" >
-        version = #{version,jdbcType=DECIMAL},
       </if>
       <if test="planRepayInterest != null" >
         plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
@@ -771,22 +622,12 @@
     update ht_account
     set user_id = #{userId,jdbcType=INTEGER},
       total = #{total,jdbcType=DECIMAL},
-      income = #{income,jdbcType=DECIMAL},
-      expend = #{expend,jdbcType=DECIMAL},
       balance = #{balance,jdbcType=DECIMAL},
       balance_cash = #{balanceCash,jdbcType=DECIMAL},
       balance_frost = #{balanceFrost,jdbcType=DECIMAL},
       frost = #{frost,jdbcType=DECIMAL},
       await = #{await,jdbcType=DECIMAL},
       repay = #{repay,jdbcType=DECIMAL},
-      frost_cash = #{frostCash,jdbcType=DECIMAL},
-      is_update = #{isUpdate,jdbcType=INTEGER},
-      isok = #{isok,jdbcType=TINYINT},
-      rec_money = #{recMoney,jdbcType=DECIMAL},
-      fee = #{fee,jdbcType=DECIMAL},
-      in_money = #{inMoney,jdbcType=DECIMAL},
-      in_money_flag = #{inMoneyFlag,jdbcType=INTEGER},
-      version = #{version,jdbcType=DECIMAL},
       plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       plan_balance = #{planBalance,jdbcType=DECIMAL},
       plan_frost = #{planFrost,jdbcType=DECIMAL},

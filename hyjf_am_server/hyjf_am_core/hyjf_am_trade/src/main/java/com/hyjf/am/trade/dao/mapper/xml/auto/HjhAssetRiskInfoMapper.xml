@@ -5,10 +5,10 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="asset_id" property="assetId" jdbcType="VARCHAR" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.HjhAssetRiskInfoWithBLOBs" extends="BaseResultMap" >
     <result column="amazon_info" property="amazonInfo" jdbcType="LONGVARCHAR" />
@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, asset_id, create_user, create_time, update_user_id, update_time, del_flg
+    id, asset_id, create_user, create_time, update_user_id, update_time, del_flag
   </sql>
   <sql id="Blob_Column_List" >
     amazon_info, ebay_info, jingdong_info, taobao_info, tianmao_info
@@ -140,11 +140,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_hjh_asset_risk_info (asset_id, create_user, create_time, 
-      update_user_id, update_time, del_flg, 
+      update_user_id, update_time, del_flag, 
       amazon_info, ebay_info, jingdong_info, 
       taobao_info, tianmao_info)
-    values (#{assetId,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT}, 
+    values (#{assetId,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}, 
       #{amazonInfo,jdbcType=LONGVARCHAR}, #{ebayInfo,jdbcType=LONGVARCHAR}, #{jingdongInfo,jdbcType=LONGVARCHAR}, 
       #{taobaoInfo,jdbcType=LONGVARCHAR}, #{tianmaoInfo,jdbcType=LONGVARCHAR})
   </insert>
@@ -169,8 +169,8 @@
       <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="delFlg != null" >
-        del_flg,
+      <if test="delFlag != null" >
+        del_flag,
       </if>
       <if test="amazonInfo != null" >
         amazon_info,
@@ -196,16 +196,16 @@
         #{createUser,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="amazonInfo != null" >
         #{amazonInfo,jdbcType=LONGVARCHAR},
@@ -243,16 +243,16 @@
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.amazonInfo != null" >
         amazon_info = #{record.amazonInfo,jdbcType=LONGVARCHAR},
@@ -279,10 +279,10 @@
     set id = #{record.id,jdbcType=INTEGER},
       asset_id = #{record.assetId,jdbcType=VARCHAR},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       amazon_info = #{record.amazonInfo,jdbcType=LONGVARCHAR},
       ebay_info = #{record.ebayInfo,jdbcType=LONGVARCHAR},
       jingdong_info = #{record.jingdongInfo,jdbcType=LONGVARCHAR},
@@ -297,10 +297,10 @@
     set id = #{record.id,jdbcType=INTEGER},
       asset_id = #{record.assetId,jdbcType=VARCHAR},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -315,16 +315,16 @@
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="amazonInfo != null" >
         amazon_info = #{amazonInfo,jdbcType=LONGVARCHAR},
@@ -348,10 +348,10 @@
     update ht_hjh_asset_risk_info
     set asset_id = #{assetId,jdbcType=VARCHAR},
       create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=TINYINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       amazon_info = #{amazonInfo,jdbcType=LONGVARCHAR},
       ebay_info = #{ebayInfo,jdbcType=LONGVARCHAR},
       jingdong_info = #{jingdongInfo,jdbcType=LONGVARCHAR},
@@ -363,10 +363,10 @@
     update ht_hjh_asset_risk_info
     set asset_id = #{assetId,jdbcType=VARCHAR},
       create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=TINYINT}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

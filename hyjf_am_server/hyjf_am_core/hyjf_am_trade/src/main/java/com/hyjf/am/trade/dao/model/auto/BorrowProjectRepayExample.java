@@ -405,62 +405,52 @@ public class BorrowProjectRepayExample {
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagEqualTo(String value) {
+        public Criteria andDelFlagEqualTo(Integer value) {
             addCriterion("del_flag =", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagNotEqualTo(String value) {
+        public Criteria andDelFlagNotEqualTo(Integer value) {
             addCriterion("del_flag <>", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagGreaterThan(String value) {
+        public Criteria andDelFlagGreaterThan(Integer value) {
             addCriterion("del_flag >", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagGreaterThanOrEqualTo(String value) {
+        public Criteria andDelFlagGreaterThanOrEqualTo(Integer value) {
             addCriterion("del_flag >=", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagLessThan(String value) {
+        public Criteria andDelFlagLessThan(Integer value) {
             addCriterion("del_flag <", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagLessThanOrEqualTo(String value) {
+        public Criteria andDelFlagLessThanOrEqualTo(Integer value) {
             addCriterion("del_flag <=", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagLike(String value) {
-            addCriterion("del_flag like", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagNotLike(String value) {
-            addCriterion("del_flag not like", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagIn(List<String> values) {
+        public Criteria andDelFlagIn(List<Integer> values) {
             addCriterion("del_flag in", values, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagNotIn(List<String> values) {
+        public Criteria andDelFlagNotIn(List<Integer> values) {
             addCriterion("del_flag not in", values, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagBetween(String value1, String value2) {
+        public Criteria andDelFlagBetween(Integer value1, Integer value2) {
             addCriterion("del_flag between", value1, value2, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlagNotBetween(String value1, String value2) {
+        public Criteria andDelFlagNotBetween(Integer value1, Integer value2) {
             addCriterion("del_flag not between", value1, value2, "delFlag");
             return (Criteria) this;
         }

@@ -5,16 +5,16 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="consume_class" property="consumeClass" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="project_type" property="projectType" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="TINYINT" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
-    <result column="company_or_personal" property="companyOrPersonal" jdbcType="VARCHAR" />
+    <result column="company_or_personal" property="companyOrPersonal" jdbcType="TINYINT" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="province" property="province" jdbcType="VARCHAR" />
     <result column="city" property="city" jdbcType="VARCHAR" />
     <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="com_reg_time" property="comRegTime" jdbcType="VARCHAR" />
     <result column="reg_captial" property="regCaptial" jdbcType="INTEGER" />
-    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowConsumeWithBLOBs" extends="BaseResultMap" >
     <result column="borrow_contents" property="borrowContents" jdbcType="LONGVARCHAR" />
@@ -84,7 +84,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, consume_class, `name`, project_type, user_name, company_or_personal, username, 
-    province, city, area, com_reg_time, reg_captial, updatetime
+    province, city, area, com_reg_time, reg_captial, update_time
   </sql>
   <sql id="Blob_Column_List" >
     borrow_contents, account_contents, files, borrow_measures_instit, borrow_company_instruction, 
@@ -151,14 +151,14 @@
     insert into ht_borrow_consume (consume_class, `name`, project_type, 
       user_name, company_or_personal, username, 
       province, city, area, 
-      com_reg_time, reg_captial, updatetime, 
+      com_reg_time, reg_captial, update_time, 
       borrow_contents, account_contents, 
       files, borrow_measures_instit, borrow_company_instruction, 
       borrow_measures_mea)
-    values (#{consumeClass,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{projectType,jdbcType=VARCHAR}, 
-      #{userName,jdbcType=VARCHAR}, #{companyOrPersonal,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+    values (#{consumeClass,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{projectType,jdbcType=TINYINT}, 
+      #{userName,jdbcType=VARCHAR}, #{companyOrPersonal,jdbcType=TINYINT}, #{username,jdbcType=VARCHAR}, 
       #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
-      #{comRegTime,jdbcType=VARCHAR}, #{regCaptial,jdbcType=INTEGER}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{comRegTime,jdbcType=VARCHAR}, #{regCaptial,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{borrowContents,jdbcType=LONGVARCHAR}, #{accountContents,jdbcType=LONGVARCHAR}, 
       #{files,jdbcType=LONGVARCHAR}, #{borrowMeasuresInstit,jdbcType=LONGVARCHAR}, #{borrowCompanyInstruction,jdbcType=LONGVARCHAR}, 
       #{borrowMeasuresMea,jdbcType=LONGVARCHAR})
@@ -202,8 +202,8 @@
       <if test="regCaptial != null" >
         reg_captial,
       </if>
-      <if test="updatetime != null" >
-        updatetime,
+      <if test="updateTime != null" >
+        update_time,
       </if>
       <if test="borrowContents != null" >
         borrow_contents,
@@ -232,13 +232,13 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="projectType != null" >
-        #{projectType,jdbcType=VARCHAR},
+        #{projectType,jdbcType=TINYINT},
       </if>
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
       <if test="companyOrPersonal != null" >
-        #{companyOrPersonal,jdbcType=VARCHAR},
+        #{companyOrPersonal,jdbcType=TINYINT},
       </if>
       <if test="username != null" >
         #{username,jdbcType=VARCHAR},
@@ -258,8 +258,8 @@
       <if test="regCaptial != null" >
         #{regCaptial,jdbcType=INTEGER},
       </if>
-      <if test="updatetime != null" >
-        #{updatetime,jdbcType=TIMESTAMP},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="borrowContents != null" >
         #{borrowContents,jdbcType=LONGVARCHAR},
@@ -300,13 +300,13 @@
         `name` = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.projectType != null" >
-        project_type = #{record.projectType,jdbcType=VARCHAR},
+        project_type = #{record.projectType,jdbcType=TINYINT},
       </if>
       <if test="record.userName != null" >
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
       <if test="record.companyOrPersonal != null" >
-        company_or_personal = #{record.companyOrPersonal,jdbcType=VARCHAR},
+        company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
       </if>
       <if test="record.username != null" >
         username = #{record.username,jdbcType=VARCHAR},
@@ -326,8 +326,8 @@
       <if test="record.regCaptial != null" >
         reg_captial = #{record.regCaptial,jdbcType=INTEGER},
       </if>
-      <if test="record.updatetime != null" >
-        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.borrowContents != null" >
         borrow_contents = #{record.borrowContents,jdbcType=LONGVARCHAR},
@@ -357,16 +357,16 @@
     set id = #{record.id,jdbcType=INTEGER},
       consume_class = #{record.consumeClass,jdbcType=VARCHAR},
       `name` = #{record.name,jdbcType=VARCHAR},
-      project_type = #{record.projectType,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
       user_name = #{record.userName,jdbcType=VARCHAR},
-      company_or_personal = #{record.companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
       username = #{record.username,jdbcType=VARCHAR},
       province = #{record.province,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=VARCHAR},
       com_reg_time = #{record.comRegTime,jdbcType=VARCHAR},
       reg_captial = #{record.regCaptial,jdbcType=INTEGER},
-      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       borrow_contents = #{record.borrowContents,jdbcType=LONGVARCHAR},
       account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
       files = #{record.files,jdbcType=LONGVARCHAR},
@@ -382,16 +382,16 @@
     set id = #{record.id,jdbcType=INTEGER},
       consume_class = #{record.consumeClass,jdbcType=VARCHAR},
       `name` = #{record.name,jdbcType=VARCHAR},
-      project_type = #{record.projectType,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
       user_name = #{record.userName,jdbcType=VARCHAR},
-      company_or_personal = #{record.companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
       username = #{record.username,jdbcType=VARCHAR},
       province = #{record.province,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=VARCHAR},
       com_reg_time = #{record.comRegTime,jdbcType=VARCHAR},
       reg_captial = #{record.regCaptial,jdbcType=INTEGER},
-      updatetime = #{record.updatetime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -406,13 +406,13 @@
         `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="projectType != null" >
-        project_type = #{projectType,jdbcType=VARCHAR},
+        project_type = #{projectType,jdbcType=TINYINT},
       </if>
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="companyOrPersonal != null" >
-        company_or_personal = #{companyOrPersonal,jdbcType=VARCHAR},
+        company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
       </if>
       <if test="username != null" >
         username = #{username,jdbcType=VARCHAR},
@@ -432,8 +432,8 @@
       <if test="regCaptial != null" >
         reg_captial = #{regCaptial,jdbcType=INTEGER},
       </if>
-      <if test="updatetime != null" >
-        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="borrowContents != null" >
         borrow_contents = #{borrowContents,jdbcType=LONGVARCHAR},
@@ -460,16 +460,16 @@
     update ht_borrow_consume
     set consume_class = #{consumeClass,jdbcType=VARCHAR},
       `name` = #{name,jdbcType=VARCHAR},
-      project_type = #{projectType,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
       user_name = #{userName,jdbcType=VARCHAR},
-      company_or_personal = #{companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
       username = #{username,jdbcType=VARCHAR},
       province = #{province,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
       com_reg_time = #{comRegTime,jdbcType=VARCHAR},
       reg_captial = #{regCaptial,jdbcType=INTEGER},
-      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       borrow_contents = #{borrowContents,jdbcType=LONGVARCHAR},
       account_contents = #{accountContents,jdbcType=LONGVARCHAR},
       files = #{files,jdbcType=LONGVARCHAR},
@@ -482,16 +482,16 @@
     update ht_borrow_consume
     set consume_class = #{consumeClass,jdbcType=VARCHAR},
       `name` = #{name,jdbcType=VARCHAR},
-      project_type = #{projectType,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
       user_name = #{userName,jdbcType=VARCHAR},
-      company_or_personal = #{companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
       username = #{username,jdbcType=VARCHAR},
       province = #{province,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
       com_reg_time = #{comRegTime,jdbcType=VARCHAR},
       reg_captial = #{regCaptial,jdbcType=INTEGER},
-      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

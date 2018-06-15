@@ -47,7 +47,6 @@ public class BorrowApicronServiceImpl implements BorrowApicronService{
         if (record.getWebStatus() == null) {
             record.setWebStatus(0);
         }
-        record.setUpdateTime(GetDate.getMyTimeInMillis());
         return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
     }
 
@@ -59,7 +58,6 @@ public class BorrowApicronServiceImpl implements BorrowApicronService{
         if (record.getWebStatus() == null) {
             record.setWebStatus(0);
         }
-        record.setUpdateTime(GetDate.getMyTimeInMillis());
         return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
     }
 
@@ -79,7 +77,6 @@ public class BorrowApicronServiceImpl implements BorrowApicronService{
         BorrowApicron record = new BorrowApicron();
         record.setId(id);
         record.setExtraYieldRepayStatus(status);
-        record.setUpdateTime(GetDate.getMyTimeInMillis());
         return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
     }
 }

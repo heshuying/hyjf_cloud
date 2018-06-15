@@ -19,7 +19,7 @@
     <result column="loan_interest" property="loanInterest" jdbcType="DECIMAL" />
     <result column="remain_period" property="remainPeriod" jdbcType="TINYINT" />
     <result column="repay_period" property="repayPeriod" jdbcType="TINYINT" />
-    <result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+    <result column="repay_time" property="repayTime" jdbcType="INTEGER" />
     <result column="repay_action_time" property="repayActionTime" jdbcType="INTEGER" />
     <result column="repay_interest_yes" property="repayInterestYes" jdbcType="DECIMAL" />
     <result column="repay_interest_wait" property="repayInterestWait" jdbcType="DECIMAL" />
@@ -28,10 +28,10 @@
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="repay_order_id" property="repayOrderId" jdbcType="VARCHAR" />
     <result column="repay_order_date" property="repayOrderDate" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
   </resultMap>
@@ -154,11 +154,11 @@
       #{borrowUserName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{borrowApr,jdbcType=DECIMAL}, 
       #{borrowExtraYield,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, 
       #{borrowStyleName,jdbcType=VARCHAR}, #{loanInterest,jdbcType=DECIMAL}, #{remainPeriod,jdbcType=TINYINT}, 
-      #{repayPeriod,jdbcType=TINYINT}, #{repayTime,jdbcType=VARCHAR}, #{repayActionTime,jdbcType=INTEGER}, 
+      #{repayPeriod,jdbcType=TINYINT}, #{repayTime,jdbcType=INTEGER}, #{repayActionTime,jdbcType=INTEGER}, 
       #{repayInterestYes,jdbcType=DECIMAL}, #{repayInterestWait,jdbcType=DECIMAL}, #{repayStatus,jdbcType=TINYINT}, 
       #{addip,jdbcType=VARCHAR}, #{web,jdbcType=TINYINT}, #{repayOrderId,jdbcType=VARCHAR}, 
-      #{repayOrderDate,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
-      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{repayOrderDate,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
+      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
       #{updateUserName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoan" >
@@ -311,7 +311,7 @@
         #{repayPeriod,jdbcType=TINYINT},
       </if>
       <if test="repayTime != null" >
-        #{repayTime,jdbcType=VARCHAR},
+        #{repayTime,jdbcType=INTEGER},
       </if>
       <if test="repayActionTime != null" >
         #{repayActionTime,jdbcType=INTEGER},
@@ -338,7 +338,7 @@
         #{repayOrderDate,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -347,7 +347,7 @@
         #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
@@ -418,7 +418,7 @@
         repay_period = #{record.repayPeriod,jdbcType=TINYINT},
       </if>
       <if test="record.repayTime != null" >
-        repay_time = #{record.repayTime,jdbcType=VARCHAR},
+        repay_time = #{record.repayTime,jdbcType=INTEGER},
       </if>
       <if test="record.repayActionTime != null" >
         repay_action_time = #{record.repayActionTime,jdbcType=INTEGER},
@@ -445,7 +445,7 @@
         repay_order_date = #{record.repayOrderDate,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -454,7 +454,7 @@
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -486,7 +486,7 @@
       loan_interest = #{record.loanInterest,jdbcType=DECIMAL},
       remain_period = #{record.remainPeriod,jdbcType=TINYINT},
       repay_period = #{record.repayPeriod,jdbcType=TINYINT},
-      repay_time = #{record.repayTime,jdbcType=VARCHAR},
+      repay_time = #{record.repayTime,jdbcType=INTEGER},
       repay_action_time = #{record.repayActionTime,jdbcType=INTEGER},
       repay_interest_yes = #{record.repayInterestYes,jdbcType=DECIMAL},
       repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
@@ -495,10 +495,10 @@
       web = #{record.web,jdbcType=TINYINT},
       repay_order_id = #{record.repayOrderId,jdbcType=VARCHAR},
       repay_order_date = #{record.repayOrderDate,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -557,7 +557,7 @@
         repay_period = #{repayPeriod,jdbcType=TINYINT},
       </if>
       <if test="repayTime != null" >
-        repay_time = #{repayTime,jdbcType=VARCHAR},
+        repay_time = #{repayTime,jdbcType=INTEGER},
       </if>
       <if test="repayActionTime != null" >
         repay_action_time = #{repayActionTime,jdbcType=INTEGER},
@@ -584,7 +584,7 @@
         repay_order_date = #{repayOrderDate,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -593,7 +593,7 @@
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
@@ -622,7 +622,7 @@
       loan_interest = #{loanInterest,jdbcType=DECIMAL},
       remain_period = #{remainPeriod,jdbcType=TINYINT},
       repay_period = #{repayPeriod,jdbcType=TINYINT},
-      repay_time = #{repayTime,jdbcType=VARCHAR},
+      repay_time = #{repayTime,jdbcType=INTEGER},
       repay_action_time = #{repayActionTime,jdbcType=INTEGER},
       repay_interest_yes = #{repayInterestYes,jdbcType=DECIMAL},
       repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
@@ -631,10 +631,10 @@
       web = #{web,jdbcType=TINYINT},
       repay_order_id = #{repayOrderId,jdbcType=VARCHAR},
       repay_order_date = #{repayOrderDate,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

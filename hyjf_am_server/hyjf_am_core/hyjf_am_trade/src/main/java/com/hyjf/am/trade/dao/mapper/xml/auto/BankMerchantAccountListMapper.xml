@@ -15,9 +15,9 @@
     <result column="bank_account_code" property="bankAccountCode" jdbcType="VARCHAR" />
     <result column="bank_account_balance" property="bankAccountBalance" jdbcType="DECIMAL" />
     <result column="bank_account_frost" property="bankAccountFrost" jdbcType="DECIMAL" />
-    <result column="trans_type" property="transType" jdbcType="INTEGER" />
-    <result column="type" property="type" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="trans_type" property="transType" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
     <result column="tx_date" property="txDate" jdbcType="INTEGER" />
     <result column="tx_time" property="txTime" jdbcType="INTEGER" />
@@ -143,7 +143,7 @@
       #{branchName,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{accountId,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{bankAccountType,jdbcType=VARCHAR}, 
       #{bankAccountCode,jdbcType=VARCHAR}, #{bankAccountBalance,jdbcType=DECIMAL}, #{bankAccountFrost,jdbcType=DECIMAL}, 
-      #{transType,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{transType,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
       #{seqNo,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
@@ -269,13 +269,13 @@
         #{bankAccountFrost,jdbcType=DECIMAL},
       </if>
       <if test="transType != null" >
-        #{transType,jdbcType=INTEGER},
+        #{transType,jdbcType=TINYINT},
       </if>
       <if test="type != null" >
-        #{type,jdbcType=INTEGER},
+        #{type,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="seqNo != null" >
         #{seqNo,jdbcType=VARCHAR},
@@ -358,13 +358,13 @@
         bank_account_frost = #{record.bankAccountFrost,jdbcType=DECIMAL},
       </if>
       <if test="record.transType != null" >
-        trans_type = #{record.transType,jdbcType=INTEGER},
+        trans_type = #{record.transType,jdbcType=TINYINT},
       </if>
       <if test="record.type != null" >
-        `type` = #{record.type,jdbcType=INTEGER},
+        `type` = #{record.type,jdbcType=TINYINT},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.seqNo != null" >
         seq_no = #{record.seqNo,jdbcType=VARCHAR},
@@ -416,9 +416,9 @@
       bank_account_code = #{record.bankAccountCode,jdbcType=VARCHAR},
       bank_account_balance = #{record.bankAccountBalance,jdbcType=DECIMAL},
       bank_account_frost = #{record.bankAccountFrost,jdbcType=DECIMAL},
-      trans_type = #{record.transType,jdbcType=INTEGER},
-      `type` = #{record.type,jdbcType=INTEGER},
-      `status` = #{record.status,jdbcType=INTEGER},
+      trans_type = #{record.transType,jdbcType=TINYINT},
+      `type` = #{record.type,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=TINYINT},
       seq_no = #{record.seqNo,jdbcType=VARCHAR},
       tx_date = #{record.txDate,jdbcType=INTEGER},
       tx_time = #{record.txTime,jdbcType=INTEGER},
@@ -473,13 +473,13 @@
         bank_account_frost = #{bankAccountFrost,jdbcType=DECIMAL},
       </if>
       <if test="transType != null" >
-        trans_type = #{transType,jdbcType=INTEGER},
+        trans_type = #{transType,jdbcType=TINYINT},
       </if>
       <if test="type != null" >
-        `type` = #{type,jdbcType=INTEGER},
+        `type` = #{type,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="seqNo != null" >
         seq_no = #{seqNo,jdbcType=VARCHAR},
@@ -528,9 +528,9 @@
       bank_account_code = #{bankAccountCode,jdbcType=VARCHAR},
       bank_account_balance = #{bankAccountBalance,jdbcType=DECIMAL},
       bank_account_frost = #{bankAccountFrost,jdbcType=DECIMAL},
-      trans_type = #{transType,jdbcType=INTEGER},
-      `type` = #{type,jdbcType=INTEGER},
-      `status` = #{status,jdbcType=INTEGER},
+      trans_type = #{transType,jdbcType=TINYINT},
+      `type` = #{type,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
       seq_no = #{seqNo,jdbcType=VARCHAR},
       tx_date = #{txDate,jdbcType=INTEGER},
       tx_time = #{txTime,jdbcType=INTEGER},

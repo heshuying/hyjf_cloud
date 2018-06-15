@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class IncreaseInterestLoan implements Serializable {
     private Integer id;
@@ -38,7 +39,7 @@ public class IncreaseInterestLoan implements Serializable {
 
     private Integer repayPeriod;
 
-    private String repayTime;
+    private Integer repayTime;
 
     private Integer repayActionTime;
 
@@ -56,13 +57,13 @@ public class IncreaseInterestLoan implements Serializable {
 
     private String repayOrderDate;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private Integer updateUserId;
 
@@ -206,12 +207,12 @@ public class IncreaseInterestLoan implements Serializable {
         this.repayPeriod = repayPeriod;
     }
 
-    public String getRepayTime() {
+    public Integer getRepayTime() {
         return repayTime;
     }
 
-    public void setRepayTime(String repayTime) {
-        this.repayTime = repayTime == null ? null : repayTime.trim();
+    public void setRepayTime(Integer repayTime) {
+        this.repayTime = repayTime;
     }
 
     public Integer getRepayActionTime() {
@@ -278,11 +279,11 @@ public class IncreaseInterestLoan implements Serializable {
         this.repayOrderDate = repayOrderDate == null ? null : repayOrderDate.trim();
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -302,11 +303,11 @@ public class IncreaseInterestLoan implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

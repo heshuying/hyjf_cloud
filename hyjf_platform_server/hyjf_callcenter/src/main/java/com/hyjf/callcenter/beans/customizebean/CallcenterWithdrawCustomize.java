@@ -3,8 +3,6 @@ package com.hyjf.callcenter.beans.customizebean;
 
 import java.io.Serializable;
 
-// 不要继承数据库的bean,需要什么属性写一份  todo xiashuqing
-//public class CallcenterWithdrawCustomize extends Accountwithdraw implements Serializable {
 public class CallcenterWithdrawCustomize implements Serializable {
 
 	/**

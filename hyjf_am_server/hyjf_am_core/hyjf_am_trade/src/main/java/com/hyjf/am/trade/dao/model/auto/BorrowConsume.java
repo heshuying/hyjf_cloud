@@ -10,11 +10,11 @@ public class BorrowConsume implements Serializable {
 
     private String name;
 
-    private String projectType;
+    private Integer projectType;
 
     private String userName;
 
-    private String companyOrPersonal;
+    private Integer companyOrPersonal;
 
     private String username;
 
@@ -28,7 +28,7 @@ public class BorrowConsume implements Serializable {
 
     private Integer regCaptial;
 
-    private Date updatetime;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -56,12 +56,12 @@ public class BorrowConsume implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getProjectType() {
+    public Integer getProjectType() {
         return projectType;
     }
 
-    public void setProjectType(String projectType) {
-        this.projectType = projectType == null ? null : projectType.trim();
+    public void setProjectType(Integer projectType) {
+        this.projectType = projectType;
     }
 
     public String getUserName() {
@@ -72,12 +72,12 @@ public class BorrowConsume implements Serializable {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getCompanyOrPersonal() {
+    public Integer getCompanyOrPersonal() {
         return companyOrPersonal;
     }
 
-    public void setCompanyOrPersonal(String companyOrPersonal) {
-        this.companyOrPersonal = companyOrPersonal == null ? null : companyOrPersonal.trim();
+    public void setCompanyOrPersonal(Integer companyOrPersonal) {
+        this.companyOrPersonal = companyOrPersonal;
     }
 
     public String getUsername() {
@@ -128,11 +128,11 @@ public class BorrowConsume implements Serializable {
         this.regCaptial = regCaptial;
     }
 
-    public Date getUpdatetime() {
-        return updatetime;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdatetime(Date updatetime) {
-        this.updatetime = updatetime;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

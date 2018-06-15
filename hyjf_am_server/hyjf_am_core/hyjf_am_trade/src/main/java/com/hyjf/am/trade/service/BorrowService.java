@@ -5,18 +5,14 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
+import com.hyjf.am.trade.dao.model.auto.*;
 
 /**
  * @author fuqiang
  * @version BorrowService, v0.1 2018/6/13 18:52
  */
 public interface BorrowService {
-    BorrowWithBLOBs getBorrow(String borrowNid);
+    Borrow getBorrow(String borrowNid);
 
     BorrowStyle getborrowStyleByNid(String borrowStyle);
 
@@ -39,7 +35,7 @@ public interface BorrowService {
      * 借款表插入
      * @param borrow
      */
-    int insertBorrow(BorrowWithBLOBs borrow);
+    int insertBorrow(Borrow borrow);
 
     int insertBorrowManinfo(BorrowManinfo borrowManinfo);
 

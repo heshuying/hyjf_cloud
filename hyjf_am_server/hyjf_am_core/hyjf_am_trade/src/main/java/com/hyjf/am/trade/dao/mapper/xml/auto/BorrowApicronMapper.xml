@@ -10,8 +10,6 @@
     <result column="web_status" property="webStatus" jdbcType="TINYINT" />
     <result column="api_type" property="apiType" jdbcType="TINYINT" />
     <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
     <result column="period_now" property="periodNow" jdbcType="INTEGER" />
     <result column="credit_repay_status" property="creditRepayStatus" jdbcType="TINYINT" />
     <result column="extra_yield_status" property="extraYieldStatus" jdbcType="TINYINT" />
@@ -38,6 +36,8 @@
     <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
     <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
     <result column="ordid" property="ordid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowApicron" extends="BaseResultMap" >
     <result column="data" property="data" jdbcType="LONGVARCHAR" />
@@ -101,12 +101,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, nid, user_id, borrow_nid, `status`, web_status, api_type, repay_status, create_time, 
-    update_time, period_now, credit_repay_status, extra_yield_status, extra_yield_repay_status, 
-    is_repay_org_flag, user_name, borrow_account, borrow_period, batch_no, batch_amount, 
-    batch_counts, batch_service_fee, tx_amount, tx_counts, fail_times, suc_counts, suc_amount, 
-    fail_counts, fail_amount, service_fee, tx_date, tx_time, seq_no, bank_seq_no, plan_nid, 
-    ordid
+    id, nid, user_id, borrow_nid, `status`, web_status, api_type, repay_status, period_now, 
+    credit_repay_status, extra_yield_status, extra_yield_repay_status, is_repay_org_flag, 
+    user_name, borrow_account, borrow_period, batch_no, batch_amount, batch_counts, batch_service_fee, 
+    tx_amount, tx_counts, fail_times, suc_counts, suc_amount, fail_counts, fail_amount, 
+    service_fee, tx_date, tx_time, seq_no, bank_seq_no, plan_nid, ordid, create_time, 
+    update_time
   </sql>
   <sql id="Blob_Column_List" >
     `data`
@@ -171,29 +171,29 @@
     </selectKey>
     insert into ht_borrow_apicron (nid, user_id, borrow_nid, 
       `status`, web_status, api_type, 
-      repay_status, create_time, update_time, 
-      period_now, credit_repay_status, extra_yield_status, 
-      extra_yield_repay_status, is_repay_org_flag, 
-      user_name, borrow_account, borrow_period, 
-      batch_no, batch_amount, batch_counts, 
-      batch_service_fee, tx_amount, tx_counts, 
-      fail_times, suc_counts, suc_amount, 
-      fail_counts, fail_amount, service_fee, 
-      tx_date, tx_time, seq_no, 
-      bank_seq_no, plan_nid, ordid, 
+      repay_status, period_now, credit_repay_status, 
+      extra_yield_status, extra_yield_repay_status, 
+      is_repay_org_flag, user_name, borrow_account, 
+      borrow_period, batch_no, batch_amount, 
+      batch_counts, batch_service_fee, tx_amount, 
+      tx_counts, fail_times, suc_counts, 
+      suc_amount, fail_counts, fail_amount, 
+      service_fee, tx_date, tx_time, 
+      seq_no, bank_seq_no, plan_nid, 
+      ordid, create_time, update_time, 
       `data`)
     values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, 
       #{status,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, #{apiType,jdbcType=TINYINT}, 
-      #{repayStatus,jdbcType=TINYINT}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
-      #{periodNow,jdbcType=INTEGER}, #{creditRepayStatus,jdbcType=TINYINT}, #{extraYieldStatus,jdbcType=TINYINT}, 
-      #{extraYieldRepayStatus,jdbcType=TINYINT}, #{isRepayOrgFlag,jdbcType=TINYINT}, 
-      #{userName,jdbcType=VARCHAR}, #{borrowAccount,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, 
-      #{batchNo,jdbcType=VARCHAR}, #{batchAmount,jdbcType=DECIMAL}, #{batchCounts,jdbcType=INTEGER}, 
-      #{batchServiceFee,jdbcType=DECIMAL}, #{txAmount,jdbcType=DECIMAL}, #{txCounts,jdbcType=INTEGER}, 
-      #{failTimes,jdbcType=TINYINT}, #{sucCounts,jdbcType=INTEGER}, #{sucAmount,jdbcType=DECIMAL}, 
-      #{failCounts,jdbcType=INTEGER}, #{failAmount,jdbcType=DECIMAL}, #{serviceFee,jdbcType=DECIMAL}, 
-      #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=INTEGER}, 
-      #{bankSeqNo,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{ordid,jdbcType=VARCHAR}, 
+      #{repayStatus,jdbcType=TINYINT}, #{periodNow,jdbcType=INTEGER}, #{creditRepayStatus,jdbcType=TINYINT}, 
+      #{extraYieldStatus,jdbcType=TINYINT}, #{extraYieldRepayStatus,jdbcType=TINYINT}, 
+      #{isRepayOrgFlag,jdbcType=TINYINT}, #{userName,jdbcType=VARCHAR}, #{borrowAccount,jdbcType=DECIMAL}, 
+      #{borrowPeriod,jdbcType=INTEGER}, #{batchNo,jdbcType=VARCHAR}, #{batchAmount,jdbcType=DECIMAL}, 
+      #{batchCounts,jdbcType=INTEGER}, #{batchServiceFee,jdbcType=DECIMAL}, #{txAmount,jdbcType=DECIMAL}, 
+      #{txCounts,jdbcType=INTEGER}, #{failTimes,jdbcType=TINYINT}, #{sucCounts,jdbcType=INTEGER}, 
+      #{sucAmount,jdbcType=DECIMAL}, #{failCounts,jdbcType=INTEGER}, #{failAmount,jdbcType=DECIMAL}, 
+      #{serviceFee,jdbcType=DECIMAL}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
+      #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
+      #{ordid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{data,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
@@ -222,12 +222,6 @@
       </if>
       <if test="repayStatus != null" >
         repay_status,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
       </if>
       <if test="periodNow != null" >
         period_now,
@@ -307,6 +301,12 @@
       <if test="ordid != null" >
         ordid,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
       <if test="data != null" >
         `data`,
       </if>
@@ -332,12 +332,6 @@
       </if>
       <if test="repayStatus != null" >
         #{repayStatus,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
       </if>
       <if test="periodNow != null" >
         #{periodNow,jdbcType=INTEGER},
@@ -417,6 +411,12 @@
       <if test="ordid != null" >
         #{ordid,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="data != null" >
         #{data,jdbcType=LONGVARCHAR},
       </if>
@@ -454,12 +454,6 @@
       </if>
       <if test="record.repayStatus != null" >
         repay_status = #{record.repayStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
       </if>
       <if test="record.periodNow != null" >
         period_now = #{record.periodNow,jdbcType=INTEGER},
@@ -539,6 +533,12 @@
       <if test="record.ordid != null" >
         ordid = #{record.ordid,jdbcType=VARCHAR},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.data != null" >
         `data` = #{record.data,jdbcType=LONGVARCHAR},
       </if>
@@ -557,8 +557,6 @@
       web_status = #{record.webStatus,jdbcType=TINYINT},
       api_type = #{record.apiType,jdbcType=TINYINT},
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       period_now = #{record.periodNow,jdbcType=INTEGER},
       credit_repay_status = #{record.creditRepayStatus,jdbcType=TINYINT},
       extra_yield_status = #{record.extraYieldStatus,jdbcType=TINYINT},
@@ -585,6 +583,8 @@
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `data` = #{record.data,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -600,8 +600,6 @@
       web_status = #{record.webStatus,jdbcType=TINYINT},
       api_type = #{record.apiType,jdbcType=TINYINT},
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       period_now = #{record.periodNow,jdbcType=INTEGER},
       credit_repay_status = #{record.creditRepayStatus,jdbcType=TINYINT},
       extra_yield_status = #{record.extraYieldStatus,jdbcType=TINYINT},
@@ -627,7 +625,9 @@
       seq_no = #{record.seqNo,jdbcType=INTEGER},
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
-      ordid = #{record.ordid,jdbcType=VARCHAR}
+      ordid = #{record.ordid,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -655,12 +655,6 @@
       </if>
       <if test="repayStatus != null" >
         repay_status = #{repayStatus,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
       </if>
       <if test="periodNow != null" >
         period_now = #{periodNow,jdbcType=INTEGER},
@@ -740,6 +734,12 @@
       <if test="ordid != null" >
         ordid = #{ordid,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="data != null" >
         `data` = #{data,jdbcType=LONGVARCHAR},
       </if>
@@ -755,8 +755,6 @@
       web_status = #{webStatus,jdbcType=TINYINT},
       api_type = #{apiType,jdbcType=TINYINT},
       repay_status = #{repayStatus,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
       period_now = #{periodNow,jdbcType=INTEGER},
       credit_repay_status = #{creditRepayStatus,jdbcType=TINYINT},
       extra_yield_status = #{extraYieldStatus,jdbcType=TINYINT},
@@ -783,6 +781,8 @@
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       `data` = #{data,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -795,8 +795,6 @@
       web_status = #{webStatus,jdbcType=TINYINT},
       api_type = #{apiType,jdbcType=TINYINT},
       repay_status = #{repayStatus,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
       period_now = #{periodNow,jdbcType=INTEGER},
       credit_repay_status = #{creditRepayStatus,jdbcType=TINYINT},
       extra_yield_status = #{extraYieldStatus,jdbcType=TINYINT},
@@ -822,7 +820,9 @@
       seq_no = #{seqNo,jdbcType=INTEGER},
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{planNid,jdbcType=VARCHAR},
-      ordid = #{ordid,jdbcType=VARCHAR}
+      ordid = #{ordid,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

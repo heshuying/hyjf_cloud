@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class IncreaseInterestRepay implements Serializable {
     private Integer id;
@@ -52,15 +53,15 @@ public class IncreaseInterestRepay implements Serializable {
 
     private String addip;
 
-    private Integer web;
+    private Boolean web;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private Integer updateUserId;
 
@@ -260,19 +261,19 @@ public class IncreaseInterestRepay implements Serializable {
         this.addip = addip == null ? null : addip.trim();
     }
 
-    public Integer getWeb() {
+    public Boolean getWeb() {
         return web;
     }
 
-    public void setWeb(Integer web) {
+    public void setWeb(Boolean web) {
         this.web = web;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -292,11 +293,11 @@ public class IncreaseInterestRepay implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

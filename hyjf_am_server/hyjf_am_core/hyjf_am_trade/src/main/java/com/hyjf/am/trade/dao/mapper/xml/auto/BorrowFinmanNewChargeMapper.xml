@@ -21,8 +21,8 @@
     <result column="repayer_type" property="repayerType" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -122,30 +122,29 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
-    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_finman_new_charge (man_charge_type, man_charge_time, man_charge_time_type, 
-      project_type, inst_code, asset_type, 
-      auto_borrow_apr, charge_mode, charge_rate, 
-      man_charge_rate, return_rate, late_interest, 
-      service_fee_total, late_free_days, auto_repay, 
-      repayer_type, `status`, remark, 
-      create_time, update_time)
-    values (#{manChargeType,jdbcType=VARCHAR}, #{manChargeTime,jdbcType=INTEGER}, #{manChargeTimeType,jdbcType=VARCHAR}, 
-      #{projectType,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
-      #{autoBorrowApr,jdbcType=VARCHAR}, #{chargeMode,jdbcType=TINYINT}, #{chargeRate,jdbcType=VARCHAR}, 
-      #{manChargeRate,jdbcType=VARCHAR}, #{returnRate,jdbcType=VARCHAR}, #{lateInterest,jdbcType=VARCHAR}, 
-      #{serviceFeeTotal,jdbcType=DECIMAL}, #{lateFreeDays,jdbcType=TINYINT}, #{autoRepay,jdbcType=TINYINT}, 
-      #{repayerType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER})
+    insert into ht_borrow_finman_new_charge (man_charge_cd, man_charge_type, man_charge_time, 
+      man_charge_time_type, project_type, inst_code, 
+      asset_type, auto_borrow_apr, charge_mode, 
+      charge_rate, man_charge_rate, return_rate, 
+      late_interest, service_fee_total, late_free_days, 
+      auto_repay, repayer_type, `status`, 
+      remark, create_time, update_time
+      )
+    values (#{manChargeCd,jdbcType=VARCHAR}, #{manChargeType,jdbcType=VARCHAR}, #{manChargeTime,jdbcType=INTEGER}, 
+      #{manChargeTimeType,jdbcType=VARCHAR}, #{projectType,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, 
+      #{assetType,jdbcType=TINYINT}, #{autoBorrowApr,jdbcType=VARCHAR}, #{chargeMode,jdbcType=TINYINT}, 
+      #{chargeRate,jdbcType=VARCHAR}, #{manChargeRate,jdbcType=VARCHAR}, #{returnRate,jdbcType=VARCHAR}, 
+      #{lateInterest,jdbcType=VARCHAR}, #{serviceFeeTotal,jdbcType=DECIMAL}, #{lateFreeDays,jdbcType=TINYINT}, 
+      #{autoRepay,jdbcType=TINYINT}, #{repayerType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
-    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_borrow_finman_new_charge
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="manChargeCd != null" >
+        man_charge_cd,
+      </if>
       <if test="manChargeType != null" >
         man_charge_type,
       </if>
@@ -208,6 +207,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="manChargeCd != null" >
+        #{manChargeCd,jdbcType=VARCHAR},
+      </if>
       <if test="manChargeType != null" >
         #{manChargeType,jdbcType=VARCHAR},
       </if>
@@ -263,10 +265,10 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -337,10 +339,10 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -368,8 +370,8 @@
       repayer_type = #{record.repayerType,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -432,10 +434,10 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where man_charge_cd = #{manChargeCd,jdbcType=VARCHAR}
@@ -460,8 +462,8 @@
       repayer_type = #{repayerType,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where man_charge_cd = #{manChargeCd,jdbcType=VARCHAR}
   </update>
 </mapper>
