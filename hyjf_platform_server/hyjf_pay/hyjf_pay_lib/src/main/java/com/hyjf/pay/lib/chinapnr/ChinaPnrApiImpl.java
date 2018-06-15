@@ -47,23 +47,31 @@ public class ChinaPnrApiImpl implements PnrApi {
     public ChinaPnrApiImpl() {
         // 版本号
         if (Validator.isNull(_version)) {
-            _version = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_VERSION_KEY);
+            //   todo xiashuqing 20180615
+            _version = "";
+           // _version = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_VERSION_KEY);
             // _version ="20";
         }
 
         // 商户客户号
         if (Validator.isNull(_merCustId)) {
-            _merCustId = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERCUSTID);
+            //   todo xiashuqing 20180615
+           // _merCustId = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERCUSTID);
+            _merCustId = "";
         }
 
         // 商户子账户号
         if (Validator.isNull(_merAcctId)) {
-            _merAcctId = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERACCTID);
+            //   todo xiashuqing 20180615
+            //_merAcctId = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERACCTID);
+            _merAcctId = "";
         }
 
         // 商户后台回调地址
         if (Validator.isNull(_bgRetUrl)) {
-            _bgRetUrl = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_CALLBACK_URL);
+            //   todo xiashuqing 20180615
+            //_bgRetUrl = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_CALLBACK_URL);
+            _bgRetUrl = "";
         }
     }
 
@@ -93,8 +101,9 @@ public class ChinaPnrApiImpl implements PnrApi {
         }
 
         try {
-            // 发送请求
-            String HTTP_URL = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_URL);
+            // 发送请求 //   todo xiashuqing 20180615
+            //String HTTP_URL = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_URL);
+            String HTTP_URL = "";
             result = HttpDeal.post(HTTP_URL, bean.getAllParams());
             log.debug("[返回结果:" + result + "]");
         } catch (Exception e) {

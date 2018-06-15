@@ -1,10 +1,9 @@
 package com.hyjf.pay.lib.bank.bean;
 
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-
 import java.io.Serializable;
+
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 
 public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
@@ -130,8 +129,11 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	}
 
 	private void setCallCommon(Integer userId, String txCode, Integer client) {
-		String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-		String bankInstCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+		//todo
+		//String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
+		String bankCode ="";
+		//String bankInstCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+		String bankInstCode = "";
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		String txDate = GetOrderIdUtils.getTxDate();
 		String txTime = GetOrderIdUtils.getTxTime();

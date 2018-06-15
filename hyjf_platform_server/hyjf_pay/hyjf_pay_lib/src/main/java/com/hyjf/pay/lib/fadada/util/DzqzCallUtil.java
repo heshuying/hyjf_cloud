@@ -1,18 +1,16 @@
 package com.hyjf.pay.lib.fadada.util;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 
 public class DzqzCallUtil {
 
@@ -34,7 +32,9 @@ public class DzqzCallUtil {
             bean.setTxTime(txTime);
             bean.setLogordid(orderId);
             bean.convert();
-            String payurl = PropUtils.getSystem(DzqzConstant.HYJF_PAY_FDD_URL);
+            //   todo xiashuqing 20180615
+            //String payurl = PropUtils.getSystem(DzqzConstant.HYJF_PAY_FDD_URL);
+            String payurl = "";
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }

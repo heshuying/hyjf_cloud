@@ -3,8 +3,6 @@ package com.hyjf.cs.message.jpush;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hyjf.common.util.PropUtils;
-
 import cn.jpush.api.JPushClient;
 import cn.jpush.api.common.ClientConfig;
 import cn.jpush.api.common.resp.APIConnectionException;
@@ -36,9 +34,10 @@ public class JPush {
     private static String soundName="music.caf";
 
     /**
-     * ios是否为开发环境 true为生产 false 为开发环境
+     * ios是否为开发环境 true为生产 false 为开发环境 todo
      */
-    private static boolean isProduction = Boolean.valueOf(PropUtils.getSystem("hyjf.jpush.isproduction"));
+    private static boolean isProduction = Boolean.TRUE;
+    // private static boolean isProduction = Boolean.valueOf(PropUtils.getSystem("hyjf.jpush.isproduction"));
 
     /**
      * 调用样例

@@ -1,6 +1,5 @@
 package com.hyjf.pay.lib.chinapnr.util;
 
-import com.hyjf.common.util.PropUtils;
 
 /**
  * <p>
@@ -10,7 +9,7 @@ import com.hyjf.common.util.PropUtils;
  * @author gogtz
  * @version 1.0.0
  */
-public class ChinaPnrPropUtils extends PropUtils {
+public class ChinaPnrPropUtils   {
 
 //    protected static final String SYSTEM_RESOURCES_PROPERTIES_FILE_NAME = "system.properties";
 //

@@ -4,16 +4,12 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-
-import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.anrong.AnRongCallApiImpl;
-import com.hyjf.pay.lib.anrong.bean.AnRongBean;
-import com.hyjf.pay.lib.anrong.bean.AnRongConstant;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.anrong.bean.AnRongBean;
 
 /**
  * 
@@ -49,8 +45,9 @@ public class AnRongCallUtils implements Serializable {
 		try {
 			// bean转换成参数
 			bean.convert();
-			// 取出调用安融的url
-			String payurl = PropUtils.getSystem(AnRongConstant.PARM_PAY_URL);
+			// 取出调用安融的url todo
+			//String payurl = PropUtils.getSystem(AnRongConstant.PARM_PAY_URL);
+			String payurl = "";
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}

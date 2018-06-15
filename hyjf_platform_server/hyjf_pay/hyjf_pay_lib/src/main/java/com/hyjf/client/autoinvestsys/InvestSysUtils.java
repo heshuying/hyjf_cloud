@@ -9,8 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.util.PropertiesConstants;
 
 @Service
 public class InvestSysUtils {
@@ -32,8 +30,9 @@ public class InvestSysUtils {
 		Map<String, String> params = new HashMap<String, String>();
 		// 需要保存的计划投资对象转json字符串
 		params.put("id", id);
-		// 请求路径
-		String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_UPDATE_BORROWTENDER_SYS;
+		// 请求路径 todo
+		// String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_UPDATE_BORROWTENDER_SYS;
+		String requestUrl = "";
 		InvestSysUtils.noRetPost(requestUrl,params);
 	}
 	/**
@@ -43,8 +42,9 @@ public class InvestSysUtils {
 		Map<String, String> params = new HashMap<String, String>();
 		// 需要保存的计划投资对象转json字符串
 		params.put("debtinfo", debtinfo);
-		// 请求路径
-		String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_INSERT_INVEST_SYS;
+		// 请求路径 todo
+		//String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_INSERT_INVEST_SYS;
+		String requestUrl = "";
 		InvestSysUtils.noRetPost(requestUrl,params);
 	}
 	/**
@@ -54,8 +54,9 @@ public class InvestSysUtils {
 		Map<String, String> params = new HashMap<String, String>();
 		// 需要保存的计划投资对象转json字符串
 		params.put("debtinfo", debtinfo);
-		// 请求路径
-		String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_UPDATE_INVEST_SYS;
+		// 请求路径 todo
+		//String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_UPDATE_INVEST_SYS;
+		String requestUrl = "";
 		InvestSysUtils.noRetPost(requestUrl,params);
 	}
 

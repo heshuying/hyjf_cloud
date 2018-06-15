@@ -1,14 +1,13 @@
 package com.hyjf.callcenter.beans;
 
-import com.hyjf.common.util.PropUtils;
-
 public class BaseDefine {
 	/** @RequestMapping值 */
 	// public static final String REQUEST_HOME = "/hyjf-api-web";
 //	public static final String HOST = PropUtils.getSystem("hyjf.api.web.url").trim();
 //	public static final String HOST_ASYN = PropUtils.getSystem("http.hyjf.web.host").trim();
 
-	public static final String MSG_CALLCENTER = PropUtils.getMessage("ICALLCENTER001").trim();
+	// public static final String MSG_CALLCENTER = PropUtils.getMessage("ICALLCENTER001").trim(); todo
+	public static final String MSG_CALLCENTER = "";
 	public static final String MSG_COLON = ":";
 	public static final String MSG_CALLCENTER_COLON = MSG_CALLCENTER + MSG_COLON;
 	public static final Integer CHK_SEARCH_MAXSIZE = 100;

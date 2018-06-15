@@ -3,6 +3,18 @@
  */
 package com.hyjf.cs.user.service.autoplus.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -10,7 +22,10 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmBankOpenClient;
@@ -27,17 +42,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -244,7 +248,7 @@ public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusServ
             bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
             bean.setOrderId(bean.getLogOrderId());
             bean.setAccountId(users.getBankAccount());
-            bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+            // bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL); todo
             bean.setRetUrl(retUrl);
             bean.setNotifyUrl(bgRetUrl);
             bean.setLastSrvAuthCode(lastSrvAuthCode);
@@ -255,15 +259,15 @@ public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusServ
             // 取得用户在江西银行的客户号
             BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(users.getUserId());
             bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
-            bean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE));
-            bean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE));
+            //bean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE)); todo
+            // bean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE)); todo
             bean.setTxDate(GetOrderIdUtils.getTxDate());
             bean.setTxTime(GetOrderIdUtils.getTxTime());
             bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
             bean.setChannel(channel);
             bean.setAccountId(bankOpenAccount.getAccount());
             bean.setOrderId(orderId);
-            bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+            // bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL); todo
             bean.setRetUrl(retUrl);
             bean.setNotifyUrl(bgRetUrl);
             bean.setLastSrvAuthCode(lastSrvAuthCode);
@@ -595,7 +599,7 @@ public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusServ
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
         bean.setOrderId(bean.getLogOrderId());
         bean.setAccountId(accountId);
-        bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+        // bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);todo
         bean.setLastSrvAuthCode(lastSrvAuthCode);
         bean.setSmsCode(smsCode);
         bean.setLogRemark(remark);
@@ -612,8 +616,8 @@ public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusServ
         selectbean.setVersion(BankCallConstant.VERSION_10);
         selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);
         // 机构代码
-        selectbean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE));
-        selectbean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE));
+        //selectbean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE)); todo
+        // selectbean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE)); todo
         selectbean.setTxDate(GetOrderIdUtils.getTxDate());
         selectbean.setTxTime(GetOrderIdUtils.getTxTime());
         selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
