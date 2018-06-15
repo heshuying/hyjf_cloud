@@ -12,7 +12,7 @@ public class Page implements Serializable {
 
     private static final long serialVersionUID = -4312323165564562319L;
 
-    private int pageNum = 1;
+    private int currPage = 1;
 
     private int pageSize = 10;
 
@@ -21,12 +21,12 @@ public class Page implements Serializable {
      */
     private int total = -1;
 
-    public int getPageNum() {
-        return pageNum;
+    public int getCurrPage() {
+        return currPage;
     }
 
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+    public void setCurrPage(int currPage) {
+        this.currPage = currPage;
     }
 
     /**
@@ -49,15 +49,15 @@ public class Page implements Serializable {
     }
 
     public int getPrevPage() {
-        return this.isFirstPage() ? this.getPageNum() : this.getPageNum() - 1;
+        return this.isFirstPage() ? this.getCurrPage() : this.getCurrPage() - 1;
     }
 
     public int getNextPage() {
-        return this.isLastPage() ? this.getPageNum() : this.getPageNum() + 1;
+        return this.isLastPage() ? this.getCurrPage() : this.getCurrPage() + 1;
     }
 
     public boolean isFirstPage() {
-        return (1 == this.getPageNum());
+        return (1 == this.getCurrPage());
     }
 
     public boolean isLastPage() {
@@ -65,7 +65,7 @@ public class Page implements Serializable {
             return false;
         }
 
-        return (this.getPageCount() < 1 || this.getPageCount() <= this.getPageNum());
+        return (this.getPageCount() < 1 || this.getPageCount() <= this.getCurrPage());
     }
 
     /**
@@ -97,11 +97,11 @@ public class Page implements Serializable {
      * @return
      */
     public int getOffset() {
-        if (pageNum < 1) {
+        if (currPage < 1) {
             return 0;
         }
 
-        return (pageNum - 1) * pageSize;
+        return (currPage - 1) * pageSize;
     }
 
     /**
@@ -117,7 +117,7 @@ public class Page implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + pageNum;
+        result = prime * result + currPage;
         result = prime * result + pageSize;
         result = prime * result + total;
 
@@ -136,7 +136,7 @@ public class Page implements Serializable {
             return false;
         }
         Page other = (Page) obj;
-        if (pageNum != other.pageNum){
+        if (currPage != other.currPage){
             return false;
         }
         if (pageSize != other.pageSize){
@@ -161,7 +161,7 @@ public class Page implements Serializable {
      */
     public static Page initPage(int currentPage, int pageSize){
         Page page = new Page();
-        page.setPageNum(currentPage <= 0 ? 1 : currentPage);
+        page.setCurrPage(currentPage <= 0 ? 1 : currentPage);
         page.setPageSize(pageSize <= 0? 10 : pageSize);
         return page;
     }

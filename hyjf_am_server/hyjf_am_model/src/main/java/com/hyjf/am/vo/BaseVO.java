@@ -9,19 +9,19 @@ public class BaseVO {
     /**
      * 当前页码
      */
-    private int pageNum;
+    private int currPage;
 
     /**
      * 当前页条数
      */
     private int pageSize;
 
-    public int getPageNum() {
-        return pageNum;
+    public int getCurrPage() {
+        return currPage;
     }
 
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+    public void setCurrPage(int currPage) {
+        this.currPage = currPage;
     }
 
     public int getPageSize() {
