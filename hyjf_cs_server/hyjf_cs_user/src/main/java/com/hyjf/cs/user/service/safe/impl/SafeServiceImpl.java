@@ -386,6 +386,8 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
     		throw new ReturnMessageException(ContractSetError.CONTRACT_RELATION_ERROR);
     	}
     	
+    	resultBean.setRelationMap(relationMap);
+    	
     	// 获取当前紧急联系人信息
     	UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
     	if(usersContactVO != null) {
