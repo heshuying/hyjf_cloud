@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.am.vo.borrow.BorrowWithBLOBsVO;
-import com.hyjf.am.vo.borrow.HjhLabelVO;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 

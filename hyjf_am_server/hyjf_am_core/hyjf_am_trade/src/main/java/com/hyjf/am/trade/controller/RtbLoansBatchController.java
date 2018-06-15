@@ -3,13 +3,12 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.BorrowWithBLOBSResponse;
 import com.hyjf.am.response.trade.IncreaseInterestInvestResponse;
 import com.hyjf.am.response.trade.IncreaseInterestRepayDetailResponse;
 import com.hyjf.am.response.trade.IncreaseInterestRepayResponse;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.RtbLoansService;
-import com.hyjf.am.vo.rtbbatch.*;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

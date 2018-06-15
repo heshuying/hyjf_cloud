@@ -3,8 +3,8 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.trade.AccountRechargeVO;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BankCardVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;

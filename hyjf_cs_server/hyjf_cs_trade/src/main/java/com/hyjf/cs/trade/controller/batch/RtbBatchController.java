@@ -3,24 +3,10 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.am.vo.rtbbatch.BorrowApicronVo;
-import com.hyjf.am.vo.rtbbatch.BorrowWithBLOBsVo;
-import com.hyjf.am.vo.rtbbatch.IncreaseInterestInvestVo;
-import com.hyjf.am.vo.trade.AccountVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.hyjf.cs.trade.bean.rtbbatch.TimesBean;
-import com.hyjf.cs.trade.mq.MailProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.service.RtbLoansBatchService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +16,23 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.message.MailMessage;
+import com.hyjf.am.vo.trade.IncreaseInterestInvestVo;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVo;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.rtbbatch.TimesBean;
+import com.hyjf.cs.trade.mq.MailProducer;
+import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.service.RtbLoansBatchService;
 
 /**
  * @author ${yaoy}
@@ -115,7 +115,7 @@ public class RtbBatchController {
                             throw new RuntimeException("借款人未开户。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
                         }
                         // 取得借款详情
-                        BorrowWithBLOBsVo borrow = rtbLoansBatchService.getBorrow(borrowNid);
+                        BorrowWithBLOBsVO borrow = rtbLoansBatchService.getBorrow(borrowNid);
                         if (borrow == null) {
                             throw new RuntimeException("借款详情不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
                         }

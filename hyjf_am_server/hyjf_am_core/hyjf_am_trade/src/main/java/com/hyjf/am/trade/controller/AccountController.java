@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.AccountService;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

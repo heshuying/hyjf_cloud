@@ -3,11 +3,27 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.vo.rtbbatch.*;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVo;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVo;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
@@ -18,18 +34,6 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.RtbBatchClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author ${yaoy}
@@ -102,7 +106,7 @@ public class RtbBatchClientImpl implements RtbBatchClient {
     }
 
     @Override
-    public BorrowWithBLOBsVo getBorrow(String borrowNid) {
+    public BorrowWithBLOBsVO getBorrow(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/trade/getBorrow/"+borrowNid;
         BorrowWithBLOBSResponse response = restTemplate.getForEntity(url,BorrowWithBLOBSResponse.class).getBody();
         if (response != null) {
@@ -135,7 +139,7 @@ public class RtbBatchClientImpl implements RtbBatchClient {
         UserVO borrowUser = this.getUsersByUserId(borrowUserid);
         /** 标的基本数据 */
         // 取得标的详情
-        BorrowWithBLOBsVo borrow = getBorrow(borrowNid);
+        BorrowWithBLOBsVO borrow = getBorrow(borrowNid);
         Map<String, String> msg = new HashMap<String, String>();
         retMsgList.add(msg);
         // 借款期数

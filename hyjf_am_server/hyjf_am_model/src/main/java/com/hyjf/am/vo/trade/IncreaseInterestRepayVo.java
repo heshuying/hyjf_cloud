@@ -1,18 +1,11 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.vo.rtbbatch;
+package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-/**
- * @author ${yaoy}
- * @version IncreaseInterestLoanVo, v0.1 2018/6/13 18:26
- */
-public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
+public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer userId;
@@ -24,10 +17,6 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
     private String investOrderId;
 
     private BigDecimal investAccount;
-
-    private Integer borrowUserId;
-
-    private String borrowUserName;
 
     private String borrowNid;
 
@@ -41,29 +30,31 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
 
     private String borrowStyleName;
 
-    private BigDecimal loanInterest;
+    private String orderId;
+
+    private String orderDate;
+
+    private Integer repayStatus;
 
     private Integer remainPeriod;
 
+    private Integer alreadyRepayPeriod;
+
     private Integer repayPeriod;
 
-    private String repayTime;
+    private Integer repayTime;
 
     private Integer repayActionTime;
+
+    private BigDecimal repayInterest;
 
     private BigDecimal repayInterestYes;
 
     private BigDecimal repayInterestWait;
 
-    private Integer repayStatus;
-
     private String addip;
 
     private Integer web;
-
-    private String repayOrderId;
-
-    private String repayOrderDate;
 
     private Integer createTime;
 
@@ -127,22 +118,6 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
         this.investAccount = investAccount;
     }
 
-    public Integer getBorrowUserId() {
-        return borrowUserId;
-    }
-
-    public void setBorrowUserId(Integer borrowUserId) {
-        this.borrowUserId = borrowUserId;
-    }
-
-    public String getBorrowUserName() {
-        return borrowUserName;
-    }
-
-    public void setBorrowUserName(String borrowUserName) {
-        this.borrowUserName = borrowUserName == null ? null : borrowUserName.trim();
-    }
-
     public String getBorrowNid() {
         return borrowNid;
     }
@@ -191,12 +166,28 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
         this.borrowStyleName = borrowStyleName == null ? null : borrowStyleName.trim();
     }
 
-    public BigDecimal getLoanInterest() {
-        return loanInterest;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setLoanInterest(BigDecimal loanInterest) {
-        this.loanInterest = loanInterest;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId == null ? null : orderId.trim();
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate == null ? null : orderDate.trim();
+    }
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
     }
 
     public Integer getRemainPeriod() {
@@ -207,6 +198,14 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
         this.remainPeriod = remainPeriod;
     }
 
+    public Integer getAlreadyRepayPeriod() {
+        return alreadyRepayPeriod;
+    }
+
+    public void setAlreadyRepayPeriod(Integer alreadyRepayPeriod) {
+        this.alreadyRepayPeriod = alreadyRepayPeriod;
+    }
+
     public Integer getRepayPeriod() {
         return repayPeriod;
     }
@@ -215,12 +214,12 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
         this.repayPeriod = repayPeriod;
     }
 
-    public String getRepayTime() {
+    public Integer getRepayTime() {
         return repayTime;
     }
 
-    public void setRepayTime(String repayTime) {
-        this.repayTime = repayTime == null ? null : repayTime.trim();
+    public void setRepayTime(Integer repayTime) {
+        this.repayTime = repayTime;
     }
 
     public Integer getRepayActionTime() {
@@ -229,6 +228,14 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
 
     public void setRepayActionTime(Integer repayActionTime) {
         this.repayActionTime = repayActionTime;
+    }
+
+    public BigDecimal getRepayInterest() {
+        return repayInterest;
+    }
+
+    public void setRepayInterest(BigDecimal repayInterest) {
+        this.repayInterest = repayInterest;
     }
 
     public BigDecimal getRepayInterestYes() {
@@ -247,14 +254,6 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
         this.repayInterestWait = repayInterestWait;
     }
 
-    public Integer getRepayStatus() {
-        return repayStatus;
-    }
-
-    public void setRepayStatus(Integer repayStatus) {
-        this.repayStatus = repayStatus;
-    }
-
     public String getAddip() {
         return addip;
     }
@@ -269,22 +268,6 @@ public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
 
     public void setWeb(Integer web) {
         this.web = web;
-    }
-
-    public String getRepayOrderId() {
-        return repayOrderId;
-    }
-
-    public void setRepayOrderId(String repayOrderId) {
-        this.repayOrderId = repayOrderId == null ? null : repayOrderId.trim();
-    }
-
-    public String getRepayOrderDate() {
-        return repayOrderDate;
-    }
-
-    public void setRepayOrderDate(String repayOrderDate) {
-        this.repayOrderDate = repayOrderDate == null ? null : repayOrderDate.trim();
     }
 
     public Integer getCreateTime() {

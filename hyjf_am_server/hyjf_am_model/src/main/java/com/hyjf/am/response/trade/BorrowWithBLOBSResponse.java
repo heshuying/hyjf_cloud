@@ -4,11 +4,11 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.rtbbatch.BorrowWithBLOBsVo;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
 
 /**
  * @author ${yaoy}
  * @version BorrowWithBLOBSResponse, v0.1 2018/6/13 17:47
  */
-public class BorrowWithBLOBSResponse extends Response<BorrowWithBLOBsVo> {
+public class BorrowWithBLOBSResponse extends Response<BorrowWithBLOBsVO> {
 }
