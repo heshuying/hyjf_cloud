@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.regist;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.cs.user.service.BaseService;
 import com.hyjf.cs.user.vo.RegisterVO;
 
 import javax.validation.Valid;
@@ -13,7 +14,7 @@ import javax.validation.Valid;
  * @author zhangqingqing
  * @version RegistService, v0.1 2018/6/11 15:09
  */
-public interface RegistService {
+public interface RegistService extends BaseService{
 
 
 

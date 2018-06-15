@@ -44,7 +44,7 @@ public class WeChatAutoPlusController {
      * @Param: * @param token
      * @param param
      * @Date: 16:36 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
     @PostMapping(value ="/userAuthCredit", produces = "application/json; charset=utf-8")
@@ -69,7 +69,7 @@ public class WeChatAutoPlusController {
      * @Param: * @param token
      * @param request
      * @Date: 16:36 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "自动投资授权接口", notes = "自动投资授权接口")
     @PostMapping("/userAuthInves")
@@ -95,7 +95,7 @@ public class WeChatAutoPlusController {
      * @param bean
      * @param request
      * @Date: 16:37 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return: ApiResult
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
     @PostMapping(value = "/userAuthCreditReturn", produces = "application/json; charset=utf-8")
@@ -115,7 +115,7 @@ public class WeChatAutoPlusController {
      * @param bean
      * @param request
      * @Date: 16:37 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return: ApiResult
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
@@ -133,7 +133,7 @@ public class WeChatAutoPlusController {
      * @Desc :用户授权自动投资异步回调
      * @Param: * @param bean
      * @Date: 16:37 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
@@ -148,7 +148,7 @@ public class WeChatAutoPlusController {
      * @Desc :用户授权自动债转异步回调
      * @Param: * @param bean
      * @Date: 16:37 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping(value = "/userAuthCreditBgreturn", produces = "application/json; charset=utf-8")

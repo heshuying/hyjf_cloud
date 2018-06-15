@@ -486,7 +486,7 @@ public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusServ
      * @param callback
      * @param acqRes
      * @Date: 11:03 2018/5/31
-     * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
+     * @Return: BankCallResult
      */
     @Override
     public BankCallResult userAuthInvesBgreturn(BankCallBean bean, String callback, String acqRes) {

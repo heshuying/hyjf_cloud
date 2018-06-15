@@ -30,13 +30,6 @@ public interface SafeService  extends BaseService {
     JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 
     /**
-     * 保存用户通知设置
-     * @param userVO
-     * @return
-     */
-    int updateUserByUserId(UserVO userVO);
-
-    /**
      * 获取用戶通知配置信息
      * @param userId
      * @return
@@ -56,10 +49,6 @@ public interface SafeService  extends BaseService {
     void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUser user);
 
     boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUser user) throws MQException;
-
-    boolean checkForMobileModify(String newMobile, String smsCode);
-
-    MobileModifyResultBean queryForMobileModify(Integer userId);
 
     int updateUserNoticeSet(UserNoticeSetRequest requestBean);
 }
