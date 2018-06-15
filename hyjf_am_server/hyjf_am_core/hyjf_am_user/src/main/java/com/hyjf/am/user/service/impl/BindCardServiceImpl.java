@@ -175,6 +175,24 @@ public class BindCardServiceImpl implements BindCardService {
 			}
 		}
 	}
-	
+	/**
+	 * 查询用户的授权码
+	 *
+	 * @param userId
+	 * @param srvTxCode
+	 * @param srvAuthCode
+	 * @return
+	 */
+	@Override
+	public String selectBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode) {
+		BankSmsAuthCodeExample example = new BankSmsAuthCodeExample();
+		example.createCriteria().andUserIdEqualTo(userId).andSrvTxCodeEqualTo(srvTxCode);
+		List<BankSmsAuthCode> smsAuthCodeList = bankSmsAuthCodeMapper.selectByExample(example);
+		if (smsAuthCodeList != null && smsAuthCodeList.size() == 1) {
+			BankSmsAuthCode smsAuthCode = smsAuthCodeList.get(0);
+			return smsAuthCode.getSrvAuthCode();
+		}
+		return null;
+	}
 	
 }

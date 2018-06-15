@@ -50,7 +50,7 @@ public class HjhUserAuth implements Serializable {
 
     private String repayCancelTime;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private Integer createUserId;
 
@@ -247,11 +247,11 @@ public class HjhUserAuth implements Serializable {
     }
 
     public Integer getDelFlg() {
-        return delFlg;
+        return delFlag;
     }
 
     public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+        this.delFlag = delFlg;
     }
 
     public Integer getCreateUserId() {

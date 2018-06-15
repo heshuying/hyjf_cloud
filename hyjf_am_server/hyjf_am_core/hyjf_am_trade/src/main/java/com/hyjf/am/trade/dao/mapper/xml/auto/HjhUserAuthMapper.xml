@@ -124,7 +124,7 @@
       auto_credit_status, auto_withdraw_status, auto_consume_status, 
       auto_create_time, auto_order_id, auto_credit_order_id, 
       auto_credit_time, auto_bid_time, create_time, 
-      create_user, update_time, update_user, 
+      create_user, update_time, update_user,
       del_flg)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{autoInvesStatus,jdbcType=TINYINT}, 
       #{autoCreditStatus,jdbcType=TINYINT}, #{autoWithdrawStatus,jdbcType=TINYINT}, #{autoConsumeStatus,jdbcType=TINYINT}, 

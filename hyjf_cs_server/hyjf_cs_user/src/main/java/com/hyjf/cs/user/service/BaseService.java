@@ -1,9 +1,11 @@
 package com.hyjf.cs.user.service;
 
+import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.cs.user.bean.BaseBean;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 
 public interface BaseService {
@@ -44,5 +46,11 @@ public interface BaseService {
 
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
-    int updateUserByUserId(UserVO userVO);
+	boolean checkIsOpen(Integer userId);
+
+	int updateUserByUserId(UserVO userVO);
+
+	BankCallBean callSendCode(Integer userId, String mobile, String txCode, String client, String cardNo);
+
+	boolean updateAfterSendCode(BankSmsLogRequest request);
 }

@@ -82,9 +82,9 @@ public class ClientConstants implements Serializable {
 	 * url header获取
 	 */
 	public static final Map<Integer,String> CLIENT_HEADER_MAP = new HashMap<Integer, String>(){{
-		put(WEB_CLIENT,"web");
-		put(WECHAT_CLIENT,"wechat");
-		put(APP_CLIENT,"app");
+		put(WEB_CLIENT,"/web");
+		put(WECHAT_CLIENT,"/wechat");
+		put(APP_CLIENT,"/app");
 	}};
 
 	// 版本号

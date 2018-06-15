@@ -27,9 +27,6 @@ public interface AmBindCardClient {
 	int deleteUserCardByCardNo(String cardNo);
 
 	AccountVO getAccount(Integer userId);
-
-	boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode);
-
 }
 
 	

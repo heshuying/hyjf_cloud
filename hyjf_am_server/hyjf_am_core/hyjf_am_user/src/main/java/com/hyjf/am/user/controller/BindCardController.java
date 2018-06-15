@@ -2,6 +2,7 @@ package com.hyjf.am.user.controller;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,20 +119,39 @@ public class BindCardController {
 		int cnt = bindCardService.insertBindCardLog(bankCardLog);
 		return cnt;
 	}
-	
+
 	/**
 	 * 更新绑卡授权记录
-	 * @param userId
-	 * @param srvTxCode
-	 * @param srvAuthCode
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value = "/updateBankSmsLog", method = RequestMethod.POST)
-	public boolean updateBankSmsLog(@RequestParam String userId, @RequestParam String srvTxCode, @RequestParam String srvAuthCode) {
-		if(StringUtils.isBlank(userId) || StringUtils.isBlank(srvTxCode) || StringUtils.isBlank(srvAuthCode)) {
+	public boolean updateBankSmsLog(@RequestBody BankSmsLogRequest request) {
+		if(null == request) {
 			return false;
 		}
-		
-		return bindCardService.updateBankSmsLog(Integer.parseInt(userId), srvTxCode, srvAuthCode);
+		int userId = request.getUserId();
+		String srvTxCode = request.getSrvTxCode();
+		String srvAuthCode = request.getSrvAuthCode();
+
+
+		return bindCardService.updateBankSmsLog(userId, srvTxCode, srvAuthCode);
+	}
+
+	/**
+	 * 查询用户的授权码
+	 * @param
+	 * @return
+	 */
+	@RequestMapping(value = "/selectBankSmsLog", method = RequestMethod.POST)
+	public String selectBankSmsLog(@RequestBody BankSmsLogRequest request) {
+		if(null == request) {
+			return null;
+		}
+		int userId = request.getUserId();
+		String srvTxCode = request.getSrvTxCode();
+		String srvAuthCode = request.getSrvAuthCode();
+
+		return bindCardService.selectBankSmsLog(userId, srvTxCode, srvAuthCode);
 	}
 }

@@ -25,7 +25,7 @@
     <result column="credit_cancel_time" property="creditCancelTime" jdbcType="VARCHAR" />
     <result column="payment_cancel_time" property="paymentCancelTime" jdbcType="VARCHAR" />
     <result column="repay_cancel_time" property="repayCancelTime" jdbcType="VARCHAR" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlg" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -94,7 +94,7 @@
     auto_consume_status, auto_create_time, auto_order_id, auto_credit_order_id, auto_credit_time, 
     auto_bid_time, auto_bid_end_time, auto_payment_status, auto_payment_time, auto_payment_end_time, 
     auto_repay_status, auto_repay_time, auto_repay_end_time, inves_cancel_time, credit_cancel_time, 
-    payment_cancel_time, repay_cancel_time, del_flg, create_user_id, update_user_id, 
+    payment_cancel_time, repay_cancel_time, del_flag, create_user_id, update_user_id,
     create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthExample" >
@@ -141,7 +141,7 @@
       auto_payment_status, auto_payment_time, auto_payment_end_time, 
       auto_repay_status, auto_repay_time, auto_repay_end_time, 
       inves_cancel_time, credit_cancel_time, payment_cancel_time, 
-      repay_cancel_time, del_flg, create_user_id, 
+      repay_cancel_time, del_flag, create_user_id,
       update_user_id, create_time, update_time
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{autoInvesStatus,jdbcType=TINYINT}, 
@@ -228,7 +228,7 @@
         repay_cancel_time,
       </if>
       <if test="delFlg != null" >
-        del_flg,
+        del_flag,
       </if>
       <if test="createUserId != null" >
         create_user_id,
@@ -406,7 +406,7 @@
         repay_cancel_time = #{record.repayCancelTime,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
+        del_flag = #{record.delFlg,jdbcType=TINYINT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -450,7 +450,7 @@
       credit_cancel_time = #{record.creditCancelTime,jdbcType=VARCHAR},
       payment_cancel_time = #{record.paymentCancelTime,jdbcType=VARCHAR},
       repay_cancel_time = #{record.repayCancelTime,jdbcType=VARCHAR},
-      del_flg = #{record.delFlg,jdbcType=TINYINT},
+    del_flag = #{record.delFlg,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -529,7 +529,7 @@
         repay_cancel_time = #{repayCancelTime,jdbcType=VARCHAR},
       </if>
       <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=TINYINT},
+        del_flag = #{delFlg,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -570,7 +570,7 @@
       credit_cancel_time = #{creditCancelTime,jdbcType=VARCHAR},
       payment_cancel_time = #{paymentCancelTime,jdbcType=VARCHAR},
       repay_cancel_time = #{repayCancelTime,jdbcType=VARCHAR},
-      del_flg = #{delFlg,jdbcType=TINYINT},
+      del_flag = #{delFlg,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

@@ -7,9 +7,16 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.user.constants.BindCardError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -63,6 +70,7 @@ public class MobileModifyController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "用户手机号修改基础信息获取", notes = "用户手机号修改基础信息获取")
     @PostMapping("/mobileModifyInit")
     public ApiResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         ApiResult<MobileModifyResultBean> result = new ApiResult<MobileModifyResultBean>();
@@ -99,4 +107,34 @@ public class MobileModifyController {
         result.setResult(resultMap);
         return result;
     }
+
+    @ApiOperation(value = "用户修改手机号发送短信验证码", notes = "用户修改手机号发送短信验证码")
+    @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
+    @PostMapping(value = "/mobileModifySendCode", produces = "application/json; charset=utf-8")
+    public ApiResult<Object> mobileModifySendCode(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param) {
+        logger.info("Web端用户修改手机号发送短信验证码, mobile :{}，cardNo:{}", param);
+        ApiResult<Object> result = new ApiResult<Object>();
+
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("mobile")), MsgEnum.MOBILE_ERROR);
+        CheckUtil.check(mobileModifyService.checkIsOpen(user.getUserId()),MsgEnum.BANK_NOT_OPEN_ERROR);
+        // 请求银行绑卡接口
+        BankCallBean bankBean = null;
+        try {
+            bankBean = mobileModifyService.callSendCode(user.getUserId(),param.get("mobile"), BankCallMethodConstant.TXCODE_MOBILE_MODIFY_PLUS, ClientConstants.CHANNEL_PC,null);
+        } catch (Exception e) {
+            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+            logger.error("请求验证码接口发生异常", e);
+        }
+        if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
+            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+            logger.error("请求验证码接口失败");
+        }else {
+            result.setResult(bankBean.getSrvAuthCode());
+        }
+        return result;
+    }
+
 }

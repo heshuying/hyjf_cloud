@@ -104,7 +104,7 @@ public class WebSafeController {
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
     public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
-        logger.info("用戶通知設置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
+        logger.info("用户通知设置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
@@ -178,14 +178,14 @@ public class WebSafeController {
      */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-    @ApiImplicitParam(name = "param",value = "{relationId:string,rlName:string}", dataType = "Map")
-    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap) {
+    @ApiImplicitParam(name = "param",value = "{relationId:string,rlName:string,rlPhone:string}", dataType = "Map")
+    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param) {
         ApiResult<Object> result = new ApiResult<Object>();
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        safeService.checkForContractSave(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
+        safeService.checkForContractSave(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
 
         try {
-            safeService.saveContract(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
+            safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
         } catch (MQException e) {
             logger.error("紧急联系人保存失败", e);
             result.setStatus(ApiResult.STATUS_FAIL);

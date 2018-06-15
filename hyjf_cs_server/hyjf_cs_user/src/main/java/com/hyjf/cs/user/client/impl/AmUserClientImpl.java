@@ -404,4 +404,24 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 *
+	 * 更新绑卡验证码
+	 */
+	@Override
+	public boolean updateBankSmsLog(BankSmsLogRequest request) {
+		boolean result = restTemplate
+				.postForEntity("http://AM-USER/am-user/card/updateBankSmsLog", request, Boolean.class).getBody();
+		return result;
+	}
+
+
+	@Override
+	public String selectBankSmsLog(BankSmsLogRequest request) {
+		String result = restTemplate
+				.postForEntity("http://AM-USER/am-user/card/selectBankSmsLog", request, String.class).getBody();
+		return result;
+	}
+
 }

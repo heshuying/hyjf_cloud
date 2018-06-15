@@ -1,16 +1,26 @@
 package com.hyjf.cs.user.service;
 
+import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoStateQueryRequest;
 import com.hyjf.cs.user.bean.BaseBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +33,8 @@ public class BaseServiceImpl implements BaseService {
 	@Autowired
 	AmUserClient amUserClient;
 
-
+	@Autowired
+	SystemConfig systemConfig;
 
 	/**
 	 * @param token
@@ -122,6 +133,22 @@ public class BaseServiceImpl implements BaseService {
 	}
 
 	/**
+	 * 校验用户是否已开户
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public boolean checkIsOpen(Integer userId) {
+		BankOpenAccountVO bankAccount = this.amUserClient.selectById(userId);
+
+		if(bankAccount == null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * 更新用户信息
 	 * @param userVO
 	 * @return
@@ -131,6 +158,86 @@ public class BaseServiceImpl implements BaseService {
 		return amUserClient.updateUserById(userVO);
 	}
 
+	/**
+	 * 请求验证码接口
+	 * @param userId
+	 * @param cardNo
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public BankCallBean callSendCode(Integer userId, String mobile, String srvTxCode ,String client, String cardNo) {
+		// 调用存管接口发送验证码
+		BankCallBean retBean = null;
+		BankCallBean bean = new BankCallBean();
+		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);// 交易代码cardBind
+		bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+		bean.setBankCode(systemConfig.getBankCode());
+		bean.setTxDate(GetOrderIdUtils.getOrderDate());// 交易日期
+		bean.setTxTime(GetOrderIdUtils.getOrderTime());// 交易时间
+		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
+		bean.setChannel(client);// 交易渠道000001手机APP 000002网页
+		bean.setReqType("1");
+		bean.setCardNo(cardNo);
+		bean.setSrvTxCode(srvTxCode);
+		bean.setMobile(mobile);// 交易渠道
+		bean.setSmsType("1");
+		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));// 订单号
+		bean.setLogUserId(String.valueOf(userId));// 请求用户名
+
+		try {
+			retBean  = BankCallUtils.callApiBg(bean);
+		} catch (Exception e) {
+			logger.info("请求银行接口失败", e);
+			return null;
+		}
+
+		if (Validator.isNull(retBean)) {
+			return null;
+		}
+		// 短信发送返回结果码
+		String retCode = retBean.getRetCode();
+		if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
+			return null;
+		}
+		if (Validator.isNull(retBean.getSrvAuthCode()) && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
+			return null;
+		}
+		// 业务授权码
+
+		if (Validator.isNotNull(retBean.getSrvAuthCode())) {
+			BankSmsLogRequest request = new BankSmsLogRequest();
+			request.setSrvAuthCode(retBean.getSrvAuthCode());
+			request.setSrvTxCode(retBean.getTxCode());
+			request.setUserId(Integer.parseInt(retBean.getLogUserId()));
+			boolean smsFlag = this.updateAfterSendCode(request);
+			CheckUtil.check(smsFlag, MsgEnum.CARD_SAVE_ERROR);
+			return retBean;
+
+		} else {
+			// 保存用户开户日志
+			BankSmsLogRequest request = new BankSmsLogRequest();
+			request.setSrvAuthCode(bean.getSrvAuthCode());
+			request.setSrvTxCode(bean.getTxCode());
+			request.setUserId(Integer.parseInt(bean.getLogUserId()));
+			String srvAuthCode = amUserClient.selectBankSmsLog(request);
+			CheckUtil.check(Validator.isNotNull(srvAuthCode), MsgEnum.CARD_SAVE_ERROR);
+			retBean.setSrvAuthCode(srvAuthCode);
+			return retBean;
+
+		}
+	}
+
+	/**
+	 * 更新绑卡短信验证码
+	 * @param
+	 * @return
+	 */
+	@Override
+	public boolean updateAfterSendCode(BankSmsLogRequest request) {
+		return amUserClient.updateBankSmsLog(request);
+	}
 	/**
 	 * 验证外部请求签名
 	 *
