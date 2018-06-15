@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.api.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
