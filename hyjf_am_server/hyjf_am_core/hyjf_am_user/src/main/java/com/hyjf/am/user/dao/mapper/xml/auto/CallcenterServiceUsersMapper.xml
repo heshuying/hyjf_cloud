@@ -106,7 +106,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_callcenter_service_users (username, assigned, insdate,
+    insert into ht_callcenter_service_users (username, assigned, insdate, 
       upddate)
     values (#{username,jdbcType=VARCHAR}, #{assigned,jdbcType=TINYINT}, #{insdate,jdbcType=TIMESTAMP}, 
       #{upddate,jdbcType=TIMESTAMP})

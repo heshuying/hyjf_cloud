@@ -137,6 +137,9 @@
         WHEN htb.`status` = '4' THEN
         htb.borrow_full_time
         END DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
     </select>
 
 

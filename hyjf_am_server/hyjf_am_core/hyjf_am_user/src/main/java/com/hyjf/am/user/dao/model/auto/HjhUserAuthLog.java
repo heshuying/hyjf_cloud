@@ -20,7 +20,7 @@ public class HjhUserAuthLog implements Serializable {
 
     private Integer authCreateTime;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private Integer createUserId;
 
@@ -96,12 +96,12 @@ public class HjhUserAuthLog implements Serializable {
         this.authCreateTime = authCreateTime;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public Integer getCreateUserId() {

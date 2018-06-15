@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
+import com.hyjf.am.util.Page;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface ProjectListService {
      * @param request
      * @return
      */
-    List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request);
+    List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request, Page page);
 
-    int countHomePageProjectList(@Valid ProjectListRequest request);
+    int countHomePageProjectList(@Valid ProjectListRequest request,Page page);
 }

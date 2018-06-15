@@ -6,7 +6,7 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="bind_unique_id" property="bindUniqueId" jdbcType="INTEGER" />
     <result column="bind_platform_id" property="bindPlatformId" jdbcType="INTEGER" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="del_flg" property="delFlg" jdbcType="BIT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
@@ -115,7 +115,7 @@
       del_flg, create_user_id, create_time, 
       update_user_id, update_time)
     values (#{userId,jdbcType=INTEGER}, #{bindUniqueId,jdbcType=INTEGER}, #{bindPlatformId,jdbcType=INTEGER}, 
-      #{delFlg,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{delFlg,jdbcType=BIT}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.BindUser" >
@@ -160,7 +160,7 @@
         #{bindPlatformId,jdbcType=INTEGER},
       </if>
       <if test="delFlg != null" >
-        #{delFlg,jdbcType=TINYINT},
+        #{delFlg,jdbcType=BIT},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -198,7 +198,7 @@
         bind_platform_id = #{record.bindPlatformId,jdbcType=INTEGER},
       </if>
       <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
+        del_flg = #{record.delFlg,jdbcType=BIT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -223,7 +223,7 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       bind_unique_id = #{record.bindUniqueId,jdbcType=INTEGER},
       bind_platform_id = #{record.bindPlatformId,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT},
+      del_flg = #{record.delFlg,jdbcType=BIT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -245,7 +245,7 @@
         bind_platform_id = #{bindPlatformId,jdbcType=INTEGER},
       </if>
       <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=TINYINT},
+        del_flg = #{delFlg,jdbcType=BIT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -267,7 +267,7 @@
     set user_id = #{userId,jdbcType=INTEGER},
       bind_unique_id = #{bindUniqueId,jdbcType=INTEGER},
       bind_platform_id = #{bindPlatformId,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=TINYINT},
+      del_flg = #{delFlg,jdbcType=BIT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
