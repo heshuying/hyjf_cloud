@@ -1,0 +1,1729 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_pre_nid" property="borrowPreNid" jdbcType="VARCHAR" />
+    <result column="borrow_pre_nid_new" property="borrowPreNidNew" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
+    <result column="applicant" property="applicant" jdbcType="VARCHAR" />
+    <result column="repay_org_name" property="repayOrgName" jdbcType="VARCHAR" />
+    <result column="is_repay_org_flag" property="isRepayOrgFlag" jdbcType="TINYINT" />
+    <result column="repay_org_user_id" property="repayOrgUserId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="borrow_use" property="borrowUse" jdbcType="VARCHAR" />
+    <result column="borrow_valid_time" property="borrowValidTime" jdbcType="INTEGER" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+    <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />
+    <result column="entrusted_flg" property="entrustedFlg" jdbcType="TINYINT" />
+    <result column="entrusted_user_name" property="entrustedUserName" jdbcType="VARCHAR" />
+    <result column="entrusted_user_id" property="entrustedUserId" jdbcType="INTEGER" />
+    <result column="trustee_pay_time" property="trusteePayTime" jdbcType="INTEGER" />
+    <result column="tender_account_min" property="tenderAccountMin" jdbcType="INTEGER" />
+    <result column="tender_account_max" property="tenderAccountMax" jdbcType="INTEGER" />
+    <result column="upfiles_id" property="upfilesId" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="TINYINT" />
+    <result column="can_transaction_pc" property="canTransactionPc" jdbcType="VARCHAR" />
+    <result column="can_transaction_wei" property="canTransactionWei" jdbcType="VARCHAR" />
+    <result column="can_transaction_ios" property="canTransactionIos" jdbcType="VARCHAR" />
+    <result column="can_transaction_android" property="canTransactionAndroid" jdbcType="VARCHAR" />
+    <result column="operation_label" property="operationLabel" jdbcType="VARCHAR" />
+    <result column="company_or_personal" property="companyOrPersonal" jdbcType="TINYINT" />
+    <result column="borrow_manager_scale_end" property="borrowManagerScaleEnd" jdbcType="VARCHAR" />
+    <result column="consume_id" property="consumeId" jdbcType="VARCHAR" />
+    <result column="disposal_price_estimate" property="disposalPriceEstimate" jdbcType="VARCHAR" />
+    <result column="disposal_period" property="disposalPeriod" jdbcType="VARCHAR" />
+    <result column="disposal_channel" property="disposalChannel" jdbcType="VARCHAR" />
+    <result column="disposal_result" property="disposalResult" jdbcType="VARCHAR" />
+    <result column="disposal_note" property="disposalNote" jdbcType="VARCHAR" />
+    <result column="disposal_project_name" property="disposalProjectName" jdbcType="VARCHAR" />
+    <result column="disposal_project_type" property="disposalProjectType" jdbcType="VARCHAR" />
+    <result column="disposal_area" property="disposalArea" jdbcType="VARCHAR" />
+    <result column="disposal_predictive_value" property="disposalPredictiveValue" jdbcType="VARCHAR" />
+    <result column="disposal_ownership_category" property="disposalOwnershipCategory" jdbcType="VARCHAR" />
+    <result column="disposal_asset_origin" property="disposalAssetOrigin" jdbcType="VARCHAR" />
+    <result column="disposal_attachment_info" property="disposalAttachmentInfo" jdbcType="VARCHAR" />
+    <result column="borrow_increase_money" property="borrowIncreaseMoney" jdbcType="DECIMAL" />
+    <result column="borrow_interest_coupon" property="borrowInterestCoupon" jdbcType="TINYINT" />
+    <result column="borrow_taste_money" property="borrowTasteMoney" jdbcType="TINYINT" />
+    <result column="borrow_asset_number" property="borrowAssetNumber" jdbcType="VARCHAR" />
+    <result column="borrow_project_source" property="borrowProjectSource" jdbcType="VARCHAR" />
+    <result column="borrow_interest_time" property="borrowInterestTime" jdbcType="VARCHAR" />
+    <result column="borrow_due_time" property="borrowDueTime" jdbcType="VARCHAR" />
+    <result column="borrow_safeguard_way" property="borrowSafeguardWay" jdbcType="VARCHAR" />
+    <result column="borrow_income_description" property="borrowIncomeDescription" jdbcType="VARCHAR" />
+    <result column="borrow_publisher" property="borrowPublisher" jdbcType="VARCHAR" />
+    <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="DECIMAL" />
+    <result column="contract_period" property="contractPeriod" jdbcType="INTEGER" />
+    <result column="borrow_level" property="borrowLevel" jdbcType="VARCHAR" />
+    <result column="asset_attributes" property="assetAttributes" jdbcType="TINYINT" />
+    <result column="bank_raise_start_date" property="bankRaiseStartDate" jdbcType="VARCHAR" />
+    <result column="bank_raise_end_date" property="bankRaiseEndDate" jdbcType="VARCHAR" />
+    <result column="bank_regist_days" property="bankRegistDays" jdbcType="TINYINT" />
+    <result column="bank_borrow_days" property="bankBorrowDays" jdbcType="INTEGER" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="finance_purpose" property="financePurpose" jdbcType="VARCHAR" />
+    <result column="monthly_income" property="monthlyIncome" jdbcType="VARCHAR" />
+    <result column="payment" property="payment" jdbcType="VARCHAR" />
+    <result column="first_payment" property="firstPayment" jdbcType="VARCHAR" />
+    <result column="second_payment" property="secondPayment" jdbcType="VARCHAR" />
+    <result column="cost_introdution" property="costIntrodution" jdbcType="VARCHAR" />
+    <result column="fiance_condition" property="fianceCondition" jdbcType="VARCHAR" />
+    <result column="is_new" property="isNew" jdbcType="TINYINT" />
+    <result column="publish_inst_code" property="publishInstCode" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowInfoWithBLOBs" extends="BaseResultMap" >
+    <result column="account_contents" property="accountContents" jdbcType="LONGVARCHAR" />
+    <result column="borrow_contents" property="borrowContents" jdbcType="LONGVARCHAR" />
+    <result column="borrow_running_use" property="borrowRunningUse" jdbcType="LONGVARCHAR" />
+    <result column="borrow_running_soruce" property="borrowRunningSoruce" jdbcType="LONGVARCHAR" />
+    <result column="borrow_measures_instit" property="borrowMeasuresInstit" jdbcType="LONGVARCHAR" />
+    <result column="borrow_measures_mort" property="borrowMeasuresMort" jdbcType="LONGVARCHAR" />
+    <result column="borrow_measures_mea" property="borrowMeasuresMea" jdbcType="LONGVARCHAR" />
+    <result column="files" property="files" jdbcType="LONGVARCHAR" />
+    <result column="borrow_company_instruction" property="borrowCompanyInstruction" jdbcType="LONGVARCHAR" />
+    <result column="borrow_operating_process" property="borrowOperatingProcess" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, borrow_nid, borrow_pre_nid, borrow_pre_nid_new, `name`, user_id, borrow_user_name, 
+    applicant, repay_org_name, is_repay_org_flag, repay_org_user_id, `type`, borrow_use, 
+    borrow_valid_time, inst_code, asset_type, asset_type_name, entrusted_flg, entrusted_user_name, 
+    entrusted_user_id, trustee_pay_time, tender_account_min, tender_account_max, upfiles_id, 
+    project_type, can_transaction_pc, can_transaction_wei, can_transaction_ios, can_transaction_android, 
+    operation_label, company_or_personal, borrow_manager_scale_end, consume_id, disposal_price_estimate, 
+    disposal_period, disposal_channel, disposal_result, disposal_note, disposal_project_name, 
+    disposal_project_type, disposal_area, disposal_predictive_value, disposal_ownership_category, 
+    disposal_asset_origin, disposal_attachment_info, borrow_increase_money, borrow_interest_coupon, 
+    borrow_taste_money, borrow_asset_number, borrow_project_source, borrow_interest_time, 
+    borrow_due_time, borrow_safeguard_way, borrow_income_description, borrow_publisher, 
+    borrow_extra_yield, contract_period, borrow_level, asset_attributes, bank_raise_start_date, 
+    bank_raise_end_date, bank_regist_days, bank_borrow_days, project_name, finance_purpose, 
+    monthly_income, payment, first_payment, second_payment, cost_introdution, fiance_condition, 
+    is_new, publish_inst_code, remark, create_user_name, add_time, addip, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    account_contents, borrow_contents, borrow_running_use, borrow_running_soruce, borrow_measures_instit, 
+    borrow_measures_mort, borrow_measures_mea, files, borrow_company_instruction, borrow_operating_process
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_borrow_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_borrow_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_borrow_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_borrow_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoExample" >
+    delete from ht_borrow_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_info (borrow_nid, borrow_pre_nid, borrow_pre_nid_new, 
+      `name`, user_id, borrow_user_name, 
+      applicant, repay_org_name, is_repay_org_flag, 
+      repay_org_user_id, `type`, borrow_use, 
+      borrow_valid_time, inst_code, asset_type, 
+      asset_type_name, entrusted_flg, entrusted_user_name, 
+      entrusted_user_id, trustee_pay_time, tender_account_min, 
+      tender_account_max, upfiles_id, project_type, 
+      can_transaction_pc, can_transaction_wei, can_transaction_ios, 
+      can_transaction_android, operation_label, 
+      company_or_personal, borrow_manager_scale_end, 
+      consume_id, disposal_price_estimate, disposal_period, 
+      disposal_channel, disposal_result, disposal_note, 
+      disposal_project_name, disposal_project_type, 
+      disposal_area, disposal_predictive_value, 
+      disposal_ownership_category, disposal_asset_origin, 
+      disposal_attachment_info, borrow_increase_money, 
+      borrow_interest_coupon, borrow_taste_money, 
+      borrow_asset_number, borrow_project_source, 
+      borrow_interest_time, borrow_due_time, borrow_safeguard_way, 
+      borrow_income_description, borrow_publisher, 
+      borrow_extra_yield, contract_period, borrow_level, 
+      asset_attributes, bank_raise_start_date, bank_raise_end_date, 
+      bank_regist_days, bank_borrow_days, project_name, 
+      finance_purpose, monthly_income, payment, 
+      first_payment, second_payment, cost_introdution, 
+      fiance_condition, is_new, publish_inst_code, 
+      remark, create_user_name, add_time, 
+      addip, update_time, account_contents, 
+      borrow_contents, borrow_running_use, 
+      borrow_running_soruce, borrow_measures_instit, 
+      borrow_measures_mort, borrow_measures_mea, 
+      files, borrow_company_instruction, 
+      borrow_operating_process)
+    values (#{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=VARCHAR}, #{borrowPreNidNew,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowUserName,jdbcType=VARCHAR}, 
+      #{applicant,jdbcType=VARCHAR}, #{repayOrgName,jdbcType=VARCHAR}, #{isRepayOrgFlag,jdbcType=TINYINT}, 
+      #{repayOrgUserId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{borrowUse,jdbcType=VARCHAR}, 
+      #{borrowValidTime,jdbcType=INTEGER}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
+      #{assetTypeName,jdbcType=VARCHAR}, #{entrustedFlg,jdbcType=TINYINT}, #{entrustedUserName,jdbcType=VARCHAR}, 
+      #{entrustedUserId,jdbcType=INTEGER}, #{trusteePayTime,jdbcType=INTEGER}, #{tenderAccountMin,jdbcType=INTEGER}, 
+      #{tenderAccountMax,jdbcType=INTEGER}, #{upfilesId,jdbcType=VARCHAR}, #{projectType,jdbcType=TINYINT}, 
+      #{canTransactionPc,jdbcType=VARCHAR}, #{canTransactionWei,jdbcType=VARCHAR}, #{canTransactionIos,jdbcType=VARCHAR}, 
+      #{canTransactionAndroid,jdbcType=VARCHAR}, #{operationLabel,jdbcType=VARCHAR}, 
+      #{companyOrPersonal,jdbcType=TINYINT}, #{borrowManagerScaleEnd,jdbcType=VARCHAR}, 
+      #{consumeId,jdbcType=VARCHAR}, #{disposalPriceEstimate,jdbcType=VARCHAR}, #{disposalPeriod,jdbcType=VARCHAR}, 
+      #{disposalChannel,jdbcType=VARCHAR}, #{disposalResult,jdbcType=VARCHAR}, #{disposalNote,jdbcType=VARCHAR}, 
+      #{disposalProjectName,jdbcType=VARCHAR}, #{disposalProjectType,jdbcType=VARCHAR}, 
+      #{disposalArea,jdbcType=VARCHAR}, #{disposalPredictiveValue,jdbcType=VARCHAR}, 
+      #{disposalOwnershipCategory,jdbcType=VARCHAR}, #{disposalAssetOrigin,jdbcType=VARCHAR}, 
+      #{disposalAttachmentInfo,jdbcType=VARCHAR}, #{borrowIncreaseMoney,jdbcType=DECIMAL}, 
+      #{borrowInterestCoupon,jdbcType=TINYINT}, #{borrowTasteMoney,jdbcType=TINYINT}, 
+      #{borrowAssetNumber,jdbcType=VARCHAR}, #{borrowProjectSource,jdbcType=VARCHAR}, 
+      #{borrowInterestTime,jdbcType=VARCHAR}, #{borrowDueTime,jdbcType=VARCHAR}, #{borrowSafeguardWay,jdbcType=VARCHAR}, 
+      #{borrowIncomeDescription,jdbcType=VARCHAR}, #{borrowPublisher,jdbcType=VARCHAR}, 
+      #{borrowExtraYield,jdbcType=DECIMAL}, #{contractPeriod,jdbcType=INTEGER}, #{borrowLevel,jdbcType=VARCHAR}, 
+      #{assetAttributes,jdbcType=TINYINT}, #{bankRaiseStartDate,jdbcType=VARCHAR}, #{bankRaiseEndDate,jdbcType=VARCHAR}, 
+      #{bankRegistDays,jdbcType=TINYINT}, #{bankBorrowDays,jdbcType=INTEGER}, #{projectName,jdbcType=VARCHAR}, 
+      #{financePurpose,jdbcType=VARCHAR}, #{monthlyIncome,jdbcType=VARCHAR}, #{payment,jdbcType=VARCHAR}, 
+      #{firstPayment,jdbcType=VARCHAR}, #{secondPayment,jdbcType=VARCHAR}, #{costIntrodution,jdbcType=VARCHAR}, 
+      #{fianceCondition,jdbcType=VARCHAR}, #{isNew,jdbcType=TINYINT}, #{publishInstCode,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, 
+      #{addip,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{accountContents,jdbcType=LONGVARCHAR}, 
+      #{borrowContents,jdbcType=LONGVARCHAR}, #{borrowRunningUse,jdbcType=LONGVARCHAR}, 
+      #{borrowRunningSoruce,jdbcType=LONGVARCHAR}, #{borrowMeasuresInstit,jdbcType=LONGVARCHAR}, 
+      #{borrowMeasuresMort,jdbcType=LONGVARCHAR}, #{borrowMeasuresMea,jdbcType=LONGVARCHAR}, 
+      #{files,jdbcType=LONGVARCHAR}, #{borrowCompanyInstruction,jdbcType=LONGVARCHAR}, 
+      #{borrowOperatingProcess,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="borrowPreNid != null" >
+        borrow_pre_nid,
+      </if>
+      <if test="borrowPreNidNew != null" >
+        borrow_pre_nid_new,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="borrowUserName != null" >
+        borrow_user_name,
+      </if>
+      <if test="applicant != null" >
+        applicant,
+      </if>
+      <if test="repayOrgName != null" >
+        repay_org_name,
+      </if>
+      <if test="isRepayOrgFlag != null" >
+        is_repay_org_flag,
+      </if>
+      <if test="repayOrgUserId != null" >
+        repay_org_user_id,
+      </if>
+      <if test="type != null" >
+        `type`,
+      </if>
+      <if test="borrowUse != null" >
+        borrow_use,
+      </if>
+      <if test="borrowValidTime != null" >
+        borrow_valid_time,
+      </if>
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="assetType != null" >
+        asset_type,
+      </if>
+      <if test="assetTypeName != null" >
+        asset_type_name,
+      </if>
+      <if test="entrustedFlg != null" >
+        entrusted_flg,
+      </if>
+      <if test="entrustedUserName != null" >
+        entrusted_user_name,
+      </if>
+      <if test="entrustedUserId != null" >
+        entrusted_user_id,
+      </if>
+      <if test="trusteePayTime != null" >
+        trustee_pay_time,
+      </if>
+      <if test="tenderAccountMin != null" >
+        tender_account_min,
+      </if>
+      <if test="tenderAccountMax != null" >
+        tender_account_max,
+      </if>
+      <if test="upfilesId != null" >
+        upfiles_id,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="canTransactionPc != null" >
+        can_transaction_pc,
+      </if>
+      <if test="canTransactionWei != null" >
+        can_transaction_wei,
+      </if>
+      <if test="canTransactionIos != null" >
+        can_transaction_ios,
+      </if>
+      <if test="canTransactionAndroid != null" >
+        can_transaction_android,
+      </if>
+      <if test="operationLabel != null" >
+        operation_label,
+      </if>
+      <if test="companyOrPersonal != null" >
+        company_or_personal,
+      </if>
+      <if test="borrowManagerScaleEnd != null" >
+        borrow_manager_scale_end,
+      </if>
+      <if test="consumeId != null" >
+        consume_id,
+      </if>
+      <if test="disposalPriceEstimate != null" >
+        disposal_price_estimate,
+      </if>
+      <if test="disposalPeriod != null" >
+        disposal_period,
+      </if>
+      <if test="disposalChannel != null" >
+        disposal_channel,
+      </if>
+      <if test="disposalResult != null" >
+        disposal_result,
+      </if>
+      <if test="disposalNote != null" >
+        disposal_note,
+      </if>
+      <if test="disposalProjectName != null" >
+        disposal_project_name,
+      </if>
+      <if test="disposalProjectType != null" >
+        disposal_project_type,
+      </if>
+      <if test="disposalArea != null" >
+        disposal_area,
+      </if>
+      <if test="disposalPredictiveValue != null" >
+        disposal_predictive_value,
+      </if>
+      <if test="disposalOwnershipCategory != null" >
+        disposal_ownership_category,
+      </if>
+      <if test="disposalAssetOrigin != null" >
+        disposal_asset_origin,
+      </if>
+      <if test="disposalAttachmentInfo != null" >
+        disposal_attachment_info,
+      </if>
+      <if test="borrowIncreaseMoney != null" >
+        borrow_increase_money,
+      </if>
+      <if test="borrowInterestCoupon != null" >
+        borrow_interest_coupon,
+      </if>
+      <if test="borrowTasteMoney != null" >
+        borrow_taste_money,
+      </if>
+      <if test="borrowAssetNumber != null" >
+        borrow_asset_number,
+      </if>
+      <if test="borrowProjectSource != null" >
+        borrow_project_source,
+      </if>
+      <if test="borrowInterestTime != null" >
+        borrow_interest_time,
+      </if>
+      <if test="borrowDueTime != null" >
+        borrow_due_time,
+      </if>
+      <if test="borrowSafeguardWay != null" >
+        borrow_safeguard_way,
+      </if>
+      <if test="borrowIncomeDescription != null" >
+        borrow_income_description,
+      </if>
+      <if test="borrowPublisher != null" >
+        borrow_publisher,
+      </if>
+      <if test="borrowExtraYield != null" >
+        borrow_extra_yield,
+      </if>
+      <if test="contractPeriod != null" >
+        contract_period,
+      </if>
+      <if test="borrowLevel != null" >
+        borrow_level,
+      </if>
+      <if test="assetAttributes != null" >
+        asset_attributes,
+      </if>
+      <if test="bankRaiseStartDate != null" >
+        bank_raise_start_date,
+      </if>
+      <if test="bankRaiseEndDate != null" >
+        bank_raise_end_date,
+      </if>
+      <if test="bankRegistDays != null" >
+        bank_regist_days,
+      </if>
+      <if test="bankBorrowDays != null" >
+        bank_borrow_days,
+      </if>
+      <if test="projectName != null" >
+        project_name,
+      </if>
+      <if test="financePurpose != null" >
+        finance_purpose,
+      </if>
+      <if test="monthlyIncome != null" >
+        monthly_income,
+      </if>
+      <if test="payment != null" >
+        payment,
+      </if>
+      <if test="firstPayment != null" >
+        first_payment,
+      </if>
+      <if test="secondPayment != null" >
+        second_payment,
+      </if>
+      <if test="costIntrodution != null" >
+        cost_introdution,
+      </if>
+      <if test="fianceCondition != null" >
+        fiance_condition,
+      </if>
+      <if test="isNew != null" >
+        is_new,
+      </if>
+      <if test="publishInstCode != null" >
+        publish_inst_code,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="addip != null" >
+        addip,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="accountContents != null" >
+        account_contents,
+      </if>
+      <if test="borrowContents != null" >
+        borrow_contents,
+      </if>
+      <if test="borrowRunningUse != null" >
+        borrow_running_use,
+      </if>
+      <if test="borrowRunningSoruce != null" >
+        borrow_running_soruce,
+      </if>
+      <if test="borrowMeasuresInstit != null" >
+        borrow_measures_instit,
+      </if>
+      <if test="borrowMeasuresMort != null" >
+        borrow_measures_mort,
+      </if>
+      <if test="borrowMeasuresMea != null" >
+        borrow_measures_mea,
+      </if>
+      <if test="files != null" >
+        files,
+      </if>
+      <if test="borrowCompanyInstruction != null" >
+        borrow_company_instruction,
+      </if>
+      <if test="borrowOperatingProcess != null" >
+        borrow_operating_process,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNid != null" >
+        #{borrowPreNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNidNew != null" >
+        #{borrowPreNidNew,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="borrowUserName != null" >
+        #{borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="applicant != null" >
+        #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="repayOrgName != null" >
+        #{repayOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="isRepayOrgFlag != null" >
+        #{isRepayOrgFlag,jdbcType=TINYINT},
+      </if>
+      <if test="repayOrgUserId != null" >
+        #{repayOrgUserId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUse != null" >
+        #{borrowUse,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowValidTime != null" >
+        #{borrowValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="assetTypeName != null" >
+        #{assetTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustedFlg != null" >
+        #{entrustedFlg,jdbcType=TINYINT},
+      </if>
+      <if test="entrustedUserName != null" >
+        #{entrustedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustedUserId != null" >
+        #{entrustedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="trusteePayTime != null" >
+        #{trusteePayTime,jdbcType=INTEGER},
+      </if>
+      <if test="tenderAccountMin != null" >
+        #{tenderAccountMin,jdbcType=INTEGER},
+      </if>
+      <if test="tenderAccountMax != null" >
+        #{tenderAccountMax,jdbcType=INTEGER},
+      </if>
+      <if test="upfilesId != null" >
+        #{upfilesId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="canTransactionPc != null" >
+        #{canTransactionPc,jdbcType=VARCHAR},
+      </if>
+      <if test="canTransactionWei != null" >
+        #{canTransactionWei,jdbcType=VARCHAR},
+      </if>
+      <if test="canTransactionIos != null" >
+        #{canTransactionIos,jdbcType=VARCHAR},
+      </if>
+      <if test="canTransactionAndroid != null" >
+        #{canTransactionAndroid,jdbcType=VARCHAR},
+      </if>
+      <if test="operationLabel != null" >
+        #{operationLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="companyOrPersonal != null" >
+        #{companyOrPersonal,jdbcType=TINYINT},
+      </if>
+      <if test="borrowManagerScaleEnd != null" >
+        #{borrowManagerScaleEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="consumeId != null" >
+        #{consumeId,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalPriceEstimate != null" >
+        #{disposalPriceEstimate,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalPeriod != null" >
+        #{disposalPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalChannel != null" >
+        #{disposalChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalResult != null" >
+        #{disposalResult,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalNote != null" >
+        #{disposalNote,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalProjectName != null" >
+        #{disposalProjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalProjectType != null" >
+        #{disposalProjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalArea != null" >
+        #{disposalArea,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalPredictiveValue != null" >
+        #{disposalPredictiveValue,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalOwnershipCategory != null" >
+        #{disposalOwnershipCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalAssetOrigin != null" >
+        #{disposalAssetOrigin,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalAttachmentInfo != null" >
+        #{disposalAttachmentInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowIncreaseMoney != null" >
+        #{borrowIncreaseMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowInterestCoupon != null" >
+        #{borrowInterestCoupon,jdbcType=TINYINT},
+      </if>
+      <if test="borrowTasteMoney != null" >
+        #{borrowTasteMoney,jdbcType=TINYINT},
+      </if>
+      <if test="borrowAssetNumber != null" >
+        #{borrowAssetNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowProjectSource != null" >
+        #{borrowProjectSource,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowInterestTime != null" >
+        #{borrowInterestTime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowDueTime != null" >
+        #{borrowDueTime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowSafeguardWay != null" >
+        #{borrowSafeguardWay,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowIncomeDescription != null" >
+        #{borrowIncomeDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPublisher != null" >
+        #{borrowPublisher,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowExtraYield != null" >
+        #{borrowExtraYield,jdbcType=DECIMAL},
+      </if>
+      <if test="contractPeriod != null" >
+        #{contractPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowLevel != null" >
+        #{borrowLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAttributes != null" >
+        #{assetAttributes,jdbcType=TINYINT},
+      </if>
+      <if test="bankRaiseStartDate != null" >
+        #{bankRaiseStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bankRaiseEndDate != null" >
+        #{bankRaiseEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bankRegistDays != null" >
+        #{bankRegistDays,jdbcType=TINYINT},
+      </if>
+      <if test="bankBorrowDays != null" >
+        #{bankBorrowDays,jdbcType=INTEGER},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="financePurpose != null" >
+        #{financePurpose,jdbcType=VARCHAR},
+      </if>
+      <if test="monthlyIncome != null" >
+        #{monthlyIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null" >
+        #{payment,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPayment != null" >
+        #{firstPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="secondPayment != null" >
+        #{secondPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="costIntrodution != null" >
+        #{costIntrodution,jdbcType=VARCHAR},
+      </if>
+      <if test="fianceCondition != null" >
+        #{fianceCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="isNew != null" >
+        #{isNew,jdbcType=TINYINT},
+      </if>
+      <if test="publishInstCode != null" >
+        #{publishInstCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="addip != null" >
+        #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountContents != null" >
+        #{accountContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowContents != null" >
+        #{borrowContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowRunningUse != null" >
+        #{borrowRunningUse,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowRunningSoruce != null" >
+        #{borrowRunningSoruce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresInstit != null" >
+        #{borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresMort != null" >
+        #{borrowMeasuresMort,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresMea != null" >
+        #{borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="files != null" >
+        #{files,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowCompanyInstruction != null" >
+        #{borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowOperatingProcess != null" >
+        #{borrowOperatingProcess,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_borrow_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPreNid != null" >
+        borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPreNidNew != null" >
+        borrow_pre_nid_new = #{record.borrowPreNidNew,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowUserName != null" >
+        borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applicant != null" >
+        applicant = #{record.applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repayOrgName != null" >
+        repay_org_name = #{record.repayOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isRepayOrgFlag != null" >
+        is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayOrgUserId != null" >
+        repay_org_user_id = #{record.repayOrgUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.type != null" >
+        `type` = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowUse != null" >
+        borrow_use = #{record.borrowUse,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowValidTime != null" >
+        borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetType != null" >
+        asset_type = #{record.assetType,jdbcType=TINYINT},
+      </if>
+      <if test="record.assetTypeName != null" >
+        asset_type_name = #{record.assetTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entrustedFlg != null" >
+        entrusted_flg = #{record.entrustedFlg,jdbcType=TINYINT},
+      </if>
+      <if test="record.entrustedUserName != null" >
+        entrusted_user_name = #{record.entrustedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entrustedUserId != null" >
+        entrusted_user_id = #{record.entrustedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.trusteePayTime != null" >
+        trustee_pay_time = #{record.trusteePayTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderAccountMin != null" >
+        tender_account_min = #{record.tenderAccountMin,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderAccountMax != null" >
+        tender_account_max = #{record.tenderAccountMax,jdbcType=INTEGER},
+      </if>
+      <if test="record.upfilesId != null" >
+        upfiles_id = #{record.upfilesId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=TINYINT},
+      </if>
+      <if test="record.canTransactionPc != null" >
+        can_transaction_pc = #{record.canTransactionPc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.canTransactionWei != null" >
+        can_transaction_wei = #{record.canTransactionWei,jdbcType=VARCHAR},
+      </if>
+      <if test="record.canTransactionIos != null" >
+        can_transaction_ios = #{record.canTransactionIos,jdbcType=VARCHAR},
+      </if>
+      <if test="record.canTransactionAndroid != null" >
+        can_transaction_android = #{record.canTransactionAndroid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operationLabel != null" >
+        operation_label = #{record.operationLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyOrPersonal != null" >
+        company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowManagerScaleEnd != null" >
+        borrow_manager_scale_end = #{record.borrowManagerScaleEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consumeId != null" >
+        consume_id = #{record.consumeId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalPriceEstimate != null" >
+        disposal_price_estimate = #{record.disposalPriceEstimate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalPeriod != null" >
+        disposal_period = #{record.disposalPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalChannel != null" >
+        disposal_channel = #{record.disposalChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalResult != null" >
+        disposal_result = #{record.disposalResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalNote != null" >
+        disposal_note = #{record.disposalNote,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalProjectName != null" >
+        disposal_project_name = #{record.disposalProjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalProjectType != null" >
+        disposal_project_type = #{record.disposalProjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalArea != null" >
+        disposal_area = #{record.disposalArea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalPredictiveValue != null" >
+        disposal_predictive_value = #{record.disposalPredictiveValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalOwnershipCategory != null" >
+        disposal_ownership_category = #{record.disposalOwnershipCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalAssetOrigin != null" >
+        disposal_asset_origin = #{record.disposalAssetOrigin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disposalAttachmentInfo != null" >
+        disposal_attachment_info = #{record.disposalAttachmentInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowIncreaseMoney != null" >
+        borrow_increase_money = #{record.borrowIncreaseMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowInterestCoupon != null" >
+        borrow_interest_coupon = #{record.borrowInterestCoupon,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowTasteMoney != null" >
+        borrow_taste_money = #{record.borrowTasteMoney,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowAssetNumber != null" >
+        borrow_asset_number = #{record.borrowAssetNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowProjectSource != null" >
+        borrow_project_source = #{record.borrowProjectSource,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowInterestTime != null" >
+        borrow_interest_time = #{record.borrowInterestTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowDueTime != null" >
+        borrow_due_time = #{record.borrowDueTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowSafeguardWay != null" >
+        borrow_safeguard_way = #{record.borrowSafeguardWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowIncomeDescription != null" >
+        borrow_income_description = #{record.borrowIncomeDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPublisher != null" >
+        borrow_publisher = #{record.borrowPublisher,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowExtraYield != null" >
+        borrow_extra_yield = #{record.borrowExtraYield,jdbcType=DECIMAL},
+      </if>
+      <if test="record.contractPeriod != null" >
+        contract_period = #{record.contractPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowLevel != null" >
+        borrow_level = #{record.borrowLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetAttributes != null" >
+        asset_attributes = #{record.assetAttributes,jdbcType=TINYINT},
+      </if>
+      <if test="record.bankRaiseStartDate != null" >
+        bank_raise_start_date = #{record.bankRaiseStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankRaiseEndDate != null" >
+        bank_raise_end_date = #{record.bankRaiseEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankRegistDays != null" >
+        bank_regist_days = #{record.bankRegistDays,jdbcType=TINYINT},
+      </if>
+      <if test="record.bankBorrowDays != null" >
+        bank_borrow_days = #{record.bankBorrowDays,jdbcType=INTEGER},
+      </if>
+      <if test="record.projectName != null" >
+        project_name = #{record.projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.financePurpose != null" >
+        finance_purpose = #{record.financePurpose,jdbcType=VARCHAR},
+      </if>
+      <if test="record.monthlyIncome != null" >
+        monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payment != null" >
+        payment = #{record.payment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.firstPayment != null" >
+        first_payment = #{record.firstPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secondPayment != null" >
+        second_payment = #{record.secondPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.costIntrodution != null" >
+        cost_introdution = #{record.costIntrodution,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fianceCondition != null" >
+        fiance_condition = #{record.fianceCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isNew != null" >
+        is_new = #{record.isNew,jdbcType=TINYINT},
+      </if>
+      <if test="record.publishInstCode != null" >
+        publish_inst_code = #{record.publishInstCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.addip != null" >
+        addip = #{record.addip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.accountContents != null" >
+        account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowContents != null" >
+        borrow_contents = #{record.borrowContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowRunningUse != null" >
+        borrow_running_use = #{record.borrowRunningUse,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowRunningSoruce != null" >
+        borrow_running_soruce = #{record.borrowRunningSoruce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowMeasuresInstit != null" >
+        borrow_measures_instit = #{record.borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowMeasuresMort != null" >
+        borrow_measures_mort = #{record.borrowMeasuresMort,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowMeasuresMea != null" >
+        borrow_measures_mea = #{record.borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.files != null" >
+        files = #{record.files,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowCompanyInstruction != null" >
+        borrow_company_instruction = #{record.borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowOperatingProcess != null" >
+        borrow_operating_process = #{record.borrowOperatingProcess,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_borrow_info
+    set id = #{record.id,jdbcType=INTEGER},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
+      borrow_pre_nid_new = #{record.borrowPreNidNew,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
+      applicant = #{record.applicant,jdbcType=VARCHAR},
+      repay_org_name = #{record.repayOrgName,jdbcType=VARCHAR},
+      is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
+      repay_org_user_id = #{record.repayOrgUserId,jdbcType=INTEGER},
+      `type` = #{record.type,jdbcType=VARCHAR},
+      borrow_use = #{record.borrowUse,jdbcType=VARCHAR},
+      borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      asset_type = #{record.assetType,jdbcType=TINYINT},
+      asset_type_name = #{record.assetTypeName,jdbcType=VARCHAR},
+      entrusted_flg = #{record.entrustedFlg,jdbcType=TINYINT},
+      entrusted_user_name = #{record.entrustedUserName,jdbcType=VARCHAR},
+      entrusted_user_id = #{record.entrustedUserId,jdbcType=INTEGER},
+      trustee_pay_time = #{record.trusteePayTime,jdbcType=INTEGER},
+      tender_account_min = #{record.tenderAccountMin,jdbcType=INTEGER},
+      tender_account_max = #{record.tenderAccountMax,jdbcType=INTEGER},
+      upfiles_id = #{record.upfilesId,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
+      can_transaction_pc = #{record.canTransactionPc,jdbcType=VARCHAR},
+      can_transaction_wei = #{record.canTransactionWei,jdbcType=VARCHAR},
+      can_transaction_ios = #{record.canTransactionIos,jdbcType=VARCHAR},
+      can_transaction_android = #{record.canTransactionAndroid,jdbcType=VARCHAR},
+      operation_label = #{record.operationLabel,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
+      borrow_manager_scale_end = #{record.borrowManagerScaleEnd,jdbcType=VARCHAR},
+      consume_id = #{record.consumeId,jdbcType=VARCHAR},
+      disposal_price_estimate = #{record.disposalPriceEstimate,jdbcType=VARCHAR},
+      disposal_period = #{record.disposalPeriod,jdbcType=VARCHAR},
+      disposal_channel = #{record.disposalChannel,jdbcType=VARCHAR},
+      disposal_result = #{record.disposalResult,jdbcType=VARCHAR},
+      disposal_note = #{record.disposalNote,jdbcType=VARCHAR},
+      disposal_project_name = #{record.disposalProjectName,jdbcType=VARCHAR},
+      disposal_project_type = #{record.disposalProjectType,jdbcType=VARCHAR},
+      disposal_area = #{record.disposalArea,jdbcType=VARCHAR},
+      disposal_predictive_value = #{record.disposalPredictiveValue,jdbcType=VARCHAR},
+      disposal_ownership_category = #{record.disposalOwnershipCategory,jdbcType=VARCHAR},
+      disposal_asset_origin = #{record.disposalAssetOrigin,jdbcType=VARCHAR},
+      disposal_attachment_info = #{record.disposalAttachmentInfo,jdbcType=VARCHAR},
+      borrow_increase_money = #{record.borrowIncreaseMoney,jdbcType=DECIMAL},
+      borrow_interest_coupon = #{record.borrowInterestCoupon,jdbcType=TINYINT},
+      borrow_taste_money = #{record.borrowTasteMoney,jdbcType=TINYINT},
+      borrow_asset_number = #{record.borrowAssetNumber,jdbcType=VARCHAR},
+      borrow_project_source = #{record.borrowProjectSource,jdbcType=VARCHAR},
+      borrow_interest_time = #{record.borrowInterestTime,jdbcType=VARCHAR},
+      borrow_due_time = #{record.borrowDueTime,jdbcType=VARCHAR},
+      borrow_safeguard_way = #{record.borrowSafeguardWay,jdbcType=VARCHAR},
+      borrow_income_description = #{record.borrowIncomeDescription,jdbcType=VARCHAR},
+      borrow_publisher = #{record.borrowPublisher,jdbcType=VARCHAR},
+      borrow_extra_yield = #{record.borrowExtraYield,jdbcType=DECIMAL},
+      contract_period = #{record.contractPeriod,jdbcType=INTEGER},
+      borrow_level = #{record.borrowLevel,jdbcType=VARCHAR},
+      asset_attributes = #{record.assetAttributes,jdbcType=TINYINT},
+      bank_raise_start_date = #{record.bankRaiseStartDate,jdbcType=VARCHAR},
+      bank_raise_end_date = #{record.bankRaiseEndDate,jdbcType=VARCHAR},
+      bank_regist_days = #{record.bankRegistDays,jdbcType=TINYINT},
+      bank_borrow_days = #{record.bankBorrowDays,jdbcType=INTEGER},
+      project_name = #{record.projectName,jdbcType=VARCHAR},
+      finance_purpose = #{record.financePurpose,jdbcType=VARCHAR},
+      monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
+      payment = #{record.payment,jdbcType=VARCHAR},
+      first_payment = #{record.firstPayment,jdbcType=VARCHAR},
+      second_payment = #{record.secondPayment,jdbcType=VARCHAR},
+      cost_introdution = #{record.costIntrodution,jdbcType=VARCHAR},
+      fiance_condition = #{record.fianceCondition,jdbcType=VARCHAR},
+      is_new = #{record.isNew,jdbcType=TINYINT},
+      publish_inst_code = #{record.publishInstCode,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      addip = #{record.addip,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
+      borrow_contents = #{record.borrowContents,jdbcType=LONGVARCHAR},
+      borrow_running_use = #{record.borrowRunningUse,jdbcType=LONGVARCHAR},
+      borrow_running_soruce = #{record.borrowRunningSoruce,jdbcType=LONGVARCHAR},
+      borrow_measures_instit = #{record.borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      borrow_measures_mort = #{record.borrowMeasuresMort,jdbcType=LONGVARCHAR},
+      borrow_measures_mea = #{record.borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      files = #{record.files,jdbcType=LONGVARCHAR},
+      borrow_company_instruction = #{record.borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      borrow_operating_process = #{record.borrowOperatingProcess,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_borrow_info
+    set id = #{record.id,jdbcType=INTEGER},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{record.borrowPreNid,jdbcType=VARCHAR},
+      borrow_pre_nid_new = #{record.borrowPreNidNew,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
+      applicant = #{record.applicant,jdbcType=VARCHAR},
+      repay_org_name = #{record.repayOrgName,jdbcType=VARCHAR},
+      is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
+      repay_org_user_id = #{record.repayOrgUserId,jdbcType=INTEGER},
+      `type` = #{record.type,jdbcType=VARCHAR},
+      borrow_use = #{record.borrowUse,jdbcType=VARCHAR},
+      borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      asset_type = #{record.assetType,jdbcType=TINYINT},
+      asset_type_name = #{record.assetTypeName,jdbcType=VARCHAR},
+      entrusted_flg = #{record.entrustedFlg,jdbcType=TINYINT},
+      entrusted_user_name = #{record.entrustedUserName,jdbcType=VARCHAR},
+      entrusted_user_id = #{record.entrustedUserId,jdbcType=INTEGER},
+      trustee_pay_time = #{record.trusteePayTime,jdbcType=INTEGER},
+      tender_account_min = #{record.tenderAccountMin,jdbcType=INTEGER},
+      tender_account_max = #{record.tenderAccountMax,jdbcType=INTEGER},
+      upfiles_id = #{record.upfilesId,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
+      can_transaction_pc = #{record.canTransactionPc,jdbcType=VARCHAR},
+      can_transaction_wei = #{record.canTransactionWei,jdbcType=VARCHAR},
+      can_transaction_ios = #{record.canTransactionIos,jdbcType=VARCHAR},
+      can_transaction_android = #{record.canTransactionAndroid,jdbcType=VARCHAR},
+      operation_label = #{record.operationLabel,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
+      borrow_manager_scale_end = #{record.borrowManagerScaleEnd,jdbcType=VARCHAR},
+      consume_id = #{record.consumeId,jdbcType=VARCHAR},
+      disposal_price_estimate = #{record.disposalPriceEstimate,jdbcType=VARCHAR},
+      disposal_period = #{record.disposalPeriod,jdbcType=VARCHAR},
+      disposal_channel = #{record.disposalChannel,jdbcType=VARCHAR},
+      disposal_result = #{record.disposalResult,jdbcType=VARCHAR},
+      disposal_note = #{record.disposalNote,jdbcType=VARCHAR},
+      disposal_project_name = #{record.disposalProjectName,jdbcType=VARCHAR},
+      disposal_project_type = #{record.disposalProjectType,jdbcType=VARCHAR},
+      disposal_area = #{record.disposalArea,jdbcType=VARCHAR},
+      disposal_predictive_value = #{record.disposalPredictiveValue,jdbcType=VARCHAR},
+      disposal_ownership_category = #{record.disposalOwnershipCategory,jdbcType=VARCHAR},
+      disposal_asset_origin = #{record.disposalAssetOrigin,jdbcType=VARCHAR},
+      disposal_attachment_info = #{record.disposalAttachmentInfo,jdbcType=VARCHAR},
+      borrow_increase_money = #{record.borrowIncreaseMoney,jdbcType=DECIMAL},
+      borrow_interest_coupon = #{record.borrowInterestCoupon,jdbcType=TINYINT},
+      borrow_taste_money = #{record.borrowTasteMoney,jdbcType=TINYINT},
+      borrow_asset_number = #{record.borrowAssetNumber,jdbcType=VARCHAR},
+      borrow_project_source = #{record.borrowProjectSource,jdbcType=VARCHAR},
+      borrow_interest_time = #{record.borrowInterestTime,jdbcType=VARCHAR},
+      borrow_due_time = #{record.borrowDueTime,jdbcType=VARCHAR},
+      borrow_safeguard_way = #{record.borrowSafeguardWay,jdbcType=VARCHAR},
+      borrow_income_description = #{record.borrowIncomeDescription,jdbcType=VARCHAR},
+      borrow_publisher = #{record.borrowPublisher,jdbcType=VARCHAR},
+      borrow_extra_yield = #{record.borrowExtraYield,jdbcType=DECIMAL},
+      contract_period = #{record.contractPeriod,jdbcType=INTEGER},
+      borrow_level = #{record.borrowLevel,jdbcType=VARCHAR},
+      asset_attributes = #{record.assetAttributes,jdbcType=TINYINT},
+      bank_raise_start_date = #{record.bankRaiseStartDate,jdbcType=VARCHAR},
+      bank_raise_end_date = #{record.bankRaiseEndDate,jdbcType=VARCHAR},
+      bank_regist_days = #{record.bankRegistDays,jdbcType=TINYINT},
+      bank_borrow_days = #{record.bankBorrowDays,jdbcType=INTEGER},
+      project_name = #{record.projectName,jdbcType=VARCHAR},
+      finance_purpose = #{record.financePurpose,jdbcType=VARCHAR},
+      monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
+      payment = #{record.payment,jdbcType=VARCHAR},
+      first_payment = #{record.firstPayment,jdbcType=VARCHAR},
+      second_payment = #{record.secondPayment,jdbcType=VARCHAR},
+      cost_introdution = #{record.costIntrodution,jdbcType=VARCHAR},
+      fiance_condition = #{record.fianceCondition,jdbcType=VARCHAR},
+      is_new = #{record.isNew,jdbcType=TINYINT},
+      publish_inst_code = #{record.publishInstCode,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      addip = #{record.addip,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoWithBLOBs" >
+    update ht_borrow_info
+    <set >
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNid != null" >
+        borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNidNew != null" >
+        borrow_pre_nid_new = #{borrowPreNidNew,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="borrowUserName != null" >
+        borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="applicant != null" >
+        applicant = #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="repayOrgName != null" >
+        repay_org_name = #{repayOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="isRepayOrgFlag != null" >
+        is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
+      </if>
+      <if test="repayOrgUserId != null" >
+        repay_org_user_id = #{repayOrgUserId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUse != null" >
+        borrow_use = #{borrowUse,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowValidTime != null" >
+        borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        asset_type = #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="assetTypeName != null" >
+        asset_type_name = #{assetTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustedFlg != null" >
+        entrusted_flg = #{entrustedFlg,jdbcType=TINYINT},
+      </if>
+      <if test="entrustedUserName != null" >
+        entrusted_user_name = #{entrustedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustedUserId != null" >
+        entrusted_user_id = #{entrustedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="trusteePayTime != null" >
+        trustee_pay_time = #{trusteePayTime,jdbcType=INTEGER},
+      </if>
+      <if test="tenderAccountMin != null" >
+        tender_account_min = #{tenderAccountMin,jdbcType=INTEGER},
+      </if>
+      <if test="tenderAccountMax != null" >
+        tender_account_max = #{tenderAccountMax,jdbcType=INTEGER},
+      </if>
+      <if test="upfilesId != null" >
+        upfiles_id = #{upfilesId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="canTransactionPc != null" >
+        can_transaction_pc = #{canTransactionPc,jdbcType=VARCHAR},
+      </if>
+      <if test="canTransactionWei != null" >
+        can_transaction_wei = #{canTransactionWei,jdbcType=VARCHAR},
+      </if>
+      <if test="canTransactionIos != null" >
+        can_transaction_ios = #{canTransactionIos,jdbcType=VARCHAR},
+      </if>
+      <if test="canTransactionAndroid != null" >
+        can_transaction_android = #{canTransactionAndroid,jdbcType=VARCHAR},
+      </if>
+      <if test="operationLabel != null" >
+        operation_label = #{operationLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="companyOrPersonal != null" >
+        company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
+      </if>
+      <if test="borrowManagerScaleEnd != null" >
+        borrow_manager_scale_end = #{borrowManagerScaleEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="consumeId != null" >
+        consume_id = #{consumeId,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalPriceEstimate != null" >
+        disposal_price_estimate = #{disposalPriceEstimate,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalPeriod != null" >
+        disposal_period = #{disposalPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalChannel != null" >
+        disposal_channel = #{disposalChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalResult != null" >
+        disposal_result = #{disposalResult,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalNote != null" >
+        disposal_note = #{disposalNote,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalProjectName != null" >
+        disposal_project_name = #{disposalProjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalProjectType != null" >
+        disposal_project_type = #{disposalProjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalArea != null" >
+        disposal_area = #{disposalArea,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalPredictiveValue != null" >
+        disposal_predictive_value = #{disposalPredictiveValue,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalOwnershipCategory != null" >
+        disposal_ownership_category = #{disposalOwnershipCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalAssetOrigin != null" >
+        disposal_asset_origin = #{disposalAssetOrigin,jdbcType=VARCHAR},
+      </if>
+      <if test="disposalAttachmentInfo != null" >
+        disposal_attachment_info = #{disposalAttachmentInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowIncreaseMoney != null" >
+        borrow_increase_money = #{borrowIncreaseMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowInterestCoupon != null" >
+        borrow_interest_coupon = #{borrowInterestCoupon,jdbcType=TINYINT},
+      </if>
+      <if test="borrowTasteMoney != null" >
+        borrow_taste_money = #{borrowTasteMoney,jdbcType=TINYINT},
+      </if>
+      <if test="borrowAssetNumber != null" >
+        borrow_asset_number = #{borrowAssetNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowProjectSource != null" >
+        borrow_project_source = #{borrowProjectSource,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowInterestTime != null" >
+        borrow_interest_time = #{borrowInterestTime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowDueTime != null" >
+        borrow_due_time = #{borrowDueTime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowSafeguardWay != null" >
+        borrow_safeguard_way = #{borrowSafeguardWay,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowIncomeDescription != null" >
+        borrow_income_description = #{borrowIncomeDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPublisher != null" >
+        borrow_publisher = #{borrowPublisher,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowExtraYield != null" >
+        borrow_extra_yield = #{borrowExtraYield,jdbcType=DECIMAL},
+      </if>
+      <if test="contractPeriod != null" >
+        contract_period = #{contractPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowLevel != null" >
+        borrow_level = #{borrowLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAttributes != null" >
+        asset_attributes = #{assetAttributes,jdbcType=TINYINT},
+      </if>
+      <if test="bankRaiseStartDate != null" >
+        bank_raise_start_date = #{bankRaiseStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bankRaiseEndDate != null" >
+        bank_raise_end_date = #{bankRaiseEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="bankRegistDays != null" >
+        bank_regist_days = #{bankRegistDays,jdbcType=TINYINT},
+      </if>
+      <if test="bankBorrowDays != null" >
+        bank_borrow_days = #{bankBorrowDays,jdbcType=INTEGER},
+      </if>
+      <if test="projectName != null" >
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="financePurpose != null" >
+        finance_purpose = #{financePurpose,jdbcType=VARCHAR},
+      </if>
+      <if test="monthlyIncome != null" >
+        monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null" >
+        payment = #{payment,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPayment != null" >
+        first_payment = #{firstPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="secondPayment != null" >
+        second_payment = #{secondPayment,jdbcType=VARCHAR},
+      </if>
+      <if test="costIntrodution != null" >
+        cost_introdution = #{costIntrodution,jdbcType=VARCHAR},
+      </if>
+      <if test="fianceCondition != null" >
+        fiance_condition = #{fianceCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="isNew != null" >
+        is_new = #{isNew,jdbcType=TINYINT},
+      </if>
+      <if test="publishInstCode != null" >
+        publish_inst_code = #{publishInstCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="addip != null" >
+        addip = #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountContents != null" >
+        account_contents = #{accountContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowContents != null" >
+        borrow_contents = #{borrowContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowRunningUse != null" >
+        borrow_running_use = #{borrowRunningUse,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowRunningSoruce != null" >
+        borrow_running_soruce = #{borrowRunningSoruce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresInstit != null" >
+        borrow_measures_instit = #{borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresMort != null" >
+        borrow_measures_mort = #{borrowMeasuresMort,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresMea != null" >
+        borrow_measures_mea = #{borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="files != null" >
+        files = #{files,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowCompanyInstruction != null" >
+        borrow_company_instruction = #{borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowOperatingProcess != null" >
+        borrow_operating_process = #{borrowOperatingProcess,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoWithBLOBs" >
+    update ht_borrow_info
+    set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
+      borrow_pre_nid_new = #{borrowPreNidNew,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
+      applicant = #{applicant,jdbcType=VARCHAR},
+      repay_org_name = #{repayOrgName,jdbcType=VARCHAR},
+      is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
+      repay_org_user_id = #{repayOrgUserId,jdbcType=INTEGER},
+      `type` = #{type,jdbcType=VARCHAR},
+      borrow_use = #{borrowUse,jdbcType=VARCHAR},
+      borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      asset_type = #{assetType,jdbcType=TINYINT},
+      asset_type_name = #{assetTypeName,jdbcType=VARCHAR},
+      entrusted_flg = #{entrustedFlg,jdbcType=TINYINT},
+      entrusted_user_name = #{entrustedUserName,jdbcType=VARCHAR},
+      entrusted_user_id = #{entrustedUserId,jdbcType=INTEGER},
+      trustee_pay_time = #{trusteePayTime,jdbcType=INTEGER},
+      tender_account_min = #{tenderAccountMin,jdbcType=INTEGER},
+      tender_account_max = #{tenderAccountMax,jdbcType=INTEGER},
+      upfiles_id = #{upfilesId,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
+      can_transaction_pc = #{canTransactionPc,jdbcType=VARCHAR},
+      can_transaction_wei = #{canTransactionWei,jdbcType=VARCHAR},
+      can_transaction_ios = #{canTransactionIos,jdbcType=VARCHAR},
+      can_transaction_android = #{canTransactionAndroid,jdbcType=VARCHAR},
+      operation_label = #{operationLabel,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
+      borrow_manager_scale_end = #{borrowManagerScaleEnd,jdbcType=VARCHAR},
+      consume_id = #{consumeId,jdbcType=VARCHAR},
+      disposal_price_estimate = #{disposalPriceEstimate,jdbcType=VARCHAR},
+      disposal_period = #{disposalPeriod,jdbcType=VARCHAR},
+      disposal_channel = #{disposalChannel,jdbcType=VARCHAR},
+      disposal_result = #{disposalResult,jdbcType=VARCHAR},
+      disposal_note = #{disposalNote,jdbcType=VARCHAR},
+      disposal_project_name = #{disposalProjectName,jdbcType=VARCHAR},
+      disposal_project_type = #{disposalProjectType,jdbcType=VARCHAR},
+      disposal_area = #{disposalArea,jdbcType=VARCHAR},
+      disposal_predictive_value = #{disposalPredictiveValue,jdbcType=VARCHAR},
+      disposal_ownership_category = #{disposalOwnershipCategory,jdbcType=VARCHAR},
+      disposal_asset_origin = #{disposalAssetOrigin,jdbcType=VARCHAR},
+      disposal_attachment_info = #{disposalAttachmentInfo,jdbcType=VARCHAR},
+      borrow_increase_money = #{borrowIncreaseMoney,jdbcType=DECIMAL},
+      borrow_interest_coupon = #{borrowInterestCoupon,jdbcType=TINYINT},
+      borrow_taste_money = #{borrowTasteMoney,jdbcType=TINYINT},
+      borrow_asset_number = #{borrowAssetNumber,jdbcType=VARCHAR},
+      borrow_project_source = #{borrowProjectSource,jdbcType=VARCHAR},
+      borrow_interest_time = #{borrowInterestTime,jdbcType=VARCHAR},
+      borrow_due_time = #{borrowDueTime,jdbcType=VARCHAR},
+      borrow_safeguard_way = #{borrowSafeguardWay,jdbcType=VARCHAR},
+      borrow_income_description = #{borrowIncomeDescription,jdbcType=VARCHAR},
+      borrow_publisher = #{borrowPublisher,jdbcType=VARCHAR},
+      borrow_extra_yield = #{borrowExtraYield,jdbcType=DECIMAL},
+      contract_period = #{contractPeriod,jdbcType=INTEGER},
+      borrow_level = #{borrowLevel,jdbcType=VARCHAR},
+      asset_attributes = #{assetAttributes,jdbcType=TINYINT},
+      bank_raise_start_date = #{bankRaiseStartDate,jdbcType=VARCHAR},
+      bank_raise_end_date = #{bankRaiseEndDate,jdbcType=VARCHAR},
+      bank_regist_days = #{bankRegistDays,jdbcType=TINYINT},
+      bank_borrow_days = #{bankBorrowDays,jdbcType=INTEGER},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      finance_purpose = #{financePurpose,jdbcType=VARCHAR},
+      monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
+      payment = #{payment,jdbcType=VARCHAR},
+      first_payment = #{firstPayment,jdbcType=VARCHAR},
+      second_payment = #{secondPayment,jdbcType=VARCHAR},
+      cost_introdution = #{costIntrodution,jdbcType=VARCHAR},
+      fiance_condition = #{fianceCondition,jdbcType=VARCHAR},
+      is_new = #{isNew,jdbcType=TINYINT},
+      publish_inst_code = #{publishInstCode,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=INTEGER},
+      addip = #{addip,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      account_contents = #{accountContents,jdbcType=LONGVARCHAR},
+      borrow_contents = #{borrowContents,jdbcType=LONGVARCHAR},
+      borrow_running_use = #{borrowRunningUse,jdbcType=LONGVARCHAR},
+      borrow_running_soruce = #{borrowRunningSoruce,jdbcType=LONGVARCHAR},
+      borrow_measures_instit = #{borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      borrow_measures_mort = #{borrowMeasuresMort,jdbcType=LONGVARCHAR},
+      borrow_measures_mea = #{borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      files = #{files,jdbcType=LONGVARCHAR},
+      borrow_company_instruction = #{borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      borrow_operating_process = #{borrowOperatingProcess,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfo" >
+    update ht_borrow_info
+    set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{borrowPreNid,jdbcType=VARCHAR},
+      borrow_pre_nid_new = #{borrowPreNidNew,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
+      applicant = #{applicant,jdbcType=VARCHAR},
+      repay_org_name = #{repayOrgName,jdbcType=VARCHAR},
+      is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
+      repay_org_user_id = #{repayOrgUserId,jdbcType=INTEGER},
+      `type` = #{type,jdbcType=VARCHAR},
+      borrow_use = #{borrowUse,jdbcType=VARCHAR},
+      borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      asset_type = #{assetType,jdbcType=TINYINT},
+      asset_type_name = #{assetTypeName,jdbcType=VARCHAR},
+      entrusted_flg = #{entrustedFlg,jdbcType=TINYINT},
+      entrusted_user_name = #{entrustedUserName,jdbcType=VARCHAR},
+      entrusted_user_id = #{entrustedUserId,jdbcType=INTEGER},
+      trustee_pay_time = #{trusteePayTime,jdbcType=INTEGER},
+      tender_account_min = #{tenderAccountMin,jdbcType=INTEGER},
+      tender_account_max = #{tenderAccountMax,jdbcType=INTEGER},
+      upfiles_id = #{upfilesId,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
+      can_transaction_pc = #{canTransactionPc,jdbcType=VARCHAR},
+      can_transaction_wei = #{canTransactionWei,jdbcType=VARCHAR},
+      can_transaction_ios = #{canTransactionIos,jdbcType=VARCHAR},
+      can_transaction_android = #{canTransactionAndroid,jdbcType=VARCHAR},
+      operation_label = #{operationLabel,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
+      borrow_manager_scale_end = #{borrowManagerScaleEnd,jdbcType=VARCHAR},
+      consume_id = #{consumeId,jdbcType=VARCHAR},
+      disposal_price_estimate = #{disposalPriceEstimate,jdbcType=VARCHAR},
+      disposal_period = #{disposalPeriod,jdbcType=VARCHAR},
+      disposal_channel = #{disposalChannel,jdbcType=VARCHAR},
+      disposal_result = #{disposalResult,jdbcType=VARCHAR},
+      disposal_note = #{disposalNote,jdbcType=VARCHAR},
+      disposal_project_name = #{disposalProjectName,jdbcType=VARCHAR},
+      disposal_project_type = #{disposalProjectType,jdbcType=VARCHAR},
+      disposal_area = #{disposalArea,jdbcType=VARCHAR},
+      disposal_predictive_value = #{disposalPredictiveValue,jdbcType=VARCHAR},
+      disposal_ownership_category = #{disposalOwnershipCategory,jdbcType=VARCHAR},
+      disposal_asset_origin = #{disposalAssetOrigin,jdbcType=VARCHAR},
+      disposal_attachment_info = #{disposalAttachmentInfo,jdbcType=VARCHAR},
+      borrow_increase_money = #{borrowIncreaseMoney,jdbcType=DECIMAL},
+      borrow_interest_coupon = #{borrowInterestCoupon,jdbcType=TINYINT},
+      borrow_taste_money = #{borrowTasteMoney,jdbcType=TINYINT},
+      borrow_asset_number = #{borrowAssetNumber,jdbcType=VARCHAR},
+      borrow_project_source = #{borrowProjectSource,jdbcType=VARCHAR},
+      borrow_interest_time = #{borrowInterestTime,jdbcType=VARCHAR},
+      borrow_due_time = #{borrowDueTime,jdbcType=VARCHAR},
+      borrow_safeguard_way = #{borrowSafeguardWay,jdbcType=VARCHAR},
+      borrow_income_description = #{borrowIncomeDescription,jdbcType=VARCHAR},
+      borrow_publisher = #{borrowPublisher,jdbcType=VARCHAR},
+      borrow_extra_yield = #{borrowExtraYield,jdbcType=DECIMAL},
+      contract_period = #{contractPeriod,jdbcType=INTEGER},
+      borrow_level = #{borrowLevel,jdbcType=VARCHAR},
+      asset_attributes = #{assetAttributes,jdbcType=TINYINT},
+      bank_raise_start_date = #{bankRaiseStartDate,jdbcType=VARCHAR},
+      bank_raise_end_date = #{bankRaiseEndDate,jdbcType=VARCHAR},
+      bank_regist_days = #{bankRegistDays,jdbcType=TINYINT},
+      bank_borrow_days = #{bankBorrowDays,jdbcType=INTEGER},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      finance_purpose = #{financePurpose,jdbcType=VARCHAR},
+      monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
+      payment = #{payment,jdbcType=VARCHAR},
+      first_payment = #{firstPayment,jdbcType=VARCHAR},
+      second_payment = #{secondPayment,jdbcType=VARCHAR},
+      cost_introdution = #{costIntrodution,jdbcType=VARCHAR},
+      fiance_condition = #{fianceCondition,jdbcType=VARCHAR},
+      is_new = #{isNew,jdbcType=TINYINT},
+      publish_inst_code = #{publishInstCode,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=INTEGER},
+      addip = #{addip,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

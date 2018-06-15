@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhRepayMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhRepay" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="lock_period" property="lockPeriod" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_attribute" property="userAttribute" jdbcType="INTEGER" />
+    <result column="accede_account" property="accedeAccount" jdbcType="DECIMAL" />
+    <result column="repay_interest" property="repayInterest" jdbcType="DECIMAL" />
+    <result column="repay_capital" property="repayCapital" jdbcType="DECIMAL" />
+    <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
+    <result column="repay_already" property="repayAlready" jdbcType="DECIMAL" />
+    <result column="repay_wait" property="repayWait" jdbcType="DECIMAL" />
+    <result column="repay_should" property="repayShould" jdbcType="DECIMAL" />
+    <result column="repay_actual" property="repayActual" jdbcType="DECIMAL" />
+    <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
+    <result column="repay_actual_time" property="repayActualTime" jdbcType="INTEGER" />
+    <result column="repay_should_time" property="repayShouldTime" jdbcType="INTEGER" />
+    <result column="plan_repay_capital" property="planRepayCapital" jdbcType="DECIMAL" />
+    <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
+    <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
+    <result column="plan_wait_captical" property="planWaitCaptical" jdbcType="DECIMAL" />
+    <result column="plan_wait_interest" property="planWaitInterest" jdbcType="DECIMAL" />
+    <result column="wait_total" property="waitTotal" jdbcType="DECIMAL" />
+    <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, accede_order_id, plan_nid, lock_period, user_id, user_name, user_attribute, accede_account, 
+    repay_interest, repay_capital, repay_status, repay_already, repay_wait, repay_should, 
+    repay_actual, order_status, repay_actual_time, repay_should_time, plan_repay_capital, 
+    plan_repay_interest, repay_total, plan_wait_captical, plan_wait_interest, wait_total, 
+    service_fee, create_user, create_time, update_user, update_time, del_flag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepayExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_repay
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_repay
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_repay
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepayExample" >
+    delete from ht_hjh_repay
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepay" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_repay (accede_order_id, plan_nid, lock_period, 
+      user_id, user_name, user_attribute, 
+      accede_account, repay_interest, repay_capital, 
+      repay_status, repay_already, repay_wait, 
+      repay_should, repay_actual, order_status, 
+      repay_actual_time, repay_should_time, plan_repay_capital, 
+      plan_repay_interest, repay_total, plan_wait_captical, 
+      plan_wait_interest, wait_total, service_fee, 
+      create_user, create_time, update_user, 
+      update_time, del_flag)
+    values (#{accedeOrderId,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{lockPeriod,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userAttribute,jdbcType=INTEGER}, 
+      #{accedeAccount,jdbcType=DECIMAL}, #{repayInterest,jdbcType=DECIMAL}, #{repayCapital,jdbcType=DECIMAL}, 
+      #{repayStatus,jdbcType=TINYINT}, #{repayAlready,jdbcType=DECIMAL}, #{repayWait,jdbcType=DECIMAL}, 
+      #{repayShould,jdbcType=DECIMAL}, #{repayActual,jdbcType=DECIMAL}, #{orderStatus,jdbcType=TINYINT}, 
+      #{repayActualTime,jdbcType=INTEGER}, #{repayShouldTime,jdbcType=INTEGER}, #{planRepayCapital,jdbcType=DECIMAL}, 
+      #{planRepayInterest,jdbcType=DECIMAL}, #{repayTotal,jdbcType=DECIMAL}, #{planWaitCaptical,jdbcType=DECIMAL}, 
+      #{planWaitInterest,jdbcType=DECIMAL}, #{waitTotal,jdbcType=DECIMAL}, #{serviceFee,jdbcType=DECIMAL}, 
+      #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepay" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_repay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accedeOrderId != null" >
+        accede_order_id,
+      </if>
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="lockPeriod != null" >
+        lock_period,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userAttribute != null" >
+        user_attribute,
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account,
+      </if>
+      <if test="repayInterest != null" >
+        repay_interest,
+      </if>
+      <if test="repayCapital != null" >
+        repay_capital,
+      </if>
+      <if test="repayStatus != null" >
+        repay_status,
+      </if>
+      <if test="repayAlready != null" >
+        repay_already,
+      </if>
+      <if test="repayWait != null" >
+        repay_wait,
+      </if>
+      <if test="repayShould != null" >
+        repay_should,
+      </if>
+      <if test="repayActual != null" >
+        repay_actual,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="repayActualTime != null" >
+        repay_actual_time,
+      </if>
+      <if test="repayShouldTime != null" >
+        repay_should_time,
+      </if>
+      <if test="planRepayCapital != null" >
+        plan_repay_capital,
+      </if>
+      <if test="planRepayInterest != null" >
+        plan_repay_interest,
+      </if>
+      <if test="repayTotal != null" >
+        repay_total,
+      </if>
+      <if test="planWaitCaptical != null" >
+        plan_wait_captical,
+      </if>
+      <if test="planWaitInterest != null" >
+        plan_wait_interest,
+      </if>
+      <if test="waitTotal != null" >
+        wait_total,
+      </if>
+      <if test="serviceFee != null" >
+        service_fee,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accedeOrderId != null" >
+        #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="lockPeriod != null" >
+        #{lockPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAttribute != null" >
+        #{userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="accedeAccount != null" >
+        #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterest != null" >
+        #{repayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapital != null" >
+        #{repayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayStatus != null" >
+        #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayAlready != null" >
+        #{repayAlready,jdbcType=DECIMAL},
+      </if>
+      <if test="repayWait != null" >
+        #{repayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayShould != null" >
+        #{repayShould,jdbcType=DECIMAL},
+      </if>
+      <if test="repayActual != null" >
+        #{repayActual,jdbcType=DECIMAL},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayActualTime != null" >
+        #{repayActualTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayShouldTime != null" >
+        #{repayShouldTime,jdbcType=INTEGER},
+      </if>
+      <if test="planRepayCapital != null" >
+        #{planRepayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayInterest != null" >
+        #{planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTotal != null" >
+        #{repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitCaptical != null" >
+        #{planWaitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitInterest != null" >
+        #{planWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="waitTotal != null" >
+        #{waitTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepayExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_repay
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_repay
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.accedeOrderId != null" >
+        accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lockPeriod != null" >
+        lock_period = #{record.lockPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userAttribute != null" >
+        user_attribute = #{record.userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.accedeAccount != null" >
+        accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayInterest != null" >
+        repay_interest = #{record.repayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayCapital != null" >
+        repay_capital = #{record.repayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayStatus != null" >
+        repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayAlready != null" >
+        repay_already = #{record.repayAlready,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayWait != null" >
+        repay_wait = #{record.repayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayShould != null" >
+        repay_should = #{record.repayShould,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayActual != null" >
+        repay_actual = #{record.repayActual,jdbcType=DECIMAL},
+      </if>
+      <if test="record.orderStatus != null" >
+        order_status = #{record.orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayActualTime != null" >
+        repay_actual_time = #{record.repayActualTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayShouldTime != null" >
+        repay_should_time = #{record.repayShouldTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.planRepayCapital != null" >
+        plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planRepayInterest != null" >
+        plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayTotal != null" >
+        repay_total = #{record.repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planWaitCaptical != null" >
+        plan_wait_captical = #{record.planWaitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planWaitInterest != null" >
+        plan_wait_interest = #{record.planWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.waitTotal != null" >
+        wait_total = #{record.waitTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.serviceFee != null" >
+        service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_repay
+    set id = #{record.id,jdbcType=INTEGER},
+      accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      lock_period = #{record.lockPeriod,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_attribute = #{record.userAttribute,jdbcType=INTEGER},
+      accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      repay_interest = #{record.repayInterest,jdbcType=DECIMAL},
+      repay_capital = #{record.repayCapital,jdbcType=DECIMAL},
+      repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      repay_already = #{record.repayAlready,jdbcType=DECIMAL},
+      repay_wait = #{record.repayWait,jdbcType=DECIMAL},
+      repay_should = #{record.repayShould,jdbcType=DECIMAL},
+      repay_actual = #{record.repayActual,jdbcType=DECIMAL},
+      order_status = #{record.orderStatus,jdbcType=TINYINT},
+      repay_actual_time = #{record.repayActualTime,jdbcType=INTEGER},
+      repay_should_time = #{record.repayShouldTime,jdbcType=INTEGER},
+      plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
+      repay_total = #{record.repayTotal,jdbcType=DECIMAL},
+      plan_wait_captical = #{record.planWaitCaptical,jdbcType=DECIMAL},
+      plan_wait_interest = #{record.planWaitInterest,jdbcType=DECIMAL},
+      wait_total = #{record.waitTotal,jdbcType=DECIMAL},
+      service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepay" >
+    update ht_hjh_repay
+    <set >
+      <if test="accedeOrderId != null" >
+        accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="lockPeriod != null" >
+        lock_period = #{lockPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAttribute != null" >
+        user_attribute = #{userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterest != null" >
+        repay_interest = #{repayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapital != null" >
+        repay_capital = #{repayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayStatus != null" >
+        repay_status = #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayAlready != null" >
+        repay_already = #{repayAlready,jdbcType=DECIMAL},
+      </if>
+      <if test="repayWait != null" >
+        repay_wait = #{repayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayShould != null" >
+        repay_should = #{repayShould,jdbcType=DECIMAL},
+      </if>
+      <if test="repayActual != null" >
+        repay_actual = #{repayActual,jdbcType=DECIMAL},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayActualTime != null" >
+        repay_actual_time = #{repayActualTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayShouldTime != null" >
+        repay_should_time = #{repayShouldTime,jdbcType=INTEGER},
+      </if>
+      <if test="planRepayCapital != null" >
+        plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayInterest != null" >
+        plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTotal != null" >
+        repay_total = #{repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitCaptical != null" >
+        plan_wait_captical = #{planWaitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitInterest != null" >
+        plan_wait_interest = #{planWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="waitTotal != null" >
+        wait_total = #{waitTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        service_fee = #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepay" >
+    update ht_hjh_repay
+    set accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      plan_nid = #{planNid,jdbcType=VARCHAR},
+      lock_period = #{lockPeriod,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_attribute = #{userAttribute,jdbcType=INTEGER},
+      accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      repay_interest = #{repayInterest,jdbcType=DECIMAL},
+      repay_capital = #{repayCapital,jdbcType=DECIMAL},
+      repay_status = #{repayStatus,jdbcType=TINYINT},
+      repay_already = #{repayAlready,jdbcType=DECIMAL},
+      repay_wait = #{repayWait,jdbcType=DECIMAL},
+      repay_should = #{repayShould,jdbcType=DECIMAL},
+      repay_actual = #{repayActual,jdbcType=DECIMAL},
+      order_status = #{orderStatus,jdbcType=TINYINT},
+      repay_actual_time = #{repayActualTime,jdbcType=INTEGER},
+      repay_should_time = #{repayShouldTime,jdbcType=INTEGER},
+      plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
+      repay_total = #{repayTotal,jdbcType=DECIMAL},
+      plan_wait_captical = #{planWaitCaptical,jdbcType=DECIMAL},
+      plan_wait_interest = #{planWaitInterest,jdbcType=DECIMAL},
+      wait_total = #{waitTotal,jdbcType=DECIMAL},
+      service_fee = #{serviceFee,jdbcType=DECIMAL},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
