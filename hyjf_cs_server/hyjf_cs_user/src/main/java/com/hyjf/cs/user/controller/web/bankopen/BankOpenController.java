@@ -64,14 +64,13 @@ public class BankOpenController {
     @ApiOperation(value = "web端用户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
 	public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
-        logger.info("openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
+        logger.info("web  openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
 		
 		ModelAndView reuslt = new ModelAndView();
         // 验证请求参数
         if (token == null) {
             throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
         }
-        
         UserVO user = this.bankOpenService.getUsers(token);
         // 检查请求参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
@@ -87,6 +86,7 @@ public class BankOpenController {
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
+        // 组装参数
         reuslt = bankOpenService.getOpenAccountMV(openBean);
         //保存开户日志
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"");
@@ -95,7 +95,6 @@ public class BankOpenController {
             throw new ReturnMessageException(OpenAccountError.SYSTEM_ERROR);
         }
         logger.info("开户end");
-    
 		return reuslt;
 	}
 
