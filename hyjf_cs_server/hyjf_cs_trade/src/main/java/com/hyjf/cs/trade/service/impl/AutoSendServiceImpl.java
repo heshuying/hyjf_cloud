@@ -4,9 +4,10 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.borrow.*;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;

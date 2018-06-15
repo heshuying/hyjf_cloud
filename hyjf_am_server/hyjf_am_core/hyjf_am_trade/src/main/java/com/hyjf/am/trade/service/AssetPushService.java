@@ -5,7 +5,7 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 
 import java.util.List;
 

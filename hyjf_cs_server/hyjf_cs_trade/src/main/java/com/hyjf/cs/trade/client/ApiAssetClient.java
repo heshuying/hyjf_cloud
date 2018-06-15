@@ -4,10 +4,10 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.assetpush.InfoBean;
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.BorrowProjectRepayVO;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;

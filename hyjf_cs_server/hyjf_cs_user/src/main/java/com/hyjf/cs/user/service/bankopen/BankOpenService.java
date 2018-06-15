@@ -27,13 +27,29 @@ public interface BankOpenService extends BaseService {
 	int updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name,
 			String idno, String cardNo);
 
-    AppResult<String> checkRequestParam(UserVO user, BankOpenVO bankOpenVO);
+	/**
+	 * @Description 检查请求参数
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/15 17:28
+	 */
+	void checkRequestParam(UserVO user, BankOpenVO bankOpenVO);
 
+	/**
+	 * @Description 组装跳转江西银行的参数
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/15 17:19
+	 */
 	ModelAndView getOpenAccountMV(OpenAccountPageBean openBean);
 
+	/**
+	 * @Description 开户异步逻辑处理
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/15 17:25
+	 */
 	BankCallResult openAccountBgReturn(BankCallBean bean);
-
-	Map<String,String> openAccountReturn(String token, String isSuccess);
 
     Map<String,String> checkApiParam(ApiBankOpenRequestBean requestBean);
 }

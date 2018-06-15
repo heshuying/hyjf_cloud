@@ -1,7 +1,7 @@
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.trade.AccountVO;
-import com.hyjf.am.vo.trade.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
 import java.math.BigDecimal;
 

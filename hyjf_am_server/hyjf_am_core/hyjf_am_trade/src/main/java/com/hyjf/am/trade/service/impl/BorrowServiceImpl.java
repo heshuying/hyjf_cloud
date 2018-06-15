@@ -8,7 +8,7 @@ import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.vo.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

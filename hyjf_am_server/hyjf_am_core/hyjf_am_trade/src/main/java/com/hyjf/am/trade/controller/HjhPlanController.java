@@ -8,7 +8,7 @@ import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.service.HjhPlanService;
-import com.hyjf.am.vo.borrow.HjhLabelVO;
+import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

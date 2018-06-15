@@ -3,35 +3,25 @@
  */
 package com.hyjf.am.trade.controller;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.hyjf.am.response.trade.BorrowConfigResponse;
 import com.hyjf.am.response.trade.BorrowFinmanNewChargeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.BorrowWithBLOBSResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.vo.rtbbatch.BorrowStyleVo;
-import com.hyjf.am.vo.rtbbatch.BorrowWithBLOBsVo;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.trade.service.UserService;
-import com.hyjf.am.vo.borrow.BorrowConfigVO;
-import com.hyjf.am.vo.borrow.BorrowFinmanNewChargeVO;
-import com.hyjf.am.vo.borrow.BorrowManinfoVO;
-import com.hyjf.am.vo.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * @author zhangqingqing
@@ -142,7 +132,7 @@ public class BorrowController {
         BorrowWithBLOBSResponse response = new BorrowWithBLOBSResponse();
         Borrow borrowWithBLOBs = borrowService.getBorrow(borrowNid);
         if (borrowWithBLOBs != null) {
-            BorrowWithBLOBsVo borrowWithBLOBsVo = new BorrowWithBLOBsVo();
+            BorrowWithBLOBsVO borrowWithBLOBsVo = new BorrowWithBLOBsVO();
             BeanUtils.copyProperties(borrowWithBLOBs,borrowWithBLOBsVo);
             response.setResult(borrowWithBLOBsVo);
         }

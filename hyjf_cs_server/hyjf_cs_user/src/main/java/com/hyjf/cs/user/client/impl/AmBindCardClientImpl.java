@@ -11,7 +11,7 @@ import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.user.client.AmBindCardClient;

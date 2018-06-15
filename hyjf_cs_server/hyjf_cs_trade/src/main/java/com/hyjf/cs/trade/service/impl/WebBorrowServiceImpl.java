@@ -9,6 +9,8 @@ import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.bank.LogAcqResBean;
