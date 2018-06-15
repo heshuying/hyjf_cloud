@@ -4,10 +4,8 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.assetpush.InfoBean;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
-import com.hyjf.am.trade.dao.model.auto.STZHWhiteList;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 
 import java.util.List;
 
@@ -54,4 +52,32 @@ public interface AssetPushService {
      * @param infobeans
      */
     void insertRiskInfo(List<InfoBean> infobeans);
+
+    /**
+     * 查询资产表
+     * @param assetId
+     * @param instCode
+     * @return
+     */
+    HjhPlanAsset selectPlanAsset(String assetId, String instCode);
+
+    /**
+     * 更新资产表
+     * @param planAssetVO
+     */
+    void updatePlanAsset(HjhPlanAssetVO planAssetVO);
+
+    /**
+     * 获取项目类型
+     * @param borrowCd
+     * @return
+     */
+    List<BorrowProjectType> selectBorrowProjectByBorrowCd(String borrowCd);
+
+    /**
+     * 更新资产表
+     * @param hjhPlanAsset
+     * @return
+     */
+    int updateHjhPlanAssetnew(HjhPlanAsset hjhPlanAsset);
 }

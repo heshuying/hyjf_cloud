@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.wechat.login;
 
+import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
@@ -37,33 +38,30 @@ public class WeChatLoginController {
      * @Author: zhangqingqing
      * @Desc :登录接口
      * @Param: * @param request
-     * @param loginUserName
-     * @param loginPassword
-     * @param env
+     * @param user
      * @Date: 16:35 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<com.hyjf.am.vo.user.UserVO>
+     * @Return:
      */
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> login(HttpServletRequest request, @RequestParam String loginUserName, @RequestParam String loginPassword,
-                                   @RequestParam String env) {
+    public ApiResult<UserVO> login(HttpServletRequest request, @RequestBody LoginRequestVO user) {
+        logger.info("login start, loginUserName is :{}", user.getUsername());
         // 现只支持两个参数  1微信  2风车理财
-        if (!"1".equals(env) && !"2".equals(env)) {
+        if (!"1".equals(user.getEnv()) && !"2".equals(user.getEnv())) {
             throw new ReturnMessageException(LoginError.ERROR_PARAM);
         }
-        logger.info("login start, loginUserName is :{}", loginUserName);
         ApiResult<UserVO> result = new ApiResult<UserVO>();
         // weChat 只支持手机号登录
-        if (!CommonUtils.isMobile(loginUserName)) {
+        if (!CommonUtils.isMobile(user.getUsername())) {
             throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
         }
-        UserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+        UserVO userVO = loginService.login(user.getUsername(), user.getPassword(), GetCilentIP.getIpAddr(request));
         if (userVO != null) {
-            logger.info("login success, userId is :{}", userVO.getUserId());
+            logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());
             result.setResult(userVO);
         } else {
-            logger.error("login failed...");
+            logger.error("weChat端登录失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
         }
@@ -75,7 +73,7 @@ public class WeChatLoginController {
      * @Desc : 退出登录
      * @Param: * @param token
      * @Date: 16:29 2018/6/5
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return: ApiResult
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")

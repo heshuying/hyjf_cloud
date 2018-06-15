@@ -13,8 +13,10 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.safe.SafeService;
+import com.hyjf.cs.user.vo.BindEmailVO;
 import com.hyjf.cs.user.vo.UserNoticeSetVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +48,10 @@ public class WebSafeController {
 
     /**
      * @Author: zhangqingqing
-     * @Desc :账户设置查询
+     * @Desc : 账户设置查询
      * @Param: * @param token
      * @Date: 16:43 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
     @PostMapping(value = "accountSet")
@@ -95,14 +97,13 @@ public class WebSafeController {
      * 保存用户通知设置
      * @param token
      * @param userNoticeSetVO
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @return
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO, HttpServletRequest request,
-                                                   HttpServletResponse response) {
+    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
         logger.info("用戶通知設置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         ApiResult<UserVO> result = new ApiResult<UserVO>();
 
@@ -122,58 +123,20 @@ public class WebSafeController {
         return result;
     }
 
-    /**
-     * 用户手机号修改基础信息获取
-     * @param token
-     * @param request
-     * @return
-     */
-    @PostMapping("/mobileModifyInit")
-    public ApiResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        ApiResult<MobileModifyResultBean> result = new ApiResult<MobileModifyResultBean>();
-
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        MobileModifyResultBean resultBean = safeService.queryForMobileModify(user.getUserId());
-        result.setResult(resultBean);
-
-        return result;
-    }
-
-    /**
-     * 用户手机号码修改
-     */
-    @ApiOperation(value = "手机号码修改", notes = "手机号码修改")
-    @PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String newMobile, @RequestParam(required=true) String smsCode, HttpServletRequest request,
-                                          HttpServletResponse response) {
-        logger.info("用户手机号码修改, newMobile :{}, smsCode:{}", newMobile, smsCode);
-        ApiResult<UserVO> result = new ApiResult<UserVO>();
-
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        boolean checkRet = safeService.checkForMobileModify(newMobile, smsCode);
-        if(checkRet) {
-            UserVO userVO = new UserVO();
-            userVO.setUserId(user.getUserId());
-            userVO.setMobile(newMobile);
-            safeService.updateUserByUserId(userVO);
-        }
-
-        return result;
-    }
 
     /**
      * 发送激活邮件
      */
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String email, HttpServletRequest request) {
+    public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         ApiResult<Object> result = new ApiResult<Object>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        safeService.checkForEmailSend(email, user.getUserId());
+        safeService.checkForEmailSend(paraMap.get("email"), user.getUserId());
 
         try {
-            safeService.sendEmailActive(user.getUserId(), email);
+            safeService.sendEmailActive(user.getUserId(), paraMap.get("email"));
         } catch (MQException e) {
             logger.error("发送激活邮件失败", e);
             result.setStatus(ApiResult.STATUS_FAIL);
@@ -188,15 +151,16 @@ public class WebSafeController {
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
     @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> bindEmail(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String key, @RequestParam(required=true) String value, @RequestParam(required=true) String email, HttpServletRequest request) {
-        ApiResult<Object> result = new ApiResult<Object>();
+    public ApiResult<Object> bindEmail(@RequestHeader(value = "token") String token, @RequestBody BindEmailVO bindEmailVO) {
+    	logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
+    	ApiResult<Object> result = new ApiResult<Object>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 
-        safeService.checkForEmailBind(email, key, value, user);
+        safeService.checkForEmailBind(bindEmailVO, user);
 
         try {
-            safeService.updateEmail(user.getUserId(), email);
+            safeService.updateEmail(user.getUserId(), bindEmailVO.getEmail());
         } catch (MQException e) {
             logger.error("邮箱激活失败", e);
             result.setStatus(ApiResult.STATUS_FAIL);
@@ -209,27 +173,26 @@ public class WebSafeController {
     /**
      * 添加、修改紧急联系人
      * @param token
-     * @param request
+     * @param
      * @return
      */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestParam(required=true) String relationId,
-                                          @RequestParam(required=true) String rlName, @RequestParam(required=true) String rlPhone, HttpServletRequest request) {
+    @ApiImplicitParam(name = "param",value = "{relationId:string,rlName:string}", dataType = "Map")
+    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap) {
         ApiResult<Object> result = new ApiResult<Object>();
-
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        safeService.checkForContractSave(relationId, rlName, rlPhone, user);
+        safeService.checkForContractSave(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
 
         try {
-            safeService.saveContract(relationId, rlName, rlPhone, user);
+            safeService.saveContract(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
         } catch (MQException e) {
             logger.error("紧急联系人保存失败", e);
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc("紧急联系人保存失败");
         }
-
         return result;
     }
+
 
 }

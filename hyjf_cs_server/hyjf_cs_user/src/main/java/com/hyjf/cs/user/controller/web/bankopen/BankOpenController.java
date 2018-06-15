@@ -2,17 +2,21 @@ package com.hyjf.cs.user.controller.web.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
-import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
@@ -30,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 /**
  * 
@@ -68,63 +73,49 @@ public class BankOpenController {
 
         // 验证请求参数
         if (token == null) {
-        	model.addAttribute("message", "用户未登陆，请先登陆！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
         }
         
         UserVO user = this.bankOpenService.getUsers(token);
         
         if (user == null) {
-        	model.addAttribute("message", "获取用户信息失败！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.GET_USER_INFO_ERROR);
         }
         
         // 手机号
         if (StringUtils.isEmpty(bankOpenVO.getMobile())) {
-            model.addAttribute("message", "手机号不能为空！");
-            return reuslt;
-        }
-        if (StringUtils.isEmpty(bankOpenVO.getCardNo())) {
-            model.addAttribute("message", "银行卡号不能为空！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.MOBILE_NULL_ERROR);
         }
         // 姓名
         if (StringUtils.isEmpty(bankOpenVO.getTrueName())) {
-            model.addAttribute("message", "真实姓名不能为空！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.TRUENAME_NULL_ERROR);
         }else{
             //判断真实姓名是否包含空格
             if (!ValidatorCheckUtil.verfiyChinaFormat(bankOpenVO.getTrueName())) {
-                model.addAttribute("message", "真实姓名不能包含空格！");
-                return reuslt;
+                throw new ReturnMessageException(OpenAccountError.TRUENAME_BLANKL_ERROR);
             }
             //判断真实姓名的长度,不能超过10位
             if (bankOpenVO.getTrueName().length() > 10) {
-                model.addAttribute("message", "真实姓名不能超过10位！");
-                return reuslt;
+                throw new ReturnMessageException(OpenAccountError.TRUENAME_LENGTH_ERROR);
             }
         }
         // 身份证号
         if (StringUtils.isEmpty(bankOpenVO.getIdNo())) {
-            model.addAttribute("message", "身份证号不能为空！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.IDNO_NULL_ERROR);
         }
 
         if (bankOpenVO.getIdNo().length() != 18) {
-            model.addAttribute("message", "身份证号格式不正确！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.IDNO_FORMAT_ERROR);
         }
         String idNo = bankOpenVO.getIdNo().toUpperCase().trim();
         bankOpenVO.setIdNo(idNo);
         //增加身份证唯一性校验
         boolean isOnly = bankOpenService.checkIdNo(idNo);
-        if (!isOnly) {
-            model.addAttribute("message", "身份证已存在！");
-            return reuslt;
+        if (isOnly) {
+            throw new ReturnMessageException(OpenAccountError.IDNO_USED_ERROR);
         }
         if(!Validator.isMobile(bankOpenVO.getMobile())){
-            model.addAttribute("message", "手机号格式错误！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.MOBILE_FORMAT_ERROR);
         }
         String mobile = user.getMobile();
         if (StringUtils.isBlank(mobile)) {
@@ -132,24 +123,21 @@ public class BankOpenController {
                 if(!bankOpenService.existUser(bankOpenVO.getMobile())){
                     mobile = bankOpenVO.getMobile();
                 }else{
-                    model.addAttribute("message", "用户信息错误，手机号码重复！");
-                    return reuslt;
+                    throw new ReturnMessageException(OpenAccountError.MOBILE_USED_ERROR);
                 }
             } else {
-                model.addAttribute("message", "用户信息错误，未获取到用户的手机号码！");
-                return reuslt;
+                throw new ReturnMessageException(OpenAccountError.MOBILE_ERROR);
             }
         } else {
             if (StringUtils.isNotBlank(bankOpenVO.getMobile()) && !mobile.equals(bankOpenVO.getMobile())) {
-                model.addAttribute("message", "用户信息错误，用户的手机号码错误！");
-                return reuslt;
+                throw new ReturnMessageException(OpenAccountError.MOBILE_ERROR);
             }
         }
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = systemConfig.getWebHost() + "/web/secure/open/bankOpenReturn";
+        String retUrl = systemConfig.getWebHost() + "/web/secure/open/return"+ "?phone="+bankOpenVO.getMobile();;
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bankOpenBgreturn" + "?phone="+bankOpenVO.getMobile();
+        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn" + "?phone="+bankOpenVO.getMobile();
 
         OpenAccountPageBean openBean = new OpenAccountPageBean();
         
@@ -162,7 +150,7 @@ public class BankOpenController {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
-        
+
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
@@ -188,17 +176,15 @@ public class BankOpenController {
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),openBean.getCardNo());
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
-            model.addAttribute("message", "操作失败！");
-            return reuslt;
+            throw new ReturnMessageException(OpenAccountError.SYSTEM_ERROR);
         }
         logger.info("开户end");
     
-
 		return reuslt;
 	}
 	
 
-    public ModelAndView getCallbankMV(@RequestBody @Valid OpenAccountPageBean openBean) {
+    public ModelAndView getCallbankMV(OpenAccountPageBean openBean) {
         ModelAndView mv = new ModelAndView();
         // 根据身份证号码获取性别
         String gender = "";
@@ -209,8 +195,8 @@ public class BankOpenController {
             gender = "M";
         }
         // 获取共同参数
-        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-        String bankInstCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+        String bankCode =systemConfig.getBankCode();
+        String bankInstCode = systemConfig.getBankInstcode();
         String orderDate = GetOrderIdUtils.getOrderDate();
         String txDate = GetOrderIdUtils.getTxDate();
         String txTime = GetOrderIdUtils.getTxTime();
@@ -256,5 +242,38 @@ public class BankOpenController {
         }
         return mv;
     }
-    
+
+    /**
+     * web开户同步跳转地址
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "web端用户同步回调", notes = "web端用户开户")
+    @PostMapping(value = "/return")
+    public Map<String, String> returnPage(HttpServletRequest request, @RequestHeader(value = "token", required = true) String token) {
+        String isSuccess = request.getParameter("isSuccess");
+        if (StringUtils.isEmpty(token)) {
+            token = request.getParameter("token");
+        }
+        logger.info("web端开户同步请求,token:{},isSuccess:{}", token, isSuccess);
+        Map<String, String> result = bankOpenService.openAccountReturn(token, isSuccess);
+        logger.info("web端开户同步请求返回值：{}", JSONObject.toJSONString(result));
+        return result;
+    }
+
+    /**
+     * web页面开户异步处理
+     *
+     * @param bean
+     * @return
+     */
+    @ApiOperation(value = "web端页面开户异步处理", notes = "web端页面开户异步处理")
+    @PostMapping("/bgReturn")
+    public BankCallResult openAccountBgReturn(@RequestBody @Valid BankCallBean bean, @RequestParam("phone") String mobile) {
+        logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
+        bean.setMobile(mobile);
+        BankCallResult result = bankOpenService.openAccountBgReturn(bean);
+        return result;
+    }
 }

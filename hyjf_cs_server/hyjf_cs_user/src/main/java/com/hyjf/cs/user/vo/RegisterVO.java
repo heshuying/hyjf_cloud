@@ -1,17 +1,25 @@
 package com.hyjf.cs.user.vo;
 
+import com.hyjf.cs.user.bean.BaseBean;
+
 /**
  * @author xiasq
  * @version RegisterVO, v0.1 2018/4/11 9:37
  */
-public class RegisterVO {
+public class RegisterVO extends BaseBean{
 
 	private String mobilephone;
 	private String smsCode;
+	/**推荐人*/
 	private String reffer;
 	private String password;
+	/**注册渠道*/
 	private String utmId;
+	/**机构编号*/
     private String instCode;
+    /**注册平台*/
+    private String platform;
+
 
     @Override
     public String toString() {
@@ -23,6 +31,14 @@ public class RegisterVO {
                 ", utmId='" + utmId + '\'' +
                 ", instCode='" + instCode + '\'' +
                 '}';
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     public String getMobilephone() {

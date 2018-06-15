@@ -1,22 +1,18 @@
 package com.hyjf.callcenter.serviceImpl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
+import com.hyjf.am.vo.callcenter.CallCenterServiceUsersVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.UserBean;
-import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 import com.hyjf.callcenter.client.AmCallcenterUserInfoClient;
 import com.hyjf.callcenter.service.UserInfoService;
-import com.hyjf.ribbon.EurekaInvokeClient;
 
 /**
  * @author libin
@@ -24,11 +20,11 @@ import com.hyjf.ribbon.EurekaInvokeClient;
  */
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
-	
+
 	/*private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();*/
-    @Autowired
-    private AmCallcenterUserInfoClient amCallcenterUserInfoClient;
-    
+	@Autowired
+	private AmCallcenterUserInfoClient amCallcenterUserInfoClient;
+
 	@Override
 	public List<CallCenterUserBaseVO> getNoServiceUsersList(UserBean bean) {
 		// 封装查询条件
@@ -51,6 +47,37 @@ public class UserInfoServiceImpl implements UserInfoService {
 			users = this.amCallcenterUserInfoClient.selectNoServiceUsersList(callCenterUserInfoRequest);
 		}
 		/*此接口情况特殊，直接是跨库查询  start*/
+		return users;
+	}
+
+	@Override
+	public Integer executeRecord(List<CallCenterServiceUsersVO> userList){
+		CallCenterServiceUsersRequest callCenterServiceUsersRequest = new CallCenterServiceUsersRequest();
+		callCenterServiceUsersRequest.setCallCenterServiceUsersVOList(userList);
+		return this.amCallcenterUserInfoClient.executeRecord(callCenterServiceUsersRequest);
+	}
+
+	@Override
+	public List<CallCenterUserBaseVO> getUserBaseList(UserVO user) {
+		List<CallCenterUserBaseVO> users = null;
+		// 封装查询条件
+		CallCenterUserInfoRequest callCenterUserInfoRequest = new CallCenterUserInfoRequest();
+		if(user.getUserId() != null){
+			callCenterUserInfoRequest.setUserId(user.getUserId());
+			users = this.amCallcenterUserInfoClient.selectUserList(callCenterUserInfoRequest);
+		}
+		return users;
+	}
+
+	@Override
+	public List<CallCenterUserBaseVO> getUserDetailList(UserVO user) {
+		List<CallCenterUserBaseVO> users = null;
+		// 封装查询条件
+		CallCenterUserInfoRequest callCenterUserInfoRequest = new CallCenterUserInfoRequest();
+		if(user.getUserId() != null){
+			callCenterUserInfoRequest.setUserId(user.getUserId());
+			users = this.amCallcenterUserInfoClient.selectUserDetailById(callCenterUserInfoRequest);
+		}
 		return users;
 	}
 

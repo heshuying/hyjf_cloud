@@ -53,7 +53,7 @@ public class WebAutoPlusController {
      * @Param: * @param token
      * @param request
      * @Date: 16:43 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping("/userAuthInves")
@@ -77,7 +77,7 @@ public class WebAutoPlusController {
      * @Param: * @param token
      * @param request
      * @Date: 16:42 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
     @PostMapping("/creditUserAuthInves")
@@ -102,10 +102,10 @@ public class WebAutoPlusController {
      * @param request
      * @param bean
      * @Date: 16:42 2018/5/30
-     * @Return: java.util.Map<java.lang.String,java.lang.String>
+     * @Return: Map
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
-    @PostMapping("/userAuthInvesReturn")
+    @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
     public Map<String, String> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
         logger.info("userAuthInvesReturn:" + "[投资人自动投标签约增强同步回调开始]");
         String isSuccess = request.getParameter("isSuccess");
@@ -120,10 +120,10 @@ public class WebAutoPlusController {
      * @param request
      * @param bean
      * @Date: 16:42 2018/5/30
-     * @Return: java.util.Map<java.lang.String,java.lang.String>
+     * @Return: Map
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
-    @PostMapping("/credituserAuthInvesReturn")
+    @PostMapping(value = "/credituserAuthInvesReturn", produces = "application/json; charset=utf-8")
     public Map<String, String> userCreditAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
                                                          @RequestBody @Valid  BankCallBean bean) {
         logger.info("[投资人自动债转签约增强同步回调开始]");
@@ -139,7 +139,7 @@ public class WebAutoPlusController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
-    @PostMapping("/userAuthInvesBgreturn")
+    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public String userAuthInvesBgreturn(@RequestBody @Valid  BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean);
         return result;
@@ -150,10 +150,10 @@ public class WebAutoPlusController {
      * @Desc :用户授权自动债转异步回调
      * @Param: * @param bean
      * @Date: 16:43 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @PostMapping("/credituserAuthInvesBgreturn")
+    @PostMapping(value = "/credituserAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public String userCreditAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean);
         return result;

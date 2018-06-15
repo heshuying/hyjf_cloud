@@ -2,11 +2,11 @@ package com.hyjf.cs.user.controller.wechat.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -63,13 +63,13 @@ public class WeChatBankOpenController {
         } else {
             logger.error("openAccount userInfo failed...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            result.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
         }
         return result;
     }
 
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
-    @PostMapping(value = "/openBankAccount")
+    @PostMapping(value = "/openBankAccount", produces = "application/json; charset=utf-8")
     public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         // 返回给前端的值
@@ -140,7 +140,7 @@ public class WeChatBankOpenController {
      * @return
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
-    @PostMapping("/bgReturn")
+    @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
     public BankCallResult openAccountBgReturn(@RequestBody @Valid BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);

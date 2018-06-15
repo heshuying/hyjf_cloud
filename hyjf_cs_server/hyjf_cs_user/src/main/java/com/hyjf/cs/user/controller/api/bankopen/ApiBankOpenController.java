@@ -2,8 +2,8 @@ package com.hyjf.cs.user.controller.api.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
-import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
+import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -42,7 +42,7 @@ public class ApiBankOpenController {
     SystemConfig systemConfig;
 
     @ApiOperation(value = "第三方用户开户", notes = "第三方用户开户")
-    @PostMapping(value = "/openBankAccount")
+    @PostMapping(value = "/openBankAccount", produces = "application/json; charset=utf-8")
     public ModelAndView openBankAccount(@RequestBody @Valid ApiBankOpenRequestBean requestBean , HttpServletRequest request) {
         logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();
@@ -67,7 +67,7 @@ public class ApiBankOpenController {
         return modelAndView;
     }
 
-    private OpenAccountPageBean getOpenAccountPageBean(@RequestBody @Valid ApiBankOpenRequestBean requestBean) {
+    private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
         // 同步调用路径

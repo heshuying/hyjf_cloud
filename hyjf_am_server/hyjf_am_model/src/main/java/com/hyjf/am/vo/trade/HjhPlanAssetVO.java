@@ -3,11 +3,15 @@
  */
 package com.hyjf.am.vo.trade;
 
+import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
+
 /**
  * @author fuqiang
  * @version HjhPlanAssetVO, v0.1 2018/6/11 19:21
  */
-public class HjhPlanAssetVO {
+public class HjhPlanAssetVO extends BaseVO implements Serializable {
     private Integer id;
 
     private String assetId;

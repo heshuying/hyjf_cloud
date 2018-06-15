@@ -4,8 +4,11 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
+import com.hyjf.am.vo.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.borrow.HjhLabelVO;
 import com.hyjf.am.vo.trade.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -17,12 +20,12 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.cs.trade.bean.assetpush.PushBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.client.ApiAssetClient;
-import com.hyjf.cs.trade.mq.AssetPushProducer;
+import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.mq.AutoSendProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.ApiAssetPushService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
@@ -34,7 +37,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +49,7 @@ import java.util.List;
 @Service
 public class ApiAssetPushServcieImpl implements ApiAssetPushService {
 
-    private Logger logger = LoggerFactory.getLogger(ApiAssetPushServcieImpl.class);
+    private Logger _log = LoggerFactory.getLogger(ApiAssetPushServcieImpl.class);
 
     private static final Long MAX_ASSET_MONEY = 1000000L;
 
@@ -52,7 +57,10 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
     private ApiAssetClient apiAssetClient;
 
     @Autowired
-    private AssetPushProducer assetPushProducer;
+    private AutoSendClient autoSendClient;
+
+    @Autowired
+    private AutoSendProducer autoSendProducer;
 
     @Override
     public void sendToMQ(HjhPlanAssetVO hjhPlanAsset) {
@@ -61,10 +69,9 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
-            assetPushProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, params));
+            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, params));
         } catch (MQException e) {
-            e.printStackTrace();
-            logger.error("资产推送发送消息失败...");
+            _log.error("自动录标发送消息失败...", e);
         }
     }
 
@@ -76,7 +83,7 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
         // 查看机构表是否存在
         HjhAssetBorrowTypeVO assetBorrow = apiAssetClient.selectAssetBorrowType(pushRequestBean.getInstCode(), pushRequestBean.getAssetType());
         if (assetBorrow == null) {
-            logger.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------机构编号不存在");
+            _log.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------机构编号不存在");
             return resultBean;
         }
 
@@ -91,12 +98,12 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
             }
             if (assets.size() > 1000) {
                 resultBean.setStatusDesc("请求参数过长");
-                logger.error("------请求参数过长-------");
+                _log.error("------请求参数过长-------");
                 return resultBean;
             }
 
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            _log.error(e.getMessage(), e);
             return resultBean;
         }
 
@@ -156,7 +163,7 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
 
                 //校验还款方式
                 if (!checkIsMonthStyle(pushBean.getBorrowStyle(), pushBean.getIsMonth()) || !checkBorrowStyle(projectRepays, pushBean.getBorrowStyle())) {
-                    logger.info(pushRequestBean.getInstCode() + " 还款方式不正确 " + projectRepays);
+                    _log.info(pushRequestBean.getInstCode() + " 还款方式不正确 " + projectRepays);
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000005);
                     pushBean.setRetMsg("不支持这种还款方式");
                     continue;
@@ -294,7 +301,7 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
 
             } catch (Exception e) {
                 // ZT000008
-                logger.error(e.getMessage(), e);
+                _log.error(e.getMessage(), e);
                 if (e instanceof DuplicateKeyException) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
                     pushBean.setRetMsg("资产已入库");
@@ -305,20 +312,20 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
             }
         }
 
-        logger.info(pushRequestBean.getInstCode()+" 结束推送资产");
+        _log.info(pushRequestBean.getInstCode()+" 结束推送资产");
 
         //商家信息未解析版
-        logger.info("----------------商家信息导入开始-----------------------");
+        _log.info("----------------商家信息导入开始-----------------------");
         List<InfoBean> riskInfo = pushRequestBean.getRiskInfo();
         if (Validator.isNotNull(riskInfo)) {
             if (riskInfo.size() > 1000) {
                 resultBean.setStatusDesc("商家信息数量超限");
-                logger.error("------------商家信息数量超限-----------");
+                _log.error("------------商家信息数量超限-----------");
                 return resultBean;
             }
             this.apiAssetClient.insertRiskInfo(riskInfo);
         }
-        logger.info("----------------商家信息导入完成-----------------------");
+        _log.info("----------------商家信息导入完成-----------------------");
 
         resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
         resultBean.setStatusDesc("请求成功");
@@ -327,6 +334,159 @@ public class ApiAssetPushServcieImpl implements ApiAssetPushService {
         resultBean.setData(retassets);
 
         return resultBean;
+    }
+
+
+    @Override
+    public HjhLabelVO getLabelId(BorrowWithBLOBsVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
+
+        HjhLabelVO resultLabel = null;
+
+        List<HjhLabelVO> list = autoSendClient.seleHjhLabel(borrowVO.getBorrowStyle());
+        if (list != null && list.size() <= 0) {
+            _log.info(borrowVO.getBorrowStyle()+" 该原始标还款方式 没有一个标签");
+            return resultLabel;
+        }
+        // continue过滤输入了但是不匹配的标签，如果找到就是第一个
+        for (HjhLabelVO hjhLabelVO : list) {
+            // 标的期限
+//			int score = 0;
+            if(hjhLabelVO.getLabelTermEnd() != null && hjhLabelVO.getLabelTermEnd().intValue()>0 && hjhLabelVO.getLabelTermStart()!=null
+                    && hjhLabelVO.getLabelTermStart().intValue()>0){
+                if(borrowVO.getBorrowPeriod() >= hjhLabelVO.getLabelTermStart() && borrowVO.getBorrowPeriod() <= hjhLabelVO.getLabelTermEnd()){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+            }else if ((hjhLabelVO.getLabelTermEnd() != null && hjhLabelVO.getLabelTermEnd().intValue()>0) ||
+                    (hjhLabelVO.getLabelTermStart()!=null && hjhLabelVO.getLabelTermStart().intValue()>0)) {
+                if(borrowVO.getBorrowPeriod() == hjhLabelVO.getLabelTermStart() || borrowVO.getBorrowPeriod() == hjhLabelVO.getLabelTermEnd()){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+            }else{
+                continue;
+            }
+            // 标的实际利率
+            if(hjhLabelVO.getLabelAprStart() != null && hjhLabelVO.getLabelAprStart().compareTo(BigDecimal.ZERO)>0 &&
+                    hjhLabelVO.getLabelAprEnd()!=null && hjhLabelVO.getLabelAprEnd().compareTo(BigDecimal.ZERO)>0){
+                if(borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprStart())>=0 && borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprEnd())<=0){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+            }else if (hjhLabelVO.getLabelAprStart() != null && hjhLabelVO.getLabelAprStart().compareTo(BigDecimal.ZERO)>0) {
+                if(borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprStart())==0 ){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+
+            }else if (hjhLabelVO.getLabelAprEnd()!=null && hjhLabelVO.getLabelAprEnd().compareTo(BigDecimal.ZERO)>0 ) {
+                if(borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprEnd())==0){
+//					score = score+1;
+                }else {
+                    continue;
+                }
+            }
+            // 标的实际支付金额
+            if(hjhLabelVO.getLabelPaymentAccountStart() != null && hjhLabelVO.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO)>0 &&
+                    hjhLabelVO.getLabelPaymentAccountEnd()!=null && hjhLabelVO.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO)>0){
+                if(borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountStart())>=0 && borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountEnd())<=0){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+            }else if (hjhLabelVO.getLabelPaymentAccountStart() != null && hjhLabelVO.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO)>0) {
+                if(borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountStart())==0 ){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+
+            }else if (hjhLabelVO.getLabelPaymentAccountEnd()!=null && hjhLabelVO.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO)>0 ) {
+                if(borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountEnd())==0){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+            }
+            // 资产来源
+            if(StringUtils.isNotBlank(hjhLabelVO.getInstCode())){
+                if(hjhLabelVO.getInstCode().equals(borrowVO.getInstCode())){
+//					score = score+1;
+                }else{
+                    continue;
+                }
+            }
+            // 产品类型
+            if(hjhLabelVO.getAssetType() != null && hjhLabelVO.getAssetType().intValue() > 0){
+                if(hjhLabelVO.getAssetType().equals(borrowVO.getAssetType())){
+                    ;
+                }else{
+                    continue;
+                }
+            }
+            // 项目类型
+            if(hjhLabelVO.getProjectType() != null && hjhLabelVO.getProjectType().intValue() > 0){
+                if(hjhLabelVO.getProjectType().equals(borrowVO.getProjectType())){
+                    ;
+                }else{
+                    continue;
+                }
+            }
+
+            // 推送时间节点
+            if(hjhPlanAssetVO != null && hjhPlanAssetVO.getRecieveTime() != null && hjhPlanAssetVO.getRecieveTime().intValue() > 0){
+                Date reciveDate = GetDate.getDate(hjhPlanAssetVO.getRecieveTime());
+
+                if(hjhLabelVO.getPushTimeStart() != null && hjhLabelVO.getPushTimeEnd()!=null){
+                    if(reciveDate.getTime() >= hjhLabelVO.getPushTimeStart().getTime() &&
+                            reciveDate.getTime() <= hjhLabelVO.getPushTimeEnd().getTime()){
+//						score = score+1;
+                    }else{
+                        continue;
+                    }
+                }else if (hjhLabelVO.getPushTimeStart() != null) {
+                    if(reciveDate.getTime() == hjhLabelVO.getPushTimeStart().getTime() ){
+//						score = score+1;
+                    }else{
+                        continue;
+                    }
+
+                }else if (hjhLabelVO.getPushTimeEnd()!=null) {
+                    if(reciveDate.getTime() == hjhLabelVO.getPushTimeEnd().getTime() ){
+//						score = score+1;
+                    }else{
+                        continue;
+                    }
+                }
+
+            }
+
+            // 如果找到返回最近的一个
+            return hjhLabelVO;
+
+        }
+
+        return resultLabel;
+    }
+
+    @Override
+    public void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String mqGroup) {
+
+        // 加入到消息队列
+        JSONObject params = new JSONObject();
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        params.put("assetId", hjhPlanAssetVO.getAssetId());
+        params.put("instCode", hjhPlanAssetVO.getInstCode());
+        try {
+            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_RECORD_TOPIC, params));
+        } catch (MQException e) {
+            e.printStackTrace();
+            _log.error("自动备案送消息失败...", e);
+        }
     }
 
 

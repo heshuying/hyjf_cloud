@@ -15,8 +15,8 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
-import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
-import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
+import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -74,7 +74,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     @Override
     public boolean checkIdNo(String idNo) {
 
-        UserInfoVO userInfo = amBankOpenClient.findUserInfoByCardNo(idNo);
+        UserInfoVO userInfo = amUserClient.getUserByIdNo(idNo);
 
         if (userInfo != null) {
             return true;
@@ -200,7 +200,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         // 获取共同参数
         String idType = BankCallConstant.ID_TYPE_IDCARD;
         // 调用开户接口
-        BankCallBean openAccoutBean =  new BankCallBean(openBean.getUserId(),BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE,Integer.parseInt(openBean.getPlatform()),BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+        BankCallBean openAccoutBean =  new BankCallBean(systemConfig.getBankCode(),systemConfig.getBankInstcode(),openBean.getUserId(),BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE,Integer.parseInt(openBean.getPlatform()),BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
         if ("3".equals(openBean.getIdentity())) {

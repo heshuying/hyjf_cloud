@@ -3,11 +3,13 @@
  */
 package com.hyjf.cs.user.controller.wechat.regist;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -50,21 +52,19 @@ public class WeChatRegistController {
      * @param request
      * @param response
      * @Date: 16:34 2018/5/30
-     * @Return: com.hyjf.cs.user.result.BaseResultBean
+     * @Return: BaseResultBean
      */
+
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public BaseResultBean register(@RequestHeader String key, @RequestParam String mobile,
-                                   @RequestParam String verificationCode, @RequestParam String password,
-                                   @RequestParam(required = false) String reffer, HttpServletRequest request, HttpServletResponse response) {
-        logger.info("register start, mobile is :{}", mobile);
+    public BaseResultBean register(@RequestHeader String key,@RequestBody RegisterVO register, HttpServletRequest request, HttpServletResponse response) {
+        logger.info("register start, mobile is :{}", JSONObject.toJSONString(register));
         BaseResultBean resultBean = new BaseResultBean();
 
-        String mobilephone = DES.decodeValue(key, mobile);
-        String smsCode = DES.decodeValue(key, verificationCode);
-        String pwd = DES.decodeValue(key, password);
-
-        reffer = DES.decodeValue(key, reffer);
+        String mobilephone = DES.decodeValue(key, register.getMobilephone());
+        String smsCode = DES.decodeValue(key, register.getSmsCode());
+        String pwd = DES.decodeValue(key, register.getPassword());
+        String reffer = DES.decodeValue(key, register.getReffer());
         if (StringUtils.isNotBlank(reffer)) {
             int count = amUserClient.countUserByRecommendName(reffer);
             if (count == 0) {
@@ -78,6 +78,7 @@ public class WeChatRegistController {
         registerVO.setPassword(pwd);
         registerVO.setReffer(reffer);
         registerVO.setSmsCode(smsCode);
+        registService.registerCheckParam(ClientConstants.WECHAT_CLIENT,registerVO);
         UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
 
         if (userVO != null) {
@@ -85,7 +86,7 @@ public class WeChatRegistController {
         } else {
             logger.error("register failed...");
             resultBean.setStatus("1");
-            resultBean.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            resultBean.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
         }
         return resultBean;
     }

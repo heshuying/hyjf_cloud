@@ -855,7 +855,7 @@ public class UserServiceImpl implements UserService {
 	 * @Desc :查询紧急联系人
 	 * @Param: * @param userId
 	 * @Date: 14:09 2018/6/4
-	 * @Return: com.hyjf.am.user.dao.model.auto.UsersContact
+	 * @Return: UsersContact
 	 */
 	@Override
 	public UsersContact selectUserContact(Integer userId){
@@ -950,6 +950,20 @@ public class UserServiceImpl implements UserService {
 		UserLoginLog userLoginLog = userLoginLogMapper.selectByPrimaryKey(userId);
 		return userLoginLog;
 
+	}
+
+	@Override
+	public List<User> selectUserByUsername(String repayOrgName) {
+		// 根据垫付机构用户名检索垫付机构用户ID
+		UserExample usersExample = new UserExample();
+		UserExample.Criteria userCri = usersExample.createCriteria();
+		userCri.andUsernameEqualTo(repayOrgName);
+		userCri.andBankOpenAccountEqualTo(1);// 汇付已开户
+		List<User> ulist = this.usersMapper.selectByExample(usersExample);
+		if (!CollectionUtils.isEmpty(ulist)) {
+			return ulist;
+		}
+		return null;
 	}
 
 }

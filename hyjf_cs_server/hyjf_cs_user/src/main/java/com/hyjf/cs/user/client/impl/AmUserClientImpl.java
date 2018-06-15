@@ -1,9 +1,14 @@
 package com.hyjf.cs.user.client.impl;
 
-import java.io.UnsupportedEncodingException;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.cs.user.client.AmUserClient;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -13,18 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.BindEmailLogRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
-import com.hyjf.am.resquest.user.UserNoticeSetRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.cs.user.client.AmUserClient;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author xiasq
@@ -42,7 +36,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO findUserByMobile(String mobile) {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findByMobile/" + mobile, UserResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -55,7 +49,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public int countUserByRecommendName(String reffer) {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class).getBody();
-		if (response != null && response.getResult() != null) {
+		if (response != null  && response.getResult() != null) {
 			return 1;
 		}
 		return 0;
@@ -65,7 +59,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO register(RegisterUserRequest request) {
 		UserResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/user/register", request, UserResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -75,7 +69,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -85,12 +79,21 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserInfoVO findUserInfoById(int userId) {
 		UserInfoResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
 	}
 
+	/**
+	 * 保存验证码
+	 * @param mobile
+	 * @param checkCode
+	 * @param validCodeType
+	 * @param status
+	 * @param platform
+	 * @return
+	 */
 	@Override
 	public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
 		SmsCodeRequest request = new SmsCodeRequest();
@@ -132,7 +135,7 @@ public class AmUserClientImpl implements AmUserClient {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findByCondition/" + loginUserName, UserResponse.class)
 				.getBody();
-		if (response != null) {
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -336,7 +339,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @Desc : 查询紧急联系人
 	 * @Param: * @param userId
 	 * @Date: 14:25 2018/6/4
-	 * @Return: com.hyjf.am.vo.user.UsersContactVO
+	 * @Return: UsersContactVO
 	 */
 	@Override
 	public UsersContactVO selectUserContact(Integer userId) {
@@ -374,7 +377,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO getUserByIdNo(String idNo) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/userInfo/" + idNo, UserInfoResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userInfo/findByIdNo/" + idNo, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

@@ -1,8 +1,8 @@
 package com.hyjf.cs.user.service.bankopen;
 
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.user.beans.ApiBankOpenRequestBean;
-import com.hyjf.cs.user.beans.OpenAccountPageBean;
+import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
+import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.BaseService;
 import com.hyjf.cs.user.vo.BankOpenVO;

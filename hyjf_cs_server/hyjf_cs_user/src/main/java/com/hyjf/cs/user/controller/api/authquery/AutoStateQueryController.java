@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.user.controller.api.authquery;
 
-import com.hyjf.cs.user.beans.AutoStateQueryRequest;
-import com.hyjf.cs.user.beans.AutoStateQueryResultBean;
-import com.hyjf.cs.user.constants.RegisterError;
+import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.cs.user.bean.AutoStateQueryRequest;
+import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
 import io.swagger.annotations.Api;
@@ -38,7 +38,7 @@ public class AutoStateQueryController {
             result.setResult(resultBean);
         } else {
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            result.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
         }
         return result;
     }

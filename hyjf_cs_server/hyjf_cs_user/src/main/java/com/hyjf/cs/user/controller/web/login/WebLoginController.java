@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.controller.web.login;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
@@ -36,27 +38,28 @@ public class WebLoginController {
 
 
     /**
-     * @param loginPassword
+     * @param user
      * @param request
      * @Author: zhangqingqing
      * @Desc :登录
      * @Param: * @param loginUserName
      * @Date: 16:39 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<com.hyjf.am.vo.user.UserVO>
+     * @Return:
      */
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> login(@RequestParam String loginUserName,
-                                   @RequestParam String loginPassword,
+    public ApiResult<UserVO> login(@RequestBody LoginRequestVO user,
                                    HttpServletRequest request) {
-        logger.info("login start, loginUserName is :{}", loginUserName);
+        logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
+        String loginUserName = user.getUsername();
+        String loginPassword = user.getPassword();
         ApiResult<UserVO> result = new ApiResult<UserVO>();
         UserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
-            logger.info("login success, userId is :{}", userVO.getUserId());
+            logger.info("web端登录成功 userId is :{}", userVO.getUserId());
             result.setResult(userVO);
         } else {
-            logger.error("login failed...");
+            logger.error("web端登录失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
             result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
         }
@@ -68,7 +71,7 @@ public class WebLoginController {
      * @Desc : 退出登录
      * @Param: * @param token
      * @Date: 16:29 2018/6/5
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return:
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")

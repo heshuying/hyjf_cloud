@@ -12,7 +12,7 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.beans.*;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -486,7 +486,7 @@ public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusServ
      * @param callback
      * @param acqRes
      * @Date: 11:03 2018/5/31
-     * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
+     * @Return: BankCallResult
      */
     @Override
     public BankCallResult userAuthInvesBgreturn(BankCallBean bean, String callback, String acqRes) {

@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.vo.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.borrow.HjhLabelVO;
 import com.hyjf.am.vo.trade.HjhPlanAssetVO;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
@@ -26,4 +28,21 @@ public interface ApiAssetPushService {
      * @param pushRequestBean
      */
     PushResultBean assetPush(PushRequestBean pushRequestBean);
+
+    /**
+     * 查询标签
+     *
+     * @param borrowVO
+     * @param hjhPlanAssetVO
+     * @return
+     */
+    HjhLabelVO getLabelId(BorrowWithBLOBsVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO);
+
+    /**
+     * 发送消息自动备案
+     *
+     * @param hjhPlanAssetVO
+     * @param mqGroup
+     */
+    void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String mqGroup);
 }

@@ -3,7 +3,7 @@
  */
 package com.hyjf.callcenter.controller.repaymentdetail;
 
-import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
+import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
 import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -51,12 +51,12 @@ public class RepaymentDetailServer extends CallcenterBaseController {
 
         //*************各自业务开始***************
         //根据用户信息查询用户优惠券信息
-        CallCenterRepaymentRequest callCenterRepaymentRequest = new CallCenterRepaymentRequest();
-        callCenterRepaymentRequest.setUserId(user.getUserId());
-        callCenterRepaymentRequest.setLimitStart(bean.getLimitStart());
-        callCenterRepaymentRequest.setLimitEnd(bean.getLimitSize());
+        CallCenterBaseRequest callCenterBaseRequest = new CallCenterBaseRequest();
+        callCenterBaseRequest.setUserId(user.getUserId());
+        callCenterBaseRequest.setLimitStart(bean.getLimitStart());
+        callCenterBaseRequest.setLimitEnd(bean.getLimitSize());
         List<CallCenterHztRepaymentDetailVO> recordList =
-                this.repaymentDetailService.getHztRepaymentDetailList(callCenterRepaymentRequest);
+                this.repaymentDetailService.getHztRepaymentDetailList(callCenterBaseRequest);
 
         if (recordList == null) {
             result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户无还款明细！");
@@ -106,12 +106,12 @@ public class RepaymentDetailServer extends CallcenterBaseController {
 
         //*************各自业务开始***************
         //根据用户信息查询用户优惠券信息
-        CallCenterRepaymentRequest callCenterRepaymentRequest = new CallCenterRepaymentRequest();
-        callCenterRepaymentRequest.setUserId(user.getUserId());
-        callCenterRepaymentRequest.setLimitStart(bean.getLimitStart());
-        callCenterRepaymentRequest.setLimitEnd(bean.getLimitSize());
+        CallCenterBaseRequest callCenterBaseRequest = new CallCenterBaseRequest();
+        callCenterBaseRequest.setUserId(user.getUserId());
+        callCenterBaseRequest.setLimitStart(bean.getLimitStart());
+        callCenterBaseRequest.setLimitEnd(bean.getLimitSize());
         List<CallCenterHtjRepaymentDetailVO> recordList = this.repaymentDetailService.getHtjRepaymentDetailList(
-                callCenterRepaymentRequest);
+                callCenterBaseRequest);
 
         if (recordList == null) {
             result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户无还款明细！");
