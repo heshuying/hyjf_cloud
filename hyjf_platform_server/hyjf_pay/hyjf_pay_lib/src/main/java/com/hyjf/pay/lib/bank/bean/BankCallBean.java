@@ -3,6 +3,8 @@ package com.hyjf.pay.lib.bank.bean;
 import java.io.Serializable;
 
 import com.hyjf.common.spring.SpringUtils;
+import java.io.Serializable;
+
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.config.PaySystemConfig;

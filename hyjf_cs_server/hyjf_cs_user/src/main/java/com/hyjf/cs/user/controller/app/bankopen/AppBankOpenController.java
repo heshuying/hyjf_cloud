@@ -7,7 +7,6 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -65,7 +64,7 @@ public class AppBankOpenController {
         } else {
             logger.error("openAccount userInfo failed...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(RegisterError.REGISTER_ERROR.getMessage());
+            result.setStatusDesc(OpenAccountError.GET_USER_INFO_ERROR.getMessage());
         }
         return result;
     }
