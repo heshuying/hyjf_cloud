@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -128,8 +128,17 @@
             <columnOverride column="borrower_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!-- 用户紧急联络人表 -->
-        <table tableName="ht_user_contact" domainObjectName="UserContract">
+        <table tableName="ht_user_contact" domainObjectName="UserContact">
             <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户email绑定log表 -->
+        <table tableName="ht_user_bind_email_log" domainObjectName="UserBindEmailLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 用户江西银行短信验证码授权表 -->
+        <table tableName="ht_bank_sms_auth_code" domainObjectName="BankSmsAuthCode">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!-- 用户log日志表 -->
         <table tableName="ht_user_log" domainObjectName="UserLog">
@@ -306,7 +315,11 @@
 		<table tableName="ht_param_name" domainObjectName="ParamName">
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
 		</table>
-
+        <!-- 数据字典表 -->
+        <table tableName="ht_callcenter_service_users" domainObjectName="CallcenterServiceUsers">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="assigned" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
         <!-- 3. hyjf_trade -->
 
@@ -879,5 +892,10 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+
+        <table tableName="ht_coupon_recover" domainObjectName="CouponRecover">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
     </context>
 </generatorConfiguration>
