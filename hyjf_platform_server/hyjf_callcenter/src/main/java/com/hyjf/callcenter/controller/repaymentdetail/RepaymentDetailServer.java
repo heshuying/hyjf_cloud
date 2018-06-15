@@ -36,7 +36,7 @@ public class RepaymentDetailServer extends CallcenterBaseController {
     @ApiOperation(value = "查询还款明细（直投产品，含承接的债权）",
             notes = "按照用户名/手机号查询还款明细（直投产品，含承接的债权）")
     @ResponseBody
-    @PostMapping(value = RepaymentDetailDefine.GET_HZT_REPAYMENT_DETAIL_LIST_ACTION, produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getHztRepaymentDetailList", produces = "application/json; charset=utf-8")
     public ResultListBean getHztRepaymentDetailList(HttpServletRequest request, HttpServletResponse response,
                                                     @RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();
@@ -91,7 +91,7 @@ public class RepaymentDetailServer extends CallcenterBaseController {
      */
     @ApiOperation(value = "查询还款明细（汇添金）", notes = "按照用户名/手机号查询还款明细（汇添金）")
     @ResponseBody
-    @PostMapping(value = RepaymentDetailDefine.GET_HTJ_REPAYMENT_DETAIL_LIST_ACTION, produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getHtjRepaymentDetailList", produces = "application/json; charset=utf-8")
     public ResultListBean getHtjRepaymentDetailList(HttpServletRequest request, HttpServletResponse response,
                                                     @RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();

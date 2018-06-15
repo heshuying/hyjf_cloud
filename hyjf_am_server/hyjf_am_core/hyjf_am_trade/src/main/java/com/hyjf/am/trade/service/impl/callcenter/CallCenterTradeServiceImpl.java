@@ -8,10 +8,8 @@ import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterAccountDetailCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterRepaymentDetailCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterRechargeCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterAccountDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterRechargeCustomize;
+import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterWithdrawCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.common.cache.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,9 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 
     @Autowired
     private CallcenterRechargeCustomizeMapper callcenterRechargeCustomizeMapper;
+
+    @Autowired
+    private CallcenterWithdrawCustomizeMapper callcenterWithdrawCustomizeMapper;
 
     /**
      *
@@ -96,6 +97,24 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
             for(CallCenterRechargeCustomize callCenterRechargeCustomize : list){
                 callCenterRechargeCustomize.setStatus(statusMap.getOrDefault(callCenterRechargeCustomize.getStatus(),null));
                 callCenterRechargeCustomize.setIsBank(bankMap.getOrDefault(callCenterRechargeCustomize.getIsBank(),null));
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 查询提现明细
+     * @author wangjun
+     * @param centerBaseRequest
+     * @return
+     */
+    @Override
+    public List<CallCenterWithdrawCustomize> getWithdrawRecordList(CallCenterBaseRequest centerBaseRequest) {
+        List<CallCenterWithdrawCustomize> list = callcenterWithdrawCustomizeMapper.getWithdrawRecordList(centerBaseRequest);
+        if(!CollectionUtils.isEmpty(list)){
+            Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
+            for(CallCenterWithdrawCustomize callCenterWithdrawCustomize : list){
+                callCenterWithdrawCustomize.setClientStr(clientMap.getOrDefault(callCenterWithdrawCustomize.getClientStr(),null));
             }
         }
         return list;
