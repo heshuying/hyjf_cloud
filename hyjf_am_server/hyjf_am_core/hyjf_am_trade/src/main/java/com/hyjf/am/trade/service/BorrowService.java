@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
 import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
 import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
 
 /**
@@ -15,6 +16,10 @@ import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
  * @version BorrowService, v0.1 2018/6/13 18:52
  */
 public interface BorrowService {
+    BorrowWithBLOBs getBorrow(String borrowNid);
+
+    BorrowStyle getborrowStyleByNid(String borrowStyle);
+
 
     /**
      * 根据项目类型，期限，获取借款利率

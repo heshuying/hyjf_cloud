@@ -11,4 +11,6 @@ public interface AccountService {
     void insert(Account account);
 
      Account getAccount(Integer userId);
+
+    int updateOfRTBLoansTender(Account account);
 }

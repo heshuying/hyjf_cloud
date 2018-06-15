@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.impl;
 
 import java.util.List;
 
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import com.hyjf.am.trade.service.AccountService;
 public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountMapper accountMapper;
+	@Autowired
+	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
 	@Override
 	public void insert(Account account) {
@@ -40,6 +43,11 @@ public class AccountServiceImpl implements AccountService {
 			return listAccount.get(0);
 		}
 		return null;
+	}
+
+	@Override
+	public int updateOfRTBLoansTender(Account account) {
+		return adminAccountCustomizeMapper.updateOfRTBLoansTender(account);
 	}
 
 }
