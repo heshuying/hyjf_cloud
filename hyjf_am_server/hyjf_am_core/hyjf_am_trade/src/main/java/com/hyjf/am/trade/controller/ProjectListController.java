@@ -3,14 +3,10 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.callcenter.CallCenterHztRepaymentResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
-import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
-import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

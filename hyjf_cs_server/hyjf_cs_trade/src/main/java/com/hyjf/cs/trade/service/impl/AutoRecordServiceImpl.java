@@ -16,14 +16,12 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoRecordClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.mq.AutoPreAuditProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
 import com.hyjf.cs.trade.service.AutoRecordService;
@@ -59,6 +57,9 @@ public class AutoRecordServiceImpl implements AutoRecordService {
 
     @Autowired
     private SmsProducer smsProducer;
+
+    @Autowired
+    private AutoPreAuditProducer autoPreAuditProducer;
 
     @Override
     public boolean updateRecordBorrow(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO) {
@@ -109,7 +110,17 @@ public class AutoRecordServiceImpl implements AutoRecordService {
 
     @Override
     public void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String borrowPreauditGroup) {
-
+        // 加入到消息队列
+        JSONObject params = new JSONObject();
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        params.put("assetId", hjhPlanAssetVO.getAssetId());
+        params.put("instCode", hjhPlanAssetVO.getInstCode());
+        try {
+            autoPreAuditProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_PREAUDIT_TOPIC, params));
+        } catch (MQException e) {
+            e.printStackTrace();
+            _log.error("自动初审发送消息失败...", e);
+        }
     }
 
     /**

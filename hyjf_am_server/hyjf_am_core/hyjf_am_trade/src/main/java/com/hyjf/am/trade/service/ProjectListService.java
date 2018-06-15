@@ -23,4 +23,6 @@ public interface ProjectListService {
      * @return
      */
     List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request);
+
+    int countHomePageProjectList(@Valid ProjectListRequest request);
 }
