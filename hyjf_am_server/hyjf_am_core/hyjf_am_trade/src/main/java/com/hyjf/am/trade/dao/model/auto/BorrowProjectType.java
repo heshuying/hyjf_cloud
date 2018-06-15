@@ -14,9 +14,9 @@ public class BorrowProjectType implements Serializable {
 
     private String borrowClass;
 
-    private String investUserType;
+    private Integer investUserType;
 
-    private String status;
+    private Integer status;
 
     private String investStart;
 
@@ -24,15 +24,11 @@ public class BorrowProjectType implements Serializable {
 
     private String remark;
 
-    private String createGroupId;
-
-    private String createUserId;
+    private Integer createUserId;
 
     private Date createTime;
 
-    private String updateGroupId;
-
-    private String updateUserId;
+    private Integer updateUserId;
 
     private Date updateTime;
 
@@ -84,20 +80,20 @@ public class BorrowProjectType implements Serializable {
         this.borrowClass = borrowClass == null ? null : borrowClass.trim();
     }
 
-    public String getInvestUserType() {
+    public Integer getInvestUserType() {
         return investUserType;
     }
 
-    public void setInvestUserType(String investUserType) {
-        this.investUserType = investUserType == null ? null : investUserType.trim();
+    public void setInvestUserType(Integer investUserType) {
+        this.investUserType = investUserType;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getInvestStart() {
@@ -124,20 +120,12 @@ public class BorrowProjectType implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getCreateGroupId() {
-        return createGroupId;
-    }
-
-    public void setCreateGroupId(String createGroupId) {
-        this.createGroupId = createGroupId == null ? null : createGroupId.trim();
-    }
-
-    public String getCreateUserId() {
+    public Integer getCreateUserId() {
         return createUserId;
     }
 
-    public void setCreateUserId(String createUserId) {
-        this.createUserId = createUserId == null ? null : createUserId.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
     public Date getCreateTime() {
@@ -148,20 +136,12 @@ public class BorrowProjectType implements Serializable {
         this.createTime = createTime;
     }
 
-    public String getUpdateGroupId() {
-        return updateGroupId;
-    }
-
-    public void setUpdateGroupId(String updateGroupId) {
-        this.updateGroupId = updateGroupId == null ? null : updateGroupId.trim();
-    }
-
-    public String getUpdateUserId() {
+    public Integer getUpdateUserId() {
         return updateUserId;
     }
 
-    public void setUpdateUserId(String updateUserId) {
-        this.updateUserId = updateUserId == null ? null : updateUserId.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getUpdateTime() {

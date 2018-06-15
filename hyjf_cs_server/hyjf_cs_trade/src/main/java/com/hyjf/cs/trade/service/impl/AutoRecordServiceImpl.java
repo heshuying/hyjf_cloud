@@ -6,11 +6,11 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -162,8 +162,8 @@ public class AutoRecordServiceImpl implements AutoRecordService {
                     boolean debtRegistingFlag = autoRecordClient.updateBorrowRegist(req);
                     if (debtRegistingFlag) {
                         // 获取共同参数
-                        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-                        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+                        //String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE); todo
+                        //String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE); todo
                         String channel = BankCallConstant.CHANNEL_PC;
                         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
                         String orderDate = GetOrderIdUtils.getOrderDate();
@@ -174,8 +174,8 @@ public class AutoRecordServiceImpl implements AutoRecordService {
                         BankCallBean debtRegistBean = new BankCallBean();
                         debtRegistBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
                         debtRegistBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER);// 消息类型(用户开户)
-                        debtRegistBean.setInstCode(instCode);// 机构代码
-                        debtRegistBean.setBankCode(bankCode);
+                        //debtRegistBean.setInstCode(instCode);// 机构代码  todo
+                       // debtRegistBean.setBankCode(bankCode); //todo
                         debtRegistBean.setTxDate(txDate);
                         debtRegistBean.setTxTime(txTime);
                         debtRegistBean.setSeqNo(seqNo);

@@ -32,6 +32,9 @@ public class SystemConfig {
     @Value("${file.upload.head.path}")
     public String uploadHeadPath;
 
+    @Value("${hyjf.front.host}")
+    public String frontHost;
+
     public String getUploadHeadPath() {
         return uploadHeadPath;
     }
@@ -103,4 +106,12 @@ public class SystemConfig {
 	public void setWebUIBindEmail(String webUIBindEmail) {
 		this.webUIBindEmail = webUIBindEmail;
 	}
+
+    public String getFrontHost() {
+        return frontHost;
+    }
+
+    public void setFrontHost(String frontHost) {
+        this.frontHost = frontHost;
+    }
 }

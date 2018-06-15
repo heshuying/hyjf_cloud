@@ -11,7 +11,7 @@ import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
  * @version AmCallcenterUserInfoClient, v0.1 2018/6/6 10:02
  */
 public interface AmCallcenterUserInfoClient {
-	
+
 	/**
 	 * 查询呼叫中心未分配客服的用户（复投用户筛选）
 	 * @param user
@@ -38,5 +38,19 @@ public interface AmCallcenterUserInfoClient {
 	 * @author wangjun
 	 */
 	Integer executeRecord(CallCenterServiceUsersRequest callCenterServiceUsersRequest);
+
+	/**
+	 * 查询用户基本信息
+	 * @param user
+	 * @return
+	 */
+	List<CallCenterUserBaseVO> selectUserList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+
+	/**
+	 * 查询用户详细信息
+	 * @param user
+	 * @return
+	 */
+	List<CallCenterUserBaseVO> selectUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
 }

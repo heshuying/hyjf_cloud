@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.trade.handle;
 
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.ApiAssetClient;

@@ -26,6 +26,7 @@ import com.hyjf.cs.user.constants.BindEmailError;
 import com.hyjf.cs.user.constants.ContractSetError;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
+import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.BaseServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
@@ -39,6 +40,8 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+
 
 /**
  * @author zhangqingqing
@@ -354,6 +357,39 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
         }
 
         return true;
+    }
+
+    /**
+     * 获取紧急联系人信息
+     * @author hesy
+     */
+    @Override
+	public ContractSetResultBean queryContractInfo(Integer userId) {
+    	ContractSetResultBean resultBean = new ContractSetResultBean();
+
+    	// 获取紧急联系人关系信息
+    	Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+    	if(relationMap == null || relationMap.isEmpty()) {
+    		throw new ReturnMessageException(ContractSetError.CONTRACT_RELATION_ERROR);
+    	}
+
+    	resultBean.setRelationMap(relationMap);
+
+    	// 获取当前紧急联系人信息
+    	UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
+    	if(usersContactVO != null) {
+    		resultBean.setResult(usersContactVO);
+
+    		for(Entry<String, String> entry :  relationMap.entrySet()) {
+    			if(entry.getKey().equals(usersContactVO.getRelation())) {
+    				resultBean.setCheckRelationId(entry.getKey());
+    				resultBean.setCheckRelationName(entry.getValue());
+    			}
+    		}
+    	}
+
+    	return resultBean;
+
     }
 
 

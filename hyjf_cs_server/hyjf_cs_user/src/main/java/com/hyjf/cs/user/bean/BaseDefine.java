@@ -1,12 +1,9 @@
 package com.hyjf.cs.user.bean;
 
-import com.hyjf.common.util.PropUtils;
 
 public class BaseDefine {
 	/** @RequestMapping值 */
 	// public static final String REQUEST_HOME = "/hyjf-api-web";
-	public static final String HOST = PropUtils.getSystem("hyjf.api.web.url").trim();
-	public static final String HOST_ASYN = PropUtils.getSystem("http.hyjf.web.host").trim();
 
 	public static final String CALL_BACK_VIEW = "/callback/callback_post";
 	public static final String CALL_BACK_TRANSPASSWORD_VIEW = "/callback/callback_transpassword";

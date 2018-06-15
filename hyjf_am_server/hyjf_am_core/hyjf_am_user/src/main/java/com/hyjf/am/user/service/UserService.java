@@ -106,7 +106,7 @@ public interface UserService {
 
 	int updateUserContact(UsersContractRequest record);
 
-	UsersContact selectUserContact(Integer userId);
+	UserContact selectUserContact(Integer userId);
 
 	boolean checkEmailUsed(String email);
 

@@ -5,14 +5,14 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="nid" property="nid" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="username" property="username" jdbcType="CHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
     <result column="tx_date" property="txDate" jdbcType="INTEGER" />
     <result column="tx_time" property="txTime" jdbcType="INTEGER" />
     <result column="seq_no" property="seqNo" jdbcType="INTEGER" />
     <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
     <result column="is_bank" property="isBank" jdbcType="TINYINT" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="money" property="money" jdbcType="DECIMAL" />
     <result column="fee" property="fee" jdbcType="DECIMAL" />
     <result column="balance" property="balance" jdbcType="DECIMAL" />
@@ -20,24 +20,13 @@
     <result column="gate_type" property="gateType" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
-    <result column="verify_time" property="verifyTime" jdbcType="VARCHAR" />
-    <result column="verify_remark" property="verifyRemark" jdbcType="VARCHAR" />
-    <result column="addtime" property="addtime" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
     <result column="addip" property="addip" jdbcType="VARCHAR" />
-    <result column="isok" property="isok" jdbcType="TINYINT" />
     <result column="client" property="client" jdbcType="TINYINT" />
-    <result column="nok" property="nok" jdbcType="TINYINT" />
-    <result column="isok11" property="isok11" jdbcType="TINYINT" />
-    <result column="flag" property="flag" jdbcType="TINYINT" />
-    <result column="activity_flag" property="activityFlag" jdbcType="TINYINT" />
     <result column="cardid" property="cardid" jdbcType="VARCHAR" />
-    <result column="dianfu_fee" property="dianfuFee" jdbcType="DECIMAL" />
-    <result column="fee_from" property="feeFrom" jdbcType="VARCHAR" />
     <result column="message" property="message" jdbcType="VARCHAR" />
-    <result column="version" property="version" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -99,9 +88,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, nid, user_id, username, account_id, tx_date, tx_time, seq_no, bank_seq_no, is_bank, 
-    `status`, money, fee, balance, payment, gate_type, `type`, remark, create_time, update_time, 
-    `operator`, verify_time, verify_remark, addtime, addip, isok, client, nok, isok11, 
-    flag, activity_flag, cardid, dianfu_fee, fee_from, message, version
+    `status`, money, fee, balance, payment, gate_type, `type`, remark, update_time, `operator`, 
+    add_time, addip, client, cardid, message
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample" >
     select
@@ -145,25 +133,19 @@
       seq_no, bank_seq_no, is_bank, 
       `status`, money, fee, 
       balance, payment, gate_type, 
-      `type`, remark, create_time, 
-      update_time, `operator`, verify_time, 
-      verify_remark, addtime, addip, 
-      isok, client, nok, 
-      isok11, flag, activity_flag, 
-      cardid, dianfu_fee, fee_from, 
-      message, version)
-    values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=CHAR}, 
+      `type`, remark, update_time, 
+      `operator`, add_time, addip, 
+      client, cardid, message
+      )
+    values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
       #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
       #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{isBank,jdbcType=TINYINT}, 
-      #{status,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
+      #{status,jdbcType=TINYINT}, #{money,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
       #{balance,jdbcType=DECIMAL}, #{payment,jdbcType=VARCHAR}, #{gateType,jdbcType=VARCHAR}, 
-      #{type,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{verifyTime,jdbcType=VARCHAR}, 
-      #{verifyRemark,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, 
-      #{isok,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{nok,jdbcType=TINYINT}, 
-      #{isok11,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}, #{activityFlag,jdbcType=TINYINT}, 
-      #{cardid,jdbcType=VARCHAR}, #{dianfuFee,jdbcType=DECIMAL}, #{feeFrom,jdbcType=VARCHAR}, 
-      #{message,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL})
+      #{type,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{operator,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, #{addip,jdbcType=VARCHAR}, 
+      #{client,jdbcType=TINYINT}, #{cardid,jdbcType=VARCHAR}, #{message,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRecharge" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -222,59 +204,26 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
       <if test="operator != null" >
         `operator`,
       </if>
-      <if test="verifyTime != null" >
-        verify_time,
-      </if>
-      <if test="verifyRemark != null" >
-        verify_remark,
-      </if>
-      <if test="addtime != null" >
-        addtime,
+      <if test="addTime != null" >
+        add_time,
       </if>
       <if test="addip != null" >
         addip,
       </if>
-      <if test="isok != null" >
-        isok,
-      </if>
       <if test="client != null" >
         client,
-      </if>
-      <if test="nok != null" >
-        nok,
-      </if>
-      <if test="isok11 != null" >
-        isok11,
-      </if>
-      <if test="flag != null" >
-        flag,
-      </if>
-      <if test="activityFlag != null" >
-        activity_flag,
       </if>
       <if test="cardid != null" >
         cardid,
       </if>
-      <if test="dianfuFee != null" >
-        dianfu_fee,
-      </if>
-      <if test="feeFrom != null" >
-        fee_from,
-      </if>
       <if test="message != null" >
         message,
-      </if>
-      <if test="version != null" >
-        version,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -285,7 +234,7 @@
         #{userId,jdbcType=INTEGER},
       </if>
       <if test="username != null" >
-        #{username,jdbcType=CHAR},
+        #{username,jdbcType=VARCHAR},
       </if>
       <if test="accountId != null" >
         #{accountId,jdbcType=VARCHAR},
@@ -306,7 +255,7 @@
         #{isBank,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="money != null" >
         #{money,jdbcType=DECIMAL},
@@ -329,59 +278,26 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
-      </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
       </if>
-      <if test="verifyTime != null" >
-        #{verifyTime,jdbcType=VARCHAR},
-      </if>
-      <if test="verifyRemark != null" >
-        #{verifyRemark,jdbcType=VARCHAR},
-      </if>
-      <if test="addtime != null" >
-        #{addtime,jdbcType=VARCHAR},
+      <if test="addTime != null" >
+        #{addTime,jdbcType=INTEGER},
       </if>
       <if test="addip != null" >
         #{addip,jdbcType=VARCHAR},
       </if>
-      <if test="isok != null" >
-        #{isok,jdbcType=TINYINT},
-      </if>
       <if test="client != null" >
         #{client,jdbcType=TINYINT},
-      </if>
-      <if test="nok != null" >
-        #{nok,jdbcType=TINYINT},
-      </if>
-      <if test="isok11 != null" >
-        #{isok11,jdbcType=TINYINT},
-      </if>
-      <if test="flag != null" >
-        #{flag,jdbcType=TINYINT},
-      </if>
-      <if test="activityFlag != null" >
-        #{activityFlag,jdbcType=TINYINT},
       </if>
       <if test="cardid != null" >
         #{cardid,jdbcType=VARCHAR},
       </if>
-      <if test="dianfuFee != null" >
-        #{dianfuFee,jdbcType=DECIMAL},
-      </if>
-      <if test="feeFrom != null" >
-        #{feeFrom,jdbcType=VARCHAR},
-      </if>
       <if test="message != null" >
         #{message,jdbcType=VARCHAR},
-      </if>
-      <if test="version != null" >
-        #{version,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -404,7 +320,7 @@
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
       <if test="record.username != null" >
-        username = #{record.username,jdbcType=CHAR},
+        username = #{record.username,jdbcType=VARCHAR},
       </if>
       <if test="record.accountId != null" >
         account_id = #{record.accountId,jdbcType=VARCHAR},
@@ -425,7 +341,7 @@
         is_bank = #{record.isBank,jdbcType=TINYINT},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.money != null" >
         money = #{record.money,jdbcType=DECIMAL},
@@ -448,59 +364,26 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
-      </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.operator != null" >
         `operator` = #{record.operator,jdbcType=VARCHAR},
       </if>
-      <if test="record.verifyTime != null" >
-        verify_time = #{record.verifyTime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.verifyRemark != null" >
-        verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
-      </if>
-      <if test="record.addtime != null" >
-        addtime = #{record.addtime,jdbcType=VARCHAR},
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=INTEGER},
       </if>
       <if test="record.addip != null" >
         addip = #{record.addip,jdbcType=VARCHAR},
       </if>
-      <if test="record.isok != null" >
-        isok = #{record.isok,jdbcType=TINYINT},
-      </if>
       <if test="record.client != null" >
         client = #{record.client,jdbcType=TINYINT},
-      </if>
-      <if test="record.nok != null" >
-        nok = #{record.nok,jdbcType=TINYINT},
-      </if>
-      <if test="record.isok11 != null" >
-        isok11 = #{record.isok11,jdbcType=TINYINT},
-      </if>
-      <if test="record.flag != null" >
-        flag = #{record.flag,jdbcType=TINYINT},
-      </if>
-      <if test="record.activityFlag != null" >
-        activity_flag = #{record.activityFlag,jdbcType=TINYINT},
       </if>
       <if test="record.cardid != null" >
         cardid = #{record.cardid,jdbcType=VARCHAR},
       </if>
-      <if test="record.dianfuFee != null" >
-        dianfu_fee = #{record.dianfuFee,jdbcType=DECIMAL},
-      </if>
-      <if test="record.feeFrom != null" >
-        fee_from = #{record.feeFrom,jdbcType=VARCHAR},
-      </if>
       <if test="record.message != null" >
         message = #{record.message,jdbcType=VARCHAR},
-      </if>
-      <if test="record.version != null" >
-        version = #{record.version,jdbcType=DECIMAL},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -512,14 +395,14 @@
     set id = #{record.id,jdbcType=INTEGER},
       nid = #{record.nid,jdbcType=VARCHAR},
       user_id = #{record.userId,jdbcType=INTEGER},
-      username = #{record.username,jdbcType=CHAR},
+      username = #{record.username,jdbcType=VARCHAR},
       account_id = #{record.accountId,jdbcType=VARCHAR},
       tx_date = #{record.txDate,jdbcType=INTEGER},
       tx_time = #{record.txTime,jdbcType=INTEGER},
       seq_no = #{record.seqNo,jdbcType=INTEGER},
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
       is_bank = #{record.isBank,jdbcType=TINYINT},
-      `status` = #{record.status,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       money = #{record.money,jdbcType=DECIMAL},
       fee = #{record.fee,jdbcType=DECIMAL},
       balance = #{record.balance,jdbcType=DECIMAL},
@@ -527,24 +410,13 @@
       gate_type = #{record.gateType,jdbcType=VARCHAR},
       `type` = #{record.type,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `operator` = #{record.operator,jdbcType=VARCHAR},
-      verify_time = #{record.verifyTime,jdbcType=VARCHAR},
-      verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
-      addtime = #{record.addtime,jdbcType=VARCHAR},
+      add_time = #{record.addTime,jdbcType=INTEGER},
       addip = #{record.addip,jdbcType=VARCHAR},
-      isok = #{record.isok,jdbcType=TINYINT},
       client = #{record.client,jdbcType=TINYINT},
-      nok = #{record.nok,jdbcType=TINYINT},
-      isok11 = #{record.isok11,jdbcType=TINYINT},
-      flag = #{record.flag,jdbcType=TINYINT},
-      activity_flag = #{record.activityFlag,jdbcType=TINYINT},
       cardid = #{record.cardid,jdbcType=VARCHAR},
-      dianfu_fee = #{record.dianfuFee,jdbcType=DECIMAL},
-      fee_from = #{record.feeFrom,jdbcType=VARCHAR},
-      message = #{record.message,jdbcType=VARCHAR},
-      version = #{record.version,jdbcType=DECIMAL}
+      message = #{record.message,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -559,7 +431,7 @@
         user_id = #{userId,jdbcType=INTEGER},
       </if>
       <if test="username != null" >
-        username = #{username,jdbcType=CHAR},
+        username = #{username,jdbcType=VARCHAR},
       </if>
       <if test="accountId != null" >
         account_id = #{accountId,jdbcType=VARCHAR},
@@ -580,7 +452,7 @@
         is_bank = #{isBank,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="money != null" >
         money = #{money,jdbcType=DECIMAL},
@@ -603,59 +475,26 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operator != null" >
         `operator` = #{operator,jdbcType=VARCHAR},
       </if>
-      <if test="verifyTime != null" >
-        verify_time = #{verifyTime,jdbcType=VARCHAR},
-      </if>
-      <if test="verifyRemark != null" >
-        verify_remark = #{verifyRemark,jdbcType=VARCHAR},
-      </if>
-      <if test="addtime != null" >
-        addtime = #{addtime,jdbcType=VARCHAR},
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=INTEGER},
       </if>
       <if test="addip != null" >
         addip = #{addip,jdbcType=VARCHAR},
       </if>
-      <if test="isok != null" >
-        isok = #{isok,jdbcType=TINYINT},
-      </if>
       <if test="client != null" >
         client = #{client,jdbcType=TINYINT},
-      </if>
-      <if test="nok != null" >
-        nok = #{nok,jdbcType=TINYINT},
-      </if>
-      <if test="isok11 != null" >
-        isok11 = #{isok11,jdbcType=TINYINT},
-      </if>
-      <if test="flag != null" >
-        flag = #{flag,jdbcType=TINYINT},
-      </if>
-      <if test="activityFlag != null" >
-        activity_flag = #{activityFlag,jdbcType=TINYINT},
       </if>
       <if test="cardid != null" >
         cardid = #{cardid,jdbcType=VARCHAR},
       </if>
-      <if test="dianfuFee != null" >
-        dianfu_fee = #{dianfuFee,jdbcType=DECIMAL},
-      </if>
-      <if test="feeFrom != null" >
-        fee_from = #{feeFrom,jdbcType=VARCHAR},
-      </if>
       <if test="message != null" >
         message = #{message,jdbcType=VARCHAR},
-      </if>
-      <if test="version != null" >
-        version = #{version,jdbcType=DECIMAL},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -664,14 +503,14 @@
     update ht_account_recharge
     set nid = #{nid,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
-      username = #{username,jdbcType=CHAR},
+      username = #{username,jdbcType=VARCHAR},
       account_id = #{accountId,jdbcType=VARCHAR},
       tx_date = #{txDate,jdbcType=INTEGER},
       tx_time = #{txTime,jdbcType=INTEGER},
       seq_no = #{seqNo,jdbcType=INTEGER},
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
       is_bank = #{isBank,jdbcType=TINYINT},
-      `status` = #{status,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       money = #{money,jdbcType=DECIMAL},
       fee = #{fee,jdbcType=DECIMAL},
       balance = #{balance,jdbcType=DECIMAL},
@@ -679,24 +518,13 @@
       gate_type = #{gateType,jdbcType=VARCHAR},
       `type` = #{type,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       `operator` = #{operator,jdbcType=VARCHAR},
-      verify_time = #{verifyTime,jdbcType=VARCHAR},
-      verify_remark = #{verifyRemark,jdbcType=VARCHAR},
-      addtime = #{addtime,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=INTEGER},
       addip = #{addip,jdbcType=VARCHAR},
-      isok = #{isok,jdbcType=TINYINT},
       client = #{client,jdbcType=TINYINT},
-      nok = #{nok,jdbcType=TINYINT},
-      isok11 = #{isok11,jdbcType=TINYINT},
-      flag = #{flag,jdbcType=TINYINT},
-      activity_flag = #{activityFlag,jdbcType=TINYINT},
       cardid = #{cardid,jdbcType=VARCHAR},
-      dianfu_fee = #{dianfuFee,jdbcType=DECIMAL},
-      fee_from = #{feeFrom,jdbcType=VARCHAR},
-      message = #{message,jdbcType=VARCHAR},
-      version = #{version,jdbcType=DECIMAL}
+      message = #{message,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

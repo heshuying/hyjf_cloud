@@ -1,8 +1,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.AccountVO;
-import com.hyjf.am.vo.trade.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
 /**
  * @author pangchengchao

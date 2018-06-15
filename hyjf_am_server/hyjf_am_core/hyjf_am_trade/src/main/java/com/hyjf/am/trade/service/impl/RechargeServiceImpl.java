@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -14,7 +15,7 @@ import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.service.RechargeService;
-import com.hyjf.am.vo.trade.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringUtil;
 
@@ -34,8 +35,6 @@ public class RechargeServiceImpl implements RechargeService {
 	protected AccountMapper accountMapper;
 	@Autowired
 	protected  AccountListMapper accountListMapper;
-
-
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -78,9 +77,7 @@ public class RechargeServiceImpl implements RechargeService {
 		record.setAccountId(bankRequest.getAccountId());
 		record.setMoney(money);
 		record.setCardid(cardNo);
-		record.setFeeFrom(null);
 		record.setFee(BigDecimal.ZERO);
-		record.setDianfuFee(BigDecimal.ZERO);
 		// 实际到账余额
 		record.setBalance(money);
 		record.setPayment(bankRequest == null ? "" : bankRequest.getBank());
@@ -88,9 +85,8 @@ public class RechargeServiceImpl implements RechargeService {
 		// 类型.1网上充值.0线下充值
 		record.setType(1);
 		record.setRemark("快捷充值");
-		record.setCreateTime(nowTime);
 		record.setOperator(bankRequest.getLogUserId());
-		record.setAddtime(String.valueOf(nowTime));
+		record.setAddTime(nowTime);
 		record.setAddip(bankRequest.getUserIP());
 		// 0pc
 		record.setClient(bankRequest.getLogClient());
@@ -197,13 +193,9 @@ public class RechargeServiceImpl implements RechargeService {
 			accountList.setAwait(account.getAwait());
 			accountList.setRepay(account.getRepay());
 			accountList.setRemark("快捷充值");
-			accountList.setCreateTime(nowTime);
-			accountList.setBaseUpdate(nowTime);
+			accountList.setCreateTime(new Date());
 			accountList.setOperator(userId + "");
 			accountList.setIp(ip);
-			accountList.setIsUpdate(0);
-			accountList.setBaseUpdate(0);
-			accountList.setInterest(null);
 			accountList.setWeb(0);
 			accountList.setIsBank(1);// 是否是银行的交易记录 0:否 ,1:是
 			accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账

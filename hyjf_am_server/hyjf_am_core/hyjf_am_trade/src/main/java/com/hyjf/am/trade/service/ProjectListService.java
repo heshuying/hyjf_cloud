@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
+import com.hyjf.am.util.Page;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,11 +19,16 @@ public interface ProjectListService {
 
 
     /**
-     * 获取首页散标专区列表
+     * 获取项目列表
      * @param request
      * @return
      */
-    List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request);
+    List<WebProjectListCustomize> searchProjectList(@Valid ProjectListRequest request);
 
-    int countHomePageProjectList(@Valid ProjectListRequest request);
+    /**
+     * 获取项目列表件数
+     * @param request
+     * @return
+     */
+    int countProjectList(@Valid ProjectListRequest request);
 }

@@ -11,23 +11,35 @@ import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomi
  * @version CallCenterCustomizeMapper, v0.1 2018/5/8 14:14
  */
 public interface CallCenterCustomizeMapper {
-	
+
     /**
      * @param mobiles
      * @return
      */
     List<CallcenterUserBaseCustomize> findNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-    
+
     /**
      * @param mobiles
      * @return
      */
     List<CallcenterUserBaseCustomize> findNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-    
+
     /**
      * @param mobiles
      * @return
      */
     List<CallcenterUserBaseCustomize> findNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+
+    /**
+     * @param mobiles
+     * @return
+     */
+    List<CallcenterUserBaseCustomize> findBasicUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+
+    /**
+     * @param mobiles     明天把查询实现了
+     * @return
+     */
+    List<CallcenterUserBaseCustomize> findUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
 }

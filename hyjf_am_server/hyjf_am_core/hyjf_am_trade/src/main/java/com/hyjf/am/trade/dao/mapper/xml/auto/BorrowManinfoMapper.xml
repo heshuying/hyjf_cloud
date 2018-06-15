@@ -4,9 +4,9 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowManinfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="INTEGER" />
-    <result column="old" property="old" jdbcType="INTEGER" />
-    <result column="merry" property="merry" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="old" property="old" jdbcType="TINYINT" />
+    <result column="merry" property="merry" jdbcType="TINYINT" />
     <result column="pro" property="pro" jdbcType="VARCHAR" />
     <result column="city" property="city" jdbcType="VARCHAR" />
     <result column="industry" property="industry" jdbcType="VARCHAR" />
@@ -159,8 +159,8 @@
       debt_situation, other_borrowed, is_funds, 
       is_managed, is_ability, is_overdue, 
       is_complaint, is_punished)
-    values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{old,jdbcType=INTEGER}, 
-      #{merry,jdbcType=INTEGER}, #{pro,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{old,jdbcType=TINYINT}, 
+      #{merry,jdbcType=TINYINT}, #{pro,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
       #{position,jdbcType=VARCHAR}, #{credit,jdbcType=INTEGER}, #{size,jdbcType=VARCHAR}, 
       #{business,jdbcType=DECIMAL}, #{wtime,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
       #{borrowPreNid,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{domicile,jdbcType=VARCHAR}, 
@@ -302,13 +302,13 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        #{sex,jdbcType=INTEGER},
+        #{sex,jdbcType=TINYINT},
       </if>
       <if test="old != null" >
-        #{old,jdbcType=INTEGER},
+        #{old,jdbcType=TINYINT},
       </if>
       <if test="merry != null" >
-        #{merry,jdbcType=INTEGER},
+        #{merry,jdbcType=TINYINT},
       </if>
       <if test="pro != null" >
         #{pro,jdbcType=VARCHAR},
@@ -433,13 +433,13 @@
         `name` = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.sex != null" >
-        sex = #{record.sex,jdbcType=INTEGER},
+        sex = #{record.sex,jdbcType=TINYINT},
       </if>
       <if test="record.old != null" >
-        `old` = #{record.old,jdbcType=INTEGER},
+        `old` = #{record.old,jdbcType=TINYINT},
       </if>
       <if test="record.merry != null" >
-        merry = #{record.merry,jdbcType=INTEGER},
+        merry = #{record.merry,jdbcType=TINYINT},
       </if>
       <if test="record.pro != null" >
         pro = #{record.pro,jdbcType=VARCHAR},
@@ -555,9 +555,9 @@
     update ht_borrow_maninfo
     set id = #{record.id,jdbcType=INTEGER},
       `name` = #{record.name,jdbcType=VARCHAR},
-      sex = #{record.sex,jdbcType=INTEGER},
-      `old` = #{record.old,jdbcType=INTEGER},
-      merry = #{record.merry,jdbcType=INTEGER},
+      sex = #{record.sex,jdbcType=TINYINT},
+      `old` = #{record.old,jdbcType=TINYINT},
+      merry = #{record.merry,jdbcType=TINYINT},
       pro = #{record.pro,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       industry = #{record.industry,jdbcType=VARCHAR},
@@ -604,13 +604,13 @@
         `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        sex = #{sex,jdbcType=INTEGER},
+        sex = #{sex,jdbcType=TINYINT},
       </if>
       <if test="old != null" >
-        `old` = #{old,jdbcType=INTEGER},
+        `old` = #{old,jdbcType=TINYINT},
       </if>
       <if test="merry != null" >
-        merry = #{merry,jdbcType=INTEGER},
+        merry = #{merry,jdbcType=TINYINT},
       </if>
       <if test="pro != null" >
         pro = #{pro,jdbcType=VARCHAR},
@@ -723,9 +723,9 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowManinfo" >
     update ht_borrow_maninfo
     set `name` = #{name,jdbcType=VARCHAR},
-      sex = #{sex,jdbcType=INTEGER},
-      `old` = #{old,jdbcType=INTEGER},
-      merry = #{merry,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=TINYINT},
+      `old` = #{old,jdbcType=TINYINT},
+      merry = #{merry,jdbcType=TINYINT},
       pro = #{pro,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       industry = #{industry,jdbcType=VARCHAR},

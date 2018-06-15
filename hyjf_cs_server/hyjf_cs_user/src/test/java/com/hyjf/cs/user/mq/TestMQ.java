@@ -27,6 +27,7 @@ public class TestMQ {
 	SmsProducer smsProducer;
 
 	@Test
+	@Deprecated  // 过时方法 具体调用参照 SmsCodeServiceImpl
 	public void sendSmscode() throws MQException {
 
 		JSONObject params = new JSONObject();

@@ -6,7 +6,6 @@ package com.hyjf.callcenter.controller.account.bank;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.AccountBankBean;
-import com.hyjf.callcenter.beans.AccountBankDefine;
 import com.hyjf.callcenter.beans.ResultListBean;
 import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.controller.base.CallcenterBaseController;
@@ -44,7 +43,7 @@ public class AccountBankServer extends CallcenterBaseController {
      */
     @ApiOperation(value = "查询江西银行绑卡", notes = "查询江西银行绑卡")
     @ResponseBody
-    @PostMapping(value = AccountBankDefine.INIT_TIED_CARD_ACTION, produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getTiedcardInfo", produces = "application/json; charset=utf-8")
     public ResultListBean getContentOfAccountBank(HttpServletRequest request, HttpServletResponse response,
                                                   @RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();

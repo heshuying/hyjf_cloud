@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class STZHWhiteListExample {
@@ -924,73 +925,63 @@ public class STZHWhiteListExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeIsNull() {
-            addCriterion("createtime is null");
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeIsNotNull() {
-            addCriterion("createtime is not null");
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeEqualTo(String value) {
-            addCriterion("createtime =", value, "createtime");
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("create_time =", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeNotEqualTo(String value) {
-            addCriterion("createtime <>", value, "createtime");
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("create_time <>", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeGreaterThan(String value) {
-            addCriterion("createtime >", value, "createtime");
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("create_time >", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeGreaterThanOrEqualTo(String value) {
-            addCriterion("createtime >=", value, "createtime");
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_time >=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeLessThan(String value) {
-            addCriterion("createtime <", value, "createtime");
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("create_time <", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeLessThanOrEqualTo(String value) {
-            addCriterion("createtime <=", value, "createtime");
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("create_time <=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeLike(String value) {
-            addCriterion("createtime like", value, "createtime");
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("create_time in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeNotLike(String value) {
-            addCriterion("createtime not like", value, "createtime");
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("create_time not in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeIn(List<String> values) {
-            addCriterion("createtime in", values, "createtime");
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreatetimeNotIn(List<String> values) {
-            addCriterion("createtime not in", values, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeBetween(String value1, String value2) {
-            addCriterion("createtime between", value1, value2, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeNotBetween(String value1, String value2) {
-            addCriterion("createtime not between", value1, value2, "createtime");
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
@@ -1064,73 +1055,63 @@ public class STZHWhiteListExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeIsNull() {
-            addCriterion("updatetime is null");
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("update_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeIsNotNull() {
-            addCriterion("updatetime is not null");
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("update_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeEqualTo(String value) {
-            addCriterion("updatetime =", value, "updatetime");
+        public Criteria andUpdateTimeEqualTo(Date value) {
+            addCriterion("update_time =", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeNotEqualTo(String value) {
-            addCriterion("updatetime <>", value, "updatetime");
+        public Criteria andUpdateTimeNotEqualTo(Date value) {
+            addCriterion("update_time <>", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeGreaterThan(String value) {
-            addCriterion("updatetime >", value, "updatetime");
+        public Criteria andUpdateTimeGreaterThan(Date value) {
+            addCriterion("update_time >", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeGreaterThanOrEqualTo(String value) {
-            addCriterion("updatetime >=", value, "updatetime");
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("update_time >=", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeLessThan(String value) {
-            addCriterion("updatetime <", value, "updatetime");
+        public Criteria andUpdateTimeLessThan(Date value) {
+            addCriterion("update_time <", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeLessThanOrEqualTo(String value) {
-            addCriterion("updatetime <=", value, "updatetime");
+        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("update_time <=", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeLike(String value) {
-            addCriterion("updatetime like", value, "updatetime");
+        public Criteria andUpdateTimeIn(List<Date> values) {
+            addCriterion("update_time in", values, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeNotLike(String value) {
-            addCriterion("updatetime not like", value, "updatetime");
+        public Criteria andUpdateTimeNotIn(List<Date> values) {
+            addCriterion("update_time not in", values, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeIn(List<String> values) {
-            addCriterion("updatetime in", values, "updatetime");
+        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("update_time between", value1, value2, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatetimeNotIn(List<String> values) {
-            addCriterion("updatetime not in", values, "updatetime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdatetimeBetween(String value1, String value2) {
-            addCriterion("updatetime between", value1, value2, "updatetime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdatetimeNotBetween(String value1, String value2) {
-            addCriterion("updatetime not between", value1, value2, "updatetime");
+        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
 
@@ -1204,63 +1185,63 @@ public class STZHWhiteListExample {
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIsNull() {
-            addCriterion("del_flg is null");
+        public Criteria andDelFlagIsNull() {
+            addCriterion("del_flag is null");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIsNotNull() {
-            addCriterion("del_flg is not null");
+        public Criteria andDelFlagIsNotNull() {
+            addCriterion("del_flag is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgEqualTo(Integer value) {
-            addCriterion("del_flg =", value, "delFlg");
+        public Criteria andDelFlagEqualTo(Integer value) {
+            addCriterion("del_flag =", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotEqualTo(Integer value) {
-            addCriterion("del_flg <>", value, "delFlg");
+        public Criteria andDelFlagNotEqualTo(Integer value) {
+            addCriterion("del_flag <>", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThan(Integer value) {
-            addCriterion("del_flg >", value, "delFlg");
+        public Criteria andDelFlagGreaterThan(Integer value) {
+            addCriterion("del_flag >", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThanOrEqualTo(Integer value) {
-            addCriterion("del_flg >=", value, "delFlg");
+        public Criteria andDelFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("del_flag >=", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThan(Integer value) {
-            addCriterion("del_flg <", value, "delFlg");
+        public Criteria andDelFlagLessThan(Integer value) {
+            addCriterion("del_flag <", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThanOrEqualTo(Integer value) {
-            addCriterion("del_flg <=", value, "delFlg");
+        public Criteria andDelFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("del_flag <=", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIn(List<Integer> values) {
-            addCriterion("del_flg in", values, "delFlg");
+        public Criteria andDelFlagIn(List<Integer> values) {
+            addCriterion("del_flag in", values, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotIn(List<Integer> values) {
-            addCriterion("del_flg not in", values, "delFlg");
+        public Criteria andDelFlagNotIn(List<Integer> values) {
+            addCriterion("del_flag not in", values, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgBetween(Integer value1, Integer value2) {
-            addCriterion("del_flg between", value1, value2, "delFlg");
+        public Criteria andDelFlagBetween(Integer value1, Integer value2) {
+            addCriterion("del_flag between", value1, value2, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotBetween(Integer value1, Integer value2) {
-            addCriterion("del_flg not between", value1, value2, "delFlg");
+        public Criteria andDelFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("del_flag not between", value1, value2, "delFlag");
             return (Criteria) this;
         }
 

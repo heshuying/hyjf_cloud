@@ -1,10 +1,13 @@
 package com.hyjf.pay.lib.bank.bean;
 
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-
 import java.io.Serializable;
+
+import com.hyjf.common.spring.SpringUtils;
+import java.io.Serializable;
+
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 
 public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
@@ -105,7 +108,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	 * @param txCode
 	 * @param client
 	 */
-	public BankCallBean(String bankCode,String instCode,Integer userId, String txCode, Integer client,String logBankDetailUrl) {
+	public BankCallBean(Integer userId, String txCode, Integer client,String logBankDetailUrl) {
 		super();
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		String txDate = GetOrderIdUtils.getTxDate();
@@ -130,8 +133,9 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	}
 
 	private void setCallCommon(Integer userId, String txCode, Integer client) {
-		String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-		String bankInstCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+		PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+		String bankCode = paySystemConfig.getBankCode();
+		String bankInstCode = paySystemConfig.getBankInstcode();
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		String txDate = GetOrderIdUtils.getTxDate();
 		String txTime = GetOrderIdUtils.getTxTime();

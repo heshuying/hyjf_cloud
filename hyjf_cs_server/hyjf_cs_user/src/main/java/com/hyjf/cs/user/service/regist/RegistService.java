@@ -45,7 +45,7 @@ public interface RegistService extends BaseService{
      * @param activityId
      * @return
      */
-    boolean checkActivityIfAvailable(String activityId);
+    boolean checkActivityIfAvailable(Integer activityId);
 
     int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
 

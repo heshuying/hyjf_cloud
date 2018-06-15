@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class Accountwithdraw implements Serializable {
     private Integer id;
@@ -18,39 +19,23 @@ public class Accountwithdraw implements Serializable {
 
     private Integer bankId;
 
-    private String branch;
-
-    private Integer province;
-
-    private Integer city;
-
     private BigDecimal total;
 
     private BigDecimal credited;
 
     private String fee;
 
-    private Integer verifyUserid;
-
-    private Integer verifyTime;
-
-    private String verifyRemark;
-
-    private String addtime;
+    private Date addTime;
 
     private String addip;
 
     private String remark;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private Integer client;
 
-    private Integer isok;
-
     private String reason;
-
-    private Integer activityFlag;
 
     private Integer bankFlag;
 
@@ -124,30 +109,6 @@ public class Accountwithdraw implements Serializable {
         this.bankId = bankId;
     }
 
-    public String getBranch() {
-        return branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch == null ? null : branch.trim();
-    }
-
-    public Integer getProvince() {
-        return province;
-    }
-
-    public void setProvince(Integer province) {
-        this.province = province;
-    }
-
-    public Integer getCity() {
-        return city;
-    }
-
-    public void setCity(Integer city) {
-        this.city = city;
-    }
-
     public BigDecimal getTotal() {
         return total;
     }
@@ -172,36 +133,12 @@ public class Accountwithdraw implements Serializable {
         this.fee = fee == null ? null : fee.trim();
     }
 
-    public Integer getVerifyUserid() {
-        return verifyUserid;
+    public Date getAddTime() {
+        return addTime;
     }
 
-    public void setVerifyUserid(Integer verifyUserid) {
-        this.verifyUserid = verifyUserid;
-    }
-
-    public Integer getVerifyTime() {
-        return verifyTime;
-    }
-
-    public void setVerifyTime(Integer verifyTime) {
-        this.verifyTime = verifyTime;
-    }
-
-    public String getVerifyRemark() {
-        return verifyRemark;
-    }
-
-    public void setVerifyRemark(String verifyRemark) {
-        this.verifyRemark = verifyRemark == null ? null : verifyRemark.trim();
-    }
-
-    public String getAddtime() {
-        return addtime;
-    }
-
-    public void setAddtime(String addtime) {
-        this.addtime = addtime == null ? null : addtime.trim();
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
     }
 
     public String getAddip() {
@@ -220,11 +157,11 @@ public class Accountwithdraw implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -236,28 +173,12 @@ public class Accountwithdraw implements Serializable {
         this.client = client;
     }
 
-    public Integer getIsok() {
-        return isok;
-    }
-
-    public void setIsok(Integer isok) {
-        this.isok = isok;
-    }
-
     public String getReason() {
         return reason;
     }
 
     public void setReason(String reason) {
         this.reason = reason == null ? null : reason.trim();
-    }
-
-    public Integer getActivityFlag() {
-        return activityFlag;
-    }
-
-    public void setActivityFlag(Integer activityFlag) {
-        this.activityFlag = activityFlag;
     }
 
     public Integer getBankFlag() {

@@ -14,11 +14,11 @@
     <result column="auto_credit_order_id" property="autoCreditOrderId" jdbcType="VARCHAR" />
     <result column="auto_credit_time" property="autoCreditTime" jdbcType="INTEGER" />
     <result column="auto_bid_time" property="autoBidTime" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -81,7 +81,7 @@
   <sql id="Base_Column_List" >
     id, user_id, user_name, auto_inves_status, auto_credit_status, auto_withdraw_status, 
     auto_consume_status, auto_create_time, auto_order_id, auto_credit_order_id, auto_credit_time, 
-    auto_bid_time, create_time, create_user, update_time, update_user, del_flg
+    auto_bid_time, create_time, create_user, update_time, update_user, del_flag
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhUserAuthExample" >
     select
@@ -124,14 +124,14 @@
       auto_credit_status, auto_withdraw_status, auto_consume_status, 
       auto_create_time, auto_order_id, auto_credit_order_id, 
       auto_credit_time, auto_bid_time, create_time, 
-      create_user, update_time, update_user,
-      del_flg)
+      create_user, update_time, update_user, 
+      del_flag)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{autoInvesStatus,jdbcType=TINYINT}, 
       #{autoCreditStatus,jdbcType=TINYINT}, #{autoWithdrawStatus,jdbcType=TINYINT}, #{autoConsumeStatus,jdbcType=TINYINT}, 
       #{autoCreateTime,jdbcType=INTEGER}, #{autoOrderId,jdbcType=VARCHAR}, #{autoCreditOrderId,jdbcType=VARCHAR}, 
-      #{autoCreditTime,jdbcType=INTEGER}, #{autoBidTime,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
-      #{createUser,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
-      #{delFlg,jdbcType=TINYINT})
+      #{autoCreditTime,jdbcType=INTEGER}, #{autoBidTime,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, 
+      #{delFlag,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhUserAuth" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -184,8 +184,8 @@
       <if test="updateUser != null" >
         update_user,
       </if>
-      <if test="delFlg != null" >
-        del_flg,
+      <if test="delFlag != null" >
+        del_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -223,19 +223,19 @@
         #{autoBidTime,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null" >
-        #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -285,19 +285,19 @@
         auto_bid_time = #{record.autoBidTime,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
-      <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -318,11 +318,11 @@
       auto_credit_order_id = #{record.autoCreditOrderId,jdbcType=VARCHAR},
       auto_credit_time = #{record.autoCreditTime,jdbcType=INTEGER},
       auto_bid_time = #{record.autoBidTime,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user = #{record.updateUser,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT}
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -364,19 +364,19 @@
         auto_bid_time = #{autoBidTime,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -394,11 +394,11 @@
       auto_credit_order_id = #{autoCreditOrderId,jdbcType=VARCHAR},
       auto_credit_time = #{autoCreditTime,jdbcType=INTEGER},
       auto_bid_time = #{autoBidTime,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=TINYINT}
+      del_flag = #{delFlag,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

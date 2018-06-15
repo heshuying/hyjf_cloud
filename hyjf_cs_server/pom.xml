@@ -24,6 +24,8 @@
 		<module>hyjf_cs_market</module>
 		<module>hyjf_cs_trade</module>
 		<module>hyjf_cs_message</module>
+		<module>hyjf_cs_common</module>
 	</modules>
+
 
 </project>

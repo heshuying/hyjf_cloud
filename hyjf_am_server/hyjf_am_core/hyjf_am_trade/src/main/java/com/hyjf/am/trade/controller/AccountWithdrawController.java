@@ -2,11 +2,10 @@ package com.hyjf.am.trade.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
 import com.hyjf.am.trade.service.AccountWithdrawService;
-import com.hyjf.am.vo.trade.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

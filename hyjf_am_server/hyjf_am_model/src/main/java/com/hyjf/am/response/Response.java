@@ -1,5 +1,6 @@
 package com.hyjf.am.response;
 
+import com.hyjf.am.util.Page;
 import com.hyjf.am.vo.BaseVO;
 
 import java.util.List;
@@ -19,6 +20,11 @@ public class Response<T extends BaseVO> {
 	private T result;
 
 	private List<T> resultList;
+
+	/**
+	 * 分页标志
+	 */
+	private Page page;
 
 	public Response() {
 		this.rtn = SUCCESS;
@@ -66,5 +72,13 @@ public class Response<T extends BaseVO> {
 
 	public void setResultList(List<T> resultList) {
 		this.resultList = resultList;
+	}
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
 	}
 }

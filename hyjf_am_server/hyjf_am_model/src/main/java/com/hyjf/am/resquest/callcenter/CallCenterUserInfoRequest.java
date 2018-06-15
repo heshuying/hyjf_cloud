@@ -21,6 +21,10 @@ public class CallCenterUserInfoRequest extends BaseVO  {
 	private Integer limitSize;
 
 	private String flag;
+	/**
+	 * userId
+	 */
+	private Integer userId;
 	public String getUserName() {
 		return userName;
 	}
@@ -51,4 +55,11 @@ public class CallCenterUserInfoRequest extends BaseVO  {
 	public void setFlag(String flag) {
 		this.flag = flag;
 	}
+	public Integer getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
 }

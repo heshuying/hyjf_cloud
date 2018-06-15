@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AccountListExample {
@@ -1145,52 +1146,52 @@ public class AccountListExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeEqualTo(Integer value) {
+        public Criteria andCreateTimeEqualTo(Date value) {
             addCriterion("create_time =", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotEqualTo(Integer value) {
+        public Criteria andCreateTimeNotEqualTo(Date value) {
             addCriterion("create_time <>", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeGreaterThan(Integer value) {
+        public Criteria andCreateTimeGreaterThan(Date value) {
             addCriterion("create_time >", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
             addCriterion("create_time >=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeLessThan(Integer value) {
+        public Criteria andCreateTimeLessThan(Date value) {
             addCriterion("create_time <", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeLessThanOrEqualTo(Integer value) {
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
             addCriterion("create_time <=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIn(List<Integer> values) {
+        public Criteria andCreateTimeIn(List<Date> values) {
             addCriterion("create_time in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotIn(List<Integer> values) {
+        public Criteria andCreateTimeNotIn(List<Date> values) {
             addCriterion("create_time not in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeBetween(Integer value1, Integer value2) {
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
             addCriterion("create_time between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotBetween(Integer value1, Integer value2) {
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
@@ -1332,186 +1333,6 @@ public class AccountListExample {
 
         public Criteria andIpNotBetween(String value1, String value2) {
             addCriterion("ip not between", value1, value2, "ip");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateIsNull() {
-            addCriterion("is_update is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateIsNotNull() {
-            addCriterion("is_update is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateEqualTo(Integer value) {
-            addCriterion("is_update =", value, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateNotEqualTo(Integer value) {
-            addCriterion("is_update <>", value, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateGreaterThan(Integer value) {
-            addCriterion("is_update >", value, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_update >=", value, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateLessThan(Integer value) {
-            addCriterion("is_update <", value, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateLessThanOrEqualTo(Integer value) {
-            addCriterion("is_update <=", value, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateIn(List<Integer> values) {
-            addCriterion("is_update in", values, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateNotIn(List<Integer> values) {
-            addCriterion("is_update not in", values, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateBetween(Integer value1, Integer value2) {
-            addCriterion("is_update between", value1, value2, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsUpdateNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_update not between", value1, value2, "isUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateIsNull() {
-            addCriterion("base_update is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateIsNotNull() {
-            addCriterion("base_update is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateEqualTo(Integer value) {
-            addCriterion("base_update =", value, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateNotEqualTo(Integer value) {
-            addCriterion("base_update <>", value, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateGreaterThan(Integer value) {
-            addCriterion("base_update >", value, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateGreaterThanOrEqualTo(Integer value) {
-            addCriterion("base_update >=", value, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateLessThan(Integer value) {
-            addCriterion("base_update <", value, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateLessThanOrEqualTo(Integer value) {
-            addCriterion("base_update <=", value, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateIn(List<Integer> values) {
-            addCriterion("base_update in", values, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateNotIn(List<Integer> values) {
-            addCriterion("base_update not in", values, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateBetween(Integer value1, Integer value2) {
-            addCriterion("base_update between", value1, value2, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andBaseUpdateNotBetween(Integer value1, Integer value2) {
-            addCriterion("base_update not between", value1, value2, "baseUpdate");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestIsNull() {
-            addCriterion("interest is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestIsNotNull() {
-            addCriterion("interest is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestEqualTo(BigDecimal value) {
-            addCriterion("interest =", value, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestNotEqualTo(BigDecimal value) {
-            addCriterion("interest <>", value, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestGreaterThan(BigDecimal value) {
-            addCriterion("interest >", value, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("interest >=", value, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestLessThan(BigDecimal value) {
-            addCriterion("interest <", value, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("interest <=", value, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestIn(List<BigDecimal> values) {
-            addCriterion("interest in", values, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestNotIn(List<BigDecimal> values) {
-            addCriterion("interest not in", values, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("interest between", value1, value2, "interest");
-            return (Criteria) this;
-        }
-
-        public Criteria andInterestNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("interest not between", value1, value2, "interest");
             return (Criteria) this;
         }
 

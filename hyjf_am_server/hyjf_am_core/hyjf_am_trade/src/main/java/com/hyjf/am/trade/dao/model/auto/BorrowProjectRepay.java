@@ -12,7 +12,7 @@ public class BorrowProjectRepay implements Serializable {
 
     private String methodName;
 
-    private String delFlag;
+    private Integer delFlag;
 
     private String remark;
 
@@ -62,12 +62,12 @@ public class BorrowProjectRepay implements Serializable {
         this.methodName = methodName == null ? null : methodName.trim();
     }
 
-    public String getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag == null ? null : delFlag.trim();
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public String getRemark() {

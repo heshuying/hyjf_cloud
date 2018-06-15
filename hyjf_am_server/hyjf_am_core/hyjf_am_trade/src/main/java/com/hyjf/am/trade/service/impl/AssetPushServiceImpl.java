@@ -3,20 +3,19 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.assetpush.InfoBean;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.AssetPushService;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.AssetPushService;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 
 /**
  * @author fuqiang
@@ -64,7 +63,7 @@ public class AssetPushServiceImpl implements AssetPushService {
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria crt = example.createCriteria();
         crt.andBorrowCdEqualTo(borrowcCd);
-        crt.andStatusEqualTo("0");
+        crt.andStatusEqualTo(0);
         List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);
         String brrowClass = null;
         if(list.size() > 0){
@@ -73,7 +72,7 @@ public class AssetPushServiceImpl implements AssetPushService {
             BorrowProjectRepayExample example2 = new BorrowProjectRepayExample();
             BorrowProjectRepayExample.Criteria crt2 = example2.createCriteria();
             crt2.andBorrowClassEqualTo(brrowClass);
-            crt2.andDelFlagEqualTo("0");
+            crt2.andDelFlagEqualTo(0);
             List<BorrowProjectRepay> list2 = this.borrowProjectRepayMapper.selectByExample(example2);
 
             return list2;
@@ -89,7 +88,7 @@ public class AssetPushServiceImpl implements AssetPushService {
         STZHWhiteListExample.Criteria crt = example.createCriteria();
         crt.andStAccountidEqualTo(entrustedAccountId);
         crt.andInstcodeEqualTo(instCode);
-        crt.andDelFlgEqualTo(0);
+        crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);
         List<STZHWhiteList> list = this.sTZHWhiteListMapper.selectByExample(example);
         if(list.size() > 0){
@@ -109,9 +108,6 @@ public class AssetPushServiceImpl implements AssetPushService {
         for (InfoBean infobean : infobeans) {
             HjhAssetRiskInfoWithBLOBs riskInfo = new HjhAssetRiskInfoWithBLOBs();
 
-            int nowTime = GetDate.getNowTime10(); // 当前时间
-            riskInfo.setCreateTime(nowTime);
-            riskInfo.setUpdateTime(nowTime);
             riskInfo.setCreateUser(1);// 默认系统用户
             riskInfo.setUpdateUserId(1);
 
@@ -167,7 +163,7 @@ public class AssetPushServiceImpl implements AssetPushService {
     public List<BorrowProjectType> selectBorrowProjectByBorrowCd(String borrowCd) {
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();
-        cra.andStatusEqualTo(CustomConstants.FLAG_NORMAL);
+        cra.andStatusEqualTo(0);
         cra.andBorrowCdEqualTo(borrowCd);
 
         List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);

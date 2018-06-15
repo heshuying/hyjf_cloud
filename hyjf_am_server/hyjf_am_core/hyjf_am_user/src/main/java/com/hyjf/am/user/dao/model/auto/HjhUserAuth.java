@@ -246,12 +246,12 @@ public class HjhUserAuth implements Serializable {
         this.repayCancelTime = repayCancelTime == null ? null : repayCancelTime.trim();
     }
 
-    public Integer getDelFlg() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlag = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public Integer getCreateUserId() {

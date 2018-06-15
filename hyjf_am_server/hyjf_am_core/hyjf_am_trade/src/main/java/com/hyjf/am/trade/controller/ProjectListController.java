@@ -7,6 +7,7 @@ import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
+import com.hyjf.am.util.Page;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ public class ProjectListController {
      * @param request
      * @return
      */
-    @RequestMapping("/getHomePageProjectList")
-    public ProjectListResponse getHomePageProjectList(@RequestBody @Valid ProjectListRequest request){
+    @RequestMapping("/searchProjectList")
+    public ProjectListResponse searchProjectList(@RequestBody @Valid ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
-        List<WebProjectListCustomize> list = projectListService.getHomePageProjectList(request);
+        List<WebProjectListCustomize> list = projectListService.searchProjectList(request);
         if(!CollectionUtils.isEmpty(list)){
             List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
             projectListResponse.setResultList(webProjectListCustomizeVo);

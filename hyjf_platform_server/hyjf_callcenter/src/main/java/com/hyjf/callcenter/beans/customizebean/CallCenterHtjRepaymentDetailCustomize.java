@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 /**
  * @ClassName PlanLockCustomize
- * @Description TODO
+ * @Description
  * @author 孙小宝
  * @date 2016年11月24日 下午3:49:17
  */

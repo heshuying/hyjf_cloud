@@ -38,13 +38,19 @@ public class ChinaPnrSignUtils implements Serializable {
     public static final int RAS_VERIFY_SIGN_SUCCESS = 0;
 
     /** 商户客户号 **/
-    public static final String RECV_MER_ID = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERID);
+    //   todo xiashuqing 20180615
+    //public static final String RECV_MER_ID = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERID);
+    public static final String RECV_MER_ID = "";
 
     /** 商户公钥文件地址 **/
-    public static final String MER_PUB_KEY_PATH = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MER_PUB_KEY_PATH);
+    //   todo xiashuqing 20180615
+    //public static final String MER_PUB_KEY_PATH = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MER_PUB_KEY_PATH);
+    public static final String MER_PUB_KEY_PATH = "";
 
     /** 商户私钥文件地址 **/
-    public static final String MER_PRI_KEY_PATH = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MER_PRI_KEY_PATH);
+    //   todo xiashuqing 20180615
+    //public static final String MER_PRI_KEY_PATH = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MER_PRI_KEY_PATH);
+    public static final String MER_PRI_KEY_PATH = "";
 
     /**
      * RSA方式加签

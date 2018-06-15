@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BorrowBail implements Serializable {
     private Integer id;
@@ -12,9 +13,9 @@ public class BorrowBail implements Serializable {
 
     private Integer operaterUid;
 
-    private Integer updatetime;
-
     private BigDecimal bailNum;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -50,19 +51,19 @@ public class BorrowBail implements Serializable {
         this.operaterUid = operaterUid;
     }
 
-    public Integer getUpdatetime() {
-        return updatetime;
-    }
-
-    public void setUpdatetime(Integer updatetime) {
-        this.updatetime = updatetime;
-    }
-
     public BigDecimal getBailNum() {
         return bailNum;
     }
 
     public void setBailNum(BigDecimal bailNum) {
         this.bailNum = bailNum;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
