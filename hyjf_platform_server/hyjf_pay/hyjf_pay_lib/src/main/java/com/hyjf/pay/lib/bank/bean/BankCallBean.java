@@ -108,7 +108,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	 * @param txCode
 	 * @param client
 	 */
-	public BankCallBean(String bankCode,String instCode,Integer userId, String txCode, Integer client,String logBankDetailUrl) {
+	public BankCallBean(Integer userId, String txCode, Integer client,String logBankDetailUrl) {
 		super();
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		String txDate = GetOrderIdUtils.getTxDate();
