@@ -1,10 +1,12 @@
 package com.hyjf.cs.user.vo;
 
+import com.hyjf.cs.user.bean.BaseBean;
+
 /**
  * @author xiasq
  * @version RegisterVO, v0.1 2018/4/11 9:37
  */
-public class RegisterVO {
+public class RegisterVO extends BaseBean{
 
 	private String mobilephone;
 	private String smsCode;

@@ -5,16 +5,14 @@ package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowManinfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.borrow.BorrowVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -37,6 +35,8 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Autowired
     private BorrowManinfoMapper borrowManinfoMapper;
+    @Autowired
+    private BorrowStyleMapper borrowStyleMapper;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -50,6 +50,19 @@ public class BorrowServiceImpl implements BorrowService {
         cra.andStatusEqualTo(0);
 
         List<BorrowFinmanNewCharge> list = this.borrowFinmanNewChargeMapper.selectByExample(example);
+
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public Borrow getBorrow(String borrowNid) {
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<Borrow> list = this.borrowMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list.get(0);
         }
@@ -57,13 +70,21 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     @Override
+    public BorrowStyle getborrowStyleByNid(String borrowStyle) {
+        BorrowStyleExample example = new BorrowStyleExample();
+        BorrowStyleExample.Criteria cri = example.createCriteria();
+        cri.andNidEqualTo(borrowStyle);
+        List<BorrowStyle> style = borrowStyleMapper.selectByExample(example);
+        return style.get(0);
+    }
+
     public BorrowConfig getBorrowConfigByConfigCd(String configCd) {
         BorrowConfig borrowConfig = this.borrowConfigMapper.selectByPrimaryKey(configCd);
         return borrowConfig;
     }
 
     @Override
-    public int insertBorrow(BorrowWithBLOBs borrow) {
+    public int insertBorrow(Borrow borrow) {
         return borrowMapper.insertSelective(borrow);
     }
 
@@ -86,7 +107,7 @@ public class BorrowServiceImpl implements BorrowService {
         borrowVO.setRegistUserId(1);//TODO:id写死1
         borrowVO.setRegistUserName("AutoRecord");
         borrowVO.setRegistTime(nowDate);
-        BorrowWithBLOBs borrow = new BorrowWithBLOBs();
+        Borrow borrow = new Borrow();
         BeanUtils.copyProperties(borrowVO, borrow);
         return borrowMapper.updateByExampleSelective(borrow, example);
     }

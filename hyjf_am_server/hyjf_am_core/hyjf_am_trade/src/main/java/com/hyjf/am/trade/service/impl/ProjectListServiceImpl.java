@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.mapper.customize.trade.WebProjectListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
+import com.hyjf.am.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class ProjectListServiceImpl implements ProjectListService {
      * @return
      */
     @Override
-    public List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request) {
+    public List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request, Page page) {
         Map<String, Object> params = new HashMap<String, Object>();
         // 项目类型
         String projectType = request.getProjectType();
@@ -45,9 +46,28 @@ public class ProjectListServiceImpl implements ProjectListService {
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
-        params.put("limitStart", limitStart);
-        params.put("limitEnd", limitEnd);
+//        params.put("limitStart", page.getOffset());
+//        params.put("limitEnd", page.getLimit());
 
         return webProjectListCustomizeMapper.searchProjectList(params);
+    }
+
+    @Override
+    public int countHomePageProjectList(@Valid ProjectListRequest request, Page page) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        params.put("limitStart", page.getOffset());
+        params.put("limitEnd", page.getLimit());
+
+        return webProjectListCustomizeMapper.countProjectList(params);
     }
 }

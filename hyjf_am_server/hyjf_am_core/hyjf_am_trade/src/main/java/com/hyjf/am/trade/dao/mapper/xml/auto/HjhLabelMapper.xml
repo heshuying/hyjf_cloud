@@ -28,10 +28,10 @@
     <result column="remaining_days_end" property="remainingDaysEnd" jdbcType="INTEGER" />
     <result column="label_state" property="labelState" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -97,7 +97,7 @@
     inst_code, inst_name, asset_type, asset_type_name, project_type, project_type_name, 
     is_credit, is_late, credit_sum_max, push_time_start, push_time_end, remaining_days_start, 
     remaining_days_end, label_state, create_user_id, create_time, update_user_id, update_time, 
-    del_flg
+    del_flag
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabelExample" >
     select
@@ -145,7 +145,7 @@
       credit_sum_max, push_time_start, push_time_end, 
       remaining_days_start, remaining_days_end, label_state, 
       create_user_id, create_time, update_user_id, 
-      update_time, del_flg)
+      update_time, del_flag)
     values (#{labelName,jdbcType=VARCHAR}, #{labelTermStart,jdbcType=INTEGER}, #{labelTermEnd,jdbcType=INTEGER}, 
       #{labelTermType,jdbcType=VARCHAR}, #{labelAprStart,jdbcType=DECIMAL}, #{labelAprEnd,jdbcType=DECIMAL}, 
       #{borrowStyle,jdbcType=VARCHAR}, #{borrowStyleName,jdbcType=VARCHAR}, #{labelPaymentAccountStart,jdbcType=DECIMAL}, 
@@ -154,8 +154,8 @@
       #{projectTypeName,jdbcType=VARCHAR}, #{isCredit,jdbcType=TINYINT}, #{isLate,jdbcType=TINYINT}, 
       #{creditSumMax,jdbcType=INTEGER}, #{pushTimeStart,jdbcType=TIME}, #{pushTimeEnd,jdbcType=TIME}, 
       #{remainingDaysStart,jdbcType=INTEGER}, #{remainingDaysEnd,jdbcType=INTEGER}, #{labelState,jdbcType=TINYINT}, 
-      #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{delFlg,jdbcType=TINYINT})
+      #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabel" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -247,8 +247,8 @@
       <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="delFlg != null" >
-        del_flg,
+      <if test="delFlag != null" >
+        del_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -328,16 +328,16 @@
         #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -429,16 +429,16 @@
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -473,10 +473,10 @@
       remaining_days_end = #{record.remainingDaysEnd,jdbcType=INTEGER},
       label_state = #{record.labelState,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=TINYINT}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -560,16 +560,16 @@
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -601,10 +601,10 @@
       remaining_days_end = #{remainingDaysEnd,jdbcType=INTEGER},
       label_state = #{labelState,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=TINYINT}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

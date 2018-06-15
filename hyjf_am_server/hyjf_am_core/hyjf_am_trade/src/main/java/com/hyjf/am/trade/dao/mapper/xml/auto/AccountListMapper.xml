@@ -18,12 +18,9 @@
     <result column="await" property="await" jdbcType="DECIMAL" />
     <result column="repay" property="repay" jdbcType="DECIMAL" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
-    <result column="is_update" property="isUpdate" jdbcType="TINYINT" />
-    <result column="base_update" property="baseUpdate" jdbcType="TINYINT" />
-    <result column="interest" property="interest" jdbcType="DECIMAL" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
     <result column="is_bank" property="isBank" jdbcType="TINYINT" />
@@ -32,8 +29,8 @@
     <result column="tx_time" property="txTime" jdbcType="INTEGER" />
     <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
     <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
-    <result column="check_status" property="checkStatus" jdbcType="INTEGER" />
-    <result column="trade_status" property="tradeStatus" jdbcType="INTEGER" />
+    <result column="check_status" property="checkStatus" jdbcType="TINYINT" />
+    <result column="trade_status" property="tradeStatus" jdbcType="TINYINT" />
     <result column="bank_total" property="bankTotal" jdbcType="DECIMAL" />
     <result column="bank_balance" property="bankBalance" jdbcType="DECIMAL" />
     <result column="bank_frost" property="bankFrost" jdbcType="DECIMAL" />
@@ -109,11 +106,11 @@
   </sql>
   <sql id="Base_Column_List" >
     id, nid, accede_order_id, is_show, user_id, amount, `type`, trade, trade_code, total, 
-    balance, frost, plan_frost, await, repay, remark, create_time, `operator`, ip, is_update, 
-    base_update, interest, web, plan_balance, is_bank, account_id, tx_date, tx_time, 
-    seq_no, bank_seq_no, check_status, trade_status, bank_total, bank_balance, bank_frost, 
-    bank_wait_repay, bank_wait_capital, bank_wait_interest, bank_interest_sum, bank_invest_sum, 
-    bank_await, bank_await_capital, bank_await_interest, check_date, check_balance, account_date
+    balance, frost, plan_frost, await, repay, remark, create_time, `operator`, ip, web, 
+    plan_balance, is_bank, account_id, tx_date, tx_time, seq_no, bank_seq_no, check_status, 
+    trade_status, bank_total, bank_balance, bank_frost, bank_wait_repay, bank_wait_capital, 
+    bank_wait_interest, bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, 
+    bank_await_interest, check_date, check_balance, account_date
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountListExample" >
     select
@@ -158,7 +155,6 @@
       balance, frost, plan_frost, 
       await, repay, remark, 
       create_time, `operator`, ip, 
-      is_update, base_update, interest, 
       web, plan_balance, is_bank, 
       account_id, tx_date, tx_time, 
       seq_no, bank_seq_no, check_status, 
@@ -173,12 +169,11 @@
       #{trade,jdbcType=VARCHAR}, #{tradeCode,jdbcType=VARCHAR}, #{total,jdbcType=DECIMAL}, 
       #{balance,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, 
       #{await,jdbcType=DECIMAL}, #{repay,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
-      #{isUpdate,jdbcType=TINYINT}, #{baseUpdate,jdbcType=TINYINT}, #{interest,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
       #{web,jdbcType=TINYINT}, #{planBalance,jdbcType=DECIMAL}, #{isBank,jdbcType=TINYINT}, 
       #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
-      #{seqNo,jdbcType=VARCHAR}, #{bankSeqNo,jdbcType=VARCHAR}, #{checkStatus,jdbcType=INTEGER}, 
-      #{tradeStatus,jdbcType=INTEGER}, #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, 
+      #{seqNo,jdbcType=VARCHAR}, #{bankSeqNo,jdbcType=VARCHAR}, #{checkStatus,jdbcType=TINYINT}, 
+      #{tradeStatus,jdbcType=TINYINT}, #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, 
       #{bankFrost,jdbcType=DECIMAL}, #{bankWaitRepay,jdbcType=DECIMAL}, #{bankWaitCapital,jdbcType=DECIMAL}, 
       #{bankWaitInterest,jdbcType=DECIMAL}, #{bankInterestSum,jdbcType=DECIMAL}, #{bankInvestSum,jdbcType=DECIMAL}, 
       #{bankAwait,jdbcType=DECIMAL}, #{bankAwaitCapital,jdbcType=DECIMAL}, #{bankAwaitInterest,jdbcType=DECIMAL}, 
@@ -244,15 +239,6 @@
       </if>
       <if test="ip != null" >
         ip,
-      </if>
-      <if test="isUpdate != null" >
-        is_update,
-      </if>
-      <if test="baseUpdate != null" >
-        base_update,
-      </if>
-      <if test="interest != null" >
-        interest,
       </if>
       <if test="web != null" >
         web,
@@ -374,22 +360,13 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
       </if>
       <if test="ip != null" >
         #{ip,jdbcType=VARCHAR},
-      </if>
-      <if test="isUpdate != null" >
-        #{isUpdate,jdbcType=TINYINT},
-      </if>
-      <if test="baseUpdate != null" >
-        #{baseUpdate,jdbcType=TINYINT},
-      </if>
-      <if test="interest != null" >
-        #{interest,jdbcType=DECIMAL},
       </if>
       <if test="web != null" >
         #{web,jdbcType=TINYINT},
@@ -416,10 +393,10 @@
         #{bankSeqNo,jdbcType=VARCHAR},
       </if>
       <if test="checkStatus != null" >
-        #{checkStatus,jdbcType=INTEGER},
+        #{checkStatus,jdbcType=TINYINT},
       </if>
       <if test="tradeStatus != null" >
-        #{tradeStatus,jdbcType=INTEGER},
+        #{tradeStatus,jdbcType=TINYINT},
       </if>
       <if test="bankTotal != null" >
         #{bankTotal,jdbcType=DECIMAL},
@@ -523,22 +500,13 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.operator != null" >
         `operator` = #{record.operator,jdbcType=VARCHAR},
       </if>
       <if test="record.ip != null" >
         ip = #{record.ip,jdbcType=VARCHAR},
-      </if>
-      <if test="record.isUpdate != null" >
-        is_update = #{record.isUpdate,jdbcType=TINYINT},
-      </if>
-      <if test="record.baseUpdate != null" >
-        base_update = #{record.baseUpdate,jdbcType=TINYINT},
-      </if>
-      <if test="record.interest != null" >
-        interest = #{record.interest,jdbcType=DECIMAL},
       </if>
       <if test="record.web != null" >
         web = #{record.web,jdbcType=TINYINT},
@@ -565,10 +533,10 @@
         bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
       </if>
       <if test="record.checkStatus != null" >
-        check_status = #{record.checkStatus,jdbcType=INTEGER},
+        check_status = #{record.checkStatus,jdbcType=TINYINT},
       </if>
       <if test="record.tradeStatus != null" >
-        trade_status = #{record.tradeStatus,jdbcType=INTEGER},
+        trade_status = #{record.tradeStatus,jdbcType=TINYINT},
       </if>
       <if test="record.bankTotal != null" >
         bank_total = #{record.bankTotal,jdbcType=DECIMAL},
@@ -635,12 +603,9 @@
       await = #{record.await,jdbcType=DECIMAL},
       repay = #{record.repay,jdbcType=DECIMAL},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       `operator` = #{record.operator,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
-      is_update = #{record.isUpdate,jdbcType=TINYINT},
-      base_update = #{record.baseUpdate,jdbcType=TINYINT},
-      interest = #{record.interest,jdbcType=DECIMAL},
       web = #{record.web,jdbcType=TINYINT},
       plan_balance = #{record.planBalance,jdbcType=DECIMAL},
       is_bank = #{record.isBank,jdbcType=TINYINT},
@@ -649,8 +614,8 @@
       tx_time = #{record.txTime,jdbcType=INTEGER},
       seq_no = #{record.seqNo,jdbcType=VARCHAR},
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
-      check_status = #{record.checkStatus,jdbcType=INTEGER},
-      trade_status = #{record.tradeStatus,jdbcType=INTEGER},
+      check_status = #{record.checkStatus,jdbcType=TINYINT},
+      trade_status = #{record.tradeStatus,jdbcType=TINYINT},
       bank_total = #{record.bankTotal,jdbcType=DECIMAL},
       bank_balance = #{record.bankBalance,jdbcType=DECIMAL},
       bank_frost = #{record.bankFrost,jdbcType=DECIMAL},
@@ -718,22 +683,13 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operator != null" >
         `operator` = #{operator,jdbcType=VARCHAR},
       </if>
       <if test="ip != null" >
         ip = #{ip,jdbcType=VARCHAR},
-      </if>
-      <if test="isUpdate != null" >
-        is_update = #{isUpdate,jdbcType=TINYINT},
-      </if>
-      <if test="baseUpdate != null" >
-        base_update = #{baseUpdate,jdbcType=TINYINT},
-      </if>
-      <if test="interest != null" >
-        interest = #{interest,jdbcType=DECIMAL},
       </if>
       <if test="web != null" >
         web = #{web,jdbcType=TINYINT},
@@ -760,10 +716,10 @@
         bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
       </if>
       <if test="checkStatus != null" >
-        check_status = #{checkStatus,jdbcType=INTEGER},
+        check_status = #{checkStatus,jdbcType=TINYINT},
       </if>
       <if test="tradeStatus != null" >
-        trade_status = #{tradeStatus,jdbcType=INTEGER},
+        trade_status = #{tradeStatus,jdbcType=TINYINT},
       </if>
       <if test="bankTotal != null" >
         bank_total = #{bankTotal,jdbcType=DECIMAL},
@@ -827,12 +783,9 @@
       await = #{await,jdbcType=DECIMAL},
       repay = #{repay,jdbcType=DECIMAL},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       `operator` = #{operator,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
-      is_update = #{isUpdate,jdbcType=TINYINT},
-      base_update = #{baseUpdate,jdbcType=TINYINT},
-      interest = #{interest,jdbcType=DECIMAL},
       web = #{web,jdbcType=TINYINT},
       plan_balance = #{planBalance,jdbcType=DECIMAL},
       is_bank = #{isBank,jdbcType=TINYINT},
@@ -841,8 +794,8 @@
       tx_time = #{txTime,jdbcType=INTEGER},
       seq_no = #{seqNo,jdbcType=VARCHAR},
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
-      check_status = #{checkStatus,jdbcType=INTEGER},
-      trade_status = #{tradeStatus,jdbcType=INTEGER},
+      check_status = #{checkStatus,jdbcType=TINYINT},
+      trade_status = #{tradeStatus,jdbcType=TINYINT},
       bank_total = #{bankTotal,jdbcType=DECIMAL},
       bank_balance = #{bankBalance,jdbcType=DECIMAL},
       bank_frost = #{bankFrost,jdbcType=DECIMAL},

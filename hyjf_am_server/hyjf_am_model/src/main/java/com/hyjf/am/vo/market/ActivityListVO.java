@@ -1,10 +1,12 @@
 package com.hyjf.am.vo.market;
 
+import com.hyjf.am.vo.BaseVO;
+
 /**
  * @author xiasq
  * @version ActivityListVO, v0.1 2018/5/14 16:13
  */
-public class ActivityListVO {
+public class ActivityListVO extends BaseVO {
     private int timeStart;
     private int timeEnd;
 

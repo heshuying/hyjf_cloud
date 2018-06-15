@@ -10,7 +10,7 @@ import com.hyjf.am.vo.trade.HjhPlanAssetVO;
  * @author fuqiang
  * @version AutoRecordService, v0.1 2018/6/14 10:17
  */
-public interface AutoRecordService extends ApiAssetPushService {
+public interface AutoRecordService {
 
     /**
      * 备案

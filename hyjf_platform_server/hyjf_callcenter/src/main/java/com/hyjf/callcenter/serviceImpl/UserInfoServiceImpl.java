@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.client.AmCallcenterUserInfoClient;
 import com.hyjf.callcenter.service.UserInfoService;
@@ -19,11 +20,11 @@ import com.hyjf.callcenter.service.UserInfoService;
  */
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
-	
+
 	/*private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();*/
-    @Autowired
-    private AmCallcenterUserInfoClient amCallcenterUserInfoClient;
-    
+	@Autowired
+	private AmCallcenterUserInfoClient amCallcenterUserInfoClient;
+
 	@Override
 	public List<CallCenterUserBaseVO> getNoServiceUsersList(UserBean bean) {
 		// 封装查询条件
@@ -54,6 +55,30 @@ public class UserInfoServiceImpl implements UserInfoService {
 		CallCenterServiceUsersRequest callCenterServiceUsersRequest = new CallCenterServiceUsersRequest();
 		callCenterServiceUsersRequest.setCallCenterServiceUsersVOList(userList);
 		return this.amCallcenterUserInfoClient.executeRecord(callCenterServiceUsersRequest);
+	}
+
+	@Override
+	public List<CallCenterUserBaseVO> getUserBaseList(UserVO user) {
+		List<CallCenterUserBaseVO> users = null;
+		// 封装查询条件
+		CallCenterUserInfoRequest callCenterUserInfoRequest = new CallCenterUserInfoRequest();
+		if(user.getUserId() != null){
+			callCenterUserInfoRequest.setUserId(user.getUserId());
+			users = this.amCallcenterUserInfoClient.selectUserList(callCenterUserInfoRequest);
+		}
+		return users;
+	}
+
+	@Override
+	public List<CallCenterUserBaseVO> getUserDetailList(UserVO user) {
+		List<CallCenterUserBaseVO> users = null;
+		// 封装查询条件
+		CallCenterUserInfoRequest callCenterUserInfoRequest = new CallCenterUserInfoRequest();
+		if(user.getUserId() != null){
+			callCenterUserInfoRequest.setUserId(user.getUserId());
+			users = this.amCallcenterUserInfoClient.selectUserDetailById(callCenterUserInfoRequest);
+		}
+		return users;
 	}
 
 }

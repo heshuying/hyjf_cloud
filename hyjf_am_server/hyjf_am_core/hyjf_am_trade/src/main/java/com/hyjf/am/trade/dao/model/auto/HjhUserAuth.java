@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuth implements Serializable {
     private Integer id;
@@ -27,15 +28,15 @@ public class HjhUserAuth implements Serializable {
 
     private Integer autoBidTime;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer createUser;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private Integer updateUser;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -135,11 +136,11 @@ public class HjhUserAuth implements Serializable {
         this.autoBidTime = autoBidTime;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -151,11 +152,11 @@ public class HjhUserAuth implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -167,11 +168,11 @@ public class HjhUserAuth implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 }

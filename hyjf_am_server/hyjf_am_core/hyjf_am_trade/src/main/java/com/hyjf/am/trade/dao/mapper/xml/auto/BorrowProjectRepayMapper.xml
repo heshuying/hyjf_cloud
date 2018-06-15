@@ -6,7 +6,7 @@
     <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
     <result column="repay_method" property="repayMethod" jdbcType="VARCHAR" />
     <result column="method_name" property="methodName" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_group_id" property="createGroupId" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
@@ -119,7 +119,7 @@
       create_user_id, create_time, update_group_id, 
       update_user_id, update_time)
     values (#{borrowClass,jdbcType=VARCHAR}, #{repayMethod,jdbcType=VARCHAR}, #{methodName,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createGroupId,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createGroupId,jdbcType=VARCHAR}, 
       #{createUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateGroupId,jdbcType=VARCHAR}, 
       #{updateUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -174,7 +174,7 @@
         #{methodName,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=VARCHAR},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -221,7 +221,7 @@
         method_name = #{record.methodName,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=VARCHAR},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -255,7 +255,7 @@
       borrow_class = #{record.borrowClass,jdbcType=VARCHAR},
       repay_method = #{record.repayMethod,jdbcType=VARCHAR},
       method_name = #{record.methodName,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=VARCHAR},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_group_id = #{record.createGroupId,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=VARCHAR},
@@ -280,7 +280,7 @@
         method_name = #{methodName,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=VARCHAR},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -311,7 +311,7 @@
     set borrow_class = #{borrowClass,jdbcType=VARCHAR},
       repay_method = #{repayMethod,jdbcType=VARCHAR},
       method_name = #{methodName,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       create_group_id = #{createGroupId,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=VARCHAR},

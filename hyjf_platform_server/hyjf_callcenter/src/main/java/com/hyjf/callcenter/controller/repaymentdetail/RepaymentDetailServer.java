@@ -3,7 +3,7 @@
  */
 package com.hyjf.callcenter.controller.repaymentdetail;
 
-import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
+import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
 import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -36,7 +36,7 @@ public class RepaymentDetailServer extends CallcenterBaseController {
     @ApiOperation(value = "查询还款明细（直投产品，含承接的债权）",
             notes = "按照用户名/手机号查询还款明细（直投产品，含承接的债权）")
     @ResponseBody
-    @PostMapping(value = RepaymentDetailDefine.GET_HZT_REPAYMENT_DETAIL_LIST_ACTION, produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getHztRepaymentDetailList", produces = "application/json; charset=utf-8")
     public ResultListBean getHztRepaymentDetailList(HttpServletRequest request, HttpServletResponse response,
                                                     @RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();
@@ -51,12 +51,12 @@ public class RepaymentDetailServer extends CallcenterBaseController {
 
         //*************各自业务开始***************
         //根据用户信息查询用户优惠券信息
-        CallCenterRepaymentRequest callCenterRepaymentRequest = new CallCenterRepaymentRequest();
-        callCenterRepaymentRequest.setUserId(user.getUserId());
-        callCenterRepaymentRequest.setLimitStart(bean.getLimitStart());
-        callCenterRepaymentRequest.setLimitEnd(bean.getLimitSize());
+        CallCenterBaseRequest callCenterBaseRequest = new CallCenterBaseRequest();
+        callCenterBaseRequest.setUserId(user.getUserId());
+        callCenterBaseRequest.setLimitStart(bean.getLimitStart());
+        callCenterBaseRequest.setLimitEnd(bean.getLimitSize());
         List<CallCenterHztRepaymentDetailVO> recordList =
-                this.repaymentDetailService.getHztRepaymentDetailList(callCenterRepaymentRequest);
+                this.repaymentDetailService.getHztRepaymentDetailList(callCenterBaseRequest);
 
         if (recordList == null) {
             result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户无还款明细！");
@@ -91,7 +91,7 @@ public class RepaymentDetailServer extends CallcenterBaseController {
      */
     @ApiOperation(value = "查询还款明细（汇添金）", notes = "按照用户名/手机号查询还款明细（汇添金）")
     @ResponseBody
-    @PostMapping(value = RepaymentDetailDefine.GET_HTJ_REPAYMENT_DETAIL_LIST_ACTION, produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getHtjRepaymentDetailList", produces = "application/json; charset=utf-8")
     public ResultListBean getHtjRepaymentDetailList(HttpServletRequest request, HttpServletResponse response,
                                                     @RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();
@@ -106,12 +106,12 @@ public class RepaymentDetailServer extends CallcenterBaseController {
 
         //*************各自业务开始***************
         //根据用户信息查询用户优惠券信息
-        CallCenterRepaymentRequest callCenterRepaymentRequest = new CallCenterRepaymentRequest();
-        callCenterRepaymentRequest.setUserId(user.getUserId());
-        callCenterRepaymentRequest.setLimitStart(bean.getLimitStart());
-        callCenterRepaymentRequest.setLimitEnd(bean.getLimitSize());
+        CallCenterBaseRequest callCenterBaseRequest = new CallCenterBaseRequest();
+        callCenterBaseRequest.setUserId(user.getUserId());
+        callCenterBaseRequest.setLimitStart(bean.getLimitStart());
+        callCenterBaseRequest.setLimitEnd(bean.getLimitSize());
         List<CallCenterHtjRepaymentDetailVO> recordList = this.repaymentDetailService.getHtjRepaymentDetailList(
-                callCenterRepaymentRequest);
+                callCenterBaseRequest);
 
         if (recordList == null) {
             result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户无还款明细！");

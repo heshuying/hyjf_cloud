@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhPlan" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="plan_name" property="planName" jdbcType="VARCHAR" />
+    <result column="lock_period" property="lockPeriod" jdbcType="TINYINT" />
+    <result column="is_month" property="isMonth" jdbcType="TINYINT" />
+    <result column="expect_apr" property="expectApr" jdbcType="DECIMAL" />
+    <result column="min_investment" property="minInvestment" jdbcType="DECIMAL" />
+    <result column="max_investment" property="maxInvestment" jdbcType="DECIMAL" />
+    <result column="investment_increment" property="investmentIncrement" jdbcType="DECIMAL" />
+    <result column="available_invest_account" property="availableInvestAccount" jdbcType="DECIMAL" />
+    <result column="repay_wait_all" property="repayWaitAll" jdbcType="DECIMAL" />
+    <result column="plan_invest_status" property="planInvestStatus" jdbcType="TINYINT" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    <result column="coupon_config" property="couponConfig" jdbcType="VARCHAR" />
+    <result column="join_total" property="joinTotal" jdbcType="DECIMAL" />
+    <result column="plan_wait_captical" property="planWaitCaptical" jdbcType="DECIMAL" />
+    <result column="plan_wait_interest" property="planWaitInterest" jdbcType="DECIMAL" />
+    <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
+    <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
+    <result column="plan_repay_capital" property="planRepayCapital" jdbcType="DECIMAL" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs" extends="BaseResultMap" >
+    <result column="plan_concept" property="planConcept" jdbcType="LONGVARCHAR" />
+    <result column="plan_principle" property="planPrinciple" jdbcType="LONGVARCHAR" />
+    <result column="safeguard_measures" property="safeguardMeasures" jdbcType="LONGVARCHAR" />
+    <result column="margin_measures" property="marginMeasures" jdbcType="LONGVARCHAR" />
+    <result column="normal_questions" property="normalQuestions" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, plan_nid, plan_name, lock_period, is_month, expect_apr, min_investment, max_investment, 
+    investment_increment, available_invest_account, repay_wait_all, plan_invest_status, 
+    add_time, borrow_style, coupon_config, join_total, plan_wait_captical, plan_wait_interest, 
+    repay_total, plan_repay_interest, plan_repay_capital, create_user, create_time, update_user, 
+    update_time, del_flag
+  </sql>
+  <sql id="Blob_Column_List" >
+    plan_concept, plan_principle, safeguard_measures, margin_measures, normal_questions
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_hjh_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_hjh_plan
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanExample" >
+    delete from ht_hjh_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_plan (plan_nid, plan_name, lock_period, 
+      is_month, expect_apr, min_investment, 
+      max_investment, investment_increment, available_invest_account, 
+      repay_wait_all, plan_invest_status, add_time, 
+      borrow_style, coupon_config, join_total, 
+      plan_wait_captical, plan_wait_interest, repay_total, 
+      plan_repay_interest, plan_repay_capital, create_user, 
+      create_time, update_user, update_time, 
+      del_flag, plan_concept, plan_principle, 
+      safeguard_measures, margin_measures, 
+      normal_questions)
+    values (#{planNid,jdbcType=VARCHAR}, #{planName,jdbcType=VARCHAR}, #{lockPeriod,jdbcType=TINYINT}, 
+      #{isMonth,jdbcType=TINYINT}, #{expectApr,jdbcType=DECIMAL}, #{minInvestment,jdbcType=DECIMAL}, 
+      #{maxInvestment,jdbcType=DECIMAL}, #{investmentIncrement,jdbcType=DECIMAL}, #{availableInvestAccount,jdbcType=DECIMAL}, 
+      #{repayWaitAll,jdbcType=DECIMAL}, #{planInvestStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, 
+      #{borrowStyle,jdbcType=VARCHAR}, #{couponConfig,jdbcType=VARCHAR}, #{joinTotal,jdbcType=DECIMAL}, 
+      #{planWaitCaptical,jdbcType=DECIMAL}, #{planWaitInterest,jdbcType=DECIMAL}, #{repayTotal,jdbcType=DECIMAL}, 
+      #{planRepayInterest,jdbcType=DECIMAL}, #{planRepayCapital,jdbcType=DECIMAL}, #{createUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=TINYINT}, #{planConcept,jdbcType=LONGVARCHAR}, #{planPrinciple,jdbcType=LONGVARCHAR}, 
+      #{safeguardMeasures,jdbcType=LONGVARCHAR}, #{marginMeasures,jdbcType=LONGVARCHAR}, 
+      #{normalQuestions,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="planName != null" >
+        plan_name,
+      </if>
+      <if test="lockPeriod != null" >
+        lock_period,
+      </if>
+      <if test="isMonth != null" >
+        is_month,
+      </if>
+      <if test="expectApr != null" >
+        expect_apr,
+      </if>
+      <if test="minInvestment != null" >
+        min_investment,
+      </if>
+      <if test="maxInvestment != null" >
+        max_investment,
+      </if>
+      <if test="investmentIncrement != null" >
+        investment_increment,
+      </if>
+      <if test="availableInvestAccount != null" >
+        available_invest_account,
+      </if>
+      <if test="repayWaitAll != null" >
+        repay_wait_all,
+      </if>
+      <if test="planInvestStatus != null" >
+        plan_invest_status,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style,
+      </if>
+      <if test="couponConfig != null" >
+        coupon_config,
+      </if>
+      <if test="joinTotal != null" >
+        join_total,
+      </if>
+      <if test="planWaitCaptical != null" >
+        plan_wait_captical,
+      </if>
+      <if test="planWaitInterest != null" >
+        plan_wait_interest,
+      </if>
+      <if test="repayTotal != null" >
+        repay_total,
+      </if>
+      <if test="planRepayInterest != null" >
+        plan_repay_interest,
+      </if>
+      <if test="planRepayCapital != null" >
+        plan_repay_capital,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="planConcept != null" >
+        plan_concept,
+      </if>
+      <if test="planPrinciple != null" >
+        plan_principle,
+      </if>
+      <if test="safeguardMeasures != null" >
+        safeguard_measures,
+      </if>
+      <if test="marginMeasures != null" >
+        margin_measures,
+      </if>
+      <if test="normalQuestions != null" >
+        normal_questions,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planName != null" >
+        #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="lockPeriod != null" >
+        #{lockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="isMonth != null" >
+        #{isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="expectApr != null" >
+        #{expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="minInvestment != null" >
+        #{minInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="maxInvestment != null" >
+        #{maxInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="investmentIncrement != null" >
+        #{investmentIncrement,jdbcType=DECIMAL},
+      </if>
+      <if test="availableInvestAccount != null" >
+        #{availableInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayWaitAll != null" >
+        #{repayWaitAll,jdbcType=DECIMAL},
+      </if>
+      <if test="planInvestStatus != null" >
+        #{planInvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="couponConfig != null" >
+        #{couponConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="joinTotal != null" >
+        #{joinTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitCaptical != null" >
+        #{planWaitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitInterest != null" >
+        #{planWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTotal != null" >
+        #{repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayInterest != null" >
+        #{planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayCapital != null" >
+        #{planRepayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="planConcept != null" >
+        #{planConcept,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="planPrinciple != null" >
+        #{planPrinciple,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="safeguardMeasures != null" >
+        #{safeguardMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="marginMeasures != null" >
+        #{marginMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="normalQuestions != null" >
+        #{normalQuestions,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_plan
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planName != null" >
+        plan_name = #{record.planName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lockPeriod != null" >
+        lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="record.isMonth != null" >
+        is_month = #{record.isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="record.expectApr != null" >
+        expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.minInvestment != null" >
+        min_investment = #{record.minInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="record.maxInvestment != null" >
+        max_investment = #{record.maxInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investmentIncrement != null" >
+        investment_increment = #{record.investmentIncrement,jdbcType=DECIMAL},
+      </if>
+      <if test="record.availableInvestAccount != null" >
+        available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayWaitAll != null" >
+        repay_wait_all = #{record.repayWaitAll,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planInvestStatus != null" >
+        plan_invest_status = #{record.planInvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowStyle != null" >
+        borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.couponConfig != null" >
+        coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joinTotal != null" >
+        join_total = #{record.joinTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planWaitCaptical != null" >
+        plan_wait_captical = #{record.planWaitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planWaitInterest != null" >
+        plan_wait_interest = #{record.planWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayTotal != null" >
+        repay_total = #{record.repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planRepayInterest != null" >
+        plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planRepayCapital != null" >
+        plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.planConcept != null" >
+        plan_concept = #{record.planConcept,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.planPrinciple != null" >
+        plan_principle = #{record.planPrinciple,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.safeguardMeasures != null" >
+        safeguard_measures = #{record.safeguardMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.marginMeasures != null" >
+        margin_measures = #{record.marginMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.normalQuestions != null" >
+        normal_questions = #{record.normalQuestions,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_hjh_plan
+    set id = #{record.id,jdbcType=INTEGER},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      plan_name = #{record.planName,jdbcType=VARCHAR},
+      lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+      is_month = #{record.isMonth,jdbcType=TINYINT},
+      expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      min_investment = #{record.minInvestment,jdbcType=DECIMAL},
+      max_investment = #{record.maxInvestment,jdbcType=DECIMAL},
+      investment_increment = #{record.investmentIncrement,jdbcType=DECIMAL},
+      available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
+      repay_wait_all = #{record.repayWaitAll,jdbcType=DECIMAL},
+      plan_invest_status = #{record.planInvestStatus,jdbcType=TINYINT},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      join_total = #{record.joinTotal,jdbcType=DECIMAL},
+      plan_wait_captical = #{record.planWaitCaptical,jdbcType=DECIMAL},
+      plan_wait_interest = #{record.planWaitInterest,jdbcType=DECIMAL},
+      repay_total = #{record.repayTotal,jdbcType=DECIMAL},
+      plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
+      plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      plan_concept = #{record.planConcept,jdbcType=LONGVARCHAR},
+      plan_principle = #{record.planPrinciple,jdbcType=LONGVARCHAR},
+      safeguard_measures = #{record.safeguardMeasures,jdbcType=LONGVARCHAR},
+      margin_measures = #{record.marginMeasures,jdbcType=LONGVARCHAR},
+      normal_questions = #{record.normalQuestions,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_plan
+    set id = #{record.id,jdbcType=INTEGER},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      plan_name = #{record.planName,jdbcType=VARCHAR},
+      lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+      is_month = #{record.isMonth,jdbcType=TINYINT},
+      expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      min_investment = #{record.minInvestment,jdbcType=DECIMAL},
+      max_investment = #{record.maxInvestment,jdbcType=DECIMAL},
+      investment_increment = #{record.investmentIncrement,jdbcType=DECIMAL},
+      available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
+      repay_wait_all = #{record.repayWaitAll,jdbcType=DECIMAL},
+      plan_invest_status = #{record.planInvestStatus,jdbcType=TINYINT},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      join_total = #{record.joinTotal,jdbcType=DECIMAL},
+      plan_wait_captical = #{record.planWaitCaptical,jdbcType=DECIMAL},
+      plan_wait_interest = #{record.planWaitInterest,jdbcType=DECIMAL},
+      repay_total = #{record.repayTotal,jdbcType=DECIMAL},
+      plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
+      plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs" >
+    update ht_hjh_plan
+    <set >
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planName != null" >
+        plan_name = #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="lockPeriod != null" >
+        lock_period = #{lockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="isMonth != null" >
+        is_month = #{isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="expectApr != null" >
+        expect_apr = #{expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="minInvestment != null" >
+        min_investment = #{minInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="maxInvestment != null" >
+        max_investment = #{maxInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="investmentIncrement != null" >
+        investment_increment = #{investmentIncrement,jdbcType=DECIMAL},
+      </if>
+      <if test="availableInvestAccount != null" >
+        available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayWaitAll != null" >
+        repay_wait_all = #{repayWaitAll,jdbcType=DECIMAL},
+      </if>
+      <if test="planInvestStatus != null" >
+        plan_invest_status = #{planInvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="couponConfig != null" >
+        coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="joinTotal != null" >
+        join_total = #{joinTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitCaptical != null" >
+        plan_wait_captical = #{planWaitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="planWaitInterest != null" >
+        plan_wait_interest = #{planWaitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTotal != null" >
+        repay_total = #{repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayInterest != null" >
+        plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayCapital != null" >
+        plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="planConcept != null" >
+        plan_concept = #{planConcept,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="planPrinciple != null" >
+        plan_principle = #{planPrinciple,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="safeguardMeasures != null" >
+        safeguard_measures = #{safeguardMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="marginMeasures != null" >
+        margin_measures = #{marginMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="normalQuestions != null" >
+        normal_questions = #{normalQuestions,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs" >
+    update ht_hjh_plan
+    set plan_nid = #{planNid,jdbcType=VARCHAR},
+      plan_name = #{planName,jdbcType=VARCHAR},
+      lock_period = #{lockPeriod,jdbcType=TINYINT},
+      is_month = #{isMonth,jdbcType=TINYINT},
+      expect_apr = #{expectApr,jdbcType=DECIMAL},
+      min_investment = #{minInvestment,jdbcType=DECIMAL},
+      max_investment = #{maxInvestment,jdbcType=DECIMAL},
+      investment_increment = #{investmentIncrement,jdbcType=DECIMAL},
+      available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
+      repay_wait_all = #{repayWaitAll,jdbcType=DECIMAL},
+      plan_invest_status = #{planInvestStatus,jdbcType=TINYINT},
+      add_time = #{addTime,jdbcType=INTEGER},
+      borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      join_total = #{joinTotal,jdbcType=DECIMAL},
+      plan_wait_captical = #{planWaitCaptical,jdbcType=DECIMAL},
+      plan_wait_interest = #{planWaitInterest,jdbcType=DECIMAL},
+      repay_total = #{repayTotal,jdbcType=DECIMAL},
+      plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
+      plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      plan_concept = #{planConcept,jdbcType=LONGVARCHAR},
+      plan_principle = #{planPrinciple,jdbcType=LONGVARCHAR},
+      safeguard_measures = #{safeguardMeasures,jdbcType=LONGVARCHAR},
+      margin_measures = #{marginMeasures,jdbcType=LONGVARCHAR},
+      normal_questions = #{normalQuestions,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan" >
+    update ht_hjh_plan
+    set plan_nid = #{planNid,jdbcType=VARCHAR},
+      plan_name = #{planName,jdbcType=VARCHAR},
+      lock_period = #{lockPeriod,jdbcType=TINYINT},
+      is_month = #{isMonth,jdbcType=TINYINT},
+      expect_apr = #{expectApr,jdbcType=DECIMAL},
+      min_investment = #{minInvestment,jdbcType=DECIMAL},
+      max_investment = #{maxInvestment,jdbcType=DECIMAL},
+      investment_increment = #{investmentIncrement,jdbcType=DECIMAL},
+      available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
+      repay_wait_all = #{repayWaitAll,jdbcType=DECIMAL},
+      plan_invest_status = #{planInvestStatus,jdbcType=TINYINT},
+      add_time = #{addTime,jdbcType=INTEGER},
+      borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      join_total = #{joinTotal,jdbcType=DECIMAL},
+      plan_wait_captical = #{planWaitCaptical,jdbcType=DECIMAL},
+      plan_wait_interest = #{planWaitInterest,jdbcType=DECIMAL},
+      repay_total = #{repayTotal,jdbcType=DECIMAL},
+      plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
+      plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

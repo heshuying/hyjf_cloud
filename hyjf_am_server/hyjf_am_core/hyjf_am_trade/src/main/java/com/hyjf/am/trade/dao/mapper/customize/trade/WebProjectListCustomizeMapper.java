@@ -22,4 +22,6 @@ public interface WebProjectListCustomizeMapper {
      * @return
      */
     List<WebProjectListCustomize> searchProjectList(Map<String, Object> params);
+
+    int countProjectList(Map<String, Object> params);
 }

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class STZHWhiteList implements Serializable {
     private Integer id;
@@ -27,15 +28,15 @@ public class STZHWhiteList implements Serializable {
 
     private Integer state;
 
-    private String createtime;
+    private Date createTime;
 
     private String createuser;
 
-    private String updatetime;
+    private Date updateTime;
 
     private String updateuser;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private String approvalName;
 
@@ -145,12 +146,12 @@ public class STZHWhiteList implements Serializable {
         this.state = state;
     }
 
-    public String getCreatetime() {
-        return createtime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreatetime(String createtime) {
-        this.createtime = createtime == null ? null : createtime.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public String getCreateuser() {
@@ -161,12 +162,12 @@ public class STZHWhiteList implements Serializable {
         this.createuser = createuser == null ? null : createuser.trim();
     }
 
-    public String getUpdatetime() {
-        return updatetime;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdatetime(String updatetime) {
-        this.updatetime = updatetime == null ? null : updatetime.trim();
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getUpdateuser() {
@@ -177,12 +178,12 @@ public class STZHWhiteList implements Serializable {
         this.updateuser = updateuser == null ? null : updateuser.trim();
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public String getApprovalName() {

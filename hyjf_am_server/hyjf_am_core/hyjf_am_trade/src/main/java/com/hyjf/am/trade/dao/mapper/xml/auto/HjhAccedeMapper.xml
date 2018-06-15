@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhAccede" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_attribute" property="userAttribute" jdbcType="INTEGER" />
+    <result column="invite_user_id" property="inviteUserId" jdbcType="INTEGER" />
+    <result column="invite_user_name" property="inviteUserName" jdbcType="VARCHAR" />
+    <result column="invite_user_attribute" property="inviteUserAttribute" jdbcType="INTEGER" />
+    <result column="invite_user_regionname" property="inviteUserRegionname" jdbcType="VARCHAR" />
+    <result column="invite_user_branchname" property="inviteUserBranchname" jdbcType="VARCHAR" />
+    <result column="invite_user_departmentname" property="inviteUserDepartmentname" jdbcType="VARCHAR" />
+    <result column="accede_account" property="accedeAccount" jdbcType="DECIMAL" />
+    <result column="already_invest" property="alreadyInvest" jdbcType="DECIMAL" />
+    <result column="client" property="client" jdbcType="TINYINT" />
+    <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="count_interest_time" property="countInterestTime" jdbcType="INTEGER" />
+    <result column="send_status" property="sendStatus" jdbcType="TINYINT" />
+    <result column="lock_period" property="lockPeriod" jdbcType="TINYINT" />
+    <result column="commission_status" property="commissionStatus" jdbcType="TINYINT" />
+    <result column="commission_count_time" property="commissionCountTime" jdbcType="INTEGER" />
+    <result column="available_invest_account" property="availableInvestAccount" jdbcType="DECIMAL" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="credit_complete_flag" property="creditCompleteFlag" jdbcType="TINYINT" />
+    <result column="frost_account" property="frostAccount" jdbcType="DECIMAL" />
+    <result column="wait_total" property="waitTotal" jdbcType="DECIMAL" />
+    <result column="wait_captical" property="waitCaptical" jdbcType="DECIMAL" />
+    <result column="wait_interest" property="waitInterest" jdbcType="DECIMAL" />
+    <result column="received_total" property="receivedTotal" jdbcType="DECIMAL" />
+    <result column="received_interest" property="receivedInterest" jdbcType="DECIMAL" />
+    <result column="received_capital" property="receivedCapital" jdbcType="DECIMAL" />
+    <result column="quit_time" property="quitTime" jdbcType="INTEGER" />
+    <result column="last_payment_time" property="lastPaymentTime" jdbcType="INTEGER" />
+    <result column="acctual_payment_time" property="acctualPaymentTime" jdbcType="INTEGER" />
+    <result column="should_pay_total" property="shouldPayTotal" jdbcType="DECIMAL" />
+    <result column="should_pay_capital" property="shouldPayCapital" jdbcType="DECIMAL" />
+    <result column="should_pay_interest" property="shouldPayInterest" jdbcType="DECIMAL" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, accede_order_id, plan_nid, user_id, user_name, user_attribute, invite_user_id, 
+    invite_user_name, invite_user_attribute, invite_user_regionname, invite_user_branchname, 
+    invite_user_departmentname, accede_account, already_invest, client, order_status, 
+    add_time, count_interest_time, send_status, lock_period, commission_status, commission_count_time, 
+    available_invest_account, end_date, credit_complete_flag, frost_account, wait_total, 
+    wait_captical, wait_interest, received_total, received_interest, received_capital, 
+    quit_time, last_payment_time, acctual_payment_time, should_pay_total, should_pay_capital, 
+    should_pay_interest, create_user, create_time, update_user, update_time, del_flag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccedeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_accede
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_accede
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_accede
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccedeExample" >
+    delete from ht_hjh_accede
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_accede (accede_order_id, plan_nid, user_id, 
+      user_name, user_attribute, invite_user_id, 
+      invite_user_name, invite_user_attribute, invite_user_regionname, 
+      invite_user_branchname, invite_user_departmentname, 
+      accede_account, already_invest, client, 
+      order_status, add_time, count_interest_time, 
+      send_status, lock_period, commission_status, 
+      commission_count_time, available_invest_account, 
+      end_date, credit_complete_flag, frost_account, 
+      wait_total, wait_captical, wait_interest, 
+      received_total, received_interest, received_capital, 
+      quit_time, last_payment_time, acctual_payment_time, 
+      should_pay_total, should_pay_capital, should_pay_interest, 
+      create_user, create_time, update_user, 
+      update_time, del_flag)
+    values (#{accedeOrderId,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{userName,jdbcType=VARCHAR}, #{userAttribute,jdbcType=INTEGER}, #{inviteUserId,jdbcType=INTEGER}, 
+      #{inviteUserName,jdbcType=VARCHAR}, #{inviteUserAttribute,jdbcType=INTEGER}, #{inviteUserRegionname,jdbcType=VARCHAR}, 
+      #{inviteUserBranchname,jdbcType=VARCHAR}, #{inviteUserDepartmentname,jdbcType=VARCHAR}, 
+      #{accedeAccount,jdbcType=DECIMAL}, #{alreadyInvest,jdbcType=DECIMAL}, #{client,jdbcType=TINYINT}, 
+      #{orderStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{countInterestTime,jdbcType=INTEGER}, 
+      #{sendStatus,jdbcType=TINYINT}, #{lockPeriod,jdbcType=TINYINT}, #{commissionStatus,jdbcType=TINYINT}, 
+      #{commissionCountTime,jdbcType=INTEGER}, #{availableInvestAccount,jdbcType=DECIMAL}, 
+      #{endDate,jdbcType=DATE}, #{creditCompleteFlag,jdbcType=TINYINT}, #{frostAccount,jdbcType=DECIMAL}, 
+      #{waitTotal,jdbcType=DECIMAL}, #{waitCaptical,jdbcType=DECIMAL}, #{waitInterest,jdbcType=DECIMAL}, 
+      #{receivedTotal,jdbcType=DECIMAL}, #{receivedInterest,jdbcType=DECIMAL}, #{receivedCapital,jdbcType=DECIMAL}, 
+      #{quitTime,jdbcType=INTEGER}, #{lastPaymentTime,jdbcType=INTEGER}, #{acctualPaymentTime,jdbcType=INTEGER}, 
+      #{shouldPayTotal,jdbcType=DECIMAL}, #{shouldPayCapital,jdbcType=DECIMAL}, #{shouldPayInterest,jdbcType=DECIMAL}, 
+      #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_accede
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accedeOrderId != null" >
+        accede_order_id,
+      </if>
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userAttribute != null" >
+        user_attribute,
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id,
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name,
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute,
+      </if>
+      <if test="inviteUserRegionname != null" >
+        invite_user_regionname,
+      </if>
+      <if test="inviteUserBranchname != null" >
+        invite_user_branchname,
+      </if>
+      <if test="inviteUserDepartmentname != null" >
+        invite_user_departmentname,
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account,
+      </if>
+      <if test="alreadyInvest != null" >
+        already_invest,
+      </if>
+      <if test="client != null" >
+        client,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="countInterestTime != null" >
+        count_interest_time,
+      </if>
+      <if test="sendStatus != null" >
+        send_status,
+      </if>
+      <if test="lockPeriod != null" >
+        lock_period,
+      </if>
+      <if test="commissionStatus != null" >
+        commission_status,
+      </if>
+      <if test="commissionCountTime != null" >
+        commission_count_time,
+      </if>
+      <if test="availableInvestAccount != null" >
+        available_invest_account,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="creditCompleteFlag != null" >
+        credit_complete_flag,
+      </if>
+      <if test="frostAccount != null" >
+        frost_account,
+      </if>
+      <if test="waitTotal != null" >
+        wait_total,
+      </if>
+      <if test="waitCaptical != null" >
+        wait_captical,
+      </if>
+      <if test="waitInterest != null" >
+        wait_interest,
+      </if>
+      <if test="receivedTotal != null" >
+        received_total,
+      </if>
+      <if test="receivedInterest != null" >
+        received_interest,
+      </if>
+      <if test="receivedCapital != null" >
+        received_capital,
+      </if>
+      <if test="quitTime != null" >
+        quit_time,
+      </if>
+      <if test="lastPaymentTime != null" >
+        last_payment_time,
+      </if>
+      <if test="acctualPaymentTime != null" >
+        acctual_payment_time,
+      </if>
+      <if test="shouldPayTotal != null" >
+        should_pay_total,
+      </if>
+      <if test="shouldPayCapital != null" >
+        should_pay_capital,
+      </if>
+      <if test="shouldPayInterest != null" >
+        should_pay_interest,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accedeOrderId != null" >
+        #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAttribute != null" >
+        #{userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserId != null" >
+        #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserName != null" >
+        #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserRegionname != null" >
+        #{inviteUserRegionname,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserBranchname != null" >
+        #{inviteUserBranchname,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserDepartmentname != null" >
+        #{inviteUserDepartmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeAccount != null" >
+        #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="alreadyInvest != null" >
+        #{alreadyInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="client != null" >
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="countInterestTime != null" >
+        #{countInterestTime,jdbcType=INTEGER},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="lockPeriod != null" >
+        #{lockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="commissionStatus != null" >
+        #{commissionStatus,jdbcType=TINYINT},
+      </if>
+      <if test="commissionCountTime != null" >
+        #{commissionCountTime,jdbcType=INTEGER},
+      </if>
+      <if test="availableInvestAccount != null" >
+        #{availableInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="creditCompleteFlag != null" >
+        #{creditCompleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="frostAccount != null" >
+        #{frostAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="waitTotal != null" >
+        #{waitTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="waitCaptical != null" >
+        #{waitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="waitInterest != null" >
+        #{waitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receivedTotal != null" >
+        #{receivedTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="receivedInterest != null" >
+        #{receivedInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receivedCapital != null" >
+        #{receivedCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="quitTime != null" >
+        #{quitTime,jdbcType=INTEGER},
+      </if>
+      <if test="lastPaymentTime != null" >
+        #{lastPaymentTime,jdbcType=INTEGER},
+      </if>
+      <if test="acctualPaymentTime != null" >
+        #{acctualPaymentTime,jdbcType=INTEGER},
+      </if>
+      <if test="shouldPayTotal != null" >
+        #{shouldPayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldPayCapital != null" >
+        #{shouldPayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldPayInterest != null" >
+        #{shouldPayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccedeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_accede
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_accede
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.accedeOrderId != null" >
+        accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userAttribute != null" >
+        user_attribute = #{record.userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteUserId != null" >
+        invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteUserName != null" >
+        invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteUserAttribute != null" >
+        invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteUserRegionname != null" >
+        invite_user_regionname = #{record.inviteUserRegionname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteUserBranchname != null" >
+        invite_user_branchname = #{record.inviteUserBranchname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteUserDepartmentname != null" >
+        invite_user_departmentname = #{record.inviteUserDepartmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accedeAccount != null" >
+        accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.alreadyInvest != null" >
+        already_invest = #{record.alreadyInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.client != null" >
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.orderStatus != null" >
+        order_status = #{record.orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.countInterestTime != null" >
+        count_interest_time = #{record.countInterestTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.sendStatus != null" >
+        send_status = #{record.sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.lockPeriod != null" >
+        lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="record.commissionStatus != null" >
+        commission_status = #{record.commissionStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.commissionCountTime != null" >
+        commission_count_time = #{record.commissionCountTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.availableInvestAccount != null" >
+        available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.endDate != null" >
+        end_date = #{record.endDate,jdbcType=DATE},
+      </if>
+      <if test="record.creditCompleteFlag != null" >
+        credit_complete_flag = #{record.creditCompleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.frostAccount != null" >
+        frost_account = #{record.frostAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.waitTotal != null" >
+        wait_total = #{record.waitTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.waitCaptical != null" >
+        wait_captical = #{record.waitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="record.waitInterest != null" >
+        wait_interest = #{record.waitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receivedTotal != null" >
+        received_total = #{record.receivedTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receivedInterest != null" >
+        received_interest = #{record.receivedInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receivedCapital != null" >
+        received_capital = #{record.receivedCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.quitTime != null" >
+        quit_time = #{record.quitTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastPaymentTime != null" >
+        last_payment_time = #{record.lastPaymentTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.acctualPaymentTime != null" >
+        acctual_payment_time = #{record.acctualPaymentTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.shouldPayTotal != null" >
+        should_pay_total = #{record.shouldPayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.shouldPayCapital != null" >
+        should_pay_capital = #{record.shouldPayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.shouldPayInterest != null" >
+        should_pay_interest = #{record.shouldPayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_accede
+    set id = #{record.id,jdbcType=INTEGER},
+      accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_attribute = #{record.userAttribute,jdbcType=INTEGER},
+      invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      invite_user_regionname = #{record.inviteUserRegionname,jdbcType=VARCHAR},
+      invite_user_branchname = #{record.inviteUserBranchname,jdbcType=VARCHAR},
+      invite_user_departmentname = #{record.inviteUserDepartmentname,jdbcType=VARCHAR},
+      accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      already_invest = #{record.alreadyInvest,jdbcType=DECIMAL},
+      client = #{record.client,jdbcType=TINYINT},
+      order_status = #{record.orderStatus,jdbcType=TINYINT},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      count_interest_time = #{record.countInterestTime,jdbcType=INTEGER},
+      send_status = #{record.sendStatus,jdbcType=TINYINT},
+      lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+      commission_status = #{record.commissionStatus,jdbcType=TINYINT},
+      commission_count_time = #{record.commissionCountTime,jdbcType=INTEGER},
+      available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
+      end_date = #{record.endDate,jdbcType=DATE},
+      credit_complete_flag = #{record.creditCompleteFlag,jdbcType=TINYINT},
+      frost_account = #{record.frostAccount,jdbcType=DECIMAL},
+      wait_total = #{record.waitTotal,jdbcType=DECIMAL},
+      wait_captical = #{record.waitCaptical,jdbcType=DECIMAL},
+      wait_interest = #{record.waitInterest,jdbcType=DECIMAL},
+      received_total = #{record.receivedTotal,jdbcType=DECIMAL},
+      received_interest = #{record.receivedInterest,jdbcType=DECIMAL},
+      received_capital = #{record.receivedCapital,jdbcType=DECIMAL},
+      quit_time = #{record.quitTime,jdbcType=INTEGER},
+      last_payment_time = #{record.lastPaymentTime,jdbcType=INTEGER},
+      acctual_payment_time = #{record.acctualPaymentTime,jdbcType=INTEGER},
+      should_pay_total = #{record.shouldPayTotal,jdbcType=DECIMAL},
+      should_pay_capital = #{record.shouldPayCapital,jdbcType=DECIMAL},
+      should_pay_interest = #{record.shouldPayInterest,jdbcType=DECIMAL},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede" >
+    update ht_hjh_accede
+    <set >
+      <if test="accedeOrderId != null" >
+        accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAttribute != null" >
+        user_attribute = #{userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserRegionname != null" >
+        invite_user_regionname = #{inviteUserRegionname,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserBranchname != null" >
+        invite_user_branchname = #{inviteUserBranchname,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserDepartmentname != null" >
+        invite_user_departmentname = #{inviteUserDepartmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="alreadyInvest != null" >
+        already_invest = #{alreadyInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="client != null" >
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="countInterestTime != null" >
+        count_interest_time = #{countInterestTime,jdbcType=INTEGER},
+      </if>
+      <if test="sendStatus != null" >
+        send_status = #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="lockPeriod != null" >
+        lock_period = #{lockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="commissionStatus != null" >
+        commission_status = #{commissionStatus,jdbcType=TINYINT},
+      </if>
+      <if test="commissionCountTime != null" >
+        commission_count_time = #{commissionCountTime,jdbcType=INTEGER},
+      </if>
+      <if test="availableInvestAccount != null" >
+        available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="creditCompleteFlag != null" >
+        credit_complete_flag = #{creditCompleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="frostAccount != null" >
+        frost_account = #{frostAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="waitTotal != null" >
+        wait_total = #{waitTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="waitCaptical != null" >
+        wait_captical = #{waitCaptical,jdbcType=DECIMAL},
+      </if>
+      <if test="waitInterest != null" >
+        wait_interest = #{waitInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receivedTotal != null" >
+        received_total = #{receivedTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="receivedInterest != null" >
+        received_interest = #{receivedInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receivedCapital != null" >
+        received_capital = #{receivedCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="quitTime != null" >
+        quit_time = #{quitTime,jdbcType=INTEGER},
+      </if>
+      <if test="lastPaymentTime != null" >
+        last_payment_time = #{lastPaymentTime,jdbcType=INTEGER},
+      </if>
+      <if test="acctualPaymentTime != null" >
+        acctual_payment_time = #{acctualPaymentTime,jdbcType=INTEGER},
+      </if>
+      <if test="shouldPayTotal != null" >
+        should_pay_total = #{shouldPayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldPayCapital != null" >
+        should_pay_capital = #{shouldPayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldPayInterest != null" >
+        should_pay_interest = #{shouldPayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede" >
+    update ht_hjh_accede
+    set accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      plan_nid = #{planNid,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_attribute = #{userAttribute,jdbcType=INTEGER},
+      invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      invite_user_regionname = #{inviteUserRegionname,jdbcType=VARCHAR},
+      invite_user_branchname = #{inviteUserBranchname,jdbcType=VARCHAR},
+      invite_user_departmentname = #{inviteUserDepartmentname,jdbcType=VARCHAR},
+      accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      already_invest = #{alreadyInvest,jdbcType=DECIMAL},
+      client = #{client,jdbcType=TINYINT},
+      order_status = #{orderStatus,jdbcType=TINYINT},
+      add_time = #{addTime,jdbcType=INTEGER},
+      count_interest_time = #{countInterestTime,jdbcType=INTEGER},
+      send_status = #{sendStatus,jdbcType=TINYINT},
+      lock_period = #{lockPeriod,jdbcType=TINYINT},
+      commission_status = #{commissionStatus,jdbcType=TINYINT},
+      commission_count_time = #{commissionCountTime,jdbcType=INTEGER},
+      available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
+      end_date = #{endDate,jdbcType=DATE},
+      credit_complete_flag = #{creditCompleteFlag,jdbcType=TINYINT},
+      frost_account = #{frostAccount,jdbcType=DECIMAL},
+      wait_total = #{waitTotal,jdbcType=DECIMAL},
+      wait_captical = #{waitCaptical,jdbcType=DECIMAL},
+      wait_interest = #{waitInterest,jdbcType=DECIMAL},
+      received_total = #{receivedTotal,jdbcType=DECIMAL},
+      received_interest = #{receivedInterest,jdbcType=DECIMAL},
+      received_capital = #{receivedCapital,jdbcType=DECIMAL},
+      quit_time = #{quitTime,jdbcType=INTEGER},
+      last_payment_time = #{lastPaymentTime,jdbcType=INTEGER},
+      acctual_payment_time = #{acctualPaymentTime,jdbcType=INTEGER},
+      should_pay_total = #{shouldPayTotal,jdbcType=DECIMAL},
+      should_pay_capital = #{shouldPayCapital,jdbcType=DECIMAL},
+      should_pay_interest = #{shouldPayInterest,jdbcType=DECIMAL},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

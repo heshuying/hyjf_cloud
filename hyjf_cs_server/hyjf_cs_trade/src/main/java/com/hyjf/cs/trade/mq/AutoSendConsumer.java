@@ -50,7 +50,7 @@ public class AutoSendConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
         defaultMQPushConsumer.start();
-        _log.info("====assetPush consumer=====");
+        _log.info("====autoSend consumer=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {

@@ -1,15 +1,12 @@
 package com.hyjf.pay.lib.anrong;
 
-import com.hyjf.common.http.HttpDealBank;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.pay.lib.anrong.bean.AnRongApiBean;
-import com.hyjf.pay.lib.anrong.bean.AnRongConstant;
-import com.hyjf.pay.lib.anrong.util.AnRongParamConstant;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.hyjf.common.http.HttpDealBank;
+import com.hyjf.pay.lib.anrong.bean.AnRongApiBean;
+import com.hyjf.pay.lib.anrong.util.AnRongParamConstant;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 
 /**
  * 
@@ -39,9 +36,13 @@ public class AnRongCallApiImpl implements AnRongCallApi{
             String HTTP_URL = "";
             // 获得接口URL
             if(AnRongParamConstant.TXCODE_QUERY.equals(bean.get(BankCallConstant.PARAM_TXCODE))){
-                HTTP_URL = PropUtils.getSystem(AnRongConstant.PARM_REQ_QUERY_URL);
+                // todo xiashquing 20180615
+                //HTTP_URL = PropUtils.getSystem(AnRongConstant.PARM_REQ_QUERY_URL);
+                HTTP_URL = "";
             }else if (AnRongParamConstant.TXCODE_SEND_MESS.equals(bean.get(BankCallConstant.PARAM_TXCODE))){
-                HTTP_URL = PropUtils.getSystem(AnRongConstant.PARM_REQ_SEND_URL);
+                // HTTP_URL = PropUtils.getSystem(AnRongConstant.PARM_REQ_SEND_URL);
+                // todo xiashquing 20180615
+                HTTP_URL = "";
             }
             // 清除参数
             bean.getAllParams().remove(BankCallConstant.PARAM_TXCODE);

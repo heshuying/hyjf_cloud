@@ -7,16 +7,14 @@
     <result column="borrow_cd" property="borrowCd" jdbcType="VARCHAR" />
     <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
     <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
-    <result column="invest_user_type" property="investUserType" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="invest_user_type" property="investUserType" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="invest_start" property="investStart" jdbcType="VARCHAR" />
     <result column="invest_end" property="investEnd" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_group_id" property="createGroupId" jdbcType="VARCHAR" />
-    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_group_id" property="updateGroupId" jdbcType="VARCHAR" />
-    <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="increase_money" property="increaseMoney" jdbcType="DECIMAL" />
     <result column="interest_coupon" property="interestCoupon" jdbcType="TINYINT" />
@@ -82,8 +80,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, borrow_project_type, borrow_cd, borrow_name, borrow_class, invest_user_type, 
-    `status`, invest_start, invest_end, remark, create_group_id, create_user_id, create_time, 
-    update_group_id, update_user_id, update_time, increase_money, interest_coupon, taste_money
+    `status`, invest_start, invest_end, remark, create_user_id, create_time, update_user_id, 
+    update_time, increase_money, interest_coupon, taste_money
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample" >
     select
@@ -125,17 +123,15 @@
     insert into ht_borrow_project_type (borrow_project_type, borrow_cd, borrow_name, 
       borrow_class, invest_user_type, `status`, 
       invest_start, invest_end, remark, 
-      create_group_id, create_user_id, create_time, 
-      update_group_id, update_user_id, update_time, 
-      increase_money, interest_coupon, taste_money
-      )
+      create_user_id, create_time, update_user_id, 
+      update_time, increase_money, interest_coupon, 
+      taste_money)
     values (#{borrowProjectType,jdbcType=VARCHAR}, #{borrowCd,jdbcType=VARCHAR}, #{borrowName,jdbcType=VARCHAR}, 
-      #{borrowClass,jdbcType=VARCHAR}, #{investUserType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{borrowClass,jdbcType=VARCHAR}, #{investUserType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
       #{investStart,jdbcType=VARCHAR}, #{investEnd,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{createGroupId,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateGroupId,jdbcType=VARCHAR}, #{updateUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{increaseMoney,jdbcType=DECIMAL}, #{interestCoupon,jdbcType=TINYINT}, #{tasteMoney,jdbcType=TINYINT}
-      )
+      #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{increaseMoney,jdbcType=DECIMAL}, #{interestCoupon,jdbcType=TINYINT}, 
+      #{tasteMoney,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowProjectType" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -170,17 +166,11 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="createGroupId != null" >
-        create_group_id,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
-      </if>
-      <if test="updateGroupId != null" >
-        update_group_id,
       </if>
       <if test="updateUserId != null" >
         update_user_id,
@@ -212,10 +202,10 @@
         #{borrowClass,jdbcType=VARCHAR},
       </if>
       <if test="investUserType != null" >
-        #{investUserType,jdbcType=VARCHAR},
+        #{investUserType,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="investStart != null" >
         #{investStart,jdbcType=VARCHAR},
@@ -226,20 +216,14 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createGroupId != null" >
-        #{createGroupId,jdbcType=VARCHAR},
-      </if>
       <if test="createUserId != null" >
-        #{createUserId,jdbcType=VARCHAR},
+        #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateGroupId != null" >
-        #{updateGroupId,jdbcType=VARCHAR},
-      </if>
       <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=VARCHAR},
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -280,10 +264,10 @@
         borrow_class = #{record.borrowClass,jdbcType=VARCHAR},
       </if>
       <if test="record.investUserType != null" >
-        invest_user_type = #{record.investUserType,jdbcType=VARCHAR},
+        invest_user_type = #{record.investUserType,jdbcType=TINYINT},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=VARCHAR},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.investStart != null" >
         invest_start = #{record.investStart,jdbcType=VARCHAR},
@@ -294,20 +278,14 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.createGroupId != null" >
-        create_group_id = #{record.createGroupId,jdbcType=VARCHAR},
-      </if>
       <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=VARCHAR},
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updateGroupId != null" >
-        update_group_id = #{record.updateGroupId,jdbcType=VARCHAR},
-      </if>
       <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=VARCHAR},
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -333,16 +311,14 @@
       borrow_cd = #{record.borrowCd,jdbcType=VARCHAR},
       borrow_name = #{record.borrowName,jdbcType=VARCHAR},
       borrow_class = #{record.borrowClass,jdbcType=VARCHAR},
-      invest_user_type = #{record.investUserType,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=VARCHAR},
+      invest_user_type = #{record.investUserType,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=TINYINT},
       invest_start = #{record.investStart,jdbcType=VARCHAR},
       invest_end = #{record.investEnd,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_group_id = #{record.createGroupId,jdbcType=VARCHAR},
-      create_user_id = #{record.createUserId,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_group_id = #{record.updateGroupId,jdbcType=VARCHAR},
-      update_user_id = #{record.updateUserId,jdbcType=VARCHAR},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       increase_money = #{record.increaseMoney,jdbcType=DECIMAL},
       interest_coupon = #{record.interestCoupon,jdbcType=TINYINT},
@@ -367,10 +343,10 @@
         borrow_class = #{borrowClass,jdbcType=VARCHAR},
       </if>
       <if test="investUserType != null" >
-        invest_user_type = #{investUserType,jdbcType=VARCHAR},
+        invest_user_type = #{investUserType,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=VARCHAR},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="investStart != null" >
         invest_start = #{investStart,jdbcType=VARCHAR},
@@ -381,20 +357,14 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createGroupId != null" >
-        create_group_id = #{createGroupId,jdbcType=VARCHAR},
-      </if>
       <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=VARCHAR},
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateGroupId != null" >
-        update_group_id = #{updateGroupId,jdbcType=VARCHAR},
-      </if>
       <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -417,16 +387,14 @@
       borrow_cd = #{borrowCd,jdbcType=VARCHAR},
       borrow_name = #{borrowName,jdbcType=VARCHAR},
       borrow_class = #{borrowClass,jdbcType=VARCHAR},
-      invest_user_type = #{investUserType,jdbcType=VARCHAR},
-      `status` = #{status,jdbcType=VARCHAR},
+      invest_user_type = #{investUserType,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
       invest_start = #{investStart,jdbcType=VARCHAR},
       invest_end = #{investEnd,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      create_group_id = #{createGroupId,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_group_id = #{updateGroupId,jdbcType=VARCHAR},
-      update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       increase_money = #{increaseMoney,jdbcType=DECIMAL},
       interest_coupon = #{interestCoupon,jdbcType=TINYINT},

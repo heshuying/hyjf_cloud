@@ -12,7 +12,7 @@ public class BindUser implements Serializable {
 
     private Integer bindPlatformId;
 
-    private Integer delFlg;
+    private Boolean delFlg;
 
     private Integer createUserId;
 
@@ -56,11 +56,11 @@ public class BindUser implements Serializable {
         this.bindPlatformId = bindPlatformId;
     }
 
-    public Integer getDelFlg() {
+    public Boolean getDelFlg() {
         return delFlg;
     }
 
-    public void setDelFlg(Integer delFlg) {
+    public void setDelFlg(Boolean delFlg) {
         this.delFlg = delFlg;
     }
 

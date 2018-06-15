@@ -93,7 +93,8 @@ public class ServerController {
 					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
 					resultBean.setServerIp(
-							DES.encryptDES_ECB(PropUtils.getSystem(CustomConstants.HYJF_WEB_URL), initKey));
+							// DES.encryptDES_ECB(PropUtils.getSystem(CustomConstants.HYJF_WEB_URL), initKey)); todo
+							DES.encryptDES_ECB("", initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey

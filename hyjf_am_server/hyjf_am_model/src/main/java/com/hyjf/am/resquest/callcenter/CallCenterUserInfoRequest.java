@@ -9,30 +9,22 @@ import java.util.Date;
 
 /**
  * @author wangjun
- * @version CallCenterRepaymentRequest, v0.1 2018/6/11 17:52
+ * @version CallCenterUserInfoRequest, v0.1 2018/6/11 17:52
  */
 public class CallCenterUserInfoRequest extends BaseVO  {
-	/**
-	 * 用户名
-	 */
 	private String userName;
-	/**
-	 * 手机号
-	 */
+
 	private String mobile;
-	/**
-	 * 检索记录开始条数（从0开始）
-	 */
+
 	private Integer limitStart;
 
-	/**
-	 * 检索记录条数
-	 */
 	private Integer limitSize;
-	/**
-	 * flag
-	 */
+
 	private String flag;
+	/**
+	 * userId
+	 */
+	private Integer userId;
 	public String getUserName() {
 		return userName;
 	}
@@ -63,4 +55,11 @@ public class CallCenterUserInfoRequest extends BaseVO  {
 	public void setFlag(String flag) {
 		this.flag = flag;
 	}
+	public Integer getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
 }

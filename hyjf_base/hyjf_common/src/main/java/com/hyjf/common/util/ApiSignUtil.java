@@ -3,24 +3,37 @@ package com.hyjf.common.util;
 import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ApiSignUtil {
 	
 	/** 汇盈金服公钥文件地址(请求) **/
-	public static final String HYJF_REQ_PUB_KEY_PATH = PropUtils.getSystem("hyjf.req.pub.key");
+//	@Value("${hyjf.req.pub.key}")
+	private static String HYJF_REQ_PUB_KEY_PATH = "";
+//	public static final String HYJF_REQ_PUB_KEY_PATH = PropUtils.getSystem("hyjf.req.pub.key");
 
 	/** 汇盈金服私钥文件地址(请求) **/
-	public static final String HYJF_REQ_PRI_KEY_PATH = PropUtils.getSystem("hyjf.req.pri.key");
+//	@Value("${hyjf.req.pri.key}")
+	private static String HYJF_REQ_PRI_KEY_PATH = "";
+//	public static final String HYJF_REQ_PRI_KEY_PATH = PropUtils.getSystem("hyjf.req.pri.key");
 	
 	/** 汇盈金服(请求)密码 **/
-	public static final String HYJF_REQ_KEY_PASS = PropUtils.getSystem("hyjf.req.password");
-	
+//	@Value("${hyjf.req.password}")
+	private static String HYJF_REQ_KEY_PASS = "";
+//	public static final String HYJF_REQ_KEY_PASS = PropUtils.getSystem("hyjf.req.password");
 
-	public static final String HYJF_RES_PUB_KEY_PATH = PropUtils.getSystem("hyjf.res.pub.key");
+//	@Value("${hyjf.res.pub.key}")
+	private static String HYJF_RES_PUB_KEY_PATH = "";
+//	public static final String HYJF_RES_PUB_KEY_PATH = PropUtils.getSystem("hyjf.res.pub.key");
 	
 	/** 汇盈金服公钥文件地址(返回) ！！！这部分不能对外,对外提供公钥 ！！！**/
-	public static final String HYJF_RES_PRI_KEY_PATH = PropUtils.getSystem("hyjf.res.pri.key");
-	public static final String HYJF_RES_KEY_PASS = PropUtils.getSystem("hyjf.res.password");
+//	@Value("${hyjf.res.pri.key}")
+	private static String HYJF_RES_PRI_KEY_PATH = "";
+//	public static final String HYJF_RES_PRI_KEY_PATH = PropUtils.getSystem("hyjf.res.pri.key");
+
+//	@Value("${hyjf.res.password}")
+	private static String HYJF_RES_KEY_PASS = "";
+//	public static final String HYJF_RES_KEY_PASS = PropUtils.getSystem("hyjf.res.password");
 
 	/**
 	 * RSA方式加签

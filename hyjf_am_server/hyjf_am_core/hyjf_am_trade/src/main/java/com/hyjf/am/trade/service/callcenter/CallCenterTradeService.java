@@ -1,10 +1,8 @@
 package com.hyjf.am.trade.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
-import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterAccountDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
+import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 
 import java.util.List;
 
@@ -15,24 +13,40 @@ import java.util.List;
 public interface CallCenterTradeService {
     /**
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
-     * @param callCenterRepaymentRequest
-     * @return List<CouponUserCustomize>
+     * @param callCenterBaseRequest
+     * @return List<CallCenterHztRepaymentDetailCustomize>
      * @author wangjun
      */
-     List<CallCenterHztRepaymentDetailCustomize> getHztRepaymentDetailList(CallCenterRepaymentRequest callCenterRepaymentRequest);
+     List<CallCenterHztRepaymentDetailCustomize> getHztRepaymentDetailList(CallCenterBaseRequest callCenterBaseRequest);
     /**
      * 按照用户名/手机号查询还款明细（汇添金）
-     * @param callCenterRepaymentRequest
-     * @return List<CouponUserCustomize>
+     * @param callCenterBaseRequest
+     * @return List<CallCenterHtjRepaymentDetailCustomize>
      * @author wangjun
      */
-     List<CallCenterHtjRepaymentDetailCustomize> getHtjRepaymentDetailList(CallCenterRepaymentRequest callCenterRepaymentRequest);
+     List<CallCenterHtjRepaymentDetailCustomize> getHtjRepaymentDetailList(CallCenterBaseRequest callCenterBaseRequest);
 
     /**
      * 查询资金明细
      * @param callCenterAccountDetailRequest
-     * @return List<CallCenterHtjRepaymentDetailCustomize>
+     * @return List<CallCenterAccountDetailCustomize>
      * @author wangjun
      */
      List<CallCenterAccountDetailCustomize> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest);
+
+    /**
+     * 查询充值明细
+     * @param centerBaseRequest
+     * @return List<CallCenterRechargeCustomize>
+     * @author wangjun
+     */
+    List<CallCenterRechargeCustomize> queryRechargeList(CallCenterBaseRequest centerBaseRequest);
+
+    /**
+     * 查询提现明细
+     * @param centerBaseRequest
+     * @return List<CallCenterRechargeCustomize>
+     * @author wangjun
+     */
+    List<CallCenterWithdrawCustomize> getWithdrawRecordList(CallCenterBaseRequest centerBaseRequest);
 }

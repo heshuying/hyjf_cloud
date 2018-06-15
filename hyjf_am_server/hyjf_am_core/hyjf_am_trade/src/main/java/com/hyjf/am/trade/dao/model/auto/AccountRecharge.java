@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class AccountRecharge implements Serializable {
     private Integer id;
@@ -40,41 +41,19 @@ public class AccountRecharge implements Serializable {
 
     private String remark;
 
-    private Integer createTime;
-
-    private Integer updateTime;
+    private Date updateTime;
 
     private String operator;
 
-    private String verifyTime;
-
-    private String verifyRemark;
-
-    private String addtime;
+    private Integer addTime;
 
     private String addip;
 
-    private Integer isok;
-
     private Integer client;
-
-    private Integer nok;
-
-    private Integer isok11;
-
-    private Integer flag;
-
-    private Integer activityFlag;
 
     private String cardid;
 
-    private BigDecimal dianfuFee;
-
-    private String feeFrom;
-
     private String message;
-
-    private BigDecimal version;
 
     private static final long serialVersionUID = 1L;
 
@@ -222,19 +201,11 @@ public class AccountRecharge implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -246,28 +217,12 @@ public class AccountRecharge implements Serializable {
         this.operator = operator == null ? null : operator.trim();
     }
 
-    public String getVerifyTime() {
-        return verifyTime;
+    public Integer getAddTime() {
+        return addTime;
     }
 
-    public void setVerifyTime(String verifyTime) {
-        this.verifyTime = verifyTime == null ? null : verifyTime.trim();
-    }
-
-    public String getVerifyRemark() {
-        return verifyRemark;
-    }
-
-    public void setVerifyRemark(String verifyRemark) {
-        this.verifyRemark = verifyRemark == null ? null : verifyRemark.trim();
-    }
-
-    public String getAddtime() {
-        return addtime;
-    }
-
-    public void setAddtime(String addtime) {
-        this.addtime = addtime == null ? null : addtime.trim();
+    public void setAddTime(Integer addTime) {
+        this.addTime = addTime;
     }
 
     public String getAddip() {
@@ -278,52 +233,12 @@ public class AccountRecharge implements Serializable {
         this.addip = addip == null ? null : addip.trim();
     }
 
-    public Integer getIsok() {
-        return isok;
-    }
-
-    public void setIsok(Integer isok) {
-        this.isok = isok;
-    }
-
     public Integer getClient() {
         return client;
     }
 
     public void setClient(Integer client) {
         this.client = client;
-    }
-
-    public Integer getNok() {
-        return nok;
-    }
-
-    public void setNok(Integer nok) {
-        this.nok = nok;
-    }
-
-    public Integer getIsok11() {
-        return isok11;
-    }
-
-    public void setIsok11(Integer isok11) {
-        this.isok11 = isok11;
-    }
-
-    public Integer getFlag() {
-        return flag;
-    }
-
-    public void setFlag(Integer flag) {
-        this.flag = flag;
-    }
-
-    public Integer getActivityFlag() {
-        return activityFlag;
-    }
-
-    public void setActivityFlag(Integer activityFlag) {
-        this.activityFlag = activityFlag;
     }
 
     public String getCardid() {
@@ -334,35 +249,11 @@ public class AccountRecharge implements Serializable {
         this.cardid = cardid == null ? null : cardid.trim();
     }
 
-    public BigDecimal getDianfuFee() {
-        return dianfuFee;
-    }
-
-    public void setDianfuFee(BigDecimal dianfuFee) {
-        this.dianfuFee = dianfuFee;
-    }
-
-    public String getFeeFrom() {
-        return feeFrom;
-    }
-
-    public void setFeeFrom(String feeFrom) {
-        this.feeFrom = feeFrom == null ? null : feeFrom.trim();
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message == null ? null : message.trim();
-    }
-
-    public BigDecimal getVersion() {
-        return version;
-    }
-
-    public void setVersion(BigDecimal version) {
-        this.version = version;
     }
 }

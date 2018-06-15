@@ -16,14 +16,12 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoRecordClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.mq.AutoPreAuditProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
 import com.hyjf.cs.trade.service.AutoRecordService;
@@ -44,7 +42,7 @@ import java.util.Map;
  * @version AutoRecordServiceImpl, v0.1 2018/6/14 10:17
  */
 @Service
-public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements AutoRecordService {
+public class AutoRecordServiceImpl implements AutoRecordService {
 
     private static final Logger _log = LoggerFactory.getLogger(AutoRecordServiceImpl.class);
 
@@ -59,6 +57,9 @@ public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements Au
 
     @Autowired
     private SmsProducer smsProducer;
+
+    @Autowired
+    private AutoPreAuditProducer autoPreAuditProducer;
 
     @Override
     public boolean updateRecordBorrow(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO) {
@@ -109,7 +110,17 @@ public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements Au
 
     @Override
     public void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String borrowPreauditGroup) {
-
+        // 加入到消息队列
+        JSONObject params = new JSONObject();
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        params.put("assetId", hjhPlanAssetVO.getAssetId());
+        params.put("instCode", hjhPlanAssetVO.getInstCode());
+        try {
+            autoPreAuditProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_PREAUDIT_TOPIC, params));
+        } catch (MQException e) {
+            e.printStackTrace();
+            _log.error("自动初审发送消息失败...", e);
+        }
     }
 
     /**
@@ -151,8 +162,8 @@ public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements Au
                     boolean debtRegistingFlag = autoRecordClient.updateBorrowRegist(req);
                     if (debtRegistingFlag) {
                         // 获取共同参数
-                        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-                        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
+                        //String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE); todo
+                        //String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE); todo
                         String channel = BankCallConstant.CHANNEL_PC;
                         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
                         String orderDate = GetOrderIdUtils.getOrderDate();
@@ -163,8 +174,8 @@ public class AutoRecordServiceImpl extends ApiAssetPushServcieImpl implements Au
                         BankCallBean debtRegistBean = new BankCallBean();
                         debtRegistBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
                         debtRegistBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER);// 消息类型(用户开户)
-                        debtRegistBean.setInstCode(instCode);// 机构代码
-                        debtRegistBean.setBankCode(bankCode);
+                        //debtRegistBean.setInstCode(instCode);// 机构代码  todo
+                       // debtRegistBean.setBankCode(bankCode); //todo
                         debtRegistBean.setTxDate(txDate);
                         debtRegistBean.setTxTime(txTime);
                         debtRegistBean.setSeqNo(seqNo);

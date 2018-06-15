@@ -1,12 +1,11 @@
 package com.hyjf.pay.lib.bank.bean;
 
+import java.io.Serializable;
+
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.config.PaySystemConfig;
-
-import java.io.Serializable;
 
 public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
@@ -107,9 +106,26 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	 * @param txCode
 	 * @param client
 	 */
-	public BankCallBean(Integer userId, String txCode, Integer client,String logBankDetailUrl) {
+	public BankCallBean(String bankCode,String instCode,Integer userId, String txCode, Integer client,String logBankDetailUrl) {
 		super();
-		setCallCommon(userId, txCode, client);
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String txDate = GetOrderIdUtils.getTxDate();
+		String txTime = GetOrderIdUtils.getTxTime();
+		String seqNo = GetOrderIdUtils.getSeqNo(6);
+		String orderId = GetOrderIdUtils.getOrderId2(userId);
+		// 调用开户接口
+		this.version = BankCallConstant.VERSION_10;
+		this.txCode = txCode;
+		this.instCode = instCode;
+		this.bankCode = bankCode;
+		this.txDate = txDate;
+		// 交易时间
+		this.txTime = txTime;
+		this.seqNo = seqNo;
+		this.logOrderId = orderId;
+		this.logOrderDate = orderDate;
+		this.logUserId = userId+"";
+		this.logClient = client;
 		// 页面调用必传   页面地址
 		this.logBankDetailUrl = logBankDetailUrl;
 	}

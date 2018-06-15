@@ -43,4 +43,6 @@ public interface BaseService {
 	boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
     BankOpenAccountVO getBankOpenAccount(Integer userId);
+
+    int updateUserByUserId(UserVO userVO);
 }

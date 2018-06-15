@@ -3,34 +3,11 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BindEmailLogRequest;
-import com.hyjf.am.resquest.user.UserNoticeSetRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.constants.UserConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.*;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.client.AmBankOpenClient;
-import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.BindEmailError;
-import com.hyjf.cs.user.constants.ContractSetError;
-import com.hyjf.cs.user.constants.RegisterError;
-import com.hyjf.cs.user.mq.MailProducer;
-import com.hyjf.cs.user.mq.Producer;
-import com.hyjf.cs.user.result.MobileModifyResultBean;
-import com.hyjf.cs.user.service.safe.SafeService;
-import com.hyjf.cs.user.vo.BindEmailVO;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,16 +16,53 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.BindEmailLogRequest;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.vo.message.MailMessage;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.BindEmailLogVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserLoginLogVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UsersContactVO;
+import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.constants.UserConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.AsteriskProcessUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.client.AmBankOpenClient;
+import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.BindEmailError;
+import com.hyjf.cs.user.constants.ContractSetError;
+import com.hyjf.cs.user.mq.MailProducer;
+import com.hyjf.cs.user.mq.Producer;
+import com.hyjf.cs.user.result.ContractSetResultBean;
+import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.safe.SafeService;
+import com.hyjf.cs.user.vo.BindEmailVO;
 
 /**
  * @author zhangqingqing
  * @version SafeServiceImpl, v0.1 2018/6/11 15:55
  */
 @Service
-public class SafeServiceImpl implements SafeService {
+public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
 
@@ -77,15 +91,6 @@ public class SafeServiceImpl implements SafeService {
         return amUserClient.updatePassWd(userId, oldPW, newPW);
     }
 
-    /**
-     * 更新用户信息
-     * @param userVO
-     * @return
-     */
-    @Override
-    public int updateUserByUserId(UserVO userVO) {
-        return amUserClient.updateUserById(userVO);
-    }
 
     /**
      * 获取用户对象
@@ -103,7 +108,7 @@ public class SafeServiceImpl implements SafeService {
      * @Desc :账户设置信息查询
      * @Param: * @param token
      * @Date: 16:47 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @Override
     public Map<String,Object> safeInit(WebViewUser webViewUser) {
@@ -280,9 +285,9 @@ public class SafeServiceImpl implements SafeService {
 
     /**
      * 绑定邮箱激活条件校验
-     * @param email
-     * @param userId
-     * @param activeCode
+     * @param
+     * @param
+     * @param
      */
     @Override
     public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUser user) {
@@ -366,41 +371,41 @@ public class SafeServiceImpl implements SafeService {
 
         return true;
     }
-
+    
     /**
-     * 更换手机号条件校验
-     * @param newMobile
-     * @param smsCode
+     * 获取紧急联系人信息
+     * @author hesy
      */
     @Override
-    public boolean checkForMobileModify(String newMobile, String smsCode) {
-        String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
-        int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        if (cnt <= 0) {
-            throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
-        }
-
-        return true;
+	public ContractSetResultBean queryContractInfo(Integer userId) { 
+    	ContractSetResultBean resultBean = new ContractSetResultBean();
+    	
+    	// 获取紧急联系人关系信息
+    	Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+    	if(relationMap == null || relationMap.isEmpty()) {
+    		throw new ReturnMessageException(ContractSetError.CONTRACT_RELATION_ERROR);
+    	}
+    	
+    	resultBean.setRelationMap(relationMap);
+    	
+    	// 获取当前紧急联系人信息
+    	UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
+    	if(usersContactVO != null) {
+    		resultBean.setResult(usersContactVO);
+    		
+    		for(Entry<String, String> entry :  relationMap.entrySet()) {
+    			if(entry.getKey().equals(usersContactVO.getRelation())) {
+    				resultBean.setCheckRelationId(entry.getKey());
+    				resultBean.setCheckRelationName(entry.getValue());
+    			}
+    		}
+    	}
+    	
+    	return resultBean;
+    	
     }
 
-    /**
-     * 用户手机号修改信息查询
-     * @param userId
-     * @return
-     */
-    @Override
-    public MobileModifyResultBean queryForMobileModify(Integer userId) {
-        MobileModifyResultBean result = new MobileModifyResultBean();
-        UserVO user = amUserClient.findUserById(userId);
-        if(user != null && StringUtils.isNotBlank(user.getMobile())) {
-            String hideMobile = user.getMobile().substring(0,user.getMobile().length()-(user.getMobile().substring(3)).length())+"****"+user.getMobile().substring(7);
-            result.setMobile(user.getMobile());
-            result.setHideMobile(hideMobile);
-        }
 
-        return result;
-    }
 
 
     /**

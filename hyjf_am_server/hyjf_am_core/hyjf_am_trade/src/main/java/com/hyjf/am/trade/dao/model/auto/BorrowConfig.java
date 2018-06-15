@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class BorrowConfig implements Serializable {
     private String configCd;
@@ -11,11 +12,11 @@ public class BorrowConfig implements Serializable {
 
     private String remark;
 
-    private String delFlag;
+    private Integer delFlag;
 
-    private Integer createTime;
+    private Date createTime;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -51,27 +52,27 @@ public class BorrowConfig implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag == null ? null : delFlag.trim();
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 }

@@ -10,10 +10,6 @@ public class Account implements Serializable {
 
     private BigDecimal total;
 
-    private BigDecimal income;
-
-    private BigDecimal expend;
-
     private BigDecimal balance;
 
     private BigDecimal balanceCash;
@@ -25,22 +21,6 @@ public class Account implements Serializable {
     private BigDecimal await;
 
     private BigDecimal repay;
-
-    private BigDecimal frostCash;
-
-    private Integer isUpdate;
-
-    private Integer isok;
-
-    private BigDecimal recMoney;
-
-    private BigDecimal fee;
-
-    private BigDecimal inMoney;
-
-    private Integer inMoneyFlag;
-
-    private BigDecimal version;
 
     private BigDecimal planRepayInterest;
 
@@ -116,22 +96,6 @@ public class Account implements Serializable {
         this.total = total;
     }
 
-    public BigDecimal getIncome() {
-        return income;
-    }
-
-    public void setIncome(BigDecimal income) {
-        this.income = income;
-    }
-
-    public BigDecimal getExpend() {
-        return expend;
-    }
-
-    public void setExpend(BigDecimal expend) {
-        this.expend = expend;
-    }
-
     public BigDecimal getBalance() {
         return balance;
     }
@@ -178,70 +142,6 @@ public class Account implements Serializable {
 
     public void setRepay(BigDecimal repay) {
         this.repay = repay;
-    }
-
-    public BigDecimal getFrostCash() {
-        return frostCash;
-    }
-
-    public void setFrostCash(BigDecimal frostCash) {
-        this.frostCash = frostCash;
-    }
-
-    public Integer getIsUpdate() {
-        return isUpdate;
-    }
-
-    public void setIsUpdate(Integer isUpdate) {
-        this.isUpdate = isUpdate;
-    }
-
-    public Integer getIsok() {
-        return isok;
-    }
-
-    public void setIsok(Integer isok) {
-        this.isok = isok;
-    }
-
-    public BigDecimal getRecMoney() {
-        return recMoney;
-    }
-
-    public void setRecMoney(BigDecimal recMoney) {
-        this.recMoney = recMoney;
-    }
-
-    public BigDecimal getFee() {
-        return fee;
-    }
-
-    public void setFee(BigDecimal fee) {
-        this.fee = fee;
-    }
-
-    public BigDecimal getInMoney() {
-        return inMoney;
-    }
-
-    public void setInMoney(BigDecimal inMoney) {
-        this.inMoney = inMoney;
-    }
-
-    public Integer getInMoneyFlag() {
-        return inMoneyFlag;
-    }
-
-    public void setInMoneyFlag(Integer inMoneyFlag) {
-        this.inMoneyFlag = inMoneyFlag;
-    }
-
-    public BigDecimal getVersion() {
-        return version;
-    }
-
-    public void setVersion(BigDecimal version) {
-        this.version = version;
     }
 
     public BigDecimal getPlanRepayInterest() {

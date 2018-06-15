@@ -12,7 +12,7 @@ import com.hyjf.am.vo.trade.HjhPlanAssetVO;
  * @author fuqiang
  * @version AutoSendService, v0.1 2018/6/12 17:04
  */
-public interface AutoSendService extends ApiAssetPushService {
+public interface AutoSendService {
     /**
      * 资产自动录标
      *

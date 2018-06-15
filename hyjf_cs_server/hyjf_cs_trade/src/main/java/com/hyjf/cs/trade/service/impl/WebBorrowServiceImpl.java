@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version WebBorrowServiceImpl, v0.1 2018/6/5 9:50
  */
+@Service
 public class WebBorrowServiceImpl implements WebBorrowService {
     private static final Logger logger = LoggerFactory.getLogger(WebBorrowServiceImpl.class);
 
@@ -354,7 +356,8 @@ public class WebBorrowServiceImpl implements WebBorrowService {
 
         // 检查参数(交易金额是否大于0)
         BigDecimal account = new BigDecimal(transAmt);
-        String feetmp = PropUtils.getSystem(BankCallConstant.BANK_FEE);
+        // String feetmp = PropUtils.getSystem(BankCallConstant.BANK_FEE); todo
+        String feetmp = "";
         if (feetmp == null) {
             feetmp = "1";
         }
@@ -522,7 +525,7 @@ public class WebBorrowServiceImpl implements WebBorrowService {
             bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
         }
 
-        bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+        // bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);  todo
         bean.setRetUrl(retUrl);// 商户前台台应答地址(必须)
         bean.setNotifyUrl(bgRetUrl); // 商户后台应答地址(必须)
         System.out.println("提现前台回调函数：\n" + bean.getRetUrl());
@@ -531,7 +534,8 @@ public class WebBorrowServiceImpl implements WebBorrowService {
         return bean;
     }
     private String getWithdrawFee(Integer userId, String cardNo) {
-        String feetmp = PropUtils.getSystem(BankCallConstant.BANK_FEE);
+        // String feetmp = PropUtils.getSystem(BankCallConstant.BANK_FEE); todo
+        String feetmp = "";
         if (feetmp == null) {
             feetmp = "1";
         }

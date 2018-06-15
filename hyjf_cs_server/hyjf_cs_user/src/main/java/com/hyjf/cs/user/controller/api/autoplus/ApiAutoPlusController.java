@@ -43,10 +43,10 @@ public class ApiAutoPlusController {
      * @Desc :自动投资授权
      * @Param: * @param payRequestBean
      * @Date: 16:44 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "自动投资授权", notes = "自动投资授权")
-    @PostMapping(value = "/userAuthInves")
+    @PostMapping(value = "/userAuthInves", produces = "application/json; charset=utf-8")
     public ModelAndView userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
@@ -74,10 +74,10 @@ public class ApiAutoPlusController {
      * @Desc :用户自动债转授权
      * @Param: * @param payRequestBean
      * @Date: 16:45 2018/5/30
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
-    @PostMapping("/userAuthCredit")
+    @PostMapping(value = "/userAuthCredit", produces = "application/json; charset=utf-8")
     public ModelAndView userAuthCredit(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
@@ -106,9 +106,9 @@ public class ApiAutoPlusController {
      * @Desc :自动投资授权同步回调
      * @Param: * @param request
      * @Date: 10:11 2018/5/31
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
-    @PostMapping("/userAuthInvesReturn")
+    @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
     public ModelAndView userAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -125,9 +125,9 @@ public class ApiAutoPlusController {
      * @Desc :自动债转授权同步回调
      * @Param: * @param request
      * @Date: 10:11 2018/5/31
-     * @Return: org.springframework.web.servlet.ModelAndView
+     * @Return: ModelAndView
      */
-    @PostMapping("/userCreditAuthInvesReturn")
+    @PostMapping(value = "/userCreditAuthInvesReturn", produces = "application/json; charset=utf-8")
     public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -144,10 +144,10 @@ public class ApiAutoPlusController {
      * @Param: * @param request
      * @param bean
      * @Date: 10:33 2018/5/31
-     * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
+     * @Return: BankCallResult
      */
     @ResponseBody
-    @PostMapping("/userAuthInvesBgreturn")
+    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
@@ -161,10 +161,10 @@ public class ApiAutoPlusController {
      * @Param: * @param request
      * @param bean
      * @Date: 10:33 2018/5/31
-     * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
+     * @Return: BankCallResult
      */
     @ResponseBody
-    @PostMapping("/userCreditAuthInvesBgreturn")
+    @PostMapping(value = "/userCreditAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");

@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Service
 public class AccountBankClientImpl implements AccountBankClient {
-    private static final Logger logger = LoggerFactory.getLogger(AmCallcenterBaseClientImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountBankClientImpl.class);
     private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
     @Override
     public List<BankCardVO> getTiedCardOfAccountBank(UserVO user) {

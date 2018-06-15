@@ -1,5 +1,7 @@
 package com.hyjf.common.util;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
@@ -20,61 +22,101 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final int USERID_ADMIN = 3;
 
     /** 服务地址 */
-    public static final String HOST = PropUtils.getSystem("hyjf.web.host");
+//    @Value("${hyjf.web.host}")
+    public static String HOST = "";
+//    public static final String HOST = PropUtils.getSystem("hyjf.web.host");
     /** 微信服务地址 */
-    public static final String WECHAT_HOST = PropUtils.getSystem("hyjf.wechat.web.host");
+//    @Value("${hyjf.wechat.web.host}")
+    private static String WECHAT_HOST = "";
+//    public static final String WECHAT_HOST = PropUtils.getSystem("hyjf.wechat.web.host");
     
     /** 服务地址 */
-    public static final String WEB_DOMAIN_HOST = PropUtils.getSystem("file.domain.url");
+//    @Value("${file.domain.url}")
+    private static String WEB_DOMAIN_HOST = "";
+//    public static final String WEB_DOMAIN_HOST = PropUtils.getSystem("file.domain.url");
     
     /** 忘记密码地址*/
-    public static final String FORGET_PASSWORD_URL = PropUtils.getSystem("hyjf.web.bank.forgetpassword");
+//    @Value("${hyjf.web.bank.forgetpassword}")
+    private static String FORGET_PASSWORD_URL = "";
+//    public static final String FORGET_PASSWORD_URL = PropUtils.getSystem("hyjf.web.bank.forgetpassword");
     
     /** 忘记密码地址*/
-    public static final String WECHAT_FORGET_PASSWORD_URL = PropUtils.getSystem("hyjf.wechat.bank.forgetpassword");
+//    @Value("${hyjf.wechat.bank.forgetpassword}")
+    private static String WECHAT_FORGET_PASSWORD_URL = "";
+//    public static final String WECHAT_FORGET_PASSWORD_URL = PropUtils.getSystem("hyjf.wechat.bank.forgetpassword");
     
     /** 忘记密码callback地址*/
-    public static final String WECHAT_FORGET_PASSWORD_CALLBACK_URL = PropUtils.getSystem("hyjf.wechat.bank.forgetpassword.callback");
+//    @Value("${hyjf.wechat.bank.forgetpassword.callback}")
+    private static String WECHAT_FORGET_PASSWORD_CALLBACK_URL = "";
+//    public static final String WECHAT_FORGET_PASSWORD_CALLBACK_URL = PropUtils.getSystem("hyjf.wechat.bank.forgetpassword.callback");
     
     /**放款请求合法性校验地址*/
-    public static final String BANK_LOAN_VERIFY_URL= PropUtils.getSystem("hyjf.web.bank.batch.loan.verify.url");
+//    @Value("${hyjf.web.bank.batch.loan.verify.url}")
+    private static String BANK_LOAN_VERIFY_URL = "";
+//    public static final String BANK_LOAN_VERIFY_URL= PropUtils.getSystem("hyjf.web.bank.batch.loan.verify.url");
     
     /**放款请求结果回调地址*/
-    public static final String BANK_LOAN_RESULT_URL= PropUtils.getSystem("hyjf.web.bank.batch.loan.result.url");
+//    @Value("${hyjf.web.bank.batch.loan.result.url}")
+    private static String BANK_LOAN_RESULT_URL = "";
+//    public static final String BANK_LOAN_RESULT_URL= PropUtils.getSystem("hyjf.web.bank.batch.loan.result.url");
     
     /**放款请求合法性校验地址*/
-    public static final String BANK_REPAY_VERIFY_URL= PropUtils.getSystem("hyjf.web.bank.batch.repay.verify.url");
+//    @Value("${hyjf.web.bank.batch.repay.verify.url}")
+    private static String BANK_REPAY_VERIFY_URL = "";
+//    public static final String BANK_REPAY_VERIFY_URL= PropUtils.getSystem("hyjf.web.bank.batch.repay.verify.url");
     
     /**放款请求结果回调地址*/
-    public static final String BANK_REPAY_RESULT_URL= PropUtils.getSystem("hyjf.web.bank.batch.repay.result.url");
+//    @Value("${hyjf.web.bank.batch.repay.result.url}")
+    private static String BANK_REPAY_RESULT_URL = "";
+//    public static final String BANK_REPAY_RESULT_URL= PropUtils.getSystem("hyjf.web.bank.batch.repay.result.url");
     
     /**批量结束债权合法性校验地址*/
-    public static final String BATCHCREDITEND_VERIFY_URL= PropUtils.getSystem("hyjf.web.bank.batch.creditend.verify.url");
+//    @Value("${hyjf.web.bank.batch.creditend.verify.url}")
+    private static String BATCHCREDITEND_VERIFY_URL = "";
+//    public static final String BATCHCREDITEND_VERIFY_URL= PropUtils.getSystem("hyjf.web.bank.batch.creditend.verify.url");
     
     /**批量结束债权结果回调地址*/
-    public static final String BATCHCREDITEND_RESULT_URL= PropUtils.getSystem("hyjf.web.bank.batch.creditend.result.url");
+//    @Value("${hyjf.web.bank.batch.creditend.result.url}")
+    private static String BATCHCREDITEND_RESULT_URL = "";
+//    public static final String BATCHCREDITEND_RESULT_URL= PropUtils.getSystem("hyjf.web.bank.batch.creditend.result.url");
 
     /** 活动编号 */
-    public static final String ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.id");
+//    @Value("${hyjf.activity.id}")
+    private static String ACTIVITY_ID = "";
+//    public static final String ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.id");
 
     /** 开户送68代金券活动编号 */
-    public static final String OPENACCOUNT_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.open.id");
+//    @Value("${hyjf.activity.open.id}")
+    private static String OPENACCOUNT_ACTIVITY_ID = "";
+//    public static final String OPENACCOUNT_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.open.id");
 
     /** 注册送68代金券活动编号 */
-    public static final String REGIST_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.regist.id");
+//    @Value("${hyjf.activity.regist.id}")
+    private static String REGIST_ACTIVITY_ID = "";
+//    public static final String REGIST_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.regist.id");
 
     /** 投资满1000活动编号 */
-    public static final String INVEST_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.invest.id");
+//    @Value("${hyjf.activity.invest.id}")
+    private static String INVEST_ACTIVITY_ID = "";
+//    public static final String INVEST_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.invest.id");
     
     /** 注册送888元新手红包 */
-    public static final String REGIST_888_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.888.id");
+//    @Value("${hyjf.activity.888.id}")
+    private static String REGIST_888_ACTIVITY_ID = "";
+//    public static final String REGIST_888_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.888.id");
     
     /** 投之家用户注册送加息券 */
-    public static final String REGIST_TZJ_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.regist.tzj.id");
+//    @Value("${hyjf.activity.regist.tzj.id}")
+    private static String REGIST_TZJ_ACTIVITY_ID = "";
+//    public static final String REGIST_TZJ_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.regist.tzj.id");
     /** 账户分佣交易密码 */
-    public static final String SUB_COMMISSION_PASSWORD =PropUtils.getSystem("hyjf.sub.commission.password");
+//    @Value("${hyjf.sub.commission.password}")
+    private static String SUB_COMMISSION_PASSWORD = "";
+//    public static final String SUB_COMMISSION_PASSWORD =PropUtils.getSystem("hyjf.sub.commission.password");
     /** 管理费账户*/
-    public static final String HYJF_BANK_MERS_ACCOUNT = PropUtils.getSystem("hyjf.bank.mers.account");
+//    @Value("${hyjf.bank.mers.account}")
+    private static String HYJF_BANK_MERS_ACCOUNT = "";
+//    public static final String HYJF_BANK_MERS_ACCOUNT = PropUtils.getSystem("hyjf.bank.mers.account");
     /** version=1.1.0 */
     public static final String APP_VERSION_NUM = "1.1.0";
 

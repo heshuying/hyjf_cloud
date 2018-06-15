@@ -3,18 +3,12 @@
  */
 package com.hyjf.am.trade.controller.callcenter;
 
-import com.hyjf.am.response.callcenter.CallCenterAccountDetailResponse;
-import com.hyjf.am.response.callcenter.CallCenterHtjRepaymentResponse;
-import com.hyjf.am.response.callcenter.CallCenterHztRepaymentResponse;
+import com.hyjf.am.response.callcenter.*;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
-import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterAccountDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHtjRepaymentDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterHztRepaymentDetailCustomize;
+import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
-import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
-import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
-import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
+import com.hyjf.am.vo.callcenter.*;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +41,7 @@ public class CallCenterTradeController {
      * @return
      */
     @RequestMapping(value = "/getHztRepaymentDetailList",method = RequestMethod.POST)
-    public CallCenterHztRepaymentResponse getHztRepaymentDetailList(@RequestBody @Valid CallCenterRepaymentRequest request){
+    public CallCenterHztRepaymentResponse getHztRepaymentDetailList(@RequestBody @Valid CallCenterBaseRequest request){
         CallCenterHztRepaymentResponse callCenterHztRepaymentResponse = new CallCenterHztRepaymentResponse();
         List<CallCenterHztRepaymentDetailCustomize> list = callCenterTradeService.getHztRepaymentDetailList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -64,7 +58,7 @@ public class CallCenterTradeController {
      * @return
      */
     @RequestMapping(value = "/getHtjRepaymentDetailList", method = RequestMethod.POST)
-    public CallCenterHtjRepaymentResponse getHtjRepaymentDetailList(@RequestBody @Valid CallCenterRepaymentRequest request){
+    public CallCenterHtjRepaymentResponse getHtjRepaymentDetailList(@RequestBody @Valid CallCenterBaseRequest request){
         CallCenterHtjRepaymentResponse callCenterHtjRepaymentResponse = new CallCenterHtjRepaymentResponse();
         List<CallCenterHtjRepaymentDetailCustomize> list = callCenterTradeService.getHtjRepaymentDetailList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -89,5 +83,39 @@ public class CallCenterTradeController {
             callCenterAccountDetailResponse.setResultList(callCenterAccountDetailVOS);
         }
         return callCenterAccountDetailResponse;
+    }
+
+    /**
+     * 查询充值明细
+     * @author wangjun
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryRechargeList", method = RequestMethod.POST)
+    public CallCenterRechargeResponse queryRechargeList(@RequestBody @Valid CallCenterBaseRequest request){
+        CallCenterRechargeResponse callCenterRechargeResponse = new CallCenterRechargeResponse();
+        List<CallCenterRechargeCustomize> list = callCenterTradeService.queryRechargeList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterRechargeVO> callCenterRechargeVOS = CommonUtils.convertBeanList(list,CallCenterRechargeVO.class);
+            callCenterRechargeResponse.setResultList(callCenterRechargeVOS);
+        }
+        return callCenterRechargeResponse;
+    }
+
+    /**
+     * 查询提现明细
+     * @author wangjun
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getWithdrawRecordList", method = RequestMethod.POST)
+    public CallCenterWithdrawResponse getWithdrawRecordList(@RequestBody @Valid CallCenterBaseRequest request){
+        CallCenterWithdrawResponse callCenterWithdrawResponse = new CallCenterWithdrawResponse();
+        List<CallCenterWithdrawCustomize> list = callCenterTradeService.getWithdrawRecordList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterWithdrawVO> callCenterWithdrawVOS = CommonUtils.convertBeanList(list,CallCenterWithdrawVO.class);
+            callCenterWithdrawResponse.setResultList(callCenterWithdrawVOS);
+        }
+        return callCenterWithdrawResponse;
     }
 }

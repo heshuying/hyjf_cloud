@@ -3,7 +3,7 @@
  */
 package com.hyjf.callcenter.client;
 
-import com.hyjf.am.resquest.callcenter.CallCenterRepaymentRequest;
+import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
 import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
 
@@ -16,16 +16,16 @@ import java.util.List;
 public interface RepaymentDetailClient {
     /**
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
-     * @param callCenterRepaymentRequest
+     * @param callCenterBaseRequest
      * @return List<CallCenterHztRepaymentDetailVO>
      * @author wangjun
      */
-     List<CallCenterHztRepaymentDetailVO> getHztRepaymentDetailList(CallCenterRepaymentRequest callCenterRepaymentRequest);
+     List<CallCenterHztRepaymentDetailVO> getHztRepaymentDetailList(CallCenterBaseRequest callCenterBaseRequest);
     /**
      * 按照用户名/手机号查询还款明细（汇添金）
-     * @param callCenterRepaymentRequest
+     * @param callCenterBaseRequest
      * @return List<CallCenterHtjRepaymentDetailVO>
      * @author wangjun
      */
-     List<CallCenterHtjRepaymentDetailVO> getHtjRepaymentDetailList(CallCenterRepaymentRequest callCenterRepaymentRequest);
+     List<CallCenterHtjRepaymentDetailVO> getHtjRepaymentDetailList(CallCenterBaseRequest callCenterBaseRequest);
 }

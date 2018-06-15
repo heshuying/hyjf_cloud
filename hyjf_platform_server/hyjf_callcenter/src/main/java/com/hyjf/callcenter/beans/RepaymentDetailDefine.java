@@ -3,7 +3,7 @@
  */
 package com.hyjf.callcenter.beans;
 
-public class RepaymentDetailDefine extends BaseDefine {
+public class RepaymentDetailDefine {
 
     /** @RequestMapping值 */
     public static final String REQUEST_MAPPING = "/repaymentdetail";

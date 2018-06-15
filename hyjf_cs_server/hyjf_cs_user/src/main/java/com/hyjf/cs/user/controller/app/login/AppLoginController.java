@@ -68,7 +68,7 @@ public class AppLoginController {
      * @Desc : 退出登录
      * @Param: * @param token
      * @Date: 16:29 2018/6/5
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")

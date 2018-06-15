@@ -1,0 +1,302 @@
+/**
+ * Description: 提前还款、延期还款、逾期还款 获取本息工具类
+ * Copyright: Copyright (HYJF Corporation)2015
+ * Company: HYJF Corporation
+ * @author: b
+ * @version: 1.0
+ * Created at: 2015年12月1日 上午11:53:02
+ * Modification History:
+ * Modified by : 
+ */
+
+package com.hyjf.common.util.calculate;
+
+import java.math.BigDecimal;
+
+/**
+ * 非正常还款工具类，包含提前还款、延期还款、逾期还款
+ */
+public class UnnormalRepayUtils {
+
+	/**
+	 * 提前还款,获取本息 提前还款是指在还款日之前还款； a、若提前8个工作日内还款，需全额支付应还利息；
+	 * b、若提前8个工作日（不包括8个工作日）以上，则需补3天的利息。 实际应还本息=应还本息-本期应还本金*年化收益÷36000 *（提前还款天数-3）；
+	 * 
+	 * @param termShouldPrincipalInterest
+	 *            本期应还本息
+	 * @param termShouldPrincipal
+	 *            本期应还本金
+	 * @param yearRate
+	 *            年化收益
+	 * @param aheadDays
+	 *            提前还款天数
+	 * @return 提前还款实际应还本息
+	 */
+	public static BigDecimal aheadRepayPrincipalInterest(BigDecimal termShouldPrincipalInterest, BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
+		
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(aheadDays).subtract(new BigDecimal(3))).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		BigDecimal result = termShouldPrincipalInterest.subtract(aheadInterest);
+		result = result.setScale(2, BigDecimal.ROUND_DOWN);
+		return result;
+	}
+	
+	/**
+	 * 融通宝提前还款,获取本息 提前还款是指在还款日之前还款； a、若提前8个工作日内还款，需全额支付应还利息；
+	 * b、若提前8个工作日（不包括8个工作日）以上，则需补3天的利息。 实际应还本息=应还本息-本期应还本金*年化收益÷36000 *（提前还款天数-3）；
+	 * 
+	 * @param termShouldPrincipalInterest
+	 *            本期应还本息
+	 * @param termShouldPrincipal
+	 *            本期应还本金
+	 * @param yearRate
+	 *            年化收益
+	 * @param aheadDays
+	 *            提前还款天数
+	 * @return 提前还款实际应还本息
+	 */
+	public static BigDecimal aheadRTBRepayPrincipalInterest(BigDecimal termShouldPrincipalInterest, BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
+		
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(aheadDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		BigDecimal result = termShouldPrincipalInterest.subtract(aheadInterest);
+		result = result.setScale(2, BigDecimal.ROUND_DOWN);
+		return result;
+	}
+	/**
+	 * 提前还款实际利息
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param aheadDays
+	 * @return
+	 */
+	public static BigDecimal aheadRepayInterest(BigDecimal termShouldInterest, BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
+		
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(aheadDays).subtract(new BigDecimal(3))).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		BigDecimal result = termShouldInterest.subtract(aheadInterest);
+		result = result.setScale(2, BigDecimal.ROUND_DOWN);
+		return result;
+	}
+
+	
+	/**
+	 * 提前还款减少的利息
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param aheadDays
+	 * @return
+	 */
+	public static BigDecimal aheadRepayChargeInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
+		
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(aheadDays).subtract(new BigDecimal(3))).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		return aheadInterest;
+	}
+
+
+	/**
+	 * 先息后本还款方式 提前还款减息计算公式
+	 * @param termShouldRepayInterest 当月应还利息
+	 * @param aheadDays 提现还款天数
+	 * @return
+	 */
+	public static  BigDecimal aheadEndMonthRepayChargeInterest(BigDecimal termShouldRepayInterest, int aheadDays){
+		BigDecimal advanceDays = new BigDecimal(aheadDays).subtract(new BigDecimal(3));
+		BigDecimal aheadInterest  =((termShouldRepayInterest.multiply(advanceDays)).divide(new BigDecimal(30),18,BigDecimal.ROUND_DOWN)).setScale(2,BigDecimal.ROUND_DOWN);
+		return aheadInterest;
+	}
+
+
+	/**
+	 * 融通宝提前还款减少的利息
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param aheadDays
+	 * @return
+	 */
+	public static BigDecimal aheadRTBRepayChargeInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
+		
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(aheadDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		return aheadInterest;
+	}
+	/**
+	 * 延期还款
+	 * 
+	 * 公式：延期利息=本期本金*年化收益÷36000*实际延期天数； 实际应还本息=应还本息+延期利息；
+	 * 
+	 * @param termShouldPrincipalInterest
+	 *            本期应还本息
+	 * @param termShouldPrincipal
+	 *            本期应还本金
+	 * @param yearRate
+	 *            年化收益
+	 * @param delayDays
+	 *            延期天数
+	 * @return 延期还款实际应还本息
+	 */
+	public static BigDecimal delayRepayPrincipalInterest(BigDecimal termShouldPrincipalInterest, BigDecimal termShouldPrincipal,BigDecimal yearRate, int delayDays) {
+		// 延期利息
+		BigDecimal delayInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(delayDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		// 实际应还本息=应还本息+延期利息
+		BigDecimal result = termShouldPrincipalInterest.add(delayInterest);
+		result = result.setScale(2, BigDecimal.ROUND_DOWN);
+		return result;
+	}
+	
+	/**
+	 * 延期利息总和
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param delayDays
+	 * @return
+	 */
+	public static BigDecimal delayRepayInterestTotal(BigDecimal termShouldInterest, BigDecimal termShouldPrincipal,BigDecimal yearRate, int delayDays) {
+		// 延期利息
+		BigDecimal delayInterest = termShouldInterest.add(termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(delayDays))).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		return delayInterest;
+	}
+	
+	/**
+	 * 延期利息
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param delayDays
+	 * @return
+	 */
+	public static BigDecimal delayRepayInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int delayDays) {
+		// 延期利息
+		BigDecimal delayInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(delayDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		return delayInterest;
+	}
+
+	/**
+	 * 逾期还款
+	 * 
+	 * 公式逾期罚息总额=逾期本息总额*逾期天数*0.06％； 实际应还本息=应还本息+延期利息+逾期罚息；
+	 * 
+	 * @param termShouldPrincipalInterest
+	 *            本期应还本息
+	 * @param termShouldPrincipal
+	 *            本期应还本金
+	 * @param yearRate
+	 *            年化收益
+	 * @param overdueDays
+	 *            逾期天数
+	 * @return 逾期还款 实际应还本息
+	 */
+	public static BigDecimal overdueRepayPrincipalInterest(BigDecimal termShouldPrincipalInterest, BigDecimal termShouldPrincipal,BigDecimal yearRate, int delayDays,int overdueDays) {
+		// 逾期罚息总额
+		BigDecimal overdueInterest = termShouldPrincipalInterest.multiply(new BigDecimal(overdueDays)).multiply(new BigDecimal("0.0006"));
+		overdueInterest = overdueInterest.setScale(2, BigDecimal.ROUND_DOWN);
+		// 延期利息
+		BigDecimal delayInterest =termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(delayDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		// 实际应还本息=应还本息+延期利息+逾期罚息；
+		BigDecimal result = termShouldPrincipalInterest.add(delayInterest).add(overdueInterest);
+		result = result.setScale(2, BigDecimal.ROUND_DOWN);
+		return result;
+	}
+	
+	/**
+	 * 逾期总利息
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param overdueDays
+	 * @return
+	 */
+	public static BigDecimal overdueRepayInterest(BigDecimal termShouldPrincipalInterest, BigDecimal termShouldPrincipal,BigDecimal termShouldInterest,BigDecimal yearRate,int delayDays,int overdueDays) {
+		// 逾期罚息总额
+		BigDecimal overdueInterest = termShouldPrincipalInterest.multiply(new BigDecimal(overdueDays)).multiply(new BigDecimal("0.0006"));
+		// 延期利息
+		BigDecimal delayInterest =termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(delayDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		BigDecimal result =termShouldInterest.add (delayInterest).add(overdueInterest);
+		result = result.setScale(2, BigDecimal.ROUND_DOWN);
+		return result;
+	}
+	
+	/**
+	 * 逾期利息
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param overdueDays
+	 * @return
+	 */
+	public static BigDecimal overdueRepayOverdueInterest(BigDecimal termShouldPrincipalInterest,int overdueDays) {
+		// 逾期罚息总额
+		BigDecimal overdueInterest = termShouldPrincipalInterest.multiply(new BigDecimal(overdueDays)).multiply(new BigDecimal("0.0006"));
+		overdueInterest = overdueInterest.setScale(2, BigDecimal.ROUND_DOWN);
+		return overdueInterest;
+	}
+
+	/**
+	 * 逾期的延期利息
+	 * @param termShouldPrincipalInterest
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param overdueDays
+	 * @return
+	 */
+	public static BigDecimal overdueRepayDelayInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int delayDays) {
+		// 延期利息
+		BigDecimal delayInterest =termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(delayDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		delayInterest = delayInterest.setScale(2, BigDecimal.ROUND_DOWN);
+		return delayInterest;
+	}
+	
+	
+	public static void main(String[] args) {
+		
+		BigDecimal a = new BigDecimal(0);
+		BigDecimal b = new BigDecimal(0);
+		if (a.equals(b)) {
+			System.out.println("true");
+		}else{
+			System.out.println("false");
+		}
+		BigDecimal ddd = aheadEndMonthRepayChargeInterest(new BigDecimal("1000"),29);
+
+		System.out.println(ddd);
+		/*
+		BigDecimal termShouldPrincipalInterest = new BigDecimal(172.54);
+		BigDecimal termShouldPrincipal = new BigDecimal(170.84);
+		BigDecimal yearRate = new BigDecimal(0.12);
+		int aheadDays = 10;
+		int delayDays = 3;
+		//int overdueDays = 8;
+
+		BigDecimal result1 = aheadRepayPrincipalInterest(termShouldPrincipalInterest, termShouldPrincipal, yearRate,
+				aheadDays);
+		System.out.println("提前还款本息：" + result1);
+
+		BigDecimal result2 = delayRepayPrincipalInterest(termShouldPrincipalInterest, termShouldPrincipal, yearRate,
+				delayDays);
+		System.out.println("延期还款本息：" + result2);
+
+		BigDecimal result3 = overdueRepayPrincipalInterest(termShouldPrincipalInterest, termShouldPrincipal, yearRate,
+				overdueDays);
+		System.out.println("逾期还款本息：" + result3);
+	*/}
+
+	/**
+	 * 计算计划相关的逾期利率
+	 * @param termShouldPrincipalInterest
+	 * @param overdueDays
+	 * @param planRate
+	 * @return
+	 */
+	public static BigDecimal overduePlanRepayOverdueInterest(BigDecimal termShouldPrincipalInterest, int overdueDays,
+			BigDecimal planRate) {
+		if (planRate == null || planRate.equals(new BigDecimal(0))) {
+			planRate = new BigDecimal("0.0006");
+		}
+		// 逾期罚息总额
+		BigDecimal overdueInterest = termShouldPrincipalInterest.multiply(new BigDecimal(overdueDays)).multiply(planRate);
+		overdueInterest = overdueInterest.setScale(2, BigDecimal.ROUND_DOWN);
+		return overdueInterest;
+	}
+	
+
+}

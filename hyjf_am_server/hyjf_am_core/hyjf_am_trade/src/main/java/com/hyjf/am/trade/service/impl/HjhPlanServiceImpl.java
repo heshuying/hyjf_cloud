@@ -22,35 +22,35 @@ import java.util.List;
 @Service
 public class HjhPlanServiceImpl implements HjhPlanService {
 
-    @Autowired
-    private HjhInstConfigMapper hjhInstConfigMapper;
+	@Autowired
+	private HjhInstConfigMapper hjhInstConfigMapper;
 
-    @Autowired
-    private HjhLabelMapper hjhLabelMapper;
+	@Autowired
+	private HjhLabelMapper hjhLabelMapper;
 
-    @Override
-    public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
-        HjhInstConfigExample example = new HjhInstConfigExample();
-        HjhInstConfigExample.Criteria cra = example.createCriteria();
-        cra.andInstCodeEqualTo(instCode);
-        cra.andDelFlgEqualTo(0);
-        List<HjhInstConfig> list = this.hjhInstConfigMapper.selectByExample(example);
-        return list;
-    }
+	@Override
+	public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
+		HjhInstConfigExample example = new HjhInstConfigExample();
+		HjhInstConfigExample.Criteria cra = example.createCriteria();
+		cra.andInstCodeEqualTo(instCode);
+		cra.andDelFlagEqualTo(0);
+		List<HjhInstConfig> list = this.hjhInstConfigMapper.selectByExample(example);
+		return list;
+	}
 
-    @Override
-    public List<HjhLabel> seleHjhLabelByBorrowStyle(String borrowStyle) {
-        HjhLabelExample example = new HjhLabelExample();
-        HjhLabelExample.Criteria cra = example.createCriteria();
+	@Override
+	public List<HjhLabel> seleHjhLabelByBorrowStyle(String borrowStyle) {
+		HjhLabelExample example = new HjhLabelExample();
+		HjhLabelExample.Criteria cra = example.createCriteria();
 
-        cra.andDelFlgEqualTo(0);
-        cra.andLabelStateEqualTo(1);
-        cra.andBorrowStyleEqualTo(borrowStyle);
-        cra.andIsCreditEqualTo(0); // 原始标
-        cra.andIsLateEqualTo(0); // 是否逾期
-        example.setOrderByClause(" update_time desc ");
+		cra.andDelFlagEqualTo(0);
+		cra.andLabelStateEqualTo(1);
+		cra.andBorrowStyleEqualTo(borrowStyle);
+		cra.andIsCreditEqualTo(0); // 原始标
+		cra.andIsLateEqualTo(0); // 是否逾期
+		example.setOrderByClause(" update_time desc ");
 
-        List<HjhLabel> list = this.hjhLabelMapper.selectByExample(example);
-        return list;
-    }
+		List<HjhLabel> list = this.hjhLabelMapper.selectByExample(example);
+		return list;
+	}
 }
