@@ -5,16 +5,14 @@ package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowManinfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.borrow.BorrowVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -53,8 +51,14 @@ public class BorrowServiceImpl implements BorrowService {
 
         List<BorrowFinmanNewCharge> list = this.borrowFinmanNewChargeMapper.selectByExample(example);
 
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
     @Override
-    public BorrowWithBLOBs getBobrrow(String borrowNid) {
+    public BorrowWithBLOBs getBorrow(String borrowNid) {
         BorrowExample example = new BorrowExample();
         BorrowExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);

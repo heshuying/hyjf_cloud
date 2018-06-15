@@ -1,10 +1,7 @@
 package com.hyjf.am.config.dao;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.AmConfigApplication;
-import com.hyjf.am.config.dao.model.auto.GatewayApiConfig;
-import com.hyjf.am.config.dao.model.auto.GatewayApiConfigExample;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import org.junit.Test;

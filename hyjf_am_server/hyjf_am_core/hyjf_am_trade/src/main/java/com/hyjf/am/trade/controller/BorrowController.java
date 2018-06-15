@@ -3,8 +3,12 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.BorrowConfigResponse;
+import com.hyjf.am.response.trade.BorrowFinmanNewChargeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.BorrowWithBLOBSResponse;
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
+import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
 import com.hyjf.am.trade.service.BorrowService;
@@ -136,7 +140,7 @@ public class BorrowController {
     @GetMapping("/getBorrow/{borrowNid}")
     public BorrowWithBLOBSResponse getBorrow(String borrowNid) {
         BorrowWithBLOBSResponse response = new BorrowWithBLOBSResponse();
-        BorrowWithBLOBs borrowWithBLOBs = borrowService.getBobrrow(borrowNid);
+        BorrowWithBLOBs borrowWithBLOBs = borrowService.getBorrow(borrowNid);
         if (borrowWithBLOBs != null) {
             BorrowWithBLOBsVo borrowWithBLOBsVo = new BorrowWithBLOBsVo();
             BeanUtils.copyProperties(borrowWithBLOBs,borrowWithBLOBsVo);

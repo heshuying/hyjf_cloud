@@ -16,7 +16,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowWithBLOBs;
  * @version BorrowService, v0.1 2018/6/13 18:52
  */
 public interface BorrowService {
-    BorrowWithBLOBs getBobrrow(String borrowNid);
+    BorrowWithBLOBs getBorrow(String borrowNid);
 
     BorrowStyle getborrowStyleByNid(String borrowStyle);
 
