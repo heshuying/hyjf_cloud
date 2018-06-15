@@ -19,7 +19,6 @@ import java.util.Random;
  * @author renxingchen
  * @version hyjf 1.0
  * @since hyjf 1.0 2016年3月28日
- * @see 下午2:56:31
  */
 public class WebUtils {
 
@@ -41,7 +40,7 @@ public class WebUtils {
      * 重定向到制定页面
      * @author renxingchen
      * @param response
-     * @param xmlHttpRequest
+     * @param url
      * @throws IOException
      */
     public static void redirectTargetPage(HttpServletResponse response, String url) throws IOException {
