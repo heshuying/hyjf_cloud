@@ -1,5 +1,10 @@
 package com.hyjf.cs.user.result;
 
+/**
+ * 手机号修改返回bean
+ * @author hesy
+ *
+ */
 public class MobileModifyResultBean extends ApiResult<Object>{
 	// 手机号
 	String mobile;
