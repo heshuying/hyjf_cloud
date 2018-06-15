@@ -1,14 +1,29 @@
-package com.hyjf.am.vo.rtbbatch;
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.vo.trade;
+
+import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class IncreaseInterestLoanDetailVo implements Serializable {
+/**
+ * @author ${yaoy}
+ * @version IncreaseInterestLoanVo, v0.1 2018/6/13 18:26
+ */
+public class IncreaseInterestLoanVo extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer userId;
 
     private String userName;
+
+    private Integer investId;
+
+    private String investOrderId;
+
+    private BigDecimal investAccount;
 
     private Integer borrowUserId;
 
@@ -26,17 +41,13 @@ public class IncreaseInterestLoanDetailVo implements Serializable {
 
     private String borrowStyleName;
 
-    private Integer investId;
-
-    private String investOrderId;
-
-    private BigDecimal investAccount;
-
     private BigDecimal loanInterest;
+
+    private Integer remainPeriod;
 
     private Integer repayPeriod;
 
-    private Integer repayTime;
+    private String repayTime;
 
     private Integer repayActionTime;
 
@@ -90,6 +101,30 @@ public class IncreaseInterestLoanDetailVo implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName == null ? null : userName.trim();
+    }
+
+    public Integer getInvestId() {
+        return investId;
+    }
+
+    public void setInvestId(Integer investId) {
+        this.investId = investId;
+    }
+
+    public String getInvestOrderId() {
+        return investOrderId;
+    }
+
+    public void setInvestOrderId(String investOrderId) {
+        this.investOrderId = investOrderId == null ? null : investOrderId.trim();
+    }
+
+    public BigDecimal getInvestAccount() {
+        return investAccount;
+    }
+
+    public void setInvestAccount(BigDecimal investAccount) {
+        this.investAccount = investAccount;
     }
 
     public Integer getBorrowUserId() {
@@ -156,36 +191,20 @@ public class IncreaseInterestLoanDetailVo implements Serializable {
         this.borrowStyleName = borrowStyleName == null ? null : borrowStyleName.trim();
     }
 
-    public Integer getInvestId() {
-        return investId;
-    }
-
-    public void setInvestId(Integer investId) {
-        this.investId = investId;
-    }
-
-    public String getInvestOrderId() {
-        return investOrderId;
-    }
-
-    public void setInvestOrderId(String investOrderId) {
-        this.investOrderId = investOrderId == null ? null : investOrderId.trim();
-    }
-
-    public BigDecimal getInvestAccount() {
-        return investAccount;
-    }
-
-    public void setInvestAccount(BigDecimal investAccount) {
-        this.investAccount = investAccount;
-    }
-
     public BigDecimal getLoanInterest() {
         return loanInterest;
     }
 
     public void setLoanInterest(BigDecimal loanInterest) {
         this.loanInterest = loanInterest;
+    }
+
+    public Integer getRemainPeriod() {
+        return remainPeriod;
+    }
+
+    public void setRemainPeriod(Integer remainPeriod) {
+        this.remainPeriod = remainPeriod;
     }
 
     public Integer getRepayPeriod() {
@@ -196,12 +215,12 @@ public class IncreaseInterestLoanDetailVo implements Serializable {
         this.repayPeriod = repayPeriod;
     }
 
-    public Integer getRepayTime() {
+    public String getRepayTime() {
         return repayTime;
     }
 
-    public void setRepayTime(Integer repayTime) {
-        this.repayTime = repayTime;
+    public void setRepayTime(String repayTime) {
+        this.repayTime = repayTime == null ? null : repayTime.trim();
     }
 
     public Integer getRepayActionTime() {

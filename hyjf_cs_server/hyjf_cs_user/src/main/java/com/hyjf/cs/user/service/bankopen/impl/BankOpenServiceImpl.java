@@ -88,7 +88,6 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     public int updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo) {
 
         BankOpenRequest bankOpenRequest = new BankOpenRequest();
-
         bankOpenRequest.setUserId(userId);
         bankOpenRequest.setUsername(userName);
         bankOpenRequest.setMobile(mobile);
@@ -101,6 +100,12 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         return amBankOpenClient.updateUserAccountLog(bankOpenRequest);
     }
 
+    /**
+     * @Description 检查请求参数
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/15 17:28
+     */
     @Override
     public void checkRequestParam(UserVO user, BankOpenVO bankOpenVO) {
         if (user == null) {
@@ -163,6 +168,12 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         }
     }
 
+    /**
+     * @Description 组装跳转江西银行的参数
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/15 17:20
+     */
     @Override
     public ModelAndView getOpenAccountMV(OpenAccountPageBean openBean) {
         ModelAndView mv = new ModelAndView();
@@ -210,6 +221,12 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         return mv;
     }
 
+    /**
+     * @Description 开户异步逻辑处理
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/15 17:25
+     */
     @Override
     public BankCallResult openAccountBgReturn(BankCallBean bean) {
         BankCallResult result = new BankCallResult();
@@ -244,7 +261,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         }
         result.setStatus(true);
         result.setMessage("开户成功");
-        logger.info("页面开户异步处理end,UserId:{} 开户平台为：{}", bean.getLogUserId());
+        logger.info("页面开户异步处理end,UserId:{} 开户平台为：{}", bean.getLogUserId(),bean.getLogClient());
         return result;
     }
 
@@ -340,22 +357,6 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         codeBean.setAccountId(cardNo);
         codeBean.setLogRemark("联行号查询");
         return BankCallUtils.callApiBg(codeBean);
-    }
-
-    @Override
-    public Map<String, String> openAccountReturn(String token, String isSuccess) {
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("status", "success");
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        if (user == null) {
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
-        }
-        if (isSuccess == null || !ClientConstants.ISSUCCESS.equals(isSuccess)) {
-            throw new ReturnMessageException(OpenAccountError.ERROR);
-        } else {
-            resultMap.put("status", "success");
-        }
-        return resultMap;
     }
 
     @Override

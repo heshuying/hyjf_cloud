@@ -15,7 +15,7 @@ import com.hyjf.am.assetpush.InfoBean;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.AssetPushService;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 
 /**
  * @author fuqiang

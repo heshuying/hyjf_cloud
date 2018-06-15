@@ -1,22 +1,18 @@
-package com.hyjf.am.vo.rtbbatch;
-
-import com.hyjf.am.vo.BaseVO;
+package com.hyjf.am.vo.trade;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
+public class IncreaseInterestLoanDetailVo implements Serializable {
     private Integer id;
 
     private Integer userId;
 
     private String userName;
 
-    private Integer investId;
+    private Integer borrowUserId;
 
-    private String investOrderId;
-
-    private BigDecimal investAccount;
+    private String borrowUserName;
 
     private String borrowNid;
 
@@ -30,15 +26,13 @@ public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
 
     private String borrowStyleName;
 
-    private String orderId;
+    private Integer investId;
 
-    private String orderDate;
+    private String investOrderId;
 
-    private Integer repayStatus;
+    private BigDecimal investAccount;
 
-    private Integer remainPeriod;
-
-    private Integer alreadyRepayPeriod;
+    private BigDecimal loanInterest;
 
     private Integer repayPeriod;
 
@@ -46,15 +40,19 @@ public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
 
     private Integer repayActionTime;
 
-    private BigDecimal repayInterest;
-
     private BigDecimal repayInterestYes;
 
     private BigDecimal repayInterestWait;
 
+    private Integer repayStatus;
+
     private String addip;
 
     private Integer web;
+
+    private String repayOrderId;
+
+    private String repayOrderDate;
 
     private Integer createTime;
 
@@ -94,28 +92,20 @@ public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public Integer getInvestId() {
-        return investId;
+    public Integer getBorrowUserId() {
+        return borrowUserId;
     }
 
-    public void setInvestId(Integer investId) {
-        this.investId = investId;
+    public void setBorrowUserId(Integer borrowUserId) {
+        this.borrowUserId = borrowUserId;
     }
 
-    public String getInvestOrderId() {
-        return investOrderId;
+    public String getBorrowUserName() {
+        return borrowUserName;
     }
 
-    public void setInvestOrderId(String investOrderId) {
-        this.investOrderId = investOrderId == null ? null : investOrderId.trim();
-    }
-
-    public BigDecimal getInvestAccount() {
-        return investAccount;
-    }
-
-    public void setInvestAccount(BigDecimal investAccount) {
-        this.investAccount = investAccount;
+    public void setBorrowUserName(String borrowUserName) {
+        this.borrowUserName = borrowUserName == null ? null : borrowUserName.trim();
     }
 
     public String getBorrowNid() {
@@ -166,44 +156,36 @@ public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
         this.borrowStyleName = borrowStyleName == null ? null : borrowStyleName.trim();
     }
 
-    public String getOrderId() {
-        return orderId;
+    public Integer getInvestId() {
+        return investId;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
+    public void setInvestId(Integer investId) {
+        this.investId = investId;
     }
 
-    public String getOrderDate() {
-        return orderDate;
+    public String getInvestOrderId() {
+        return investOrderId;
     }
 
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate == null ? null : orderDate.trim();
+    public void setInvestOrderId(String investOrderId) {
+        this.investOrderId = investOrderId == null ? null : investOrderId.trim();
     }
 
-    public Integer getRepayStatus() {
-        return repayStatus;
+    public BigDecimal getInvestAccount() {
+        return investAccount;
     }
 
-    public void setRepayStatus(Integer repayStatus) {
-        this.repayStatus = repayStatus;
+    public void setInvestAccount(BigDecimal investAccount) {
+        this.investAccount = investAccount;
     }
 
-    public Integer getRemainPeriod() {
-        return remainPeriod;
+    public BigDecimal getLoanInterest() {
+        return loanInterest;
     }
 
-    public void setRemainPeriod(Integer remainPeriod) {
-        this.remainPeriod = remainPeriod;
-    }
-
-    public Integer getAlreadyRepayPeriod() {
-        return alreadyRepayPeriod;
-    }
-
-    public void setAlreadyRepayPeriod(Integer alreadyRepayPeriod) {
-        this.alreadyRepayPeriod = alreadyRepayPeriod;
+    public void setLoanInterest(BigDecimal loanInterest) {
+        this.loanInterest = loanInterest;
     }
 
     public Integer getRepayPeriod() {
@@ -230,14 +212,6 @@ public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
         this.repayActionTime = repayActionTime;
     }
 
-    public BigDecimal getRepayInterest() {
-        return repayInterest;
-    }
-
-    public void setRepayInterest(BigDecimal repayInterest) {
-        this.repayInterest = repayInterest;
-    }
-
     public BigDecimal getRepayInterestYes() {
         return repayInterestYes;
     }
@@ -254,6 +228,14 @@ public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
         this.repayInterestWait = repayInterestWait;
     }
 
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
+    }
+
     public String getAddip() {
         return addip;
     }
@@ -268,6 +250,22 @@ public class IncreaseInterestRepayVo extends BaseVO implements Serializable {
 
     public void setWeb(Integer web) {
         this.web = web;
+    }
+
+    public String getRepayOrderId() {
+        return repayOrderId;
+    }
+
+    public void setRepayOrderId(String repayOrderId) {
+        this.repayOrderId = repayOrderId == null ? null : repayOrderId.trim();
+    }
+
+    public String getRepayOrderDate() {
+        return repayOrderDate;
+    }
+
+    public void setRepayOrderDate(String repayOrderDate) {
+        this.repayOrderDate = repayOrderDate == null ? null : repayOrderDate.trim();
     }
 
     public Integer getCreateTime() {

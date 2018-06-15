@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.rtbbatch;
+package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.vo.BaseVO;
 

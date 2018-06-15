@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.trade;
+package com.hyjf.am.vo.trade.account;
 
 import com.hyjf.am.vo.BaseVO;
 

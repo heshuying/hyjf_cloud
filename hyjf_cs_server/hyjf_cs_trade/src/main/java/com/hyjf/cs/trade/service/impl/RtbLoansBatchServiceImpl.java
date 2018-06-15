@@ -4,18 +4,18 @@
 package com.hyjf.cs.trade.service.impl;
 
 
-import com.hyjf.am.vo.rtbbatch.BorrowApicronVo;
-import com.hyjf.am.vo.rtbbatch.BorrowWithBLOBsVo;
-import com.hyjf.am.vo.rtbbatch.IncreaseInterestInvestVo;
-import com.hyjf.am.vo.trade.AccountVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
+import java.util.List;
 
-import com.hyjf.cs.trade.client.RtbBatchClient;
-import com.hyjf.cs.trade.service.RtbLoansBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.hyjf.am.vo.trade.IncreaseInterestInvestVo;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVo;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.cs.trade.client.RtbBatchClient;
+import com.hyjf.cs.trade.service.RtbLoansBatchService;
 
 
 /**
@@ -60,7 +60,7 @@ public class RtbLoansBatchServiceImpl implements RtbLoansBatchService {
     }
 
     @Override
-    public BorrowWithBLOBsVo getBorrow(String borrowNid) {
+    public BorrowWithBLOBsVO getBorrow(String borrowNid) {
         return rtbBatchClient.getBorrow(borrowNid);
     }
 

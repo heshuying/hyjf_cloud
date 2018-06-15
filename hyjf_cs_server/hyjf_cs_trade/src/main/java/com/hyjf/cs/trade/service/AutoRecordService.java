@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 
 /**
  * @author fuqiang

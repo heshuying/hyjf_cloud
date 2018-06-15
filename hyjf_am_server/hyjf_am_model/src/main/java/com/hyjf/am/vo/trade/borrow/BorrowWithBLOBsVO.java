@@ -1,10 +1,15 @@
-package com.hyjf.am.vo.rtbbatch;
-
-import com.hyjf.am.vo.borrow.BorrowVO;
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.vo.trade.borrow;
 
 import java.io.Serializable;
 
-public class BorrowWithBLOBsVo extends BorrowVO implements Serializable {
+/**
+ * @author fuqiang
+ * @version BorrowWithBLOBsVO, v0.1 2018/6/12 18:56
+ */
+public class BorrowWithBLOBsVO extends BorrowVO implements Serializable {
     private String accountContents;
 
     private String borrowContents;

@@ -4,8 +4,8 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
-import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 
 /**
  * @author fuqiang

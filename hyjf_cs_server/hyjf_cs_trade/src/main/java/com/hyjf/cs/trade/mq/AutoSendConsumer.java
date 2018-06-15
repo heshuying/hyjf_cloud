@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.mq;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.handle.AutoSendMessageHandle;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;

@@ -7,7 +7,7 @@ import com.hyjf.am.trade.dao.mapper.auto.AccountwithdrawMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.AccountWithdrawService;
-import com.hyjf.am.vo.trade.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
