@@ -18,8 +18,8 @@ public class WebProjectListClientImpl implements WebProjectListClient {
     @Autowired
     private RestTemplate restTemplate;
     @Override
-    public ProjectListResponse getHomeProductList(ProjectListRequest request) {
-       ProjectListResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/getHomePageProjectBorrowList",request,ProjectListResponse.class).getBody();
+    public ProjectListResponse searchProjectList(ProjectListRequest request) {
+       ProjectListResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/searchProjectList",request,ProjectListResponse.class).getBody();
        return response;
     }
 }

@@ -14,6 +14,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * web端项目列表Service实现类
+ *
+ * @author liuyang
+ * @version WebProjectListServiceImpl, v0.1 2018/6/13 10:21
+ */
 @Service
 public class WebProjectListServiceImpl implements WebProjectListService {
 
@@ -21,14 +27,15 @@ public class WebProjectListServiceImpl implements WebProjectListService {
     private WebProjectListClient webProjectListClient;
 
     /**
-     * service进行参数验证和结果集拼装
+     * 获取Web端项目列表
      * @param request
+     * @author liuyang
      * @return
      */
     @Override
-    public Result getHomeProductList(ProjectListRequest request) {
+    public Result searchProjectList(ProjectListRequest request) {
         // 参数验证 略
-        ProjectListResponse response = webProjectListClient.getHomeProductList(request);
+        ProjectListResponse response = webProjectListClient.searchProjectList(request);
         // 对调用返回的结果进行转换和拼装
         if (response != null && "00".equals((response.getRtn()))){  //判断可以抽出来单独封装成公用方法
             List<WebProjectListCsVO> result = new ArrayList<>();

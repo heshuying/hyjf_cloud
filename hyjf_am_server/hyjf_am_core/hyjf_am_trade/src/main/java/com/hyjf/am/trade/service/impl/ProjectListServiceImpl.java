@@ -28,13 +28,37 @@ public class ProjectListServiceImpl implements ProjectListService {
     private WebProjectListCustomizeMapper webProjectListCustomizeMapper;
 
     /**
-     * 获取首页散标专区列表
+     * 获取标的列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<WebProjectListCustomize> searchProjectList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        params.put("limitStart", limitStart);
+        params.put("limitEnd", limitEnd);
+
+        return webProjectListCustomizeMapper.searchProjectList(params);
+    }
+
+    /**
+     * 获取标的列表件数
      *
      * @param request
      * @return
      */
     @Override
-    public List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request, Page page) {
+    public int countProjectList(@Valid ProjectListRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();
         // 项目类型
         String projectType = request.getProjectType();
@@ -46,28 +70,8 @@ public class ProjectListServiceImpl implements ProjectListService {
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
-//        params.put("limitStart", page.getOffset());
-//        params.put("limitEnd", page.getLimit());
-
-        return webProjectListCustomizeMapper.searchProjectList(params);
-    }
-
-    @Override
-    public int countHomePageProjectList(@Valid ProjectListRequest request, Page page) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        // 项目类型
-        String projectType = request.getProjectType();
-        // 项目子类型
-        String borrowClass = request.getBorrowClass();
-        // 分页起始
-        Integer limitStart = request.getLimitStart();
-        // 分页结束
-        Integer limitEnd = request.getLimitEnd();
-        params.put("projectType", projectType);
-        params.put("borrowClass", borrowClass);
-        params.put("limitStart", page.getOffset());
-        params.put("limitEnd", page.getLimit());
-
+        params.put("limitStart",limitStart);
+        params.put("limitEnd", limitEnd);
         return webProjectListCustomizeMapper.countProjectList(params);
     }
 }

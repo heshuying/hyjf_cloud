@@ -19,11 +19,16 @@ public interface ProjectListService {
 
 
     /**
-     * 获取首页散标专区列表
+     * 获取项目列表
      * @param request
      * @return
      */
-    List<WebProjectListCustomize> getHomePageProjectList(@Valid ProjectListRequest request, Page page);
+    List<WebProjectListCustomize> searchProjectList(@Valid ProjectListRequest request);
 
-    int countHomePageProjectList(@Valid ProjectListRequest request,Page page);
+    /**
+     * 获取项目列表件数
+     * @param request
+     * @return
+     */
+    int countProjectList(@Valid ProjectListRequest request);
 }
