@@ -124,9 +124,9 @@ public class BankRequest extends BaseVO {
     /** 交易类型 */
     public String tranType;
     /** 页数 */
-    public String pageNum;
+    //public String pageNum;
     /** 页长 */
-    public String pageSize;
+    //public String pageSize;
     /** 自动投标总金额上限（不算已还金额） */
     public String totAmount;
     /** 原订单号 */
@@ -965,21 +965,21 @@ public class BankRequest extends BaseVO {
         this.tranType = tranType;
     }
 
-    public String getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(String pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public String getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(String pageSize) {
-        this.pageSize = pageSize;
-    }
+//    public String getPageNum() {
+//        return pageNum;
+//    }
+//
+//    public void setPageNum(String pageNum) {
+//        this.pageNum = pageNum;
+//    }
+//
+//    public String getPageSize() {
+//        return pageSize;
+//    }
+//
+//    public void setPageSize(String pageSize) {
+//        this.pageSize = pageSize;
+//    }
 
     public String getTotAmount() {
         return totAmount;
