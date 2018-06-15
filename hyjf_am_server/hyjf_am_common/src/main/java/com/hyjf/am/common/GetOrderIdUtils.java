@@ -9,7 +9,7 @@
  *           Modified by :
  */
 
-package com.hyjf.am.util;
+package com.hyjf.am.common;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
