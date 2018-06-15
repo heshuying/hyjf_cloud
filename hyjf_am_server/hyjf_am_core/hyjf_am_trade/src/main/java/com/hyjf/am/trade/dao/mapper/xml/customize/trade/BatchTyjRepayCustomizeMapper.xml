@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.mybatis.mapper.customize.batch.BatchTyjRepayCustomizeMapper">
+
+	<!-- 查询体验金按收益期限还款的投资 -->
+	<select id="selectNidForTyj" resultType="java.lang.String" parameterType="java.util.Map">
+		SELECT DISTINCT
+			r.tender_id
+		FROM
+			hyjf_coupon_recover r
+		INNER JOIN hyjf_borrow_tender_cpn cpn ON r.tender_id = cpn.nid
+		INNER JOIN hyjf_coupon_tender t ON r.tender_id = t.order_id
+		INNER JOIN hyjf_coupon_user u ON t.coupon_grant_id = u.id
+		INNER JOIN hyjf_coupon_config c ON u.coupon_code = c.coupon_code
+		WHERE
+			(
+				c.repay_time_config = 2
+				OR (
+					cpn.tender_type = 3
+					AND NOT EXISTS (
+						SELECT
+							id
+						FROM
+							hyjf_coupon_real_tender t1
+						WHERE
+							t1.coupon_tender_id = cpn.nid
+						AND t1.real_tender_id IS NOT NULL
+					)
+				)
+			)
+		AND r.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(NOW())
+		AND r.recover_status = 0
+		AND r.received_flg = 1
+	</select>
+	
+ 
+</mapper>

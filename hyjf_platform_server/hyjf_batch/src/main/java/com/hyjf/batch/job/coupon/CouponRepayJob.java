@@ -17,12 +17,12 @@ import org.slf4j.LoggerFactory;
  */
 public class CouponRepayJob extends BaseJob implements Job {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(CouponRepayJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponRepayJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-MARKET/coupon/batch/periodRepay", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/batch/coupon/periodRepay", String.class);
         logger.info("CouponRepayJob execute end...");
     }
 }
