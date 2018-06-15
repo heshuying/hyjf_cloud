@@ -13,7 +13,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.chinapnr.MerPriv;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.PropUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 
@@ -56,8 +55,9 @@ public class ChinapnrUtil {
         ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 
         try {
-            // 取出调用汇付接口的url
-            String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
+            // 取出调用汇付接口的url  todo xiashuqing 20180615
+            //String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
+            String payurl = "";
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -106,8 +106,9 @@ public class ChinapnrUtil {
                     
                 }
             }
-            // 取出调用汇付接口的url
-            String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
+            // 取出调用汇付接口的url // 取出调用汇付接口的url  todo xiashuqing 20180615
+           // String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
+            String payurl = "";
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -143,8 +144,9 @@ public class ChinapnrUtil {
             // bean转换成参数
             bean.convert();
 
-            // 取出调用汇付接口的url
-            String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
+            // 取出调用汇付接口的url // 取出调用汇付接口的url  todo xiashuqing 20180615
+            //String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
+            String payurl = "";
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -168,14 +170,18 @@ public class ChinapnrUtil {
      * 取得页面返回 URL
      */
     public static String getRetUrl() {
-        return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_RETURN_URL);
+        //   todo xiashuqing 20180615
+        //return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_RETURN_URL);
+        return "";
     }
 
     /**
      * 企业用户绑定取得页面返回 URL
      */
     public static String getBindRetUrl() {
-        return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_BIND_RETURN_URL);
+        //   todo xiashuqing 20180615
+        //return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_BIND_RETURN_URL);
+        return "";
     }
 
     
@@ -183,7 +189,9 @@ public class ChinapnrUtil {
      * 取得商户后台应答地址
      */
     public static String getBgRetUrl() {
-        return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_CALLBACK_URL);
+        //   todo xiashuqing 20180615
+        //return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_CALLBACK_URL);
+        return "";
     }
 
     /**

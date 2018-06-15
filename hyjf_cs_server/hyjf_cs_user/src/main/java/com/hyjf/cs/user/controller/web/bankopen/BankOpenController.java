@@ -1,26 +1,11 @@
 package com.hyjf.cs.user.controller.web.bankopen;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.common.validator.ValidatorCheckUtil;
-import com.hyjf.cs.user.bean.OpenAccountPageBean;
-import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.AuthorizedError;
-import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.service.bankopen.BankOpenService;
-import com.hyjf.cs.user.vo.BankOpenVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,10 +16,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.cs.user.bean.OpenAccountPageBean;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.OpenAccountError;
+import com.hyjf.cs.user.service.bankopen.BankOpenService;
+import com.hyjf.cs.user.vo.BankOpenVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 

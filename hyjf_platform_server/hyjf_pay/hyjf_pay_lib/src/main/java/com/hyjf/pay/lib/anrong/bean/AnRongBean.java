@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.hyjf.common.util.CreateUUID;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.PropUtils;
 
 /**
  * 
@@ -29,9 +28,11 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
 	}
 
 	private void setBankCallCommon(String customerName, String paperNumber,String bizType,String loanType,String userid) {
-		// 获取共通信息
-	    String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
-	    String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
+		// 获取共通信息 todo
+	    //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
+	    String member = "";
+	    //String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
+	    String sign = "";
 	    this.member = member;
 	    this.sign = sign;
 	    this.customerName = customerName;
@@ -452,9 +453,11 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
     public void setSystemParm(String loanId, String userid) {
         this.loanId = loanId;
         setBankCallLog(Integer.parseInt(userid));
-        // 获取共通信息
-        String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
-        String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
+        // 获取共通信息 todo
+        //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
+        String member = "";
+        //String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
+        String sign = "";
         this.member = member;
         this.sign = sign;
     }
@@ -463,9 +466,11 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
         /** 格式为：年月日+去除【-】的uuid */
         this.loanId = GetOrderIdUtils.getTxDate()+CreateUUID.createUUID().replaceAll("-", "");
         setBankCallLog(Integer.parseInt(userid));
-        // 获取共通信息
-        String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
-        String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
+        // 获取共通信息 todo
+        //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
+        String member = "";
+        //String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
+        String sign = "";
         this.member = member;
         this.sign = sign;
     }

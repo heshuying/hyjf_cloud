@@ -1,8 +1,10 @@
 package com.hyjf.am.vo.rtbbatch;
 
+import com.hyjf.am.vo.borrow.BorrowVO;
+
 import java.io.Serializable;
 
-public class BorrowWithBLOBsVo extends BorrowVo implements Serializable {
+public class BorrowWithBLOBsVo extends BorrowVO implements Serializable {
     private String accountContents;
 
     private String borrowContents;

@@ -1,8 +1,5 @@
 package com.hyjf.pay.lib.fadada.bean;
 
-import com.hyjf.common.util.PropUtils;
-import com.hyjf.pay.lib.fadada.util.DzqzConstant;
-
 import java.io.File;
 import java.io.Serializable;
 
@@ -513,10 +510,15 @@ public class DzqzCallBean extends DzqzCallApiBean implements Serializable {
     }
 
     public void setCommonItem(){
-        String appId = PropUtils.getSystem(DzqzConstant.HYJF_FDD_APP_ID);
-        String secret = PropUtils.getSystem(DzqzConstant.HYJF_FDD_APP_SECRET);
-        String version = PropUtils.getSystem(DzqzConstant.HYJF_FDD_VERSION);
-        String url = PropUtils.getSystem(DzqzConstant.HYJF_FDD_URL);
+        //   todo xiashuqing 20180615
+//        String appId = PropUtils.getSystem(DzqzConstant.HYJF_FDD_APP_ID);
+//        String secret = PropUtils.getSystem(DzqzConstant.HYJF_FDD_APP_SECRET);
+//        String version = PropUtils.getSystem(DzqzConstant.HYJF_FDD_VERSION);
+//        String url = PropUtils.getSystem(DzqzConstant.HYJF_FDD_URL);
+        String appId = "";
+        String secret = "";
+        String version = "";
+        String url = "";
 
        this.app_id = appId;
        this.secret =secret;
