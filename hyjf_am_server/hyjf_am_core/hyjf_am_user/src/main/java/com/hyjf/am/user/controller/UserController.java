@@ -322,7 +322,7 @@ public class UserController {
 	@RequestMapping("/selectUserContact/{userId}")
 	public UsersContactResponse selectUserContact(Integer userId){
 		UsersContactResponse response = new UsersContactResponse();
-		UsersContact usersContact = userService.selectUserContact(userId);
+		UserContact usersContact = userService.selectUserContact(userId);
 		if (null != usersContact){
 			UsersContactVO usersContactVO = new UsersContactVO();
 			BeanUtils.copyProperties(usersContact,usersContactVO);

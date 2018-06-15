@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 	AccountChinapnrMapper accountChinapnrMapper;
 	
 	@Autowired
-	UsersContactMapper usersContactMapper;
+	UserContactMapper UserContactMapper;
 	
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
@@ -719,7 +719,7 @@ public class UserServiceImpl implements UserService {
 			hjhUserAuth.setCreateTime(nowTime);
 			hjhUserAuth.setUpdateTime(nowTime);
 			hjhUserAuth.setUpdateUserId(userId);
-			hjhUserAuth.setDelFlg(0);
+			hjhUserAuth.setDelFlag(0);
 			this.insertSelective(hjhUserAuth);
 		} else {
 			HjhUserAuth updateHjhUserAuth = new HjhUserAuth();
@@ -844,10 +844,10 @@ public class UserServiceImpl implements UserService {
 		if(record.getUserId() == null) {
 			return 0;
 		}
-		UsersContact contact = new UsersContact();
+		UserContact contact = new UserContact();
 		BeanUtils.copyProperties(record, contact);
 		usersMapper.deleteByPrimaryKey(record.getUserId());
-		return usersContactMapper.insertSelective(contact);
+		return UserContactMapper.insertSelective(contact);
 	}
 
 	/**
@@ -855,14 +855,14 @@ public class UserServiceImpl implements UserService {
 	 * @Desc :查询紧急联系人
 	 * @Param: * @param userId
 	 * @Date: 14:09 2018/6/4
-	 * @Return: UsersContact
+	 * @Return: UserContact
 	 */
 	@Override
-	public UsersContact selectUserContact(Integer userId){
+	public UserContact selectUserContact(Integer userId){
 		if(userId == null) {
 			return null;
 		}
-		UsersContact result = usersContactMapper.selectByPrimaryKey(userId);
+		UserContact result = UserContactMapper.selectByPrimaryKey(userId);
 		return result;
 	}
 
