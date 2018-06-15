@@ -174,64 +174,64 @@
 			<if test="userId != null and userId !=''">
 				AND t.user_id = #{userId}
 			</if>
-			<if test="borrowerType != null and borrowerType !=''">
+<!-- 			<if test="borrowerType != null and borrowerType !=''">
 				AND t.borrower_type = #{borrowerType}
-			</if>
+			</if> -->
 			<if test="userName != null and userName !=''">
 				AND t.user_name LIKE CONCAT('%', #{userName}, '%')
 			</if>
-			<if test="realName != null and realName != ''">
+<!-- 			<if test="realName != null and realName != ''">
 				AND t.real_name LIKE CONCAT('%', #{realName}, '%')
-			</if>
-			<if test="recommendName != null and recommendName != ''">
+			</if> -->
+<!-- 			<if test="recommendName != null and recommendName != ''">
 				AND t.recommend_name LIKE CONCAT('%', #{recommendName}, '%')
-			</if>
+			</if> -->
 			<if test="mobile != null and mobile != ''">
 				AND t.mobile LIKE CONCAT('%', #{mobile}, '%')
 			</if>
-			<if test="userRole != null and userRole != ''">
+<!-- 			<if test="userRole != null and userRole != ''">
 				AND t.role_id = #{userRole,jdbcType=INTEGER}
-			</if>
-			<if test="userType != null and userType != ''">
+			</if> -->
+<!-- 			<if test="userType != null and userType != ''">
 				AND t.type_id = #{userType,jdbcType=INTEGER}
-			</if>
-			<if test="userProperty != null and userProperty != ''">
+			</if> -->
+<!-- 			<if test="userProperty != null and userProperty != ''">
 				AND t.attribute = #{userProperty,jdbcType=INTEGER}
-			</if>
+			</if> -->
 			<!-- 无法判断江西银行开户状态 -->
 			<!-- <if test="accountStatus != null and accountStatus != ''">
 				AND t.open_account = #{accountStatus,jdbcType=INTEGER}
 			</if> -->
-			<if test="accountStatus != null and accountStatus != ''">
+<!-- 			<if test="accountStatus != null and accountStatus != ''">
 				AND t.bank_open_account = #{accountStatus,jdbcType=INTEGER}
-			</if>
-			<if test="userStatus != null and userStatus != ''">
+			</if> -->
+<!-- 			<if test="userStatus != null and userStatus != ''">
 				AND t.`status` = #{userStatus,jdbcType=INTEGER}
-			</if>
-			<if test="registPlat != null and registPlat != ''">
+			</if> -->
+<!-- 			<if test="registPlat != null and registPlat != ''">
 				AND t.reg_esb = #{registPlat,jdbcType=INTEGER}
-			</if>
-			<if test="is51 != null and is51 != ''">
+			</if> -->
+<!-- 			<if test="is51 != null and is51 != ''">
 				AND t.is51_cd = #{is51,jdbcType=INTEGER}
-			</if>
-			<if test="vipType != null and vipType == 1">
+			</if> -->
+<!-- 			<if test="vipType != null and vipType == 1">
 				AND t.vipid IS NULL
 			</if>
 			<if test="vipType != null and vipType == 2">
 				AND t.vipid IS NOT NULL
-			</if>
-			<if test="regTimeStart != null and regTimeStart != '' ">
+			</if> -->
+<!-- 			<if test="regTimeStart != null and regTimeStart != '' ">
 				AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[>=]]> #{regTimeStart}
 			</if>
 			<if test="regTimeEnd != null and regTimeEnd != ''">
 				AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[<=]]> #{regTimeEnd}
-			</if>
-			<if test="combotreeListSrch != null and combotreeListSrch != ''">
+			</if> -->
+<!-- 			<if test="combotreeListSrch != null and combotreeListSrch != ''">
 				AND od.id in
 				<foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
 					#{dep}
 				</foreach>
-			</if>
+			</if> -->
 		</where>
 	</sql>
 	<select id="findBasicUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
@@ -323,7 +323,7 @@
 		FROM
 			ht_user hydu
 		LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-		LEFT JOIN ht_users_contact hyduc ON hydu.user_id = hyduc.user_id
+		LEFT JOIN ht_user_contact hyduc ON hydu.user_id = hyduc.user_id
 		LEFT JOIN ht_account_chinapnr hydac ON hydac.user_id = hydu.user_id
 		LEFT JOIN ht_utm_reg hydur ON hydur.user_id = hydu.user_id
 		LEFT JOIN ht_utm hydutm ON hydur.utm_id = hydutm.utm_id
