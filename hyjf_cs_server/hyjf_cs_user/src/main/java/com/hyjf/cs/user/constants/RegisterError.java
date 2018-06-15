@@ -1,11 +1,14 @@
+/*
 package com.hyjf.cs.user.constants;
 
 import com.hyjf.common.constants.ErrorCode;
 
+*/
 /**
  * @author xiasq
  * @version RegisterError, v0.1 2018/4/11 9:43
- */
+ *//*
+
 public enum RegisterError implements ErrorCode {
 	REGISTER_ERROR("1", "注册失败"),
 	MOBILE_IS_NOT_NULL_ERROR("1", "请填写手机号"),
@@ -50,3 +53,4 @@ public enum RegisterError implements ErrorCode {
 		return this.message;
 	}
 }
+*/

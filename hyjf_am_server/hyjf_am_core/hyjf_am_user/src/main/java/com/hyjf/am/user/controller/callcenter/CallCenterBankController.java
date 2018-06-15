@@ -34,7 +34,7 @@ public class CallCenterBankController {
     @Autowired
     CallCenterBankService callCenterBankService;
     private static final Logger logger = LoggerFactory.getLogger(CallCenterBankController.class);
-    
+
     @RequestMapping("/getTiedCardForBank/{userId}")
     public BankCardResponse getTiedCardOfAccountBank(@PathVariable Integer userId){
         BankCardResponse bankCardResponse = new BankCardResponse();
@@ -45,11 +45,11 @@ public class CallCenterBankController {
         }
         return bankCardResponse;
     }
-    
-    
+
+
     @RequestMapping("/getNoServiceFuTouUsersList")
     public CallCenterUserBaseResponse getNoServiceFuTouUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
-    	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
+        CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
         List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceFuTouUsersList(callCenterUserInfoRequest);
         if(!CollectionUtils.isEmpty(list)){
             List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
@@ -57,11 +57,11 @@ public class CallCenterBankController {
         }
         return callCenterUserBaseResponse;
     }
-    
-    
+
+
     @RequestMapping("/getNoServiceLiuShiUsersList")
     public CallCenterUserBaseResponse getNoServiceLiuShiUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
-    	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
+        CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
         List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceLiuShiUsersList(callCenterUserInfoRequest);
         if(!CollectionUtils.isEmpty(list)){
             List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
@@ -69,11 +69,11 @@ public class CallCenterBankController {
         }
         return callCenterUserBaseResponse;
     }
-    
-    
+
+
     @RequestMapping("/getNoServiceUsersList")
     public CallCenterUserBaseResponse getNoServiceUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
-    	CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
+        CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
         List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceUsersList(callCenterUserInfoRequest);
         if(!CollectionUtils.isEmpty(list)){
             List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
@@ -87,5 +87,26 @@ public class CallCenterBankController {
         /*CallCenterServiceUsersResponse callCenterServiceUsersResponse = new CallCenterServiceUsersResponse();*/
         return callCenterBankService.updateRecord(callCenterServiceUsersRequest);
     }
-    
+
+    @RequestMapping("/getBasicUsersList")
+    public CallCenterUserBaseResponse getBasicUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
+        CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
+        List<CallcenterUserBaseCustomize> list = callCenterBankService.getBasicUsersList(callCenterUserInfoRequest);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
+            callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
+        }
+        return callCenterUserBaseResponse;
+    }
+
+    @RequestMapping("/getUserDetailById")
+    public CallCenterUserBaseResponse getUserDetailById(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
+        CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
+        List<CallcenterUserBaseCustomize> list = callCenterBankService.getUserDetailById(callCenterUserInfoRequest);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
+            callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
+        }
+        return callCenterUserBaseResponse;
+    }
 }

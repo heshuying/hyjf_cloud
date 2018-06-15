@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.BorrowConfigResponse;
 import com.hyjf.am.response.trade.BorrowFinmanNewChargeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
@@ -42,7 +43,7 @@ public class BorrowController {
      * @Desc :根据机构编号检索机构信息
      * @Param: * @param instCode
      * @Date: 9:00 2018/5/31
-     * @Return: com.hyjf.am.response.user.HjhInstConfigResponse
+     * @Return: HjhInstConfigResponse
      */
     @ApiOperation(value = " 根据机构编号检索机构信息")
     @GetMapping("/selectInstConfigByInstCode/{instCode}")
@@ -118,5 +119,10 @@ public class BorrowController {
             return borrowService.insertBorrowManinfo(borrowManinfo);
         }
         return 0;
+    }
+
+    @RequestMapping("/updateBorrowRegist")
+    public int updateBorrowRegist(@RequestBody BorrowRegistRequest request) {
+        return borrowService.updateBorrowRegist(request);
     }
 }

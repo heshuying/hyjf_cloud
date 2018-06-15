@@ -44,7 +44,7 @@ public class WebLoginController {
      * @Desc :登录
      * @Param: * @param loginUserName
      * @Date: 16:39 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<com.hyjf.am.vo.user.UserVO>
+     * @Return:
      */
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
@@ -71,7 +71,7 @@ public class WebLoginController {
      * @Desc : 退出登录
      * @Param: * @param token
      * @Date: 16:29 2018/6/5
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return:
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")

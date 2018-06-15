@@ -13,13 +13,17 @@ import java.util.List;
  */
 public interface CallCenterBankService {
     List<BankCard> getTiedCardOfAccountBank(Integer userId);
-    
+
     List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-    
+
     List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-    
+
     List<CallcenterUserBaseCustomize> getNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
     Integer updateRecord(CallCenterServiceUsersRequest callCenterServiceUsersRequest);
+
+    List<CallcenterUserBaseCustomize> getBasicUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
+
+    List<CallcenterUserBaseCustomize> getUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
 }

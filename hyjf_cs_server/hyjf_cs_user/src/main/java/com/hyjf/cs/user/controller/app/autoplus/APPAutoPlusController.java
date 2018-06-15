@@ -68,7 +68,7 @@ public class APPAutoPlusController {
      * @return
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
-    @PostMapping("/userAuthCreditReturn")
+    @PostMapping(value = "/userAuthCreditReturn", produces = "application/json; charset=utf-8")
     public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
         ApiResult<Object> apiResult = new ApiResult<>();
         String sign = request.getHeader("sign");
@@ -120,10 +120,10 @@ public class APPAutoPlusController {
      * @param request
      * @param bean
      * @Date: 16:45 2018/5/30
-     * @Return: com.hyjf.cs.user.result.ApiResult<java.lang.String>
+     * @Return: ApiResult
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
-    @PostMapping("/userAuthInvesReturn")
+    @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
     public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
         ApiResult<Object> apiResult = new ApiResult<>();
         String sign = request.getHeader("sign");
@@ -138,11 +138,11 @@ public class APPAutoPlusController {
      * @Desc :用户授权自动投资异步回调
      * @Param: * @param bean
      * @Date: 16:46 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
-    @PostMapping("/userAuthInvesBgreturn")
+    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
 
         String result = autoPlusService.userBgreturn(bean);

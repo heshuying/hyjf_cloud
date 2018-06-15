@@ -317,7 +317,7 @@ public class UserController {
 	 * @Desc : 查询紧急联系人
 	 * @Param: * @param userId
 	 * @Date: 14:21 2018/6/4
-	 * @Return: com.hyjf.am.response.user.UsersContactResponse
+	 * @Return: UsersContactResponse
 	 */
 	@RequestMapping("/selectUserContact/{userId}")
 	public UsersContactResponse selectUserContact(Integer userId){

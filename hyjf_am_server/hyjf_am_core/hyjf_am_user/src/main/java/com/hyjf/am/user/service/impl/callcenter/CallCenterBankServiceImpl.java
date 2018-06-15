@@ -27,24 +27,24 @@ import java.util.List;
  */
 @Service
 public class CallCenterBankServiceImpl implements CallCenterBankService {
-    @Autowired
-    private BankCardMapper bankCardMapper;
-    @Autowired
-    private CallCenterCustomizeMapper callCenterCustomizeMapper;
+	@Autowired
+	private BankCardMapper bankCardMapper;
+	@Autowired
+	private CallCenterCustomizeMapper callCenterCustomizeMapper;
 
-    @Autowired
+	@Autowired
 	private CallcenterServiceUsersMapper callcenterServiceUsersMapper;
 
-    public List<BankCard> getTiedCardOfAccountBank(Integer userId){
-        BankCardExample example = new BankCardExample();
-        BankCardExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
-        if(bankCardList!= null && bankCardList.size()>0){
-            return bankCardList;
-        }
-        return null;
-    }
+	public List<BankCard> getTiedCardOfAccountBank(Integer userId){
+		BankCardExample example = new BankCardExample();
+		BankCardExample.Criteria cra = example.createCriteria();
+		cra.andUserIdEqualTo(userId);
+		List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
+		if(bankCardList!= null && bankCardList.size()>0){
+			return bankCardList;
+		}
+		return null;
+	}
 
 	@Override
 	public List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
@@ -89,5 +89,24 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 			}
 		}
 		return rowCound;
+	}
+
+	@Override
+	public List<CallcenterUserBaseCustomize> getBasicUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
+		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findBasicUsersList(callCenterUserInfoRequest);
+
+		/*在此拼装*/
+
+
+		return CallcenterUserBaseCustomizeList;
+	}
+
+	@Override
+	public List<CallcenterUserBaseCustomize> getUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest) {
+		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findUserDetailById(callCenterUserInfoRequest);
+
+		/*在此拼装*/
+
+		return CallcenterUserBaseCustomizeList;
 	}
 }

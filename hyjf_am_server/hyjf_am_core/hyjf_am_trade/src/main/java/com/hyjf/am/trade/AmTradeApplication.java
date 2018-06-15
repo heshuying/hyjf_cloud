@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages = "com.hyjf")
-public class AmBorrowApplication {
+public class AmTradeApplication {
 
     @Bean
     @LoadBalanced
@@ -25,6 +25,6 @@ public class AmBorrowApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(AmBorrowApplication.class, args);
+        SpringApplication.run(AmTradeApplication.class, args);
     }
 }

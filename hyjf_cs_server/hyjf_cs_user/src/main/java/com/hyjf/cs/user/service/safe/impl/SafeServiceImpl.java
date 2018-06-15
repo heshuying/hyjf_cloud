@@ -15,20 +15,22 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.UserConstant;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.BindEmailError;
 import com.hyjf.cs.user.constants.ContractSetError;
-import com.hyjf.cs.user.constants.RegisterError;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
+import com.hyjf.cs.user.service.BaseServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 
@@ -48,7 +50,7 @@ import java.util.Map;
  * @version SafeServiceImpl, v0.1 2018/6/11 15:55
  */
 @Service
-public class SafeServiceImpl implements SafeService {
+public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
 
@@ -77,15 +79,6 @@ public class SafeServiceImpl implements SafeService {
         return amUserClient.updatePassWd(userId, oldPW, newPW);
     }
 
-    /**
-     * 更新用户信息
-     * @param userVO
-     * @return
-     */
-    @Override
-    public int updateUserByUserId(UserVO userVO) {
-        return amUserClient.updateUserById(userVO);
-    }
 
     /**
      * 获取用户对象
@@ -103,7 +96,7 @@ public class SafeServiceImpl implements SafeService {
      * @Desc :账户设置信息查询
      * @Param: * @param token
      * @Date: 16:47 2018/5/30
-     * @Return: java.lang.String
+     * @Return: String
      */
     @Override
     public Map<String,Object> safeInit(WebViewUser webViewUser) {
@@ -280,9 +273,9 @@ public class SafeServiceImpl implements SafeService {
 
     /**
      * 绑定邮箱激活条件校验
-     * @param email
-     * @param userId
-     * @param activeCode
+     * @param
+     * @param
+     * @param
      */
     @Override
     public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUser user) {
@@ -367,40 +360,7 @@ public class SafeServiceImpl implements SafeService {
         return true;
     }
 
-    /**
-     * 更换手机号条件校验
-     * @param newMobile
-     * @param smsCode
-     */
-    @Override
-    public boolean checkForMobileModify(String newMobile, String smsCode) {
-        String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
-        int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        if (cnt <= 0) {
-            throw new ReturnMessageException(RegisterError.SMSCODE_INVALID_ERROR);
-        }
 
-        return true;
-    }
-
-    /**
-     * 用户手机号修改信息查询
-     * @param userId
-     * @return
-     */
-    @Override
-    public MobileModifyResultBean queryForMobileModify(Integer userId) {
-        MobileModifyResultBean result = new MobileModifyResultBean();
-        UserVO user = amUserClient.findUserById(userId);
-        if(user != null && StringUtils.isNotBlank(user.getMobile())) {
-            String hideMobile = user.getMobile().substring(0,user.getMobile().length()-(user.getMobile().substring(3)).length())+"****"+user.getMobile().substring(7);
-            result.setMobile(user.getMobile());
-            result.setHideMobile(hideMobile);
-        }
-
-        return result;
-    }
 
 
     /**

@@ -83,7 +83,7 @@ public class RechargeController{
 	 * @Param: * @param request
 	 * @param bean
 	 * @Date: 12:40 2018/6/5
-	 * @Return: org.springframework.web.servlet.ModelAndView
+	 * @Return: ModelAndView
 	 */
 	@RequestMapping("/return")
 	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
@@ -126,7 +126,7 @@ public class RechargeController{
 	 * @Param: * @param request
 	 * @param bean
 	 * @Date: 12:40 2018/6/5
-	 * @Return: com.hyjf.pay.lib.bank.bean.BankCallResult
+	 * @Return: BankCallResult
 	 */
 	@ResponseBody
 	@RequestMapping("/bgreturn")
