@@ -125,12 +125,12 @@ public class MobileModifyController extends BaseUserController {
             bankBean = mobileModifyService.callSendCode(user.getUserId(),param.get("mobile"), BankCallMethodConstant.TXCODE_MOBILE_MODIFY_PLUS, ClientConstants.CHANNEL_PC,null);
         } catch (Exception e) {
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
             logger.error("请求验证码接口发生异常", e);
         }
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
             logger.error("请求验证码接口失败");
         }else {
             result.setResult(bankBean.getSrvAuthCode());

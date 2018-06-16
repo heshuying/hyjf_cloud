@@ -11,6 +11,7 @@ import com.hyjf.cs.trade.bean.MQBorrow;
 import com.hyjf.cs.trade.mq.AutoPreAuditProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.AutoPreAuditService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

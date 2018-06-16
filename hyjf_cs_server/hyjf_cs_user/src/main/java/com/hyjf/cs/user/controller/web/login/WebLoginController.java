@@ -62,7 +62,7 @@ public class WebLoginController extends BaseUserController {
         } else {
             logger.error("web端登录失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
+            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
         }
         return result;
     }

@@ -54,13 +54,13 @@ public class WebBindCardController extends BaseUserController {
 			bankBean = bindCardService.callSendCode(user.getUserId(),mobile, BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_PC,cardNo);
 		} catch (Exception e) {
 			result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
 			logger.error("请求绑卡验证码接口发生异常", e);
 		}
         
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
         	result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
 			logger.error("请求绑卡验证码接口失败");
         }else {
 			result.setResult(bankBean.getSrvAuthCode());
@@ -86,13 +86,13 @@ public class WebBindCardController extends BaseUserController {
 			bankBean = bindCardService.callBankBindCard(bindCardVO, user.getUserId(), userIp);
 		} catch (Exception e) {
 			result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
 			logger.error("请求绑卡接口发生异常", e);
 		}
         
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
         	result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
 			logger.error("请求绑卡接口失败");
         }
         
@@ -101,7 +101,7 @@ public class WebBindCardController extends BaseUserController {
 			bindCardService.updateAfterBindCard(bankBean);
 		} catch (ParseException e) {
 			result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMsg());
 			logger.error("绑卡后处理异常", e);
 		}
         
@@ -125,13 +125,13 @@ public class WebBindCardController extends BaseUserController {
 			bankBean = bindCardService.callBankUnBindCard(bindCardVO, user.getUserId());
 		} catch (Exception e) {
 			result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
 			logger.error("请求解绑卡接口发生异常", e);
 		}
         
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
         	result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
 			logger.error("请求解绑卡接口失败");
         }
         
@@ -140,7 +140,7 @@ public class WebBindCardController extends BaseUserController {
 			bindCardService.updateAfterUnBindCard(bankBean);
 		} catch (Exception e) {
 			result.setStatus(ApiResult.STATUS_FAIL);
-			result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMessage());
+			result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMsg());
 			logger.error("解绑卡后处理异常", e);
 		}
         

@@ -1,11 +1,12 @@
 package com.hyjf.cs.user.constants;
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.validator.CheckUtil;
 
 /**
  * @author hesy
  */
-public enum BindCardError implements ErrorCode {
+public enum BindCardError implements MsgCode {
     CARD_NO_ERROR("1", "银行卡号未填写"),
     MOBILE_ERROR("1", "手机号未填写"),
     SMSCODE_ERROR("1", "短信验证码未填写"),
@@ -17,21 +18,21 @@ public enum BindCardError implements ErrorCode {
 	CARD_NOT_EXIST_ERROR("1", "没有要解绑的银行卡"),
 	CARD_DELETE_ERROR("1", "银行卡删除失败");
 
-    private String errCode;
-    private String message;
+    private String code;
+    private String msg;
 
-    BindCardError(String errCode, String message) {
-        this.errCode = errCode;
-        this.message = message;
+    BindCardError(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     @Override
-    public String getErrCode() {
-        return this.errCode;
+    public String getCode() {
+        return this.code;
     }
 
     @Override
-    public String getMessage() {
-        return this.message;
+    public String getMsg() {
+        return this.msg;
     }
 }

@@ -11,12 +11,16 @@
 	
 package com.hyjf.common.enums.utils;
 
+
+import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.validator.CheckUtil;
+
 /**
  * 信息代码和信息本体的枚举
  * @author liubin
  */
 
-public enum MsgEnum {
+public enum MsgEnum implements MsgCode {
 	
 	
 	// ----------通用警告信息------------
@@ -177,9 +181,7 @@ public enum MsgEnum {
 		this.msg = msg;
 	}
 
-	public String getMsg() {
-		return this.msg;
-	}
+	public String getMsg() { return this.msg; }
 
 	public String getCode() {
 		return this.code;

@@ -1,6 +1,7 @@
 package com.hyjf.common.exception;
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
+import org.apache.log4j.spi.ErrorCode;
 
 /**
  * @author xiasq
@@ -8,13 +9,13 @@ import com.hyjf.common.constants.ErrorCode;
  */
 public class ReturnMessageException extends RuntimeException {
 
-	private ErrorCode error;
+	private MsgCode error;
 
-	public ReturnMessageException(ErrorCode error) {
+	public ReturnMessageException(MsgCode error) {
 		this.error = error;
 	}
 
-	public ReturnMessageException(ErrorCode error, Throwable e) {
+	public ReturnMessageException(MsgCode error, Throwable e) {
 		super(e);
 		this.error = error;
 	}
@@ -35,11 +36,11 @@ public class ReturnMessageException extends RuntimeException {
 		super(e);
 	}
 
-	public ErrorCode getError() {
+	public MsgCode getError() {
 		return error;
 	}
 
-	public void setError(ErrorCode error) {
+	public void setError(MsgCode error) {
 		this.error = error;
 	}
 

@@ -58,7 +58,7 @@ public class AppLoginController extends BaseUserController {
 
         if (Validator.isNull(loginUserName) || Validator.isNull(loginPassword)||!CommonUtils.isMobile(loginUserName)) {
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
+            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
         }
         loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
         return result;

@@ -65,7 +65,7 @@ public class WeChatBankOpenController extends BaseUserController {
         } else {
             logger.error("openAccount userInfo failed...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(OpenAccountError.SYSTEM_ERROR.getMessage());
+            result.setStatusDesc(OpenAccountError.SYSTEM_ERROR.getMsg());
         }
         return result;
     }

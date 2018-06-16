@@ -1,7 +1,6 @@
 package com.hyjf.cs.user.result;
 
-import com.hyjf.common.constants.ErrorCode;
-
+import com.hyjf.common.constants.MsgCode;
 /**
  * @author sss
  * @version ApiResult, v0.1 2018/5/31 14:39
@@ -23,9 +22,9 @@ public class AppResult<T> {
 		this.statusDesc = statusDesc;
 	}
 
-	public AppResult(ErrorCode code) {
-		this.status = code.getErrCode();
-		this.statusDesc = code.getMessage();
+	public AppResult(MsgCode code) {
+		this.status = code.getCode();
+		this.statusDesc = code.getMsg();
 	}
 
 	private T result;

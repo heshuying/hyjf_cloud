@@ -4,13 +4,13 @@
 package com.hyjf.cs.trade.constants;
 
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
 
 /**
  * @author zhangqingqing
  * @version LoginError, v0.1 2018/4/25 14:58
  */
-public enum BankWithdrawError implements ErrorCode {
+public enum BankWithdrawError implements MsgCode {
     USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
     PARAM_ERROR("1", "参数错误，请重试"),
     WITHDRAW_TRSANSAMT_ERROR("1", "请输入提现金额。"),
@@ -25,21 +25,21 @@ public enum BankWithdrawError implements ErrorCode {
     CALL_BANK_ERROR("1", "调用银行接口失败");
 
 
-    private String errCode;
-    private String message;
+    private String code;
+    private String msg;
 
-    BankWithdrawError(String errCode, String message) {
-        this.errCode = errCode;
-        this.message = message;
+    BankWithdrawError(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     @Override
-    public String getErrCode() {
-        return this.errCode;
+    public String getCode() {
+        return this.code;
     }
 
     @Override
-    public String getMessage() {
-        return this.message;
+    public String getMsg() {
+        return this.msg;
     }
 }

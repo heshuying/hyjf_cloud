@@ -65,7 +65,7 @@ public class AppBankOpenController extends BaseUserController {
         } else {
             logger.error("openAccount userInfo failed...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(OpenAccountError.GET_USER_INFO_ERROR.getMessage());
+            result.setStatusDesc(OpenAccountError.GET_USER_INFO_ERROR.getMsg());
         }
         return result;
     }

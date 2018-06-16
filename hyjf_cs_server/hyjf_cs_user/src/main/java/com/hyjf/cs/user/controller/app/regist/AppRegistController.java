@@ -61,7 +61,7 @@ public class AppRegistController extends BaseUserController {
             int count = amUserClient.countUserByRecommendName(reffer);
             if (count == 0) {
                 result.setStatus(ApiResult.STATUS_FAIL);
-                result.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMessage());
+                result.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMsg());
             }
         }
         RegisterVO registerVO = new RegisterVO();
@@ -77,7 +77,7 @@ public class AppRegistController extends BaseUserController {
         } else {
             logger.error("web端注册失败...");
             result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
+            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
         }
         return result;
     }

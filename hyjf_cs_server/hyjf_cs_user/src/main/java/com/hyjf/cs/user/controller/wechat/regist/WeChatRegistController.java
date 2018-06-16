@@ -69,8 +69,8 @@ public class WeChatRegistController extends BaseUserController {
         if (StringUtils.isNotBlank(reffer)) {
             int count = amUserClient.countUserByRecommendName(reffer);
             if (count == 0) {
-                resultBean.setStatus(LoginError.REFFER_INVALID_ERROR.getErrCode());
-                resultBean.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMessage());
+                resultBean.setStatus(LoginError.REFFER_INVALID_ERROR.getCode());
+                resultBean.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMsg());
                 return resultBean;
             }
         }

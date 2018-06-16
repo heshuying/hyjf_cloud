@@ -36,8 +36,8 @@ public class GlobalExceptionHandler {
 	@ResponseBody
 	public BaseResultBean defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
 		BaseResultBean response = new BaseResultBean();
-		response.setStatus(e.getError().getErrCode());
-		response.setStatusDesc(e.getError().getMessage());
+		response.setStatus(e.getError().getCode());
+		response.setStatusDesc(e.getError().getMsg());
 		return response;
 	}
 
