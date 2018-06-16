@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.callcenter;
 import com.hyjf.am.response.callcenter.*;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.am.vo.callcenter.*;
@@ -117,5 +118,22 @@ public class CallCenterTradeController {
             callCenterWithdrawResponse.setResultList(callCenterWithdrawVOS);
         }
         return callCenterWithdrawResponse;
+    }
+
+    /**
+     * 查询投资明细(直投产品)
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryBorrowInvestList", method = RequestMethod.POST)
+    public CallcenterHztInvestResponse getBorrowInvestList(@RequestBody @Valid CallcenterHztInvestRequest request){
+    	CallcenterHztInvestResponse callcenterHztInvestResponse = new CallcenterHztInvestResponse();
+        List<CallcenterHztInvestCustomize> list = callCenterTradeService.getBorrowInvestList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallcenterHztInvestVO> callcenterHztInvestVO = CommonUtils.convertBeanList(list,CallcenterHztInvestVO.class);
+            callcenterHztInvestResponse.setResultList(callcenterHztInvestVO);
+        }
+        return callcenterHztInvestResponse;
     }
 }

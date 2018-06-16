@@ -320,7 +320,7 @@ public class CommonUtils {
 	 * @author zhangyk
 	 * @date 2018年6月6日14:57:50
 	 */
-	private static <S, T> T convertBean(S s, Class<T> clazz) {
+	public static <S, T> T convertBean(S s, Class<T> clazz) {
 		if (s == null) {
 			return null;
 		}
