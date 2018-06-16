@@ -5,13 +5,16 @@ package com.hyjf.am.user.service.impl.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.mapper.auto.CallcenterServiceUsersMapper;
+import com.hyjf.am.user.dao.mapper.customize.callcenter.CallCenterAccountHuifuMapper;
 import com.hyjf.am.user.dao.mapper.customize.callcenter.CallCenterCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsers;
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsersExample;
+import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterAccountHuifuCustomize;
 import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
 import com.hyjf.am.user.service.callcenter.CallCenterBankService;
 import com.hyjf.common.cache.CacheUtil;
@@ -35,7 +38,8 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 	private BankCardMapper bankCardMapper;
 	@Autowired
 	private CallCenterCustomizeMapper callCenterCustomizeMapper;
-
+	@Autowired
+	private CallCenterAccountHuifuMapper callCenterAccountHuifuMapper;
 	@Autowired
 	private CallcenterServiceUsersMapper callcenterServiceUsersMapper;
 
@@ -137,5 +141,11 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 			callcenterUserBaseCustomize.setUserType(userTypeMap.getOrDefault(callcenterUserBaseCustomize.getUserType(),null));
 		}
 		return CallcenterUserBaseCustomizeList;
+	}
+
+	@Override
+	public List<CallcenterAccountHuifuCustomize> getHuifuTiedcardInfo(CallcenterAccountHuifuRequest callcenterAccountHuifuRequest) {
+		List<CallcenterAccountHuifuCustomize> callcenterAccountHuifuCustomizeList = callCenterAccountHuifuMapper.findHuifuTiedcardInfo(callcenterAccountHuifuRequest);
+		return callcenterAccountHuifuCustomizeList;
 	}
 }

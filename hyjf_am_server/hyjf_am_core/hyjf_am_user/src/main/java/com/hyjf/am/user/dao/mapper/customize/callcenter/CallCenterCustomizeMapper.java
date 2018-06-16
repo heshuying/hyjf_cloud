@@ -37,7 +37,7 @@ public interface CallCenterCustomizeMapper {
     List<CallcenterUserBaseCustomize> findBasicUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
     /**
-     * @param mobiles     明天把查询实现了
+     * @param mobiles     
      * @return
      */
     List<CallcenterUserBaseCustomize> findUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest);
