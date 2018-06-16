@@ -22,8 +22,9 @@ public enum BankWithdrawError implements MsgCode {
     NOT_REGIST_ERROR("1", "用户未开户！"),
     NOT_SET_PWD_ERROR("1", "用户未设置交易密码"),
     CANNOT_REPEAT_ERROR("1", "用户已授权,无需重复授权"),
-    CALL_BANK_ERROR("1", "调用银行接口失败");
-
+    CALL_BANK_ERROR("1", "调用银行接口失败"),
+	BANK_WITHDRAW_EXCEPTION_HANDLE_ERROR("1", "江西银行提现掉单处理出错！"),
+	BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS("0", "江西银行提现掉单处理成功！");
 
     private String code;
     private String msg;
