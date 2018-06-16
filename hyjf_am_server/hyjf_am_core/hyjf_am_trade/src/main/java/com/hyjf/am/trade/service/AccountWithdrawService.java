@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
 
@@ -21,4 +22,9 @@ public interface AccountWithdrawService {
     int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankRequest);
 
     void updateAccountwithdrawLog(Accountwithdraw accountwithdraw);
+    
+    int updateAccountwithdraw(Accountwithdraw accountWithdraw);
+
+	void selectAndUpdateAccountWithdraw(JSONObject pamaMap) throws Exception;
+
 }
