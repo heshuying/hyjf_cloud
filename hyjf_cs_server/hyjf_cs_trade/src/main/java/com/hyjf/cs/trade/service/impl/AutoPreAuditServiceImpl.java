@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  * @version AutoPreAuditServiceImpl, v0.1 2018/6/14 16:35
  */
 @Service
-public class AutoPreAuditServiceImpl implements AutoPreAuditService {
+public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements AutoPreAuditService {
 
     private Logger _log = LoggerFactory.getLogger(AutoPreAuditServiceImpl.class);
 

@@ -6,7 +6,7 @@ package com.hyjf.cs.user.service.autoplus;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoPlusRetBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
-import com.hyjf.cs.user.service.BaseService;
+import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AutoPlusService, v0.1 2018/6/11 15:38
  */
-public interface AutoPlusService extends BaseService {
+public interface AutoPlusService extends BaseUserService {
 
     /**
      * 授权自动债转、投资

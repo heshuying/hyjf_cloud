@@ -20,6 +20,7 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ import java.util.Map;
  * @version SmsCodeServiceImpl, v0.1 2018/4/25 9:02
  */
 @Service
-public class SmsCodeServiceImpl implements SmsCodeService {
+public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeService {
 	private static final Logger logger = LoggerFactory.getLogger(SmsCodeServiceImpl.class);
 
 	@Autowired

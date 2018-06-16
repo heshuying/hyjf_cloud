@@ -16,7 +16,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
  * @author ${yaoy}
  * @version RtbLoansBatchService, v0.1 2018/6/12 16:02
  */
-public interface RtbLoansBatchService {
+public interface RtbLoansBatchService extends BaseTradeService{
 
     List<BorrowApicronVo> getBorrowApicronList(Integer status, Integer apiType);
 

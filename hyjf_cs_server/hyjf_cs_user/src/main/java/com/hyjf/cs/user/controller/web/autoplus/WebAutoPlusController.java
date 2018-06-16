@@ -14,6 +14,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.BindCardError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -43,7 +44,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class WebAutoPlusController {
+public class WebAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebAutoPlusController.class);
 

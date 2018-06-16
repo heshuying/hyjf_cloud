@@ -8,6 +8,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -36,7 +37,7 @@ import java.util.Map;
 @Api(value = "微信端用户开户")
 @Controller
 @RequestMapping("/wechat/user/open")
-public class WeChatBankOpenController {
+public class WeChatBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatBankOpenController.class);
 
     @Autowired

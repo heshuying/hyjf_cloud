@@ -1,12 +1,13 @@
 package com.hyjf.cs.user.service.smscode;
 
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.service.BaseUserService;
 
 /**
  * @author xiasq
  * @version SmsCodeService, v0.1 2018/4/25 9:02
  */
-public interface SmsCodeService {
+public interface SmsCodeService extends BaseUserService {
     /**
      * 发送短信验证码
      * @param validCodeType

@@ -11,6 +11,7 @@ import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.constants.BindCardError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
@@ -38,7 +39,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class MobileModifyController {
+public class MobileModifyController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(MobileModifyController.class);
     @Autowired
     MobileModifyService mobileModifyService;

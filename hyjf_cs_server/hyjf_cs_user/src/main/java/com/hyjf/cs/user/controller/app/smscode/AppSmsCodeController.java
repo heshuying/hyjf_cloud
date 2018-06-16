@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.app.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -22,7 +23,7 @@ import java.util.Map;
 @Api(value = "验证码")
 @RestController
 @RequestMapping("/app/smsCode")
-public class AppSmsCodeController {
+public class AppSmsCodeController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(AppSmsCodeController.class);
 
 	@Autowired

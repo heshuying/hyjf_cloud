@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @author hesy
  */
 @Service
-public class BindCardServiceImpl extends BaseServiceImpl implements BindCardService{
+public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCardService{
 	private static final Logger logger = LoggerFactory.getLogger(BindCardServiceImpl.class);
 	@Autowired
 	SystemConfig systemConfig;

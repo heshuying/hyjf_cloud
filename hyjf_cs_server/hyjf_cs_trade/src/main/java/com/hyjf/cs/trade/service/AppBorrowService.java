@@ -7,5 +7,5 @@ package com.hyjf.cs.trade.service;
  * @author zhangqingqing
  * @version AppBorrowService, v0.1 2018/6/5 9:48
  */
-public interface AppBorrowService {
+public interface AppBorrowService extends BaseTradeService{
 }

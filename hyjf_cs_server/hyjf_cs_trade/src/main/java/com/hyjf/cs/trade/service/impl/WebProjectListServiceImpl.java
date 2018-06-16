@@ -7,6 +7,7 @@ import com.hyjf.am.util.Page;
 import com.hyjf.am.vo.trade.WebProjectListCsVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.trade.client.WebProjectListClient;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.WebProjectListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.List;
  * @version WebProjectListServiceImpl, v0.1 2018/6/13 10:21
  */
 @Service
-public class WebProjectListServiceImpl implements WebProjectListService {
+public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements WebProjectListService {
 
     @Autowired
     private WebProjectListClient webProjectListClient;

@@ -7,11 +7,7 @@ import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
@@ -22,8 +18,7 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.result.AppResult;
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -49,7 +44,7 @@ import java.util.Map;
  */
 
 @Service
-public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService   {
+public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpenService   {
 	
 	private static final Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 

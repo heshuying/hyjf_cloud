@@ -49,7 +49,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.CouponProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.vo.RegisterVO;
 
@@ -58,7 +58,7 @@ import com.hyjf.cs.user.vo.RegisterVO;
  * @version RegistServiceImpl, v0.1 2018/6/11 15:10
  */
 @Service
-public class RegistServiceImpl extends BaseServiceImpl implements RegistService{
+public class RegistServiceImpl extends BaseUserServiceImpl implements RegistService{
 
     private static final Logger logger = LoggerFactory.getLogger(RegistServiceImpl.class);
 

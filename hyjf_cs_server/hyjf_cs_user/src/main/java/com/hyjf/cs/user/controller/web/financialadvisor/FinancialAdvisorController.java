@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.web.financialadvisor;
 
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class FinancialAdvisorController {
+public class FinancialAdvisorController extends BaseUserController {
 
     @Autowired
     FinancialAdvisorService financialAdvisorService;

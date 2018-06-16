@@ -12,6 +12,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -32,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "app端用户登录接口")
 @RestController
 @RequestMapping("/app/appUser")
-public class AppLoginController {
+public class AppLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
 

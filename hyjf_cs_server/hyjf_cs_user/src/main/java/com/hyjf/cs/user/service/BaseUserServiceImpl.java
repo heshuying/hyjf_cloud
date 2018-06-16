@@ -11,6 +11,7 @@ import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoStateQueryRequest;
 import com.hyjf.cs.user.bean.BaseBean;
@@ -26,9 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class BaseServiceImpl implements BaseService {
+public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
 
-	Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(BaseUserServiceImpl.class);
 
 	@Autowired
 	AmUserClient amUserClient;

@@ -9,6 +9,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -29,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class WebLoginController {
+public class WebLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebLoginController.class);
 

@@ -12,8 +12,8 @@ web * Description:（类功能描述-必填） 需要在每个方法前添加业
 package com.hyjf.cs.common.aop;
 
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.cs.common.bean.result.ResultApiBean;
-import com.hyjf.cs.common.bean.result.ResultBean;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.BaseResult;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -38,13 +38,13 @@ public class AOPHandler {
 	 * @param pjp
 	 * @return
 	 */
-	@Pointcut("execution(* com.ctj.service.*.*(..))")
+	@Pointcut("execution(* com.hyjf.cs..*controller.*(..)))")
 	public Object apiLogAOPHandler(ProceedingJoinPoint pjp) {
 
 		long startTime = System.currentTimeMillis();
-		ResultBean<?> result;
+		BaseResult<?> result;
 		try {
-			result = (ResultBean<?>) pjp.proceed();
+			result = (BaseResult<?>) pjp.proceed();
 			logger.info(pjp.getSignature() + " 执行时间:" + (System.currentTimeMillis() - startTime));
 		}catch(Throwable e) {
 			result = apiExceptionHandler(pjp, e);
@@ -58,17 +58,17 @@ public class AOPHandler {
 	 * @param e
 	 * @return
 	 */
-	private ResultBean<?> apiExceptionHandler(ProceedingJoinPoint pjp, Throwable e) {
+	private BaseResult<?> apiExceptionHandler(ProceedingJoinPoint pjp, Throwable e) {
 
-		ResultBean<?> result = new ResultBean<>();
+		BaseResult<?> result = new BaseResult<>();
 
 		// 已知异常
 		if (e instanceof CheckException) {
-			result.setStatus(ResultBean.FAIL);
+			result.setStatus(BaseResult.FAIL);
 			result.setStatusDesc(e.getLocalizedMessage());
 		} else {
 			logger.error(pjp.getSignature() + " 发生异常\r\n" + AOPUtil.getMethodArgs(pjp), e);
-			result.setStatus(ResultBean.ERROR);
+			result.setStatus(BaseResult.ERROR);
 			result.setStatusDesc("接口调用发生异常，请联系服务方。");
 			// TODO 发送邮件或者写到异常文件中
 		}
@@ -81,13 +81,13 @@ public class AOPHandler {
 	 * @return
 	 */
 
-	@Pointcut("execution(public com.hyjf.cs.common.bean.result.ResultApiBean *(..))")
+	@Pointcut("execution(public com.hyjf.cs.common.bean.result.ApiResult *(..))")
 	public Object apiResSignLogAOPHandler(ProceedingJoinPoint pjp) {
 
 		long startTime = System.currentTimeMillis();
-		ResultApiBean<?> result;
+		ApiResult<?> result;
 		try {
-			result = (ResultApiBean<?>) pjp.proceed();
+			result = (ApiResult<?>) pjp.proceed();
 			logger.info(pjp.getSignature() + " 执行时间:" + (System.currentTimeMillis() - startTime));
 		}catch(Throwable e) {
 			result = apiResSignExceptionHandler(pjp, e);
@@ -101,9 +101,9 @@ public class AOPHandler {
 	 * @param e
 	 * @return
 	 */
-	private ResultApiBean<?> apiResSignExceptionHandler(ProceedingJoinPoint pjp, Throwable e) {
+	private ApiResult<?> apiResSignExceptionHandler(ProceedingJoinPoint pjp, Throwable e) {
 
-		ResultApiBean<?> result = new ResultApiBean<>();
+		ApiResult<?> result = new ApiResult<>();
 
 		// 已知异常
 		if (e instanceof CheckException) {
@@ -111,7 +111,7 @@ public class AOPHandler {
 			result.setStatusDesc(e.getLocalizedMessage());
 		} else {
 			logger.error(pjp.getSignature() + " 发生异常\r\n" + AOPUtil.getMethodArgs(pjp), e);
-			result.setStatus(ResultBean.ERROR);
+			result.setStatus(BaseResult.ERROR);
 			result.setStatusDesc("接口调用发生异常，请联系服务方。");
 			// TODO 发送邮件或者写到异常文件中
 		}
@@ -124,7 +124,7 @@ public class AOPHandler {
 	 * @return
 	 * @throws Throwable
 	 */
-
+	@Pointcut("execution(public com.hyjf.cs.common.bean.result.BaseResult *(..))")
 	public Object webApiLogAOPHandler(ProceedingJoinPoint pjp) throws Throwable {
 
 		long startTime = System.currentTimeMillis();

@@ -32,7 +32,7 @@ import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.util.ResultEnum;
@@ -48,7 +48,7 @@ import com.hyjf.soa.apiweb.CommonSoaUtils;
  * @version AutoPlusServiceImpl, v0.1 2018/6/11 15:39
  */
 @Service
-public class AutoPlusServiceImpl extends BaseServiceImpl implements AutoPlusService  {
+public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlusService  {
     private static final Logger logger = LoggerFactory.getLogger(AutoPlusServiceImpl.class);
 
     @Autowired

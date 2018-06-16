@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.wechat.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -22,7 +23,7 @@ import java.util.Map;
 @Api(value = "验证码")
 @RestController
 @RequestMapping("/weChat/smsCode")
-public class WeChatSmsCodeController {
+public class WeChatSmsCodeController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WeChatSmsCodeController.class);
 
 	@Autowired

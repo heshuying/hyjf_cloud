@@ -10,6 +10,7 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -29,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "weChat端用户登录接口")
 @RestController
 @RequestMapping("/wechat/user")
-public class WeChatLoginController {
+public class WeChatLoginController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatLoginController.class);
     @Autowired
     private LoginService loginService;

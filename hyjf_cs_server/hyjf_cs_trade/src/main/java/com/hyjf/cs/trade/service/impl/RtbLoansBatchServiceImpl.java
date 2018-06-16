@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.service.impl;
 
 import java.util.List;
 
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import com.hyjf.cs.trade.service.RtbLoansBatchService;
  * @version RtbLoansBatchServiceImpl, v0.1 2018/6/12 15:52
  */
 @Service
-public class RtbLoansBatchServiceImpl implements RtbLoansBatchService {
+public class RtbLoansBatchServiceImpl extends BaseTradeServiceImpl implements RtbLoansBatchService {
 
     @Autowired
     RtbBatchClient rtbBatchClient;

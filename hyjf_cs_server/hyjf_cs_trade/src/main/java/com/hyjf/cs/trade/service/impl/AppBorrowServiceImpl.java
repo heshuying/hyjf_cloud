@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.cs.trade.service.AppBorrowService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,5 +12,5 @@ import org.springframework.stereotype.Service;
  * @version AppBorrowServiceImpl, v0.1 2018/6/5 9:51
  */
 @Service
-public class AppBorrowServiceImpl implements AppBorrowService {
+public class AppBorrowServiceImpl extends BaseTradeServiceImpl implements AppBorrowService {
 }

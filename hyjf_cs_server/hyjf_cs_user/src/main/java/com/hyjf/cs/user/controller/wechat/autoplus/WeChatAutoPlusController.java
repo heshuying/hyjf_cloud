@@ -7,6 +7,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -33,7 +34,7 @@ import java.util.Map;
 @Api(value = "weChat端用户授权自动投资债转接口")
 @RestController
 @RequestMapping("/wechat/user")
-public class WeChatAutoPlusController {
+public class WeChatAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WeChatAutoPlusController.class);
     @Autowired

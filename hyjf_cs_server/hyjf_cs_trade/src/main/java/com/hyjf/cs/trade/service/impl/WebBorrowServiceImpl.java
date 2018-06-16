@@ -25,6 +25,7 @@ import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.mq.AppMessageProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.WebBorrowService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -49,7 +50,7 @@ import java.util.Map;
  * @version WebBorrowServiceImpl, v0.1 2018/6/5 9:50
  */
 @Service
-public class WebBorrowServiceImpl implements WebBorrowService {
+public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBorrowService {
     private static final Logger logger = LoggerFactory.getLogger(WebBorrowServiceImpl.class);
 
     @Autowired

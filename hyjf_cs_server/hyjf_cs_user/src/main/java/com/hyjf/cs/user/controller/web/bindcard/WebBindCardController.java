@@ -6,6 +6,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.constants.BindCardError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -32,7 +33,7 @@ import java.text.ParseException;
 @Api(value = "web端用户解绑卡接口")
 @RestController
 @RequestMapping("/web/card")
-public class WebBindCardController {
+public class WebBindCardController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WebBindCardController.class);
 
 	@Autowired

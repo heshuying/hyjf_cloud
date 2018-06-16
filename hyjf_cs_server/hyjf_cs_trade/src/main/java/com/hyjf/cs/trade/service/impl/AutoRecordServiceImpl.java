@@ -42,7 +42,7 @@ import java.util.Map;
  * @version AutoRecordServiceImpl, v0.1 2018/6/14 10:17
  */
 @Service
-public class AutoRecordServiceImpl implements AutoRecordService {
+public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoRecordService {
 
     private static final Logger _log = LoggerFactory.getLogger(AutoRecordServiceImpl.class);
 

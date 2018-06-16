@@ -7,5 +7,5 @@ package com.hyjf.cs.trade.service;
  * @author zhangqingqing
  * @version WeChatBorrowService, v0.1 2018/6/5 9:49
  */
-public interface WeChatBorrowService {
+public interface WeChatBorrowService extends BaseTradeService{
 }

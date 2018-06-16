@@ -45,7 +45,7 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class WebSafeController {
+public class WebSafeController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSafeController.class);
 
