@@ -155,9 +155,16 @@ public class BankWithdrawExceptionClientImpl implements BankWithdrawExceptionCli
 
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public BankCardVO getBankInfo(Integer userId, String bankId) {
-		// TODO Auto-generated method stub
+		String url = "http://AM-USER/am-user/bankCard/getBankCard/"+userId+"/"+bankId;
+		BankCardResponse response = restTemplate.getForEntity(url, BankCardResponse.class).getBody();
+		if(response!=null) {
+			return response.getResult();
+		}
 		return null;
 	}
 
