@@ -1,0 +1,33 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.cs.trade.controller.batch;
+
+import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.trade.service.CouponExpiredPushService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author yaoy
+ * @version CouponExpiredPushController, v0.1 2018/6/19 15:21
+ * 优惠券过期发送push消息定时任务
+ */
+@RestController
+@RequestMapping("batch/coupon")
+public class CouponExpiredPushController {
+    private static final Logger logger = LoggerFactory.getLogger(CouponExpiredPushController.class);
+
+    @Autowired
+    private CouponExpiredPushService couponExpiredPushService;
+
+    @RequestMapping("/expiredPush")
+    public void sendCouponExpiredMsg() throws MQException {
+        logger.info("优惠券过期检查发送push消息开始");
+        couponExpiredPushService.sendExpiredMsgAct();
+        logger.info("优惠券过期检查发送push消息结束");
+    }
+}
