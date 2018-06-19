@@ -20,13 +20,14 @@ import java.util.List;
  * 体验金按收益期限还款
  */
 @RestController
-@RequestMapping("/batch/periodRepay")
+@RequestMapping("/batch/coupon")
 public class CouponRepayBatchController {
     private static final Logger logger = LoggerFactory.getLogger(CouponRepayBatchController.class);
 
     @Autowired
     private CouponRepayBatchService couponRepayBatchService;
 
+    @RequestMapping("/periodRepay")
     public void couponRepay() {
         logger.info("筛选优惠券单独投资还款开始");
         try {
