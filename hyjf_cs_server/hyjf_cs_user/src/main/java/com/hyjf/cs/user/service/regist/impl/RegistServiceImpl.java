@@ -3,8 +3,6 @@
  */
 package com.hyjf.cs.user.service.regist.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 import java.time.Instant;
 import java.util.Map;
 import java.util.regex.Matcher;
