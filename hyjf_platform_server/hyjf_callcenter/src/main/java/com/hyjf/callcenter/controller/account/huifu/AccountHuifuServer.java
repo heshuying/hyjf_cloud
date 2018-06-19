@@ -65,16 +65,16 @@ public class AccountHuifuServer extends CallcenterBaseController {
         //*************各自业务开始***************
         //根据用户信息查询汇付绑卡关系
         AccountHuifuBean returnBean = new AccountHuifuBean();
-        // 跨库处理开始
-        // 此处添加一个单独查config库的map
+        // (1)config库的map
         List<CallcenterBankConfigVO> bankConfigList = this.accountHuifuService.getBankConfigList();
-/*		if (bankConfigList == null) {
+		if (bankConfigList == null) {
 			result.statusMessage(ResultListBean.STATUS_FAIL,"银行配置为空！");
 			return result;
-		}*/
+		}
         for (CallcenterBankConfigVO vo : bankConfigList) {
         	configMap.put(vo.getBankCode(), vo.getBankName()); 
         }
+        // (2)AccountHuifu 的 LIST
 		List<CallcenterAccountHuifuVO> recordList = this.accountHuifuService.getRecordList(user,bean.getLimitStart(),bean.getLimitSize());
 		if (recordList == null) {
 			result.statusMessage(ResultListBean.STATUS_FAIL,"该用户在汇付未绑卡！");

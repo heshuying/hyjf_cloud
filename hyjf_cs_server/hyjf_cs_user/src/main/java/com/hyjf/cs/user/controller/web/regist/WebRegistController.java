@@ -132,6 +132,7 @@ public class WebRegistController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "检查手机号是否已存在", notes = "检查手机号是否已存在")
+    @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
     @PostMapping(value = "/checkPhone", produces = "application/json; charset=utf-8")
     public boolean checkPhone(@RequestBody Map<String,String> param) {
         logger.info("Web端检查手机号是否已存在, mobile is :{}",JSONObject.toJSONString(param));

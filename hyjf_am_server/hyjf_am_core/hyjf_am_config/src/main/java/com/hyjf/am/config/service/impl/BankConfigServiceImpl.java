@@ -22,7 +22,7 @@ import com.hyjf.am.config.service.BankConfigService;
 public class BankConfigServiceImpl implements BankConfigService {
 
 	@Autowired
-	protected BankConfigMapper BankConfigMapper;
+	protected BankConfigMapper bankConfigMapper;
 
 	@Autowired
 	protected BankReturnCodeConfigMapper bankReturnCodeConfigMapper;
@@ -40,7 +40,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 		}
 		BankConfigExample example = new BankConfigExample();
 		example.createCriteria().andIdEqualTo(bankId).andDelFlgEqualTo(0);
-		List<BankConfig> BankConfigList = BankConfigMapper.selectByExample(example);
+		List<BankConfig> BankConfigList = bankConfigMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(BankConfigList)) {
 			return BankConfigList.get(0);
 		}
