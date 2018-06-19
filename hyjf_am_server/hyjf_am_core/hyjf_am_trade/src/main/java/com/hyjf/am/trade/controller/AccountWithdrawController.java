@@ -1,23 +1,27 @@
 package com.hyjf.am.trade.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.AccountwithdrawResponse;
 import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
 import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author pangchengchao
@@ -114,4 +118,30 @@ public class AccountWithdrawController {
         logger.info("updateAccountwithdrawLog:" + JSONObject.toJSONString(accountwithdraw));
         accountWithdrawService.updateAccountwithdrawLog(accountwithdraw);
     }
+    
+    /**
+     * 提现掉单更新订单信息
+     * add by jijun 20180616
+     */
+    @PostMapping("/updateAccountwithdraw")
+    public boolean updateAccountwithdraw(@RequestBody AccountWithdrawVO accountWithdraw){
+        int count=accountWithdrawService.updateAccountwithdraw(CommonUtils.convertBean(accountWithdraw, Accountwithdraw.class));
+        if (count>0) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+
+    @GetMapping("/selectAndUpdateAccountWithdraw")
+    public void selectAndUpdateAccountWithdraw(@RequestBody JSONObject pamaMap){
+        try {
+			accountWithdrawService.selectAndUpdateAccountWithdraw(pamaMap);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
 }
