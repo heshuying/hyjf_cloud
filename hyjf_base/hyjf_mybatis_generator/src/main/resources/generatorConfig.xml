@@ -129,7 +129,6 @@
         </table>
         <!-- 用户紧急联络人表 -->
         <table tableName="ht_user_contact" domainObjectName="UserContact">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
         <!-- 用户email绑定log表 -->
         <table tableName="ht_user_bind_email_log" domainObjectName="UserBindEmailLog">

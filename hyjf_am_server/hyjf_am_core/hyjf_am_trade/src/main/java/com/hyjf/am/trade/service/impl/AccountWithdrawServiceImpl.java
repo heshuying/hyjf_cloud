@@ -1,23 +1,28 @@
 package com.hyjf.am.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountwithdrawMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
+import com.hyjf.am.trade.dao.model.auto.AccountwithdrawExample;
 import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.common.util.GetDate;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.List;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * @author pangchengchao
@@ -194,7 +199,7 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
         if (list != null && list.size() > 0) {
             Accountwithdraw accountwithdraw = list.get(0);
             Accountwithdraw accountWithdraw = (Accountwithdraw)paraMap.get("accountWithdraw");
-            BankCallBeanVO bean = (BankCallBeanVO)paraMap.get("bankCallBean");
+            BankCallBeanVO bean = (BankCallBeanVO)paraMap.get("bankCallBeanVO");
             if (WITHDRAW_STATUS_DEFAULT == accountWithdraw.getStatus()
                     || WITHDRAW_STATUS_WAIT == accountWithdraw.getStatus()) {
                 accountwithdraw.setStatus(WITHDRAW_STATUS_FAIL);// 提现失败

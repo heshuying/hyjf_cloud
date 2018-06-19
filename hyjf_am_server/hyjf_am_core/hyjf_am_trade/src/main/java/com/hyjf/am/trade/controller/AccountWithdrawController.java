@@ -133,7 +133,10 @@ public class AccountWithdrawController {
         }
     }
     
-
+	/**
+	 * 选择并更新账户提现信息
+	 * @param pamaMap
+	 */
     @GetMapping("/selectAndUpdateAccountWithdraw")
     public void selectAndUpdateAccountWithdraw(@RequestBody JSONObject pamaMap){
         try {

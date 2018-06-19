@@ -3,14 +3,11 @@
  */
 package com.hyjf.cs.user.service.regist.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 import java.time.Instant;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hyjf.cs.user.bean.BaseDefine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +30,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
@@ -43,6 +40,7 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -170,11 +168,14 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         Matcher m = p.matcher(password);
         CheckUtil.check(m.matches(), MsgEnum.ERR_PASSWORD_FORMAT);
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+      /*  int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);
+        CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);*/
         String reffer = registerVO.getReffer();
-        CheckUtil.check(isNotBlank(reffer) && amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_REFFER_INVALID);
+        if(StringUtils.isNotEmpty(reffer)){
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_REFFER_INVALID);
+        }
+
     }
 
     /**

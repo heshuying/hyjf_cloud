@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
+import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.client.AccountHuifuClient;
 import com.hyjf.callcenter.service.AccountHuifuService;
@@ -36,5 +37,17 @@ public class AccountHuifuServiceImpl implements AccountHuifuService {
 		list = accountHuifuClient.selectBankCardList(callcenterAccountHuifuRequest);
 		return list;
 	}
-
+	
+	/**
+	 * 查询BankConfig表
+	 * @param user
+	 * @return List<CallcenterAccountHuifuVO>
+	 * @author libin
+	 */
+	@Override
+	public List<CallcenterBankConfigVO> getBankConfigList() {
+		CallcenterAccountHuifuRequest callcenterAccountHuifuRequest = new CallcenterAccountHuifuRequest();
+		List<CallcenterBankConfigVO> list = accountHuifuClient.getBankConfigList(callcenterAccountHuifuRequest);;
+		return list;
+	}
 }

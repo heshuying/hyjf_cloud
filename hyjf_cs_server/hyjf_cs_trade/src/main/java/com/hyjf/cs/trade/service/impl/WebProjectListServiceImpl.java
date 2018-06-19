@@ -1,11 +1,12 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.util.Result;
-import com.hyjf.am.util.Page;
 import com.hyjf.am.vo.trade.WebProjectListCsVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.client.WebProjectListClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.WebProjectListService;
@@ -34,22 +35,56 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      * @return
      */
     @Override
-    public Result searchProjectList(ProjectListRequest request) {
+    public WebResult searchProjectList(ProjectListRequest request) {
         // 参数验证 略
-        ProjectListResponse response = webProjectListClient.searchProjectList(request);
+
+        // 初始化分页参数，并组合到请求参数
+        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
+        // ①查询count
+        ProjectListResponse response = webProjectListClient.countProjectList(request);
         // 对调用返回的结果进行转换和拼装
-        if (response != null && "00".equals((response.getRtn()))){  //判断可以抽出来单独封装成公用方法
-            List<WebProjectListCsVO> result = new ArrayList<>();
-            Page page = response.getPage();
-            Result apiResult = new Result();
-            if (page.getTotal() > 0){
-                result = CommonUtils.convertBeanList(response.getResultList(),WebProjectListCsVO.class);
-                apiResult.setResult(result);
-            }
-            apiResult.setPage(page);
-            return  apiResult;
-        }else{ // 如果需要还可以把原子层的错误信息继续向上抛
-            throw new RuntimeException("查询原子层异常");
+        WebResult webResult = new WebResult();
+        // 先抛错方式，避免代码看起来头重脚轻。
+        if (!Response.isSuccess(response)){
+            throw new RuntimeException("查询原子层count异常");
         }
+        int count = response.getCount();
+        page.setTotal(count);
+        //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
+        webResult.setData(new ArrayList<>());
+        if (count > 0){
+            List<WebProjectListCsVO> result = new ArrayList<>();
+            ProjectListResponse dataResponse = webProjectListClient.searchProjectList(request);
+            if (!Response.isSuccess(dataResponse)){
+                throw  new RuntimeException("查询原子层list数据异常");
+            }
+            result = CommonUtils.convertBeanList(dataResponse.getResultList(),WebProjectListCsVO.class);
+            webResult.setData(result);
+        }
+        webResult.setPage(page);
+        return  webResult;
+
+        //传统的if多重嵌套判断方式
+        /*if (Response.isSuccess(response)){
+            count = response.getCount();
+            page.setTotal(count);
+            if (count > 0){
+                List<WebProjectListCsVO> result = new ArrayList<>();
+                ProjectListResponse dataResponse = webProjectListClient.searchProjectList(request);
+                if (Response.isSuccess(dataResponse)){
+                    result = CommonUtils.convertBeanList(dataResponse.getResultList(),WebProjectListCsVO.class);
+                    webResult.setData(result);
+                }else{
+                    throw  new RuntimeException("查询原子层list数据异常");
+                }
+            }
+            webResult.setPage(page);
+            return  webResult;
+        }else{ // 如果需要还可以把原子层的错误信息继续向上抛
+            throw new RuntimeException("查询原子层count异常");
+        }*/
+
     }
 }

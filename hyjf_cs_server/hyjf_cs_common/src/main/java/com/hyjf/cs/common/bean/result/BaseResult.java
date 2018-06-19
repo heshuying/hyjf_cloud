@@ -19,12 +19,13 @@ import com.hyjf.common.util.StringUtil;
 import java.io.Serializable;
 
 /**
+ * 返回前端结果基类
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final String SUCCESS = "000";
+	public static final String SUCCESS = "0";
 	public static final String SUCCESS_DESC = "成功";
 	public static final String ERROR = "-1";
 	public static final String ERROR_DESC = "异常";
@@ -34,7 +35,7 @@ public class BaseResult<T> implements Serializable {
 	public static final String NO_PERMISSION_DESC = "无权限";
 
 	private String status = SUCCESS;
-	private String statusDesc = ERROR_DESC;
+	private String statusDesc = SUCCESS_DESC;
 	private T data;
 
 	public BaseResult() {
@@ -129,6 +130,7 @@ public class BaseResult<T> implements Serializable {
 	/**
 	 * @return
 	 */
+	@Override
 	public String toString() {
 		return JSON.toJSONString(this);
 	}

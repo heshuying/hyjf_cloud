@@ -880,8 +880,10 @@ public class UserServiceImpl implements UserService {
 		}
 		UserContact contact = new UserContact();
 		BeanUtils.copyProperties(record, contact);
-		usersMapper.deleteByPrimaryKey(record.getUserId());
-		return UserContactMapper.insertSelective(contact);
+		contact.setCreateTime(GetDate.getNowTime());
+		contact.setUpdateTime(GetDate.getNowTime());
+		UserContactMapper.deleteByPrimaryKey(record.getUserId());
+		return UserContactMapper.insert(contact);
 	}
 
 	/**
