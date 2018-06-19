@@ -81,9 +81,8 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 //    public static final String BATCHCREDITEND_RESULT_URL= PropUtils.getSystem("hyjf.web.bank.batch.creditend.result.url");
 
     /** 活动编号 */
-//    @Value("${hyjf.activity.id}")
-    private static String ACTIVITY_ID = "";
-//    public static final String ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.id");
+  /*  @Value("${hyjf.activity.id}")
+    private static String ACTIVITY_ID = "";*/
 
     /** 开户送68代金券活动编号 */
 //    @Value("${hyjf.activity.open.id}")

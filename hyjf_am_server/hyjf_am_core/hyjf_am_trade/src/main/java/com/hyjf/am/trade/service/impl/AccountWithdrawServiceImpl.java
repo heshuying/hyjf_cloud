@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
@@ -7,7 +8,10 @@ import com.hyjf.am.trade.dao.mapper.auto.AccountwithdrawMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.AccountWithdrawService;
+import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.common.util.GetDate;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -166,5 +170,49 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
             return listAccount.get(0);
         }
         return null;
+    }
+    
+    
+    /**
+     * 账户充值更新
+     */
+	@Override
+	public int updateAccountwithdraw(Accountwithdraw accountWithdraw) {
+		return this.accountWithdrawMapper.updateByPrimaryKeySelective(accountWithdraw);
+	}
+
+
+    @Override
+    public void selectAndUpdateAccountWithdraw(JSONObject paraMap) throws Exception {
+
+        // 提现失败,更新处理中订单状态为失败
+        AccountwithdrawExample example = new AccountwithdrawExample();
+        AccountwithdrawExample.Criteria cra = example.createCriteria();
+        String ordId = String.valueOf(paraMap.get("ordId"));
+        cra.andNidEqualTo(ordId);
+        List<Accountwithdraw> list = this.accountWithdrawMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            Accountwithdraw accountwithdraw = list.get(0);
+            Accountwithdraw accountWithdraw = (Accountwithdraw)paraMap.get("accountWithdraw");
+            BankCallBeanVO bean = (BankCallBeanVO)paraMap.get("bankCallBean");
+            if (WITHDRAW_STATUS_DEFAULT == accountWithdraw.getStatus()
+                    || WITHDRAW_STATUS_WAIT == accountWithdraw.getStatus()) {
+                accountwithdraw.setStatus(WITHDRAW_STATUS_FAIL);// 提现失败
+                accountwithdraw.setUpdateTime(GetDate.getDate());// 更新时间
+                accountwithdraw.setReason(bean.getRetMsg());// 失败原因
+
+                //冲正撤销标志为1：已冲正/撤销时
+                //临时按照失败处理
+                if ("1".equals(bean.getOrFlag())) {
+                    accountwithdraw.setReason("提现订单："+ bean.getOrFlag() + "：已冲正/撤销");
+                }
+
+                boolean isUpdateFlag = this.accountWithdrawMapper.updateByExample(accountwithdraw, example) > 0 ? true : false;
+                if (!isUpdateFlag) {
+                    throw new Exception("提现失败后,更新提现记录表失败" + "提现订单号:" + ordId + ",用户ID:" + accountWithdraw.getUserId());
+                }
+            }
+        }
+
     }
 }

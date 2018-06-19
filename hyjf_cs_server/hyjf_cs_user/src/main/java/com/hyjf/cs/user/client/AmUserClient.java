@@ -73,4 +73,12 @@ public interface AmUserClient {
 	boolean updateBankSmsLog(BankSmsLogRequest request);
 
 	String selectBankSmsLog(BankSmsLogRequest request);
+
+    int countScore(AnswerRequest answerRequest);
+
+	EvalationVO getEvalationByCountScore(short countScore);
+
+	 UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+
+	ActivityListVO selectActivityList(int activityId);
 }
