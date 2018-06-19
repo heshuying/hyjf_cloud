@@ -1,5 +1,6 @@
 package com.hyjf.am.market.controller;
 
+import com.hyjf.am.response.market.AdsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,9 @@ public class AdsController {
 
 
     @RequestMapping("/findAdsById/{activityId}")
-    public void findActivityById(@PathVariable Integer activityId){
+    public AdsResponse findActivityById(@PathVariable Integer activityId){
 
+        return null;
     }
 
     /**

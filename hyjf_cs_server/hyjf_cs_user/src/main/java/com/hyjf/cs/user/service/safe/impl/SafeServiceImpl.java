@@ -99,7 +99,6 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     @Override
     public Map<String,Object> safeInit(WebViewUser webViewUser) {
         Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("url","user/safe/account-setting-index");
         UserVO user = amUserClient.findUserById(webViewUser.getUserId());
         resultMap.put("webViewUser", user);
         if (user.getTruename() != null && user.getTruename().length() >= 1) {
@@ -381,9 +380,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     		resultBean.setData(usersContactVO);
 
     		for(Entry<String, String> entry :  relationMap.entrySet()) {
-    			if(entry.getKey().equals(usersContactVO.getRelation())) {
+    			if(usersContactVO.getRelation() != null && entry.getKey().equals(String.valueOf(usersContactVO.getRelation()))) {
     				resultBean.setCheckRelationId(entry.getKey());
     				resultBean.setCheckRelationName(entry.getValue());
+    				break;
     			}
     		}
     	}

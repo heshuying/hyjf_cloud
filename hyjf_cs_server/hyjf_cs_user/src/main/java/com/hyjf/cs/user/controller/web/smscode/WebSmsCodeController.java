@@ -21,6 +21,7 @@ import java.util.Map;
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
 @Api(value = "验证码")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/smsCode")
 public class WebSmsCodeController extends BaseUserController {
