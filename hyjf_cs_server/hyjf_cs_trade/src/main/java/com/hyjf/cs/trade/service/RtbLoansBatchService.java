@@ -4,20 +4,19 @@
 package com.hyjf.cs.trade.service;
 
 
-
-import com.hyjf.am.vo.rtbbatch.BorrowApicronVo;
-import com.hyjf.am.vo.rtbbatch.BorrowWithBLOBsVo;
-import com.hyjf.am.vo.rtbbatch.IncreaseInterestInvestVo;
-import com.hyjf.am.vo.trade.AccountVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-
 import java.util.List;
+
+import com.hyjf.am.vo.trade.IncreaseInterestInvestVo;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVo;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 /**
  * @author ${yaoy}
  * @version RtbLoansBatchService, v0.1 2018/6/12 16:02
  */
-public interface RtbLoansBatchService {
+public interface RtbLoansBatchService extends BaseTradeService{
 
     List<BorrowApicronVo> getBorrowApicronList(Integer status, Integer apiType);
 
@@ -31,7 +30,7 @@ public interface RtbLoansBatchService {
 
     BankOpenAccountVO getBankOpenAccount(Integer borrowUserId);
 
-    BorrowWithBLOBsVo getBorrow(String borrowNid);
+    BorrowWithBLOBsVO getBorrow(String borrowNid);
 
     void updateBorrowTender(IncreaseInterestInvestVo borrowTender);
 

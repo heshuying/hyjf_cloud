@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.app.safe;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.util.SecretUtil;
 import io.swagger.annotations.Api;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "app端用户接口")
 @RestController
 @RequestMapping("/app/appUser")
-public class AppSafeController {
+public class AppSafeController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppSafeController.class);
 

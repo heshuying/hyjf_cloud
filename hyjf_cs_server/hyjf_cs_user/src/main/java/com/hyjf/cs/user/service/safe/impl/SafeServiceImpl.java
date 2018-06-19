@@ -3,35 +3,13 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.BindEmailLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserLoginLogVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UsersContactVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -39,11 +17,7 @@ import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -53,16 +27,28 @@ import com.hyjf.cs.user.constants.ContractSetError;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 
 /**
  * @author zhangqingqing
  * @version SafeServiceImpl, v0.1 2018/6/11 15:55
  */
 @Service
-public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
+public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
 
@@ -114,25 +100,26 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
     public Map<String,Object> safeInit(WebViewUser webViewUser) {
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("url","user/safe/account-setting-index");
-        resultMap.put("webViewUser", webViewUser);
-        if (webViewUser.getTruename() != null && webViewUser.getTruename().length() >= 1) {
-            resultMap.put("truename", webViewUser.getTruename().substring(0, 1) + "**");
+        UserVO user = amUserClient.findUserById(webViewUser.getUserId());
+        resultMap.put("webViewUser", user);
+        if (user.getTruename() != null && user.getTruename().length() >= 1) {
+            resultMap.put("truename", user.getTruename().substring(0, 1) + "**");
         }
-        if (webViewUser.getIdcard() != null && webViewUser.getIdcard().length() >= 15) {
-            resultMap.put("idcard", webViewUser.getIdcard().substring(0, 3) + "***********" + webViewUser.getIdcard().substring(webViewUser.getIdcard().length() - 4));
+        if (user.getIdcard() != null && user.getIdcard().length() >= 15) {
+            resultMap.put("idcard", user.getIdcard().substring(0, 3) + "***********" + user.getIdcard().substring(user.getIdcard().length() - 4));
         }
-        if (webViewUser.getMobile() != null && webViewUser.getMobile().length() == 11) {
-            resultMap.put("mobile", webViewUser.getMobile().substring(0, 3) + "****" + webViewUser.getMobile().substring(webViewUser.getMobile().length() - 4));
+        if (user.getMobile() != null && user.getMobile().length() == 11) {
+            resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
         }
-        if (webViewUser.getEmail() != null && webViewUser.getEmail().length() >= 2) {
-            String emails[] = webViewUser.getEmail().split("@");
+        if (user.getEmail() != null && user.getEmail().length() >= 2) {
+            String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() -2) + "@" + emails[1]);
         }
-        UserVO user = amUserClient.findUserById(webViewUser.getUserId());
-        UserLoginLogVO userLogin = amUserClient.getUserLoginById(webViewUser.getUserId());
+
+        UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
 
         // 用户角色
-        UserInfoVO userInfo = this.amUserClient.findUsersInfoById(webViewUser.getUserId());
+        UserInfoVO userInfo = this.amUserClient.findUsersInfoById(user.getUserId());
         resultMap.put("roleId", userInfo.getRoleId());
         // 是否设置交易密码
         resultMap.put("isSetPassword", user.getIsSetPassword());
@@ -144,12 +131,12 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
 		resultMap.put("userRelation", result);
 		
-        BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(webViewUser.getUserId());
-        AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(webViewUser.getUserId());
+        BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(user.getUserId());
+        AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);
         resultMap.put("chinapnr", chinapnr);
 
-        UserEvalationResultVO userEvalationResult = amBankOpenClient.selectUserEvalationResultByUserId(webViewUser.getUserId());
+        UserEvalationResultVO userEvalationResult = amBankOpenClient.selectUserEvalationResultByUserId(user.getUserId());
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(),1,1).getTime();
@@ -167,7 +154,7 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
         } else {
             resultMap.put("ifEvaluation", 0);
         }
-        HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(webViewUser.getUserId());
+        HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
         resultMap.put("hjhUserAuth", getUserAuthState(hjhUserAuth));
 
         // 获得是否授权
@@ -179,7 +166,7 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
         if(org.apache.commons.lang3.StringUtils.isNotEmpty( user.getIconurl())){
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconurl());
         }
-        resultMap.put("inviteLink", systemConfig.getWebHost()+"/web/user/regist/init?from="+webViewUser.getUserId());
+        resultMap.put("inviteLink", systemConfig.getWebHost()+"/web/user/regist/init?from="+user.getUserId());
         return resultMap;
     }
 
@@ -371,28 +358,28 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
 
         return true;
     }
-    
+
     /**
      * 获取紧急联系人信息
      * @author hesy
      */
     @Override
-	public ContractSetResultBean queryContractInfo(Integer userId) { 
+	public ContractSetResultBean queryContractInfo(Integer userId) {
     	ContractSetResultBean resultBean = new ContractSetResultBean();
-    	
+
     	// 获取紧急联系人关系信息
     	Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
     	if(relationMap == null || relationMap.isEmpty()) {
     		throw new ReturnMessageException(ContractSetError.CONTRACT_RELATION_ERROR);
     	}
-    	
+
     	resultBean.setRelationMap(relationMap);
-    	
+
     	// 获取当前紧急联系人信息
     	UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
     	if(usersContactVO != null) {
-    		resultBean.setResult(usersContactVO);
-    		
+    		resultBean.setData(usersContactVO);
+
     		for(Entry<String, String> entry :  relationMap.entrySet()) {
     			if(entry.getKey().equals(usersContactVO.getRelation())) {
     				resultBean.setCheckRelationId(entry.getKey());
@@ -400,9 +387,9 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
     			}
     		}
     	}
-    	
+
     	return resultBean;
-    	
+
     }
 
 

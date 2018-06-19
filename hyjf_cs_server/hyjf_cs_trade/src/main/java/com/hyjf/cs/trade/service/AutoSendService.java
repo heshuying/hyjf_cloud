@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 
 /**
  * 自动录标
@@ -12,7 +12,7 @@ import com.hyjf.am.vo.trade.HjhPlanAssetVO;
  * @author fuqiang
  * @version AutoSendService, v0.1 2018/6/12 17:04
  */
-public interface AutoSendService {
+public interface AutoSendService extends BaseTradeService{
     /**
      * 资产自动录标
      *

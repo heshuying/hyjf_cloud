@@ -11,8 +11,10 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.constants.LoginError;
-import com.hyjf.cs.user.result.ApiResult;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import io.swagger.annotations.Api;
@@ -32,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "app端用户登录接口")
 @RestController
 @RequestMapping("/app/appUser")
-public class AppLoginController {
+public class AppLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
 
@@ -47,17 +49,17 @@ public class AppLoginController {
      */
     @ApiOperation(value = "登录", notes = "登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> login(@RequestHeader String key,@RequestBody LoginRequestVO user,
+    public AppResult<UserVO> login(@RequestHeader String key,@RequestBody LoginRequestVO user,
                                    HttpServletRequest request) {
         logger.info("App端登录接口, user is :{}", JSONObject.toJSONString(user));
-        ApiResult<UserVO> result = new ApiResult<UserVO>();
+        AppResult<UserVO> result = new AppResult<UserVO>();
         // 账户密码解密
         String loginUserName = DES.decodeValue(key, user.getUsername());
         String loginPassword = DES.decodeValue(key, user.getPassword());
 
         if (Validator.isNull(loginUserName) || Validator.isNull(loginPassword)||!CommonUtils.isMobile(loginUserName)) {
-            result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMessage());
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
         }
         loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
         return result;
@@ -72,14 +74,14 @@ public class AppLoginController {
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")
-    public ApiResult<String> loginout(@RequestHeader(value = "token") String token){
-        ApiResult<String> result = new ApiResult<>();
+    public AppResult<String> loginout(@RequestHeader(value = "token") String token){
+        AppResult<String> result = new AppResult<>();
         // 退出到首页
-        result.setResult("index");
+        result.setData("index");
         try {
             RedisUtils.del(RedisKey.USER_TOKEN_REDIS + token);
         }catch (Exception e){
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("退出失败");
         }
         return result;

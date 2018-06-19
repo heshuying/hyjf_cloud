@@ -6,17 +6,20 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.borrow.BorrowVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoRecordClient;
@@ -25,6 +28,7 @@ import com.hyjf.cs.trade.mq.AutoPreAuditProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
 import com.hyjf.cs.trade.service.AutoRecordService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -42,7 +46,7 @@ import java.util.Map;
  * @version AutoRecordServiceImpl, v0.1 2018/6/14 10:17
  */
 @Service
-public class AutoRecordServiceImpl implements AutoRecordService {
+public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoRecordService {
 
     private static final Logger _log = LoggerFactory.getLogger(AutoRecordServiceImpl.class);
 

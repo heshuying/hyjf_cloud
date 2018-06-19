@@ -8,10 +8,10 @@
  * Modification History:
  * Modified by : 
  */
-	
 package com.hyjf.common.exception;
 
 /**
+ * 自定义异常，用于组合层返回给页面
  * @author liubin
  */
 
@@ -22,7 +22,7 @@ public class CheckException extends RuntimeException{
 	private String code;
 	/** 错误返回url */
 	private String url;
-	/** 错误返回url */
+	/** 错误返回data */
 	private Object data;	
 	
 	public CheckException() {

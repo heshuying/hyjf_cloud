@@ -11,7 +11,7 @@ import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.user.client.AmBindCardClient;
@@ -155,16 +155,7 @@ public class AmBindCardClientImpl implements AmBindCardClient{
         return null;
     }
 	
-	/**
-	 * 
-	 * 更新绑卡验证码
-	 */
-	@Override
-	public boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode) {
-		boolean result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/updateBankSmsLog", null, Boolean.class, String.valueOf(userId), srvTxCode, srvAuthCode).getBody();
-		return result;
-	}
+
 }
 
 	

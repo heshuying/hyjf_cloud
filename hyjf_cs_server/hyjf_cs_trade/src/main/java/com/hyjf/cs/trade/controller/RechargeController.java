@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "/web/recharge")
-public class RechargeController{
+public class RechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(RechargeController.class);
 

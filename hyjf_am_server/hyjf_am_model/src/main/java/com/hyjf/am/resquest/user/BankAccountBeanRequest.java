@@ -1,6 +1,6 @@
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.trade.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 
 public class BankAccountBeanRequest {
 

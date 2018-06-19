@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.controller.app.bestserver;
 
+import com.hyjf.cs.user.controller.BaseUserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,7 @@ import com.hyjf.cs.user.result.ServerResultBean;
  */
 @RestController
 @RequestMapping("/app/server")
-public class ServerController {
+public class ServerController extends BaseUserController {
 	private Logger logger = LoggerFactory.getLogger(ServerController.class);
 
 	/** 从系统配置中获取最新版本号 */

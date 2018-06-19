@@ -2,7 +2,7 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 
@@ -27,9 +27,6 @@ public interface AmBindCardClient {
 	int deleteUserCardByCardNo(String cardNo);
 
 	AccountVO getAccount(Integer userId);
-
-	boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode);
-
 }
 
 	

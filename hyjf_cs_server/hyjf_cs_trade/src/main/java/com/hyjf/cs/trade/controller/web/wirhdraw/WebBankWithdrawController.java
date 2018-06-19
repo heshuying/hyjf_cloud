@@ -8,7 +8,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
-import com.hyjf.cs.trade.controller.WebBorrowController;
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.WebBorrowService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -36,9 +36,9 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/withdraw")
-public class WebBankWithdrawController {
+public class WebBankWithdrawController extends BaseTradeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebBorrowController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
     @Autowired
     private WebBorrowService webBorrowService;
 

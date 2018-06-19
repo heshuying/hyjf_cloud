@@ -15,7 +15,7 @@ import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.service.RechargeService;
-import com.hyjf.am.vo.trade.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringUtil;
 

@@ -4,13 +4,13 @@
 package com.hyjf.cs.user.constants;
 
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
 
 /**
  * @author zhangqingqing
  * @version LoginError, v0.1 2018/4/25 14:58
  */
-public enum AuthorizedError implements ErrorCode {
+public enum AuthorizedError implements MsgCode {
     USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
     PARAM_ERROR("1", "参数错误，请重试"),
     NOT_REGIST_ERROR("1", "用户未开户！"),
@@ -19,21 +19,21 @@ public enum AuthorizedError implements ErrorCode {
     CALL_BANK_ERROR("1", "调用银行接口失败");
 
 
-    private String errCode;
-    private String message;
+    private String code;
+    private String msg;
 
-    AuthorizedError(String errCode, String message) {
-        this.errCode = errCode;
-        this.message = message;
+    AuthorizedError(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     @Override
-    public String getErrCode() {
-        return this.errCode;
+    public String getCode() {
+        return this.code;
     }
 
     @Override
-    public String getMessage() {
-        return this.message;
+    public String getMsg() {
+        return this.msg;
     }
 }

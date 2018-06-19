@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author
  *
  */
-public interface RechargeService extends BaseService{
+public interface RechargeService extends BaseTradeService{
 	/**
 	 * 根据用户Id,银行卡号检索用户银行卡信息
 	 * @param userId

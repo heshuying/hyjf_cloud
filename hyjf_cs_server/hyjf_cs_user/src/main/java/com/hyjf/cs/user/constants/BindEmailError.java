@@ -1,8 +1,8 @@
 package com.hyjf.cs.user.constants;
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
 
-public enum BindEmailError implements ErrorCode{
+public enum BindEmailError implements MsgCode {
 		REQUEST_PARAM_ERROR("1", "请求参数错误"),
 	 	EMAIL_EMPTY_ERROR("1", "待绑定的邮箱不能为空"),
 	 	EMAIL_USED_ERROR("1", "邮箱已被占用"),
@@ -15,22 +15,22 @@ public enum BindEmailError implements ErrorCode{
 	    EMAIL_ACTIVE_ERROR_4("1", "激活邮件不存在"),
 	
 	    EMAIL_ACTIVE_ERROR("1", "激活失败");
-	
-	    private String errCode;
-	    private String message;
 
-	    BindEmailError(String errCode, String message) {
-	        this.errCode = errCode;
-	        this.message = message;
-	    }
+		private String code;
+		private String msg;
 
-	    @Override
-	    public String getErrCode() {
-	        return this.errCode;
-	    }
+		BindEmailError(String code, String msg) {
+			this.code = code;
+			this.msg = msg;
+		}
 
-	    @Override
-	    public String getMessage() {
-	        return this.message;
-	    }
+		@Override
+		public String getCode() {
+			return this.code;
+		}
+
+		@Override
+		public String getMsg() {
+			return this.msg;
+		}
 }

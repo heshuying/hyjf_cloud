@@ -4,6 +4,8 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.vo.user.EvalationVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
@@ -102,7 +104,9 @@ public interface UserService {
 
 	UserEvalationResult selectUserEvalationResultByUserId(Integer userId);
 
-	AccountChinapnr getAccountChinapnr(Integer userId);
+    void deleteUserEvalationResultByUserId(Integer userId);
+
+    AccountChinapnr getAccountChinapnr(Integer userId);
 
 	int updateUserContact(UsersContractRequest record);
 
@@ -124,4 +128,13 @@ public interface UserService {
 	 * @return
 	 */
 	List<User> selectUserByUsername(String repayOrgName);
+
+    int countScore(List<String> answerList);
+
+	Evalation getEvalationByCountScore(short countScore);
+
+    UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
+                                                  EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult);
+
+	ActivityList selectActivityList(int activityId);
 }

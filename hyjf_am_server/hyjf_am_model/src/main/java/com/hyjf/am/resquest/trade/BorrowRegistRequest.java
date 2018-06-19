@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.resquest.trade;
 
-import com.hyjf.am.vo.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 
 /**
  * @author fuqiang

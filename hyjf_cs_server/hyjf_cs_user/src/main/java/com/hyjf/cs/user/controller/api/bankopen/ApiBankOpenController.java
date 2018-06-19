@@ -2,9 +2,11 @@ package com.hyjf.cs.user.controller.api.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -32,7 +34,7 @@ import java.util.Map;
 @Api(value = "第三方用户开户")
 @Controller
 @RequestMapping("/api/user/open")
-public class ApiBankOpenController {
+public class ApiBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(ApiBankOpenController.class);
 
     @Autowired
@@ -54,7 +56,7 @@ public class ApiBankOpenController {
         UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
-
+        openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
         modelAndView = bankOpenService.getOpenAccountMV(openAccountPageBean);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "");
@@ -114,7 +116,7 @@ public class ApiBankOpenController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
-    public BankCallResult openAccountBgReturn(@RequestBody @Valid  BankCallBean bean, @RequestParam("phone") String mobile) {
+    public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);

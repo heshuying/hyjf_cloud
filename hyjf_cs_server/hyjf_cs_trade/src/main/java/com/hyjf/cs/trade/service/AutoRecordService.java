@@ -3,14 +3,14 @@
  */
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 
 /**
  * @author fuqiang
  * @version AutoRecordService, v0.1 2018/6/14 10:17
  */
-public interface AutoRecordService {
+public interface AutoRecordService extends BaseTradeService{
 
     /**
      * 备案

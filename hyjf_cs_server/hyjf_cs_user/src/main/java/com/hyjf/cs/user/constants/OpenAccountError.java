@@ -1,12 +1,12 @@
 package com.hyjf.cs.user.constants;
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
 
 /**
  * @author sunss
  * @version RegisterError, v0.1
  */
-public enum OpenAccountError implements ErrorCode {
+public enum OpenAccountError implements MsgCode {
 	SUCCESS("0", ""),
 	USER_NOT_LOGIN_ERROR("1", "用户未登录"),
 	ERROR("1", "开户失败"),
@@ -24,24 +24,25 @@ public enum OpenAccountError implements ErrorCode {
 	MOBILE_FORMAT_ERROR("1", "手机号格式错误"),
 	MOBILE_USED_ERROR("1", "手机号码重复"),
 	MOBILE_ERROR("1", "手机号码输入错误"),
+	OPEN_ACCOUNTED_ERROR("1", "已开户")
 
 	;
 
-	private String errCode;
-	private String message;
+	private String code;
+	private String msg;
 
-	OpenAccountError(String errCode, String message) {
-		this.errCode = errCode;
-		this.message = message;
+	OpenAccountError(String code, String msg) {
+		this.code = code;
+		this.msg = msg;
 	}
 
 	@Override
-	public String getErrCode() {
-		return this.errCode;
+	public String getCode() {
+		return this.code;
 	}
 
 	@Override
-	public String getMessage() {
-		return this.message;
+	public String getMsg() {
+		return this.msg;
 	}
 }

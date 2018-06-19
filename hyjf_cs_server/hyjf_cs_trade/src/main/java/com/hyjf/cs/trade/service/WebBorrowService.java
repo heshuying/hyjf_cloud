@@ -13,7 +13,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version WebService, v0.1 2018/6/5 9:48
  */
-public interface WebBorrowService {
+public interface WebBorrowService extends BaseTradeService{
     /**
      * 构建银行调用数据
      * @param user

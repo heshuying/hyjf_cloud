@@ -3,14 +3,25 @@
  */
 package com.hyjf.cs.user.controller.web.autoplus;
 
+import com.hyjf.am.util.Result;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.BindCardError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +41,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class WebAutoPlusController {
+public class WebAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebAutoPlusController.class);
 
@@ -45,6 +56,38 @@ public class WebAutoPlusController {
     public String init(Model model) {
 
         return "init";
+    }
+
+    @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
+    @ApiImplicitParam(name = "param",value = "{type: string} type=1授权自动投标；type=2授权自动债转", dataType = "Map")
+    @PostMapping(value = "/autoPlusSendCode", produces = "application/json; charset=utf-8")
+    public WebResult<Object> autoPlusSendCode(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param) {
+        logger.info("Web端用户修改手机号发送短信验证码, param :{}", param);
+        WebResult<Object> result = new WebResult<Object>();
+
+
+        UserVO user = autoPlusService.getUsers(token);
+        CheckUtil.check(user!=null,MsgEnum.ERR_USER_NOT_LOGIN);
+        CheckUtil.check(user.getMobile()!=null,MsgEnum.ERR_MOBILE);
+        CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("type")), MsgEnum.ERR_PARAM_TYPE);
+        String srvTxCode = "1".equals(param.get("type"))? BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS:BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS;
+                // 请求银行绑卡接口
+        BankCallBean bankBean = null;
+        try {
+            bankBean = autoPlusService.callSendCode(user.getUserId(),user.getMobile(),srvTxCode, ClientConstants.CHANNEL_PC,null);
+        } catch (Exception e) {
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            logger.error("请求验证码接口发生异常", e);
+        }
+        if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            logger.error("请求验证码接口失败");
+        }else {
+            result.setData(bankBean.getSrvAuthCode());
+        }
+        return result;
     }
 
     /**
@@ -66,7 +109,7 @@ public class WebAutoPlusController {
             modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_CALL_BANK);
         }
         return modelAndView;
     }
@@ -90,7 +133,7 @@ public class WebAutoPlusController {
             modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ReturnMessageException(AuthorizedError.CALL_BANK_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_CALL_BANK);
         }
         return modelAndView;
     }

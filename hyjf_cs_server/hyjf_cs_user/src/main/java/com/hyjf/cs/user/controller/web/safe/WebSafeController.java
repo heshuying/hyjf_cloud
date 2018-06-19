@@ -8,6 +8,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.controller.BaseUserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +30,6 @@ import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
@@ -45,7 +48,7 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class WebSafeController {
+public class WebSafeController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSafeController.class);
 
@@ -62,20 +65,18 @@ public class WebSafeController {
      */
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
     @PostMapping(value = "accountSet")
-    public ApiResult<Object> accountSet(@RequestHeader(value = "token",required = false) String token) {
-        ApiResult<Object> apiResult = new ApiResult<>();
+    public WebResult<Object> accountSet(@RequestHeader(value = "token",required = false) String token) {
+        WebResult<Object> apiResult = new WebResult<>();
         WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         if (null == webViewUser){
-            apiResult.setStatus(ApiResult.STATUS_FAIL);
-            apiResult.setStatusDesc("账户设置查询失败");
-            apiResult.setLoginFlag(ApiResult.STATUS_FAIL);
+            apiResult.setStatusInfo(MsgEnum.ERR_USER_NOT_LOGIN);
         }else{
             Map<String,Object> result = safeService.safeInit(webViewUser);
             if (null == result){
-                apiResult.setStatus(ApiResult.STATUS_FAIL);
+                apiResult.setStatus(ApiResult.FAIL);
                 apiResult.setStatusDesc("账户设置查询失败");
             }
-            apiResult.setResult(result);
+            apiResult.setData(result);
         }
         return apiResult;
     }
@@ -89,12 +90,12 @@ public class WebSafeController {
      */
     @ApiOperation(value = "获取用戶通知配置信息", notes = "获取用戶通知配置信息")
     @PostMapping("/userNoticeSettingInit")
-    public ApiResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        ApiResult<UserVO> result = new ApiResult<UserVO>();
+    public WebResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+        WebResult<UserVO> result = new WebResult<UserVO>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         UserVO userVO = safeService.queryUserByUserId(user.getUserId());
-        result.setResult(userVO);
+        result.setData(userVO);
 
         return result;
     }
@@ -110,9 +111,9 @@ public class WebSafeController {
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
-        logger.info("用戶通知設置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
-        ApiResult<UserVO> result = new ApiResult<UserVO>();
+    public WebResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
+        logger.info("用户通知设置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
+        WebResult<UserVO> result = new WebResult<UserVO>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 
@@ -123,7 +124,7 @@ public class WebSafeController {
 
         if (ret <= 0) {
             logger.error("保存用户通知设置失败");
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("保存用户通知设置失败");
         }
 
@@ -136,8 +137,8 @@ public class WebSafeController {
      */
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
-        ApiResult<Object> result = new ApiResult<Object>();
+    public WebResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
+        WebResult<Object> result = new WebResult<Object>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         safeService.checkForEmailSend(paraMap.get("email"), user.getUserId());
@@ -146,7 +147,7 @@ public class WebSafeController {
             safeService.sendEmailActive(user.getUserId(), paraMap.get("email"));
         } catch (MQException e) {
             logger.error("发送激活邮件失败", e);
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("发送激活邮件失败");
         }
 
@@ -170,7 +171,7 @@ public class WebSafeController {
             safeService.updateEmail(user.getUserId(), bindEmailVO.getEmail());
         } catch (MQException e) {
             logger.error("邮箱激活失败", e);
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("邮箱激活失败");
         }
 
@@ -187,12 +188,12 @@ public class WebSafeController {
     @PostMapping(value = "/contractInit", produces = "application/json; charset=utf-8")
     public ContractSetResultBean contractInit(@RequestHeader(value = "token", required = true) String token) {
     	logger.info("加载紧急联系人信息开始...");
-    	
+
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 
         return safeService.queryContractInfo(user.getUserId());
     }
-    
+
     /**
      * 添加、修改紧急联系人
      * @param token
@@ -201,17 +202,17 @@ public class WebSafeController {
      */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
-    @ApiImplicitParam(name = "paraMap",value = "{relationId:int,rlName:string,rlPhone:string}", dataType = "Map")
-    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap) {
+    @ApiImplicitParam(name = "param",value = "{relationId:int,rlName:string,rlPhone:string}", dataType = "Map")
+    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param) {
         ApiResult<Object> result = new ApiResult<Object>();
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        safeService.checkForContractSave(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
+        safeService.checkForContractSave(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
 
         try {
-            safeService.saveContract(paraMap.get("relationId"), paraMap.get("rlName"), paraMap.get("rlPhone"), user);
+            safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
         } catch (MQException e) {
             logger.error("紧急联系人保存失败", e);
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("紧急联系人保存失败");
         }
         return result;

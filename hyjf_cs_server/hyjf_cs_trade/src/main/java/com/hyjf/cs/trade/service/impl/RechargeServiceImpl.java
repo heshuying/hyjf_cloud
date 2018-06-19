@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.trade.AccountRechargeVO;
-import com.hyjf.am.vo.trade.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BankCardVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -29,6 +29,7 @@ import com.hyjf.cs.trade.constants.RechargeError;
 import com.hyjf.cs.trade.mq.AppMessageProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -53,7 +54,7 @@ import java.util.Map;
  *
  */
 @Service
-public class RechargeServiceImpl  extends BaseServiceImpl  implements RechargeService  {
+public class RechargeServiceImpl extends BaseTradeServiceImpl implements RechargeService  {
 	Logger  logger = LoggerFactory.getLogger(RechargeServiceImpl.class);
 
 	@Autowired

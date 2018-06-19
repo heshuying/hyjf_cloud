@@ -5,12 +5,12 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.assetpush.InfoBean;
-import com.hyjf.am.vo.assetpush.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.assetpush.STZHWhiteListVO;
-import com.hyjf.am.vo.borrow.BorrowWithBLOBsVO;
-import com.hyjf.am.vo.borrow.HjhLabelVO;
-import com.hyjf.am.vo.trade.BorrowProjectRepayVO;
-import com.hyjf.am.vo.trade.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
+import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -28,6 +28,7 @@ import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.mq.AutoSendProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.ApiAssetPushService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ import java.util.List;
  * @version ApiAssetPushServcieImpl, v0.1 2018/6/11 18:06
  */
 @Service
-public class ApiAssetPushServcieImpl implements ApiAssetPushService {
+public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements ApiAssetPushService {
 
     private Logger _log = LoggerFactory.getLogger(ApiAssetPushServcieImpl.class);
 

@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
-import com.hyjf.am.vo.trade.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
 import java.util.List;
 

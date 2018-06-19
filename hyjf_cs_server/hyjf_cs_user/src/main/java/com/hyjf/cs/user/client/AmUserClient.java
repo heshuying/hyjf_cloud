@@ -1,11 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.BindEmailLogRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UserNoticeSetRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
 
@@ -73,4 +69,16 @@ public interface AmUserClient {
     UserLoginLogVO getUserLoginById(Integer userId);
 
 	BankOpenAccountVO selectById(int userId);
+
+	boolean updateBankSmsLog(BankSmsLogRequest request);
+
+	String selectBankSmsLog(BankSmsLogRequest request);
+
+    int countScore(AnswerRequest answerRequest);
+
+	EvalationVO getEvalationByCountScore(short countScore);
+
+	 UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+
+	ActivityListVO selectActivityList(int activityId);
 }

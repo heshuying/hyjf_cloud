@@ -404,4 +404,61 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 *
+	 * 更新绑卡验证码
+	 */
+	@Override
+	public boolean updateBankSmsLog(BankSmsLogRequest request) {
+		boolean result = restTemplate
+				.postForEntity("http://AM-USER/am-user/card/updateBankSmsLog", request, Boolean.class).getBody();
+		return result;
+	}
+
+
+	@Override
+	public String selectBankSmsLog(BankSmsLogRequest request) {
+		String result = restTemplate
+				.postForEntity("http://AM-USER/am-user/card/selectBankSmsLog", request, String.class).getBody();
+		return result;
+	}
+
+	@Override
+	public int countScore(AnswerRequest answerList) {
+		int result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/countScore", answerList, Integer.class).getBody();
+		return result;
+	}
+
+
+	@Override
+	public EvalationVO getEvalationByCountScore(short countScore) {
+		EvalationResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getEvalationByCountScore/" + countScore, EvalationResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+	@Override
+	public UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest) {
+		UserEvalationResultResponse response = restTemplate.postForEntity("http://AM-USER/am-user/user/insertUserEvalationResult",userEvalationRequest,UserEvalationResultResponse.class).getBody();
+		if(null!=response){
+			return   response.getResult();
+		}
+		return  null;
+	}
+
+	@Override
+	public ActivityListVO selectActivityList(int activityId){
+		ActivityListResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user//selectActivityList/"+activityId,ActivityListResponse.class).getBody();
+		if(null!=response){
+			return   response.getResult();
+		}
+		return  null;
+	}
+
 }
