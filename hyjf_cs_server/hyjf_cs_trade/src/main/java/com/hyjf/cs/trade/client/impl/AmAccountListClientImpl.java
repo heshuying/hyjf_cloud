@@ -1,8 +1,13 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.trade.AccountListResponse;
+import com.hyjf.am.response.user.UserEvalationResultResponse;
+import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.cs.trade.client.AmAccountListClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author pangchengchao
@@ -12,13 +17,25 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AmAccountListClientImpl implements AmAccountListClient {
+    @Autowired
+    private RestTemplate restTemplate;
     @Override
     public AccountListVO selectAccountListByOrdId(String ordId, String type) {
+        AccountListResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/accountList/selectAccountListByOrdId/" + ordId+"/"+type, AccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
         return null;
     }
 
     @Override
     public int countAccountListByOrdId(String ordId, String type) {
+        AccountListResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/accountList/selectAccountListByOrdId/" + ordId+"/"+type, AccountListResponse.class).getBody();
+        if (response != null  && response.getResult() != null) {
+            return 1;
+        }
         return 0;
     }
 }
