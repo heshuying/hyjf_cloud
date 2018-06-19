@@ -20,6 +20,14 @@ public class WebProjectListClientImpl implements WebProjectListClient {
     @Override
     public ProjectListResponse searchProjectList(ProjectListRequest request) {
        ProjectListResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/searchProjectList",request,ProjectListResponse.class).getBody();
+       logger.info("WebProjectListClientImpl --> searchProjectList --> response = {}",response);
        return response;
+    }
+
+    @Override
+    public ProjectListResponse countProjectList(ProjectListRequest request) {
+        ProjectListResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/countProjectList",request,ProjectListResponse.class).getBody();
+        logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
+        return response;
     }
 }

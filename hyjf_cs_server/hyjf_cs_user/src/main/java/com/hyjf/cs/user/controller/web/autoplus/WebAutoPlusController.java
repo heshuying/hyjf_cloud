@@ -5,7 +5,7 @@ package com.hyjf.cs.user.controller.web.autoplus;
 
 import com.hyjf.am.vo.user.AuthorizedVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.validator.CheckUtil;

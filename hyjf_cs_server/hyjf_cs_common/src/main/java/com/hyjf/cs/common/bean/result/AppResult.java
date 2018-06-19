@@ -12,17 +12,25 @@
 package com.hyjf.cs.common.bean.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hyjf.common.util.ApiSignUtil;
 
 import java.io.Serializable;
 
 /**
- * API结果返回Bean
- * 成功返回“000”，返回值加签chkValue
+ * 返回APP前端结果类
+ * 成功返回“0”
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
+	public static final String SUCCESS = "0";
+	{
+		// 成功码变更 "000" → "0"
+		if (super.getStatus() == BaseResult.SUCCESS) {
+			super.setStatus(this.SUCCESS);
+		}
+	}
 
 	// 跳转前端地址
 	private String callBackAction;

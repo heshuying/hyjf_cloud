@@ -9,17 +9,15 @@
  * Modified by : 
  */
 	
-package com.hyjf.common.enums.utils;
-
+package com.hyjf.common.enums;
 
 import com.hyjf.common.constants.MsgCode;
-
 /**
  * 信息代码和信息本体的枚举
  * @author liubin
  */
 
-public enum MsgEnum implements MsgCode{
+public enum MsgEnum implements MsgCode {
 //	// ----------BaseResult信息------------
 //	INFO_SUCCESS_0("0","成功"),
 //	INFO_SUCCESS_000("000","成功"),

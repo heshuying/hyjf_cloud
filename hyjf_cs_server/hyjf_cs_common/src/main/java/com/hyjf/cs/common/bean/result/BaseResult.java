@@ -19,6 +19,7 @@ import com.hyjf.common.util.StringUtil;
 import java.io.Serializable;
 
 /**
+ * 返回前端结果基类
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

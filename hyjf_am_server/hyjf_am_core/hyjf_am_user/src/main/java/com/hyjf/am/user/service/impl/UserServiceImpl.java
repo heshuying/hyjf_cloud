@@ -882,7 +882,7 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(record, contact);
 		contact.setCreateTime(GetDate.getNowTime());
 		contact.setUpdateTime(GetDate.getNowTime());
-		usersMapper.deleteByPrimaryKey(record.getUserId());
+		UserContactMapper.deleteByPrimaryKey(record.getUserId());
 		return UserContactMapper.insert(contact);
 	}
 
