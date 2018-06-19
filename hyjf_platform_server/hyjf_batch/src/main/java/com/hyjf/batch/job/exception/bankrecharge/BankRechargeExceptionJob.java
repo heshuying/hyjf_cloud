@@ -22,7 +22,7 @@ public class BankRechargeExceptionJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BankRechargeExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/bankException/recharge", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/recharge", String.class);
         logger.info("BankRechargeExceptionJob execute end...");
     }
 }
