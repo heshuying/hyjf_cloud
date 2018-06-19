@@ -48,6 +48,21 @@ public class WebProjectListController extends BaseTradeController {
     }
 
 
+    /**
+     * 获取首页散标推荐列表(散标推荐和散标专区的散标投资，通用接口)
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "散标专区债权转让列表", notes = "散标专区债权转让列表")
+    @PostMapping(value = "/getCreditList", produces = "application/json; charset=utf-8")
+    public Object getCredittList(@RequestBody @Valid ProjectListRequest request){
+        // controller 不做业务处理
+        WebResult result =  webProjectListService.searchProjectList(request);
+        return result;
+    }
+
+
+
 
 
 }

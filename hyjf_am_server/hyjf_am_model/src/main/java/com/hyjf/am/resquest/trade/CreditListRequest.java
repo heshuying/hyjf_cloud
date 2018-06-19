@@ -45,6 +45,25 @@ public class CreditListRequest extends BaseVO {
      */
     private String inProgressSort;
 
+    private Integer limitStart;
+
+    private Integer limitEnd;
+
+    public Integer getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(Integer limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public Integer getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(Integer limitEnd) {
+        this.limitEnd = limitEnd;
+    }
 
     public int getBorrowPeriodMin() {
         return borrowPeriodMin;
