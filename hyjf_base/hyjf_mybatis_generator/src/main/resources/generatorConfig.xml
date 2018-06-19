@@ -875,7 +875,6 @@
             <columnOverride column="remain_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="already_repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <table tableName="ht_increase_interest_repay_detail" domainObjectName="IncreaseInterestRepayDetail">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
