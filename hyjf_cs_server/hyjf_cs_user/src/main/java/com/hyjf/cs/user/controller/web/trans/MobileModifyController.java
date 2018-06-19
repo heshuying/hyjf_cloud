@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.web.trans;
 
-import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;

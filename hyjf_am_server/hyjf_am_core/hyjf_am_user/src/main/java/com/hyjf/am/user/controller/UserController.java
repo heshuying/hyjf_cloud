@@ -3,10 +3,7 @@ package com.hyjf.am.user.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.BindEmailLogRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.*;
@@ -70,7 +67,7 @@ public class UserController {
 
 	/**
 	 * 根据userId查询
-	 * 
+	 *
 	 * @param userId
 	 * @return
 	 */
@@ -89,7 +86,7 @@ public class UserController {
 
 	/**
 	 * 根据mobile查找用户
-	 * 
+	 *
 	 * @param mobile
 	 * @return
 	 */
@@ -108,7 +105,7 @@ public class UserController {
 
 	/**
 	 * 根据username 或者 mobile查询用户
-	 * 
+	 *
 	 * @param condition
 	 * @return
 	 */
@@ -127,7 +124,7 @@ public class UserController {
 
 	/**
 	 * 根据推荐人手机号或userId 查询推荐人
-	 * 
+	 *
 	 * @param reffer
 	 * @return
 	 */
@@ -166,34 +163,34 @@ public class UserController {
 		logger.info("getHjhUserAuthByUserId run...userId is :{}", userId);
 		HjhUserAuthResponse response = new HjhUserAuthResponse();
 		HjhUserAuth hjhUserAuth = userService.getHjhUserAuthByUserId(userId);
-		if (hjhUserAuth != null){
+		if (hjhUserAuth != null) {
 			HjhUserAuthVO hjhUserAuthVO = new HjhUserAuthVO();
-			BeanUtils.copyProperties(hjhUserAuth,hjhUserAuthVO);
+			BeanUtils.copyProperties(hjhUserAuth, hjhUserAuthVO);
 			response.setResult(hjhUserAuthVO);
 		}
 		return response;
 	}
 
 	@RequestMapping("/insertLogSelective")
-	public void insertLogSelective(@RequestBody HjhUserAuthLog hjhUserAuthLog){
+	public void insertLogSelective(@RequestBody HjhUserAuthLog hjhUserAuthLog) {
 		logger.info("insertSelective:" + JSONObject.toJSONString(hjhUserAuthLog));
 		userService.insertSelective(hjhUserAuthLog);
 	}
 
 	@RequestMapping("/selectByExample/{orderId}")
-	public HjhUserAuthLogResponse selectByExample(@RequestBody String orderId){
+	public HjhUserAuthLogResponse selectByExample(@RequestBody String orderId) {
 		HjhUserAuthLogResponse response = new HjhUserAuthLogResponse();
 		HjhUserAuthLog hjhUserAuthLog = userService.selectByExample(orderId);
-		if (null != hjhUserAuthLog){
+		if (null != hjhUserAuthLog) {
 			HjhUserAuthLogVO hjhUserAuthLogVO = new HjhUserAuthLogVO();
-			BeanUtils.copyProperties(hjhUserAuthLog,hjhUserAuthLogVO);
+			BeanUtils.copyProperties(hjhUserAuthLog, hjhUserAuthLogVO);
 			response.setResult(hjhUserAuthLogVO);
 		}
 		return response;
 	}
 
 	@RequestMapping("/updateUserAuthInves")
-	public void updateUserAuthInves(@RequestBody BankRequest bean){
+	public void updateUserAuthInves(@RequestBody BankRequest bean) {
 		userService.updateUserAuthInves(bean);
 	}
 
@@ -203,10 +200,10 @@ public class UserController {
 	 */
 	@RequestMapping("/updateByUserId")
 	public int updateByUserId(@RequestBody User user) {
-		if(user == null || user.getUserId() == null){
+		if (user == null || user.getUserId() == null) {
 			return 0;
 		}
-		logger.info("updatePassWord run...user is :{}",user.toString());
+		logger.info("updatePassWord run...user is :{}", user.toString());
 		return userService.updateUserById(user);
 	}
 
@@ -216,9 +213,9 @@ public class UserController {
 	 */
 	@RequestMapping("/updatePassWd/{userId}/{oldPW}/{newPW}")
 	public JSONObject updatePassWd(@PathVariable Integer userId, @PathVariable String oldPW, @PathVariable String newPW) {
-		logger.info("UserController.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}",userId,oldPW,newPW);
+		logger.info("UserController.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}", userId, oldPW, newPW);
 		JSONObject ret = new JSONObject();
-		if(userId == null || StringUtils.isBlank(oldPW) || StringUtils.isBlank(newPW)){
+		if (userId == null || StringUtils.isBlank(oldPW) || StringUtils.isBlank(newPW)) {
 			ret.put("status", "1");
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
@@ -227,7 +224,7 @@ public class UserController {
 
 		// 验证用的password
 		oldPW = MD5Utils.MD5(MD5Utils.MD5(oldPW) + user.getSalt());
-		if(!oldPW.equals(user.getPassword())){
+		if (!oldPW.equals(user.getPassword())) {
 			ret.put("status", "1");
 			ret.put("statusDesc", "旧密码不正确");
 			return ret;
@@ -264,7 +261,7 @@ public class UserController {
 		User iuser = new User();
 		iuser.setUserId(userId);
 		iuser.setPassword(MD5Utils.MD5(MD5Utils.MD5(newPW) + user.getSalt()));
-		boolean success =  userService.updateUserById(user) > 0;
+		boolean success = userService.updateUserById(user) > 0;
 		if (success) {
 			ret.put("status", "0");
 			ret.put("statusDesc", "修改密码成功");
@@ -276,39 +273,45 @@ public class UserController {
 	}
 
 	@RequestMapping("/selectUserEvalationResultByUserId/{userId}")
-	public UserEvalationResultResponse selectUserEvalationResultByUserId(Integer userId) {
-		if(null == userId){
+	public UserEvalationResultResponse selectUserEvalationResultByUserId(@PathVariable Integer userId) {
+		if (null == userId) {
 			return null;
 		}
 		UserEvalationResultResponse response = new UserEvalationResultResponse();
 		UserEvalationResult userEvalationResult = userService.selectUserEvalationResultByUserId(userId);
-		if (null != userEvalationResult){
+		if (null != userEvalationResult) {
 			UserEvalationResultVO userEvalationResultVO = new UserEvalationResultVO();
-			BeanUtils.copyProperties(userEvalationResult,userEvalationResultVO);
+			BeanUtils.copyProperties(userEvalationResult, userEvalationResultVO);
 			response.setResult(userEvalationResultVO);
 		}
 		return response;
 	}
 
+	@RequestMapping("/deleteUserEvalationResultByUserId")
+	public void deleteUserEvalationResultByUserId(@RequestBody Integer userId) {
+		userService.deleteUserEvalationResultByUserId(userId);
+	}
+
 	@RequestMapping("/getAccountChinapnr/{userId}")
-	public AccountChinapnrResponse getAccountChinapnr(Integer userId) {
+	public AccountChinapnrResponse getAccountChinapnr(@PathVariable Integer userId) {
 		AccountChinapnrResponse response = new AccountChinapnrResponse();
 		AccountChinapnr accountChinapnr = userService.getAccountChinapnr(userId);
-		if (null != accountChinapnr){
+		if (null != accountChinapnr) {
 			AccountChinapnrVO accountChinapnrVO = new AccountChinapnrVO();
-			BeanUtils.copyProperties(accountChinapnr,accountChinapnrVO);
+			BeanUtils.copyProperties(accountChinapnr, accountChinapnrVO);
 			response.setResult(accountChinapnrVO);
 		}
 		return response;
 	}
-	
+
 	/**
 	 * 保存紧急联系人信息
+	 *
 	 * @param bean
 	 * @return
 	 */
 	@RequestMapping("/updateUserContract")
-	public int updateUserContract(@RequestBody UsersContractRequest bean){
+	public int updateUserContract(@RequestBody UsersContractRequest bean) {
 		return userService.updateUserContact(bean);
 	}
 
@@ -320,19 +323,20 @@ public class UserController {
 	 * @Return: UsersContactResponse
 	 */
 	@RequestMapping("/selectUserContact/{userId}")
-	public UsersContactResponse selectUserContact(Integer userId){
+	public UsersContactResponse selectUserContact(@PathVariable Integer userId) {
 		UsersContactResponse response = new UsersContactResponse();
 		UserContact usersContact = userService.selectUserContact(userId);
-		if (null != usersContact){
+		if (null != usersContact) {
 			UsersContactVO usersContactVO = new UsersContactVO();
-			BeanUtils.copyProperties(usersContact,usersContactVO);
+			BeanUtils.copyProperties(usersContact, usersContactVO);
 			response.setResult(usersContactVO);
 		}
 		return response;
 	}
-	
+
 	/**
 	 * 检查邮箱是否已使用
+	 *
 	 * @param email
 	 * @return
 	 */
@@ -340,9 +344,10 @@ public class UserController {
 	public boolean checkEmailUsed(@PathVariable String email) {
 		return userService.checkEmailUsed(email);
 	}
-	
+
 	/**
 	 * 插入绑定邮箱日志
+	 *
 	 * @param log
 	 */
 	@RequestMapping("/insertBindEmailLog")
@@ -351,9 +356,10 @@ public class UserController {
 		BeanUtils.copyProperties(log, bean);
 		userService.insertEmailBindLog(bean);
 	}
-	
+
 	/**
 	 * 查询绑定邮箱日志
+	 *
 	 * @param userid
 	 * @return
 	 */
@@ -361,16 +367,17 @@ public class UserController {
 	public BindEmailLogResponse getUserBindEmail(@PathVariable Integer userid) {
 		BindEmailLogResponse response = new BindEmailLogResponse();
 		UserBindEmailLog log = userService.getUserBindEmail(userid);
-		if(log != null) {
+		if (log != null) {
 			BindEmailLogVO logVO = new BindEmailLogVO();
 			BeanUtils.copyProperties(log, logVO);
 			response.setResult(logVO);
 		}
 		return response;
 	}
-	
+
 	/**
 	 * 绑定邮箱更新
+	 *
 	 * @param userId
 	 * @param email
 	 * @param
@@ -382,16 +389,17 @@ public class UserController {
 
 	/**
 	 * 用户登录日志
+	 *
 	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/getUserLoginById/{userId}")
-	public UserLoginLogResponse getUserLoginById(@PathVariable Integer userId){
+	public UserLoginLogResponse getUserLoginById(@PathVariable Integer userId) {
 		UserLoginLogResponse response = new UserLoginLogResponse();
 		UserLoginLog userLoginLog = userService.selectByPrimaryKey(userId);
-		if (null != userLoginLog){
+		if (null != userLoginLog) {
 			UserLoginLogVO userLoginLogVO = new UserLoginLogVO();
-			BeanUtils.copyProperties(userLoginLog,userLoginLogVO);
+			BeanUtils.copyProperties(userLoginLog, userLoginLogVO);
 			response.setResult(userLoginLogVO);
 		}
 		return response;
@@ -400,6 +408,7 @@ public class UserController {
 
 	/**
 	 * 根据垫付机构用户名检索垫付机构用户
+	 *
 	 * @param repayOrgName
 	 * @return
 	 */
@@ -410,6 +419,54 @@ public class UserController {
 		if (!CollectionUtils.isEmpty(userList)) {
 			List<UserVO> voList = CommonUtils.convertBeanList(userList, UserVO.class);
 			response.setResultList(voList);
+		}
+		return response;
+	}
+
+	@RequestMapping("/countScore")
+	public int countScore(AnswerRequest answerList) {
+		int countScore = userService.countScore(answerList.getResultList());
+		return countScore;
+	}
+
+	@RequestMapping("/getEvalationByCountScore/{countScore}")
+	public EvalationResponse getEvalationByCountScore(@PathVariable short countScore) {
+		EvalationResponse response = new EvalationResponse();
+		Evalation evalation = userService.getEvalationByCountScore(countScore);
+		if (null != evalation) {
+			EvalationVO evalationVO = new EvalationVO();
+			BeanUtils.copyProperties(evalation, evalationVO);
+			response.setResult(evalationVO);
+		}
+		return response;
+	}
+
+	@RequestMapping("/insertUserEvalationResult")
+	public UserEvalationResultResponse insertUserEvalationResult(@RequestBody UserEvalationRequest userEvalationRequest) {
+		List<String> answerList = userEvalationRequest.getAnswerList();
+		List<String> questionList = userEvalationRequest.getQuestionList();
+		EvalationVO evalation = userEvalationRequest.getEvalation();
+		int countScore = userEvalationRequest.getCountScore();
+		Integer userId = userEvalationRequest.getUserId();
+		UserEvalationResultVO oldUserEvalationResult = userEvalationRequest.getUserEvalationResultVO();
+		UserEvalationResult userEvalationResult = userService.insertUserEvalationResult(answerList, questionList, evalation, countScore, userId, oldUserEvalationResult);
+		UserEvalationResultResponse response = new UserEvalationResultResponse();
+		if(null!= userEvalationResult){
+			UserEvalationResultVO userEvalationResultVO = new UserEvalationResultVO();
+			BeanUtils.copyProperties(userEvalationResult,userEvalationResultVO);
+			response.setResult(userEvalationResultVO);
+		}
+		return response;
+	}
+
+	@RequestMapping("/selectActivityList/{activityId}")
+	public ActivityListResponse selectActivityList(@PathVariable int activityId){
+		ActivityList activityList = userService.selectActivityList(activityId);
+		ActivityListResponse response = new ActivityListResponse();
+		if(null != activityList){
+			ActivityListVO activityListVO = new ActivityListVO();
+			BeanUtils.copyProperties(activityList,activityListVO);
+			response.setResult(activityListVO);
 		}
 		return response;
 	}

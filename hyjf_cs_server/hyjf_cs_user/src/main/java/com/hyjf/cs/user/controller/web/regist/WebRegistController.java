@@ -4,7 +4,6 @@
 package com.hyjf.cs.user.controller.web.regist;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.SmsCodeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;

@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.controller.web.projectlist;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.util.Result;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.WebProjectListService;
 import io.swagger.annotations.Api;
@@ -43,7 +43,7 @@ public class WebProjectListController extends BaseTradeController {
     @PostMapping(value = "/homeBorrowProjectList", produces = "application/json; charset=utf-8")
     public Object homeBorrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
-        Result result =  webProjectListService.searchProjectList(request);
+        WebResult result =  webProjectListService.searchProjectList(request);
         return result;
     }
 

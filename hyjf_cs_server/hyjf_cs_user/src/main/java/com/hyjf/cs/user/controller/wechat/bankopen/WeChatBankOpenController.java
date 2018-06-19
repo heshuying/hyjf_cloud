@@ -1,14 +1,12 @@
 package com.hyjf.cs.user.controller.wechat.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WechatResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
@@ -76,6 +74,9 @@ public class WeChatBankOpenController extends BaseUserController {
     public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         ModelAndView reuslt = new ModelAndView();
+        if (token == null) {
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+        }
         // 获取登录信息
         UserVO user = bankOpenService.getUsers(token);
         // 检查参数
@@ -92,8 +93,8 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setChannel(BankCallConstant.CHANNEL_WEI);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
-        openBean.setCoinstName("汇盈金服");
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_WX);
+        openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
         // 组装调用江西银行的MV
         reuslt = bankOpenService.getOpenAccountMV(openBean);
         //保存开户日志  银行卡号不必传了
@@ -104,21 +105,6 @@ public class WeChatBankOpenController extends BaseUserController {
         }
         logger.info("开户end");
         return reuslt;
-    }
-
-    /**
-     * 页面开户异步处理
-     *
-     * @param bean
-     * @return
-     */
-    @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
-    @PostMapping("/bgReturn")
-    public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
-        logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
-        bean.setMobile(mobile);
-        BankCallResult result = bankOpenService.openAccountBgReturn(bean);
-        return result;
     }
 
 }

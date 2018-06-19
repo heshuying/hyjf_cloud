@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.util.Result;
+import com.hyjf.cs.common.bean.result.WebResult;
 
 /**
  * web端项目列表Service
@@ -17,5 +17,5 @@ public interface WebProjectListService extends BaseTradeService{
      * @author liuyang
      * @return
      */
-    public Result searchProjectList(ProjectListRequest request);
+    public WebResult searchProjectList(ProjectListRequest request);
 }

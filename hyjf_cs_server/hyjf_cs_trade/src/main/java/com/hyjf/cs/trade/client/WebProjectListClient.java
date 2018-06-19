@@ -18,4 +18,11 @@ public interface WebProjectListClient {
      */
     ProjectListResponse searchProjectList(ProjectListRequest request);
 
+    /**
+     * 查询所有分页总数
+     * @param request
+     * @return
+     */
+    public ProjectListResponse countProjectList(ProjectListRequest request);
+
 }

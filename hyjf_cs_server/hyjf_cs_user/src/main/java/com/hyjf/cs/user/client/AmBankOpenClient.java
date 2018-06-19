@@ -23,6 +23,8 @@ public interface AmBankOpenClient {
 
     UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
 
+	void deleteUserEvalationResultByUserId(Integer userId);
+
 	/**
 	 * 修改开户日志表的状态
 	 * @param userId

@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.financialadvisor;
 
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.cs.user.service.BaseUserService;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
 
 import java.util.List;
 
@@ -14,4 +15,12 @@ import java.util.List;
  */
 public interface FinancialAdvisorService extends BaseUserService {
     List<QuestionCustomizeVO> getNewQuestionList();
+
+    UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
+
+     UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId);
+
+     String sendCoupon(int userId,String platform);
+
+    String checkActivityIfAvailable(String activityId);
 }

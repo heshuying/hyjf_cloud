@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.wechat.login;
 
-import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -11,7 +10,6 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.BaseResult;
 import com.hyjf.cs.common.bean.result.WechatResult;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;

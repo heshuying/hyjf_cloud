@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.mapper.customize.QuestionCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
@@ -13,6 +14,8 @@ import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.user.utils.UploadFileUtils;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.EvalationVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
@@ -69,6 +72,9 @@ public class UserServiceImpl implements UserService {
 	UserInfoService userInfoService;
 
 	@Autowired
+	EvalationMapper evalationMapper;
+
+	@Autowired
 	HjhUserAuthMapper hjhUserAuthMapper;
 
 	@Autowired
@@ -78,6 +84,9 @@ public class UserServiceImpl implements UserService {
 	UserEvalationResultMapper userEvalationResultMapper;
 
 	@Autowired
+	UserEvalationMapper userEvalationMapper;
+
+	@Autowired
 	AccountChinapnrMapper accountChinapnrMapper;
 	
 	@Autowired
@@ -85,6 +94,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
+
+	@Autowired
+	QuestionCustomizeMapper questionCustomizeMapper;
+
+	@Autowired
+	ActivityListMapper activityListMapper;
 
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
@@ -819,6 +834,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void deleteUserEvalationResultByUserId(Integer userId) {
+		UserEvalationResultExample userEvalationResultExample=new UserEvalationResultExample();
+		userEvalationResultExample.createCriteria().andUserIdEqualTo(userId);
+		List<UserEvalationResult> userEvalationResults=userEvalationResultMapper.selectByExample(userEvalationResultExample);
+		UserEvalationResult userEvalationResult=null;
+		if(userEvalationResults!=null&&userEvalationResults.size()!=0){
+			userEvalationResult=userEvalationResults.get(0);
+		}else{
+			return;
+		}
+		UserEvalationExample userEvalationExample=new UserEvalationExample();
+		userEvalationExample.createCriteria().andErIdEqualTo(userEvalationResult.getId());
+		userEvalationMapper.deleteByExample(userEvalationExample);
+		userEvalationResultMapper.deleteByPrimaryKey(userEvalationResult.getId());
+
+
+	}
+
+	@Override
 	public AccountChinapnr getAccountChinapnr(Integer userId) {
 		AccountChinapnr accountChinapnr = null;
 		if (userId == null) {
@@ -846,8 +880,10 @@ public class UserServiceImpl implements UserService {
 		}
 		UserContact contact = new UserContact();
 		BeanUtils.copyProperties(record, contact);
+		contact.setCreateTime(GetDate.getNowTime());
+		contact.setUpdateTime(GetDate.getNowTime());
 		usersMapper.deleteByPrimaryKey(record.getUserId());
-		return UserContactMapper.insertSelective(contact);
+		return UserContactMapper.insert(contact);
 	}
 
 	/**
@@ -965,5 +1001,67 @@ public class UserServiceImpl implements UserService {
 		}
 		return null;
 	}
+
+	@Override
+	public int countScore(List<String> answerList) {
+		int countScore = questionCustomizeMapper.countScore(answerList);
+		return countScore;
+	}
+
+	@Override
+	public Evalation getEvalationByCountScore(short countScore) {
+		EvalationExample example = new EvalationExample();
+		example.createCriteria().andScoreUpLessThanOrEqualTo(countScore).andScoreDownGreaterThanOrEqualTo(countScore).andStatusEqualTo(0);
+		List<Evalation> list=evalationMapper.selectByExample(example);
+		if(list!=null&&list.size()>0){
+			return list.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
+														 EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult) {
+		UserEvalationResult userEvalationResult=new UserEvalationResult();
+		userEvalationResult.setUserId(userId);
+		userEvalationResult.setScoreCount((byte) countScore);
+		userEvalationResult.setEvalType(evalation.getEvalType());
+		userEvalationResult.setSummary(evalation.getSummary());
+		userEvalationResult.setCreateTime(new Date());
+		if(oldUserEvalationResult!=null){
+			userEvalationResult.setLasttime(oldUserEvalationResult.getCreateTime());
+		}
+
+		int i=userEvalationResultMapper.insertSelective(userEvalationResult);
+		if(i>0){
+			// 更新用户信息
+			User user = usersMapper.selectByPrimaryKey(userId);
+			if (user != null){
+				user.setIsEvaluationFlag(1);// 已测评
+				// 更新用户是否测评标志位
+				this.usersMapper.updateByPrimaryKey(user);
+			}
+			for (int j = 0; j < answerList.size(); j++) {
+				UserEvalation userEvalation=new UserEvalation();
+				userEvalation.setErId(userEvalationResult.getId());
+				userEvalation.setQuestionId(new Integer(questionList.get(j)));
+				userEvalation.setAnswerId(new Integer(answerList.get(j)));
+				userEvalation.setSort((byte) j);
+				userEvalationMapper.insertSelective(userEvalation);
+			}
+		}
+		return userEvalationResult;
+	}
+
+
+	/**
+	 * 活动是否过期
+	 */
+	@Override
+	public ActivityList selectActivityList(int activityId) {
+		ActivityList activityList=activityListMapper.selectByPrimaryKey(activityId);
+		return activityList;
+	}
+
 
 }
