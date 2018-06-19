@@ -4,12 +4,13 @@
 package com.hyjf.cs.user.service.login;
 
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.cs.user.service.BaseUserService;
 
 /**
  * @author zhangqingqing
  * @version LoginService, v0.1 2018/6/11 15:31
  */
-public interface LoginService {
+public interface LoginService extends BaseUserService {
 
     /**
      *

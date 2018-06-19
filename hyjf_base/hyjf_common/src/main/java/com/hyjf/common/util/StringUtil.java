@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.validator.Validator;
 
 /**
@@ -3114,5 +3115,41 @@ public class StringUtil {
 
     public static String toString(Object obj) {
         return (obj == null) ? "" : obj.toString();
+    }
+
+    /**
+     * 给信息拼接参数
+     * @param message
+     * @param params
+     * @return
+     *
+     */
+    public static String getMessage(String message, Object... params) {
+
+        if (Validator.isNotNull(message)) {
+            if (message.contains("{0}")) {
+                if (Validator.isNotNull(params)) {
+                    int i = 0;
+                    for (Object p : params) {
+                        message = message.replace("{" + i + "}", p == null ? "" : String.valueOf(p));
+                        i++;
+                    }
+                }
+            }
+        }
+
+        return message;
+    }
+
+    /**
+     * 从枚举中取得信息，拼接参数
+     *
+     * @param
+     * @param
+     * @return
+     */
+    public static String getEnumMessage(MsgCode msgCode, Object... params) {
+        String message = msgCode.getMsg();
+        return getMessage(message, params);
     }
 }

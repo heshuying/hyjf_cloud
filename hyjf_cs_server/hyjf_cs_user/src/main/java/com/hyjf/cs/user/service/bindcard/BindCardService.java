@@ -2,11 +2,11 @@ package com.hyjf.cs.user.service.bindcard;
 
 import java.text.ParseException;
 
-import com.hyjf.cs.user.service.BaseService;
+import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
-public interface BindCardService extends BaseService{
+public interface BindCardService extends BaseUserService {
 
 	void checkParamBindCard(BindCardVO bindCardVO, Integer userId);
 

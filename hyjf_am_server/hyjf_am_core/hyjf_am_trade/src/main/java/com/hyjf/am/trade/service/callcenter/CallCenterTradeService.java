@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 
 import java.util.List;
@@ -49,4 +50,12 @@ public interface CallCenterTradeService {
      * @author wangjun
      */
     List<CallCenterWithdrawCustomize> getWithdrawRecordList(CallCenterBaseRequest centerBaseRequest);
+    
+    /**
+     * 查询投资明细(汇直投)
+     * @param centerBaseRequest
+     * @return List<CallCenterRechargeCustomize>
+     * @author libin
+     */
+    List<CallcenterHztInvestCustomize> getBorrowInvestList(CallcenterHztInvestRequest callcenterHztInvestRequest);
 }

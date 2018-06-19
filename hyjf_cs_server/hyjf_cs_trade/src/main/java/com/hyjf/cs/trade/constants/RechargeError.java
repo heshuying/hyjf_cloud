@@ -4,13 +4,14 @@
 package com.hyjf.cs.trade.constants;
 
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
+import org.apache.log4j.spi.ErrorCode;
 
 /**
  * @author zhangqingqing
  * @version LoginError, v0.1 2018/4/25 14:58
  */
-public enum RechargeError implements ErrorCode {
+public enum RechargeError implements MsgCode {
     NOT_OPENACCOUNT_ERROR("1", "用户未开户！"),
     NOT_PASSWD_ERROR("1", "用户未设置交易密码！"),
     BANKCARD_ERROR("1", "查询银行卡信息失败！"),
@@ -20,21 +21,21 @@ public enum RechargeError implements ErrorCode {
     CALL_BANK_ERROR("1", "调用银行接口失败");
 
 
-    private String errCode;
-    private String message;
+    private String code;
+    private String msg;
 
-    RechargeError(String errCode, String message) {
-        this.errCode = errCode;
-        this.message = message;
+    RechargeError(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     @Override
-    public String getErrCode() {
-        return this.errCode;
+    public String getCode() {
+        return this.code;
     }
 
     @Override
-    public String getMessage() {
-        return this.message;
+    public String getMsg() {
+        return this.msg;
     }
 }

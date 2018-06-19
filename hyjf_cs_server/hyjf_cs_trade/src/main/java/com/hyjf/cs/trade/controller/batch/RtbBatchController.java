@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ import com.hyjf.cs.trade.service.RtbLoansBatchService;
  */
 @RestController
 @RequestMapping("/batch/rtb")
-public class RtbBatchController {
+public class RtbBatchController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(RtbBatchController.class);
 
     /**

@@ -6,6 +6,7 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -33,7 +34,7 @@ import java.util.Map;
 @Api(value = "第三方用户开户")
 @Controller
 @RequestMapping("/api/user/open")
-public class ApiBankOpenController {
+public class ApiBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(ApiBankOpenController.class);
 
     @Autowired

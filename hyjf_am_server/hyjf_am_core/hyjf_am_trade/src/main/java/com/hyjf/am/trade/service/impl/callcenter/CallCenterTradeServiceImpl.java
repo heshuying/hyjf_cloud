@@ -5,8 +5,10 @@ package com.hyjf.am.trade.service.impl.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterAccountDetailCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterRepaymentDetailCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterHztInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterRechargeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterWithdrawCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
@@ -37,7 +39,9 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 
     @Autowired
     private CallcenterWithdrawCustomizeMapper callcenterWithdrawCustomizeMapper;
-
+    
+    @Autowired
+    private CallcenterHztInvestCustomizeMapper callcenterHztInvestCustomizeMapper;
     /**
      *
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
@@ -119,4 +123,26 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
         }
         return list;
     }
+    
+    /**
+     * 查询投资明细(汇直投)
+     * @author libin
+     * @param centerBaseRequest
+     * @return
+     */
+	@Override
+	public List<CallcenterHztInvestCustomize> getBorrowInvestList(CallcenterHztInvestRequest callcenterHztInvestRequest) {
+		List<CallcenterHztInvestCustomize> list = callcenterHztInvestCustomizeMapper.getBorrowInvestList(callcenterHztInvestRequest);
+		if(!CollectionUtils.isEmpty(list)){
+			Map<String, String> operatingDeckMap = CacheUtil.getParamNameMap("CLIENT");
+			Map<String, String> tenderUserAttributeMap = CacheUtil.getParamNameMap("USER_PROPERTY");
+			Map<String, String> investTypeMap = CacheUtil.getParamNameMap("INVEST_TYPE");
+           for(CallcenterHztInvestCustomize callcenterHztInvestCustomize : list){
+        	   callcenterHztInvestCustomize.setOperatingDeck(operatingDeckMap.getOrDefault(callcenterHztInvestCustomize.getOperatingDeck(),null));
+        	   callcenterHztInvestCustomize.setTenderUserAttribute(tenderUserAttributeMap.getOrDefault(callcenterHztInvestCustomize.getTenderUserAttribute(),null));
+        	   callcenterHztInvestCustomize.setInvestType(investTypeMap.getOrDefault(callcenterHztInvestCustomize.getInvestType(),null)); 
+            }
+		}
+		return list;
+	}
 }

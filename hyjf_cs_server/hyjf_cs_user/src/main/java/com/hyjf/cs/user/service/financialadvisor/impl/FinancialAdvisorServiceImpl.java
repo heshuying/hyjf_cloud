@@ -10,16 +10,14 @@ import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.financialadvisor.CouponCheckUtilDefine;
 import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
 import com.hyjf.soa.apiweb.CommonParamBean;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +31,7 @@ import java.util.Map;
  * @version FinancialAdvisorImpl, v0.1 2018/6/15 19:11
  */
 @Service
-public class FinancialAdvisorServiceImpl extends BaseServiceImpl implements FinancialAdvisorService {
+public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements FinancialAdvisorService {
 
     @Autowired
     AmBankOpenClient amBankOpenClient;

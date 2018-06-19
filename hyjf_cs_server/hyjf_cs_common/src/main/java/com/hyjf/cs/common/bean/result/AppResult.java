@@ -23,4 +23,15 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	// 跳转前端地址
+	private String callBackAction;
+
+	public String getCallBackAction() {
+		return callBackAction;
+	}
+
+	public void setCallBackAction(String callBackAction) {
+		this.callBackAction = callBackAction;
+	}
 }

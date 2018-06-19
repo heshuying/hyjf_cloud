@@ -10,6 +10,7 @@ import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.constants.OpenAccountError;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -41,7 +42,7 @@ import java.util.Map;
 @Api(value = "web端用户开户接口")
 @Controller
 @RequestMapping("/web/secure/open")
-public class BankOpenController {
+public class BankOpenController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
 
 	@Autowired

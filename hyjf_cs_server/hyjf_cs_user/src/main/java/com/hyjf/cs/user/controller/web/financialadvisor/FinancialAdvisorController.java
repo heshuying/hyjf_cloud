@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.web.financialadvisor;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +26,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class FinancialAdvisorController {
+public class FinancialAdvisorController extends BaseUserController {
 
     @Autowired
     FinancialAdvisorService financialAdvisorService;

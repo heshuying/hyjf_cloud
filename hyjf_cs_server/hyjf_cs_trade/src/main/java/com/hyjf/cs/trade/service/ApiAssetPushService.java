@@ -13,7 +13,7 @@ import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
  * @author fuqiang
  * @version ApiAssetPushService, v0.1 2018/6/11 18:06
  */
-public interface ApiAssetPushService {
+public interface ApiAssetPushService extends BaseTradeService{
 
     /**
      * 发送消息

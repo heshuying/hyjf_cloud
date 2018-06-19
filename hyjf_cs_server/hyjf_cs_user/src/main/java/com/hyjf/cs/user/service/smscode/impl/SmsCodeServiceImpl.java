@@ -20,6 +20,7 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ import java.util.Map;
  * @version SmsCodeServiceImpl, v0.1 2018/4/25 9:02
  */
 @Service
-public class SmsCodeServiceImpl implements SmsCodeService {
+public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeService {
 	private static final Logger logger = LoggerFactory.getLogger(SmsCodeServiceImpl.class);
 
 	@Autowired
@@ -90,25 +91,25 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 
 		List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
 				CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
-		CheckUtil.check(Validator.isNotNull(validCodeType) && codeTypes.contains(validCodeType), MsgEnum.CODETYPE_INVALID_ERROR);
-		CheckUtil.check(Validator.isNotNull(mobile) && Validator.isMobile(mobile), MsgEnum.MOBILE_FORMAT_ERROR);
+		CheckUtil.check(Validator.isNotNull(validCodeType) && codeTypes.contains(validCodeType), MsgEnum.ERR_CODETYPE_INVALID);
+		CheckUtil.check(Validator.isNotNull(mobile) && Validator.isMobile(mobile), MsgEnum.ERR_MOBILE_FORMAT);
 		if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
 			// 注册时要判断不能重复
-			CheckUtil.check(!existUser(mobile), MsgEnum.MOBILE_EXISTS_ERROR);
+			CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
 		}
 		if(validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)||validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
 			if (StringUtils.isNotEmpty(token)) {
 				WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-				CheckUtil.check(webViewUser != null, MsgEnum.USER_NOT_EXISTS_ERROR);
+				CheckUtil.check(webViewUser != null, MsgEnum.ERR_USER_NOT_EXISTS);
 				// 验证原手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
-					CheckUtil.check(StringUtils.isNotBlank(webViewUser.getMobile()), MsgEnum.USER_NOT_EXISTS_ERROR);
-					CheckUtil.check(webViewUser.getMobile().equals(mobile), MsgEnum.MOBILE_NEED_SAME_ERROR);
+					CheckUtil.check(StringUtils.isNotBlank(webViewUser.getMobile()), MsgEnum.ERR_USER_NOT_EXISTS);
+					CheckUtil.check(webViewUser.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_SAME);
 				}
 				// 绑定新手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-					CheckUtil.check(!webViewUser.getMobile().equals(mobile), MsgEnum.MOBILE_MODIFY_ERROR);
-					CheckUtil.check(!existUser(mobile), MsgEnum.MOBILE_EXISTS_ERROR);
+					CheckUtil.check(!webViewUser.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_MODIFY);
+					CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
 				}
 			}
 		}
@@ -116,7 +117,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		// 判断发送间隔时间
 		String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
 		logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
-		CheckUtil.check(StringUtils.isBlank(intervalTime), MsgEnum.SEND_SMSCODE_TOO_FAST_ERROR);
+		CheckUtil.check(StringUtils.isBlank(intervalTime), MsgEnum.ERR_SEND_SMSCODE_TOO_FAST);
 		String ipCount = RedisUtils.get(ip + ":MaxIpCount");
 		if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
 			ipCount = "0";
@@ -124,9 +125,9 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		}
 		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
 		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
-		CheckUtil.check(smsConfig != null, MsgEnum.FIND_SMSCONFIG_ERROR);
+		CheckUtil.check(smsConfig != null, MsgEnum.ERR_FIND_SMSCONFIG);
 		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
-			CheckUtil.check(Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount()), MsgEnum.SEND_SMSCODE_TOO_MANNY_ERROR);
+			CheckUtil.check(Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount()), MsgEnum.ERR_SEND_SMSCODE_TOO_MANNY);
 				try {
 					// 发送短信通知
 					Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -142,7 +143,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 						logger.error("短信发送失败...", e);
 					}
 				} catch (Exception e) {
-					CheckUtil.check(false, MsgEnum.IP_VISIT_TOO_MANNY_ERROR);
+					CheckUtil.check(false, MsgEnum.ERR_IP_VISIT_TOO_MANNY);
 				}
 				RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
 		}
@@ -154,7 +155,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		}
 		logger.info(mobile + "----------MaxPhoneCount-----------" + count);
 		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
-			CheckUtil.check(Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount()), MsgEnum.SEND_SMSCODE_TOO_MANNY_ERROR);
+			CheckUtil.check(Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount()), MsgEnum.ERR_SEND_SMSCODE_TOO_MANNY);
 				try {
 					// 发送短信通知
 					Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -170,7 +171,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 						logger.error("短信发送失败...", e);
 					}
 				} catch (Exception e) {
-					CheckUtil.check(false, MsgEnum.SEND_SMSCODE_TOO_MANNY_ERROR);
+					CheckUtil.check(false, MsgEnum.ERR_SEND_SMSCODE_TOO_MANNY);
 				}
 				RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
 		}

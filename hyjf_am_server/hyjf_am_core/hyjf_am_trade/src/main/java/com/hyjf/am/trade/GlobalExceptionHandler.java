@@ -37,8 +37,8 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Response<BaseVO> defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
         Response<BaseVO> response = new Response<BaseVO>();
-        response.setRtn(e.getError().getErrCode());
-        response.setMessage(e.getError().getMessage());
+        response.setRtn(e.getError().getCode());
+        response.setMessage(e.getError().getMsg());
         return response;
     }
 

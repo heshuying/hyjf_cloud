@@ -1,15 +1,18 @@
 package com.hyjf.cs.user.controller.wechat.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WechatResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
-import com.hyjf.cs.user.result.ApiResult;
-import com.hyjf.cs.user.result.AppResult;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -28,7 +31,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author sunss
@@ -36,7 +38,7 @@ import java.util.Map;
 @Api(value = "微信端用户开户")
 @Controller
 @RequestMapping("/wechat/user/open")
-public class WeChatBankOpenController {
+public class WeChatBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatBankOpenController.class);
 
     @Autowired
@@ -50,9 +52,9 @@ public class WeChatBankOpenController {
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
     @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
-    public AppResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public WechatResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         logger.info("openAccount userInfo start, token is :{}", token);
-        AppResult<String> result = new AppResult<String>();
+        WechatResult<String> result = new WechatResult<String>();
         UserVO userVO = bankOpenService.getUsers(token);
         if (userVO != null) {
             logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
@@ -60,11 +62,11 @@ public class WeChatBankOpenController {
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.setResult(mobile);
+            result.setData(mobile);
         } else {
             logger.error("openAccount userInfo failed...");
-            result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(OpenAccountError.SYSTEM_ERROR.getMessage());
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(OpenAccountError.SYSTEM_ERROR.getMsg());
         }
         return result;
     }

@@ -11,6 +11,7 @@ import com.hyjf.cs.trade.bean.MQBorrow;
 import com.hyjf.cs.trade.mq.AutoPreAuditProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.AutoPreAuditService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @version AutoPreAuditServiceImpl, v0.1 2018/6/14 16:35
  */
 @Service
-public class AutoPreAuditServiceImpl implements AutoPreAuditService {
+public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements AutoPreAuditService {
 
     private Logger _log = LoggerFactory.getLogger(AutoPreAuditServiceImpl.class);
 

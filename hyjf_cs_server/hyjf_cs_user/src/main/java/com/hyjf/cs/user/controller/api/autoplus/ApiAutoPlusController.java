@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.api.autoplus;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoPlusRetBean;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -31,7 +32,7 @@ import java.util.Map;
 @Api(value = "api端用户授权自动投资自动授权接口")
 @RestController
 @RequestMapping("/api/user")
-public class ApiAutoPlusController {
+public class ApiAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiAutoPlusController.class);
 

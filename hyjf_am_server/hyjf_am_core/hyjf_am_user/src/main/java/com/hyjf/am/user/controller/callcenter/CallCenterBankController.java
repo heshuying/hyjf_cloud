@@ -2,14 +2,18 @@
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 package com.hyjf.am.user.controller.callcenter;
+import com.hyjf.am.response.callcenter.CallCenterAccountHuifuResponse;
 import com.hyjf.am.response.callcenter.CallCenterUserBaseResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterAccountHuifuCustomize;
 import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
 import com.hyjf.am.user.service.callcenter.CallCenterBankService;
 import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
+import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -109,4 +113,15 @@ public class CallCenterBankController {
         }
         return callCenterUserBaseResponse;
     }
+    
+    @RequestMapping("/getHuifuTiedcardInfo")
+    public CallCenterAccountHuifuResponse getHuifuTiedcardInfo(@RequestBody @Valid CallcenterAccountHuifuRequest callcenterAccountHuifuRequest){
+    	CallCenterAccountHuifuResponse CallCenterAccountHuifuResponse = new CallCenterAccountHuifuResponse();
+    	List<CallcenterAccountHuifuCustomize> list = callCenterBankService.getHuifuTiedcardInfo(callcenterAccountHuifuRequest);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallcenterAccountHuifuVO> callCenterAccountHuifuVOS = CommonUtils.convertBeanList(list,CallcenterAccountHuifuVO.class);
+            CallCenterAccountHuifuResponse.setResultList(callCenterAccountHuifuVOS);
+        }
+    	return CallCenterAccountHuifuResponse;
+    }   
 }

@@ -4,13 +4,13 @@
 package com.hyjf.cs.user.service.trans;
 
 import com.hyjf.cs.user.result.MobileModifyResultBean;
-import com.hyjf.cs.user.service.BaseService;
+import com.hyjf.cs.user.service.BaseUserService;
 
 /**
  * @author zhangqingqing
  * @version MobileModifyService, v0.1 2018/6/14 16:47
  */
-public interface MobileModifyService extends BaseService{
+public interface MobileModifyService extends BaseUserService {
     boolean checkForMobileModify(String newMobile, String smsCode);
 
     MobileModifyResultBean queryForMobileModify(Integer userId);

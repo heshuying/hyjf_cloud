@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.WeChatBorrowService;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,5 @@ import org.springframework.stereotype.Service;
  * @version WeChatBorrowServiceImpl, v0.1 2018/6/5 9:50
  */
 @Service
-public class WeChatBorrowServiceImpl implements WeChatBorrowService {
+public class WeChatBorrowServiceImpl extends BaseTradeServiceImpl implements WeChatBorrowService {
 }

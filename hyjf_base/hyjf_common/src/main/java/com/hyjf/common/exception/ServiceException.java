@@ -1,6 +1,6 @@
 package com.hyjf.common.exception;
 
-import com.hyjf.common.constants.ErrorCode;
+import com.hyjf.common.constants.MsgCode;
 
 /**
  * @author xiasq
@@ -10,15 +10,15 @@ public class ServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	private ErrorCode errorCode;
+	private MsgCode errorCode;
 
 	public ServiceException() {
 	}
 
-	public ServiceException(ErrorCode errorCode) {
+	public ServiceException(MsgCode errorCode) {
 		this.errorCode = errorCode;
 	}
-	public ServiceException(ErrorCode errorCode, Throwable cause) {
+	public ServiceException(MsgCode errorCode, Throwable cause) {
 		super(cause);
 		this.errorCode = errorCode;
 	}
@@ -35,7 +35,7 @@ public class ServiceException extends RuntimeException {
 		super(cause);
 	}
 
-	public ErrorCode getErrorCode() {
+	public MsgCode getErrorCode() {
 		return errorCode;
 	}
 
@@ -43,7 +43,7 @@ public class ServiceException extends RuntimeException {
 		return errorCode != null;
 	}
 
-	public void setErrorCode(ErrorCode errorCode) {
+	public void setErrorCode(MsgCode errorCode) {
 		this.errorCode = errorCode;
 	}
 

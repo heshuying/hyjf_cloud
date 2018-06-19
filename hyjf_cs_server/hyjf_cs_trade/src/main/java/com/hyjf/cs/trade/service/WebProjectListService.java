@@ -9,7 +9,7 @@ import com.hyjf.am.util.Result;
  * @author liuyang
  * @version WebProjectListService, v0.1 2018/6/13 10:21
  */
-public interface WebProjectListService {
+public interface WebProjectListService extends BaseTradeService{
 
     /**
      * 获取Web端项目列表

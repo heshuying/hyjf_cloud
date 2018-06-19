@@ -16,7 +16,7 @@ import java.util.Map;
  * @author
  *
  */
-public interface RechargeService extends BaseService{
+public interface RechargeService extends BaseTradeService{
 	/**
 	 * 根据用户Id,银行卡号检索用户银行卡信息
 	 * @param userId

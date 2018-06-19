@@ -18,6 +18,7 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.service.ApiAssetPushService;
 import com.hyjf.cs.trade.service.AutoSendService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ import java.util.List;
  * @version AutoSendServiceImpl, v0.1 2018/6/12 17:05
  */
 @Service
-public class AutoSendServiceImpl implements AutoSendService {
+public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSendService {
 
     private static final Logger _log = LoggerFactory.getLogger(AutoSendServiceImpl.class);
 

@@ -27,7 +27,7 @@ import com.hyjf.cs.user.constants.ContractSetError;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +48,7 @@ import java.util.Map.Entry;
  * @version SafeServiceImpl, v0.1 2018/6/11 15:55
  */
 @Service
-public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
+public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
 
@@ -378,7 +378,7 @@ public class SafeServiceImpl extends BaseServiceImpl implements SafeService  {
     	// 获取当前紧急联系人信息
     	UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
     	if(usersContactVO != null) {
-    		resultBean.setResult(usersContactVO);
+    		resultBean.setData(usersContactVO);
 
     		for(Entry<String, String> entry :  relationMap.entrySet()) {
     			if(entry.getKey().equals(usersContactVO.getRelation())) {

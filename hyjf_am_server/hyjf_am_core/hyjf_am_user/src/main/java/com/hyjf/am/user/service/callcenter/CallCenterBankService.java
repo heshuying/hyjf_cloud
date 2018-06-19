@@ -2,7 +2,9 @@ package com.hyjf.am.user.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterAccountHuifuCustomize;
 import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
 
 import java.util.List;
@@ -25,5 +27,6 @@ public interface CallCenterBankService {
     List<CallcenterUserBaseCustomize> getBasicUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
     List<CallcenterUserBaseCustomize> getUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest);
-
+    
+    List<CallcenterAccountHuifuCustomize> getHuifuTiedcardInfo(CallcenterAccountHuifuRequest callcenterAccountHuifuRequest);
 }

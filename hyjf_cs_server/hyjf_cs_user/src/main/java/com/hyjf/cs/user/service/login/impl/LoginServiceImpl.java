@@ -11,8 +11,10 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.MD5Utils;
+import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -27,7 +29,7 @@ import java.util.Map;
  * @version LoginServiceImpl, v0.1 2018/6/11 15:32
  */
 @Service
-public class LoginServiceImpl implements LoginService {
+public class LoginServiceImpl extends BaseUserServiceImpl implements LoginService {
 
     @Autowired
     private AmUserClient amUserClient;

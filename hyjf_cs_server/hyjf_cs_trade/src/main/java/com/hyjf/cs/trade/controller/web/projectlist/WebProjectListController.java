@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.controller.web.projectlist;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.util.Result;
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.WebProjectListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +28,7 @@ import javax.validation.Valid;
 @Api(value = "Web端项目列表")
 @RestController
 @RequestMapping("/web/projectlist")
-public class WebProjectListController {
+public class WebProjectListController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WebProjectListController.class);
 
      @Autowired

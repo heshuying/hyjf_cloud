@@ -7,5 +7,5 @@ package com.hyjf.cs.trade.service;
  * @author zhangqingqing
  * @version ApiBorrowService, v0.1 2018/6/5 9:48
  */
-public interface ApiBorrowService {
+public interface ApiBorrowService extends BaseTradeService{
 }

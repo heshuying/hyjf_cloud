@@ -1,10 +1,12 @@
 package com.hyjf.cs.user.result;
 
+import com.hyjf.cs.common.bean.result.BaseResult;
+
 /**
  * @author xiasq
  * @version ServerResult, v0.1 2018/4/25 19:42
  */
-public class ServerResultBean extends BaseResultBean {
+public class ServerResultBean extends BaseResult {
 
 	public ServerResultBean() {
 		super();

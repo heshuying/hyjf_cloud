@@ -13,7 +13,7 @@ import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmBankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.AutoStateError;
-import com.hyjf.cs.user.service.BaseServiceImpl;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
  * @version AutoStateQueryServiceImpl, v0.1 2018/6/12 14:00
  */
 @Service
-public class AutoStateQueryServiceImpl extends BaseServiceImpl implements AutoStateQueryService {
+public class AutoStateQueryServiceImpl extends BaseUserServiceImpl implements AutoStateQueryService {
     private static final Logger logger = LoggerFactory.getLogger(AutoStateQueryServiceImpl.class);
 
     @Autowired
