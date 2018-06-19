@@ -99,7 +99,6 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     @Override
     public Map<String,Object> safeInit(WebViewUser webViewUser) {
         Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("url","user/safe/account-setting-index");
         UserVO user = amUserClient.findUserById(webViewUser.getUserId());
         resultMap.put("webViewUser", user);
         if (user.getTruename() != null && user.getTruename().length() >= 1) {
