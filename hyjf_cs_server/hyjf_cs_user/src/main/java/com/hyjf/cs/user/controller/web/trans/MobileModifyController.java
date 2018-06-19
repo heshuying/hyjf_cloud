@@ -82,14 +82,11 @@ public class MobileModifyController extends BaseUserController {
      */
     @ApiOperation(value = "用户手机号修改基础信息获取", notes = "用户手机号修改基础信息获取")
     @PostMapping("/mobileModifyInit")
-    public WebResult<MobileModifyResultBean> mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        WebResult<MobileModifyResultBean> result = new WebResult<MobileModifyResultBean>();
-
+    public MobileModifyResultBean mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         MobileModifyResultBean resultBean = mobileModifyService.queryForMobileModify(user.getUserId());
-        result.setData(resultBean);
 
-        return result;
+        return resultBean;
     }
 
     /**
