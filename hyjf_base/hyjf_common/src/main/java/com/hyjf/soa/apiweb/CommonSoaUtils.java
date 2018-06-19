@@ -2,14 +2,13 @@ package com.hyjf.soa.apiweb;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.common.security.utils.MD5;
+import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.PropertiesConstants;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
