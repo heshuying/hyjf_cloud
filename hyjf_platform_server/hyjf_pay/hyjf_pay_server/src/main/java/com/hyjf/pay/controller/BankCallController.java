@@ -462,7 +462,7 @@ public class BankCallController extends BaseController {
      */
     @ResponseBody
     @PostMapping(value = "callApiBg.json")
-    public String callApiBg(HttpServletRequest request, @RequestBody BankCallBean bean) throws Exception {
+    public String callApiBg( @RequestBody BankCallBean bean) {
         logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         String ret = "";
         String logOrderId = bean.getLogOrderId();

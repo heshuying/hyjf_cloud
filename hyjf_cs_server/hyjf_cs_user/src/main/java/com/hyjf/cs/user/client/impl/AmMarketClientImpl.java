@@ -26,7 +26,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	/**
 	 * 根据活动id查询活动
 	 * 
-	 * @param integer
+	 * @param
 	 * @return
 	 */
 	@Override

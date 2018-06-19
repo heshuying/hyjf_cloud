@@ -40,6 +40,7 @@ import java.util.Map;
  *
  */
 @Api(value = "web端用户开户接口")
+@CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/web/secure/open")
 public class BankOpenController extends BaseUserController {

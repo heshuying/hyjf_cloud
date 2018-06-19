@@ -38,7 +38,16 @@ public class SystemConfig {
     @Value("${hyjf.activity.id}")
     public String activityId;
 
+    @Value("${hyjf.web.bank.forgetpassword}")
+    public String forgetpassword;
 
+    public String getForgetpassword() {
+        return forgetpassword;
+    }
+
+    public void setForgetpassword(String forgetpassword) {
+        this.forgetpassword = forgetpassword;
+    }
 
     public String getUploadHeadPath() {
         return uploadHeadPath;
