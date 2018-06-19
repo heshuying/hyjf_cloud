@@ -1,9 +1,9 @@
 package com.hyjf.cs.user.service;
 
+import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.resquest.user.UserEvalationRequest;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.utils.MsgEnum;
@@ -25,6 +25,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseServiceImpl implements BaseService {
 
@@ -238,7 +241,9 @@ public class BaseServiceImpl implements BaseService {
 	public boolean updateAfterSendCode(BankSmsLogRequest request) {
 		return amUserClient.updateBankSmsLog(request);
 	}
-	/**
+
+
+    /**
 	 * 验证外部请求签名
 	 *
 	 * @param paramBean
