@@ -1,8 +1,11 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeCsVO;
 import com.hyjf.am.vo.trade.WebProjectListCsVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -86,5 +89,41 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             throw new RuntimeException("查询原子层count异常");
         }*/
 
+    }
+
+    @Override
+    public WebResult searchCreditList(CreditListRequest request) {
+        // 初始化分页参数，并组合到请求参数
+        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
+        // 原逻辑
+        request.setBorrowPeriodMin(0);
+        request.setBorrowPeriodMax(100);
+        request.setBorrowAprMin(0);
+        request.setBorrowAprMax(100);
+        request.setDiscountSort("DESC");
+        request.setTermSort("DESC");
+        request.setCapitalSort("DESC");
+        request.setInProgressSort("DESC");
+        CreditListResponse res = webProjectListClient.countCreditList(request);
+        WebResult webResult = new WebResult();
+        if (!Response.isSuccess(res)){
+            throw new RuntimeException("查询债权转让原子层异常");
+        }
+        int count = res.getCount();
+        page.setTotal(count);
+        webResult.setData(new ArrayList<>());
+        if (count > 0){
+            List<TenderCreditDetailCustomizeCsVO> result = new ArrayList<>();
+            CreditListResponse dataResponse = webProjectListClient.searchCreditList(request);
+            if (!Response.isSuccess(dataResponse)){
+                throw  new RuntimeException("查询原子层list数据异常");
+            }
+            result = CommonUtils.convertBeanList(dataResponse.getResultList(),TenderCreditDetailCustomizeCsVO.class);
+            webResult.setData(result);
+        }
+        webResult.setPage(page);
+        return  webResult;
     }
 }
