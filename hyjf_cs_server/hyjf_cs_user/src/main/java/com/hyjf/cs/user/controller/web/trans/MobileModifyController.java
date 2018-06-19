@@ -53,12 +53,34 @@ public class MobileModifyController extends BaseUserController {
     @Autowired
     MobileModifyService mobileModifyService;
     /**
-     * 用户手机号码修改
+     * 用户手机号码修改(未开户)
      */
-    @ApiOperation(value = "手机号码修改", notes = "手机号码修改")
-    @ApiImplicitParam(name = "param",value = "{newMobile: string,smsCode: string}", dataType = "Map")
+    @ApiOperation(value = "手机号码修改（未开户）", notes = "手机号码修改（未开户）")
+    @ApiImplicitParam(name = "paraMap",value = "{newMobile: string,smsCode: string}", dataType = "Map")
     @PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
     public WebResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
+        logger.info("用户手机号码修改, paraMap :{}",paraMap);
+        WebResult<UserVO> result = new WebResult<UserVO>();
+
+        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        boolean checkRet = mobileModifyService.checkForMobileModify(paraMap.get("newMobile"), paraMap.get("smsCode"));
+        if(checkRet) {
+            UserVO userVO = new UserVO();
+            userVO.setUserId(user.getUserId());
+            userVO.setMobile(paraMap.get("newMobile"));
+            mobileModifyService.updateUserByUserId(userVO);
+        }
+
+        return result;
+    }
+    
+    /**
+     * 用户手机号码修改（已开户）
+     */
+    @ApiOperation(value = "手机号码修改（已开户）", notes = "手机号码修改（已开户）")
+    @ApiImplicitParam(name = "paraMap",value = "{newMobile: string,smsCode: string}", dataType = "Map")
+    @PostMapping(value = "/mobileModifyOpened", produces = "application/json; charset=utf-8")
+    public WebResult<UserVO> mobileModifyOpened(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
         WebResult<UserVO> result = new WebResult<UserVO>();
 
@@ -102,7 +124,7 @@ public class MobileModifyController extends BaseUserController {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         Map<String,Object> resultMap = new HashMap<>();
         UserVO user = mobileModifyService.getUsers(token);
-        Integer accountFlag = user.getBankOpenAccount();
+        String accountFlag = user.getBankOpenAccount();
         resultMap.put("bankOpenAccount", accountFlag);
         String mobile = user.getMobile();
         String hideMobile = "";
