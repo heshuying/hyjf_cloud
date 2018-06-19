@@ -45,13 +45,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // ①查询count
         ProjectListResponse response = webProjectListClient.countProjectList(request);
         // 对调用返回的结果进行转换和拼装
-        int count ;
         WebResult webResult = new WebResult();
         // 先抛错方式，避免代码看起来头重脚轻。
         if (!Response.isSuccess(response)){
             throw new RuntimeException("查询原子层count异常");
         }
-        count = response.getCount();
+        int count = response.getCount();
         page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
         webResult.setData(new ArrayList<>());
