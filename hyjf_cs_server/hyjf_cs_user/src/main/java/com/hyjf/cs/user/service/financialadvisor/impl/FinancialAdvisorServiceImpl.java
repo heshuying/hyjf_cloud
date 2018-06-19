@@ -111,7 +111,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
             // 评测送加息券
             couponParamBean.setSendFlg(1);
             // 发放优惠券（1张加息券）
-            result = CommonSoaUtils.sendUserCoupon(couponParamBean);
+//            result = CommonSoaUtils.sendUserCoupon(couponParamBean);//TODO:微服务这种方式是错的
         }
         return result;
     }
