@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.common.GetOrderIdUtils;
@@ -36,6 +37,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @author dxj
  * @version BorrowLoanRepayToMQServiceImpl.java, v0.1 2018年6月19日 上午11:27:25
  */
+@Service
 public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQService {
 	
 
