@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
 import java.util.List;
@@ -21,4 +22,8 @@ public interface WithdrawClient {
     int updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw);
 
     int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankWithdrawBeanRequest);
+
+    int getBorrowTender(Integer userId);
+
+    List<AccountRechargeVO> getTodayRecharge(Integer userId);
 }

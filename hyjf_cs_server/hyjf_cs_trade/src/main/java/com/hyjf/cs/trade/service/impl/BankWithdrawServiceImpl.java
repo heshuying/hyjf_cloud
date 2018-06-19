@@ -6,18 +6,20 @@ import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
@@ -38,6 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -269,17 +273,108 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
         return null;
     }
 
+
+
     @Override
     public UserVO getUserByUserId(Integer userId) {
 
         return amUserClient.findUserById(userId);
     }
+    /**
+     * @Description 获取提现信息
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @Override
+    public WebResult<Object> toWithdraw(WebViewUser user) {
+        Integer userId = user.getUserId();
+        WebResult<Object> result = new WebResult<Object>();
+        JSONObject ret = new JSONObject();
+        DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
+        // 取得用户当前余额
+        AccountVO account = this.amBindCardClient.getAccount(userId);
+        if (account == null) {
+            result.setStatus(BankWithdrawError.ACCOUNT_ERROR.getCode());
+            result.setStatusDesc(BankWithdrawError.ACCOUNT_ERROR.getMsg());
+            return result;
+        }
+        // 查询页面上可以挂载的银行列表
+        BankCardVO banks = amBankOpenClient.selectBankCardByUserId(userId);
+        if (banks == null) {
+            // 用户未绑卡
+            result.setStatus(BankWithdrawError.NOT_CARD_NO_ERROR.getCode());
+            result.setStatusDesc(BankWithdrawError.NOT_CARD_NO_ERROR.getMsg());
+            return result;
+        }
 
-    private BankWithdrawBeanRequest createBankWithdrawBeanRequest(
-            AccountWithdrawVO accountWithdraw, BigDecimal transAmt, String fee,
-            BigDecimal feeAmt, BigDecimal total, int userId, String ordId, int nowTime, String accountId, String ip) {
+        UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
+        //用户角色
+        String userRoId = userInfoVO.getRoleId() + "";
+        //用户的可用金额
+        BigDecimal bankBalance = account.getBankBalance();
+        //查询用户投资记录
+        int borrowTender = withdrawClient.getBorrowTender(userId);
+        if (StringUtils.equals("1", userRoId)) {
+            if (borrowTender <= 0) {
+                //查询用户的24小时内充值记录
+                List<AccountRechargeVO> todayRecharge = withdrawClient.getTodayRecharge(userId);
+                if (todayRecharge != null && !todayRecharge.isEmpty()) {
+                    // 计算用户当前可提现金额
+                    for (AccountRechargeVO recharge : todayRecharge) {
+                        bankBalance = bankBalance.subtract(recharge.getBalance());
+                    }
+                }
+            }
+        }
 
-        BankWithdrawBeanRequest bankWithdrawBeanRequest=new BankWithdrawBeanRequest();
+        ret.put("total", CustomConstants.DF_FOR_VIEW.format(account.getBankBalance()));// 可提现金额
+        List<BankCardBean> bankcards = new ArrayList<BankCardBean>();
+        // 银行联号
+        String payAllianceCode = "";
+        // 银行类型
+        String bankType = "";
+        String feeWithdraw = "1.00";
+        if (banks != null) {
+            BankCardBean bankCardBean = new BankCardBean();
+            bankCardBean.setId(banks.getId());
+            bankCardBean.setBankId(banks.getBankId());// 银行Id
+            bankType = String.valueOf(banks.getBankId());
+            payAllianceCode = banks.getPayAllianceCode() == null ? "" : banks.getPayAllianceCode();
+            bankCardBean.setPayAllianceCode(banks.getPayAllianceCode() == null ? "" : banks.getPayAllianceCode());
+            bankCardBean.setBank(banks.getBank());
+            String cardNo = banks.getCardNo();
+            String cardNoInfo = BankCardUtil.getCardNo(cardNo);
+            bankCardBean.setCardNoInfo(cardNoInfo);
+            bankCardBean.setCardNo(cardNo);
+            bankCardBean.setIsDefault("2");// 卡类型
+            bankcards.add(bankCardBean);
+
+            Integer bankId = banks.getBankId();
+            BanksConfigVO banksConfig = amBindCardClient.getBanksConfigByBankId(bankId + "");
+            if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankName())) {
+                bankCardBean.setBank(banksConfig.getBankName());
+            }
+
+            feeWithdraw = this.getWithdrawFee(userId, banks.getCardNo());
+        }
+
+        ret.put("userType", user.getUserType());// 是否为企业用户（
+        ret.put("banks", bankcards);
+        ret.put("isSetPassWord", user.getIsSetPassword());
+        ret.put("payAllianceCode", payAllianceCode);
+        ret.put("bankType", bankType);
+        ret.put("feeWithdraw", DF_FOR_VIEW.format(new BigDecimal(feeWithdraw)));
+        ret.put("roleId", user == null ? "" : user.getRoleId());
+//		modelAndView.addObject("paymentAuthStatus", user.getPaymentAuthStatus());
+        //update by jijun 2018/04/09 合规接口改造一期
+        ret.put("paymentAuthStatus", "");
+        ret.put("bankBalance", CustomConstants.DF_FOR_VIEW.format(bankBalance));
+        result.setData(ret);
+        return result;
+    }
+    private BankWithdrawBeanRequest createBankWithdrawBeanRequest(AccountWithdrawVO accountWithdraw, BigDecimal transAmt, String fee, BigDecimal feeAmt, BigDecimal total, int userId, String ordId, int nowTime, String accountId, String ip) {
+        BankWithdrawBeanRequest bankWithdrawBeanRequest = new BankWithdrawBeanRequest();
         bankWithdrawBeanRequest.setUserId(userId);
         bankWithdrawBeanRequest.setTransAmt(transAmt);
         bankWithdrawBeanRequest.setFee(fee);
@@ -289,6 +384,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
         bankWithdrawBeanRequest.setNowTime(nowTime);
         bankWithdrawBeanRequest.setAccountId(accountId);
         bankWithdrawBeanRequest.setIp(ip);
+
         // 构建订单信息
         accountWithdraw.setFee((CustomUtil.formatAmount(feeAmt.toString()))); // 更新手续费
         accountWithdraw.setCredited(transAmt); // 更新到账金额

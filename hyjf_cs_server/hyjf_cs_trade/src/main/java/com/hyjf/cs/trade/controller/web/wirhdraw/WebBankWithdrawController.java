@@ -1,12 +1,16 @@
 package com.hyjf.cs.trade.controller.web.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BankWithdrawService;
@@ -25,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +49,15 @@ public class WebBankWithdrawController extends BaseTradeController {
     @Autowired
     private BankWithdrawService bankWithdrawService;
 
+
+
+    @ApiOperation(value = "用户银行提现", notes = "用户提现")
+    @PostMapping("/init")
+    public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebResult<Object> result=bankWithdrawService.toWithdraw(user);
+        return result;
+    }
 
     /**
      * 用户银行提现
