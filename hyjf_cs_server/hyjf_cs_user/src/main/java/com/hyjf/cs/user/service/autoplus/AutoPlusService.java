@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.autoplus;
 
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoPlusRetBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
@@ -20,7 +21,7 @@ public interface AutoPlusService extends BaseUserService {
 
     /**
      * 授权自动债转、投资
-     * @param token
+     * @param
      * @param client  0web 1wechat 2app
      * @param type 1表示投资 2表示债转
      * @param channel
@@ -28,7 +29,7 @@ public interface AutoPlusService extends BaseUserService {
      * @param smsCode
      * @return
      */
-    BankCallBean userCreditAuthInves(String token, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode);
+    BankCallBean userCreditAuthInves(UserVO user, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode);
 
     /**
      * app、wechat授权自动债转、投资同步回调
@@ -68,5 +69,7 @@ public interface AutoPlusService extends BaseUserService {
     BankCallResult userAuthInvesBgreturn(BankCallBean bean, String callback, String acqRes);
 
     BankCallBean getTermsAuthQuery(int userId,String channel);
+
+    void checkUserMessage(UserVO users, String lastSrvAuthCode, String smsCode);
 
 }

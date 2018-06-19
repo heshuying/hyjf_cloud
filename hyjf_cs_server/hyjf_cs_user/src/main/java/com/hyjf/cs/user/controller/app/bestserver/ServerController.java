@@ -1,8 +1,10 @@
 package com.hyjf.cs.user.controller.app.bestserver;
 
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,8 @@ public class ServerController extends BaseUserController {
 	@Value("${hyjf.app.serverip.test}")
 	private String testServerIp;
 
+	@Autowired
+	SystemConfig systemConfig;
 	/**
 	 * 获取最优服务器
 	 *
@@ -94,8 +98,7 @@ public class ServerController extends BaseUserController {
 					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
 					resultBean.setServerIp(
-							// DES.encryptDES_ECB(PropUtils.getSystem(CustomConstants.HYJF_WEB_URL), initKey)); todo
-							DES.encryptDES_ECB("", initKey));
+							DES.encryptDES_ECB(systemConfig.getWebHost(), initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
