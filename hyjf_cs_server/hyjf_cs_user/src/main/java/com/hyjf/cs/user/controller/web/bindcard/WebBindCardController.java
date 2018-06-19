@@ -32,6 +32,7 @@ import java.text.ParseException;
  * @author hesy
  */
 @Api(value = "web端用户解绑卡接口")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/card")
 public class WebBindCardController extends BaseUserController {

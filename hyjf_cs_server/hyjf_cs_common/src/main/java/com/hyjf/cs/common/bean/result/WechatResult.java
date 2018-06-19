@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 /**
- * API结果返回Bean
- * 成功返回“000”，返回值加签chkValue
+ * 返回Wechat前端结果类
+ * 成功返回“000”
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

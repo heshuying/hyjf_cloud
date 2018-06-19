@@ -9,7 +9,7 @@
  * Modified by : 
  */
 
-package com.hyjf.common.security.utils;
+package com.hyjf.common.security.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

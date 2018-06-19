@@ -12,6 +12,7 @@ import com.hyjf.common.util.GetDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 
@@ -19,6 +20,7 @@ import java.text.SimpleDateFormat;
  * @author yaoy
  * @version CouponExpiredServiceImpl, v0.1 2018/6/19 10:43
  */
+@Service
 public class CouponExpiredServiceImpl implements CouponExpiredService {
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredServiceImpl.class);
 

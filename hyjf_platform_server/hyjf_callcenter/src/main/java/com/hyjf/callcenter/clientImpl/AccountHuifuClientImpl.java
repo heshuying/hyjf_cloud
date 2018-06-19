@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.am.response.callcenter.CallCenterAccountHuifuResponse;
+import com.hyjf.am.response.callcenter.CallcenterBankConfigResponse;
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
+import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
 import com.hyjf.callcenter.client.AccountHuifuClient;
 import com.hyjf.ribbon.EurekaInvokeClient;
 
@@ -26,6 +28,17 @@ public class AccountHuifuClientImpl implements AccountHuifuClient {
 				.getBody();
         if (callCenterAccountHuifuResponse != null) {
             return callCenterAccountHuifuResponse.getResultList();
+        }
+		return null;
+	}
+	@Override
+	public List<CallcenterBankConfigVO> getBankConfigList(CallcenterAccountHuifuRequest callcenterAccountHuifuRequest) {
+		
+		CallcenterBankConfigResponse callcenterBankConfigResponse = restTemplate
+				.postForEntity("http://AM-CONFIG//am-config/callcenter/getBankConfigList/",callcenterAccountHuifuRequest, CallcenterBankConfigResponse.class)
+				.getBody();
+        if (callcenterBankConfigResponse != null) {
+            return callcenterBankConfigResponse.getResultList();
         }
 		return null;
 	}
