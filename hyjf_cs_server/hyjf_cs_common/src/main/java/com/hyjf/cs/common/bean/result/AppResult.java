@@ -28,7 +28,7 @@ public class AppResult<T> extends BaseResult<T> implements Serializable {
 	{
 		// 成功码变更 "000" → "0"
 		if (super.getStatus() == BaseResult.SUCCESS) {
-			super.setStatus(this.SUCCESS);
+			super.setStatus(SUCCESS);
 		}
 	}
 
