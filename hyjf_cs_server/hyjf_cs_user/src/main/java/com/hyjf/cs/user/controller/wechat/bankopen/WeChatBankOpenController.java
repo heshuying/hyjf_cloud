@@ -1,14 +1,12 @@
 package com.hyjf.cs.user.controller.wechat.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WechatResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;

@@ -7,7 +7,6 @@ import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
-import com.hyjf.am.util.Page;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +43,19 @@ public class ProjectListController {
             List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
             projectListResponse.setResultList(webProjectListCustomizeVo);
         }
+        return projectListResponse;
+    }
+
+    /**
+     * 网站首页获取散标推荐数目
+     * @param request
+     * @return
+     */
+    @RequestMapping("/countProjectList")
+    public ProjectListResponse countProjectList(@RequestBody @Valid ProjectListRequest request){
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        int count = projectListService.countProjectList(request);
+        projectListResponse.setCount(count);
         return projectListResponse;
     }
 }

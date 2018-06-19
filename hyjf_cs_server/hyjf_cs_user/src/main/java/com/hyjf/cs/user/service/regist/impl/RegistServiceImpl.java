@@ -170,11 +170,14 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         Matcher m = p.matcher(password);
         CheckUtil.check(m.matches(), MsgEnum.ERR_PASSWORD_FORMAT);
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+      /*  int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);
+        CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);*/
         String reffer = registerVO.getReffer();
-        CheckUtil.check(isNotBlank(reffer) && amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_REFFER_INVALID);
+        if(StringUtils.isNotEmpty(reffer)){
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_REFFER_INVALID);
+        }
+
     }
 
     /**

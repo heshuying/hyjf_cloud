@@ -12,16 +12,25 @@
 package com.hyjf.cs.common.bean.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.Page;
 
 import java.io.Serializable;
 
 /**
- * API结果返回Bean
- * 成功返回“000”，返回值加签chkValue
+ * Web端返回结果集
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WebResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	private Page page;
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
 }

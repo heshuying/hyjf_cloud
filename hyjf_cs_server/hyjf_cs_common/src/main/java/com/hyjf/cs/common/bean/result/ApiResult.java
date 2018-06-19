@@ -24,7 +24,7 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 5413541226545232L;
-	public static final String SUCCESS = "000";
+	public static final String SUCCESS = "0";
 	
 	private String chkValue = null; // response时的签名，可选
 
@@ -57,6 +57,7 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	 * @param status
 	 * @param StatusDesc
 	 */
+	@Override
 	public void setStatusInfo(String status, String StatusDesc) {
 		super.setStatus(status);
 		super.setStatusDesc(StatusDesc);
@@ -64,6 +65,7 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 		this.setChkValue(status);
 	}
 
+	@Override
 	public void setStatus(String status) {
 		super.setStatus(status);
 		// 返回值加签

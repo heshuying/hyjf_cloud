@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.web.autoplus;
 
-import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
