@@ -46,8 +46,7 @@ public class BankWithdrawExceptionServiceImpl extends BaseServiceImpl  implement
 	private static final int WITHDRAW_STATUS_FAIL = 3;
 	// 提现状态:成功
 	private static final int WITHDRAW_STATUS_SUCCESS = 2;
-	@Value("${hyjf.bank.fee}")
-	private String FEETMP;
+	private String FEETMP=null;
 
 
 	@Override

@@ -9,6 +9,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.WebBorrowService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -40,7 +41,7 @@ public class WebBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
     @Autowired
-    private WebBorrowService webBorrowService;
+    private BankWithdrawService bankWithdrawService;
 
 
     /**
@@ -59,10 +60,10 @@ public class WebBankWithdrawController extends BaseTradeController {
         String payAllianceCode = request.getParameter("payAllianceCode");// 银联行号
 
         WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
-        UserVO userVO=webBorrowService.getUserByUserId(user.getUserId());
+        UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        BankCallBean bean = webBorrowService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
@@ -90,7 +91,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         String isSuccess = request.getParameter("isSuccess");
         String withdrawmoney = request.getParameter("withdrawmoney");
         String wifee = request.getParameter("wifee");
-        Map<String, String> result = webBorrowService.userBankWithdrawReturn(bean, isSuccess,wifee,withdrawmoney);
+        Map<String, String> result = bankWithdrawService.userBankWithdrawReturn(bean, isSuccess,wifee,withdrawmoney);
         logger.info("[web用户银行提现同步回调结束]");
         return result;
     }
@@ -115,7 +116,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         params.put("userId", String.valueOf(userId));
         params.put("ip", CustomUtil.getIpAddr(request));
         // 执行提现后处理
-        this.webBorrowService.handlerAfterCash(bean, params);
+        this.bankWithdrawService.handlerAfterCash(bean, params);
         logger.info( "成功");
         result.setStatus(true);
         logger.info("[web用户银行提现异步回调结束]");
