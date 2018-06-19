@@ -8,10 +8,10 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.utils.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
+import com.hyjf.cs.common.bean.result.WechatResult;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
@@ -53,14 +53,14 @@ public class WeChatRegistController extends BaseUserController {
      * @param request
      * @param response
      * @Date: 16:34 2018/5/30
-     * @Return: BaseResultBean
+     * @Return: WechatResult
      */
 
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public BaseResultBean register(@RequestHeader String key,@RequestBody RegisterVO register, HttpServletRequest request, HttpServletResponse response) {
+    public WechatResult register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request, HttpServletResponse response) {
         logger.info("register start, mobile is :{}", JSONObject.toJSONString(register));
-        BaseResultBean resultBean = new BaseResultBean();
+        WechatResult resultBean = new WechatResult();
 
         String mobilephone = DES.decodeValue(key, register.getMobilephone());
         String smsCode = DES.decodeValue(key, register.getSmsCode());
@@ -87,7 +87,7 @@ public class WeChatRegistController extends BaseUserController {
         } else {
             logger.error("register failed...");
             resultBean.setStatus("1");
-            resultBean.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
+            resultBean.setStatusDesc(MsgEnum.ERR_REGISTER.getMsg());
         }
         return resultBean;
     }

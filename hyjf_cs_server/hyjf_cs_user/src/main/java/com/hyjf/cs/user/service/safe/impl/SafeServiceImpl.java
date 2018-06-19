@@ -378,7 +378,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     	// 获取当前紧急联系人信息
     	UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
     	if(usersContactVO != null) {
-    		resultBean.setResult(usersContactVO);
+    		resultBean.setData(usersContactVO);
 
     		for(Entry<String, String> entry :  relationMap.entrySet()) {
     			if(entry.getKey().equals(usersContactVO.getRelation())) {

@@ -13,20 +13,31 @@ package com.hyjf.common.enums.utils;
 
 
 import com.hyjf.common.constants.MsgCode;
-import com.hyjf.common.validator.CheckUtil;
 
 /**
  * 信息代码和信息本体的枚举
  * @author liubin
  */
 
-public enum MsgEnum implements MsgCode {
-	
-	
-	// ----------通用警告信息------------
+public enum MsgEnum implements MsgCode{
+//	// ----------BaseResult信息------------
+//	INFO_SUCCESS_0("0","成功"),
+//	INFO_SUCCESS_000("000","成功"),
+//	ERR_ERROR("-1","异常"),
+//	ERR_FAIL("1","失败"),
+//	ERR_NO_PERMISSION("2","无权限"),
+
+	// ----------正常信息INFO------------
+	//通用正常信息
+	INFO_BUILING("ITY000001","系统处理中，请稍后"),
+
+	// ----------警告信息WARN------------
+	//通用警告信息
 	WARN_BUILING("WTY000001","接口访问量过大"),
-	
-	// ----------通用错误信息------------
+
+
+	// ----------错误信息ERR-------------
+	// 通用错误信息
 	ERR_OBJECT_REQUIRED("ETY000001","{0}不能为空"),
 	ERR_OBJECT_DIGIT("ETY000002","{0}不能存在非数字"),
 	ERR_OBJECT_DATE("ETY000003","{0}非日期格式"),
@@ -39,6 +50,79 @@ public enum MsgEnum implements MsgCode {
 	ERR_PAGE_MAX("ETY000202","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
 	ERR_OBJECT_UNMATCH("ETY000104","{0}不符合接口要求，请重新传入"),
+	// 格式错误信息ERR_FMT_
+
+	// 用户相关错误信息ERR_USER_
+	// 资金相关错误信息ERR_AMT_
+
+
+	ERR_USER_LOGIN("1", "登录失败,请重新登陆"),
+	ERR_CANNOT_REPEAT("1", "用户已授权,无需重复授权"),
+	ERR_CALL_BANK("1", "调用银行接口失败"),
+	ERR_CHECK_USER_INFO("1", "根据电子账户号查询用户信息失败"),
+	ERR_GET_USER("1", "查询用户失败"),
+	ERR_NOT_PASSWD("1", "未设置交易密码"),
+	ERR_AUTH("1", "授权状态查询接口失败！"),
+	ERR_CARD_NO("1", "银行卡号未填写"),
+	ERR_MOBILE("1", "手机号未填写"),
+	ERR_SMSCODE("1", "短信验证码未填写"),
+	ERR_AUTH_CODE("1", "短信授权码为空"),
+	ERR_BANK_NOT_OPEN("1", "用户未开户"),
+	ERR_BANK_CALL("1", "请求银行接口失败"),
+	ERR_CARD_SAVE("1", "银行卡信息保存失败"),
+	ERR_BANK_BALANCE("1", "账户尚有余额，不能解绑银行卡"),
+	ERR_CARD_NOT_EXIST("1", "没有要解绑的银行卡"),
+	ERR_CARD_DELETE("1", "银行卡删除失败"),
+	ERR_EMAIL_EMPTY("1", "待绑定的邮箱不能为空"),
+	ERR_EMAIL_USED("1", "邮箱已被占用"),
+	ERR_EMAIL_FORMAT("1", "邮箱格式不正确"),
+	ERR_EMAIL_ACTIVE_SEND("1", "发送激活邮件失败"),
+	ERR_EMAIL_ACTIVE_ERROR_1("1", "激活邮件未验证"),
+	ERR_EMAIL_ACTIVE_ERROR_2("1", "激活邮件已验证"),
+	ERR_EMAIL_ACTIVE_ERROR_3("1", "激活邮件已过期"),
+	ERR_EMAIL_ACTIVE_ERROR_4("1", "激活邮件不存在"),
+	ERR_EMAIL_ACTIVE("1", "激活失败"),
+	ERR_NAME_FORMAT("1", "联系人姓名格式错误"),
+	ERR_PHONE_FORMAT("1", "联系人手机号码格式错误"),
+	ERR_RELATION_NOTEXIST("1", "无效的紧急联系人关系"),
+	ERR_CONTRACT_SAVE("1", "紧急联系人保存错误"),
+	ERR_USER_INVALID("1", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
+	ERR_CHECK_NULL("1", "用户名或密码不能为空！"),
+	ERR_REFFER_INVALID("1", "无效的推荐人！"),
+	ERR_PWD_ERROR_TOO_MANEY("1", "登录失败,当日密码错误已打上限，请明日再试！"),
+	ERR_SUCCESS("0", ""),
+	ERR_USER_NOT_LOGIN("1", "用户未登录"),
+	ERR("1", "开户失败"),
+	ERR_REGISTER("1", "注册失败"),
+	ERR_MOBILE_IS_NOT_NULL("1", "请填写手机号"),
+	ERR_SMSCODE_IS_NOT_NULL("1", "验证码不能为空"),
+	ERR_PASSWORD_IS_NOT_NULL("1", "密码不能为空"),
+	ERR_MOBILE_IS_NOT_REAL("1", "请填写您的真实手机号码"),
+	ERR_MOBILE_EXISTS("1", "手机号已存在"),
+	ERR_PASSWORD_LENGTH("1", "密码长度6-16位"),
+	ERR_PASSWORD_NO_NUMBER("1", "密码必须包含数字"),
+	ERR_PASSWORD_FORMAT("1", "密码必须由数字和字母组成，如abc123"),
+	ERR_SMSCODE_INVALID("1", "验证码无效"),
+	ERR_MOBILE_NEED_SAME("1", "获取验证码手机号与注册手机号不一致!"),
+	ERR_MOBILE_MODIFY("1", "修改手机号与原手机号不能相同!"),
+	ERR_SEND_SMSCODE_TOO_FAST("1", "请求验证码操作过快!"),
+	ERR_SEND_SMSCODE_TOO_MANNY("1", "该设备短信请求次数超限，请明日再试!"),
+	ERR_IP_VISIT_TOO_MANNY("1", "IP访问次数超限!"),
+	ERR_FIND_SMSCONFIG("1", "获取短信配置失败!"),
+	ERR_INSTCODE("1","机构编号错误"),
+	ERR_CODETYPE_INVALID("1", "无效的验证码类型!"),
+	ERR_MOBILE_FORMAT("1", "手机号格式不正确"),
+	ERR_USER_NOT_EXISTS("1", "不存在用户"),
+	ERR_INST_CODE("1", "机构编号不能为空"),
+	ERR_PLATEFORM("1", "注册平台不能为空"),
+	ERR_UTMID("1", "推广渠道不能为空"),
+	// 时间日期相关错误信息ERR_DATE_
+
+	// DB相关错误信息ERR_DB_
+	// ----------通用警告信息------------
+
+
+
 	// ----------共通机能用错误信息------------
 	STATUS_CE000001("CE000001","请求参数异常"),
 	STATUS_CE000002("CE000002","系统验签失败"),
@@ -104,75 +188,20 @@ public enum MsgEnum implements MsgCode {
 	STATUS_TP000002("TP000002","未设置过交易密码，请先设置交易密码"),
 	// ----------用户测评错误信息------------
 	STATUS_EV000001("EV000001","未找到对应测评结果"),
-	// ----------通用信息------------
-	INFO_BUILING("ITY000001","系统处理中，请稍后"),
 
 
-	USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
-	CANNOT_REPEAT_ERROR("1", "用户已授权,无需重复授权"),
-	CALL_BANK_ERROR("1", "调用银行接口失败"),
-	PARAM_ERROR("1", "请求参数非法"),
-	CHECK_ERROR("1", "验签失败！"),
-	CHECK_USER_INFO_ERROR("1", "根据电子账户号查询用户信息失败"),
-	GET_USER_ERROR("1", "查询用户失败"),
-	NOT_PASSWD_ERROR("1", "未设置交易密码"),
-	AUTH_ERROR("1", "授权状态查询接口失败！"),
-	CARD_NO_ERROR("1", "银行卡号未填写"),
-	MOBILE_ERROR("1", "手机号未填写"),
-	SMSCODE_ERROR("1", "短信验证码未填写"),
-	AUTH_CODE_ERROR("1", "短信授权码为空"),
-	BANK_NOT_OPEN_ERROR("1", "用户未开户"),
-	BANK_CALL_ERROR("1", "请求银行接口失败"),
-	CARD_SAVE_ERROR("1", "银行卡信息保存失败"),
-	BANK_BALANCE_ERROR("1", "账户尚有余额，不能解绑银行卡"),
-	CARD_NOT_EXIST_ERROR("1", "没有要解绑的银行卡"),
-	CARD_DELETE_ERROR("1", "银行卡删除失败"),
-	EMAIL_EMPTY_ERROR("1", "待绑定的邮箱不能为空"),
-	EMAIL_USED_ERROR("1", "邮箱已被占用"),
-	EMAIL_FORMAT_ERROR("1", "邮箱格式不正确"),
-	EMAIL_ACTIVE_SEND_ERROR("1", "发送激活邮件失败"),
-	EMAIL_ACTIVE_ERROR_1("1", "激活邮件未验证"),
-	EMAIL_ACTIVE_ERROR_2("1", "激活邮件已验证"),
-	EMAIL_ACTIVE_ERROR_3("1", "激活邮件已过期"),
-	EMAIL_ACTIVE_ERROR_4("1", "激活邮件不存在"),
-	EMAIL_ACTIVE_ERROR("1", "激活失败"),
-	NAME_FORMAT_ERROR("1", "联系人姓名格式错误"),
-	PHONE_FORMAT_ERROR("1", "联系人手机号码格式错误"),
-	RELATION_NOTEXIST_ERROR("1", "无效的紧急联系人关系"),
-	CONTRACT_SAVE_ERROR("1", "紧急联系人保存错误"),
-	USER_INVALID_ERROR("1", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
-	CHECK_NULL_ERROR("1", "用户名或密码不能为空！"),
-	REFFER_INVALID_ERROR("1", "无效的推荐人！"),
-	PWD_ERROR_TOO_MANEY_ERROR("1", "登录失败,当日密码错误已打上限，请明日再试！"),
-	SUCCESS("0", ""),
-	USER_NOT_LOGIN_ERROR("1", "用户未登录"),
-	ERROR("1", "开户失败"),
-	SYSTEM_ERROR("1","系统异常"),
-	REGISTER_ERROR("1", "注册失败"),
-	MOBILE_IS_NOT_NULL_ERROR("1", "请填写手机号"),
-	SMSCODE_IS_NOT_NULL_ERROR("1", "验证码不能为空"),
-	PASSWORD_IS_NOT_NULL_ERROR("1", "密码不能为空"),
-	MOBILE_IS_NOT_REAL_ERROR("1", "请填写您的真实手机号码"),
-	MOBILE_EXISTS_ERROR("1", "手机号已存在"),
-	PASSWORD_LENGTH_ERROR("1", "密码长度6-16位"),
-	PASSWORD_NO_NUMBER_ERROR("1", "密码必须包含数字"),
-	PASSWORD_FORMAT_ERROR("1", "密码必须由数字和字母组成，如abc123"),
-	SMSCODE_INVALID_ERROR("1", "验证码无效"),
-	MOBILE_NEED_SAME_ERROR("1", "获取验证码手机号与注册手机号不一致!"),
-	MOBILE_MODIFY_ERROR("1", "修改手机号与原手机号不能相同!"),
-	SEND_SMSCODE_TOO_FAST_ERROR("1", "请求验证码操作过快!"),
-	SEND_SMSCODE_TOO_MANNY_ERROR("1", "该设备短信请求次数超限，请明日再试!"),
-	IP_VISIT_TOO_MANNY_ERROR("1", "IP访问次数超限!"),
-	FIND_SMSCONFIG_ERROR("1", "获取短信配置失败!"),
-	INSTCODE_ERROR("1","机构编号错误"),
-	CODETYPE_INVALID_ERROR("1", "无效的验证码类型!"),
-	MOBILE_FORMAT_ERROR("1", "手机号格式不正确"),
-	USER_NOT_EXISTS_ERROR("1", "不存在用户"),
-	INST_CODE_ERROR("1", "机构编号不能为空"),
-	PLATEFORM_ERROR("1", "注册平台不能为空"),
-	UTMID_ERROR("1", "推广渠道不能为空");
 
-	
+
+
+
+
+
+
+
+	// 枚举终结
+	ERR_ENUM("", "");
+
+
 	private String msg;
 	private String code;
 
