@@ -5,11 +5,11 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
-import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -28,7 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author sunss
@@ -61,10 +60,10 @@ public class AppBankOpenController extends BaseUserController {
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.setResult(mobile);
+            result.setData(mobile);
         } else {
             logger.error("openAccount userInfo failed...");
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(OpenAccountError.GET_USER_INFO_ERROR.getMsg());
         }
         return result;

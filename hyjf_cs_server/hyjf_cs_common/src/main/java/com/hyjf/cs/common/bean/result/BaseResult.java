@@ -11,7 +11,10 @@
 	
 package com.hyjf.cs.common.bean.result;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -21,12 +24,17 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final String SUCCESS = "0";
+	public static final String SUCCESS = "000";
+	public static final String SUCCESS_DESC = "成功";
 	public static final String ERROR = "-1";
+	public static final String ERROR_DESC = "异常";
 	public static final String FAIL = "1";
+	public static final String FAIL_DESC = "失败";
 	public static final String NO_PERMISSION = "2";
-	private String statusDesc = "成功";
+	public static final String NO_PERMISSION_DESC = "无权限";
+
 	private String status = SUCCESS;
+	private String statusDesc = ERROR_DESC;
 	private T data;
 
 	public BaseResult() {
@@ -66,7 +74,17 @@ public class BaseResult<T> implements Serializable {
 		this.status = status;
 		this.statusDesc = statusDesc;
 	}
-	
+
+	/**
+	 * 用枚举类型设定status和statusDesc，可选拼接参数
+	 * @param msgCode
+	 * @param params
+	 */
+	public void setStatusInfo(MsgCode msgCode, Object... params) {
+		this.status = msgCode.getCode();
+		this.statusDesc = StringUtil.getMessage(msgCode.getMsg(), params);
+	}
+
 	/**
 	 * @param statusDesc the statusDesc to set
 	 */
@@ -104,10 +122,14 @@ public class BaseResult<T> implements Serializable {
 	/**
 	 * @param data the data to set
 	 */
-	
 	public void setData(T data) {
 		this.data = data;
 	}
 
-
+	/**
+	 * @return
+	 */
+	public String toString() {
+		return JSON.toJSONString(this);
+	}
 }

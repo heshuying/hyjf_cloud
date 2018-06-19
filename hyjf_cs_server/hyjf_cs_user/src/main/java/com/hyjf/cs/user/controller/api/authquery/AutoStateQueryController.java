@@ -4,11 +4,10 @@
 package com.hyjf.cs.user.controller.api.authquery;
 
 import com.hyjf.common.enums.utils.MsgEnum;
-import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.AutoStateQueryRequest;
 import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +36,10 @@ public class AutoStateQueryController extends BaseUserController {
         ApiResult<AutoStateQueryResultBean> result = new ApiResult<>();
         AutoStateQueryResultBean resultBean = autoStateQueryService.queryStatus(autoStateQuery);
         if (null != resultBean) {
-            result.setResult(resultBean);
+            result.setData(resultBean);
         } else {
-            result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_REGISTER.getMsg());
         }
         return result;
     }

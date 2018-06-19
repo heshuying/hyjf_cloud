@@ -4,13 +4,16 @@
 package com.hyjf.cs.user.controller.app.regist;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.util.Result;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
@@ -50,9 +53,9 @@ public class AppRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request) {
+    public AppResult<UserVO> register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request) {
         logger.info("web端注册接口, register is :{}", JSONObject.toJSONString(register));
-        ApiResult<UserVO> result = new ApiResult<>();
+        AppResult<UserVO> result = new AppResult<>();
         String mobilephone = DES.decodeValue(key, register.getMobilephone());
         String smsCode = DES.decodeValue(key,register.getSmsCode());
         String pwd = DES.decodeValue(key, register.getPassword());
@@ -60,7 +63,7 @@ public class AppRegistController extends BaseUserController {
         if (StringUtils.isNotBlank(reffer)) {
             int count = amUserClient.countUserByRecommendName(reffer);
             if (count == 0) {
-                result.setStatus(ApiResult.STATUS_FAIL);
+                result.setStatus(ApiResult.FAIL);
                 result.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMsg());
             }
         }
@@ -71,12 +74,12 @@ public class AppRegistController extends BaseUserController {
         registerVO.setSmsCode(smsCode);
         registService.registerCheckParam(ClientConstants.APP_CLIENT,registerVO);
         UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
-        result.setResult(userVO);
+        result.setData(userVO);
         if (userVO != null) {
             logger.info("web端注册成功, userId is :{}", userVO.getUserId());
         } else {
             logger.error("web端注册失败...");
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
         }
         return result;

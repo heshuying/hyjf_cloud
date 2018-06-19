@@ -34,7 +34,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
         int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt > 0, MsgEnum.SMSCODE_INVALID_ERROR);
+        CheckUtil.check(cnt > 0, MsgEnum.ERR_SMSCODE_INVALID);
         return true;
     }
 

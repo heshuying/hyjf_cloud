@@ -213,7 +213,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			request.setSrvTxCode(retBean.getTxCode());
 			request.setUserId(Integer.parseInt(retBean.getLogUserId()));
 			boolean smsFlag = this.updateAfterSendCode(request);
-			CheckUtil.check(smsFlag, MsgEnum.CARD_SAVE_ERROR);
+			CheckUtil.check(smsFlag, MsgEnum.ERR_CARD_SAVE);
 			return retBean;
 
 		} else {
@@ -223,7 +223,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			request.setSrvTxCode(bean.getTxCode());
 			request.setUserId(Integer.parseInt(bean.getLogUserId()));
 			String srvAuthCode = amUserClient.selectBankSmsLog(request);
-			CheckUtil.check(Validator.isNotNull(srvAuthCode), MsgEnum.CARD_SAVE_ERROR);
+			CheckUtil.check(Validator.isNotNull(srvAuthCode), MsgEnum.ERR_CARD_SAVE);
 			retBean.setSrvAuthCode(srvAuthCode);
 			return retBean;
 
