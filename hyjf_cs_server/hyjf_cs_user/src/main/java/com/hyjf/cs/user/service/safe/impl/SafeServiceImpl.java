@@ -381,9 +381,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     		resultBean.setData(usersContactVO);
 
     		for(Entry<String, String> entry :  relationMap.entrySet()) {
-    			if(entry.getKey().equals(usersContactVO.getRelation())) {
+    			if(usersContactVO.getRelation() != null && entry.getKey().equals(String.valueOf(usersContactVO.getRelation()))) {
     				resultBean.setCheckRelationId(entry.getKey());
     				resultBean.setCheckRelationName(entry.getValue());
+    				break;
     			}
     		}
     	}
