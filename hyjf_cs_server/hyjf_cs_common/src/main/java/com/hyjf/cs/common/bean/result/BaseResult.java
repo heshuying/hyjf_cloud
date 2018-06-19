@@ -19,6 +19,7 @@ import com.hyjf.common.util.StringUtil;
 import java.io.Serializable;
 
 /**
+ * 返回前端结果基类
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -34,7 +35,7 @@ public class BaseResult<T> implements Serializable {
 	public static final String NO_PERMISSION_DESC = "无权限";
 
 	private String status = SUCCESS;
-	private String statusDesc = ERROR_DESC;
+	private String statusDesc = SUCCESS_DESC;
 	private T data;
 
 	public BaseResult() {

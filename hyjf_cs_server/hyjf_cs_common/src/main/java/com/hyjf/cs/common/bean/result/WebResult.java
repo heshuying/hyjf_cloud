@@ -17,11 +17,11 @@ import com.hyjf.common.util.ApiSignUtil;
 import java.io.Serializable;
 
 /**
- * API结果返回Bean
- * 成功返回“000”，返回值加签chkValue
- * @author liubin
+ * 返回WEB前端结果类
+ * 成功返回“000”
+ * @author liubinWE
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WebResult<T> extends BaseResult<T> implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long WEB = 1L;
 }
