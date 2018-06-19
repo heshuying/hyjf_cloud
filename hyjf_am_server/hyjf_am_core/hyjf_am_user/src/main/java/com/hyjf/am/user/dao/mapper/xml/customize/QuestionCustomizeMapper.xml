@@ -15,5 +15,13 @@
         select id,type as typeString,question,sort from huiyingdai_question where status=0
     </select>
 
+    <select id="countScore"  parameterType="map" resultType="java.lang.Integer">
+        Select
+        SUM(score)
+        from huiyingdai_answer where id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>

@@ -5,11 +5,11 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
-import com.hyjf.cs.user.result.AppResult;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -28,7 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author sunss
@@ -61,10 +60,10 @@ public class AppBankOpenController extends BaseUserController {
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.setResult(mobile);
+            result.setData(mobile);
         } else {
             logger.error("openAccount userInfo failed...");
-            result.setStatus(ApiResult.STATUS_FAIL);
+            result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(OpenAccountError.GET_USER_INFO_ERROR.getMsg());
         }
         return result;
@@ -76,6 +75,10 @@ public class AppBankOpenController extends BaseUserController {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         String platform = request.getParameter("platform");
         ModelAndView reuslt = new ModelAndView();
+        // 验证请求参数
+        if (token == null) {
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+        }
         // 获取登录信息
         UserVO user = bankOpenService.getUsers(token);
         // 检查参数
@@ -92,8 +95,8 @@ public class AppBankOpenController extends BaseUserController {
         openBean.setChannel(BankCallConstant.CHANNEL_APP);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
-        openBean.setCoinstName("汇盈金服");
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_APP);
+        openBean.setPlatform(platform);
         // 组装调用江西银行的MV
         reuslt = bankOpenService.getOpenAccountMV(openBean);
         //保存开户日志  银行卡号不必传了
@@ -105,20 +108,4 @@ public class AppBankOpenController extends BaseUserController {
         logger.info("开户end");
         return reuslt;
     }
-
-    /**
-     * 页面开户异步处理
-     *
-     * @param bean
-     * @return
-     */
-    @ApiOperation(value = "app端页面开户异步处理", notes = "页面开户异步处理")
-    @PostMapping("/bgReturn")
-    public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
-        logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
-        bean.setMobile(mobile);
-        BankCallResult result = bankOpenService.openAccountBgReturn(bean);
-        return result;
-    }
-
 }

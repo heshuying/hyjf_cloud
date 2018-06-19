@@ -1,11 +1,13 @@
 package com.hyjf.cs.user.result;
 
+import com.hyjf.cs.common.bean.result.WebResult;
+
 /**
  * 手机号修改返回bean
  * @author hesy
  *
  */
-public class MobileModifyResultBean extends ApiResult<Object>{
+public class MobileModifyResultBean extends WebResult<Object>{
 	// 手机号
 	String mobile;
 	// 脱敏手机号

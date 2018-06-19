@@ -1,6 +1,5 @@
 package com.hyjf.am.response;
 
-import com.hyjf.am.util.Page;
 import com.hyjf.am.vo.BaseVO;
 
 import java.util.List;
@@ -21,11 +20,6 @@ public class Response<T extends BaseVO> {
 
 	private List<T> resultList;
 
-	/**
-	 * 分页标志
-	 */
-	private Page page;
-
 	public Response() {
 		this.rtn = SUCCESS;
 		this.message = SUCCESS_MSG;
@@ -40,6 +34,18 @@ public class Response<T extends BaseVO> {
 		this.rtn = rtn;
 		this.message = message;
 		this.result = result;
+	}
+
+	/**
+	 * 校验返回值状态公用方法
+	 * @param res
+	 * @return
+	 */
+	public static boolean isSuccess(Response res){
+		if (res != null && SUCCESS.equals(res.rtn)){
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
 	}
 
 	public String getRtn() {
@@ -74,11 +80,4 @@ public class Response<T extends BaseVO> {
 		this.resultList = resultList;
 	}
 
-	public Page getPage() {
-		return page;
-	}
-
-	public void setPage(Page page) {
-		this.page = page;
-	}
 }

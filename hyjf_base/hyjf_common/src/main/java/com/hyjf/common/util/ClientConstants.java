@@ -85,6 +85,7 @@ public class ClientConstants implements Serializable {
 		put(WEB_CLIENT,"/web");
 		put(WECHAT_CLIENT,"/wechat");
 		put(APP_CLIENT,"/app");
+		put(API_CLIENT,"/api");
 	}};
 
 	// 版本号

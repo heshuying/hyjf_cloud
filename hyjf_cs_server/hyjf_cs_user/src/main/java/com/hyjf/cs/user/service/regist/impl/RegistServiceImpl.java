@@ -3,14 +3,11 @@
  */
 package com.hyjf.cs.user.service.regist.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 import java.time.Instant;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hyjf.cs.user.bean.BaseDefine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +30,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
@@ -43,6 +40,7 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -94,7 +92,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         registerUserRequest.setInstCode(1);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
-        CheckUtil.check(userVO != null, MsgEnum.REGISTER_ERROR);
+        CheckUtil.check(userVO != null, MsgEnum.ERR_REGISTER);
         // 3.注册后处理
         this.afterRegisterHandle(userVO);
 
@@ -115,13 +113,13 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         // 根据机构编号检索机构信息
         HjhInstConfigVO instConfig = this.amUserClient.selectInstConfigByInstCode(registerVO.getInstCode());
         // 机构编号
-        CheckUtil.check(instConfig != null, MsgEnum.INSTCODE_ERROR);
+        CheckUtil.check(instConfig != null, MsgEnum.ERR_INSTCODE);
         // 验签
         CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER),MsgEnum.STATUS_CE000002);
         registerUserRequest.setInstCode(instConfig.getInstType());
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
-        CheckUtil.check(userVO != null, MsgEnum.REGISTER_ERROR);
+        CheckUtil.check(userVO != null, MsgEnum.ERR_REGISTER);
         return userVO;
     }
 
@@ -141,22 +139,22 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             // 注册渠道
             String utmId = registerVO.getUtmId();
             // 机构编号
-            CheckUtil.check(StringUtils.isNotEmpty(instCode), MsgEnum.INSTCODE_ERROR);
+            CheckUtil.check(StringUtils.isNotEmpty(instCode), MsgEnum.ERR_INSTCODE);
             // 注册平台
-            CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.PLATEFORM_ERROR);
+            CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.ERR_PLATEFORM);
             // 推广渠道
-            CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.UTMID_ERROR);
-            CheckUtil.check(registerVO != null, MsgEnum.REGISTER_ERROR);
+            CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.ERR_UTMID);
+            CheckUtil.check(registerVO != null, MsgEnum.ERR_REGISTER);
         }
         String mobile = registerVO.getMobilephone();
-        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.MOBILE_IS_NOT_NULL_ERROR);
+        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.ERR_MOBILE_IS_NOT_NULL);
         String smsCode = registerVO.getSmsCode();
-        CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.SMSCODE_IS_NOT_NULL_ERROR);
+        CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.ERR_SMSCODE_IS_NOT_NULL);
         String password = registerVO.getPassword();
-        CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.PASSWORD_IS_NOT_NULL_ERROR);
-        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.MOBILE_IS_NOT_REAL_ERROR);
-        CheckUtil.check(!existUser(mobile), MsgEnum.MOBILE_EXISTS_ERROR);
-        CheckUtil.check(password.length() >= 6 && password.length() <= 16, MsgEnum.PASSWORD_LENGTH_ERROR);
+        CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.ERR_PASSWORD_IS_NOT_NULL);
+        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_MOBILE_IS_NOT_REAL);
+        CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
+        CheckUtil.check(password.length() >= 6 && password.length() <= 16, MsgEnum.ERR_PASSWORD_LENGTH);
         boolean hasNumber = false;
         for (int i = 0; i < password.length(); i++) {
             if (Validator.isNumber(password.substring(i, i + 1))) {
@@ -164,17 +162,20 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 break;
             }
         }
-        CheckUtil.check(hasNumber, MsgEnum.PASSWORD_NO_NUMBER_ERROR);
+        CheckUtil.check(hasNumber, MsgEnum.ERR_PASSWORD_NO_NUMBER);
         String regEx = "^[a-zA-Z0-9]+$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
-        CheckUtil.check(m.matches(), MsgEnum.PASSWORD_FORMAT_ERROR);
+        CheckUtil.check(m.matches(), MsgEnum.ERR_PASSWORD_FORMAT);
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+      /*  int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt != 0, MsgEnum.SMSCODE_INVALID_ERROR);
+        CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);*/
         String reffer = registerVO.getReffer();
-        CheckUtil.check(isNotBlank(reffer) && amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.REFFER_INVALID_ERROR);
+        if(StringUtils.isNotEmpty(reffer)){
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_REFFER_INVALID);
+        }
+
     }
 
     /**

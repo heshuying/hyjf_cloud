@@ -3,12 +3,16 @@
  */
 package com.hyjf.cs.user.controller.app.autoplus;
 
+import com.hyjf.am.vo.user.AuthorizedVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -41,16 +45,23 @@ public class APPAutoPlusController extends BaseUserController {
     /**
      * 用户授权自动债转
      * @param token
-     * @param request
+     * @param
      * @param
      * @return
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
     @PostMapping("/userAuthCredit")
-    public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
-        String smsCode = request.getParameter("smsCode");
-        BankCallBean bean =  autoPlusService.userCreditAuthInves(token, ClientConstants.APP_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstants.CHANNEL_APP,lastSrvAuthCode,smsCode);
+    public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, @RequestBody AuthorizedVO authorizedVO) {
+        String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
+        String smsCode = authorizedVO.getSmsCode();
+        // 验证请求参数
+        if (token == null) {
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+        }
+        UserVO user = this.autoPlusService.getUsers(token);
+        //检查用户信息
+        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
+        BankCallBean bean =  autoPlusService.userCreditAuthInves(user, ClientConstants.APP_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstants.CHANNEL_APP,lastSrvAuthCode,smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
@@ -70,12 +81,12 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
     @PostMapping(value = "/userAuthCreditReturn", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
-        ApiResult<Object> apiResult = new ApiResult<>();
+    public AppResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, @RequestBody @Valid BankCallBean bean) {
+        AppResult<Object> apiResult = new AppResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
         Map<String,BaseMapBean> result = autoPlusService.userAuthCreditReturn(token,bean,ClientConstants.CREDIT_AUTO_TYPE,sign,isSuccess);
-        apiResult.setResult(result);
+        apiResult.setData(result);
         return apiResult;
     }
 
@@ -94,16 +105,23 @@ public class APPAutoPlusController extends BaseUserController {
     /**
      * 用户授权自动投资
      * @param token
-     * @param request
+     * @param
      * @param
      * @return
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping("/userAuthInves")
-    public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request) {
-        String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
-        String smsCode = request.getParameter("smsCode");
-        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.APP_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstants.CHANNEL_APP,lastSrvAuthCode,smsCode);
+    public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, @RequestBody AuthorizedVO authorizedVO) {
+        String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
+        String smsCode = authorizedVO.getSmsCode();
+        // 验证请求参数
+        if (token == null) {
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+        }
+        UserVO user = this.autoPlusService.getUsers(token);
+        //检查用户信息
+        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
+        BankCallBean bean = autoPlusService.userCreditAuthInves(user, ClientConstants.APP_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstants.CHANNEL_APP,lastSrvAuthCode,smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
@@ -125,12 +143,12 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
-        ApiResult<Object> apiResult = new ApiResult<>();
+    public AppResult<Object> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, @RequestBody @Valid BankCallBean bean) {
+        AppResult<Object> apiResult = new AppResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
         Map<String, BaseMapBean> result = autoPlusService.userAuthCreditReturn(token, bean, ClientConstants.INVES_AUTO_TYPE, sign, isSuccess);
-        apiResult.setResult(result);
+        apiResult.setData(result);
         return apiResult;
     }
 

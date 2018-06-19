@@ -1,12 +1,17 @@
 package com.hyjf.cs.user.service;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
@@ -22,11 +27,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
 
 	Logger logger = LoggerFactory.getLogger(BaseUserServiceImpl.class);
@@ -213,7 +213,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			request.setSrvTxCode(retBean.getTxCode());
 			request.setUserId(Integer.parseInt(retBean.getLogUserId()));
 			boolean smsFlag = this.updateAfterSendCode(request);
-			CheckUtil.check(smsFlag, MsgEnum.CARD_SAVE_ERROR);
+			CheckUtil.check(smsFlag, MsgEnum.ERR_CARD_SAVE);
 			return retBean;
 
 		} else {
@@ -223,7 +223,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			request.setSrvTxCode(bean.getTxCode());
 			request.setUserId(Integer.parseInt(bean.getLogUserId()));
 			String srvAuthCode = amUserClient.selectBankSmsLog(request);
-			CheckUtil.check(Validator.isNotNull(srvAuthCode), MsgEnum.CARD_SAVE_ERROR);
+			CheckUtil.check(Validator.isNotNull(srvAuthCode), MsgEnum.ERR_CARD_SAVE);
 			retBean.setSrvAuthCode(srvAuthCode);
 			return retBean;
 

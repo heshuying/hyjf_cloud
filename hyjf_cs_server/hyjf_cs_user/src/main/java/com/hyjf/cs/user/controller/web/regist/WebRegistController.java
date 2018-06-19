@@ -3,32 +3,41 @@
  */
 package com.hyjf.cs.user.controller.web.regist;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.SmsCodeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.RandomValidateCode;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterVO;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -55,19 +64,19 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> register(@RequestBody RegisterVO registerVO, HttpServletRequest request) {
+    public WebResult<UserVO> register(@RequestBody RegisterVO registerVO, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerVO));
-        ApiResult<UserVO> result = new ApiResult<UserVO>();
+        WebResult<UserVO> result = new WebResult<UserVO>();
         // 1. 参数检查
         registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerVO);
         UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
             logger.info("Web端用户注册成功, userId is :{}", userVO.getUserId());
-            result.setResult(userVO);
+            result.setData(userVO);
         } else {
             logger.error("Web端用户注册失败...");
-            result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_REGISTER.getMsg());
         }
         return result;
     }
@@ -123,6 +132,7 @@ public class WebRegistController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "检查手机号是否已存在", notes = "检查手机号是否已存在")
+    @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
     @PostMapping(value = "/checkPhone", produces = "application/json; charset=utf-8")
     public boolean checkPhone(@RequestBody Map<String,String> param) {
         logger.info("Web端检查手机号是否已存在, mobile is :{}",JSONObject.toJSONString(param));

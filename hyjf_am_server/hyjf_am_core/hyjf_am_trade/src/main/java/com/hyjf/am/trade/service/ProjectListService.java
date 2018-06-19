@@ -3,12 +3,15 @@
  */
 package com.hyjf.am.trade.service;
 
-import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
-import com.hyjf.am.util.Page;
+import java.util.List;
 
 import javax.validation.Valid;
-import java.util.List;
+
+import com.hyjf.am.resquest.trade.CreditListRequest;
+import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
+import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+
 
 /**
  * Web端项目列表Service
@@ -31,4 +34,18 @@ public interface ProjectListService {
      * @return
      */
     int countProjectList(@Valid ProjectListRequest request);
+
+    /**
+     * 获取债转列表count
+     * @param request
+     * @return
+     */
+    int countCreditList(@Valid CreditListRequest request);
+
+    /**
+     * @desc  获取债转列表list
+     * @author zhangyk
+     * @date 2018/6/19 16:00
+     */
+    List<TenderCreditDetailCustomizeVO> searchCreditList(@Valid CreditListRequest request);
 }

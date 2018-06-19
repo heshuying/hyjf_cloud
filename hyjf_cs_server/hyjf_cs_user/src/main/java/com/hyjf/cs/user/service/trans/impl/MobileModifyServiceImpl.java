@@ -3,17 +3,18 @@
  */
 package com.hyjf.cs.user.service.trans.impl;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.enums.utils.MsgEnum;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author zhangqingqing
@@ -34,7 +35,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
         int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt > 0, MsgEnum.SMSCODE_INVALID_ERROR);
+        CheckUtil.check(cnt > 0, MsgEnum.ERR_SMSCODE_INVALID);
         return true;
     }
 

@@ -3,17 +3,8 @@
  */
 package com.hyjf.cs.user.controller.api.regist;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.enums.utils.MsgEnum;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
-import com.hyjf.cs.user.service.regist.RegistService;
-import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.vo.RegisterVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +13,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.vo.RegisterVO;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author zhangqingqing
@@ -54,11 +56,11 @@ public class ApiRegisterController extends BaseUserController {
         UserVO userVO = registService.apiRegister(registerVO, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
             logger.info("api端注册成功, userId is :{}", userVO.getUserId());
-            result.setResult(userVO);
+            result.setData(userVO);
         } else {
             logger.error("api端注册失败...");
-            result.setStatus(ApiResult.STATUS_FAIL);
-            result.setStatusDesc(MsgEnum.REGISTER_ERROR.getMsg());
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(MsgEnum.ERR_REGISTER.getMsg());
         }
         return result;
     }

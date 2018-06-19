@@ -1,4 +1,4 @@
-package com.hyjf.am.util;
+package com.hyjf.cs.common.util;
 
 
 import java.io.Serializable;

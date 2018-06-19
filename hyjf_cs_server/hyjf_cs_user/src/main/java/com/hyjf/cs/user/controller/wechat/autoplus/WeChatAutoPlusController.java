@@ -3,12 +3,16 @@
  */
 package com.hyjf.cs.user.controller.wechat.autoplus;
 
+import com.hyjf.am.vo.user.AuthorizedVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WechatResult;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ApiResult;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -43,17 +47,23 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @Author: zhangqingqing
      * @Desc :用户自动债转授权
      * @Param: * @param token
-     * @param param
+     * @param
      * @Date: 16:36 2018/5/30
      * @Return: ModelAndView
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
     @PostMapping(value ="/userAuthCredit", produces = "application/json; charset=utf-8")
-    @ApiImplicitParam(name = "param",value = "{lastSrvAuthCode:string,smsCode:string}", dataType = "Map")
-    public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param){
-        String lastSrvAuthCode = param.get("lastSrvAuthCode");
-        String smsCode = param.get("smsCode");
-        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstants.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+    public ModelAndView userAuthCredit(@RequestHeader(value = "token", required = true) String token,  @RequestBody AuthorizedVO authorizedVO){
+        String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
+        String smsCode = authorizedVO.getSmsCode();
+        // 验证请求参数
+        if (token == null) {
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+        }
+        UserVO user = this.autoPlusService.getUsers(token);
+        //检查用户信息
+        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
+        BankCallBean bean = autoPlusService.userCreditAuthInves(user, ClientConstants.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstants.CHANNEL_WEI,lastSrvAuthCode,smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
@@ -68,17 +78,24 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @Author: zhangqingqing
      * @Desc :自动投资授权接口
      * @Param: * @param token
-     * @param request
+     * @param
      * @Date: 16:36 2018/5/30
      * @Return: ModelAndView
      */
     @ApiOperation(value = "自动投资授权接口", notes = "自动投资授权接口")
     @PostMapping("/userAuthInves")
-    public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token,HttpServletRequest request){
+    public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, @RequestBody AuthorizedVO authorizedVO){
 
-        String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
-        String smsCode = request.getParameter("smsCode");
-        BankCallBean bean = autoPlusService.userCreditAuthInves(token, ClientConstants.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstants.CHANNEL_WEI,lastSrvAuthCode,smsCode);
+        String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
+        String smsCode = authorizedVO.getSmsCode();
+        // 验证请求参数
+        if (token == null) {
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+        }
+        UserVO user = this.autoPlusService.getUsers(token);
+        //检查用户信息
+        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
+        BankCallBean bean = autoPlusService.userCreditAuthInves(user, ClientConstants.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_1,ClientConstants.CHANNEL_WEI,lastSrvAuthCode,smsCode);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
@@ -100,12 +117,12 @@ public class WeChatAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
     @PostMapping(value = "/userAuthCreditReturn", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankCallBean bean, HttpServletRequest request) {
-        ApiResult<Object> apiResult  = new ApiResult<>();
+    public WechatResult<Object> userAuthCreditReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankCallBean bean, HttpServletRequest request) {
+        WechatResult<Object> apiResult  = new WechatResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
         Map<String, BaseMapBean> result = autoPlusService.userAuthCreditReturn(token, bean, ClientConstants.CREDIT_AUTO_TYPE, sign, isSuccess);
-        apiResult.setResult(result);
+        apiResult.setData(result);
         return apiResult;
     }
 
@@ -120,12 +137,12 @@ public class WeChatAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> userAuthInvesReturn(@RequestHeader(value = "token") String token,@RequestBody @Valid BankCallBean bean, HttpServletRequest request) {
-        ApiResult<Object> apiResult  = new ApiResult<>();
+    public WechatResult<Object> userAuthInvesReturn(@RequestHeader(value = "token") String token,@RequestBody @Valid BankCallBean bean, HttpServletRequest request) {
+        WechatResult<Object> apiResult  = new WechatResult<>();
         String sign = request.getHeader("sign");
         String isSuccess = request.getParameter("isSuccess");
         Map<String, BaseMapBean> result = autoPlusService.userAuthCreditReturn(token, bean, ClientConstants.INVES_AUTO_TYPE, sign, isSuccess);
-        apiResult.setResult(result);
+        apiResult.setData(result);
         return apiResult;
     }
 

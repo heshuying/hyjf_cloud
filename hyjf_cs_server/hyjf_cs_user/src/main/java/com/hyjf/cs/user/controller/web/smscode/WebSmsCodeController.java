@@ -2,8 +2,8 @@ package com.hyjf.cs.user.controller.web.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import io.swagger.annotations.Api;
@@ -21,6 +21,7 @@ import java.util.Map;
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
 @Api(value = "验证码")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/smsCode")
 public class WebSmsCodeController extends BaseUserController {
@@ -39,14 +40,14 @@ public class WebSmsCodeController extends BaseUserController {
 	 */
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string}", dataType = "Map")
-	public BaseResultBean sendSmsCode(@RequestBody Map<String,String> param,
-									  @RequestHeader(value = "token", required = false) String token,
-									  HttpServletRequest request)
+	public WebResult sendSmsCode(@RequestBody Map<String,String> param,
+								 @RequestHeader(value = "token", required = false)String token,
+								 HttpServletRequest request)
 			throws MQException {
 		logger.info("web端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
 		String validCodeType = param.get("validCodeType");
 		String mobile = param.get("mobile");
-		BaseResultBean resultBean = new BaseResultBean();
+		WebResult resultBean = new WebResult();
 		sendSmsCode.sendSmsCode(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}

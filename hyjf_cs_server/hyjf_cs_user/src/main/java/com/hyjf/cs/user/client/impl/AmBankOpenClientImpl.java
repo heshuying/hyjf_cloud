@@ -83,6 +83,12 @@ public class AmBankOpenClientImpl implements AmBankOpenClient {
 		return null;
 	}
 
+
+	@Override
+	public void deleteUserEvalationResultByUserId(Integer userId) {
+		restTemplate.put("http://AM-USER/am-user/user/deleteUserEvalationResultByUserId/", userId);
+	}
+
 	/**
 	 * 修改开户日志表的状态
 	 * @param userId

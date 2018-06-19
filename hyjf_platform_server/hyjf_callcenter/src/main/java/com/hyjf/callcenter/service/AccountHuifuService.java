@@ -3,6 +3,7 @@ package com.hyjf.callcenter.service;
 import java.util.List;
 
 import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
+import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 
 /**
@@ -18,4 +19,14 @@ public interface AccountHuifuService {
 	 * @author libin
 	 */
 	public List<CallcenterAccountHuifuVO> getRecordList(UserVO user,Integer limitStart, Integer limitEnd);
+	
+	/**
+	 * 单表查询bankconfig库
+	 * @return List<CallcenterAccountHuifuVO>
+	 * @author libin
+	 */
+	public List<CallcenterBankConfigVO> getBankConfigList();
+	
+	
+	
 }
