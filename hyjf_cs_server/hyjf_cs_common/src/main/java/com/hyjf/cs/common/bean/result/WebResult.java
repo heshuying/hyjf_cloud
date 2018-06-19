@@ -17,13 +17,15 @@ import com.hyjf.cs.common.util.Page;
 import java.io.Serializable;
 
 /**
- * Web端返回结果集
- * @author liubin
+ * 返回WEB前端结果类
+ * 成功返回“000”
+ * @author liubinWE
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WebResult<T> extends BaseResult<T> implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long WEB = 1L;
 
+	// 分页对象
 	private Page page;
 
 	public Page getPage() {

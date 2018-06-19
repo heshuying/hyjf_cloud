@@ -35,7 +35,7 @@ public class WebProjectListController extends BaseTradeController {
      private WebProjectListService webProjectListService;
 
     /**
-     * 获取首页散标推荐列表
+     * 获取首页散标推荐列表(散标推荐和散标专区的散标投资，通用接口)
      * @param request
      * @return
      */

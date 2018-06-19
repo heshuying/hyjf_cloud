@@ -17,22 +17,17 @@ import com.hyjf.common.util.ApiSignUtil;
 import java.io.Serializable;
 
 /**
- * API结果返回Bean
+ * 返回API前端结果类
  * 成功返回“000”，返回值加签chkValue
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 5413541226545232L;
-	public static final String SUCCESS = "0";
-	
+
 	private String chkValue = null; // response时的签名，可选
 
 	{
-		// 成功码变更 "0" → "000"
-		if (super.getStatus() == BaseResult.SUCCESS) {
-			super.setStatus(ApiResult.SUCCESS);
-		}
 		// 返回值加签
 		this.chkValue = ApiSignUtil.encryptByRSA(super.getStatus());
 	}
@@ -57,7 +52,6 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	 * @param status
 	 * @param StatusDesc
 	 */
-	@Override
 	public void setStatusInfo(String status, String StatusDesc) {
 		super.setStatus(status);
 		super.setStatusDesc(StatusDesc);
@@ -65,7 +59,6 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 		this.setChkValue(status);
 	}
 
-	@Override
 	public void setStatus(String status) {
 		super.setStatus(status);
 		// 返回值加签
