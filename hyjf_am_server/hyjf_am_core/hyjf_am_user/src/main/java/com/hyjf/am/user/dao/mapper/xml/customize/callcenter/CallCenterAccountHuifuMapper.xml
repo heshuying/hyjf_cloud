@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.callcenter.CallCenterAccountHuifuMapper">
+
+
+	<sql id="Where_Clause">
+		<where>
+		    hyduab.`status` = 0
+<!-- 		    <if test="userId != null and userId !=''">
+				AND hydu.user_id = #{userId}
+			</if> -->
+			<if test="userName != null and userName !='' ">
+				AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+			</if>
+<!-- 			<if test="bank != null and bank !='' ">
+				AND hyduab.bank = #{bank,jdbcType=INTEGER}
+			</if> -->
+<!-- 			<if test="account != null and account !='' ">
+				AND hyduab.account LIKE CONCAT('%', #{account}, '%')
+			</if> -->
+			<!-- 是否是快捷支付卡 -->
+<!-- 			<if test="cardProperty != null and cardProperty !='' ">
+				<if test="cardProperty == '1'.toString() ">
+					AND hyduab.card_type = 2
+				</if>
+				<if test="cardProperty == '0'.toString() ">
+					AND (hyduab.card_type = 1 OR hyduab.card_type = 0)
+				</if>
+			</if> -->
+			<!-- 是否是默认卡 -->
+<!-- 			<if test="cardType != null and cardType !='' ">
+				<if test="cardType == '1'.toString() ">
+					AND (hyduab.card_type = 1 OR hyduab.card_type = 2)
+				</if>
+				<if test="cardType == '0'.toString() ">
+					AND hyduab.card_type = 0
+				</if>
+			</if> -->
+<!-- 			<if test="addTimeStart != null and addTimeStart !='' ">
+				AND FROM_UNIXTIME( hyduab.addtime, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+			</if> -->
+<!-- 			<if test="addTimeEnd != null and addTimeEnd !='' ">
+				AND FROM_UNIXTIME( hyduab.addtime, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+			</if> -->
+		</where>
+	</sql>
+	
+
+	<resultMap id="BankCardListPOMap" type="com.hyjf.am.user.dao.model.customize.callcenter.CallcenterAccountHuifuCustomize">
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="bank" property="bank" jdbcType="VARCHAR" />
+		<result column="card_type" property="cardType" jdbcType="VARCHAR" />
+		<result column="card_property" property="cardProperty" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="findHuifuTiedcardInfo" resultMap="BankCardListPOMap" parameterType="com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest">
+		SELECT			
+			hydu.user_id,
+			hydu.username AS user_name,
+			hyduab.bank	 AS bank,	
+			CASE
+			WHEN hyduab.card_type = 0	
+			OR hyduab.card_type = 1 THEN '普通提现卡'	
+			ELSE	
+				'快捷支付卡'
+			END AS card_property,	
+			CASE	
+			WHEN hyduab.card_type = 1	
+			OR hyduab.card_type = 2 THEN '是'	
+			ELSE	
+				'否'
+			END AS card_type,	
+			hyduab.account AS account,	
+			 from_unixtime(	
+				hyduab.create_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS add_time
+			FROM	
+				ht_user hydu
+			INNER JOIN ht_account_bank hyduab ON hydu.user_id = hyduab.user_id
+			<include refid="Where_Clause" />
+			ORDER BY hyduab.create_time DESC
+			<if test="limitStart != null and limitSize !=null" >
+		    LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
+		    </if>
+	</select>
+</mapper>
