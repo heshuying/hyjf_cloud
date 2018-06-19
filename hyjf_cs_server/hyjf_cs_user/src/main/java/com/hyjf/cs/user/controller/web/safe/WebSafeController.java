@@ -136,6 +136,7 @@ public class WebSafeController extends BaseUserController {
      * 发送激活邮件
      */
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
+    @ApiImplicitParam(name = "paraMap",value = "{email:string}", dataType = "Map")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
     public WebResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();

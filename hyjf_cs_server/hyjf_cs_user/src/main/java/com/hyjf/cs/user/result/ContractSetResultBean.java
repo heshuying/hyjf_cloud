@@ -11,7 +11,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
  * @author hesy
  *
  */
-public class ContractSetResultBean extends WebResult<UsersContactVO> {
+public class ContractSetResultBean extends WebResult<UsersContactVO>{
 	private String checkRelationName = "";
 	private String checkRelationId = "";
 	
