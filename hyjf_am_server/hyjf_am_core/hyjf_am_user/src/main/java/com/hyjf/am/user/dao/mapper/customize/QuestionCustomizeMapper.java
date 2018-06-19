@@ -8,4 +8,6 @@ public interface QuestionCustomizeMapper {
 
     List<QuestionCustomize> getNewQuestionList();
 
+    int countScore(List<String> answerList);
+
 }

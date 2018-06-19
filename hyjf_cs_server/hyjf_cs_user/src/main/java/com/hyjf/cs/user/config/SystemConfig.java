@@ -35,8 +35,21 @@ public class SystemConfig {
     @Value("${hyjf.front.host}")
     public String frontHost;
 
+    @Value("${hyjf.activity.id}")
+    public String activityId;
+
+
+
     public String getUploadHeadPath() {
         return uploadHeadPath;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
     }
 
     public void setUploadHeadPath(String uploadHeadPath) {
