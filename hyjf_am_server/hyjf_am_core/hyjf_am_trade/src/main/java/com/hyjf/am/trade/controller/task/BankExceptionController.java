@@ -12,7 +12,7 @@ import io.swagger.annotations.Api;
 
 @Api(value = "江西银行充值掉单异常处理定时任务")
 @RestController
-@RequestMapping("/bankException")
+@RequestMapping("/am-trade/bankException")
 public class BankExceptionController {
 
     private static final Logger logger = LoggerFactory.getLogger(BankExceptionController.class);
