@@ -5,10 +5,13 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.HjhLabelResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +65,21 @@ public class HjhPlanController {
             response.setResultList(voList);
             return response;
         }
+        return response;
+    }
+
+    /**
+     * @Description 根据计划编号查询计划
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/19 14:04
+     */
+    @RequestMapping("/getHjhPlanByPlanNid/{planNid}")
+    public HjhPlanResponse getHjhPlanByPlanNid(@PathVariable String planNid) {
+        HjhPlanResponse response = new HjhPlanResponse();
+        HjhPlan plan = hjhPlanService.getHjhPlanByNid(planNid);
+        HjhPlanVO result = CommonUtils.convertBean(plan, HjhPlanVO.class);
+        response.setResult(result);
         return response;
     }
 }

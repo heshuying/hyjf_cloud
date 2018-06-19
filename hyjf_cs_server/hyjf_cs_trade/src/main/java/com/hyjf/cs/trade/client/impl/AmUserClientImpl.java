@@ -65,4 +65,21 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * @param userId
+	 * @Description 查询用户授权状态
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 11:52
+	 */
+	@Override
+	public HjhUserAuthVO getHjhUserAuthVO(Integer userId) {
+		HjhUserAuthResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getHjhUserAuthByUserId/" + userId, HjhUserAuthResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 }
