@@ -53,6 +53,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         count = response.getCount();
         page.setTotal(count);
+        //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
+        webResult.setData(new ArrayList<>());
         if (count > 0){
             List<WebProjectListCsVO> result = new ArrayList<>();
             ProjectListResponse dataResponse = webProjectListClient.searchProjectList(request);
