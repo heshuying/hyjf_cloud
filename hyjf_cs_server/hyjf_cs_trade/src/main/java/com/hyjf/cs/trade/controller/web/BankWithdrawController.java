@@ -59,7 +59,7 @@ public class BankWithdrawController extends BaseTradeController {
         String cardNo = request.getParameter("widCard");// 提现银行卡号
         String payAllianceCode = request.getParameter("payAllianceCode");// 银联行号
 
-        WebViewUserVO user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(token, WebViewUserVO.class);
         UserVO userVO=webBorrowService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);

@@ -25,6 +25,7 @@ import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -43,6 +44,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
+import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.CouponProducer;
@@ -51,7 +53,6 @@ import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.vo.RegisterVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
 
 /**
  * @author zhangqingqing

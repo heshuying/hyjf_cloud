@@ -94,9 +94,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
 
-	@Autowired
-	ActivityListMapper activityListMapper;
-
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
 
