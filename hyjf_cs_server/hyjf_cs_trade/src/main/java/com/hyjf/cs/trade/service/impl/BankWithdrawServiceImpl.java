@@ -19,7 +19,6 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.bean.CheckResult;
@@ -87,7 +86,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
     SmsProducer smsProducer;
 
     @Autowired
-    private BankWithdrawExceptionClient bankWithdrawExceptionClient;//银行提现掉单
+    private BankWithdrawClient bankWithdrawClient;//银行提现掉单
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
@@ -388,7 +387,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
 
     @Override
     public void withdraw() {
-        List<AccountWithdrawVO> withdrawList = this.bankWithdrawExceptionClient.selectBankWithdrawList();
+        List<AccountWithdrawVO> withdrawList = this.bankWithdrawClient.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             for (AccountWithdrawVO accountWithdraw : withdrawList) {
                 this.updateWithdraw(accountWithdraw);
@@ -403,7 +402,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
     private void updateWithdraw(AccountWithdrawVO accountWithdraw) {
         try {
             //调用银行接口
-            BankCallBeanVO bean = bankWithdrawExceptionClient.bankCallFundTransQuery(accountWithdraw);
+            BankCallBeanVO bean = bankWithdrawClient.bankCallFundTransQuery(accountWithdraw);
             if (bean != null) {
                 //调用后平台操作
                 this.handlerAfterCash(bean, accountWithdraw);
@@ -434,7 +433,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
         // 根据用户ID查询用户银行卡信息
         String bankId=bean.getBankCode();
 
-        BankCardVO bankCard = this.bankWithdrawExceptionClient.selectBankCardByUserId(userId);
+        BankCardVO bankCard = this.bankWithdrawClient.selectBankCardByUserId(userId);
 
         // 1.该银行接口的 业务是否成功
         // 返回值=000成功 ,大额提现返回值为 CE999028
@@ -481,7 +480,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             accountWithdraw.setAccount(bean.getAccountId());
             accountWithdraw.setReason("");
 
-            boolean isAccountwithdrawFlag=this.bankWithdrawExceptionClient.updateAccountwithdraw(accountWithdraw);
+            boolean isAccountwithdrawFlag=this.bankWithdrawClient.updateAccountwithdraw(accountWithdraw);
             if (!isAccountwithdrawFlag) {
                 throw new Exception("提现后,更新用户提现记录表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
             }
@@ -493,12 +492,12 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             newAccount.setBankBalanceCash(total);// 江西银行可用余额
 
             //更新银行提现
-            boolean isAccountUpdateFlag = this.bankWithdrawExceptionClient.updateBankWithdraw(newAccount);
+            boolean isAccountUpdateFlag = this.bankWithdrawClient.updateBankWithdraw(newAccount);
             if (!isAccountUpdateFlag) {
                 throw new Exception("提现后,更新用户Account表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
             }
             // 重新获取用户信息
-            AccountVO account = this.bankWithdrawExceptionClient.getAccount(userId);
+            AccountVO account = this.bankWithdrawClient.getAccount(userId);
             // 写入收支明细
             AccountListVO accountList = new AccountListVO();
             accountList.setNid(ordId);
@@ -543,7 +542,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账
             accountList.setTradeStatus(1);// 0失败1成功2失败
 
-            boolean isAccountListFlag = this.bankWithdrawExceptionClient.addAccountList(accountList);
+            boolean isAccountListFlag = this.bankWithdrawClient.addAccountList(accountList);
             if (!isAccountListFlag) {
                 throw new Exception("提现成功后,插入交易明细表失败~!" + "提现订单号:" + ordId + ",用户ID:" + userId);
             }
@@ -553,7 +552,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             paraMap.put("ordId",ordId);
             paraMap.put("accountWithdraw",accountWithdraw);
             paraMap.put("bankCallBeanVO",bean);
-            this.bankWithdrawExceptionClient.selectAndUpdateAccountWithdraw(paraMap);
+            this.bankWithdrawClient.selectAndUpdateAccountWithdraw(paraMap);
         }
 
 
@@ -582,7 +581,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             resultMsg = msg;
         }
         // 查询是否已经处理过
-        int accountlistCnt = this.bankWithdrawExceptionClient.getAccountlistCntByOrdId(ordId,"cash_success");
+        int accountlistCnt = this.bankWithdrawClient.getAccountlistCntByOrdId(ordId,"cash_success");
         // 如果信息已被处理
         if (accountlistCnt != 0) {
             resultBool = false;
@@ -597,14 +596,14 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
 
 
     private String getWithdrawFee(Integer userId, String bankId, BigDecimal amount) {
-        BankCardVO bankCard = this.bankWithdrawExceptionClient.getBankInfo(userId, bankId);
+        BankCardVO bankCard = this.bankWithdrawClient.getBankInfo(userId, bankId);
         if (FEETMP == null) {
             FEETMP = "1";
         }
         if (bankCard != null) {
             String bankCode = bankCard.getBank();
             // 取得费率
-            List<FeeConfigVO> listFeeConfig = this.bankWithdrawExceptionClient.getFeeConfig(bankCode);
+            List<FeeConfigVO> listFeeConfig = this.bankWithdrawClient.getFeeConfig(bankCode);
 
             if (listFeeConfig != null && listFeeConfig.size() > 0) {
                 FeeConfigVO feeConfig = listFeeConfig.get(0);
