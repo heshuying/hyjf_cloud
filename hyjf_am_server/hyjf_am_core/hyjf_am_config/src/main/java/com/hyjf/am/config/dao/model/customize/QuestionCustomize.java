@@ -1,4 +1,4 @@
-package com.hyjf.am.user.dao.model.customize;
+package com.hyjf.am.config.dao.model.customize;
 
 import java.io.Serializable;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 public class QuestionCustomize implements Serializable {
     private Integer id;
 
-    private String typeString;
+    private String type;
 
     private String question;
     
@@ -23,16 +23,13 @@ public class QuestionCustomize implements Serializable {
         this.id = id;
     }
 
-   
 
-   
-
-    public String getTypeString() {
-        return typeString;
+    public String getType() {
+        return type;
     }
 
-    public void setTypeString(String typeString) {
-        this.typeString = typeString;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getQuestion() {

@@ -28,7 +28,6 @@ import com.hyjf.cs.trade.client.BankWithdrawExceptionClient;
  */
 @Service
 public class BankWithdrawExceptionClientImpl implements BankWithdrawExceptionClient {
-	private static Logger logger = LoggerFactory.getLogger(BankWithdrawExceptionClientImpl.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -36,7 +35,7 @@ public class BankWithdrawExceptionClientImpl implements BankWithdrawExceptionCli
 	@Override
 	public List<AccountWithdrawVO> selectBankWithdrawList() {
 		AccountwithdrawResponse response = restTemplate
-				.getForEntity("http://AM-TRADE/bankWithdrawException/selectBankWithdrawList",
+				.getForEntity("http://AM-TRADE/bankException/selectBankWithdrawList",
 						AccountwithdrawResponse.class)
 				.getBody();
 		if (response != null) {
@@ -100,7 +99,7 @@ public class BankWithdrawExceptionClientImpl implements BankWithdrawExceptionCli
 	 */
 	@Override
 	public boolean updateBankWithdraw(AccountVO newAccount) {
-		String url = "http://AM-TRADE/am-trade/bankWithdraw/updateBankWithdraw";
+		String url = "http://AM-TRADE/am-trade/bankException/updateBankWithdraw";
 		return restTemplate.postForEntity(url, newAccount, Boolean.class).getBody();
 	}
 

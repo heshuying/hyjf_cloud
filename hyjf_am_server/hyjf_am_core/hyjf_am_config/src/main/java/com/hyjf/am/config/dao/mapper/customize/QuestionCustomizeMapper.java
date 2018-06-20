@@ -1,6 +1,6 @@
-package com.hyjf.am.user.dao.mapper.customize;
+package com.hyjf.am.config.dao.mapper.customize;
 
-import com.hyjf.am.user.dao.model.customize.QuestionCustomize;
+import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 
 import java.util.List;
 
