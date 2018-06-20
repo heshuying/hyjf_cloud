@@ -21,7 +21,7 @@ public class UserLeaveJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("UserLeaveJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-USER/userBatch/userLeave/update", String.class);
+        restTemplate.getForEntity("http://AM-USER/userBatch/leave/update", String.class);
         logger.info("UserLeaveJob execute end...");
     }
 }
