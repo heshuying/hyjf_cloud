@@ -83,10 +83,8 @@ public class WebSafeController extends BaseUserController {
 
     /**
      * 获取用戶通知配置信息
-     *
-     * @param token
-     * @param request
-     * @return
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "获取用戶通知配置信息", notes = "获取用戶通知配置信息")
     @PostMapping("/userNoticeSettingInit")
@@ -103,11 +101,8 @@ public class WebSafeController extends BaseUserController {
 
     /**
      * 保存用户通知设置
-     * @param token
-     * @param userNoticeSetVO
-     * @param
-     * @param
-     * @return
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
@@ -134,6 +129,8 @@ public class WebSafeController extends BaseUserController {
 
     /**
      * 发送激活邮件
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
     @ApiImplicitParam(name = "paraMap",value = "{email:string}", dataType = "Map")
@@ -157,6 +154,8 @@ public class WebSafeController extends BaseUserController {
 
     /**
      * 绑定邮箱
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
     @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
@@ -181,9 +180,8 @@ public class WebSafeController extends BaseUserController {
 
     /**
      * 添加、修改紧急联系人
-     * @param token
-     * @param
-     * @return
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "加载紧急联系人信息", notes = "加载紧急联系人信息")
     @PostMapping(value = "/contractInit", produces = "application/json; charset=utf-8")
@@ -197,9 +195,8 @@ public class WebSafeController extends BaseUserController {
 
     /**
      * 添加、修改紧急联系人
-     * @param token
-     * @param
-     * @return
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
