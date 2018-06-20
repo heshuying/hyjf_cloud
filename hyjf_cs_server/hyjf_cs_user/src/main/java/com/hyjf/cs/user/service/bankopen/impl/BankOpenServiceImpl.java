@@ -480,7 +480,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      */
     @Override
     public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
-        return amBankOpenClient.getCorpOpenAccountRecord(userId);
+        return bankOpenClient.getCorpOpenAccountRecord(userId);
     }
 
 }
