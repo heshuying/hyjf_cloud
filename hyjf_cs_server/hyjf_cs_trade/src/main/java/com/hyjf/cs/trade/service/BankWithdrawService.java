@@ -60,4 +60,6 @@ public interface BankWithdrawService {
      */
 
     WebResult<Object> toWithdraw(WebViewUser user);
+
+    void withdraw();
 }
