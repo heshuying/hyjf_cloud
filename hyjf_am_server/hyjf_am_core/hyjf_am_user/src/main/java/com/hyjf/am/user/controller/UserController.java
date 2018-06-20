@@ -423,11 +423,6 @@ public class UserController {
 		return response;
 	}
 
-	@RequestMapping("/countScore")
-	public int countScore(AnswerRequest answerList) {
-		int countScore = userService.countScore(answerList.getResultList());
-		return countScore;
-	}
 
 	@RequestMapping("/getEvalationByCountScore/{countScore}")
 	public EvalationResponse getEvalationByCountScore(@PathVariable short countScore) {
@@ -437,6 +432,17 @@ public class UserController {
 			EvalationVO evalationVO = new EvalationVO();
 			BeanUtils.copyProperties(evalation, evalationVO);
 			response.setResult(evalationVO);
+		}
+		return response;
+	}
+
+	@RequestMapping("/getEvalationRecord")
+	public EvalationResponse getEvalationRecord() {
+		EvalationResponse response = new EvalationResponse();
+		List<Evalation> evalationList = userService.getEvalationRecord();
+		if(!CollectionUtils.isEmpty(evalationList)){
+			List<EvalationVO> evalationVOList = CommonUtils.convertBeanList(evalationList,EvalationVO.class);
+			response.setResultList(evalationVOList);
 		}
 		return response;
 	}
@@ -470,4 +476,6 @@ public class UserController {
 		}
 		return response;
 	}
+
+
 }

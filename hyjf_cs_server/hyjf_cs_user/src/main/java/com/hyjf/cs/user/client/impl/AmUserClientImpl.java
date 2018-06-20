@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -427,7 +428,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int countScore(AnswerRequest answerList) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/countScore", answerList, Integer.class).getBody();
+				.postForEntity("http://AM-CONFIG/am-config/config/countScore", answerList, Integer.class).getBody();
 		return result;
 	}
 
@@ -438,6 +439,16 @@ public class AmUserClientImpl implements AmUserClient {
 				.getForEntity("http://AM-USER/am-user/user/getEvalationByCountScore/" + countScore, EvalationResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public List<EvalationVO> getEvalationRecord() {
+		EvalationResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getEvalationRecord", EvalationResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
 		}
 		return null;
 	}
@@ -459,6 +470,16 @@ public class AmUserClientImpl implements AmUserClient {
 			return   response.getResult();
 		}
 		return  null;
+	}
+
+	@Override
+	public List<QuestionCustomizeVO> getNewQuestionList() {
+		QuestionCustomizeResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/config/getNewQuestionList", QuestionCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
 	}
 
 }
