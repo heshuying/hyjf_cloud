@@ -176,8 +176,6 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		BankCallBean callBean = new BankCallBean();
 		callBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		callBean.setTxCode(BankCallConstant.TXCODE_CARD_BIND_DETAILS_QUERY);
-		callBean.setInstCode(systemConfig.getBankInstcode());// 机构代码
-		callBean.setBankCode(systemConfig.getBankCode());// 银行代码
 		callBean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
 		callBean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
 		callBean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位

@@ -259,8 +259,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             // 取得用户在江西银行的客户号
             BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(users.getUserId());
             bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
-            bean.setInstCode(systemConfig.getBankInstcode());
-            bean.setBankCode(systemConfig.getBankCode());
             bean.setTxDate(GetOrderIdUtils.getTxDate());
             bean.setTxTime(GetOrderIdUtils.getTxTime());
             bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -542,8 +540,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         BankCallBean selectbean = new BankCallBean();
         selectbean.setVersion(BankCallConstant.VERSION_10);
         selectbean.setTxCode(BankCallConstant.TXCODE_CREDIT_AUTH_QUERY);
-        selectbean.setInstCode(systemConfig.getBankInstcode());
-        selectbean.setBankCode(systemConfig.getBankCode());
         selectbean.setTxDate(GetOrderIdUtils.getTxDate());
         selectbean.setTxTime(GetOrderIdUtils.getTxTime());
         selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));

@@ -1,21 +1,14 @@
 package com.hyjf.am.resquest.trade;
 
-import com.hyjf.am.vo.trade.BankCardVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
-
-import java.math.BigDecimal;
+import com.hyjf.am.vo.user.BankCardVO;
 
 /**
  * @author pangchengchao
  * @version BankWithdrawBeanRequest, v0.1 2018/6/13 15:00
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 public class SynBalanceBeanRequest {
-
-
 
     private AccountVO accountUser;
     private SynBalanceVO synBalanceBean;

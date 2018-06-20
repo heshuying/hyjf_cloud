@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.controller.app.recharge;
+package com.hyjf.cs.trade.controller.wechat.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
@@ -37,10 +37,10 @@ import java.util.Map;
  *
  */
 @Controller
-@RequestMapping(value = "/app/recharge")
-public class RechargeController extends BaseTradeController{
+@RequestMapping(value = "/wechat/recharge")
+public class WechatRechargeController extends BaseTradeController{
 	
-	Logger logger = LoggerFactory.getLogger(RechargeController.class);
+	Logger logger = LoggerFactory.getLogger(WechatRechargeController.class);
 
 	@Autowired
 	private RechargeService userRechargeService;
@@ -65,7 +65,7 @@ public class RechargeController extends BaseTradeController{
 	 */
 	@RequestMapping("/page")
 	public ModelAndView recharge(@RequestHeader(value = "token") String token,HttpServletRequest request, String mobile, String money) throws Exception {
-		logger.info("app充值服务");
+		logger.info("wechat充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
 		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,mobile,money);
 		ModelAndView modelAndView = new ModelAndView();
@@ -88,7 +88,7 @@ public class RechargeController extends BaseTradeController{
 	 */
 	@RequestMapping("/return")
 	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
-		logger.info("[app页面充值同步回调开始]");
+		logger.info("[wechat页面充值同步回调开始]");
 		ModelAndView modelAndView = new ModelAndView();
 		String money = request.getParameter("txAmount");
 		String frontParams = request.getParameter("frontParams");
@@ -134,7 +134,7 @@ public class RechargeController extends BaseTradeController{
 	@RequestMapping("/bgreturn")
 	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
-		logger.info("[app页面充值异步回调开始]");
+		logger.info("[wechat页面充值异步回调开始]");
 		String phone = request.getParameter("phone");
 		bean.setMobile(phone);
 		bean.convert();
@@ -157,7 +157,7 @@ public class RechargeController extends BaseTradeController{
 				return result;
 			}
 		}
-		logger.info(RechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
+		logger.info(WechatRechargeController.class.getName(), "/bgreturn", "[wechat用户充值完成后,回调结束]");
 		result.setMessage("充值失败");
 		result.setStatus(false);
 		return result;

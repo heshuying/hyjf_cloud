@@ -173,8 +173,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);// 交易代码cardBind
-		bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
-		bean.setBankCode(systemConfig.getBankCode());
 		bean.setTxDate(GetOrderIdUtils.getOrderDate());// 交易日期
 		bean.setTxTime(GetOrderIdUtils.getOrderTime());// 交易时间
 		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位

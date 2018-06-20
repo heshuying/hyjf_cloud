@@ -38,9 +38,9 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "/web/recharge")
-public class RechargeController extends BaseTradeController{
+public class WebRechargeController extends BaseTradeController{
 	
-	Logger logger = LoggerFactory.getLogger(RechargeController.class);
+	Logger logger = LoggerFactory.getLogger(WebRechargeController.class);
 
 	@Autowired
 	private RechargeService userRechargeService;
@@ -157,7 +157,7 @@ public class RechargeController extends BaseTradeController{
 				return result;
 			}
 		}
-		logger.info(RechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
+		logger.info(WebRechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
 		result.setMessage("充值失败");
 		result.setStatus(false);
 		return result;

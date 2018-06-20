@@ -1,46 +1,5 @@
 package com.hyjf.cs.trade.controller.api.synbalance;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.SynBalanceVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.DateDistance;
-import com.hyjf.common.util.GetCilentIP;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.BaseResultBean;
-import com.hyjf.cs.trade.bean.ResultBean;
-import com.hyjf.cs.trade.bean.SynBalanceResultBean;
-import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
-import com.hyjf.cs.trade.constants.SynBalanceError;
-import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.BankWithdrawService;
-import com.hyjf.cs.trade.service.SynBalanceService;
-import com.hyjf.cs.trade.util.ErrorCodeConstant;
-import com.hyjf.cs.trade.util.SignUtil;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -49,11 +8,47 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.SynBalanceVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.DateDistance;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.BaseResultBean;
+import com.hyjf.cs.trade.bean.ResultBean;
+import com.hyjf.cs.trade.bean.SynBalanceResultBean;
+import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
+import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.SynBalanceService;
+import com.hyjf.cs.trade.util.ErrorCodeConstant;
+import com.hyjf.cs.trade.util.SignUtil;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Api(value = "web端用户提现接口")
 @Controller
