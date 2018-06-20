@@ -138,9 +138,6 @@ public class BankWithdrawExceptionClientImpl implements BankWithdrawExceptionCli
 
 	/**
 	 * 提现费率
-	 * @param userId
-	 * @param bankId
-	 * @param transAmt
 	 * @return
 	 */
 	@Override

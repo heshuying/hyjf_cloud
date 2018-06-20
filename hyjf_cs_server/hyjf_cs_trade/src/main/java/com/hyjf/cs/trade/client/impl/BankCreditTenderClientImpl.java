@@ -2,8 +2,10 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.CreditTenderLogResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,31 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
     }
 
 
+    /**
+     * 獲取銀行開戶信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankOpenAccountVO getBankOpenAccount(Integer userId) {
+        BankOpenAccountResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新投標記錄
+     * @param creditTenderLog
+     * @return
+     */
+    @Override
+    public Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog) {
+        String url = "http://AM-TRADE/am-trade/bankException/updateCreditTenderLog";
+        return restTemplate.postForEntity(url, creditTenderLog, Boolean.class).getBody();
+    }
 
 
 }
