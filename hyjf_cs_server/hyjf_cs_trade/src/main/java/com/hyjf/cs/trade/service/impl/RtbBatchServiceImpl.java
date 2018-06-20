@@ -3,7 +3,6 @@ package com.hyjf.cs.trade.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.hyjf.am.resquest.trade.RtbIncreaseRepayRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +14,6 @@ import org.springframework.util.CollectionUtils;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AmBankOpenClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -60,10 +57,9 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 				String borrowNid = borrowApicron.getBorrowNid();
 				// 借款人ID
 				Integer borrowUserId = borrowApicron.getUserId();
-				// 从redis取开户等状态 todo key 是啥
-				UserVO userVO = RedisUtils.getObj(borrowApicron.getUserId() + "", UserVO.class);
+				BankOpenAccountVO bankOpenAccountVO = amBankOpenClient.selectById(borrowUserId);
 				// 判断未开户的错误
-				if(userVO == null || StringUtils.isBlank(userVO.getBankOpenAccount())){
+				if (bankOpenAccountVO == null || StringUtils.isBlank(bankOpenAccountVO.getAccount())) {
 					throw new RuntimeException("用户不存在或者未开户...");
 				}
 
@@ -86,8 +82,8 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 					throw new RuntimeException("公司子账户可用金额不足。" + "[借款编号：" + borrowNid + "]，" + "[可用余额：" + account + "]，"
 							+ "[还款金额：" + repayAccount + "]");
 				}
-				amTradeClient.rtbIncreaseReapy(borrowApicron, userVO.getBankOpenAccount(), merrpAccount);
- 			}
+				amTradeClient.rtbIncreaseReapy(borrowApicron, bankOpenAccountVO.getAccount(), merrpAccount);
+			}
 		}
 
 	}

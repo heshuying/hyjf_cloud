@@ -22,12 +22,12 @@ public class UserVO extends BaseVO implements Serializable {
 	/**
 	 * 汇付开户账号
 	 */
-	private String openAccount;
+	private Integer openAccount;
 	
 	/**
 	 * 银行开户账号
 	 */
-	private String bankOpenAccount;
+	private Integer bankOpenAccount;
 	private Integer isCaFlag;
 
 	private Integer sex;
@@ -169,11 +169,11 @@ public class UserVO extends BaseVO implements Serializable {
 		this.email = email;
 	}
 
-	public String getOpenAccount() {
+	public Integer getOpenAccount() {
 		return openAccount;
 	}
 
-	public void setOpenAccount(String openAccount) {
+	public void setOpenAccount(Integer openAccount) {
 		this.openAccount = openAccount;
 	}
 
@@ -193,11 +193,11 @@ public class UserVO extends BaseVO implements Serializable {
 		this.userType = userType;
 	}
 
-	public String getBankOpenAccount() {
+	public Integer getBankOpenAccount() {
 		return bankOpenAccount;
 	}
 
-	public void setBankOpenAccount(String bankOpenAccount) {
+	public void setBankOpenAccount(Integer bankOpenAccount) {
 		this.bankOpenAccount = bankOpenAccount;
 	}
 

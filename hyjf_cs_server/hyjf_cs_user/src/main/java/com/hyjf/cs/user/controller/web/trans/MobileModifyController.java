@@ -124,7 +124,7 @@ public class MobileModifyController extends BaseUserController {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         Map<String,Object> resultMap = new HashMap<>();
         UserVO user = mobileModifyService.getUsers(token);
-        String accountFlag = user.getBankOpenAccount();
+        Integer accountFlag = user.getBankOpenAccount();
         resultMap.put("bankOpenAccount", accountFlag);
         String mobile = user.getMobile();
         String hideMobile = "";
