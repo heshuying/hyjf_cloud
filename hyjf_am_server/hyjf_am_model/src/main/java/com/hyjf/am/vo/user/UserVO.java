@@ -3,6 +3,7 @@ package com.hyjf.am.vo.user;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -11,131 +12,69 @@ import java.io.Serializable;
 public class UserVO extends BaseVO implements Serializable {
 
 
-	/**
-	 * token 登录生成令牌
-	 */
-	private String token;
 	private Integer userId;
+
 	private String username;
+
 	private String mobile;
+
 	private String email;
-	/**
-	 * 汇付开户账号
-	 */
-	private Integer openAccount;
-	
-	/**
-	 * 银行开户账号
-	 */
-	private Integer bankOpenAccount;
-	private Integer isCaFlag;
 
-	private Integer sex;
-	private Integer borrowerType;
-	/**
-	 * 图像url
-	 */
-	private String iconurl;
-
-
-	/**
-	 * 推荐人
-	 */
-	private String referrerUserName;
-
-
-	/**
-	 * 昵称
-	 */
-	private String nickname;
-	/**
-	 * 真实姓名
-	 */
-	private String truename;
-	/**
-	 * 身份证
-	 */
-	private String idcard;
-	/**
-	 * 用户角色
-	 */
-	private String roleId;
-	/**
-	 * 充值成功短信 0发送1不发送
-	 */
-	private Integer rechargeSms;
-
-	/**
-	 * 提现成功短线 0发送1不发送
-	 */
-	private Integer withdrawSms;
-
-	/**
-	 * 投资成功短信 0发送1不发送
-	 */
-	private Integer investSms;
-
-	/**
-	 * 是否发送投资协议邮件 0发送 1不发送
-	 */
-	private Integer isSmtp;
-	/**
-	 * 回收成功短信 0发送1不发送
-	 */
-	private Integer recieveSms;
-	/**
-	 * 是否设置过交易密码 0未设置 1已设置
-	 */
-	private Integer isSetPassword;
-	/**
-	 * 用户类型  0普通用户 1企业账户
-	 */
-	private Integer userType;
-
-	/**
-	 * 是否测评:0:未测评,1:已测评
-	 */
-	private Integer isEvaluationFlag;
-
-
-	/**
-	 * 登录验证
-	 */
-	private String salt;
 	private String password;
+
+	private String salt;
+
 	private Integer status;
 
-	public String getToken() {
-		return token;
-	}
+	private Integer openAccount;
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+	private Integer rechargeSms;
 
-	public Integer getStatus() {
-		return status;
-	}
+	private Integer withdrawSms;
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+	private Boolean ifReceiveNotice;
 
-	public String getSalt() {
-		return salt;
-	}
+	private Integer investSms;
 
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
+	private Integer recieveSms;
 
-	public String getPassword() {
-		return password;
-	}
+	private Integer regEsb;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+	private String eprovince;
+
+	private Integer sendSms;
+
+	private Integer isInstFlag;
+
+	private String instCode;
+
+	private Integer accountEsb;
+
+	private Integer investflag;
+
+	private Integer userType;
+
+	private Boolean paymentAuthStatus;
+
+	private Integer isSetPassword;
+
+	private Integer bankOpenAccount;
+
+	private Integer bankAccountEsb;
+
+	private Integer isEvaluationFlag;
+
+	private Integer isCaFlag;
+
+	private Integer isSmtp;
+
+	private String regIp;
+
+	private Date regTime;
+
+	private Date createTime;
+
+	private Date updateTime;
 
 	public Integer getUserId() {
 		return userId;
@@ -169,100 +108,36 @@ public class UserVO extends BaseVO implements Serializable {
 		this.email = email;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public Integer getOpenAccount() {
 		return openAccount;
 	}
 
 	public void setOpenAccount(Integer openAccount) {
 		this.openAccount = openAccount;
-	}
-
-	public Integer getIsSetPassword() {
-		return isSetPassword;
-	}
-
-	public void setIsSetPassword(Integer isSetPassword) {
-		this.isSetPassword = isSetPassword;
-	}
-
-	public Integer getUserType() {
-		return userType;
-	}
-
-	public void setUserType(Integer userType) {
-		this.userType = userType;
-	}
-
-	public Integer getBankOpenAccount() {
-		return bankOpenAccount;
-	}
-
-	public void setBankOpenAccount(Integer bankOpenAccount) {
-		this.bankOpenAccount = bankOpenAccount;
-	}
-
-	public Integer getIsEvaluationFlag() {
-		return isEvaluationFlag;
-	}
-
-	public void setIsEvaluationFlag(Integer isEvaluationFlag) {
-		this.isEvaluationFlag = isEvaluationFlag;
-	}
-
-	public Integer getIsCaFlag() {
-		return isCaFlag;
-	}
-
-	public void setIsCaFlag(Integer isCaFlag) {
-		this.isCaFlag = isCaFlag;
-	}
-
-	public String getIconurl() {
-		return iconurl;
-	}
-
-	public void setIconurl(String iconurl) {
-		this.iconurl = iconurl;
-	}
-
-	public String getReferrerUserName() {
-		return referrerUserName;
-	}
-
-	public void setReferrerUserName(String referrerUserName) {
-		this.referrerUserName = referrerUserName;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public String getTruename() {
-		return truename;
-	}
-
-	public void setTruename(String truename) {
-		this.truename = truename;
-	}
-
-	public String getIdcard() {
-		return idcard;
-	}
-
-	public void setIdcard(String idcard) {
-		this.idcard = idcard;
-	}
-
-	public String getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
 	}
 
 	public Integer getRechargeSms() {
@@ -281,20 +156,20 @@ public class UserVO extends BaseVO implements Serializable {
 		this.withdrawSms = withdrawSms;
 	}
 
+	public Boolean getIfReceiveNotice() {
+		return ifReceiveNotice;
+	}
+
+	public void setIfReceiveNotice(Boolean ifReceiveNotice) {
+		this.ifReceiveNotice = ifReceiveNotice;
+	}
+
 	public Integer getInvestSms() {
 		return investSms;
 	}
 
 	public void setInvestSms(Integer investSms) {
 		this.investSms = investSms;
-	}
-
-	public Integer getIsSmtp() {
-		return isSmtp;
-	}
-
-	public void setIsSmtp(Integer isSmtp) {
-		this.isSmtp = isSmtp;
 	}
 
 	public Integer getRecieveSms() {
@@ -305,19 +180,155 @@ public class UserVO extends BaseVO implements Serializable {
 		this.recieveSms = recieveSms;
 	}
 
-	public Integer getSex() {
-		return sex;
+	public Integer getRegEsb() {
+		return regEsb;
 	}
 
-	public void setSex(Integer sex) {
-		this.sex = sex;
+	public void setRegEsb(Integer regEsb) {
+		this.regEsb = regEsb;
 	}
 
-	public Integer getBorrowerType() {
-		return borrowerType;
+	public String getEprovince() {
+		return eprovince;
 	}
 
-	public void setBorrowerType(Integer borrowerType) {
-		this.borrowerType = borrowerType;
+	public void setEprovince(String eprovince) {
+		this.eprovince = eprovince;
+	}
+
+	public Integer getSendSms() {
+		return sendSms;
+	}
+
+	public void setSendSms(Integer sendSms) {
+		this.sendSms = sendSms;
+	}
+
+	public Integer getIsInstFlag() {
+		return isInstFlag;
+	}
+
+	public void setIsInstFlag(Integer isInstFlag) {
+		this.isInstFlag = isInstFlag;
+	}
+
+	public String getInstCode() {
+		return instCode;
+	}
+
+	public void setInstCode(String instCode) {
+		this.instCode = instCode;
+	}
+
+	public Integer getAccountEsb() {
+		return accountEsb;
+	}
+
+	public void setAccountEsb(Integer accountEsb) {
+		this.accountEsb = accountEsb;
+	}
+
+	public Integer getInvestflag() {
+		return investflag;
+	}
+
+	public void setInvestflag(Integer investflag) {
+		this.investflag = investflag;
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
+
+	public Boolean getPaymentAuthStatus() {
+		return paymentAuthStatus;
+	}
+
+	public void setPaymentAuthStatus(Boolean paymentAuthStatus) {
+		this.paymentAuthStatus = paymentAuthStatus;
+	}
+
+	public Integer getIsSetPassword() {
+		return isSetPassword;
+	}
+
+	public void setIsSetPassword(Integer isSetPassword) {
+		this.isSetPassword = isSetPassword;
+	}
+
+	public Integer getBankOpenAccount() {
+		return bankOpenAccount;
+	}
+
+	public void setBankOpenAccount(Integer bankOpenAccount) {
+		this.bankOpenAccount = bankOpenAccount;
+	}
+
+	public Integer getBankAccountEsb() {
+		return bankAccountEsb;
+	}
+
+	public void setBankAccountEsb(Integer bankAccountEsb) {
+		this.bankAccountEsb = bankAccountEsb;
+	}
+
+	public Integer getIsEvaluationFlag() {
+		return isEvaluationFlag;
+	}
+
+	public void setIsEvaluationFlag(Integer isEvaluationFlag) {
+		this.isEvaluationFlag = isEvaluationFlag;
+	}
+
+	public Integer getIsCaFlag() {
+		return isCaFlag;
+	}
+
+	public void setIsCaFlag(Integer isCaFlag) {
+		this.isCaFlag = isCaFlag;
+	}
+
+	public Integer getIsSmtp() {
+		return isSmtp;
+	}
+
+	public void setIsSmtp(Integer isSmtp) {
+		this.isSmtp = isSmtp;
+	}
+
+	public String getRegIp() {
+		return regIp;
+	}
+
+	public void setRegIp(String regIp) {
+		this.regIp = regIp;
+	}
+
+	public Date getRegTime() {
+		return regTime;
+	}
+
+	public void setRegTime(Date regTime) {
+		this.regTime = regTime;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 }

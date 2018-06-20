@@ -97,6 +97,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     }
 
+    /**
+     *  散标专区债权转让列表数据
+     * @author zhangyk
+     * @date 2018/6/20 9:11
+     */
     @Override
     public WebResult searchCreditList(CreditListRequest request) {
         // 初始化分页参数，并组合到请求参数

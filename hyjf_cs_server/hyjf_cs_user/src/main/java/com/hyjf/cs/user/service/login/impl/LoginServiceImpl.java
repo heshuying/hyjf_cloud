@@ -5,13 +5,12 @@ package com.hyjf.cs.user.service.login.impl;
 
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.MD5Utils;
-import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
@@ -87,10 +86,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
             // 2. 缓存
             String token = generatorToken(userVO.getUserId(), userVO.getUsername());
-            WebViewUser webViewUser = new WebViewUser();
-            BeanUtils.copyProperties(userVO,webViewUser);
-            userVO.setToken(token);
-            RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60);
+            WebViewUserVO webViewUserVO = new WebViewUserVO();
+            BeanUtils.copyProperties(userVO, webViewUserVO);
+            webViewUserVO.setToken(token);
+            RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
 
             // 3. todo 登录时自动同步线下充值记录
 

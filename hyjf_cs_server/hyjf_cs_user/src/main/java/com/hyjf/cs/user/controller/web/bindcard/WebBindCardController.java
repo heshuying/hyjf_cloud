@@ -1,7 +1,7 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.ClientConstants;
@@ -47,7 +47,7 @@ public class WebBindCardController extends BaseUserController {
 		logger.info("绑卡发送验证码开始, mobile :{}，cardNo:{}", mobile, cardNo);
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+		WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         
         bindCardService.checkParamSendcode(user.getUserId(), mobile, cardNo);
         // 请求银行绑卡接口
@@ -77,7 +77,7 @@ public class WebBindCardController extends BaseUserController {
 		logger.info("绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+		WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         String userIp = GetCilentIP.getIpAddr(request);
         
         bindCardService.checkParamBindCard(bindCardVO, user.getUserId());
@@ -117,7 +117,7 @@ public class WebBindCardController extends BaseUserController {
 		logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+		WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         
         bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
         

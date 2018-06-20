@@ -59,7 +59,8 @@ public class SrchCapitalInfoServer extends CallcenterBaseController {
 			//查询条件使用userId精确查询
 			callCenterAccountDetailRequest.setUserId(user.getUserId());
 			callCenterAccountDetailRequest.setUserName(user.getUsername());
-			callCenterAccountDetailRequest.setReferrerName(user.getReferrerUserName());
+			// todo 推荐人要查询
+			//callCenterAccountDetailRequest.setReferrerName(user.getReferrerUserName());
 			// 分页开始结束
 			callCenterAccountDetailRequest.setLimitStart(bean.getLimitStart());
 			callCenterAccountDetailRequest.setLimitEnd(bean.getLimitSize());

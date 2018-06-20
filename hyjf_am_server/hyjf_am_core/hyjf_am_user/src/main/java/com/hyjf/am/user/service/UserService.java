@@ -70,16 +70,7 @@ public interface UserService {
 	 */
 	User findUserByRecommendName(String reffer);
 
-	/**
-	 * 组装user信息
-	 * 
-	 * @param userVO
-	 * @return
-	 */
-	UserVO assembleUserVO(UserVO userVO);
-
 	void updateLoginUser(int userId, String ip);
-
 
 	HjhUserAuth getHjhUserAuthByUserId(Integer userId);
 

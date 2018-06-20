@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hyjf.am.vo.user.WebViewUserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,15 +65,15 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult<UserVO> register(@RequestBody RegisterVO registerVO, HttpServletRequest request) {
+    public WebResult<WebViewUserVO> register(@RequestBody RegisterVO registerVO, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerVO));
-        WebResult<UserVO> result = new WebResult<UserVO>();
+        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
         // 1. 参数检查
         registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerVO);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
-        if (userVO != null) {
-            logger.info("Web端用户注册成功, userId is :{}", userVO.getUserId());
-            result.setData(userVO);
+        WebViewUserVO webViewUserVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
+        if (webViewUserVO != null) {
+            logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
+            result.setData(webViewUserVO);
         } else {
             logger.error("Web端用户注册失败...");
             result.setStatus(ApiResult.FAIL);

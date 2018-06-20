@@ -2,12 +2,12 @@ package com.hyjf.am.response.user;
 
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 
 /**
  * @author zhangqingqing
  * @version HjhUserAuthResponse, v0.1 2018/1/21 22:38
  */
-public class WebViewUserResponse extends Response<WebViewUser> {
+public class WebViewUserResponse extends Response<WebViewUserVO> {
 
 }

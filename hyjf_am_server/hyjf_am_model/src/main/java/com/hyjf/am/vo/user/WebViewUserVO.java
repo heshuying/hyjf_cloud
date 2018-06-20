@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author zhangqingqing
  * @version hyjf 1.0
  */
-public class WebViewUser  extends BaseVO implements Serializable {
+public class WebViewUserVO extends BaseVO implements Serializable {
 
     /**
      * 此处为属性说明
