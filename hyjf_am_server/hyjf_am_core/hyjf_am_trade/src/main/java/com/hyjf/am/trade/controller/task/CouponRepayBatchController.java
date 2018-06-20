@@ -1,11 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.trade.service.CouponRepayBatchService;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ public class CouponRepayBatchController {
             List<String> recoverNidList = couponRepayBatchService.selectNidForCouponOnly();
             if (recoverNidList != null) {
                 logger.info("需按优惠券单独投资还款包括：" + JSONArray.toJSONString(recoverNidList));
-//                CommonSoaUtils.couponOnlyRepay(recoverNidList); //TODO: 微服务这种方式是错的。
             }
         } catch (Exception e) {
             logger.error("筛选优惠券单独投资还款失败", e);

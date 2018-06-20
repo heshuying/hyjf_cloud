@@ -26,61 +26,63 @@ import java.util.List;
 @RequestMapping("/am-user/userAlias")
 public class UserAliasController {
 
-    private static Logger logger = LoggerFactory.getLogger(UserAliasController.class);
+	private static Logger logger = LoggerFactory.getLogger(UserAliasController.class);
 
-    @Autowired
-    private UserAliasService userAliasService;
+	@Autowired
+	private UserAliasService userAliasService;
 
-    /**
-     * 根据手机号查询推送别名
-     *
-     * @param mobile
-     * @return
-     */
-    @RequestMapping("/findAliasByMobile/{mobile}")
-    public UserAliasResponse findAliasByMobile(@PathVariable String mobile) {
-        logger.info("根据手机号查询推送别名开始... mobile is :{}", mobile);
-        UserAliasResponse response = new UserAliasResponse();
-        UserAliasVO userAliasVO = null;
-        UserAlias userAlias = userAliasService.findAliasByMobile(mobile);
-        if (userAlias != null) {
-            userAliasVO = new UserAliasVO();
-            BeanUtils.copyProperties(userAlias, userAliasVO);
-        }
-        logger.info("userAliasVO is :{}", userAliasVO);
-        response.setResult(userAliasVO);
-        return response;
-    }
+	/**
+	 * 根据手机号查询推送别名
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	@RequestMapping("/findAliasByMobile/{mobile}")
+	public UserAliasResponse findAliasByMobile(@PathVariable String mobile) {
+		logger.info("根据手机号查询推送别名开始... mobile is :{}", mobile);
+		UserAliasResponse response = new UserAliasResponse();
+		UserAliasVO userAliasVO = null;
+		UserAlias userAlias = userAliasService.findAliasByMobile(mobile);
+		if (userAlias != null) {
+			userAliasVO = new UserAliasVO();
+			BeanUtils.copyProperties(userAlias, userAliasVO);
+		}
+		logger.info("userAliasVO is :{}", userAliasVO);
+		response.setResult(userAliasVO);
+		return response;
+	}
 
-    /**
-     * 根据手机号查询推送别名 - 批量
-     *
-     * @param mobiles
-     * @return
-     */
-    @RequestMapping("/findAliasesByMobiles")
-    public List<UserAliasResponse> findAliasesByMobiles(List<String> mobiles) {
-        logger.info("根据手机号查询推送别名 - 批量开始... mobiles is :{}", mobiles);
-        List<UserAliasResponse> list = new ArrayList<>();
-        List<UserAliasVO> userAliasVOList = userAliasService.findAliasByMobiles(mobiles);
-        for (UserAliasVO userAliasVO : userAliasVOList) {
-            UserAliasResponse response = new UserAliasResponse();
-            response.setResult(userAliasVO);
-            list.add(response);
-        }
-        return list;
-    }
+	/**
+	 * 根据手机号查询推送别名 - 批量
+	 *
+	 * @param mobiles
+	 * @return
+	 */
+	@RequestMapping("/findAliasesByMobiles")
+	public List<UserAliasResponse> findAliasesByMobiles(List<String> mobiles) {
+		logger.info("根据手机号查询推送别名 - 批量开始... mobiles is :{}", mobiles);
+		List<UserAliasResponse> list = new ArrayList<>();
+		List<UserAliasVO> userAliasVOList = userAliasService.findAliasByMobiles(mobiles);
+		for (UserAliasVO userAliasVO : userAliasVOList) {
+			UserAliasResponse response = new UserAliasResponse();
+			response.setResult(userAliasVO);
+			list.add(response);
+		}
+		return list;
+	}
 
-    /**
-     * 根据设备类型统计用户人数
-     *
-     * @param clientAndroid
-     * @return
-     */
-    @RequestMapping("/countAliasByClient/{clientAndroid}")
-    public Integer countAliasByClient(@PathVariable String clientAndroid) {
-        logger.info("根据设备类型统计用户人数开始... clientAndroid is :{}", clientAndroid);
-        Integer count = userAliasService.countAliasByClient(clientAndroid);
-        return count;
-    }
+	/**
+	 * 根据设备类型统计用户人数
+	 *
+	 * @param clientAndroid
+	 * @return
+	 */
+	@RequestMapping("/countAliasByClient/{clientAndroid}")
+	public UserAliasResponse countAliasByClient(@PathVariable String clientAndroid) {
+		logger.info("根据设备类型统计用户人数开始... clientAndroid is :{}", clientAndroid);
+		UserAliasResponse response = new UserAliasResponse();
+		Integer count = userAliasService.countAliasByClient(clientAndroid);
+		response.setCount(count);
+		return response;
+	}
 }

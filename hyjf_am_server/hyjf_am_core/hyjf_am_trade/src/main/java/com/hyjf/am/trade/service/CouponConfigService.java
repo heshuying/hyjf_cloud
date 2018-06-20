@@ -5,12 +5,15 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 
-import java.util.List;
-
 /**
  * @author yaoy
  * @version CouponConfigService, v0.1 2018/6/19 19:25
  */
 public interface CouponConfigService {
-    List<CouponConfig> selectCouponConfig(String couponCode);
+    /**
+     * 根据优惠券编号查找优惠券配置
+     * @param couponCode
+     * @return
+     */
+    CouponConfig selectCouponConfig(String couponCode);
 }
