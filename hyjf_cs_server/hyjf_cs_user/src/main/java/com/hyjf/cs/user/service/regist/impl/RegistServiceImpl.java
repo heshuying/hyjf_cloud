@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.common.file.UploadFileUtils;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +23,8 @@ import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -36,6 +33,7 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
@@ -53,6 +51,7 @@ import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.vo.RegisterVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 
 /**
  * @author zhangqingqing
@@ -73,6 +72,9 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     private SmsProducer smsProducer;
 
     @Autowired
+    AmTradeClient amTradeClient;
+
+    @Autowired
     SystemConfig systemConfig;
 
     @Value("${hyjf.activity.888.id}")
@@ -83,7 +85,6 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     private String fileHeadPath;
 
     /**
-     * web 注册
      * 1. 必要参数检查 2. 注册 3. 注册后处理
      * @param registerVO
      * @param
@@ -117,7 +118,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         BeanUtils.copyProperties(registerVO, registerUserRequest);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
-        HjhInstConfigVO instConfig = this.amUserClient.selectInstConfigByInstCode(registerVO.getInstCode());
+        HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerVO.getInstCode());
         // 机构编号
         CheckUtil.check(instConfig != null, MsgEnum.ERR_INSTCODE);
         // 验签

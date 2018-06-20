@@ -125,8 +125,6 @@ public interface UserService {
     UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
                                                   EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult);
 
-	ActivityList selectActivityList(int activityId);
-
 	List<Evalation> getEvalationRecord();
 
 }
