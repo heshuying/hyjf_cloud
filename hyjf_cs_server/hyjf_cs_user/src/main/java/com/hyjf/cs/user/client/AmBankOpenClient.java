@@ -2,6 +2,7 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -47,4 +48,6 @@ public interface AmBankOpenClient {
 	 * @return
 	 */
 	Integer saveCardNoToBank(BankCardRequest request);
+
+	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 }
