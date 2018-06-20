@@ -94,11 +94,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
 
-
-	@Value("${file.domain.head.url}")
-	private String fileHeadUrl;
-	@Value("${file.upload.head.path}")
-	private String fileHeadPath;
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
 
@@ -279,24 +274,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserVO assembleUserVO(UserVO userVO) {
-		UserInfo usersInfo = userInfoService.findUserInfoById(userVO.getUserId());
-		if (usersInfo != null) {
-			userVO.setSex(usersInfo.getSex());
-			userVO.setTruename(usersInfo.getTruename());
-			userVO.setIdcard(usersInfo.getIdcard());
-			userVO.setRoleId(usersInfo.getRoleId() + "");
-			userVO.setBorrowerType(usersInfo.getBorrowerType());
-		}
-		userVO.setIconurl(this.assembleIconUrl(userVO));
-
-		// todo 银行 汇付开户账号 紧急联系人 usersContract
-		userVO.setOpenAccount(null);
-		userVO.setBankOpenAccount(null);
-		return userVO;
-	}
-
-	@Override
 	public void updateLoginUser(int userId, String ip) {
 		UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);
 		if (userLoginLog == null) {
@@ -323,23 +300,6 @@ public class UserServiceImpl implements UserService {
 			userLoginLog.setUpdateTime(new Date());
 			userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
 		}
-	}
-
-	/**
-	 * 组装图像url
-	 *
-	 * @param userVO
-	 * @return
-	 */
-	private String assembleIconUrl(UserVO userVO) {
-		String iconUrl = userVO.getIconurl();
-		if (org.apache.commons.lang3.StringUtils.isNotBlank(iconUrl)) {
-			String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
-			imghost = imghost.substring(0, imghost.length() - 1);
-			String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
-			return imghost + fileUploadTempPath + iconUrl;
-		}
-		return null;
 	}
 
 	/**

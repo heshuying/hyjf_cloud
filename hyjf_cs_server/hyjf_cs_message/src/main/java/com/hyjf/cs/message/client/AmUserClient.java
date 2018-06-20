@@ -5,6 +5,7 @@ import java.util.List;
 import com.hyjf.am.response.config.SmsNoticeConfigResponse;
 import com.hyjf.am.response.user.UserAliasResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -36,6 +37,13 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserVO findUserById(final int userId);
+	/**
+	 * 根据userId查询用户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserInfoVO findUsersInfoById(int userId);
 
 	/**
 	 * 根据手机号查询推送别名

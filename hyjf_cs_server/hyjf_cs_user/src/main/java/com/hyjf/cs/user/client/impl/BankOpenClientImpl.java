@@ -1,11 +1,13 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserEvalationResultResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -146,6 +148,17 @@ public class BankOpenClientImpl implements BankOpenClient {
 			return result;
 		}
 		return 0;
+	}
+
+
+	@Override
+	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId) {
+		CorpOpenAccountRecordResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/getCorpOpenAccountRecord/" + userId, CorpOpenAccountRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 }

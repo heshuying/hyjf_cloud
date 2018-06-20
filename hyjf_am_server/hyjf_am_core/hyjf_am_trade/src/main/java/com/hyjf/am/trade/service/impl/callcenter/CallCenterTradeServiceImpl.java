@@ -7,13 +7,7 @@ import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterAccountDetailCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterRepaymentDetailCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterBorrowCreditCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterBorrowCreditTenderCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterHztInvestCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterRechargeCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterWithdrawCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.callcenter.*;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.common.cache.CacheUtil;
@@ -51,6 +45,9 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
     
     @Autowired
     private CallcenterBorrowCreditTenderCustomizeMapper callcenterBorrowCreditTenderCustomizeMapper;
+
+    @Autowired
+    private CallCenterCouponUserCustomizeMapper callCenterCouponUserCustomizeMapper;
     /**
      *
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
@@ -179,4 +176,53 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 		List<CallCenterBorrowCreditCustomize> list = callcenterBorrowCreditTenderCustomizeMapper.getBorrowCreditTenderList(srchTransferInfoRequest);
 		return list;
 	}
+
+    /**
+     * 查询优惠券
+     * @author wangjun
+     * @param centerBaseRequest
+     * @return
+     */
+    @Override
+    public List<CallCenterCouponUserCustomize> getUserCouponInfoList(CallCenterBaseRequest centerBaseRequest) {
+        return callCenterCouponUserCustomizeMapper.selectCouponUserList(centerBaseRequest);
+    }
+
+    /**
+     * 查询优惠券使用（直投产品）
+     * @author wangjun
+     * @param centerBaseRequest
+     * @return
+     */
+    @Override
+    public List<CallCenterCouponTenderCustomize> getUserCouponTenderList(CallCenterBaseRequest centerBaseRequest) {
+        List<CallCenterCouponTenderCustomize> list = callCenterCouponUserCustomizeMapper.selectCouponTenderList(centerBaseRequest);
+        if(!CollectionUtils.isEmpty(list)){
+            Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> couponReciveMap = CacheUtil.getParamNameMap("COUPON_RECIVE_STATUS");
+            for(CallCenterCouponTenderCustomize callCenterCouponTenderCustomize : list){
+                callCenterCouponTenderCustomize.setOperatingDeck(clientMap.getOrDefault(callCenterCouponTenderCustomize.getOperatingDeck(),null));
+                callCenterCouponTenderCustomize.setReceivedFlg(couponReciveMap.getOrDefault(callCenterCouponTenderCustomize.getReceivedFlg(),null));
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 查询优惠券回款（直投产品）
+     * @author wangjun
+     * @param centerBaseRequest
+     * @return
+     */
+    @Override
+    public List<CallCenterCouponBackMoneyCustomize> getUserCouponBackMoneyList(CallCenterBaseRequest centerBaseRequest) {
+        List<CallCenterCouponBackMoneyCustomize> list = callCenterCouponUserCustomizeMapper.selectCouponBackMoneyList(centerBaseRequest);
+        if(!CollectionUtils.isEmpty(list)){
+            Map<String, String> couponReciveMap = CacheUtil.getParamNameMap("COUPON_RECIVE_STATUS");
+            for(CallCenterCouponBackMoneyCustomize callCenterCouponBackMoneyCustomize : list){
+                callCenterCouponBackMoneyCustomize.setReceivedFlg(couponReciveMap.getOrDefault(callCenterCouponBackMoneyCustomize.getReceivedFlg(),null));
+            }
+        }
+        return list;
+    }
 }

@@ -42,4 +42,10 @@ public interface CallCenterCustomizeMapper {
      */
     List<CallcenterUserBaseCustomize> findUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest);
 
+    /**
+     * @param couponSource
+     * @return
+     */
+    String getCouponContent(String couponSource);
+
 }

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterCouponUserCustomizeMapper">
+	<resultMap id="selectCouponUserMap" type="com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterCouponUserCustomize">
+		<result column="id" property="id" />
+	    <result column="coupon_code" property="couponCode" />
+	    <result column="coupon_user_code" property="couponUserCode" />
+	    <result column="coupon_name" property="couponName" />
+	    <result column="coupon_type" property="couponType" />
+	    <result column="coupon_quota" property="couponQuota" />
+	    <result column="coupon_system" property="couponSystem" />
+	    <result column="project_type" property="projectType" />
+	    <result column="tender_quota" property="tenderQuota" />
+	    <result column="project_expiration_type" property="projectExpirationType" />
+	    <result column="coupon_source" property="couponSource" />
+	    <result column="coupon_content" property="couponContent" />
+	    <result column="user_id" property="userId" />
+	    <result column="username" property="username" />
+	    <result column="used_flag" property="usedFlag" />
+	    <result column="used_flag_View" property="usedFlagView" />
+	    <result column="end_time" property="endTime" />
+	    <result column="add_time" property="addTime" />
+	    <result column="add_user" property="addUser" />
+	    <result column="update_time" property="updateTime" />
+	    <result column="update_user" property="updateUser" />
+	    <result column="del_flag" property="delFlag" />
+	    <result column="detail_url" property="detailUrl" />
+	    <result column="channel" property="channel" />
+	    <result column="attribute" property="attribute" />
+	</resultMap>
+
+	<select id="selectCouponUserList" resultMap="selectCouponUserMap"
+            parameterType="com.hyjf.am.resquest.callcenter.CallCenterBaseRequest">
+		SELECT
+			cu.id,
+			cc.coupon_code,
+			cu.coupon_user_code,
+			cc.coupon_name,
+			CASE cu.attribute
+			WHEN 0 THEN
+				'无主单'
+			WHEN 1 THEN
+				'有主单'
+			WHEN 2 THEN
+				'线下员工'
+			WHEN 3 THEN
+				'线上员工'
+			ELSE
+				''
+			END AS attribute,
+			cu.channel,
+			CASE cc.coupon_type
+            WHEN 1 THEN
+                '体验金'
+            WHEN 2 THEN
+                '加息券'
+            WHEN 3 THEN
+                '代金券'
+            END AS coupon_type,
+            CASE cc.coupon_type
+            WHEN 1 THEN
+                CONCAT(
+                    FORMAT(cc.coupon_quota, 2),
+                    '元'
+                )
+            WHEN 2 THEN
+                CONCAT(cc.coupon_quota, '%')
+            WHEN 3 THEN
+                CONCAT(
+                    FORMAT(cc.coupon_quota, 2),
+                    '元'
+                )
+            ELSE
+                CONCAT(cc.coupon_quota, '%')
+            END AS coupon_quota,
+            CASE
+            WHEN cu.coupon_source = 1 THEN
+                '手动发放'
+            WHEN cu.coupon_source = 2 THEN
+                '活动发放'
+            WHEN cu.coupon_source = 3 THEN
+                '会员礼包'
+            ELSE
+                ''
+            END AS coupon_source,
+
+            CASE
+            WHEN cu.coupon_source = 1 THEN
+                cu.content
+            WHEN cu.coupon_source = 2 THEN
+                al.title
+            ELSE
+                ''
+            END AS coupon_content,
+            FROM_UNIXTIME(
+                cu.end_time,
+                '%Y-%m-%d'
+            ) AS end_time,
+            cu.used_flag,
+            CASE
+            WHEN cu.used_flag = 0 THEN
+                '未使用'
+            WHEN cu.used_flag = 1 THEN
+                '已使用'
+            WHEN cu.used_flag = 2 THEN
+                '审核不通过'
+            WHEN cu.used_flag = 3 THEN
+                '待审核'
+            WHEN cu.used_flag = 4 THEN
+                '已失效'
+            END used_flag_View,
+             FROM_UNIXTIME(
+                cu.add_time,
+                '%Y-%m-%d %H:%i:%S'
+            ) AS add_time,
+            cc.coupon_system AS coupon_system,
+            cc.project_type AS project_type,
+            CASE
+            WHEN cc.tender_quota_type = 0 THEN
+                '投资金额不限'
+            WHEN cc.tender_quota_type = 1 THEN
+                CONCAT(
+                    cc.tender_quota_min,
+                    '元~',
+                    cc.tender_quota_max,
+                    '元可用'
+                )
+            WHEN cc.tender_quota_type = 2 THEN
+                CONCAT(
+                    '满',
+                    cc.tender_quota,
+                    '元可用'
+                )
+            WHEN cc.tender_quota_type = 3 THEN
+                CONCAT(
+                    cc.tender_quota,
+                    '元（含）内可用'
+                )
+            ELSE
+                '投资金额不限'
+            END tender_quota,
+            CASE
+            WHEN cc.project_expiration_type = 0 THEN
+                '项目期限不限'
+            WHEN cc.project_expiration_type = 1 THEN
+                CONCAT(
+                    '等于',
+                    cc.project_expiration_length,
+                    '月'
+                )
+            WHEN cc.project_expiration_type = 2 THEN
+                CONCAT(
+                    cc.project_expiration_length_min,
+                    '月~',
+                    cc.project_expiration_length_max,
+                    '月'
+                )
+            WHEN cc.project_expiration_type = 3 THEN
+                CONCAT(
+                    '大于等于',
+                    cc.project_expiration_length,
+                    '月'
+                )
+            WHEN cc.project_expiration_type = 4 THEN
+                CONCAT(
+                    '小于等于',
+                    cc.project_expiration_length,
+                    '月'
+                )
+            ELSE
+                '项目期限不限'
+            END project_expiration_type
+		FROM
+			ht_coupon_user cu
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
+		LEFT JOIN ht_activity_list al ON cu.activity_id = al.id
+        WHERE cu.user_id = #{userId}
+		ORDER BY cu.id DESC
+		<if test="limitStart !=null and limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+
+
+	<resultMap id="selectCouponTenderMap" type="com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterCouponTenderCustomize">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="attribute" property="attribute" jdbcType="VARCHAR" />
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+		<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+		<result column="coupon_quota" property="couponQuota" jdbcType="VARCHAR" />
+		<result column="operating_deck" property="operatingDeck" jdbcType="VARCHAR" />
+		<result column="account" property="account" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
+		<result column="order_date" property="orderDate" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="coupon_system" property="couponSystem" />
+	    <result column="project_type" property="projectType" />
+	    <result column="project_expiration_type" property="projectExpirationType" />
+	</resultMap>
+
+	<select id="selectCouponTenderList" resultMap="selectCouponTenderMap"
+            parameterType="com.hyjf.am.resquest.callcenter.CallCenterBaseRequest">
+        SELECT
+            hcu.id id,
+            hcu.coupon_user_code coupon_user_code,
+            hct.order_id order_id,
+            CASE hct.attribute
+                WHEN 0 THEN
+                '无主单'
+                WHEN 1 THEN
+                '有主单'
+                WHEN 2 THEN
+                '线下员工'
+                WHEN 3 THEN
+                '线上员工'
+                ELSE
+                ''
+            END AS attribute,
+            hcc.coupon_code coupon_code,
+            CASE
+                WHEN hcc.coupon_type = 1 THEN
+                '体验金'
+                WHEN hcc.coupon_type = 2 THEN
+                '加息券'
+                WHEN hcc.coupon_type = 3 THEN
+                '代金券'
+                ELSE
+                '加息券'
+            END coupon_type,
+
+            CASE hcc.coupon_type
+                WHEN 1 THEN
+                CONCAT(
+                FORMAT(hcc.coupon_quota, 2),
+                '元'
+                )
+                WHEN 3 THEN
+                CONCAT(
+                FORMAT(hcc.coupon_quota, 2),
+                '元'
+                )
+                ELSE
+                CONCAT(hcc.coupon_quota, '%')
+            END AS coupon_quota,
+
+            hbt.borrow_nid borrow_nid,
+            hbt1.account account,
+            hbt.client AS operating_deck,
+            CONCAT(hb.borrow_apr, '%') borrow_apr,
+            CASE
+                WHEN borrow_style = 'endday' THEN
+                CONCAT(hb.borrow_period, '天')
+                ELSE
+                CONCAT(hb.borrow_period, '个月')
+            END borrow_period,
+            FROM_UNIXTIME( hct.add_time, '%Y-%m-%d %H:%i' ) order_date,
+            hcr.received_flg received_flg,
+            CASE
+                WHEN hcc.project_expiration_type = 0 THEN
+                '项目期限不限'
+                WHEN hcc.project_expiration_type = 1 THEN
+                CONCAT(
+                '等于',
+                hcc.project_expiration_length,
+                '月'
+                )
+                WHEN hcc.project_expiration_type = 2 THEN
+                CONCAT(
+                hcc.project_expiration_length_min,
+                '月~',
+                hcc.project_expiration_length_max,
+                '月'
+                )
+                WHEN hcc.project_expiration_type = 3 THEN
+                CONCAT(
+                '大于等于',
+                hcc.project_expiration_length,
+                '月'
+                )
+                WHEN hcc.project_expiration_type = 4 THEN
+                CONCAT(
+                '小于等于',
+                hcc.project_expiration_length,
+                '月'
+                )
+                ELSE
+                '项目期限不限'
+            END project_expiration_type,
+            hcc.coupon_system AS coupon_system,
+            hcc.project_type AS project_type,
+
+            FROM_UNIXTIME( hcu.add_time, '%Y-%m-%d %H:%i' ) add_time
+        FROM
+            ht_coupon_tender hct
+        INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=1 AND hbt.user_id = #{userId}
+        INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
+        INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+        INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
+        INNER JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+
+        LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
+        LEFT JOIN ht_borrow_tender hbt1 ON hcrt.real_tender_id=hbt1.nid
+
+        GROUP BY hct.order_id
+        ORDER BY hbt.order_date DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+	</select>
+
+
+	<resultMap id="selectCouponBackMoneyMap" type="com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterCouponBackMoneyCustomize">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
+		<result column="coupon_quota" property="couponQuota" jdbcType="VARCHAR" />
+		<result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
+		<result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
+		<result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="recover_time" property="recoverTime" jdbcType="VARCHAR" />
+		<result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectCouponBackMoneyList" resultMap="selectCouponBackMoneyMap"
+            parameterType="com.hyjf.am.resquest.callcenter.CallCenterBaseRequest">
+        SELECT
+            hbt.borrow_nid borrow_nid,
+            hbt.nid nid,
+            hcu.coupon_user_code coupon_user_code,
+            CASE
+                WHEN hcc.coupon_type = 1 THEN
+                  '体验金'
+                WHEN hcc.coupon_type = 2 THEN
+                  '加息券'
+                WHEN hcc.coupon_type = 3 THEN
+                  '代金券'
+                ELSE
+                  '加息券'
+            END coupon_type,
+            CONCAT(hb.borrow_apr, '%') borrow_apr,
+            CASE
+                WHEN borrow_style = 'endday' THEN
+                  CONCAT(hb.borrow_period, '天')
+                ELSE
+                  CONCAT(hb.borrow_period, '个月')
+            END borrow_period,
+            IFNULL(hbten.account,'0.00') account,
+            CONCAT('第',hcr.recover_period, '期') recover_period,
+            CASE hcc.coupon_type
+                WHEN 1 THEN
+                    CONCAT(
+                    FORMAT(hcc.coupon_quota, 2),
+                    '元'
+                    )
+                WHEN 3 THEN
+                    CONCAT(
+                    FORMAT(hcc.coupon_quota, 2),
+                    '元'
+                    )
+                ELSE
+                    CONCAT(hcc.coupon_quota, '%')
+            END AS coupon_quota,
+            hcr.recover_account recover_interest,
+            hcr.transfer_id transfer_id,
+            hcr.received_flg received_flg,
+            FROM_UNIXTIME(
+            hbt.add_time,
+            '%Y-%m-%d'
+            ) add_time,
+            FROM_UNIXTIME(
+            hcr.recover_time,
+            '%Y-%m-%d'
+            ) recover_time,
+            FROM_UNIXTIME(
+            hcr.recover_yestime,
+            '%Y-%m-%d'
+            ) recover_yestime
+        FROM
+            ht_coupon_tender hct
+        INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id AND hcu.user_id = #{userId}
+        INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+        INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=1
+        INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
+        LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
+        LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
+        LEFT JOIN ht_borrow hb ON hbt.borrow_nid=hb.borrow_nid
+        ORDER BY recover_time DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+	
+</mapper>
