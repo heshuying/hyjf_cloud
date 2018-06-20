@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.task;
 
 import com.hyjf.am.trade.service.CouponExpiredService;
 import org.slf4j.Logger;
