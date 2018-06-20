@@ -3,12 +3,9 @@
  */
 package com.hyjf.cs.trade.controller.web.tender.hjh;
 
-import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.HjhTenderService;
 import io.swagger.annotations.Api;
@@ -17,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.hyjf.am.util.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -44,7 +40,7 @@ public class HjhPlanController extends BaseTradeController {
         tender.setIp(ip);
         tender.setToken(token);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        hjhTenderService.checkTenderParam(tender);
+        hjhTenderService.joinPlan(tender);
         return null;
     }
 

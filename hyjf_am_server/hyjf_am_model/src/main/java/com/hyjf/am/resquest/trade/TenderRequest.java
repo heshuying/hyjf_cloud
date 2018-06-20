@@ -16,7 +16,7 @@ public class TenderRequest extends BaseVO {
     // 债转编号
     private String creditNid ;
     // 优惠券投资
-    private String couponGrantId ;
+    private Integer couponGrantId ;
     // 项目编号
     private String borrowNid ;
     // 防止重复加入计划
@@ -29,6 +29,8 @@ public class TenderRequest extends BaseVO {
     private String token;
     // 登录的用户对象
     private WebViewUser user;
+    // 投资金额
+    private String account;
 
     public String getCreditNid() {
         return creditNid;
@@ -38,11 +40,11 @@ public class TenderRequest extends BaseVO {
         this.creditNid = creditNid;
     }
 
-    public String getCouponGrantId() {
+    public Integer getCouponGrantId() {
         return couponGrantId;
     }
 
-    public void setCouponGrantId(String couponGrantId) {
+    public void setCouponGrantId(Integer couponGrantId) {
         this.couponGrantId = couponGrantId;
     }
 
@@ -92,5 +94,13 @@ public class TenderRequest extends BaseVO {
 
     public void setUser(WebViewUser user) {
         this.user = user;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 }

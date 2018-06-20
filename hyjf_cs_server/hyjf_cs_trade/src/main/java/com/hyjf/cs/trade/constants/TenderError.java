@@ -29,6 +29,23 @@ public enum TenderError implements MsgCode {
     USER_AUTO_INVES_ERROR("1", "该产品需开通自动投标功能！"),
     USER_AUTO_CREDIT_ERROR("1", "该产品需开通自动债转功能！"),
     USER_PAYMENT_AUTH_ERROR("1", "该产品需开通服务费授权功能！"),
+    PLAN_CLOSE_ERROR("1", "此计划项目已经关闭！"),
+    NOT_FIND_PLAN_ERROR("1", "计划项目不存在！"),
+    MONEY_NULL_ERROR("1", "请输入加入金额！"),
+    MONEY_STYLE_ERROR("1", "金额格式不正确！"),
+    MONEY_ZERO_ERROR("1", "投资金额不能为0元！"),
+    COUPON_USER_ONLY_ERROR("1", "该优惠券只能单独使用！"),
+    NO_JOIN_MONEY_ERROR("1", "您来晚了，下次再来抢吧！"),
+    JOIN_MONEY_LESS_ERROR("1", "剩余可加入金额为{}元！"),
+    JOIN_MONEY_ONLY_LESS_ERROR("1", "剩余可加入只剩{}元，须全部购买！"),
+    MIN_INVESTMENT_ERROR("1", "{}元起投！"),
+    MAX_INVESTMENT_ERROR("1", "项目最大加入额为{}元！"),
+    JOIN_MONEY_THAN_ACCOUNT_ERROR("1", "加入金额不能大于开放额度！"),
+    NO_MONEY_ERROR("1", "可用金额不足！"),
+    PLAN_MONEY_LESS_ERROR("1", "项目太抢手了！剩余可加入金额只有{}元！"),
+    MONEY_INTEGRAL_MULTIPLE_ERROR("1", "加入递增金额须为{}元的整数倍"),
+    USER_EVALUATION_ERROR("1", "根据监管要求，投资前必须进行风险测评。"),
+
 	BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS("0", "江西银行提现掉单处理成功！");
 
     private String code;
@@ -47,5 +64,9 @@ public enum TenderError implements MsgCode {
     @Override
     public String getMsg() {
         return this.msg;
+    }
+
+    public void replaceMsg(String msg) {
+        this.msg = msg.replace("{}",msg);
     }
 }

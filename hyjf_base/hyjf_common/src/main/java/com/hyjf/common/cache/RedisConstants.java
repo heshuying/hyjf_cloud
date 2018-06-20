@@ -55,4 +55,8 @@ public class RedisConstants {
      */
     public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT";
 
+    /**
+     * 汇计划可投余额前缀
+     */
+    public static final String HJH_PLAN = "HJHBAL_";
 }
