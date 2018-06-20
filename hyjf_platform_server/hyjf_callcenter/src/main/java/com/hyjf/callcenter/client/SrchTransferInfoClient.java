@@ -16,4 +16,11 @@ public interface SrchTransferInfoClient {
 	 * @return
 	 */
 	List<CallCenterBorrowCreditVO> selectBorrowInvestList(SrchTransferInfoRequest srchTransferInfoRequest);	
+	/**
+	 * 获取详细列表
+	 * 
+	 * @param borrowCreditCustomize
+	 * @return
+	 */
+	List<CallCenterBorrowCreditVO> selectBorrowCreditTenderList(SrchTransferInfoRequest srchTransferInfoRequest);	
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterWithdrawCustomizeMapper">
 
 	<select id="getWithdrawRecordList" resultType="com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterWithdrawCustomize"
-			parameterType="com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterWithdrawCustomize">
+			parameterType="com.hyjf.am.resquest.callcenter.CallCenterBaseRequest">
 		SELECT
 		a.bank_flag AS bankFlag,
 		a.seq_no AS seqNo,

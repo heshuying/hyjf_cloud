@@ -123,5 +123,10 @@ public class CallCenterBankController {
             CallCenterAccountHuifuResponse.setResultList(callCenterAccountHuifuVOS);
         }
     	return CallCenterAccountHuifuResponse;
-    }   
+    }
+
+    @RequestMapping("/getVipLevel/{couponCode}")
+    public String getVipLevel(@PathVariable String couponCode){
+        return callCenterBankService.getCouponContent(couponCode);
+    }
 }

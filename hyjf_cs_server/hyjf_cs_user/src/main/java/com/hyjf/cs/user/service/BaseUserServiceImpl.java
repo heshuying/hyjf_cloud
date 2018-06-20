@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
@@ -45,8 +45,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 * @Date 2018/6/12 10:34
 	 */
 	@Override
-	public WebViewUser getUsersByToken(String token) {
-		WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+	public WebViewUserVO getUsersByToken(String token) {
+		WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 		return user;
 	}
 
@@ -59,7 +59,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	@Override
 	public UserVO getUsers(String token) {
-		WebViewUser user = getUsersByToken(token);
+		WebViewUserVO user = getUsersByToken(token);
 		if (user == null || user.getUserId() == null) {
 			return null;
 		}

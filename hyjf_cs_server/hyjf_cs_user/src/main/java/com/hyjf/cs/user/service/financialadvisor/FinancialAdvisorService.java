@@ -19,6 +19,12 @@ public interface FinancialAdvisorService extends BaseUserService {
 
     UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
 
+    /**
+     * 计算用户测评分数
+     * @param userAnswer
+     * @param userId
+     * @return
+     */
      UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId);
 
      String sendCoupon(int userId,String platform);

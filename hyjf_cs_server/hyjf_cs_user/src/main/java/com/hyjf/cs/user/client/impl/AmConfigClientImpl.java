@@ -1,8 +1,13 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.QuestionCustomizeResponse;
+import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.cs.user.client.AmConfigClient;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -59,6 +66,33 @@ public class AmConfigClientImpl implements AmConfigClient {
         BanksConfigResponse response = restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<QuestionCustomizeVO> getNewQuestionList() {
+        QuestionCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/getNewQuestionList", QuestionCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int countScore(AnswerRequest answerList) {
+        int result = restTemplate
+                .postForEntity("http://AM-CONFIG/am-config/config/countScore", answerList, Integer.class).getBody();
+        return result;
+    }
+
+    @Override
+    public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
+        BankReturnCodeConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
+        if (response != null) {
             return response.getResult();
         }
         return null;

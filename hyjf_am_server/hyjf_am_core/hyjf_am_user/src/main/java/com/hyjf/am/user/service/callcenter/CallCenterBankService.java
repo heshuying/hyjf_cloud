@@ -29,4 +29,6 @@ public interface CallCenterBankService {
     List<CallcenterUserBaseCustomize> getUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest);
     
     List<CallcenterAccountHuifuCustomize> getHuifuTiedcardInfo(CallcenterAccountHuifuRequest callcenterAccountHuifuRequest);
+
+    String getCouponContent(String couponSource);
 }

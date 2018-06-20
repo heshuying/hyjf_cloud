@@ -11,6 +11,7 @@ import java.util.Map;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.user.client.AmConfigClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Autowired
     private BankOpenClient bankOpenClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     @Autowired
     SystemConfig systemConfig;
@@ -164,7 +167,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         Map<String,String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         bean.convert();
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         if (user == null) {
             throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
         }
@@ -631,7 +634,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public String getBankRetMsg(String retCode) {
         //如果错误码不为空
         if (StringUtils.isNotBlank(retCode)) {
-            BankReturnCodeConfigVO retCodes = this.amUserClient.getBankReturnCodeConfig(retCode);
+            BankReturnCodeConfigVO retCodes = this.amConfigClient.getBankReturnCodeConfig(retCode);
             if (retCodes != null) {
                 String retMsg = retCodes.getErrorMsg();
                 if (StringUtils.isNotBlank(retMsg)) {

@@ -23,10 +23,10 @@ public class CouponConfigClientImpl implements CouponConfigClient {
     private RestTemplate restTemplate;
 
     @Override
-    public List<CouponConfigVo> selectCouponConfig(String couponCode) {
+    public CouponConfigVo selectCouponConfig(String couponCode) {
         CouponConfigResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/selectCouponConfig/" + couponCode, CouponConfigResponse.class).getBody();
         if (response != null) {
-            return response.getResultList();
+            return response.getResult();
         }
         return null;
     }

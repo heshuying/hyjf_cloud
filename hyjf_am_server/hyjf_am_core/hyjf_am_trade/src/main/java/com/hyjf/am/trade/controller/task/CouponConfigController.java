@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.CouponConfigVo;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +35,10 @@ public class CouponConfigController {
 	public CouponConfigResponse selectCouponConfig(@PathVariable String couponCode) {
 		CouponConfigResponse response = new CouponConfigResponse();
 		CouponConfig couponConfig = couponConfigService.selectCouponConfig(couponCode);
-
 		if (couponConfig != null) {
-			response.setResult(CommonUtils.convertBean(couponConfig, CouponConfigVo.class));
+			CouponConfigVo couponConfigVo = new CouponConfigVo();
+			BeanUtils.copyProperties(couponConfig,couponConfigVo);
+			response.setResult(couponConfigVo);
 		}
 		return response;
 	}

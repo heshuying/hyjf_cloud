@@ -2,6 +2,7 @@ package com.hyjf.cs.message.handle;
 
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -76,10 +77,10 @@ public class MailHandle {
 			}
 
 			// 取得用户详细信息
-			UserVO userVO = amUserClient.findUserById(userId);
-			if (userVO != null) {
-				String sex = userVO.getSex() == 1 ? "先生" : "女士";
-				replaceMap.put("val_name", userVO.getTruename() + sex);
+			UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
+			if (userInfoVO != null) {
+				String sex = userInfoVO.getSex() == 1 ? "先生" : "女士";
+				replaceMap.put("val_name", userInfoVO.getTruename() + sex);
 			}
 
 			// 开始送信
