@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.app.password;
 
-import com.hyjf.cs.user.controller.api.password.ApiPasswordController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
