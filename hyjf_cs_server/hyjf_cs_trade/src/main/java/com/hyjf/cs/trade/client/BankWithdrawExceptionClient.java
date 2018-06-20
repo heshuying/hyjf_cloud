@@ -7,10 +7,10 @@ import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankCallBeanVO;
-import com.hyjf.am.vo.trade.BankCardVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.user.BankCardVO;
 
 /**
  * 江西银行提现掉单异常处理Client

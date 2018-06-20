@@ -133,9 +133,7 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	}
 
 	private void setCallCommon(Integer userId, String txCode, Integer client) {
-		PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
-		String bankCode = paySystemConfig.getBankCode();
-		String bankInstCode = paySystemConfig.getBankInstcode();
+
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		String txDate = GetOrderIdUtils.getTxDate();
 		String txTime = GetOrderIdUtils.getTxTime();
@@ -144,7 +142,6 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 		// 调用开户接口
 		this.version = BankCallConstant.VERSION_10;
 		this.txCode = txCode;
-		this.instCode = bankInstCode;
 		this.bankCode = bankCode;
 		this.txDate = txDate;
 		// 交易时间
