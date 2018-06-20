@@ -44,7 +44,8 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
     SystemConfig systemConfig;
     @Override
     public List<QuestionCustomizeVO> getNewQuestionList() {
-        return null;
+        List<QuestionCustomizeVO> customizes = amUserClient.getNewQuestionList();
+        return customizes;
     }
 
     @Override
@@ -135,6 +136,12 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
             return CouponCheckUtilDefine.ACTIVITY_TIME_END;
         }
         return "";
+    }
+
+    @Override
+    public List<EvalationVO> getEvalationRecord() {
+        List<EvalationVO> evalationVOList = amUserClient.getEvalationRecord();
+        return evalationVOList;
     }
 
     public String checkActivityPlatform(String activityId, String platform) {

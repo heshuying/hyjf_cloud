@@ -5,6 +5,8 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
 
+import java.util.List;
+
 /**
  * @author xiasq
  * @version AmUserClient, v0.1 2018/4/19 12:44
@@ -78,7 +80,11 @@ public interface AmUserClient {
 
 	EvalationVO getEvalationByCountScore(short countScore);
 
-	 UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+	List<EvalationVO> getEvalationRecord();
+
+	UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
 
 	ActivityListVO selectActivityList(int activityId);
+
+    List<QuestionCustomizeVO> getNewQuestionList();
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.QuestionCustomizeMapper" >
+
+    <resultMap id="NewQuestionCustomizeResultMap" type="com.hyjf.am.config.dao.model.customize.QuestionCustomize" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="question" property="question" jdbcType="VARCHAR" />
+        <result column="sort" property="sort" jdbcType="VARCHAR" />
+        <association property="answers" column="id"  select="getNewAnswerList"/>
+    </resultMap>
+
+    <resultMap id="AnswerCustomizeResultMap" type="com.hyjf.am.config.dao.model.customize.AnswerCustomize" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="question_id" property="questionId" jdbcType="INTEGER" />
+        <result column="answer" property="answer" jdbcType="VARCHAR" />
+        <result column="score" property="score" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="getNewQuestionList" resultMap="NewQuestionCustomizeResultMap">
+        select id,type as typeString,question,sort from ht_question where status=0
+    </select>
+
+
+    <select id="getNewAnswerList" parameterType="java.lang.Integer" resultMap="AnswerCustomizeResultMap">
+        select id,question_id,answer,score from ht_answer where question_id=#{id} AND status=0
+    </select>
+
+
+    <select id="countScore"  parameterType="map" resultType="java.lang.Integer">
+        Select
+        SUM(score)
+        from ht_answer where id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>
