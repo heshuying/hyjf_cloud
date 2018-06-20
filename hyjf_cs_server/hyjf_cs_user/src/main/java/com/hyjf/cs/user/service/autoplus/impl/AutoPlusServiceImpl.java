@@ -587,7 +587,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
         bean.setOrderId(bean.getLogOrderId());
         bean.setAccountId(accountId);
-        // bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);todo
+        bean.setForgotPwdUrl(systemConfig.getForgetpassword());
         bean.setLastSrvAuthCode(lastSrvAuthCode);
         bean.setSmsCode(smsCode);
         bean.setLogRemark(remark);
@@ -604,8 +604,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         selectbean.setVersion(BankCallConstant.VERSION_10);
         selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);
         // 机构代码
-        //selectbean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE)); todo
-        // selectbean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE)); todo
+        selectbean.setInstCode(systemConfig.getBankInstcode());
+         selectbean.setBankCode(systemConfig.getBankCode());
         selectbean.setTxDate(GetOrderIdUtils.getTxDate());
         selectbean.setTxTime(GetOrderIdUtils.getTxTime());
         selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));

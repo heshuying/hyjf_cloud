@@ -9,10 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -50,6 +47,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -246,8 +244,25 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             webViewUserVO.setBorrowerType(usersInfo.getBorrowerType());
         }
         webViewUserVO.setIconurl(this.assembleIconUrl(userVO));
-
-        // todo 银行 汇付开户账号 紧急联系人 usersContract
+        webViewUserVO.setOpenAccount(false);
+        webViewUserVO.setBankOpenAccount(false);
+        if(null != userVO.getOpenAccount()&&userVO.getOpenAccount()==1){
+            AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(userVO.getUserId());
+            webViewUserVO.setOpenAccount(true);
+            //咱们平台的汇付账号
+            webViewUserVO.setChinapnrUsrid(chinapnr.getChinapnrUsrid());
+            webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
+        }
+        if(null!=userVO.getBankOpenAccount()&&userVO.getBankOpenAccount()==1){
+            List<BankCardVO> bankCardVOList = amUserClient.getBankOpenAccountById(userVO);
+            if(null!=bankCardVOList&&bankCardVOList.size()>0){
+                BankCardVO bankCardVO = bankCardVOList.get(0);
+                webViewUserVO.setBankOpenAccount(true);
+                webViewUserVO.setBankAccount(bankCardVO.getCardNo());
+            }
+        }
+        UsersContactVO usersContactVO = amUserClient.selectUserContact(userVO.getUserId());
+        webViewUserVO.setUsersContact(usersContactVO);
         userVO.setOpenAccount(null);
         userVO.setBankOpenAccount(null);
         return webViewUserVO;

@@ -648,4 +648,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public List<BankCardVO> getBankOpenAccountById(UserVO user) {
+		BankCardResponse bankCardResponse = restTemplate
+				.getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/" + user.getUserId(), BankCardResponse.class)
+				.getBody();
+		if (bankCardResponse != null) {
+			return bankCardResponse.getResultList();
+		}
+		return null;
+	}
 }

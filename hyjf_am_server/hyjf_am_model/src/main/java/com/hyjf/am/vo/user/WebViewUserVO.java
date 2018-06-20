@@ -132,6 +132,16 @@ public class WebViewUserVO extends BaseVO implements Serializable {
      */
     private Integer paymentAuthStatus;
 
+    private UsersContactVO usersContact;
+
+    public UsersContactVO getUsersContact() {
+        return usersContact;
+    }
+
+    public void setUsersContact(UsersContactVO usersContact) {
+        this.usersContact = usersContact;
+    }
+
     public String getToken() {
         return token;
     }

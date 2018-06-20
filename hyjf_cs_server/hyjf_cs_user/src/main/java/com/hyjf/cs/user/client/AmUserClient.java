@@ -130,4 +130,6 @@ public interface AmUserClient {
 	int insertBindCardLog(BankCardLogRequest request);
 
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
+
+    List<BankCardVO> getBankOpenAccountById(UserVO user);
 }
