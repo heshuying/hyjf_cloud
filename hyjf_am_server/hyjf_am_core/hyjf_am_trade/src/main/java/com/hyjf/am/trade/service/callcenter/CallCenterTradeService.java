@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
@@ -97,4 +98,12 @@ public interface CallCenterTradeService {
      * @author wangjun
      */
     List<CallCenterCouponBackMoneyCustomize> getUserCouponBackMoneyList(CallCenterBaseRequest centerBaseRequest);
+    
+    /**
+     * 查询投资明细(汇添金)
+     * @param centerBaseRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author libin
+     */
+    List<CallcenterHtjInvestCustomize> getHtjBorrowInvestList(CallcenterHtjInvestRequest callcenterHtjInvestRequest);
 }

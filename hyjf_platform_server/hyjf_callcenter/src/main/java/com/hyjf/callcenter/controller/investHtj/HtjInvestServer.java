@@ -1,4 +1,4 @@
-package com.hyjf.callcenter.controller.investhzt;
+package com.hyjf.callcenter.controller.investHtj;
 
 import java.util.List;
 
@@ -14,46 +14,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.vo.callcenter.CallcenterHztInvestVO;
+import com.hyjf.am.vo.callcenter.CallcenterHtjInvestVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.callcenter.beans.HztInvestBean;
 import com.hyjf.callcenter.beans.ResultListBean;
 import com.hyjf.callcenter.beans.UserBean;
+import com.hyjf.callcenter.beans.customizebean.HtjInvestBean;
 import com.hyjf.callcenter.controller.base.CallcenterBaseController;
 import com.hyjf.callcenter.result.BaseResultBean;
-import com.hyjf.callcenter.service.HztInvestService;
+import com.hyjf.callcenter.service.HtjInvestService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * 呼叫中心:查询投资明细(直投产品)Controller
- * @author libin
- * @version v1.0
- * @since v1.0 2018年6月16日
+ * 呼叫中心:按照用户名/手机号查询投资明细（汇添金）Controller
+ * @author pcc
+ * @version hyjf 1.0
+ * @since hyjf 1.0 2017年07月15日 
  */
-@Api(value = "查询投资明细(直投产品)")
+
+@Api(value = "查询投资明细（汇添金）")
 @RestController
-@RequestMapping("/hyjf-callcenter/invest/hzt")
-public class HztInvestServer extends CallcenterBaseController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(HztInvestServer.class);
+@RequestMapping("/hyjf-callcenter/invest/htj")
+public class HtjInvestServer extends CallcenterBaseController {
+	private static final Logger logger = LoggerFactory.getLogger(HtjInvestServer.class);
 	@Autowired
-	private HztInvestService hztInvestService;
-	
+	private HtjInvestService htjInvestService;
 	/**
 	 * @param request,response,UserBean
 	 * @Author: libin
-	 * @Desc :查询呼叫中心未分配客服的用户名/手机号调用入口
+	 * @Desc :按照用户名/手机号查询投资明细（汇添金）
 	 * @Date: 16:39 2018/6/6
 	 * @Return: ResultListBean
 	 */
-	@ApiOperation(value = "查询投资明细(直投产品)", notes = "查询投资明细(直投产品)")
+	@ApiOperation(value = "查询投资明细(汇添金)", notes = "查询投资明细(汇添金)")
 	@PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public ResultListBean getContentOfHztInvest(HttpServletRequest request, HttpServletResponse response,@RequestBody UserBean bean) {
+	public ResultListBean getContentOfHtjInvest(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody UserBean bean) {
 		ResultListBean result = new ResultListBean();
-		
+		HtjInvestBean returnBean = new HtjInvestBean();
 		//根据用户名或手机号取得用户信息
 		UserVO user = this.getUser(bean, result);
 		if (user == null) {
@@ -63,24 +63,21 @@ public class HztInvestServer extends CallcenterBaseController {
 			return result;
 		}
 		//*************各自业务开始***************
-		HztInvestBean returnBean = new HztInvestBean();
-		//查询投资明细(直投产品)
-		List<CallcenterHztInvestVO> recordList = this.hztInvestService.getRecordList(user,bean.getLimitStart(),bean.getLimitSize());
+		List<CallcenterHtjInvestVO> recordList = this.htjInvestService.getRecordList(
+				user,bean.getLimitStart(),bean.getLimitSize());
 		if (recordList == null) {
-			result.statusMessage(ResultListBean.STATUS_FAIL,"该用户未投资汇直投！");
+			result.statusMessage(ResultListBean.STATUS_FAIL,"该用户未投资汇天金！");
 			return result;
 		}
 		
 		//编辑返回信息
-		for (CallcenterHztInvestVO recordBean : recordList) {
-			//*************各自业务结束***************
+		for (CallcenterHtjInvestVO recordBean : recordList) {
 			//检索bean→返回bean
 			BeanUtils.copyProperties(recordBean, returnBean);
 			//用户名
-			returnBean.setUserName(user.getUsername());
-			//手机号
-			returnBean.setMobile(user.getMobile());	
-			
+            returnBean.setUserName(user.getUsername());
+            //手机号
+            returnBean.setMobile(user.getMobile());     
 			result.getDataList().add(returnBean);
 		}
 		result.statusMessage(ResultListBean.STATUS_SUCCESS, ResultListBean.STATUS_SUCCESS_DESC);
