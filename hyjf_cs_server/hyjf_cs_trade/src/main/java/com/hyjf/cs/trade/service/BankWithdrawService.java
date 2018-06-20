@@ -11,8 +11,6 @@ import java.util.Map;
 /**
  * @author pangchengchao
  * @version BankWithdrawService, v0.1 2018/6/14 14:31
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 public interface BankWithdrawService {
     /**

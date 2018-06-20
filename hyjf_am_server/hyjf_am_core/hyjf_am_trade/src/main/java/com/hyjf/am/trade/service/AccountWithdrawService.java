@@ -10,8 +10,6 @@ import java.util.List;
 /**
  * @author pangchengchao
  * @version AccountWithdrawService, v0.1 2018/6/11 13:47
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 public interface AccountWithdrawService {
     void insertAccountWithdrawLog(Accountwithdraw accountWithdraw);

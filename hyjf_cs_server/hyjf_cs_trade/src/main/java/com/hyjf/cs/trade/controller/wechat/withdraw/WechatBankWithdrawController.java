@@ -33,8 +33,6 @@ import java.util.Map;
 /**
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Api(value = "wechat端用户提现接口")
 @Controller

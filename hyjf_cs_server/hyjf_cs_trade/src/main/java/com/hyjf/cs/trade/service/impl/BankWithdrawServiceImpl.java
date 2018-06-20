@@ -54,8 +54,6 @@ import java.util.Map;
 /**
  * @author pangchengchao
  * @version BankWithdrawServiceImpl, v0.1 2018/6/14 14:32
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
 public class BankWithdrawServiceImpl implements BankWithdrawService {

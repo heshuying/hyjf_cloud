@@ -9,8 +9,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 /**
  * @author pangchengchao
  * @version SynBalanceService, v0.1 2018/6/19 18:05
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 public interface SynBalanceService {
     /**

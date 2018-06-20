@@ -28,8 +28,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 /**
  * @author pangchengchao
  * @version AccountWithdrawServiceImpl, v0.1 2018/6/11 13:47
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
 public class AccountWithdrawServiceImpl implements AccountWithdrawService {
