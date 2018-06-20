@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.task;
 
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface BankCreditTenderService {
 	List<CreditTenderLog> selectCreditTenderLogs();
 
     List<CreditTender> selectCreditTender(String assignNid);
+
+    int updateCreditTenderLog(CreditTenderLogVO creditTenderLog);
 }

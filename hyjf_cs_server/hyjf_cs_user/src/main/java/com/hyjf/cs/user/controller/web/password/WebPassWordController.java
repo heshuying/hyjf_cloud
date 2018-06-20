@@ -3,38 +3,39 @@
  */
 package com.hyjf.cs.user.controller.web.password;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.PassWordError;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author wangc
@@ -58,7 +59,7 @@ public class WebPassWordController {
     @PostMapping(value = "/updateLoginPassword", produces = "application/json; charset=utf-8")
     public WebResult updateLoginPassWD(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request, HttpServletResponse response){
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         WebResult<String> result = null;
 
         String oldpass = request.getParameter("oldPassword");
@@ -82,7 +83,7 @@ public class WebPassWordController {
 
         ModelAndView modelAndView = new ModelAndView();
         // 用户id
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         if (user == null) {
             throw new ReturnMessageException(PassWordError.USER_LOGIN_ERROR);
         }
@@ -253,7 +254,7 @@ public class WebPassWordController {
 
         ModelAndView modelAndView = new ModelAndView();
         // 用户id
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         if (user == null) {
             throw new ReturnMessageException(PassWordError.USER_LOGIN_ERROR);
         }
