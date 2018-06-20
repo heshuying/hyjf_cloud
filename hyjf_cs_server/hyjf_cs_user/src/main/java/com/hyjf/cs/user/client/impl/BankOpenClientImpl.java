@@ -9,7 +9,7 @@ import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.cs.user.client.AmBankOpenClient;
+import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 @Service
-public class AmBankOpenClientImpl implements AmBankOpenClient {
+public class BankOpenClientImpl implements BankOpenClient {
 	private static Logger logger = LoggerFactory.getLogger(AmUserClient.class);
 
 	@Autowired

@@ -15,7 +15,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.cs.trade.client.AmBankOpenClient;
+import com.hyjf.cs.trade.client.BankOpenClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.BorrowApicronClient;
 import com.hyjf.cs.trade.client.BorrowClient;
@@ -41,7 +41,7 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 	@Autowired
 	AmTradeClient amTradeClient;
 	@Autowired
-	AmBankOpenClient amBankOpenClient;
+	BankOpenClient bankOpenClient;
 
 	@Value("${hyjf.bank.merrp.account}")
 	private String merrpAccount;
@@ -57,7 +57,7 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 				String borrowNid = borrowApicron.getBorrowNid();
 				// 借款人ID
 				Integer borrowUserId = borrowApicron.getUserId();
-				BankOpenAccountVO bankOpenAccountVO = amBankOpenClient.selectById(borrowUserId);
+				BankOpenAccountVO bankOpenAccountVO = bankOpenClient.selectById(borrowUserId);
 				// 判断未开户的错误
 				if (bankOpenAccountVO == null || StringUtils.isBlank(bankOpenAccountVO.getAccount())) {
 					throw new RuntimeException("用户不存在或者未开户...");
@@ -97,14 +97,11 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 	private BigDecimal selectCompanyAccount() {
 		// 账户可用余额
 		BigDecimal balance = BigDecimal.ZERO;
-
 		logger.info("公司红包账户： ｛｝", merrpAccount);
 		// 查询商户子账户余额
-		BankOpenAccountVO bankOpenAccountVO = amBankOpenClient.selectByAccountId(merrpAccount);
-
+		BankOpenAccountVO bankOpenAccountVO = bankOpenClient.selectByAccountId(merrpAccount);
 		if (bankOpenAccountVO == null)
 			throw new RuntimeException("公司红包账户未开户...");
-
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 版本号
 		bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);// 交易代码

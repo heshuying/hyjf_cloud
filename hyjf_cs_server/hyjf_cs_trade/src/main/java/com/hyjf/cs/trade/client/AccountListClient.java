@@ -4,11 +4,9 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 
 /**
  * @author pangchengchao
- * @version AmAccountListClient, v0.1 2018/6/11 17:26
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ * @version AccountListClient, v0.1 2018/6/11 17:26
  */
-public interface AmAccountListClient {
+public interface AccountListClient {
     AccountListVO selectAccountListByOrdId(String ordId, String type);
 
     int countAccountListByOrdId(String ordId, String type);

@@ -9,9 +9,9 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * @author xiasq
- * @version AmUserClient, v0.1 2018/4/19 12:44
+ * @version BankOpenClient, v0.1 2018/4/19 12:44
  */
-public interface AmBankOpenClient {
+public interface BankOpenClient {
 
 	UserInfoVO findUserInfoByCardNo(String cradNo);
 

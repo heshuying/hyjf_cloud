@@ -16,11 +16,10 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.user.client.AmBankOpenClient;
+import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
-import com.hyjf.cs.user.service.bindcard.impl.BindCardServiceImpl;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -37,7 +36,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     @Autowired
     AmUserClient amUserClient;
     @Autowired
-	AmBankOpenClient amBankOpenClient;
+    BankOpenClient bankOpenClient;
     
     /**
      * 更换手机号条件校验
@@ -85,7 +84,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     
     @Override
 	public BankCallBean callMobileModify(Integer userId, String newMobile, String smsCode, String srvAuthCode) {
-    	BankOpenAccountVO bankAccount = amBankOpenClient.selectById(userId);
+    	BankOpenAccountVO bankAccount = bankOpenClient.selectById(userId);
     	// 调用电子账号手机号修改增强
 		BankCallBean bean = new BankCallBean();
 		bean.setTxCode(BankCallConstant.TXCODE_MOBILE_MODIFY_PLUS);

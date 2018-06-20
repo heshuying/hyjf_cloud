@@ -9,7 +9,7 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.cs.trade.client.AmBankOpenClient;
+import com.hyjf.cs.trade.client.BankOpenClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ import org.springframework.web.client.RestTemplate;
  * @Date
  */
 @Service
-public class AmBankOpenClientImpl implements AmBankOpenClient {
-	private static Logger logger = LoggerFactory.getLogger(AmBankOpenClient.class);
+public class BankOpenClientImpl implements BankOpenClient {
+	private static Logger logger = LoggerFactory.getLogger(BankOpenClient.class);
 
 	@Autowired
 	private RestTemplate restTemplate;

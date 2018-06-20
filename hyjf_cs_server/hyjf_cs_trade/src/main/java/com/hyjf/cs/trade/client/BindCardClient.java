@@ -9,7 +9,7 @@ import com.hyjf.am.vo.user.BankCardVO;
  * @Version v0.1
  * @Date  
  */
-public interface AmBindCardClient {
+public interface BindCardClient {
 
 
 	BankCardVO queryUserCardValid(String userId, String cardNo);

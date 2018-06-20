@@ -10,14 +10,13 @@ import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.cs.user.client.AmBankOpenClient;
+import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.financialadvisor.CouponCheckUtilDefine;
 import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
 import com.hyjf.soa.apiweb.CommonParamBean;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ import java.util.Map;
 public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements FinancialAdvisorService {
 
     @Autowired
-    AmBankOpenClient amBankOpenClient;
+    BankOpenClient bankOpenClient;
 
     @Autowired
     AmUserClient amUserClient;
@@ -49,7 +48,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
 
     @Override
     public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
-        UserEvalationResultVO userEvalationResult = amBankOpenClient.selectUserEvalationResultByUserId(userId);
+        UserEvalationResultVO userEvalationResult = bankOpenClient.selectUserEvalationResultByUserId(userId);
         return userEvalationResult;
     }
 
@@ -62,7 +61,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
     @Override
     public UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId) {
         UserEvalationResultVO oldUserEvalationResult =this.selectUserEvalationResultByUserId(userId);
-        amBankOpenClient.deleteUserEvalationResultByUserId(userId);
+        bankOpenClient.deleteUserEvalationResultByUserId(userId);
 
         String[] answer = userAnswer.split(",");
         List<String> answerList = new ArrayList<String>();

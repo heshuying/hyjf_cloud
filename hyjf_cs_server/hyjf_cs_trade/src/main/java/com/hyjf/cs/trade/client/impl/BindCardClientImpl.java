@@ -9,7 +9,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 
-import com.hyjf.cs.trade.client.AmBindCardClient;
+import com.hyjf.cs.trade.client.BindCardClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ import org.springframework.web.client.RestTemplate;
  * @Date
  */
 @Service
-public class AmBindCardClientImpl implements AmBindCardClient {
-	private static Logger logger = LoggerFactory.getLogger(AmBindCardClient.class);
+public class BindCardClientImpl implements BindCardClient {
+	private static Logger logger = LoggerFactory.getLogger(BindCardClient.class);
 	
 	@Autowired
 	private RestTemplate restTemplate;

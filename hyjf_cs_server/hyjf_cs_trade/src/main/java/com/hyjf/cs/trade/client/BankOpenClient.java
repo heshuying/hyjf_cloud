@@ -12,7 +12,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
  * @Version v0.1
  * @Date
  */
-public interface AmBankOpenClient {
+public interface BankOpenClient {
 
 	UserInfoVO findUserInfoByCardNo(String cradNo);
 
