@@ -824,8 +824,8 @@ public class UserServiceImpl implements UserService {
 	
 	/**
 	 * 保存紧急联系人信息
-	 * @param record
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public int updateUserContact(UsersContractRequest record){
@@ -858,8 +858,8 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 检查邮箱是否已使用
-	 * @param email
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public boolean checkEmailUsed(String email) {
@@ -875,7 +875,8 @@ public class UserServiceImpl implements UserService {
 	
 	/**
 	 * 插入绑定邮箱日志
-	 * @param log
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public void insertEmailBindLog(UserBindEmailLog log) {
@@ -895,11 +896,11 @@ public class UserServiceImpl implements UserService {
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		userBindEmailLogMapper.insertSelective(log);
 	}
-	
+
 	/**
 	 * 查询绑定邮箱日志
-	 * @param userid
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public UserBindEmailLog getUserBindEmail(Integer userid) {
@@ -915,9 +916,8 @@ public class UserServiceImpl implements UserService {
 	
 	/**
 	 * 绑定邮箱更新
-	 * @param userid
-	 * @param email
-	 * @param
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public void updateBindEmail(Integer userId, String email) {
