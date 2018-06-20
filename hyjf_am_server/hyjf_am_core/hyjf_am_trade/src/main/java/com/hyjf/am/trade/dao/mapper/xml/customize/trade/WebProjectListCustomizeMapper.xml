@@ -183,7 +183,7 @@
         from   huiyingdai_borrow_credit
         INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
         INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-        <include refid="Credit_New_Column"/>
+        <include refid="Credit_Where_Column"/>
     </select>
 
 
