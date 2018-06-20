@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.impl.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.*;
@@ -225,4 +226,16 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
         }
         return list;
     }
+	@Override
+	public List<CallcenterHtjInvestCustomize> getHtjBorrowInvestList(
+			CallcenterHtjInvestRequest callcenterHtjInvestRequest) {
+		List<CallcenterHtjInvestCustomize> list = callcenterHztInvestCustomizeMapper.getHtjBorrowInvestList(callcenterHtjInvestRequest);
+		if(!CollectionUtils.isEmpty(list)){
+			Map<String, String> operatingDeckMap = CacheUtil.getParamNameMap("CLIENT");
+           for(CallcenterHtjInvestCustomize callcenterHtjInvestCustomize : list){
+        	   callcenterHtjInvestCustomize.setPlatform(operatingDeckMap.getOrDefault(callcenterHtjInvestCustomize.getPlatform(),null));
+            }
+		}
+		return list;
+	}
 }
