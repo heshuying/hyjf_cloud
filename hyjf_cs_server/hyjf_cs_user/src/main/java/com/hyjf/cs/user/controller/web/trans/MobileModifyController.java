@@ -79,7 +79,7 @@ public class MobileModifyController extends BaseUserController {
      * 用户手机号码修改（已开户）
      */
     @ApiOperation(value = "手机号码修改（已开户）", notes = "手机号码修改（已开户）")
-    @ApiImplicitParam(name = "paraMap",value = "{newMobile: string,smsCode: string}", dataType = "Map")
+    @ApiImplicitParam(name = "paraMap",value = "{newMobile:string,smsCode:string,srvAuthCode:string}", dataType = "Map")
     @PostMapping(value = "/mobileModifyOpened", produces = "application/json; charset=utf-8")
     public WebResult<UserVO> mobileModifyOpened(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
