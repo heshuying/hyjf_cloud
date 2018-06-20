@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 /**
  * @author pangchengchao
  * @version AccountWithdrawVO, v0.1 2018/6/13 10:44
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 public class AccountWithdrawVO extends BaseVO implements Serializable {
     private Integer id;

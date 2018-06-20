@@ -3,16 +3,24 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.AccountListResponse;
+import com.hyjf.am.response.trade.AccountwithdrawResponse;
+import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.service.AccountListService;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.common.util.CommonUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ${yaoy}
@@ -21,7 +29,7 @@ import com.hyjf.common.util.CommonUtils;
 @RestController
 @RequestMapping("/am-trade/accountList")
 public class AccountListController {
-
+    private static final Logger logger = LoggerFactory.getLogger(AccountListController.class);
     @Autowired
     private AccountListService accountListService;
 
@@ -39,6 +47,26 @@ public class AccountListController {
     	}else {
     		return false;
     	}
+    }
+
+
+    /**
+     * @Description 根据订单号查询用户提现记录
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectAccountListByOrdId/{ordId}/{type}")
+    public AccountListResponse selectAccountListByOrdId(@PathVariable String ordId, @PathVariable String type){
+        logger.info("selectAccountListByOrdId:" + ordId+",type"+type);
+        AccountListResponse response = new AccountListResponse();
+        AccountList accountList = accountListService.countAccountListByOrdId(ordId,type);
+        if (accountList != null) {
+            AccountListVO accountListVO = new AccountListVO();
+            BeanUtils.copyProperties(accountList, accountListVO);
+            response.setResult(accountListVO);
+        }
+        return response;
     }
     
 }

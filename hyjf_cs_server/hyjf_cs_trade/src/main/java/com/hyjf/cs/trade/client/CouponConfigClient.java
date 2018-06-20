@@ -12,5 +12,5 @@ import java.util.List;
  * @version CouponConfigClient, v0.1 2018/6/19 18:28
  */
 public interface CouponConfigClient {
-    List<CouponConfigVo> selectCouponConfig(String couponCode);
+   CouponConfigVo selectCouponConfig(String couponCode);
 }

@@ -2,6 +2,8 @@ package com.hyjf.cs.message.client.impl;
 
 import java.util.List;
 
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,22 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO findUserById(final int userId) {
 		UserResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据userId查询用户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoVO findUsersInfoById(int userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

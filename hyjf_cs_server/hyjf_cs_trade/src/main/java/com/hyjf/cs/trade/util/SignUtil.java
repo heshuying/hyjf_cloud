@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.util;
 import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
+import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -38,6 +39,9 @@ public class SignUtil {
             int assetType = requestBean.getAssetType();
             Long timestamp = requestBean.getTimestamp();
             sign = timestamp + instCode + assetType;
+        } else if(Objects.equals("/synbalance", methodName)){
+            SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
+            sign =  bean.getAccountId() + bean.getTimestamp();
         }
 
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

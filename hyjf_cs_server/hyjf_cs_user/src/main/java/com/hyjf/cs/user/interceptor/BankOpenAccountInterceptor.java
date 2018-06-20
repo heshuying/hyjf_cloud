@@ -3,11 +3,10 @@
  */
 package com.hyjf.cs.user.interceptor;
 
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.WebUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -47,14 +46,14 @@ public class BankOpenAccountInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String token = request.getHeader("token");
-        WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUser.class);
+        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
         // 获取登录的用户
-        if (null == webViewUser) {
+        if (null == webViewUserVO) {
             // 如果用户没有登录
             WebUtils.redirectTargetPage(response, "/user/login/init");
         } else {
                 // 判断该用户是否汇付已经开户
-                if (webViewUser.isBankOpenAccount()) {
+                if (webViewUserVO.isBankOpenAccount()) {
                     return true;
                 } else {
                     // 重定向到开户页面

@@ -15,7 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -100,16 +100,16 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 		}
 		if(validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)||validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
 			if (StringUtils.isNotEmpty(token)) {
-				WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-				CheckUtil.check(webViewUser != null, MsgEnum.ERR_USER_NOT_EXISTS);
+				WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+				CheckUtil.check(webViewUserVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
 				// 验证原手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
-					CheckUtil.check(StringUtils.isNotBlank(webViewUser.getMobile()), MsgEnum.ERR_USER_NOT_EXISTS);
-					CheckUtil.check(webViewUser.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_SAME);
+					CheckUtil.check(StringUtils.isNotBlank(webViewUserVO.getMobile()), MsgEnum.ERR_USER_NOT_EXISTS);
+					CheckUtil.check(webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_SAME);
 				}
 				// 绑定新手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-					CheckUtil.check(!webViewUser.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_MODIFY);
+					CheckUtil.check(!webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_MODIFY);
 					CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
 				}
 			}

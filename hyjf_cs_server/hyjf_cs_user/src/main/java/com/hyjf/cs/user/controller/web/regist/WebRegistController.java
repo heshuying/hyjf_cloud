@@ -5,7 +5,7 @@ package com.hyjf.cs.user.controller.web.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.SmsCodeVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
@@ -56,15 +56,15 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult<UserVO> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
-        logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
-        WebResult<UserVO> result = new WebResult<UserVO>();
+    public WebResult<WebViewUserVO> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+        logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerVO));
+        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
         // 1. 参数检查
         registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerRequest);
-        UserVO userVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
-        if (userVO != null) {
-            logger.info("Web端用户注册成功, userId is :{}", userVO.getUserId());
-            result.setData(userVO);
+        WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
+        if (webViewUserVO != null) {
+            logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
+            result.setData(webViewUserVO);
         } else {
             logger.error("Web端用户注册失败...");
             result.setStatus(ApiResult.FAIL);
