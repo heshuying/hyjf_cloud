@@ -11,10 +11,11 @@ import java.util.Map;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.common.log.LogUtil;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -28,8 +29,8 @@ public class BaseMapBean {
 	/**
      * 类名
      */
-    private static final String THIS_CLASS = BaseMapBean.class.getName();
-	
+    private static final Logger logger = LoggerFactory.getLogger(BaseMapBean.class);
+
     public static final int JUMP_FLAG_YES=0;
     public static final int JUMP_FLAG_NO=1;
 	/**
@@ -177,7 +178,7 @@ public class BaseMapBean {
                                 // 将取得的结果放到map中
                                 this.set(paramName, URLDecoder.decode(result.toString(), "UTF-8"));
                             } catch (UnsupportedEncodingException e) {
-                                LogUtil.errorLog(THIS_CLASS, methodName, e);
+                                logger.error("error...",e);
                             }
                         } else {
                             // 将取得的结果放到map中
@@ -189,7 +190,7 @@ public class BaseMapBean {
             
 
         } catch (Exception e) {
-            LogUtil.errorLog(THIS_CLASS, methodName, e);
+            logger.error("error...",e);
         }
     }
 

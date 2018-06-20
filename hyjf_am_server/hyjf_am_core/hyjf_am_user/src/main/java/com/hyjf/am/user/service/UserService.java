@@ -109,7 +109,7 @@ public interface UserService {
 
 	UserBindEmailLog getUserBindEmail(Integer userid);
 
-	void updateBindEmail(Integer userid, String email);
+	void updateBindEmail(Integer userId, String email);
 
     UserLoginLog selectByPrimaryKey(Integer userId);
 

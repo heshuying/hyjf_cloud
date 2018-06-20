@@ -920,15 +920,15 @@ public class UserServiceImpl implements UserService {
 	 * @param
 	 */
 	@Override
-	public void updateBindEmail(Integer userid, String email) {
+	public void updateBindEmail(Integer userId, String email) {
 		UserExample example = new UserExample();
-		example.createCriteria().andUserIdEqualTo(userid);
+		example.createCriteria().andUserIdEqualTo(userId);
 		List<User> usersList = usersMapper.selectByExample(example);
 		User u = usersList.get(0);
 		u.setEmail(email);
 		usersMapper.updateByPrimaryKeySelective(u);
 		
-		UserBindEmailLog log = this.getUserBindEmail(userid);
+		UserBindEmailLog log = this.getUserBindEmail(userId);
 		if(log != null) {
 			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
 			userBindEmailLogMapper.updateByPrimaryKey(log);
