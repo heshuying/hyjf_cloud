@@ -72,5 +72,29 @@ public interface CallCenterTradeService {
      * @return List<CallCenterRechargeCustomize>
      * @author libin
      */
-    List<CallCenterBorrowCreditCustomize> getBorrowCreditTenderList(SrchTransferInfoRequest srchTransferInfoRequest);  
+    List<CallCenterBorrowCreditCustomize> getBorrowCreditTenderList(SrchTransferInfoRequest srchTransferInfoRequest);
+
+    /**
+     * 查询优惠券
+     * @param centerBaseRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author wangjun
+     */
+    List<CallCenterCouponUserCustomize> getUserCouponInfoList(CallCenterBaseRequest centerBaseRequest);
+
+    /**
+     * 查询优惠券使用（直投产品）
+     * @param centerBaseRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author wangjun
+     */
+    List<CallCenterCouponTenderCustomize> getUserCouponTenderList(CallCenterBaseRequest centerBaseRequest);
+
+    /**
+     * 查询优惠券回款（直投产品）
+     * @param centerBaseRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author wangjun
+     */
+    List<CallCenterCouponBackMoneyCustomize> getUserCouponBackMoneyList(CallCenterBaseRequest centerBaseRequest);
 }
