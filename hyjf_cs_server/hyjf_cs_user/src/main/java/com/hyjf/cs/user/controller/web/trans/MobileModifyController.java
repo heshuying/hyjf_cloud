@@ -33,6 +33,7 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 
@@ -85,12 +86,37 @@ public class MobileModifyController extends BaseUserController {
         WebResult<UserVO> result = new WebResult<UserVO>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        boolean checkRet = mobileModifyService.checkForMobileModify(paraMap.get("newMobile"), paraMap.get("smsCode"));
+        
+        boolean checkRet = mobileModifyService.checkForMobileModifyOpened(paraMap.get("newMobile"), paraMap.get("smsCode"), paraMap.get("srvAuthCode"));
         if(checkRet) {
-            UserVO userVO = new UserVO();
-            userVO.setUserId(user.getUserId());
-            userVO.setMobile(paraMap.get("newMobile"));
-            mobileModifyService.updateUserByUserId(userVO);
+        	
+            BankCallBean bankBean = null;
+            try {
+				bankBean = mobileModifyService.callMobileModify(user.getUserId(), paraMap.get("newMobile"), paraMap.get("smsCode"), paraMap.get("srvAuthCode"));
+			} catch (Exception e) {
+				result.setStatus(WebResult.ERROR);
+	            result.setStatusDesc(WebResult.ERROR_DESC);
+	            logger.error("请求手机号码修改接口失败", e);
+			}
+            
+            if (bankBean == null) {
+    			result.setStatus(WebResult.FAIL);
+	            result.setStatusDesc("修改手机号失败");
+	            logger.error("请求手机号码修改接口失败");
+	            return result;
+    		}
+            
+    		if (!BankCallConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode())) {
+    			result.setStatus(WebResult.FAIL);
+	            result.setStatusDesc("请求手机号码修改接口失败: " + bankBean.getRetCode());
+	            logger.error("请求手机号码修改接口失败: " + bankBean.getRetCode());
+	            return result;
+    		}
+    		
+    		 UserVO userVO = new UserVO();
+             userVO.setUserId(user.getUserId());
+             userVO.setMobile(paraMap.get("newMobile"));
+             mobileModifyService.updateUserByUserId(userVO);
         }
 
         return result;
