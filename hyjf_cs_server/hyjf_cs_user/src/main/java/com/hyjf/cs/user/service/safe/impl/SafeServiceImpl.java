@@ -19,7 +19,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.client.AmBankOpenClient;
+import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.BindEmailError;
@@ -53,7 +53,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
 
     @Autowired
-    private AmBankOpenClient amBankOpenClient;
+    private BankOpenClient bankOpenClient;
 
     @Autowired
     private AmUserClient amUserClient;
@@ -130,12 +130,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
 		resultMap.put("userRelation", result);
 		
-        BankOpenAccountVO bankOpenAccount =amBankOpenClient.selectById(user.getUserId());
+        BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(user.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);
         resultMap.put("chinapnr", chinapnr);
 
-        UserEvalationResultVO userEvalationResult = amBankOpenClient.selectUserEvalationResultByUserId(user.getUserId());
+        UserEvalationResultVO userEvalationResult = bankOpenClient.selectUserEvalationResultByUserId(user.getUserId());
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(),1,1).getTime();

@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.user.ActivityListVO;
 
 /**
  * @author xiasq
@@ -9,8 +10,10 @@ import com.hyjf.am.vo.market.AdsVO;
 public interface AmMarketClient {
     /**
      * 根据活动id查询活动
-     * @param integer
+     * @param
      * @return
      */
     AdsVO findAdsById(Integer activityId);
+
+    ActivityListVO selectActivityList(int activityId);
 }

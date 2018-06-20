@@ -44,6 +44,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_SIGN("ETY000101","签名验证失败"),
 	ERR_PARAM_TYPE("ETY000102","传入参数类型错误"),
 	ERR_JSON("ETY000103","传入JSON错误"),
+	ERR_PARAM_NUM("ETY000104", "请求参数不全"),
 	ERR_SYSTEM("ETY000199","接口调用发生异常，请联系服务方"),
 	ERR_PAGE_MAX("ETY000202","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
@@ -51,10 +52,14 @@ public enum MsgEnum implements MsgCode {
 	// 格式错误信息ERR_FMT_
 
 	// 用户相关错误信息ERR_USER_
+	ERR_USER_NOT_LOGIN("EUS000001", "用户未登录"),
+	ERR_USER_LOGIN("EUS000002", "登录失败,请重新登陆"),
+
+
 	// 资金相关错误信息ERR_AMT_
 
 
-	ERR_USER_LOGIN("1", "登录失败,请重新登陆"),
+
 	ERR_CANNOT_REPEAT("1", "用户已授权,无需重复授权"),
 	ERR_CALL_BANK("1", "调用银行接口失败"),
 	ERR_CHECK_USER_INFO("1", "根据电子账户号查询用户信息失败"),
@@ -89,7 +94,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_REFFER_INVALID("1", "无效的推荐人！"),
 	ERR_PWD_ERROR_TOO_MANEY("1", "登录失败,当日密码错误已打上限，请明日再试！"),
 	ERR_SUCCESS("0", ""),
-	ERR_USER_NOT_LOGIN("1", "用户未登录"),
+
 	ERR("1", "开户失败"),
 	ERR_REGISTER("1", "注册失败"),
 	ERR_MOBILE_IS_NOT_NULL("1", "请填写手机号"),

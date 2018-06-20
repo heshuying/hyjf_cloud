@@ -2,8 +2,9 @@ package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -34,8 +35,6 @@ public interface AmUserClient {
 
 	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
 
-    BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
-
 	HjhUserAuthLogVO selectByExample(String orderId);
 
 	void updateUserAuthInves(BankRequest bean);
@@ -43,8 +42,6 @@ public interface AmUserClient {
 	int updateUserById(UserVO user);
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
-
-	HjhInstConfigVO  selectInstConfigByInstCode(String instCode);
 
 	UserInfoVO findUsersInfoById(int userId);
 
@@ -74,11 +71,10 @@ public interface AmUserClient {
 
 	String selectBankSmsLog(BankSmsLogRequest request);
 
-    int countScore(AnswerRequest answerRequest);
-
 	EvalationVO getEvalationByCountScore(short countScore);
 
-	 UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+	List<EvalationVO> getEvalationRecord();
 
-	ActivityListVO selectActivityList(int activityId);
+	UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+
 }

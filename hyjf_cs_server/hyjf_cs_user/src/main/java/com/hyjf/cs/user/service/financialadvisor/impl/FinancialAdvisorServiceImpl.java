@@ -10,14 +10,12 @@ import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.cs.user.client.AmBankOpenClient;
-import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.client.*;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.financialadvisor.CouponCheckUtilDefine;
 import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
 import com.hyjf.soa.apiweb.CommonParamBean;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,22 +32,28 @@ import java.util.Map;
 public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements FinancialAdvisorService {
 
     @Autowired
-    AmBankOpenClient amBankOpenClient;
+    BankOpenClient bankOpenClient;
+
+    @Autowired
+    AmConfigClient amConfigClient;
 
     @Autowired
     AmUserClient amUserClient;
 
+    @Autowired
+    AmMarketClient amMarketClient;
 
     @Autowired
     SystemConfig systemConfig;
     @Override
     public List<QuestionCustomizeVO> getNewQuestionList() {
-        return null;
+        List<QuestionCustomizeVO> customizes = amConfigClient.getNewQuestionList();
+        return customizes;
     }
 
     @Override
     public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
-        UserEvalationResultVO userEvalationResult = amBankOpenClient.selectUserEvalationResultByUserId(userId);
+        UserEvalationResultVO userEvalationResult = bankOpenClient.selectUserEvalationResultByUserId(userId);
         return userEvalationResult;
     }
 
@@ -62,7 +66,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
     @Override
     public UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId) {
         UserEvalationResultVO oldUserEvalationResult =this.selectUserEvalationResultByUserId(userId);
-        amBankOpenClient.deleteUserEvalationResultByUserId(userId);
+        bankOpenClient.deleteUserEvalationResultByUserId(userId);
 
         String[] answer = userAnswer.split(",");
         List<String> answerList = new ArrayList<String>();
@@ -75,7 +79,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
         }
         AnswerRequest answerRequest = new AnswerRequest();
         answerRequest.setResultList(answerList);
-        int countScore = amUserClient.countScore(answerRequest);
+        int countScore = amConfigClient.countScore(answerRequest);
         EvalationVO evalation = amUserClient.getEvalationByCountScore((short) countScore);
         UserEvalationRequest request = new UserEvalationRequest();
         request.setAnswerList(answerList);
@@ -124,7 +128,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
         if(activityId==null){
             return CouponCheckUtilDefine.ACTIVITYID_IS_NULL;
         }
-        ActivityListVO activityList=amUserClient.selectActivityList(new Integer(activityId));
+        ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
         if(activityList==null){
             return CouponCheckUtilDefine.ACTIVITY_ISNULL;
         }
@@ -137,11 +141,17 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
         return "";
     }
 
+    @Override
+    public List<EvalationVO> getEvalationRecord() {
+        List<EvalationVO> evalationVOList = amUserClient.getEvalationRecord();
+        return evalationVOList;
+    }
+
     public String checkActivityPlatform(String activityId, String platform) {
         if(activityId==null){
             return CouponCheckUtilDefine.ACTIVITYID_IS_NULL;
         }
-        ActivityListVO activityList=amUserClient.selectActivityList(new Integer(activityId));
+        ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
         if(activityList.getPlatform().indexOf(platform)==-1){
 
             // 操作平台

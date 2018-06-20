@@ -53,7 +53,7 @@ public class IncreaseInterestRepay implements Serializable {
 
     private String addip;
 
-    private Boolean web;
+    private Integer web;
 
     private Date createTime;
 
@@ -261,11 +261,11 @@ public class IncreaseInterestRepay implements Serializable {
         this.addip = addip == null ? null : addip.trim();
     }
 
-    public Boolean getWeb() {
+    public Integer getWeb() {
         return web;
     }
 
-    public void setWeb(Boolean web) {
+    public void setWeb(Integer web) {
         this.web = web;
     }
 

@@ -6,7 +6,6 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
-import com.hyjf.am.user.dao.mapper.customize.QuestionCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
@@ -95,11 +94,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
 
-	@Autowired
-	QuestionCustomizeMapper questionCustomizeMapper;
-
-	@Autowired
-	ActivityListMapper activityListMapper;
 
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
@@ -1003,12 +997,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int countScore(List<String> answerList) {
-		int countScore = questionCustomizeMapper.countScore(answerList);
-		return countScore;
-	}
-
-	@Override
 	public Evalation getEvalationByCountScore(short countScore) {
 		EvalationExample example = new EvalationExample();
 		example.createCriteria().andScoreUpLessThanOrEqualTo(countScore).andScoreDownGreaterThanOrEqualTo(countScore).andStatusEqualTo(0);
@@ -1053,15 +1041,15 @@ public class UserServiceImpl implements UserService {
 		return userEvalationResult;
 	}
 
-
 	/**
-	 * 活动是否过期
+	 * 获取评分标准列表
+	 * @return
+	 * @author Michael
 	 */
 	@Override
-	public ActivityList selectActivityList(int activityId) {
-		ActivityList activityList=activityListMapper.selectByPrimaryKey(activityId);
-		return activityList;
+	public List<Evalation> getEvalationRecord() {
+		EvalationExample example = new EvalationExample();
+		example.createCriteria().andStatusEqualTo(0);
+		return evalationMapper.selectByExample(example);
 	}
-
-
 }

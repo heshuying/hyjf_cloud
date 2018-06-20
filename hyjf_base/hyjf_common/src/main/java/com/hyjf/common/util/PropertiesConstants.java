@@ -137,9 +137,7 @@ public interface PropertiesConstants {
     
     /** crm 工程路径 */
     String HYJF_CRM_URL = "hyjf.crm.url";
-    
-    /**区分发邮件时线上还是线下 test测试  online线上*/
-    String HYJF_ONLINE = "hyjf.online";
+
 
     /** 第三方资产方推送用户汇盈平台登陆密码 */
     String HYJF_THIRD_PARTY_USER_PASSWORD = "hyjf.third.party.user.password";

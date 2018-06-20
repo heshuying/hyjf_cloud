@@ -99,7 +99,7 @@ public class WebAutoPlusController extends BaseUserController {
      * @Return: ModelAndView
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
-    @PostMapping("/userAuthInves")
+    @PostMapping(value = "/userAuthInves" , produces = "application/json; charset=utf-8")
     public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, @RequestBody AuthorizedVO authorizedVO) {
         String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
         String smsCode = authorizedVO.getSmsCode();
@@ -130,7 +130,7 @@ public class WebAutoPlusController extends BaseUserController {
      * @Return: ModelAndView
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
-    @PostMapping("/creditUserAuthInves")
+    @PostMapping(value = "/creditUserAuthInves", produces = "application/json; charset=utf-8")
     public ModelAndView creditUserAuthInves(@RequestHeader(value = "token", required = true) String token,@RequestBody AuthorizedVO authorizedVO) {
         String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
         String smsCode = authorizedVO.getSmsCode();

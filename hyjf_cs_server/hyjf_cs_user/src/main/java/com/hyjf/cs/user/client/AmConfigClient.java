@@ -1,7 +1,12 @@
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
+import com.hyjf.am.vo.user.QuestionCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -25,4 +30,10 @@ public interface AmConfigClient {
      * @Date 2018/6/5 15:13
      */
     BanksConfigVO getBankNameByBankId(String bankId);
+
+    List<QuestionCustomizeVO> getNewQuestionList();
+
+    int countScore(AnswerRequest answerList);
+
+    BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 }
