@@ -52,6 +52,7 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	 * @param status
 	 * @param StatusDesc
 	 */
+	@Override
 	public void setStatusInfo(String status, String StatusDesc) {
 		super.setStatus(status);
 		super.setStatusDesc(StatusDesc);
@@ -59,6 +60,7 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 		this.setChkValue(status);
 	}
 
+	@Override
 	public void setStatus(String status) {
 		super.setStatus(status);
 		// 返回值加签

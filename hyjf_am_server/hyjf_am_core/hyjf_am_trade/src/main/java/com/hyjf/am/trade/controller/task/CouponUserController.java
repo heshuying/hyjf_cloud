@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.task;
 
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
@@ -31,7 +31,7 @@ public class CouponUserController {
     private CouponUserService couponUserService;
 
     @RequestMapping("/selectCouponUser/{nowBeginDate}/{nowEndDate}")
-    public CouponUserResponse selectCouponUser(@PathVariable int nowBeginDate,int nowEndDate) {
+    public CouponUserResponse selectCouponUser(@PathVariable int nowBeginDate,@PathVariable int nowEndDate) {
         CouponUserResponse response = new CouponUserResponse();
         List<CouponUser> couponUserList = couponUserService.selectCouponUser(nowBeginDate,nowEndDate);
         if (!CollectionUtils.isEmpty(couponUserList)) {
