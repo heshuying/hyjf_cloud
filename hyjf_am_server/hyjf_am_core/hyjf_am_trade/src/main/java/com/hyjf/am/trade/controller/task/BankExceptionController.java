@@ -2,18 +2,20 @@ package com.hyjf.am.trade.controller.task;
 
 import java.util.List;
 
+import com.hyjf.am.response.trade.BankCallBeanResponse;
 import com.hyjf.am.response.trade.CreditTenderLogResponse;
+import com.hyjf.am.response.trade.CreditTenderResponse;
+import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.service.task.BankCreditTenderService;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.trade.AccountwithdrawResponse;
 import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
@@ -43,6 +45,20 @@ public class BankExceptionController {
     public void recharge(){
         logger.info("recharge...");
         bankRechargeService.recharge();
+    }
+
+
+
+    @GetMapping("/selectCreditTender/{assignNid}")
+    public CreditTenderResponse selectCreditTender(@PathVariable String assignNid){
+        CreditTenderResponse response = new CreditTenderResponse();
+        List<CreditTender> creditTenderList=bankCreditTenderService.selectCreditTender(assignNid);
+        if (CollectionUtils.isNotEmpty(creditTenderList)){
+            List<CreditTenderVO> voList = CommonUtils.convertBeanList(creditTenderList, CreditTenderVO.class);
+            response.setResultList(voList);
+        }
+
+        return response;
     }
 
 
@@ -92,6 +108,17 @@ public class BankExceptionController {
     		return false;
     	}
     }
-    
+
+
+    @PostMapping(value = "/updateCreditTenderLog")
+    public Boolean updateCreditTenderLog(@RequestBody CreditTenderLogVO creditTenderLog){
+        logger.info("updateCreditTenderLog...");
+        int count = bankCreditTenderService.updateCreditTenderLog(creditTenderLog);
+        if(count>0) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 
 }
