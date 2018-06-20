@@ -3,6 +3,7 @@ package com.hyjf.am.trade.service.callcenter;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
+import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 
 import java.util.List;
@@ -58,4 +59,42 @@ public interface CallCenterTradeService {
      * @author libin
      */
     List<CallcenterHztInvestCustomize> getBorrowInvestList(CallcenterHztInvestRequest callcenterHztInvestRequest);
+    /**
+     * 按照用户名/手机号查询转让信息
+     * @param centerBaseRequest
+     * @return List<CallCenterRechargeCustomize>
+     * @author libin
+     */
+    List<CallCenterBorrowCreditCustomize> getBorrowCreditList(SrchTransferInfoRequest srchTransferInfoRequest);  
+    /**
+     * 按照用户名/手机号查询承接债权信息
+     * @param centerBaseRequest
+     * @return List<CallCenterRechargeCustomize>
+     * @author libin
+     */
+    List<CallCenterBorrowCreditCustomize> getBorrowCreditTenderList(SrchTransferInfoRequest srchTransferInfoRequest);
+
+    /**
+     * 查询优惠券
+     * @param centerBaseRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author wangjun
+     */
+    List<CallCenterCouponUserCustomize> getUserCouponInfoList(CallCenterBaseRequest centerBaseRequest);
+
+    /**
+     * 查询优惠券使用（直投产品）
+     * @param centerBaseRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author wangjun
+     */
+    List<CallCenterCouponTenderCustomize> getUserCouponTenderList(CallCenterBaseRequest centerBaseRequest);
+
+    /**
+     * 查询优惠券回款（直投产品）
+     * @param centerBaseRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author wangjun
+     */
+    List<CallCenterCouponBackMoneyCustomize> getUserCouponBackMoneyList(CallCenterBaseRequest centerBaseRequest);
 }

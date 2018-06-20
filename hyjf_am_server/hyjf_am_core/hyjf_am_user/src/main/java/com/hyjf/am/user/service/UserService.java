@@ -70,16 +70,7 @@ public interface UserService {
 	 */
 	User findUserByRecommendName(String reffer);
 
-	/**
-	 * 组装user信息
-	 * 
-	 * @param userVO
-	 * @return
-	 */
-	UserVO assembleUserVO(UserVO userVO);
-
 	void updateLoginUser(int userId, String ip);
-
 
 	HjhUserAuth getHjhUserAuthByUserId(Integer userId);
 
@@ -129,12 +120,11 @@ public interface UserService {
 	 */
 	List<User> selectUserByUsername(String repayOrgName);
 
-    int countScore(List<String> answerList);
-
 	Evalation getEvalationByCountScore(short countScore);
 
     UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
                                                   EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult);
 
-	ActivityList selectActivityList(int activityId);
+	List<Evalation> getEvalationRecord();
+
 }

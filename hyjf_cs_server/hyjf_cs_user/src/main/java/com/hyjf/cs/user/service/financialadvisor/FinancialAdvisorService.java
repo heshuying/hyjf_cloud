@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.financialadvisor;
 
+import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
@@ -18,9 +19,17 @@ public interface FinancialAdvisorService extends BaseUserService {
 
     UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
 
+    /**
+     * 计算用户测评分数
+     * @param userAnswer
+     * @param userId
+     * @return
+     */
      UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId);
 
      String sendCoupon(int userId,String platform);
 
     String checkActivityIfAvailable(String activityId);
+
+    List<EvalationVO> getEvalationRecord();
 }

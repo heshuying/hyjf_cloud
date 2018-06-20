@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.message.bean.SmsLog;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
@@ -19,7 +20,6 @@ import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
 import com.hyjf.common.util.CustomConstants;
 
-import cn.emay.sdk.client.api.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -275,9 +275,10 @@ public class SmsHandle {
 				throw new Exception("用户电话号码格式不正确");
 			}
 
+			UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
 			// 为保护客户隐私，只显示客户姓氏，不显示客户全名。 胡宝志20160115
-			replaceStrs.put("val_name", user.getTruename().substring(0, 1));
-			replaceStrs.put("val_sex", user.getSex() == 1 ? "先生" : "女士");
+			replaceStrs.put("val_name", userInfoVO.getTruename().substring(0, 1));
+			replaceStrs.put("val_sex", userInfoVO.getSex() == 1 ? "先生" : "女士");
 
 			status = sendMessages(mobile, tplCode, replaceStrs, channelType);
 		} catch (Exception e) {

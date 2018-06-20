@@ -1,11 +1,10 @@
 package com.hyjf.am.trade.mq;
 
-import com.hyjf.common.constants.MQConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
 /**
@@ -15,6 +14,7 @@ import com.hyjf.common.exception.MQException;
 
 @Component
 public class SmsProducer extends Producer {
+	private static final Logger logger = LoggerFactory.getLogger(SmsProducer.class);
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {

@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.controller.web.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -58,7 +58,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         String cardNo = request.getParameter("widCard");// 提现银行卡号
         String payAllianceCode = request.getParameter("payAllianceCode");// 银联行号
 
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(token, WebViewUserVO.class);
         UserVO userVO=webBorrowService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);

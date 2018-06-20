@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.mq;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.io.Serializable;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -16,8 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import java.io.Serializable;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 /**
  * @author xiasq

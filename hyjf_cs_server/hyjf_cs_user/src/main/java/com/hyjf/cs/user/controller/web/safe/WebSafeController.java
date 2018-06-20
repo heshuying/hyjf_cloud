@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
@@ -67,11 +67,11 @@ public class WebSafeController extends BaseUserController {
     @PostMapping(value = "accountSet")
     public WebResult<Object> accountSet(@RequestHeader(value = "token",required = false) String token) {
         WebResult<Object> apiResult = new WebResult<>();
-        WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
-        if (null == webViewUser){
+        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+        if (null == webViewUserVO){
             apiResult.setStatusInfo(MsgEnum.ERR_USER_NOT_LOGIN);
         }else{
-            Map<String,Object> result = safeService.safeInit(webViewUser);
+            Map<String,Object> result = safeService.safeInit(webViewUserVO);
             if (null == result){
                 apiResult.setStatus(ApiResult.FAIL);
                 apiResult.setStatusDesc("账户设置查询失败");
@@ -93,7 +93,7 @@ public class WebSafeController extends BaseUserController {
     public WebResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         WebResult<UserVO> result = new WebResult<UserVO>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         UserVO userVO = safeService.queryUserByUserId(user.getUserId());
         result.setData(userVO);
 
@@ -115,7 +115,7 @@ public class WebSafeController extends BaseUserController {
         logger.info("用户通知设置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         WebResult<UserVO> result = new WebResult<UserVO>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 
         UserNoticeSetRequest noticeSetRequest = new UserNoticeSetRequest();
         BeanUtils.copyProperties(userNoticeSetVO, noticeSetRequest);
@@ -141,7 +141,7 @@ public class WebSafeController extends BaseUserController {
     public WebResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         safeService.checkForEmailSend(paraMap.get("email"), user.getUserId());
 
         try {
@@ -164,7 +164,7 @@ public class WebSafeController extends BaseUserController {
     	logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
     	WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 
         safeService.checkForEmailBind(bindEmailVO, user);
 
@@ -190,7 +190,7 @@ public class WebSafeController extends BaseUserController {
     public ContractSetResultBean contractInit(@RequestHeader(value = "token", required = true) String token) {
     	logger.info("加载紧急联系人信息开始...");
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 
         return safeService.queryContractInfo(user.getUserId());
     }
@@ -206,7 +206,7 @@ public class WebSafeController extends BaseUserController {
     @ApiImplicitParam(name = "param",value = "{relationId:int,rlName:string,rlPhone:string}", dataType = "Map")
     public WebResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param) {
     	WebResult<Object> result = new WebResult<Object>();
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         safeService.checkForContractSave(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
 
         try {

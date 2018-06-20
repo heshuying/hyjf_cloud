@@ -335,4 +335,13 @@
 		WHERE
 		hydu.user_id =#{userId,jdbcType=INTEGER}
 	</select>
+
+	<select id="getCouponContent" resultType="String">
+		SELECT
+			IF(vi.vip_level=1,"欢迎礼包","升级礼包")
+		FROM
+			ht_vip_auth va
+		LEFT JOIN ht_vip_info vi ON va.vip_id=vi.id
+		WHERE va.coupon_code = #{couponSource}
+	</select>
 </mapper>

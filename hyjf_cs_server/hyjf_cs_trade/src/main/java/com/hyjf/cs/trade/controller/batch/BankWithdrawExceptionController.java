@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
-import com.hyjf.cs.trade.service.BankWithdrawExceptionService;
+import com.hyjf.cs.trade.service.BankWithdrawService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -23,7 +23,7 @@ public class BankWithdrawExceptionController {
     Logger logger = LoggerFactory.getLogger(BankWithdrawExceptionController.class);
 
     @Autowired
-    private BankWithdrawExceptionService bankWithdrawExceptionService;
+    private BankWithdrawService bankWithdrawExceptionService;
 
     /**
      * 提现掉单异常处理
@@ -33,7 +33,7 @@ public class BankWithdrawExceptionController {
     @RequestMapping(value = "/withdraw")
     public ApiResult<Object> withdraw(){
         logger.info("江西银行提现掉单异常处理");
-    	ApiResult<Object> result = new ApiResult<Object>();
+    	ApiResult<Object> result = new ApiResult<Object>(); 
         result.setStatus(ApiResult.SUCCESS);
         result.setStatusDesc(BankWithdrawError.BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS.getMsg());
 

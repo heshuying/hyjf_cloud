@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.wechat.regist;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.am.vo.user.WebViewUserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,7 @@ public class WeChatRegistController extends BaseUserController {
         registerVO.setReffer(reffer);
         registerVO.setSmsCode(smsCode);
         registService.registerCheckParam(ClientConstants.WECHAT_CLIENT,registerVO);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
+        WebViewUserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
 
         if (userVO != null) {
             logger.info("register success, userId is :{}", userVO.getUserId());

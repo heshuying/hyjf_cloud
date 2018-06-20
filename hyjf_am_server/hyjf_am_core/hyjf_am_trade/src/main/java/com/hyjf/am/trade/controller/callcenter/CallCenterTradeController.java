@@ -7,6 +7,7 @@ import com.hyjf.am.response.callcenter.*;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
+import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.am.vo.callcenter.*;
@@ -135,5 +136,91 @@ public class CallCenterTradeController {
             callcenterHztInvestResponse.setResultList(callcenterHztInvestVO);
         }
         return callcenterHztInvestResponse;
+    }
+    
+    
+    /**
+     * 按照用户名/手机号查询转让信息
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/selectBorrowCreditList", method = RequestMethod.POST)
+    public SrchTransferInfoResponse selectBorrowCreditList(@RequestBody @Valid SrchTransferInfoRequest request){
+    	SrchTransferInfoResponse srchTransferInfoResponse = new SrchTransferInfoResponse();
+    	List<CallCenterBorrowCreditCustomize> list = callCenterTradeService.getBorrowCreditList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterBorrowCreditVO> callCenterBorrowCreditVO = CommonUtils.convertBeanList(list,CallCenterBorrowCreditVO.class);
+            srchTransferInfoResponse.setResultList(callCenterBorrowCreditVO);
+        }
+        return srchTransferInfoResponse;
+    } 
+    
+    /**
+     * 按照用户名/手机号查询承接债权信息
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/selectBorrowCreditTenderList", method = RequestMethod.POST)
+    public SrchTransferInfoResponse selectBorrowCreditTenderList(@RequestBody @Valid SrchTransferInfoRequest request){
+    	SrchTransferInfoResponse srchTransferInfoResponse = new SrchTransferInfoResponse();
+    	List<CallCenterBorrowCreditCustomize> list = callCenterTradeService.getBorrowCreditTenderList(request);
+    	if(!CollectionUtils.isEmpty(list)){
+    		List<CallCenterBorrowCreditVO> callCenterBorrowCreditVO = CommonUtils.convertBeanList(list,CallCenterBorrowCreditVO.class);
+    		srchTransferInfoResponse.setResultList(callCenterBorrowCreditVO);
+    	}
+    	return srchTransferInfoResponse;
+    }
+
+    /**
+     * 查询优惠券
+     * @author wangjun
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getUserCouponInfoList", method = RequestMethod.POST)
+    public CallCenterCouponUserResponse getUserCouponInfoList(@RequestBody @Valid CallCenterBaseRequest request){
+        CallCenterCouponUserResponse callCenterCouponUserResponse = new CallCenterCouponUserResponse();
+        List<CallCenterCouponUserCustomize> list = callCenterTradeService.getUserCouponInfoList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterCouponUserVO> callCenterCouponUserVOS = CommonUtils.convertBeanList(list,CallCenterCouponUserVO.class);
+            callCenterCouponUserResponse.setResultList(callCenterCouponUserVOS);
+        }
+        return callCenterCouponUserResponse;
+    }
+
+    /**
+     * 查询优惠券使用（直投产品）
+     * @author wangjun
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getUserCouponTenderList", method = RequestMethod.POST)
+    public CallCenterCouponTenderResponse getUserCouponTenderList(@RequestBody @Valid CallCenterBaseRequest request){
+        CallCenterCouponTenderResponse callCenterCouponTenderResponse = new CallCenterCouponTenderResponse();
+        List<CallCenterCouponTenderCustomize> list = callCenterTradeService.getUserCouponTenderList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterCouponTenderVO> callCenterCouponTenderVOS = CommonUtils.convertBeanList(list,CallCenterCouponTenderVO.class);
+            callCenterCouponTenderResponse.setResultList(callCenterCouponTenderVOS);
+        }
+        return callCenterCouponTenderResponse;
+    }
+
+    /**
+     * 查询优惠券回款（直投产品）
+     * @author wangjun
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getUserCouponBackMoneyList", method = RequestMethod.POST)
+    public CallCenterCouponBackMoneyResponse getUserCouponBackMoneyList(@RequestBody @Valid CallCenterBaseRequest request){
+        CallCenterCouponBackMoneyResponse callCenterCouponBackMoneyResponse = new CallCenterCouponBackMoneyResponse();
+        List<CallCenterCouponBackMoneyCustomize> list = callCenterTradeService.getUserCouponBackMoneyList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterCouponBackMoneyVO> callCenterCouponBackMoneyVOS = CommonUtils.convertBeanList(list,CallCenterCouponBackMoneyVO.class);
+            callCenterCouponBackMoneyResponse.setResultList(callCenterCouponBackMoneyVOS);
+        }
+        return callCenterCouponBackMoneyResponse;
     }
 }

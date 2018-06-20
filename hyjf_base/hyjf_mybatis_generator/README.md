@@ -30,8 +30,8 @@ mvn install:install-file -Dfile=D:\hyjf\git\pro\hyjf_cloud\hyjf_mybatis_generato
 2. 点击绿色小加号添加build.xml（每个原子层都有单独一份，清除微服务对应的dao）
 3. 双击main执行ant脚本
 4. 修改hyjf_mybatis_generator  resoutce 下配置文件，init_*.properties 修改本机绝对路径，
-    然后修改generatorConfig.xml要加载的属性文件
-5.  mvn install  (view -> Tool Windows -> maven projects)
+    然后修改generatorConfig.xml要加载的属性文件（resource="init_*.properties"），配置表和实体类名
+5.  mvn install  (view -> Tool Windows -> maven projects -> hyjf_mybatis_generator -> Lifecycle -> install)
 6. 执行plugins 下的 mybatis-generator:generate
 7. 操作完成，查看 version controller-> local changes下生成的文件
 

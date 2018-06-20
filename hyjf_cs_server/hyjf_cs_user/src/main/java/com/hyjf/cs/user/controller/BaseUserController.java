@@ -18,22 +18,5 @@ import javax.servlet.http.HttpServletResponse;
  * @version BaseMarketController, v0.1 2018/6/1:36
  */
 public class BaseUserController extends BaseController {
-    /**
-     * 传入信息验证错误异常处理
-     * @param request
-     * @param response
-     * @param ex
-     * @return
-     * @author liubin
-     */
-    @ExceptionHandler(CheckException.class)
-    @ResponseBody
-    public BaseResult<?> CheckExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        CheckException e = (CheckException)ex;
-        BaseResult<?> result = new BaseResult<>(e.getData());
-        // 设置接口结果页信息
-        result = new BaseResult<>(e.getData());
-        result.setStatusInfo(BaseResult.FAIL, ex.getLocalizedMessage());
-        return result;
-    }
+
 }

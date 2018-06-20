@@ -3,13 +3,18 @@
  */
 package com.hyjf.am.trade.controller;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * @author ${yaoy}
