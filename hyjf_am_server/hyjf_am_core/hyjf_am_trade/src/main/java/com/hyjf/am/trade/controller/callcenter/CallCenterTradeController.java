@@ -155,4 +155,21 @@ public class CallCenterTradeController {
         }
         return srchTransferInfoResponse;
     } 
+    
+    /**
+     * 按照用户名/手机号查询承接债权信息
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/selectBorrowCreditTenderList", method = RequestMethod.POST)
+    public SrchTransferInfoResponse selectBorrowCreditTenderList(@RequestBody @Valid SrchTransferInfoRequest request){
+    	SrchTransferInfoResponse srchTransferInfoResponse = new SrchTransferInfoResponse();
+    	List<CallCenterBorrowCreditCustomize> list = callCenterTradeService.getBorrowCreditTenderList(request);
+    	if(!CollectionUtils.isEmpty(list)){
+    		List<CallCenterBorrowCreditVO> callCenterBorrowCreditVO = CommonUtils.convertBeanList(list,CallCenterBorrowCreditVO.class);
+    		srchTransferInfoResponse.setResultList(callCenterBorrowCreditVO);
+    	}
+    	return srchTransferInfoResponse;
+    }  
 }

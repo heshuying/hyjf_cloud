@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterAccountDetailCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterRepaymentDetailCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterBorrowCreditCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterBorrowCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterHztInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterRechargeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.CallcenterWithdrawCustomizeMapper;
@@ -47,6 +48,9 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
     
     @Autowired
     private CallcenterBorrowCreditCustomizeMapper callcenterBorrowCreditCustomizeMapper;
+    
+    @Autowired
+    private CallcenterBorrowCreditTenderCustomizeMapper callcenterBorrowCreditTenderCustomizeMapper;
     /**
      *
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
@@ -160,6 +164,19 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 	@Override
 	public List<CallCenterBorrowCreditCustomize> getBorrowCreditList(SrchTransferInfoRequest srchTransferInfoRequest) {
 		List<CallCenterBorrowCreditCustomize> list = callcenterBorrowCreditCustomizeMapper.getBorrowCreditList(srchTransferInfoRequest);
+		return list;
+	}
+	
+    /**
+     * 查询承接债权信息
+     * @author libin
+     * @param centerBaseRequest
+     * @return
+     */
+	@Override
+	public List<CallCenterBorrowCreditCustomize> getBorrowCreditTenderList(
+			SrchTransferInfoRequest srchTransferInfoRequest) {
+		List<CallCenterBorrowCreditCustomize> list = callcenterBorrowCreditTenderCustomizeMapper.getBorrowCreditTenderList(srchTransferInfoRequest);
 		return list;
 	}
 }
