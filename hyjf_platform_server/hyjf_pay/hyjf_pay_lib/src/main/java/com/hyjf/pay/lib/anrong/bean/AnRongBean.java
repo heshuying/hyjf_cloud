@@ -450,9 +450,9 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
         this.applyLoanMoney = applyLoanMoney;
     }
 
-    public void setSystemParm(String loanId, String userid) {
+    public void setSystemParm(String loanId, String userId) {
         this.loanId = loanId;
-        setBankCallLog(Integer.parseInt(userid));
+        setBankCallLog(Integer.parseInt(userId));
         // 获取共通信息 todo
         //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
         String member = "";
@@ -462,10 +462,10 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
         this.sign = sign;
     }
     
-    public void setSystemParm(String userid) {
+    public void setSystemParm(String userId) {
         /** 格式为：年月日+去除【-】的uuid */
         this.loanId = GetOrderIdUtils.getTxDate()+CreateUUID.createUUID().replaceAll("-", "");
-        setBankCallLog(Integer.parseInt(userid));
+        setBankCallLog(Integer.parseInt(userId));
         // 获取共通信息 todo
         //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
         String member = "";
