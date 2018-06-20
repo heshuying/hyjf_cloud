@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,6 +220,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
      * @return
      */
     private BankCallBean getCommonBankCallBean(UserVO users,String type,Integer client, String channel,String lastSrvAuthCode,String smsCode) {
+        BankOpenAccountVO bankOpenAccountVO = this.getBankOpenAccount(users.getUserId());
         String remark = "";
         String txcode = "";
         // 同步地址  是否跳转到前端页面
@@ -243,7 +246,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         if(client == 1 || client == 2){
             bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
             bean.setOrderId(bean.getLogOrderId());
-            bean.setAccountId(StringUtil.toString(users.getBankOpenAccount()));
+            bean.setAccountId(bankOpenAccountVO.getAccount());
             bean.setForgotPwdUrl(systemConfig.getForgetpassword());
             bean.setLastSrvAuthCode(lastSrvAuthCode);
             bean.setSmsCode(smsCode);
@@ -259,7 +262,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             bean.setTxTime(GetOrderIdUtils.getTxTime());
             bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
             bean.setChannel(channel);
-            bean.setAccountId(bankOpenAccount.getAccount());
+            bean.setAccountId(bankOpenAccountVO.getAccount());
             bean.setOrderId(orderId);
             bean.setForgotPwdUrl(systemConfig.getForgetpassword());
             bean.setLastSrvAuthCode(lastSrvAuthCode);
@@ -293,9 +296,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             throw new ReturnMessageException(AuthorizedError.NOT_REGIST_ERROR);
         }
         // 判断用户是否设置过交易密码
-        if (users.getIsSetPassword() == 0) {
-            throw new ReturnMessageException(AuthorizedError.NOT_SET_PWD_ERROR);
-        }
+        CheckUtil.check(users.getIsSetPassword() == 1, MsgEnum.ERR_NOT_PASSWD);
     }
 
     /**

@@ -1,9 +1,11 @@
 package com.hyjf.am.vo.user;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class QuestionCustomizeVO implements Serializable {
+public class QuestionCustomizeVO extends BaseVO implements Serializable {
     private Integer id;
 
     private String typeString;

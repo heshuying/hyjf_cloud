@@ -129,12 +129,13 @@ public interface UserService {
 	 */
 	List<User> selectUserByUsername(String repayOrgName);
 
-    int countScore(List<String> answerList);
-
 	Evalation getEvalationByCountScore(short countScore);
 
     UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
                                                   EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult);
 
 	ActivityList selectActivityList(int activityId);
+
+	List<Evalation> getEvalationRecord();
+
 }
