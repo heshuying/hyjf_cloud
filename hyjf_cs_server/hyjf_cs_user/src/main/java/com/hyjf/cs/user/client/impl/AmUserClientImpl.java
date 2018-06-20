@@ -2,10 +2,8 @@ package com.hyjf.cs.user.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -171,15 +169,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
-		BankReturnCodeConfigResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/config/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
 
 	@Override
 	public void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog) {
@@ -247,16 +236,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
-	@Override
-	public HjhInstConfigVO selectInstConfigByInstCode(String instCode) {
-		HjhInstConfigResponse response = restTemplate
-				.getForEntity("http://AM-TRADE/am-trade/trade/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
-				.getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
+
 
 	@Override
 	public UserInfoVO findUsersInfoById(int userId) {
@@ -417,18 +397,10 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
-
 	@Override
 	public String selectBankSmsLog(BankSmsLogRequest request) {
 		String result = restTemplate
 				.postForEntity("http://AM-USER/am-user/card/selectBankSmsLog", request, String.class).getBody();
-		return result;
-	}
-
-	@Override
-	public int countScore(AnswerRequest answerList) {
-		int result = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/config/countScore", answerList, Integer.class).getBody();
 		return result;
 	}
 
@@ -461,25 +433,6 @@ public class AmUserClientImpl implements AmUserClient {
 			return   response.getResult();
 		}
 		return  null;
-	}
-
-	@Override
-	public ActivityListVO selectActivityList(int activityId){
-		ActivityListResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user//selectActivityList/"+activityId,ActivityListResponse.class).getBody();
-		if(null!=response){
-			return   response.getResult();
-		}
-		return  null;
-	}
-
-	@Override
-	public List<QuestionCustomizeVO> getNewQuestionList() {
-		QuestionCustomizeResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/config/getNewQuestionList", QuestionCustomizeResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
 	}
 
 }
