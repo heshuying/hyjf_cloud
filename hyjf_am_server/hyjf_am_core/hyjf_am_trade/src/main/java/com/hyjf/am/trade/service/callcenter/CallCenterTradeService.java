@@ -66,4 +66,11 @@ public interface CallCenterTradeService {
      * @author libin
      */
     List<CallCenterBorrowCreditCustomize> getBorrowCreditList(SrchTransferInfoRequest srchTransferInfoRequest);  
+    /**
+     * 按照用户名/手机号查询承接债权信息
+     * @param centerBaseRequest
+     * @return List<CallCenterRechargeCustomize>
+     * @author libin
+     */
+    List<CallCenterBorrowCreditCustomize> getBorrowCreditTenderList(SrchTransferInfoRequest srchTransferInfoRequest);  
 }

@@ -1,16 +1,15 @@
 package com.hyjf.am.market.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsExample;
 import com.hyjf.am.market.service.AdsService;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -50,5 +49,14 @@ public class AdsServiceImpl implements AdsService {
 		cra.andStatusEqualTo( 1);
 		cra.andTypeIdEqualTo(9);
 		return adsMapper.selectByExample(example);
+	}
+
+	@Override
+	public Ads findActivityById(Integer id) {
+		Ads ads = adsMapper.selectByPrimaryKey(1);
+		if (ads != null){
+			return ads;
+		}
+		return null;
 	}
 }

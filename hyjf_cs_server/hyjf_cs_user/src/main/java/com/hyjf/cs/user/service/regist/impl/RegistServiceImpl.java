@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hyjf.cs.user.client.AmTradeClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,9 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     private SmsProducer smsProducer;
 
     @Autowired
+    AmTradeClient amTradeClient;
+
+    @Autowired
     SystemConfig systemConfig;
 
     @Value("${hyjf.activity.888.id}")
@@ -111,7 +115,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         BeanUtils.copyProperties(registerVO, registerUserRequest);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
-        HjhInstConfigVO instConfig = this.amUserClient.selectInstConfigByInstCode(registerVO.getInstCode());
+        HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerVO.getInstCode());
         // 机构编号
         CheckUtil.check(instConfig != null, MsgEnum.ERR_INSTCODE);
         // 验签

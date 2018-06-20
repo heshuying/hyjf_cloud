@@ -43,7 +43,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	/**
 	 * 融通宝还款加息
 	 * 
-	 * @param repayRequest
+	 * @param borrowApicronVO
 	 */
 	@Override
 	public void rtbIncreaseReapy(BorrowApicronVO borrowApicronVO, String account, String companyAccount) {

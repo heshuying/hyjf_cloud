@@ -55,13 +55,13 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
         List<CouponUserVo> couponUsers = couponUserClient.selectCouponUser(nowBeginDate, nowEndDate);
 
         for (CouponUserVo cUser : couponUsers) {
-            List<CouponConfigVo> config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
-            if (config == null || config.isEmpty()) {
+            CouponConfigVo config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
+            if (config == null ) {
                 logger.info("根据优惠券编号没有查询到优惠券配置，编号：{}", cUser.getCouponCode());
                 continue;
             }
 
-            logger.info("即将过期的优惠券编号：{},面值：{},有效期截止日：{}", cUser.getCouponUserCode(), config.get(0).getCouponQuota(), GetDate.formatDate(Long.parseLong(cUser.getEndTime() + "000")));
+            logger.info("即将过期的优惠券编号：{},面值：{},有效期截止日：{}", cUser.getCouponUserCode(), config.getCouponQuota(), GetDate.formatDate(Long.parseLong(cUser.getEndTime() + "000")));
 
 //            UsersInfoExample uExample = new UsersInfoExample();
 //            uExample.createCriteria().andUserIdEqualTo(cUser.getUserId());
@@ -73,8 +73,8 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
 
             //发送push消息
             Map<String, String> param = new HashMap<String, String>();
-            param.put("val_coupon_balance", config.get(0).getCouponType() == 1 ? config.get(0).getCouponQuota() + "元" : config.get(0).getCouponType() == 2 ? config.get(0).getCouponQuota() + "%" : config.get(0).getCouponQuota() + "元");
-            param.put("val_coupon_type", config.get(0).getCouponType() == 1 ? "体验金" : config.get(0).getCouponType() == 2 ? "加息券" : "代金券");
+            param.put("val_coupon_balance", config.getCouponType() == 1 ? config.getCouponQuota() + "元" : config.getCouponType() == 2 ? config.getCouponQuota() + "%" : config.getCouponQuota() + "元");
+            param.put("val_coupon_type", config.getCouponType() == 1 ? "体验金" : config.getCouponType() == 2 ? "加息券" : "代金券");
             param.put("val_profit_deadline", GetDate.formatDate(Long.parseLong(cUser.getEndTime() + "000")));
             AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, "appMsSendForUser", CustomConstants.JYTZ_COUPON_DEADLINE);
             appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(appMsMessage)));
@@ -82,30 +82,23 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
 
         List<CouponUserVo> couponUsersExp = couponUserClient.selectCouponUser(yestodayBeginDate, yestodayEndDate);
         for (CouponUserVo cUser : couponUsersExp) {
-            List<CouponConfigVo> config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
-            if (config == null || config.isEmpty()) {
+            CouponConfigVo config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
+            if (config == null ) {
                 logger.info("根据优惠券编号没有查询到优惠券配置，编号：{}", cUser.getCouponCode());
                 continue;
             }
 
-            logger.info("昨天过期的优惠券编号：{},面值：{},有效期截止日： {}", cUser.getCouponUserCode(), config.get(0).getCouponQuota(), GetDate.formatDate(Long.parseLong(cUser.getEndTime() + "000")));
+            logger.info("昨天过期的优惠券编号：{},面值：{},有效期截止日： {}", cUser.getCouponUserCode(), config.getCouponQuota(), GetDate.formatDate(Long.parseLong(cUser.getEndTime() + "000")));
 
             //发送push消息
             Map<String, String> param = new HashMap<String, String>();
-            param.put("val_coupon_balance", config.get(0).getCouponType() == 1 ? config.get(0).getCouponQuota() + "元" : config.get(0).getCouponType() == 2 ? config.get(0).getCouponQuota() + "%" : config.get(0).getCouponQuota() + "元");
-            param.put("val_coupon_type", config.get(0).getCouponType() == 1 ? "体验金" : config.get(0).getCouponType() == 2 ? "加息券" : "代金券");
+            param.put("val_coupon_balance", config.getCouponType() == 1 ? config.getCouponQuota() + "元" : config.getCouponType() == 2 ? config.getCouponQuota() + "%" : config.getCouponQuota() + "元");
+            param.put("val_coupon_type", config.getCouponType() == 1 ? "体验金" : config.getCouponType() == 2 ? "加息券" : "代金券");
             AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, "appMsSendForUser", CustomConstants.JYTZ_COUPON_INVALIDED);
             appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(appMsMessage)));
         }
 
         logger.info("优惠券即将过期push消息提醒结束");
-    }
-
-    public static void main(String[] args) {
-        int yestodayBeginDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf, 7));
-        int yestodayEndDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf, 8));
-        System.out.println(yestodayBeginDate);
-        System.out.println(yestodayEndDate);
     }
 
 }
