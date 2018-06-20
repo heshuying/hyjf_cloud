@@ -4,11 +4,10 @@ import com.hyjf.am.response.trade.CreditTenderLogResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.cs.trade.client.BankCreditTenderClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.hyjf.cs.trade.client.BankCreditTenderClient;
 
 import java.util.List;
 
@@ -30,7 +29,8 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
      */
     @Override
     public List<CreditTenderLogVO> selectCreditTenderLogs() {
-        CreditTenderLogResponse response = restTemplate.getForEntity("http://AM-TRADE/bankException/selectCreditTenderLogs",
+        CreditTenderLogResponse response =
+                restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/selectCreditTenderLogs",
                 CreditTenderLogResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -46,13 +46,15 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
     @Override
     public List<CreditTenderVO> selectCreditTender(String assignNid) {
         CreditTenderResponse response =
-                restTemplate.getForEntity("http://AM-TRADE/bankException/selectCreditTender/"+assignNid,
+                restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/selectCreditTender/"+assignNid,
                         CreditTenderResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
         return null;
     }
+
+
 
 
 }

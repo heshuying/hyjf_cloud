@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 
@@ -16,4 +17,5 @@ public interface BankCreditTenderClient {
     List<CreditTenderLogVO> selectCreditTenderLogs();
 
     List<CreditTenderVO> selectCreditTender(String assignNid);
+
 }
