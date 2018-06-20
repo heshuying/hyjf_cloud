@@ -148,7 +148,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         try {
             retBean  = BankCallUtils.callApiBg(bean);
         } catch (Exception e) {
-            logger.info("绑卡请求银行接口失败", e);
+            logger.error("绑卡请求银行接口失败", e);
             return null;
         }
         

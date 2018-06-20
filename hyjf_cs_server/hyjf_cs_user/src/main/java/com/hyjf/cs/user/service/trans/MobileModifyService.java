@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.trans;
 
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * @author zhangqingqing
@@ -14,4 +15,8 @@ public interface MobileModifyService extends BaseUserService {
     boolean checkForMobileModify(String newMobile, String smsCode);
 
     MobileModifyResultBean queryForMobileModify(Integer userId);
+
+	boolean checkForMobileModifyOpened(String newMobile, String smsCode, String srvAuthCode);
+
+	BankCallBean callMobileModify(Integer userId, String newMobile, String smsCode, String srvAuthCode);
 }
