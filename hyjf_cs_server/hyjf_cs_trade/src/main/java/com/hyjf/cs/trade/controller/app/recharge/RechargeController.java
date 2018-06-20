@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.controller;
+package com.hyjf.cs.trade.controller.app.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
@@ -6,6 +6,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.constants.RechargeError;
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -36,7 +37,7 @@ import java.util.Map;
  *
  */
 @Controller
-@RequestMapping(value = "/web/recharge")
+@RequestMapping(value = "/app/recharge")
 public class RechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(RechargeController.class);
@@ -64,7 +65,7 @@ public class RechargeController extends BaseTradeController{
 	 */
 	@RequestMapping("/page")
 	public ModelAndView recharge(@RequestHeader(value = "token") String token,HttpServletRequest request, String mobile, String money) throws Exception {
-		logger.info("充值服务");
+		logger.info("app充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
 		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,mobile,money);
 		ModelAndView modelAndView = new ModelAndView();
@@ -87,6 +88,7 @@ public class RechargeController extends BaseTradeController{
 	 */
 	@RequestMapping("/return")
 	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
+		logger.info("[app页面充值同步回调开始]");
 		ModelAndView modelAndView = new ModelAndView();
 		String money = request.getParameter("txAmount");
 		String frontParams = request.getParameter("frontParams");
@@ -132,7 +134,7 @@ public class RechargeController extends BaseTradeController{
 	@RequestMapping("/bgreturn")
 	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
-		logger.info("[缴费授权异步回调开始]");
+		logger.info("[app页面充值异步回调开始]");
 		String phone = request.getParameter("phone");
 		bean.setMobile(phone);
 		bean.convert();
