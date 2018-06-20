@@ -5,7 +5,7 @@
 
 	<sql id="Where_Clause">
 		<where>
-		    hyduab.`status` = 0
+		    hyduab.bank_status = 0
 <!-- 		    <if test="userId != null and userId !=''">
 				AND hydu.user_id = #{userId}
 			</if> -->

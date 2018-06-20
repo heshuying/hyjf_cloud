@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.hyjf.am.vo.user.UsersContactVO;
-import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 
 /**
  * 紧急联系人设置返回bean
  * @author hesy
  *
  */
-public class ContractSetResultBean extends AppResult<UsersContactVO> {
+public class ContractSetResultBean extends WebResult<UsersContactVO>{
 	private String checkRelationName = "";
 	private String checkRelationId = "";
 	

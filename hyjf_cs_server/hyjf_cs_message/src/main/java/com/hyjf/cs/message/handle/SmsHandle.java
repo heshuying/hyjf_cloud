@@ -19,7 +19,6 @@ import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
 import com.hyjf.common.util.CustomConstants;
 
-import cn.emay.sdk.client.api.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

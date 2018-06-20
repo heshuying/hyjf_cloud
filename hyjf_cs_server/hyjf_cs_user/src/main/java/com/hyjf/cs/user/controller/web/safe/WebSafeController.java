@@ -136,6 +136,7 @@ public class WebSafeController extends BaseUserController {
      * 发送激活邮件
      */
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
+    @ApiImplicitParam(name = "paraMap",value = "{email:string}", dataType = "Map")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
     public WebResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
@@ -159,9 +160,9 @@ public class WebSafeController extends BaseUserController {
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
     @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> bindEmail(@RequestHeader(value = "token") String token, @RequestBody BindEmailVO bindEmailVO) {
+    public WebResult<Object> bindEmail(@RequestHeader(value = "token") String token, @RequestBody BindEmailVO bindEmailVO) {
     	logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
-    	ApiResult<Object> result = new ApiResult<Object>();
+    	WebResult<Object> result = new WebResult<Object>();
 
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
 
@@ -203,8 +204,8 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
     @ApiImplicitParam(name = "param",value = "{relationId:int,rlName:string,rlPhone:string}", dataType = "Map")
-    public ApiResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param) {
-        ApiResult<Object> result = new ApiResult<Object>();
+    public WebResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param) {
+    	WebResult<Object> result = new WebResult<Object>();
         WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
         safeService.checkForContractSave(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
 

@@ -4,12 +4,12 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.borrow.BorrowApicronVo;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 
 /**
  * @author ${yaoy}
  * @version BorrowApicronResponse, v0.1 2018/6/13 16:50
  */
-public class BorrowApicronResponse extends Response<BorrowApicronVo> {
+public class BorrowApicronResponse extends Response<BorrowApicronVO> {
 
 }

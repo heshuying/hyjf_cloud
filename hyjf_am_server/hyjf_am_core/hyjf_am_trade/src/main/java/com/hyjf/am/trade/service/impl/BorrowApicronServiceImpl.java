@@ -19,64 +19,65 @@ import java.util.List;
  * @version BorrowApicronServiceImpl, v0.1 2018/6/14 16:48
  */
 @Service
-public class BorrowApicronServiceImpl implements BorrowApicronService{
+public class BorrowApicronServiceImpl implements BorrowApicronService {
 
-    @Autowired
-    private BorrowApicronMapper borrowApicronMapper;
+	@Autowired
+	private BorrowApicronMapper borrowApicronMapper;
 
-    @Override
-    public List<BorrowApicron> getBorrowApicronList(Integer status, Integer apiType) {
-        BorrowApicronExample example = new BorrowApicronExample();
-        BorrowApicronExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo(6);
-        criteria.andExtraYieldStatusEqualTo(status);
-        criteria.andApiTypeEqualTo(apiType);
-        example.setOrderByClause(" id asc ");
-        List<BorrowApicron> list = this.borrowApicronMapper.selectByExample(example);
-        return list;
-    }
+	@Override
+	public List<BorrowApicron> getBorrowApicronList(Integer extraYieldRepayStatus, Integer apiType) {
+		BorrowApicronExample example = new BorrowApicronExample();
+		BorrowApicronExample.Criteria criteria = example.createCriteria();
+		// 标的还款已完成
+		criteria.andStatusEqualTo(6);
+		criteria.andExtraYieldStatusEqualTo(extraYieldRepayStatus);
+		criteria.andApiTypeEqualTo(apiType);
+		example.setOrderByClause(" id asc ");
+		List<BorrowApicron> list = this.borrowApicronMapper.selectByExample(example);
+		return list;
+	}
 
-    @Override
-    public int updateBorrowApicron(Integer id, Integer status, String data) {
-        BorrowApicron record = new BorrowApicron();
-        record.setId(id);
-        record.setExtraYieldStatus(status);
-        if (Validator.isNotNull(data) || status == 1) {
-            record.setData(data);
-        }
-        if (record.getWebStatus() == null) {
-            record.setWebStatus(0);
-        }
-        return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
-    }
+	@Override
+	public int updateBorrowApicron(Integer id, Integer status, String data) {
+		BorrowApicron record = new BorrowApicron();
+		record.setId(id);
+		record.setExtraYieldStatus(status);
+		if (Validator.isNotNull(data) || status == 1) {
+			record.setData(data);
+		}
+		if (record.getWebStatus() == null) {
+			record.setWebStatus(0);
+		}
+		return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
+	}
 
-    @Override
-    public int updateBorrowApicron2(Integer id, Integer status) {
-        BorrowApicron record = new BorrowApicron();
-        record.setId(id);
-        record.setExtraYieldStatus(status);
-        if (record.getWebStatus() == null) {
-            record.setWebStatus(0);
-        }
-        return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
-    }
+	@Override
+	public int updateBorrowApicron(Integer id, Integer status) {
+		BorrowApicron record = new BorrowApicron();
+		record.setId(id);
+		record.setExtraYieldStatus(status);
+		if (record.getWebStatus() == null) {
+			record.setWebStatus(0);
+		}
+		return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
+	}
 
-    @Override
-    public List<BorrowApicron> getBorrowApicronListWithRepayStatus(Integer status, Integer apiType) {
-        BorrowApicronExample example = new BorrowApicronExample();
-        BorrowApicronExample.Criteria criteria = example.createCriteria();
-        criteria.andExtraYieldRepayStatusEqualTo(status);
-        criteria.andApiTypeEqualTo(apiType);
-        example.setOrderByClause(" id asc ");
-        List<BorrowApicron> list = this.borrowApicronMapper.selectByExample(example);
-        return list;
-    }
+	@Override
+	public List<BorrowApicron> getBorrowApicronListWithRepayStatus(Integer status, Integer apiType) {
+		BorrowApicronExample example = new BorrowApicronExample();
+		BorrowApicronExample.Criteria criteria = example.createCriteria();
+		criteria.andExtraYieldRepayStatusEqualTo(status);
+		criteria.andApiTypeEqualTo(apiType);
+		example.setOrderByClause(" id asc ");
+		List<BorrowApicron> list = this.borrowApicronMapper.selectByExample(example);
+		return list;
+	}
 
-    @Override
-    public int updateBorrowApicronOfRepayStatus(Integer id, Integer status) {
-        BorrowApicron record = new BorrowApicron();
-        record.setId(id);
-        record.setExtraYieldRepayStatus(status);
-        return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
-    }
+	@Override
+	public int updateBorrowApicronOfRepayStatus(Integer id, Integer status) {
+		BorrowApicron record = new BorrowApicron();
+		record.setId(id);
+		record.setExtraYieldRepayStatus(status);
+		return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
+	}
 }

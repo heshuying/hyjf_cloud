@@ -25,7 +25,7 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final String SUCCESS = "0";
+	public static final String SUCCESS = "000";
 	public static final String SUCCESS_DESC = "成功";
 	public static final String ERROR = "-1";
 	public static final String ERROR_DESC = "异常";
