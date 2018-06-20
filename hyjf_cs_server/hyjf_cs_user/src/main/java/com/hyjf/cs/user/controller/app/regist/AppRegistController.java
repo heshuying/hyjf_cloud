@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.app.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -51,9 +52,9 @@ public class AppRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public AppResult<UserVO> register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request) {
+    public AppResult<WebViewUserVO> register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request) {
         logger.info("web端注册接口, register is :{}", JSONObject.toJSONString(register));
-        AppResult<UserVO> result = new AppResult<>();
+        AppResult<WebViewUserVO> result = new AppResult<>();
         String mobilephone = DES.decodeValue(key, register.getMobilephone());
         String smsCode = DES.decodeValue(key,register.getSmsCode());
         String pwd = DES.decodeValue(key, register.getPassword());
@@ -71,7 +72,7 @@ public class AppRegistController extends BaseUserController {
         registerVO.setReffer(reffer);
         registerVO.setSmsCode(smsCode);
         registService.registerCheckParam(ClientConstants.APP_CLIENT,registerVO);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
+        WebViewUserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
         result.setData(userVO);
         if (userVO != null) {
             logger.info("web端注册成功, userId is :{}", userVO.getUserId());

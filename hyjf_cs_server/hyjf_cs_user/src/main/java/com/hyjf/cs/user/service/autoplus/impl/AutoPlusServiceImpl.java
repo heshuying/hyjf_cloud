@@ -164,7 +164,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         Map<String,String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         bean.convert();
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         if (user == null) {
             throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
         }

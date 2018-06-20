@@ -12,6 +12,7 @@
 package com.hyjf.common.enums;
 
 import com.hyjf.common.constants.MsgCode;
+
 /**
  * 信息代码和信息本体的枚举
  * @author liubin
@@ -159,9 +160,9 @@ public enum MsgEnum implements MsgCode {
 	STATUS_ZC000015("ZC000015","验证码错误"),
 	STATUS_ZC000016("ZC000016","银行卡与姓名不符"),
 	STATUS_ZC000017("ZC000017","银行卡与证件不符"),
-	
-    // 还款信息接口项目编号不能为空
-    STATUS_ZC000018("ZC000018","资产编号不能为空"),
+
+	// 还款信息接口项目编号不能为空
+	STATUS_ZC000018("ZC000018","资产编号不能为空"),
 	// ----------资产机能用错误信息------------
 	STATUS_ZT000001("ZT000001","没有用户信息"),
 	STATUS_ZT000002("ZT000002","没有用户开户信息"),
@@ -219,5 +220,3 @@ public enum MsgEnum implements MsgCode {
 		return this.code;
 	}
 }
-
-	
