@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.web.login;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -50,13 +51,13 @@ public class WebLoginController extends BaseUserController {
      */
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public WebResult<UserVO> login(@RequestBody LoginRequestVO user,
-                                   HttpServletRequest request) {
+    public WebResult<WebViewUserVO> login(@RequestBody LoginRequestVO user,
+                                          HttpServletRequest request) {
         logger.info("web端登录接口, user is :{}", JSONObject.toJSONString(user));
         String loginUserName = user.getUsername();
         String loginPassword = user.getPassword();
-        WebResult<UserVO> result = new WebResult<UserVO>();
-        UserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
+        WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
             logger.info("web端登录成功 userId is :{}", userVO.getUserId());
             result.setData(userVO);

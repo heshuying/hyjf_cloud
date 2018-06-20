@@ -50,12 +50,6 @@ public class BankRechargeServiceImpl implements BankRechargeService {
     private static final int RECHARGE_STATUS_FAIL = 3;
     // 充值状态:成功
     private static final int RECHARGE_STATUS_SUCCESS = 2;
-    //机构代码
-    @Value("${hyjf.bank.instcode}")
-    private String BANK_INSTCODE;
-    //银行code
-    @Value("${hyjf.bank.bankcode}")
-    private String BANK_BANKCODE;
     
     /**
      * 检索充值中的充值记录
@@ -98,8 +92,6 @@ public class BankRechargeServiceImpl implements BankRechargeService {
         BankCallBean bean = new BankCallBean();
         bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         bean.setTxCode(BankCallConstant.TXCODE_FUND_TRANS_QUERY);// 消息类型
-        bean.setInstCode(BANK_INSTCODE);// 机构代码
-        bean.setBankCode(BANK_BANKCODE);//银行code
         bean.setTxDate(GetOrderIdUtils.getTxDate());
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));

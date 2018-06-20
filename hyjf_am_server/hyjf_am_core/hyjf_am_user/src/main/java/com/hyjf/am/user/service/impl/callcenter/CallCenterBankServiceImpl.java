@@ -148,4 +148,9 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 		List<CallcenterAccountHuifuCustomize> callcenterAccountHuifuCustomizeList = callCenterAccountHuifuMapper.findHuifuTiedcardInfo(callcenterAccountHuifuRequest);
 		return callcenterAccountHuifuCustomizeList;
 	}
+
+	@Override
+	public String getCouponContent(String couponSource){
+		return callCenterCustomizeMapper.getCouponContent(couponSource);
+	}
 }

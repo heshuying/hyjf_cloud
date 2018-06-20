@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.service.financialadvisor.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.UserEvalationRequest;
 import com.hyjf.am.vo.user.ActivityListVO;
@@ -10,19 +12,28 @@ import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.cs.user.client.AmBankOpenClient;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.mq.CouponProducer;
+import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
-import com.hyjf.cs.user.service.financialadvisor.CouponCheckUtilDefine;
 import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
 import com.hyjf.soa.apiweb.CommonParamBean;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,22 +45,29 @@ import java.util.Map;
 public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements FinancialAdvisorService {
 
     @Autowired
-    AmBankOpenClient amBankOpenClient;
+    AmConfigClient amConfigClient;
 
     @Autowired
     AmUserClient amUserClient;
 
+    @Autowired
+    AmMarketClient amMarketClient;
 
     @Autowired
     SystemConfig systemConfig;
+
+    @Autowired
+    private CouponProducer couponProducer;
+
     @Override
     public List<QuestionCustomizeVO> getNewQuestionList() {
-        return null;
+        List<QuestionCustomizeVO> customizes = amConfigClient.getNewQuestionList();
+        return customizes;
     }
 
     @Override
     public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
-        UserEvalationResultVO userEvalationResult = amBankOpenClient.selectUserEvalationResultByUserId(userId);
+        UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(userId);
         return userEvalationResult;
     }
 
@@ -62,7 +80,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
     @Override
     public UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId) {
         UserEvalationResultVO oldUserEvalationResult =this.selectUserEvalationResultByUserId(userId);
-        amBankOpenClient.deleteUserEvalationResultByUserId(userId);
+        amUserClient.deleteUserEvalationResultByUserId(userId);
 
         String[] answer = userAnswer.split(",");
         List<String> answerList = new ArrayList<String>();
@@ -75,7 +93,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
         }
         AnswerRequest answerRequest = new AnswerRequest();
         answerRequest.setResultList(answerList);
-        int countScore = amUserClient.countScore(answerRequest);
+        int countScore = amConfigClient.countScore(answerRequest);
         EvalationVO evalation = amUserClient.getEvalationByCountScore((short) countScore);
         UserEvalationRequest request = new UserEvalationRequest();
         request.setAnswerList(answerList);
@@ -111,7 +129,15 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
             // 评测送加息券
             couponParamBean.setSendFlg(1);
             // 发放优惠券（1张加息券）
-            result = CommonSoaUtils.sendUserCoupon(couponParamBean);
+            try { JSONObject params = new JSONObject();
+            params.put("mqMsgId", GetCode.getRandomCode(10));
+            params.put("userId", String.valueOf(userId));
+            params.put("sendFlg", "1");
+                couponProducer.messageSend(new Producer.MassageContent(MQConstant.GRANT_COUPON_TOPIC,JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                e.printStackTrace();
+
+            }
         }
         return result;
     }
@@ -121,27 +147,25 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
      */
     @Override
     public String checkActivityIfAvailable(String activityId) {
-        if(activityId==null){
-            return CouponCheckUtilDefine.ACTIVITYID_IS_NULL;
-        }
-        ActivityListVO activityList=amUserClient.selectActivityList(new Integer(activityId));
-        if(activityList==null){
-            return CouponCheckUtilDefine.ACTIVITY_ISNULL;
-        }
-        if(activityList.getTimeStart()>System.currentTimeMillis()/1000){
-            return CouponCheckUtilDefine.ACTIVITY_TIME_NOT_START;
-        }
-        if(activityList.getTimeEnd()<System.currentTimeMillis()/1000){
-            return CouponCheckUtilDefine.ACTIVITY_TIME_END;
-        }
+        CheckUtil.check(null!=activityId, MsgEnum.ERR_ACTIVITYID_IS_NULL);
+
+        ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
+        CheckUtil.check(null!=activityList, MsgEnum.ERR_ACTIVITY_ISNULL);
+        CheckUtil.check(null!=activityList, MsgEnum.ERR_ACTIVITY_ISNULL);
+        CheckUtil.check(activityList.getTimeStart()<=System.currentTimeMillis()/1000, MsgEnum.ERR_ACTIVITY_TIME_NOT_START);
+        CheckUtil.check(activityList.getTimeEnd()>=System.currentTimeMillis()/1000, MsgEnum.ERR_ACTIVITY_TIME_END);
         return "";
     }
 
+    @Override
+    public List<EvalationVO> getEvalationRecord() {
+        List<EvalationVO> evalationVOList = amUserClient.getEvalationRecord();
+        return evalationVOList;
+    }
+
     public String checkActivityPlatform(String activityId, String platform) {
-        if(activityId==null){
-            return CouponCheckUtilDefine.ACTIVITYID_IS_NULL;
-        }
-        ActivityListVO activityList=amUserClient.selectActivityList(new Integer(activityId));
+        CheckUtil.check(null!=activityId, MsgEnum.ERR_ACTIVITYID_IS_NULL);
+        ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
         if(activityList.getPlatform().indexOf(platform)==-1){
 
             // 操作平台
@@ -160,10 +184,42 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
                 }
 
             }
-            return CouponCheckUtilDefine.PLATFORM_LIMIT.replace("***", selectedClientDisplayBuffer.toString());
+            return ClientConstants.PLATFORM_LIMIT.replace("***", selectedClientDisplayBuffer.toString());
         }
         return "";
     }
 
-
+    /**
+     * 插入评测数据并发券
+     * @param
+     * @param
+     * @return
+     */
+    @Override
+    public synchronized Map<String,Object> answerAnalysisAndCoupon(String userAnswer, Integer userId){
+        Map<String,Object> returnMap  = new HashMap<String,Object>();
+        //发放优惠券 start
+        UserEvalationResultVO ueResult = this.selectUserEvalationResultByUserId(userId);
+        // 是否已经参加过测评（true：已测评过，false：测评）
+        boolean isAdvisor = ueResult != null ? true : false;
+        // 发放优惠券 end
+        // 1_1,2_8
+        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, new Integer(userId));
+        // 发放优惠券 start
+        if(!isAdvisor){
+            String platform = CustomConstants.CLIENT_PC;
+            // 发放优惠券
+            String result = this.sendCoupon(userId, platform);
+            if(StringUtils.isNotEmpty(result)){
+                JSONObject resultObj = JSONObject.parseObject(result);
+                if(resultObj.getIntValue("status") == 0 && resultObj.getIntValue("couponCount") > 0){
+                    int sendCount = resultObj.getIntValue("couponCount");
+                    returnMap.put("sendCount", sendCount);
+                }
+            }
+        }
+        returnMap.put("userEvalationResult", userEvalationResult);
+        return returnMap;
+        // 发放优惠券 end
+    }
 }

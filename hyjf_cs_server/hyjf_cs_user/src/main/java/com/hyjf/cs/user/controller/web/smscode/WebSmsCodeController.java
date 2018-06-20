@@ -32,7 +32,7 @@ public class WebSmsCodeController extends BaseUserController {
 
 	/**
 	 * 发送短信验证码 范围：注册，修改手机号(验证原手机，修改新手机)
-	 * @param param
+	 * @param param 修改手机号码验证原手机号：validCodeType=TPL_YZYSJH  绑定新手机号：validCodeType=TPL_BDYSJH
 	 * @param token
 	 * @param request
 	 * @return

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.SignValue;
@@ -115,14 +115,14 @@ public class AccessFilter extends ZuulFilter {
 			ctx.setResponseBody("token is empty");
 			return;
 		}
-		WebViewUser webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUser.class);
-		if (webViewUser == null) {
+		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+		if (webViewUserVO == null) {
 			logger.error("user is not exist...");
 			ctx.setResponseBody("user is not exist");
 			return;
 		}
-		ctx.addZuulRequestHeader("userId", webViewUser.getUserId() + "");
-		logger.info(String.format("user token:%s userId:%s", token, webViewUser.getUserId()));
+		ctx.addZuulRequestHeader("userId", webViewUserVO.getUserId() + "");
+		logger.info(String.format("user token:%s userId:%s", token, webViewUserVO.getUserId()));
 	}
 
 }

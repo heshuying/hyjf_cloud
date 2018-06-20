@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.web.projectlist;
 
+import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -46,6 +47,20 @@ public class WebProjectListController extends BaseTradeController {
         WebResult result =  webProjectListService.searchProjectList(request);
         return result;
     }
+
+
+    /**
+     * 散标专区债权转让列表数据
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "散标专区债权转让列表", notes = "散标专区债权转让列表")
+    @PostMapping(value = "/getCreditList", produces = "application/json; charset=utf-8")
+    public Object getCredittList(@RequestBody @Valid CreditListRequest request){
+        WebResult result =  webProjectListService.searchCreditList(request);
+        return result;
+    }
+
 
 
 

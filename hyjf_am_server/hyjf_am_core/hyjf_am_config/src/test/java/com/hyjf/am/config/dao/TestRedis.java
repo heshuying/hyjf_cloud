@@ -33,7 +33,6 @@ public class TestRedis {
 
 		UserVO vo = new UserVO();
 		vo.setUserId(123);
-		vo.setIconurl("sssssssssss");
 		String result1 = RedisUtils.setObj("obj", vo);
 		logger.info("result1：" + result1);
 

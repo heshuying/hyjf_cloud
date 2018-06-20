@@ -13,6 +13,7 @@ import com.hyjf.common.constants.MsgCode;
 public enum BankWithdrawError implements MsgCode {
     USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
     PARAM_ERROR("1", "参数错误，请重试"),
+    ACCOUNT_ERROR("1", "你的账户信息存在异常，请联系客服人员处理。"),
     WITHDRAW_TRSANSAMT_ERROR("1", "请输入提现金额。"),
     WITHDRAW_SERVICE_CHARGE_ERROR("1", "提现金额需大于1元！"),
     WITHDRAW_CARD_NO_ERROR("1", "银行卡号不正确，请确认后再次提现。"),

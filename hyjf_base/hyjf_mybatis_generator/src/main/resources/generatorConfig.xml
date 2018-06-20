@@ -895,6 +895,15 @@
         <table tableName="ht_coupon_recover" domainObjectName="CouponRecover">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
+        <!-- 费率配置 -->
+        <table tableName="ht_fee_config" domainObjectName="FeeConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+        <!-- 债转 -->
+        <table tableName="ht_credit_tender_log" domainObjectName="CreditTenderLog">
+            <generatedKey column="assign_id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+
 
     </context>
 </generatorConfiguration>
