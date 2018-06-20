@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.regist;
 
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.RegisterRequest;
@@ -27,7 +28,7 @@ public interface RegistService extends BaseUserService {
      * @return
      * @throws ReturnMessageException
      */
-    UserVO register(RegisterRequest registerRequest, String ip)
+    WebViewUserVO register(RegisterRequest registerRequest, String ip)
             throws ReturnMessageException;
 
     /**

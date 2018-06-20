@@ -3,6 +3,7 @@ package com.hyjf.cs.user.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -127,4 +128,6 @@ public interface AmUserClient {
 	int updateUserCard(BankCardRequest request);
 
 	int insertBindCardLog(BankCardLogRequest request);
+
+	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 }

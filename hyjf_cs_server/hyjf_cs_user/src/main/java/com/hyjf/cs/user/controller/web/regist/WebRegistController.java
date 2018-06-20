@@ -57,7 +57,7 @@ public class WebRegistController extends BaseUserController {
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
     public WebResult<WebViewUserVO> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
-        logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerVO));
+        logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
         WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
         // 1. 参数检查
         registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerRequest);

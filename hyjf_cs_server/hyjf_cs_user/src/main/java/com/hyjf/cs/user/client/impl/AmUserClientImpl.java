@@ -3,9 +3,11 @@ package com.hyjf.cs.user.client.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -637,4 +639,13 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
+	@Override
+	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId) {
+		CorpOpenAccountRecordResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/getCorpOpenAccountRecord/" + userId, CorpOpenAccountRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 }
