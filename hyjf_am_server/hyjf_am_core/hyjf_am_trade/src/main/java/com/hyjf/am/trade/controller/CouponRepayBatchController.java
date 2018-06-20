@@ -34,7 +34,7 @@ public class CouponRepayBatchController {
             List<String> recoverNidList = couponRepayBatchService.selectNidForCouponOnly();
             if (recoverNidList != null) {
                 logger.info("需按优惠券单独投资还款包括：" + JSONArray.toJSONString(recoverNidList));
-                CommonSoaUtils.couponOnlyRepay(recoverNidList);
+//                CommonSoaUtils.couponOnlyRepay(recoverNidList); //TODO: 微服务这种方式是错的。
             }
         } catch (Exception e) {
             logger.error("筛选优惠券单独投资还款失败", e);

@@ -57,13 +57,13 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
     private AmUserClient amUserClient;
 
     @Autowired
-    private AmBankOpenClient amBankOpenClient;
+    private BankOpenClient bankOpenClient;
 
     @Autowired
-    private AmBindCardClient amBindCardClient;
+    private BindCardClient bindCardClient;
 
     @Autowired
-    private AmAccountListClient amAccountListClient;
+    private AccountListClient accountListClient;
 
     @Autowired
     private WithdrawClient withdrawClient;
@@ -153,9 +153,9 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
         // 用户ID
         int userId = Integer.parseInt(params.get("userId"));
         // 查询账户信息
-        AccountVO account = this.amBindCardClient.getAccount(userId);
+        AccountVO account = this.bindCardClient.getAccount(userId);
         // 根据用户ID查询用户银行卡信息
-        BankCardVO bankCard = this.amBankOpenClient.selectBankCardByUserId(userId);
+        BankCardVO bankCard = this.bankOpenClient.selectBankCardByUserId(userId);
         String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
         // 银联行号
         String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
@@ -173,7 +173,7 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
                     return jsonMessage("提现成功", "0");
                 } else {
                     // 查询是否已经处理过
-                    int accountlistCnt = this.amAccountListClient.countAccountListByOrdId(ordId,"cash_success");
+                    int accountlistCnt = this.accountListClient.countAccountListByOrdId(ordId,"cash_success");
                     // 未被处理
                     if (accountlistCnt == 0) {
                         try {
@@ -185,7 +185,7 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
                                 updateBankCardVO.setId(bankCard.getId());
                                 updateBankCardVO.setPayAllianceCode(payAllianceCode);
                                 try {
-                                    boolean isBankCardUpdateFlag = this.amBindCardClient.updateBankCardPayAllianceCode(updateBankCardVO) > 0 ? true : false;
+                                    boolean isBankCardUpdateFlag = this.bindCardClient.updateBankCardPayAllianceCode(updateBankCardVO) > 0 ? true : false;
                                     if (!isBankCardUpdateFlag) {
                                         throw new Exception("大额提现成功后,更新用户银行卡的银联行号失败~~~!" + bankCard.getId());
                                     }
@@ -384,7 +384,7 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
             throw new ReturnMessageException(BankWithdrawError.WITHDRAW_PAYALLIANCECODE_ERROR);
         }
 
-        BankCardVO bankCard = this.amBindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
+        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard == null || Validator.isNull(bankCard.getCardNo())) {
             throw new ReturnMessageException(BankWithdrawError.NOT_CARD_NO_ERROR);
         }
@@ -424,7 +424,7 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
         String cardNo = params.get("cardNo"); // 银行卡号
         String bank = null;
         // 取得银行信息
-        BankCardVO bankCard = this.amBindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
+        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard != null) {
             bank = bankCard.getBank();
         }
@@ -472,9 +472,9 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
      * @return
      */
     private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee) {
-        BankCardVO bankCard = this.amBindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
+        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
-        BankOpenAccountVO bankOpenAccountVO=amBankOpenClient.selectById(user.getUserId());
+        BankOpenAccountVO bankOpenAccountVO= bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         String retUrl = systemConfig.getWebHost()+CLIENT_HEADER_MAP.get(platform)+"/borrow/userBankWithdrawReturn.do";
         String bgRetUrl = systemConfig.getWebHost()+CLIENT_HEADER_MAP.get(platform)+"/borrow/userBankWithdrawBgreturn.do";
@@ -547,12 +547,12 @@ public class WebBorrowServiceImpl extends BaseTradeServiceImpl implements WebBor
             return feetmp;
         }
 
-        BankCardVO bankCard = this.amBindCardClient.queryUserCardValid(userId+"", cardNo);
+        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(userId+"", cardNo);
 
         if (bankCard != null) {
             Integer bankId = bankCard.getBankId();
             // 取得费率
-            BanksConfigVO banksConfig = amBindCardClient.getBanksConfigByBankId(bankId+"");
+            BanksConfigVO banksConfig = bindCardClient.getBanksConfigByBankId(bankId+"");
             if (banksConfig != null) {
                 if (Validator.isNotNull(banksConfig.getFeeWithdraw())) {
                     return banksConfig.getFeeWithdraw().toString();

@@ -131,7 +131,7 @@ public class AssetPushController {
      * @param planAssetVO
      */
     @RequestMapping("/updatePlanAsset")
-    public void updatePlanAsset(HjhPlanAssetVO planAssetVO) {
+    public void updatePlanAsset(@RequestBody HjhPlanAssetVO planAssetVO) {
         assetPushService.updatePlanAsset(planAssetVO);
     }
 

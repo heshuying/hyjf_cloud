@@ -7,6 +7,7 @@ import com.hyjf.am.response.callcenter.*;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
+import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.am.vo.callcenter.*;
@@ -136,4 +137,22 @@ public class CallCenterTradeController {
         }
         return callcenterHztInvestResponse;
     }
+    
+    
+    /**
+     * 按照用户名/手机号查询转让信息
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/selectBorrowCreditList", method = RequestMethod.POST)
+    public SrchTransferInfoResponse selectBorrowCreditList(@RequestBody @Valid SrchTransferInfoRequest request){
+    	SrchTransferInfoResponse srchTransferInfoResponse = new SrchTransferInfoResponse();
+    	List<CallCenterBorrowCreditCustomize> list = callCenterTradeService.getBorrowCreditList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterBorrowCreditVO> callCenterBorrowCreditVO = CommonUtils.convertBeanList(list,CallCenterBorrowCreditVO.class);
+            srchTransferInfoResponse.setResultList(callCenterBorrowCreditVO);
+        }
+        return srchTransferInfoResponse;
+    } 
 }

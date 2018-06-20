@@ -64,3 +64,7 @@ redis:
     testOnBorrow: true
     testOnReturn: true
     password: RH06863b3e6
+
+hyjf:
+  env:
+    test: true

@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 
@@ -18,4 +19,12 @@ public interface WebProjectListService extends BaseTradeService{
      * @return
      */
     public WebResult searchProjectList(ProjectListRequest request);
+
+
+    /**
+     * 获取散标专区债转列表
+     * @author zhangyk
+     * @date 2018/6/19 16:33
+     */
+    public WebResult searchCreditList(CreditListRequest request);
 }

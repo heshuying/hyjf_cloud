@@ -53,7 +53,7 @@ public enum MsgEnum implements MsgCode {
 	// 用户相关错误信息ERR_USER_
 	// 资金相关错误信息ERR_AMT_
 
-
+	ERR_REQUEST_PARAM_LACK("1", "请求参数不全"),
 	ERR_USER_LOGIN("1", "登录失败,请重新登陆"),
 	ERR_CANNOT_REPEAT("1", "用户已授权,无需重复授权"),
 	ERR_CALL_BANK("1", "调用银行接口失败"),
