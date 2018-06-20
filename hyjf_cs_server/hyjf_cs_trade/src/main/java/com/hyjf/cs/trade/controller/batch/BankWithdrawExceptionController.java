@@ -23,7 +23,7 @@ public class BankWithdrawExceptionController {
     Logger logger = LoggerFactory.getLogger(BankWithdrawExceptionController.class);
 
     @Autowired
-    private BankWithdrawService bankWithdrawExceptionService;
+    private BankWithdrawService bankWithdrawService;
 
     /**
      * 提现掉单异常处理
@@ -38,7 +38,7 @@ public class BankWithdrawExceptionController {
         result.setStatusDesc(BankWithdrawError.BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS.getMsg());
 
     	try {
-            bankWithdrawExceptionService.withdraw();
+            bankWithdrawService.withdraw();
         }catch (Exception e){
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(BankWithdrawError.BANK_WITHDRAW_EXCEPTION_HANDLE_ERROR.getMsg());
