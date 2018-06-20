@@ -43,7 +43,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
      * @param ip
      */
     @Override
-    public UserVO login(String loginUserName, String loginPassword, String ip) {
+    public WebViewUserVO login(String loginUserName, String loginPassword, String ip) {
         if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
             CheckUtil.check(false,MsgEnum.ERR_PARAM_ERROR);
         }
@@ -62,8 +62,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
      * @param loginPassword
      * @return
      */
-    private UserVO doLogin(String loginUserName, String loginPassword, String ip) {
+    private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip) {
         UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
+        WebViewUserVO webViewUserVO = new WebViewUserVO();
         CheckUtil.check(userVO != null,MsgEnum.ERR_PARAM_ERROR);
         int userId = userVO.getUserId();
         String codeSalt = userVO.getSalt();
@@ -85,7 +86,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
             // 2. 缓存
             String token = generatorToken(userVO.getUserId(), userVO.getUsername());
-            WebViewUserVO webViewUserVO = new WebViewUserVO();
             BeanUtils.copyProperties(userVO, webViewUserVO);
             webViewUserVO.setToken(token);
             RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
@@ -96,7 +96,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             RedisUtils.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
             CheckUtil.check(false, MsgEnum.ERR_PARAM_ERROR);
         }
-        return userVO;
+        return webViewUserVO;
     }
     /**
      * 字符串长度检查
