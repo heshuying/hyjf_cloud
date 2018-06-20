@@ -28,7 +28,6 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
-import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
@@ -54,8 +53,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     @Autowired
     private AmUserClient amUserClient;
 
-    @Autowired
-    private BankOpenClient bankOpenClient;
     @Autowired
     private AmConfigClient amConfigClient;
 
@@ -257,7 +254,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         }else {
             String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());
             // 取得用户在江西银行的客户号
-            BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(users.getUserId());
+            BankOpenAccountVO bankOpenAccount = amUserClient.selectById(users.getUserId());
             bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
             bean.setInstCode(systemConfig.getBankInstcode());
             bean.setBankCode(systemConfig.getBankCode());
@@ -361,7 +358,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000002);
         }
         // 根据电子账户号查询用户ID
-        BankOpenAccountVO bankOpenAccount = this.bankOpenClient.selectByAccountId(payRequestBean.getAccountId());
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(payRequestBean.getAccountId());
         if(bankOpenAccount == null){
             logger.info("-------------------没有根据电子银行卡找到用户"+payRequestBean.getAccountId()+"！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004,"没有根据电子银行卡找到用户");
@@ -416,7 +413,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Override
     public BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean) {
-        BankOpenAccountVO bankOpenAccount = this.bankOpenClient.selectByAccountId(payRequestBean.getAccountId());
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(payRequestBean.getAccountId());
         UserVO user= amUserClient.findUserById(bankOpenAccount.getUserId());
         Integer userId = user.getUserId();
         // 同步调用路径
@@ -444,7 +441,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.convert();
         //业务变更，银行不直接返回accountId，需要根据用户Id查询账号
         if (StringUtils.isNotBlank(bean.getLogUserId())) {
-            BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(Integer.parseInt(bean.getLogUserId()));
+            BankOpenAccountVO bankOpenAccount = amUserClient.selectById(Integer.parseInt(bean.getLogUserId()));
             repwdResult.set("accountId", bankOpenAccount.getAccount());
         }else{
             repwdResult.set("accountId", bean.getAccountId());
@@ -517,7 +514,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         }
         // 返回值
         if (StringUtils.isNotBlank(bean.getLogUserId())) {
-            BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(Integer.parseInt(bean.getLogUserId()));
+            BankOpenAccountVO bankOpenAccount = amUserClient.selectById(Integer.parseInt(bean.getLogUserId()));
             params.put("accountId", bankOpenAccount.getAccount()==null?bean.getAccountId():bankOpenAccount.getAccount());
         }else{
             params.put("accountId", bean.getAccountId());
@@ -538,7 +535,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     public BankCallBean getUserAuthQUery(Integer userId,String type) {
         // 调用查询投资人签约状态查询
-        BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(userId);
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectById(userId);
         BankCallBean selectbean = new BankCallBean();
         selectbean.setVersion(BankCallConstant.VERSION_10);
         selectbean.setTxCode(BankCallConstant.TXCODE_CREDIT_AUTH_QUERY);

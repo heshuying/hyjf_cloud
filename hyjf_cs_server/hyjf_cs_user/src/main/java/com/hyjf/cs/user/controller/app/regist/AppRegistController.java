@@ -14,7 +14,7 @@ import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.vo.RegisterVO;
+import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +51,7 @@ public class AppRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public AppResult<UserVO> register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request) {
+    public AppResult<UserVO> register(@RequestHeader String key, @RequestBody RegisterRequest register, HttpServletRequest request) {
         logger.info("web端注册接口, register is :{}", JSONObject.toJSONString(register));
         AppResult<UserVO> result = new AppResult<>();
         String mobilephone = DES.decodeValue(key, register.getMobilephone());
@@ -65,13 +65,13 @@ public class AppRegistController extends BaseUserController {
                 result.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMsg());
             }
         }
-        RegisterVO registerVO = new RegisterVO();
-        registerVO.setMobilephone(mobilephone);
-        registerVO.setPassword(pwd);
-        registerVO.setReffer(reffer);
-        registerVO.setSmsCode(smsCode);
-        registService.registerCheckParam(ClientConstants.APP_CLIENT,registerVO);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
+        register = new RegisterRequest();
+        register.setMobilephone(mobilephone);
+        register.setPassword(pwd);
+        register.setReffer(reffer);
+        register.setSmsCode(smsCode);
+        registService.registerCheckParam(ClientConstants.APP_CLIENT,register);
+        UserVO userVO = registService.register(register, GetCilentIP.getIpAddr(request));
         result.setData(userVO);
         if (userVO != null) {
             logger.info("web端注册成功, userId is :{}", userVO.getUserId());

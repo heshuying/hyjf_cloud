@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-    @RequestMapping("/ads")
+    @RequestMapping("/am-market/ads")
     public class AdsController {
         private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
 

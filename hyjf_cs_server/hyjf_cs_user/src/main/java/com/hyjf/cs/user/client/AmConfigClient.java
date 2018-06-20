@@ -36,4 +36,8 @@ public interface AmConfigClient {
     int countScore(AnswerRequest answerList);
 
     BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
+
+    String queryBankIdByCardNo(String cardNo);
+
+    BanksConfigVO getBanksConfigByBankId(String bankId);
 }

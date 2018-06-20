@@ -8,9 +8,11 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.LoginError;
@@ -43,12 +45,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
     @Override
     public UserVO login(String loginUserName, String loginPassword, String ip) {
         if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
-            throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
+            CheckUtil.check(false,MsgEnum.ERR_PARAM_ERROR);
         }
         // 获取密码错误次数
         String errCount = RedisUtils.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
         if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
-            throw new ReturnMessageException(LoginError.PWD_ERROR_TOO_MANEY_ERROR);
+            CheckUtil.check(false,MsgEnum.ERR_PWD_ERROR_TOO_MANEY);
         }
         return this.doLogin(loginUserName, loginPassword, ip);
     }
@@ -62,11 +64,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
      */
     private UserVO doLogin(String loginUserName, String loginPassword, String ip) {
         UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
-
-        if (userVO == null) {
-            throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
-        }
-
+        CheckUtil.check(userVO != null,MsgEnum.ERR_PARAM_ERROR);
         int userId = userVO.getUserId();
         String codeSalt = userVO.getSalt();
         String passwordDb = userVO.getPassword();
@@ -93,13 +91,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60);
 
             // 3. todo 登录时自动同步线下充值记录
-
-            return userVO;
         } else {
             // 密码错误，增加错误次数
             RedisUtils.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
-            throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
+            CheckUtil.check(false, MsgEnum.ERR_PARAM_ERROR);
         }
+        return userVO;
     }
     /**
      * 字符串长度检查

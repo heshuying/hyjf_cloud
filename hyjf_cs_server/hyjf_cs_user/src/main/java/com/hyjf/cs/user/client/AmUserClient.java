@@ -2,7 +2,9 @@ package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 
@@ -32,6 +34,8 @@ public interface AmUserClient {
 	void updateLoginUser(int userId, String ip);
 
 	HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
+
+	BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 
 	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
 
@@ -77,4 +81,50 @@ public interface AmUserClient {
 
 	UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
 
+	UserInfoVO findUserInfoByCardNo(String cradNo);
+
+	int updateUserAccountLog(BankOpenRequest request);
+
+	BankOpenAccountVO selectByAccountId(String accountId);
+
+	UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
+
+	void deleteUserEvalationResultByUserId(Integer userId);
+
+	/**
+	 * 修改开户日志表的状态
+	 * @param userId
+	 * @param logOrderId
+	 * @param state
+	 * @return
+	 */
+	Integer updateUserAccountLogState(int userId, String logOrderId, int state);
+
+	/**
+	 * 开户成功后保存用户开户信息
+	 * @param bean
+	 * @return
+	 */
+	Integer saveUserAccount(BankCallBean bean);
+
+	/**
+	 * 开户成功后保存银行卡信息
+	 * @param request
+	 * @return
+	 */
+	Integer saveCardNoToBank(BankCardRequest request);
+
+    BankCardVO queryUserCardValid(String userId, String cardNo);
+
+	int countUserCardValid(String userId);
+
+	int deleteUserCardByUserId(String userId);
+
+	int deleteUserCardByCardNo(String cardNo);
+
+	int insertUserCard(BankCardRequest request);
+
+	int updateUserCard(BankCardRequest request);
+
+	int insertBindCardLog(BankCardLogRequest request);
 }

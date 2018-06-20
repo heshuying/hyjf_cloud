@@ -13,7 +13,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
-import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -50,9 +49,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
 
     @Autowired
     private AmUserClient amUserClient;
-
-    @Autowired
-    private BankOpenClient bankOpenClient;
 
     @Autowired
     SystemConfig systemConfig;
@@ -92,7 +88,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         bankOpenRequest.setIdNo(idno);
         bankOpenRequest.setCardNo(cardNo);
 
-        return bankOpenClient.updateUserAccountLog(bankOpenRequest);
+        return amUserClient.updateUserAccountLog(bankOpenRequest);
     }
 
     /**
@@ -232,13 +228,13 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 开户失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 开户失败   将开户记录状态改为4
-            this.bankOpenClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4);
+            this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4);
             logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
             result.setStatus(false);
             return result;
         }
         // 开户成功后,保存用户的开户信息
-        Integer saveBankAccountFlag = this.bankOpenClient.saveUserAccount(bean);
+        Integer saveBankAccountFlag = this.amUserClient.saveUserAccount(bean);
         if (saveBankAccountFlag.intValue() != 1) {
             logger.info("开户失败,保存用户的开户信息失败:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
             result.setStatus(true);
@@ -327,7 +323,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                     }
                     // 更新联行号
                     bank.setPayAllianceCode(payAllianceCode);
-                    return this.bankOpenClient.saveCardNoToBank(bank);
+                    return amUserClient.saveCardNoToBank(bank);
                 } else {
                     logger.error("更新银行卡信息出错，转换array失败，userId:{}", userId);
                 }

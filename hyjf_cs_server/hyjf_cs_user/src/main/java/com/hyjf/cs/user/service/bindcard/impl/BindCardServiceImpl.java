@@ -1,24 +1,11 @@
 package com.hyjf.cs.user.service.bindcard.impl;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -29,11 +16,12 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.client.BankOpenClient;
-import com.hyjf.cs.user.client.BindCardClient;
+import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.BindCardError;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -41,6 +29,17 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 绑卡服务类
@@ -51,12 +50,15 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	private static final Logger logger = LoggerFactory.getLogger(BindCardServiceImpl.class);
 	@Autowired
 	SystemConfig systemConfig;
+
 	@Autowired
 	AmUserClient amUserClient;
+
 	@Autowired
-	BindCardClient bindCardClient;
+	AmTradeClient amTradeClient;
+
 	@Autowired
-    BankOpenClient bankOpenClient;
+	AmConfigClient amConfigClient;
 	
 	/**
 	 * 发送验证码请求参数校验
@@ -116,7 +118,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 */
 	@Override
 	public BankCallBean callBankBindCard(BindCardVO bindCardVO, Integer userId, String userIp) {
-		BankOpenAccountVO bankAccount = bankOpenClient.selectById(userId);
+		BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
 		UserInfoVO  userInfo = amUserClient.findUserInfoById(userId);
 		
 		// 请求银行绑卡接口
@@ -166,7 +168,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		// 查询用户信息
 		UserVO userVO = amUserClient.findUserById(userId);
 		// 获取用户已绑卡数量
-		int count = bindCardClient.countUserCardValid(bean.getLogUserId());
+		int count = amUserClient.countUserCardValid(bean.getLogUserId());
 		// 如果已经有绑卡则不做操作
 		if(count > 0) {
 			return;
@@ -200,12 +202,12 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 				for (int j = 0; j < array.size(); j++) {
 					JSONObject obj = array.getJSONObject(j);
 					// 根据银行卡号查询银行ID
-					String bankId = bindCardClient.queryBankIdByCardNo(obj.getString("cardNo"));
+					String bankId = amConfigClient.queryBankIdByCardNo(obj.getString("cardNo"));
 					if(bankId == null) {
 						bankId = "0";
 					}
 					// 查询银行配置信息
-					BanksConfigVO bankConfig = bindCardClient.getBanksConfigByBankId(bankId);
+					BanksConfigVO bankConfig = amConfigClient.getBanksConfigByBankId(bankId);
 					
 					BankCardRequest bank = new BankCardRequest();
 					bank.setUserId(userId);
@@ -234,7 +236,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 				}
 
 				for (BankCardRequest bank : bankCardList) {
-					boolean isInsertFlag = bindCardClient.insertUserCard(bank) > 0 ? true : false;
+					boolean isInsertFlag = amUserClient.insertUserCard(bank) > 0 ? true : false;
 					if (!isInsertFlag) {
 						throw new ReturnMessageException(BindCardError.CARD_SAVE_ERROR);
 					}
@@ -244,12 +246,12 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		
 		// 插入操作记录表
 		LogAcqResBean logAcq = bean.getLogAcqResBean();
-		String bankId = bindCardClient.queryBankIdByCardNo(logAcq.getCardNo());
+		String bankId = amConfigClient.queryBankIdByCardNo(logAcq.getCardNo());
 		if(bankId == null) {
 			bankId = "0";
 		}
 		// 查询银行配置信息
-		BanksConfigVO bankConfig = bindCardClient.getBanksConfigByBankId(bankId);
+		BanksConfigVO bankConfig = amConfigClient.getBanksConfigByBankId(bankId);
 		
 		BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
 		bankCardLogRequest.setUserId(userId);
@@ -260,16 +262,16 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
 		bankCardLogRequest.setStatus(0);// 成功
 		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
-		boolean isUpdateFlag = bindCardClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
+		boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 		if (!isUpdateFlag) {
 			throw new ReturnMessageException(BindCardError.CARD_SAVE_ERROR);
 		}
-		BankCardVO retCard = bindCardClient.queryUserCardValid(String.valueOf(userId), logAcq.getCardNo());
+		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), logAcq.getCardNo());
         if (retCard != null) {
             BankCardRequest bankCard=new BankCardRequest();
             bankCard.setId(retCard.getId());
             bankCard.setMobile(callBean.getMobile());
-            bindCardClient.updateUserCard(bankCard);
+            amUserClient.updateUserCard(bankCard);
         }
 		
 	}
@@ -310,7 +312,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 */
 	@Override
 	public BankCallBean callBankUnBindCard(BindCardVO bindCardVO, Integer userId) {
-		BankOpenAccountVO bankAccount = bankOpenClient.selectById(userId);
+		BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
 		UserInfoVO  userInfo = amUserClient.findUserInfoById(userId);
 		UserVO user = amUserClient.findUserById(userId);
 		
@@ -391,13 +393,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         }
 
         // 开户校验
-        BankOpenAccountVO openAccount = bankOpenClient.selectById(userId);
+        BankOpenAccountVO openAccount = amUserClient.selectById(userId);
         if (openAccount == null || StringUtils.isBlank(openAccount.getAccount())) {
         	throw new ReturnMessageException(BindCardError.BANK_NOT_OPEN_ERROR);
         }
         
         // 账户余额校验
-        AccountVO account = bindCardClient.getAccount(userId);
+        AccountVO account = amTradeClient.getAccount(userId);
         BigDecimal bankBalance = this.queryBankBlance(userId, openAccount.getAccount());
         if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
 				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
@@ -405,7 +407,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
         
         // 待解绑卡校验
-        BankCardVO bankCard = bindCardClient.queryUserCardValid(String.valueOf(userId), bindCardVO.getCardNo());
+        BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), bindCardVO.getCardNo());
         if (bankCard == null || StringUtils.isEmpty(bankCard.getCardNo())) {
         	throw new ReturnMessageException(BindCardError.CARD_NOT_EXIST_ERROR);
 		}
@@ -420,9 +422,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void updateAfterUnBindCard(BankCallBean bean) {
 		LogAcqResBean logAcqResBean = bean.getLogAcqResBean();
 		UserVO user = amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
-		BankCardVO bankCard = bindCardClient.queryUserCardValid(String.valueOf(bean.getLogUserId()), logAcqResBean.getCardNo());
+		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(bean.getLogUserId()), logAcqResBean.getCardNo());
 		if(bankCard != null) {
-			bindCardClient.deleteUserCardByUserId(bean.getLogUserId());
+			amUserClient.deleteUserCardByUserId(bean.getLogUserId());
 			
 			// 插入操作记录表
 			BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
@@ -434,7 +436,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			bankCardLogRequest.setOperationType(1);// 操作类型 0绑定 1删除
 			bankCardLogRequest.setStatus(0);// 成功
 			bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
-			boolean isUpdateFlag = bindCardClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
+			boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 			if (!isUpdateFlag) {
 				throw new ReturnMessageException(BindCardError.CARD_DELETE_ERROR);
 			}
