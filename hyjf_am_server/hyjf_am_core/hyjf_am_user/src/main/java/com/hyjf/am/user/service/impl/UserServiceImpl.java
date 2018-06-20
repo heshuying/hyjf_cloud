@@ -95,9 +95,6 @@ public class UserServiceImpl implements UserService {
 	UserBindEmailLogMapper userBindEmailLogMapper;
 
 
-	@Autowired
-	ActivityListMapper activityListMapper;
-
 	@Value("${file.domain.head.url}")
 	private String fileHeadUrl;
 	@Value("${file.upload.head.path}")
@@ -1044,15 +1041,6 @@ public class UserServiceImpl implements UserService {
 		return userEvalationResult;
 	}
 
-
-	/**
-	 * 活动是否过期
-	 */
-	@Override
-	public ActivityList selectActivityList(int activityId) {
-		ActivityList activityList=activityListMapper.selectByPrimaryKey(activityId);
-		return activityList;
-	}
 	/**
 	 * 获取评分标准列表
 	 * @return
