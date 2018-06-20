@@ -1,4 +1,4 @@
-package com.hyjf.am.resquest.user;
+package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;

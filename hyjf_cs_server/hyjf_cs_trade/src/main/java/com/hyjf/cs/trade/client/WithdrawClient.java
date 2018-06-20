@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 

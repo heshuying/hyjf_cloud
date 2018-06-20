@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hyjf.am.response.trade.AccountRechargeResponse;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import org.slf4j.Logger;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
 import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;

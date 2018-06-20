@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Api(value = "web端用户提现接口")
 @Controller
-@RequestMapping("/app/withdraw")
+@RequestMapping("/api/withdraw")
 public class ApiBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiBankWithdrawController.class);

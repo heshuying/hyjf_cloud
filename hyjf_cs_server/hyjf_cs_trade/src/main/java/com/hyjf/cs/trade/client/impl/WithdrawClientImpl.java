@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.AccountRechargeResponse;
 import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.cs.trade.client.AmUserClient;
