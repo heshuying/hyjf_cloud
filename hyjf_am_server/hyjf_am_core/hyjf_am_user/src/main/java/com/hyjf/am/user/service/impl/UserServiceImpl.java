@@ -94,11 +94,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
 
-
-	@Value("${file.domain.head.url}")
-	private String fileHeadUrl;
-	@Value("${file.upload.head.path}")
-	private String fileHeadPath;
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
 
@@ -279,24 +274,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserVO assembleUserVO(UserVO userVO) {
-		UserInfo usersInfo = userInfoService.findUserInfoById(userVO.getUserId());
-		if (usersInfo != null) {
-			userVO.setSex(usersInfo.getSex());
-			userVO.setTruename(usersInfo.getTruename());
-			userVO.setIdcard(usersInfo.getIdcard());
-			userVO.setRoleId(usersInfo.getRoleId() + "");
-			userVO.setBorrowerType(usersInfo.getBorrowerType());
-		}
-		userVO.setIconurl(this.assembleIconUrl(userVO));
-
-		// todo 银行 汇付开户账号 紧急联系人 usersContract
-		userVO.setOpenAccount(null);
-		userVO.setBankOpenAccount(null);
-		return userVO;
-	}
-
-	@Override
 	public void updateLoginUser(int userId, String ip) {
 		UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);
 		if (userLoginLog == null) {
@@ -323,23 +300,6 @@ public class UserServiceImpl implements UserService {
 			userLoginLog.setUpdateTime(new Date());
 			userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
 		}
-	}
-
-	/**
-	 * 组装图像url
-	 *
-	 * @param userVO
-	 * @return
-	 */
-	private String assembleIconUrl(UserVO userVO) {
-		String iconUrl = userVO.getIconurl();
-		if (org.apache.commons.lang3.StringUtils.isNotBlank(iconUrl)) {
-			String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
-			imghost = imghost.substring(0, imghost.length() - 1);
-			String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
-			return imghost + fileUploadTempPath + iconUrl;
-		}
-		return null;
 	}
 
 	/**
@@ -864,8 +824,8 @@ public class UserServiceImpl implements UserService {
 	
 	/**
 	 * 保存紧急联系人信息
-	 * @param record
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public int updateUserContact(UsersContractRequest record){
@@ -898,8 +858,8 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 检查邮箱是否已使用
-	 * @param email
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public boolean checkEmailUsed(String email) {
@@ -915,7 +875,8 @@ public class UserServiceImpl implements UserService {
 	
 	/**
 	 * 插入绑定邮箱日志
-	 * @param log
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public void insertEmailBindLog(UserBindEmailLog log) {
@@ -935,11 +896,11 @@ public class UserServiceImpl implements UserService {
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		userBindEmailLogMapper.insertSelective(log);
 	}
-	
+
 	/**
 	 * 查询绑定邮箱日志
-	 * @param userid
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
 	public UserBindEmailLog getUserBindEmail(Integer userid) {
@@ -955,20 +916,19 @@ public class UserServiceImpl implements UserService {
 	
 	/**
 	 * 绑定邮箱更新
-	 * @param userid
-	 * @param email
-	 * @param
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@Override
-	public void updateBindEmail(Integer userid, String email) {
+	public void updateBindEmail(Integer userId, String email) {
 		UserExample example = new UserExample();
-		example.createCriteria().andUserIdEqualTo(userid);
+		example.createCriteria().andUserIdEqualTo(userId);
 		List<User> usersList = usersMapper.selectByExample(example);
 		User u = usersList.get(0);
 		u.setEmail(email);
 		usersMapper.updateByPrimaryKeySelective(u);
 		
-		UserBindEmailLog log = this.getUserBindEmail(userid);
+		UserBindEmailLog log = this.getUserBindEmail(userId);
 		if(log != null) {
 			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
 			userBindEmailLogMapper.updateByPrimaryKey(log);

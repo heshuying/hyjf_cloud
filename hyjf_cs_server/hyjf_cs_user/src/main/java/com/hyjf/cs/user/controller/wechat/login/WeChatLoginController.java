@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.wechat.login;
 
 import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -47,18 +48,18 @@ public class WeChatLoginController extends BaseUserController {
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public WechatResult<UserVO> login(HttpServletRequest request, @RequestBody LoginRequestVO user) {
+    public WechatResult<WebViewUserVO> login(HttpServletRequest request, @RequestBody LoginRequestVO user) {
         logger.info("login start, loginUserName is :{}", user.getUsername());
         // 现只支持两个参数  1微信  2风车理财
         if (!"1".equals(user.getEnv()) && !"2".equals(user.getEnv())) {
             throw new ReturnMessageException(LoginError.ERROR_PARAM);
         }
-        WechatResult<UserVO> result = new WechatResult<UserVO>();
+        WechatResult<WebViewUserVO> result = new WechatResult<WebViewUserVO>();
         // weChat 只支持手机号登录
         if (!CommonUtils.isMobile(user.getUsername())) {
             throw new ReturnMessageException(LoginError.USER_LOGIN_ERROR);
         }
-        UserVO userVO = loginService.login(user.getUsername(), user.getPassword(), GetCilentIP.getIpAddr(request));
+        WebViewUserVO userVO = loginService.login(user.getUsername(), user.getPassword(), GetCilentIP.getIpAddr(request));
         if (userVO != null) {
             logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());
             result.setData(userVO);

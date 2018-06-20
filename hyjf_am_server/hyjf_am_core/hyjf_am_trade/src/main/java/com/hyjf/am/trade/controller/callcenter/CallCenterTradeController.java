@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.callcenter;
 import com.hyjf.am.response.callcenter.*;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
@@ -222,5 +223,22 @@ public class CallCenterTradeController {
             callCenterCouponBackMoneyResponse.setResultList(callCenterCouponBackMoneyVOS);
         }
         return callCenterCouponBackMoneyResponse;
+    }
+    
+    /**
+     * 查询投资明细(汇添金)
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryHtjBorrowInvestList", method = RequestMethod.POST)
+    public CallcenterHtjInvestResponse queryHtjBorrowInvestList(@RequestBody @Valid CallcenterHtjInvestRequest request){
+    	CallcenterHtjInvestResponse callcenterHtjInvestResponse = new CallcenterHtjInvestResponse();
+        List<CallcenterHtjInvestCustomize> list = callCenterTradeService.getHtjBorrowInvestList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallcenterHtjInvestVO> callcenterHtjInvestVO = CommonUtils.convertBeanList(list,CallcenterHtjInvestVO.class);
+            callcenterHtjInvestResponse.setResultList(callcenterHtjInvestVO);
+        }
+        return callcenterHtjInvestResponse;
     }
 }

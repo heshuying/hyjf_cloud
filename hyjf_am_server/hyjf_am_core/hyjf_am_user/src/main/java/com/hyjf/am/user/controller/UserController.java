@@ -54,7 +54,7 @@ public class UserController {
 			} else {
 				UserVO userVO = new UserVO();
 				BeanUtils.copyProperties(user, userVO);
-				userResponse.setResult(userService.assembleUserVO(userVO));
+				userResponse.setResult(userVO);
 			}
 		} catch (MQException e) {
 			logger.error("user register error...", e);
@@ -117,7 +117,7 @@ public class UserController {
 		if (user != null) {
 			UserVO userVO = new UserVO();
 			BeanUtils.copyProperties(user, userVO);
-			response.setResult(userService.assembleUserVO(userVO));
+			response.setResult(userVO);
 		}
 		return response;
 	}

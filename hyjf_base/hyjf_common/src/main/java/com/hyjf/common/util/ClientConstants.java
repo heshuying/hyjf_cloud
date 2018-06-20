@@ -77,7 +77,8 @@ public class ClientConstants implements Serializable {
 
 	/** 存管渠道柜面 */
 	public static final String CHANNEL_OTHER = "000004";
-
+	//该活动已结束
+	public static final String PLATFORM_LIMIT="本活动限***端参与";
 	/**
 	 * url header获取
 	 */

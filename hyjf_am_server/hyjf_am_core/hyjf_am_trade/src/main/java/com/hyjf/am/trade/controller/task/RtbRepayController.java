@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +89,7 @@ public class RtbRepayController {
 	}
 
 	@RequestMapping("/increaseInterestRepay")
-	public void rtbInterestRepay(@RequestBody RtbIncreaseRepayRequest request) {
+	public void rtbInterestRepay(@RequestBody @Valid RtbIncreaseRepayRequest request) {
 		BorrowApicronVO borrowApicron = request.getBorrowApicronVO();
 
 		Long startTime = GetDate.getMillis();

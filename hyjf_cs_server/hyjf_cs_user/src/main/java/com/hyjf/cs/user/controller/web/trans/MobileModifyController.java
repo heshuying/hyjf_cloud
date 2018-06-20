@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
@@ -53,8 +53,11 @@ public class MobileModifyController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(MobileModifyController.class);
     @Autowired
     MobileModifyService mobileModifyService;
+
     /**
      * 用户手机号码修改(未开户)
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "手机号码修改（未开户）", notes = "手机号码修改（未开户）")
     @ApiImplicitParam(name = "paraMap",value = "{newMobile: string,smsCode: string}", dataType = "Map")
@@ -63,7 +66,7 @@ public class MobileModifyController extends BaseUserController {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
         WebResult<UserVO> result = new WebResult<UserVO>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         boolean checkRet = mobileModifyService.checkForMobileModify(paraMap.get("newMobile"), paraMap.get("smsCode"));
         if(checkRet) {
             UserVO userVO = new UserVO();
@@ -77,15 +80,17 @@ public class MobileModifyController extends BaseUserController {
     
     /**
      * 用户手机号码修改（已开户）
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "手机号码修改（已开户）", notes = "手机号码修改（已开户）")
-    @ApiImplicitParam(name = "paraMap",value = "{newMobile: string,smsCode: string}", dataType = "Map")
+    @ApiImplicitParam(name = "paraMap",value = "{newMobile:string,smsCode:string,srvAuthCode:string}", dataType = "Map")
     @PostMapping(value = "/mobileModifyOpened", produces = "application/json; charset=utf-8")
     public WebResult<UserVO> mobileModifyOpened(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
         WebResult<UserVO> result = new WebResult<UserVO>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         
         boolean checkRet = mobileModifyService.checkForMobileModifyOpened(paraMap.get("newMobile"), paraMap.get("smsCode"), paraMap.get("srvAuthCode"));
         if(checkRet) {
@@ -124,14 +129,13 @@ public class MobileModifyController extends BaseUserController {
 
     /**
      * 用户手机号修改基础信息获取
-     * @param token
-     * @param request
-     * @return
+     * @auther: hesy
+     * @date: 2018/6/20
      */
     @ApiOperation(value = "用户手机号修改基础信息获取", notes = "用户手机号修改基础信息获取")
     @PostMapping("/mobileModifyInit")
     public MobileModifyResultBean mobileModifyInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         MobileModifyResultBean resultBean = mobileModifyService.queryForMobileModify(user.getUserId());
 
         return resultBean;
@@ -163,6 +167,11 @@ public class MobileModifyController extends BaseUserController {
         return result;
     }
 
+    /**
+     * 用户修改手机号发送短信验证码
+     * @auther: hesy
+     * @date: 2018/6/20
+     */
     @ApiOperation(value = "用户修改手机号发送短信验证码", notes = "用户修改手机号发送短信验证码")
     @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
     @PostMapping(value = "/mobileModifySendCode", produces = "application/json; charset=utf-8")
@@ -170,7 +179,7 @@ public class MobileModifyController extends BaseUserController {
         logger.info("Web端用户修改手机号发送短信验证码, mobile :{}，cardNo:{}", param);
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("mobile")), MsgEnum.ERR_MOBILE);
         CheckUtil.check(mobileModifyService.checkIsOpen(user.getUserId()),MsgEnum.ERR_BANK_NOT_OPEN);
         // 请求银行绑卡接口

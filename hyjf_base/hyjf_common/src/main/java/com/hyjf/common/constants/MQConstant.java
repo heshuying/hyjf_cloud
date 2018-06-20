@@ -43,6 +43,9 @@ public interface MQConstant {
 	 * 优惠券发放
 	 */
 	String GRANT_COUPON_GROUP = "COUPON_GROUP";
+
+	String GRANT_COUPON_TOPIC = "COUPON_TOPIC";
+
 	// 注册送188红包
 	String REGISTER_COUPON_TOPIC = "REGISTER_COUPON_TOPIC";
 	String REGISTER_COUPON_TAG = "REGISTER_COUPON_TAG";

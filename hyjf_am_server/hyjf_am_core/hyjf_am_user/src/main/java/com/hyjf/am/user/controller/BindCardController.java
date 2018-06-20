@@ -25,7 +25,6 @@ import com.hyjf.am.vo.user.BankCardVO;
  * 绑卡及解绑卡服务类
  * @author hesy
  */
-
 @RestController
 @RequestMapping("/am-user/card")
 public class BindCardController {
@@ -35,9 +34,8 @@ public class BindCardController {
 
 	/**
 	 * 查询用户已绑定的有效卡
-	 * @param userId
-	 * @param cardNo
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping("/queryUserCardValid/{userId}/{cardNo}")
 	public BankCardResponse queryUserCardValid(@PathVariable Integer userId, @PathVariable String cardNo) {
@@ -53,18 +51,18 @@ public class BindCardController {
 	
 	/**
 	 * 统计用户绑定的有效银行卡个数
-	 * @param userId
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping("/countUserCardValid/{userId}")
 	public int countUserCardValid(@PathVariable Integer userId) {
 		return bindCardService.countUserCardValid(userId);
 	}
-	
+
 	/**
 	 * 根据userId删除银行卡信息
-	 * @param userId
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping("/deleteUserCardByUserId/{userId}")
 	public int deleteUserCardByUserId(@PathVariable Integer userId) {
@@ -73,8 +71,8 @@ public class BindCardController {
 	
 	/**
 	 * 根据cardNo删除银行卡
-	 * @param cardNo
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping("/deleteUserCardByCardNo/{cardNo}")
 	public int deleteUserCardByCardNo(@PathVariable String cardNo) {
@@ -83,8 +81,8 @@ public class BindCardController {
 	
 	/**
 	 * 保存用户绑定的银行卡
-	 * @param bankCardRequest
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping(value = "/insertUserCard", method = RequestMethod.POST)
 	public int insertUserCard(@RequestBody @Valid BankCardRequest bankCardRequest) {
@@ -96,8 +94,8 @@ public class BindCardController {
 	
 	/**
 	 * 更新用户绑定的银行卡
-	 * @param bankCardRequest
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping(value = "/updateUserCard", method = RequestMethod.POST)
 	public int updateUserCard(@RequestBody @Valid BankCardRequest bankCardRequest) {
@@ -109,8 +107,8 @@ public class BindCardController {
 	
 	/**
 	 * 插入绑卡日志
-	 * @param bankCardLogRequest
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping(value = "/insertBindCardLog", method = RequestMethod.POST)
 	public int insertBindCardLog(@RequestBody @Valid BankCardLogRequest bankCardLogRequest) {
@@ -122,8 +120,8 @@ public class BindCardController {
 
 	/**
 	 * 更新绑卡授权记录
-	 * @param
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping(value = "/updateBankSmsLog", method = RequestMethod.POST)
 	public boolean updateBankSmsLog(@RequestBody BankSmsLogRequest request) {
@@ -140,8 +138,8 @@ public class BindCardController {
 
 	/**
 	 * 查询用户的授权码
-	 * @param
-	 * @return
+	 * @auther: hesy
+	 * @date: 2018/6/20
 	 */
 	@RequestMapping(value = "/selectBankSmsLog", method = RequestMethod.POST)
 	public String selectBankSmsLog(@RequestBody BankSmsLogRequest request) {
