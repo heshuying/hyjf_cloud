@@ -7,9 +7,9 @@ import com.hyjf.am.vo.trade.account.SynBalanceVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.cs.trade.client.AmBankOpenClient;
-import com.hyjf.cs.trade.client.AmBindCardClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.BankOpenClient;
+import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.client.SynBalanceClient;
 import com.hyjf.cs.trade.service.SynBalanceService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -28,20 +28,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class SynBalanceServiceImpl implements SynBalanceService {
     @Autowired
-    AmBankOpenClient amBankOpenClient;
+    BankOpenClient bankOpenClient;
 
     @Autowired
     AmUserClient amUserClient;
 
     @Autowired
-    AmBindCardClient amBindCardClient;
+    BindCardClient bindCardClient;
 
     @Autowired
     SynBalanceClient synBalanceClient;
 
     @Override
     public BankOpenAccountVO getBankOpenAccount(String accountId) {
-        return amBankOpenClient.selectByAccountId(accountId);
+        return bankOpenClient.selectByAccountId(accountId);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SynBalanceServiceImpl implements SynBalanceService {
 
     @Override
     public AccountVO getAccount(Integer userId) {
-        return amBindCardClient.getAccount(userId);
+        return bindCardClient.getAccount(userId);
     }
 
     @Override

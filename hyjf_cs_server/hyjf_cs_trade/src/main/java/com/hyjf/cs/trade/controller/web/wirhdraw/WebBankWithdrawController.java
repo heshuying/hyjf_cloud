@@ -2,13 +2,14 @@ package com.hyjf.cs.trade.controller.web.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.WebBorrowService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -40,7 +41,7 @@ public class WebBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
     @Autowired
-    private WebBorrowService webBorrowService;
+    private BankWithdrawService webBorrowService;
 
 
     /**

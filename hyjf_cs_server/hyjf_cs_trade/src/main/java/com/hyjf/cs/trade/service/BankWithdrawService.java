@@ -2,8 +2,8 @@ package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.Map;

@@ -4,7 +4,7 @@ import com.hyjf.am.response.trade.AccountListResponse;
 import com.hyjf.am.response.user.UserEvalationResultResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.cs.trade.client.AmAccountListClient;
+import com.hyjf.cs.trade.client.AccountListClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
-public class AmAccountListClientImpl implements AmAccountListClient {
+public class AmAccountListClientImpl implements AccountListClient {
     @Autowired
     private RestTemplate restTemplate;
     @Override
