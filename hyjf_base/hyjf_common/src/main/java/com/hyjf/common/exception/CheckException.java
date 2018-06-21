@@ -10,6 +10,8 @@
  */
 package com.hyjf.common.exception;
 
+import com.hyjf.common.constants.MsgCode;
+
 /**
  * 自定义异常，用于组合层返回给页面
  * @author liubin
@@ -65,6 +67,11 @@ public class CheckException extends RuntimeException{
 		
 	public CheckException(Throwable cause) {
 		super(cause);
+	}
+
+	public CheckException(MsgCode msgCode) {
+		super(msgCode.getMsg());
+		this.code = msgCode.getCode();
 	}
 
 	public CheckException(String code, String message) {
