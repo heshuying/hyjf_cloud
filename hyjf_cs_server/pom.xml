@@ -1,31 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.hyjf</groupId>
-	<artifactId>hyjf_cs_server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <groupId>com.hyjf</groupId>
+    <artifactId>hyjf_cs_server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-	<packaging>pom</packaging>
+    <packaging>pom</packaging>
 
-	<name>hyjf_cloud_server</name>
-	<description>Demo project for Spring Boot</description>
+    <name>hyjf_cloud_server</name>
+    <description>Demo project for Spring Boot</description>
 
-	<parent>
-		<groupId>com.hyjf</groupId>
-		<artifactId>hyjf_cloud</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/>
-	</parent>
-	
-	<modules>
-		<module>hyjf_cs_user</module>
-		<module>hyjf_cs_market</module>
-		<module>hyjf_cs_trade</module>
-		<module>hyjf_cs_message</module>
-		<module>hyjf_cs_common</module>
-	</modules>
+    <parent>
+        <groupId>com.hyjf</groupId>
+        <artifactId>hyjf_cloud</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
 
+    <modules>
+        <module>hyjf_cs_user</module>
+        <module>hyjf_cs_market</module>
+        <module>hyjf_cs_trade</module>
+        <module>hyjf_cs_message</module>
+        <module>hyjf_cs_common</module>
+    </modules>
 
+    <dependencies>
+
+        <!--swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+    </dependencies>
 </project>

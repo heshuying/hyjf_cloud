@@ -27,18 +27,18 @@ import java.util.List;
  * @version ProjectListController, v0.1 2018/6/13 11:15
  */
 @RestController
-@RequestMapping("/web/projectlist")
+@RequestMapping("/am-trade/projectlist")
 public class ProjectListController {
 
     @Autowired
    private ProjectListService projectListService;
 
     /**
-     * 网站首页获取散标推荐
+     * Web网站首页获取散标推荐
      * @param request
      * @return
      */
-    @RequestMapping("/searchProjectList")
+    @RequestMapping("/web/searchProjectList")
     public ProjectListResponse searchProjectList(@RequestBody @Valid ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchProjectList(request);
@@ -54,7 +54,7 @@ public class ProjectListController {
      * @param request
      * @return
      */
-    @RequestMapping("/countProjectList")
+    @RequestMapping("/web/countProjectList")
     public ProjectListResponse countProjectList(@RequestBody @Valid ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
         int count = projectListService.countProjectList(request);
@@ -67,7 +67,7 @@ public class ProjectListController {
      * @author zhangyk
      * @date 2018/6/19 15:12
      */
-    @RequestMapping("/searchWebCreditListCount")
+    @RequestMapping("/web/searchWebCreditListCount")
     public CreditListResponse searchCreditListCount(@RequestBody @Valid CreditListRequest request){
         CreditListResponse CreditListResponse = new CreditListResponse();
         int count = projectListService.countCreditList(request);
@@ -81,7 +81,7 @@ public class ProjectListController {
      * @author zhangyk
      * @date 2018/6/19 15:09
      */
-    @RequestMapping("/searchWebCreditList")
+    @RequestMapping("/web/searchWebCreditList")
     public CreditListResponse searchCreditList(@RequestBody @Valid CreditListRequest request){
         CreditListResponse res = new CreditListResponse();
         List<TenderCreditDetailCustomizeVO> list = projectListService.searchCreditList(request);
@@ -90,6 +90,66 @@ public class ProjectListController {
     }
 
 
+    // --------------------------------------web end------------------------------------------
+    //---------------------------------------app start------------------------------------------
+    /**
+     * App端获取散标投资
+     * @param request
+     * @return
+     */
+    @RequestMapping("/app/searchProjectList")
+    public ProjectListResponse searchAppProjectList(@RequestBody @Valid ProjectListRequest request){
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        List<WebProjectListCustomize> list = projectListService.searchAppProjectList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
+            projectListResponse.setResultList(webProjectListCustomizeVo);
+        }
+        return projectListResponse;
+    }
+
+    /**
+     * app端散标投资count
+     * @param request
+     * @return
+     */
+    @RequestMapping("/app/countProjectList")
+    public ProjectListResponse countAppProjectList(@RequestBody @Valid ProjectListRequest request){
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        int count = projectListService.countAppProjectList(request);
+        projectListResponse.setCount(count);
+        return projectListResponse;
+    }
+
+    /**
+     * App端获取散标投资
+     * @param request
+     * @return
+     */
+    @RequestMapping("/app/searchCreditList")
+    public ProjectListResponse searchAppCreditList(@RequestBody @Valid ProjectListRequest request){
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        List<WebProjectListCustomize> list = projectListService.searchAppProjectList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
+            projectListResponse.setResultList(webProjectListCustomizeVo);
+        }
+        return projectListResponse;
+    }
+
+    /**
+     * app端散标投资count
+     * @param request
+     * @return
+     */
+    @RequestMapping("/app/countCreditList")
+    public ProjectListResponse countAppCreditList(@RequestBody @Valid ProjectListRequest request){
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        int count = projectListService.countAppProjectList(request);
+        projectListResponse.setCount(count);
+        return projectListResponse;
+    }
+    // --------------------------------------app end-------------------------------------------------
 
 
 }

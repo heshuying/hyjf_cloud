@@ -161,7 +161,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         // borrow_class
         String beforeFix = borrowFinmanNewChargeVO.getProjectType();
 
-        BorrowWithBLOBsVO borrowVO = this.setBorrowCommonData(hjhPlanAssetVO, hjhAssetBorrowTypeVO, borrowFinmanNewChargeVO);
+        BorrowVO borrowVO = this.setBorrowCommonData(hjhPlanAssetVO, hjhAssetBorrowTypeVO, borrowFinmanNewChargeVO);
 
 
         // 获取标签ID
@@ -175,17 +175,17 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         String borrowPreNidNew = getNextBorrowNid();
 
         // 标签ID
-        borrowVO.setLabelId(label.getId());
+       // borrowVO.setLabelId(label.getId());
 
         String borrowNid = beforeFix + borrowPreNidNew;
         //项目标题
-        borrowVO.setProjectName(borrowNid);
+        //borrowVO.setProjectName(borrowNid);
         // 借款编号
-        borrowVO.setBorrowNid(borrowNid);
+       // borrowVO.setBorrowNid(borrowNid);
         // 借款预编码
-        borrowVO.setBorrowPreNid(borrowPreNidNew);
+       // borrowVO.setBorrowPreNid(borrowPreNidNew);
         // 新借款预编码
-        borrowVO.setBorrowPreNidNew(borrowPreNidNew);
+       // borrowVO.setBorrowPreNidNew(borrowPreNidNew);
 
 
         // 借款表插入
@@ -220,11 +220,11 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
      * @param hjhPlanAssetVO
      * @param borrowVO
      */
-    private int insertBorrowManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAssetVO, BorrowWithBLOBsVO borrowVO) {
+    private int insertBorrowManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAssetVO, BorrowVO borrowVO) {
         BorrowManinfoVO borrowManinfo = new BorrowManinfoVO();
 
         borrowManinfo.setBorrowNid(borrowNid);
-        borrowManinfo.setBorrowPreNid(borrowVO.getBorrowPreNid());
+       // borrowManinfo.setBorrowPreNid(borrowVO.getBorrowPreNid());
         // 姓名
         if (StringUtils.isNotEmpty(hjhPlanAssetVO.getTruename())) {
             borrowManinfo.setName(hjhPlanAssetVO.getTruename());
@@ -420,11 +420,11 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
      * @return
      * @throws Exception
      */
-    private BorrowWithBLOBsVO setBorrowCommonData(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO, BorrowFinmanNewChargeVO borrowFinmanNewChargeVO)
+    private BorrowVO setBorrowCommonData(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO, BorrowFinmanNewChargeVO borrowFinmanNewChargeVO)
             throws Exception {
 
         // 插入huiyingdai_borrow
-        BorrowWithBLOBsVO borrow = new BorrowWithBLOBsVO();
+        BorrowVO borrow = new BorrowVO();
 
         // 关联计划
         borrow.setIsShow(1); // 默认不展示
@@ -527,7 +527,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
 //		} else {
 //			borrow.setAccountContents(hjhPlanAssetVO.getAccountContents());
 //		}
-        borrow.setAccountContents(StringUtils.EMPTY);
+        //borrow.setAccountContents(StringUtils.EMPTY);
         borrow.setBorrowType("credit");// 插入时不用的字段
         borrow.setBorrowPassword("");// 插入时不用的字段
         borrow.setBorrowFlag("");// 插入时不用的字段
@@ -553,7 +553,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         borrow.setLateFreeDays(borrowFinmanNewChargeVO.getLateFreeDays()); // 逾期免息天数(汇计划用)late_free_days
 
         // 项目描述
-        borrow.setBorrowContents(hjhPlanAssetVO.getAssetInfo());
+        //borrow.setBorrowContents(hjhPlanAssetVO.getAssetInfo());
         // 新增协议期限字段
 //		if (StringUtils.isNotEmpty(borrowBean.getContractPeriod())) {
 //			borrow.setContractPeriod(Integer.parseInt(borrowBean.getContractPeriod()));
@@ -630,7 +630,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         // 借款到期时间
         borrow.setBorrowEndTime("");
         borrow.setBorrowPartStatus(0);// 插入时不用的字段
-        borrow.setBorrowUpfiles("");// 插入时不用的字段
+        //borrow.setBorrowUpfiles("");// 插入时不用的字段
         borrow.setCancelUserid(0);// 插入时不用的字段
         borrow.setCancelStatus(0);// 插入时不用的字段
         borrow.setCancelTime("");// 插入时不用的字段
@@ -741,7 +741,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         borrow.setCommentStaus(0);
         borrow.setCommentTimes(0); // 插入时不用的字段 评论次数
         borrow.setCommentUsertype(""); // 插入时不用的字段 可评论的用户
-        borrow.setDiyaContents(""); // 插入时不用的字段
+       // borrow.setDiyaContents(""); // 插入时不用的字段
         borrow.setBorrowPawnApp(""); // 插入时不用的字段
         borrow.setBorrowPawnAppUrl(""); // 插入时不用的字段
         borrow.setBorrowPawnAuth(""); // 插入时不用的字段
@@ -750,7 +750,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         borrow.setBorrowPawnFormalitiesUrl(""); // 插入时不用的字段
         borrow.setBorrowPawnType(""); // 插入时不用的字段
         borrow.setBorrowPawnTime(""); // 插入时不用的字段
-        borrow.setBorrowPawnDescription(""); // 插入时不用的字段
+       // borrow.setBorrowPawnDescription(""); // 插入时不用的字段
         borrow.setBorrowPawnValue(""); // 插入时不用的字段
         borrow.setBorrowPawnXin(""); // 插入时不用的字段
         borrow.setOrderTop(""); // 插入时不用的字段 置顶时间
@@ -773,8 +773,8 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         borrow.setReverifyStatus(0); // 插入时不用的字段
         borrow.setReverifyContents(""); // 插入时不用的字段 审核复审标注
         borrow.setUpfilesId(""); // 插入时不用的字段 发标上传图片
-        borrow.setBorrowRunningUse(""); // 插入时不用的字段 资金运转-用途
-        borrow.setBorrowRunningSoruce(""); // 插入时不用的字段 资金运转-来源
+        //borrow.setBorrowRunningUse(""); // 插入时不用的字段 资金运转-用途
+        //borrow.setBorrowRunningSoruce(""); // 插入时不用的字段 资金运转-来源
 
 //		// 担保机构 风险控制措施-机构
 //		borrow.setBorrowMeasuresInstit(hjhPlanAssetVO.getBorrowMeasuresInstit());
@@ -786,14 +786,14 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
 //		borrow.setBorrowMeasuresMort(hjhPlanAssetVO.getBorrowMeasuresMort());
 //		// 本息保障 险控制措施-措施  风控措施  现在默认写死
         String measureMea = "1、汇盈金服已对该项目进行了严格的审核，最大程度的确保借款方信息的真实性，但不保证审核信息完全无误。<br>2、汇盈金服仅为信息发布平台，不对出借人提供担保或承诺保本保息，出借人应根据自身的投资偏好和风险承受能力进行独立判断和作出决策。市场有风险，投资需谨慎。<br>";
-        borrow.setBorrowMeasuresMea(measureMea);
-        borrow.setBorrowAnalysisPolicy(""); // 插入时不用的字段 政策及市场分析-政策支持
-        borrow.setBorrowAnalysisMarket(""); // 插入时不用的字段 政策及市场分析-市场分析
-        borrow.setBorrowCompany(""); // 插入时不用的字段 企业背景
-        borrow.setBorrowCompanyScope(""); // 插入时不用的字段 企业信息-营业范围
-        borrow.setBorrowCompanyBusiness(""); // 插入时不用的字段 企业信息-经营状况
-        borrow.setXmupfilesId(""); // 插入时不用的字段
-        borrow.setDyupfilesId(""); // 插入时不用的字段
+        //borrow.setBorrowMeasuresMea(measureMea);
+        //borrow.setBorrowAnalysisPolicy(""); // 插入时不用的字段 政策及市场分析-政策支持
+        //borrow.setBorrowAnalysisMarket(""); // 插入时不用的字段 政策及市场分析-市场分析
+        //borrow.setBorrowCompany(""); // 插入时不用的字段 企业背景
+        //borrow.setBorrowCompanyScope(""); // 插入时不用的字段 企业信息-营业范围
+        //borrow.setBorrowCompanyBusiness(""); // 插入时不用的字段 企业信息-经营状况
+        //borrow.setXmupfilesId(""); // 插入时不用的字段
+        //borrow.setDyupfilesId(""); // 插入时不用的字段
         // 项目资料
 //		borrow.setFiles(this.getUploadImage(borrowBean, "", borrowNid));
         // 担保方式

@@ -16,8 +16,6 @@ public class ProjectListResponse extends Response<WebProjectListCustomizeVo> {
     // 数据查询条数 主要用于分页情况，原子层向组合层返回
     private  Integer  count;
 
-
-
     public Integer getCount() {
         return count;
     }

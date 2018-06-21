@@ -78,7 +78,7 @@ public interface AutoSendClient {
      *
      * @param borrow
      */
-    void insertSelective(BorrowWithBLOBsVO borrow);
+    void insertSelective(BorrowVO borrow);
 
     /**
      * 个人信息

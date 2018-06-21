@@ -4,6 +4,7 @@ import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.UserService;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -44,4 +46,22 @@ public class HjhInstConfigController {
 		}
 		return response;
 	}
+
+    /**
+     * 根据机构编号查询机构列表
+     * @param instCode
+     * @return
+     */
+	@ApiOperation(value = " 根据机构编号检索机构列表")
+	@GetMapping("/selectInstConfigListByInstCode/{instCode}")
+	public HjhInstConfigResponse selectInstConfigListByInstCode(@PathVariable(value = "instCode") String instCode){
+        HjhInstConfigResponse response = new HjhInstConfigResponse();
+        List<HjhInstConfig> hjhInstConfigList = userService.selectInstConfigListByInstCode(instCode);
+        if (null!=hjhInstConfigList&&hjhInstConfigList.size()>0) {
+            List<HjhInstConfigVO> hjhInstConfigVO = CommonUtils.convertBeanList(hjhInstConfigList,HjhInstConfigVO.class);
+            response.setResultList(hjhInstConfigVO);
+        }
+        return response;
+    }
+
 }

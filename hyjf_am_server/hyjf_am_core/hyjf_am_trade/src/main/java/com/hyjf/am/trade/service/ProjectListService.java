@@ -22,30 +22,61 @@ public interface ProjectListService {
 
 
     /**
-     * 获取项目列表
+     * Web端获取项目列表
      * @param request
      * @return
      */
     List<WebProjectListCustomize> searchProjectList(@Valid ProjectListRequest request);
 
     /**
-     * 获取项目列表件数
+     * Web端获取项目列表件数
      * @param request
      * @return
      */
     int countProjectList(@Valid ProjectListRequest request);
 
     /**
-     * 获取债转列表count
+     * Web端获取债转列表count
      * @param request
      * @return
      */
     int countCreditList(@Valid CreditListRequest request);
 
     /**
-     * @desc  获取债转列表list
+     * Web端获取债转列表list
      * @author zhangyk
      * @date 2018/6/19 16:00
      */
     List<TenderCreditDetailCustomizeVO> searchCreditList(@Valid CreditListRequest request);
+
+    // --------------------------web end --------------------------------------------------
+    //---------------------------app start ------------------------------------------------
+    /**
+     * app端获取散标投资count
+     * @author zhangyk
+     * @date 2018/6/20 16:11
+     */
+     int  countAppProjectList(@Valid ProjectListRequest request);
+
+    /**
+     * app端获取散标投资数据list
+     * @author zhangyk
+     * @date 2018/6/20 16:11
+     */
+    List<WebProjectListCustomize> searchAppProjectList(@Valid ProjectListRequest request);
+
+    /**
+     * app端获取散标投资count
+     * @author zhangyk
+     * @date 2018/6/20 16:11
+     */
+    int  countAppCreditList(@Valid ProjectListRequest request);
+
+    /**
+     * app端获取散标投资数据list
+     * @author zhangyk
+     * @date 2018/6/20 16:11
+     */
+    List<WebProjectListCustomize> searchAppCreditList(@Valid ProjectListRequest request);
+    // --------------------------app end --------------------------------------------------
 }

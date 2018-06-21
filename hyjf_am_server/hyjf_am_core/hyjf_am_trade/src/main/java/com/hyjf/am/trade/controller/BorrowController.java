@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.BorrowResponse;
-import com.hyjf.am.response.trade.BorrowWithBLOBsResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -116,14 +115,14 @@ public class BorrowController {
 	}
 
 
-	@GetMapping("/getBorrowWithBLOBsByNid/{borrowNid}")
-	public BorrowWithBLOBsResponse getBorrowWithBLOBsByNid(@PathVariable String borrowNid){
-		BorrowWithBLOBsResponse response = new BorrowWithBLOBsResponse();
-		BorrowWithBLOBsVO borrowWithBLOBs=borrowService.getBorrowWithBLOBsByNid(borrowNid);
-		if (borrowWithBLOBs!=null){
-			response.setResult(borrowWithBLOBs);
-		}
-		return response;
-	}
+//	@GetMapping("/getBorrowWithBLOBsByNid/{borrowNid}")
+//	public BorrowWithBLOBsResponse getBorrowWithBLOBsByNid(@PathVariable String borrowNid){
+//		BorrowWithBLOBsResponse response = new BorrowWithBLOBsResponse();
+//		BorrowWithBLOBsVO borrowWithBLOBs=borrowService.getBorrowWithBLOBsByNid(borrowNid);
+//		if (borrowWithBLOBs!=null){
+//			response.setResult(borrowWithBLOBs);
+//		}
+//		return response;
+//	}
 
 }
