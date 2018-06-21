@@ -17,7 +17,7 @@ import com.hyjf.pay.lib.anrong.bean.AnRongBean;
  * @author sss
  * @version hyjf 1.0
  * @since hyjf 1.0 2017年10月10日
- * @see 上午10:20:00
+ * @see
  */
 public class AnRongCallUtils implements Serializable {
 	private static Logger log = LoggerFactory.getLogger(AnRongCallUtils.class);

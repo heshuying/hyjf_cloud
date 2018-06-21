@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper">
+
+	<!-- 近期回款列表 -->
+	<resultMap id="recentPaymentMap" type="com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize">
+		<result column="project_name" property="projectName" />
+		<result column="borrow_apr" property="borrowApr" />
+		<result column="invest_date" property="investDate" />
+		<result column="total_wait" property="totalWait" />
+		<result column="type" property="type" />
+		<result column="coupon_type" property="couponType" />
+		<result column="projectNid" property="projectNid" />
+	</resultMap>
+	<select id="selectRecentPaymentList" resultMap="recentPaymentMap" parameterType="java.util.Map">
+		SELECT t.* FROM (
+		SELECT
+		IFNULL(borrowInfo.project_name, borrow.`borrow_nid`) AS project_name,
+		borrow.borrow_nid AS projectNid,
+		CONCAT(borrow.borrow_apr, '%') borrow_apr,
+		FROM_UNIXTIME(borrow.repay_last_time, '%Y-%m-%d' ) AS invest_date,
+		borrow.repay_last_time as orderby_invest_date,
+		CASE
+		WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
+		ELSE 0 END type,
+		0 coupon_type,
+		IFNULL(rec.recover_capital_wait,ten.account)+
+		IFNULL( rec.recover_interest_wait, 0 )-
+		(SELECT IFNULL(SUM(ct.assign_interest - ct.assign_repay_interest),0)
+		FROM ht_credit_tender ct
+		WHERE rec.nid = ct.credit_tender_nid
+		)-
+		(SELECT IFNULL(SUM(ct.assign_capital - ct.assign_repay_capital),0)
+		FROM ht_credit_tender ct
+		WHERE rec.nid = ct.credit_tender_nid
+		) total_wait
+		FROM
+		ht_borrow_tender ten
+		LEFT JOIN ht_borrow_recover rec
+		ON ten.nid = rec.nid
+		AND rec.recover_capital > rec.credit_amount
+		AND rec.recover_account_wait> 0
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = ten.borrow_nid
+		LEFT JOIN (SELECT hbc.tender_nid,
+		MIN(hbc.credit_capital_assigned) credit_capital_assigned,
+		MIN(hbc.credit_status) credit_status FROM ht_borrow_credit hbc
+		GROUP BY hbc.tender_nid
+		) hbc ON ten.nid=hbc.tender_nid
+		WHERE
+		borrow.`status` = 4
+		AND ten.user_id= #{userId}
+		AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
+		AND borrow.plan_nid IS NULL
+		UNION ALL
+		SELECT
+		IFNULL(borrowInfo.project_name, borrow.`borrow_nid`) AS project_name,
+		borrow.borrow_nid AS projectNid,
+		CONCAT(borrow.borrow_apr, '%') borrow_apr,
+		FROM_UNIXTIME(borrow.repay_last_time, '%Y-%m-%d' ) AS invest_date,
+		borrow.repay_last_time,
+		2 AS type,
+		0 coupon_type,
+		(ten.assign_capital+ten.assign_interest) total_wait
+		FROM
+		ht_credit_tender ten
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = ten.bid_nid
+		WHERE ten.user_id= #{userId}
+		AND borrow.`status` = 4
+		AND ten.assign_interest>0
+		AND borrow.plan_nid IS NULL
+		UNION ALL
+		SELECT
+		IFNULL(borrowInfo.project_name, hb.`borrow_nid`) AS project_name,
+		hb.borrow_nid AS projectNid,
+		CASE
+		WHEN hcc.coupon_type = 2 THEN
+		CONCAT(hcc.coupon_quota, '%')
+		ELSE
+		CONCAT(hb.borrow_apr, '%')
+		END
+		borrow_apr,
+		FROM_UNIXTIME(MAX(hcr.recover_time), '%Y-%m-%d' ) AS recover_time,
+		MAX(hcr.recover_time),
+		3 type,
+		hcc.coupon_type coupon_type,
+		IFNULL(SUM(hcr.recover_account),0) total_wait
+		FROM
+		ht_borrow_tender_cpn hbtc
+		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
+		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
+		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
+		INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		WHERE hbtc.user_id= #{userId}
+		AND hb.plan_nid IS NULL
+		GROUP BY hbtc.nid
+		HAVING MIN(hcr.recover_status)=0
+		AND IFNULL(SUM(hcr.recover_account),0)>0
+		UNION ALL
+		SELECT
+		IFNULL(borrowInfo.project_name, borrow.`borrow_nid`) AS project_name,
+		borrow.borrow_nid AS projectNid,
+		CONCAT(hiii.borrow_extra_yield, '%') borrow_apr,
+
+		FROM_UNIXTIME(borrow.repay_last_time, '%Y-%m-%d' ) AS invest_date,
+		borrow.repay_last_time,
+		4 AS type,
+		0 coupon_type,
+		hiii.repay_interest_wait AS total_wait
+		FROM
+		ht_increase_interest_invest hiii
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hiii.borrow_nid
+		INNER JOIN (select * from ht_increase_interest_loan where user_id=#{userId}
+		) hiil ON hiil.invest_order_id=hiii.order_id
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowInfo.project_type
+		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
+		WHERE borrow.`status` = 4
+		AND hiii.user_id=#{userId}
+		AND borrow.plan_nid IS NULL
+		UNION ALL
+		SELECT
+		hhp.plan_name,
+		<!-- hhp.plan_nid AS projectNid, -->
+		hhp.plan_name AS projectNid,
+		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
+		hha.last_payment_time,
+		5 AS type,
+		0 coupon_type,
+		hha.wait_total wait_total
+		FROM ht_hjh_accede hha
+		LEFT JOIN ht_hjh_plan hhp
+		ON hha.plan_nid=hhp.plan_nid
+		WHERE hha.order_status=3
+		AND hha.user_id=#{userId}
+
+		UNION ALL
+		SELECT
+		hhp.plan_name AS project_name,
+		hbtc.borrow_nid AS projectNid,
+		CASE
+		WHEN hcc.coupon_type = 2 THEN
+		CONCAT(hcc.coupon_quota, '%')
+		ELSE
+		CONCAT(hhp.expect_apr, '%')
+		END
+		borrow_apr,
+		FROM_UNIXTIME(hcr.recover_time, '%Y-%m-%d' ) AS recover_time,
+		hcr.recover_time,
+		3 type,
+		hcc.coupon_type coupon_type,
+		IFNULL(hcr.recover_account,0) total_wait
+		FROM
+		ht_borrow_tender_cpn hbtc
+		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
+		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
+		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
+		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
+		INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		WHERE hbtc.user_id= #{userId}
+		AND hcr.recover_status=0
+		) t
+		ORDER BY t.orderby_invest_date,t.type
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+</mapper>

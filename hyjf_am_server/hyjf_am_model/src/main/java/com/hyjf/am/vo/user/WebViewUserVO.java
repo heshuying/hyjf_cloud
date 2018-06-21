@@ -6,6 +6,7 @@ package com.hyjf.am.vo.user;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * WEB页面展示用户实体
@@ -30,7 +31,9 @@ public class WebViewUserVO extends BaseVO implements Serializable {
 
     private String mobile = "";
 
-    private String iconurl = "";
+    private String iconUrl ="";
+
+    private Date evaluationExpiredTime;
 
     private Integer sex = 0;
 
@@ -134,6 +137,22 @@ public class WebViewUserVO extends BaseVO implements Serializable {
 
     private UsersContactVO usersContact;
 
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public Date getEvaluationExpiredTime() {
+        return evaluationExpiredTime;
+    }
+
+    public void setEvaluationExpiredTime(Date evaluationExpiredTime) {
+        this.evaluationExpiredTime = evaluationExpiredTime;
+    }
+
     public UsersContactVO getUsersContact() {
         return usersContact;
     }
@@ -174,13 +193,6 @@ public class WebViewUserVO extends BaseVO implements Serializable {
         this.mobile = mobile;
     }
 
-    public String getIconurl() {
-        return iconurl;
-    }
-
-    public void setIconurl(String iconurl) {
-        this.iconurl = iconurl;
-    }
 
     public Integer getSex() {
         return sex;

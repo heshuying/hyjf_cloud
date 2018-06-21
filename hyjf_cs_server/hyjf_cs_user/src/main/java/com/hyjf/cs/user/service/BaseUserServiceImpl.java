@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.service;
 
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -446,4 +447,12 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
 		return amUserClient.getCorpOpenAccountRecord(userId);
 	}
+
+	@Override
+	public UserInfoVO getUserInfo(int userId) {
+		UserInfoVO userInfo = amUserClient.findUserInfoById(userId);
+		return userInfo;
+	}
+
+
 }
