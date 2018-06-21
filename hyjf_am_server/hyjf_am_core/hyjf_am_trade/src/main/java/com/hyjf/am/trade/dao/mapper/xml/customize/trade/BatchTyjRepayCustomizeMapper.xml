@@ -7,11 +7,11 @@
 		SELECT DISTINCT
 			r.tender_id
 		FROM
-			hyjf_coupon_recover r
-		INNER JOIN hyjf_borrow_tender_cpn cpn ON r.tender_id = cpn.nid
-		INNER JOIN hyjf_coupon_tender t ON r.tender_id = t.order_id
-		INNER JOIN hyjf_coupon_user u ON t.coupon_grant_id = u.id
-		INNER JOIN hyjf_coupon_config c ON u.coupon_code = c.coupon_code
+			ht_coupon_recover r
+		INNER JOIN ht_borrow_tender_cpn cpn ON r.tender_id = cpn.nid
+		INNER JOIN ht_coupon_tender t ON r.tender_id = t.order_id
+		INNER JOIN ht_coupon_user u ON t.coupon_grant_id = u.id
+		INNER JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
 		WHERE
 			(
 				c.repay_time_config = 2
@@ -21,7 +21,7 @@
 						SELECT
 							id
 						FROM
-							hyjf_coupon_real_tender t1
+							ht_coupon_real_tender t1
 						WHERE
 							t1.coupon_tender_id = cpn.nid
 						AND t1.real_tender_id IS NOT NULL

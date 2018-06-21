@@ -139,4 +139,6 @@ public interface AmUserClient {
      * @Date 2018/6/21 15:45
      */
 	String getBankOpenAccountFiledMess(String logOrdId);
+
+	int isCompAccount(Integer userId);
 }
