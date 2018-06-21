@@ -3,13 +3,15 @@
  */
 package com.hyjf.cs.user.service.password.impl;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.PassWordError;
+import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,18 +19,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.password.PassWordService;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wangc
  * @version PassWordServiceImpl, v0.1 2018/6/14 14:10
  */
 @Service
-public class PassWordServiceImpl  extends BaseServiceImpl implements PassWordService {
+public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWordService {
 
 
     private static Logger logger = LoggerFactory.getLogger(PassWordServiceImpl.class);

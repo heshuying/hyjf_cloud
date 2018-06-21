@@ -4,7 +4,7 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 
 /**
  * @Description 投资请求参数
@@ -28,7 +28,7 @@ public class TenderRequest extends BaseVO {
     // 登录的token
     private String token;
     // 登录的用户对象
-    private WebViewUser user;
+    private WebViewUserVO user;
     // 投资金额
     private String account;
 
@@ -88,11 +88,11 @@ public class TenderRequest extends BaseVO {
         this.token = token;
     }
 
-    public WebViewUser getUser() {
+    public WebViewUserVO getUser() {
         return user;
     }
 
-    public void setUser(WebViewUser user) {
+    public void setUser(WebViewUserVO user) {
         this.user = user;
     }
 

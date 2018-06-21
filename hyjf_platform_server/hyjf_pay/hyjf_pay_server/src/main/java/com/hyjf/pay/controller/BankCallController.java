@@ -24,11 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -310,8 +306,6 @@ public class BankCallController extends BaseController {
      */
     @RequestMapping(value = "callPageBack")
     public void callPageBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
-
-        String methodName = "callPageBack";
         String bgData = request.getParameter("bgData");
         logger.info("接收异步返回的消息开始,订单号:【" + bean.getLogOrderId() + "】,用户ID:【" + bean.getLogUserId() + "】.");
         logger.debug("消息内容=【" + bgData + "】");
