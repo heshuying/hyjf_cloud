@@ -4,13 +4,13 @@
 package com.hyjf.cs.user.service.password;
 
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.user.service.BaseUserService;
 
 /**
  * @author wangc
  * 密码设置相关
  */
-public interface PassWordService extends BaseService {
+public interface PassWordService extends BaseUserService {
 
     /**
      * 修改登陆密码

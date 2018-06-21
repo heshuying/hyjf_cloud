@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -38,7 +37,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -468,18 +466,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             idNo = idNo.replace(idNo.charAt(idNo.length() - 1) + "", "X");
         }
         return idNo;
-    }
-
-
-    /**
-     * 根据用户ID查询企业用户信息
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
-        return amUserClient.getCorpOpenAccountRecord(userId);
     }
 
 }
