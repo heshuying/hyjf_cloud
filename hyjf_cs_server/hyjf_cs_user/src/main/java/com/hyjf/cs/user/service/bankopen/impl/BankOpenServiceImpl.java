@@ -14,6 +14,8 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.client.AmConfigClient;
@@ -28,6 +30,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -197,8 +200,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setAcctUse("00000");
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
-        String retUrl = systemConfig.getFrontHost() + openBean.getClientHeader() + "/open/faild?phone=" + openBean.getMobile();
-        String successUrl = systemConfig.getFrontHost() + openBean.getClientHeader() + "/open/success?phone=" + openBean.getMobile();
+        //String retUrl = systemConfig.getFrontHost() + openBean.getClientHeader() + "/open/faild?phone=" + openBean.getMobile()+"&logOrdId="+openAccoutBean.getLogOrderId();
+        String retUrl = systemConfig.getFrontHost() + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
+        String successUrl = systemConfig.getFrontHost() +"/open/openSuccess";
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
@@ -233,6 +237,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 开户失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 开户失败   将开户记录状态改为4
+            // TODO: 2018/6/21  记录失败原因 
             this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4);
             logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
             result.setStatus(false);
@@ -480,6 +485,23 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     @Override
     public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
         return amUserClient.getCorpOpenAccountRecord(userId);
+    }
+
+    /**
+     * @param logOrdId
+     * @Description 根据 logOrdId查询失败原因
+     * @Author sunss
+     * @Date 2018/6/21 15:34
+     */
+    @Override
+    public WebResult<Object> getFiledMess(String logOrdId) {
+        WebResult<Object> result = new WebResult<Object>();
+        String errorMess = amUserClient.getBankOpenAccountFiledMess(logOrdId);
+        result.setStatus(WebResult.SUCCESS);
+        Map<String,String> map = new HashedMap();
+        map.put("error",errorMess);
+        result.setData(map);
+        return result;
     }
 
 }
