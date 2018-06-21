@@ -12,6 +12,8 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
@@ -71,7 +73,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     @Override
     public void joinPlan(TenderRequest request) {
-        WebViewUser loginUser = RedisUtils.getObj(request.getToken(), WebViewUser.class);
+        WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
         // 查询选择的优惠券
@@ -303,7 +305,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 3)
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 1
                 && cuc.getAddFlg() == 1))) {
-            throw new ReturnMessageException(TenderError.MONEY_NULL_ERROR);
+            throw new CheckException(MsgEnum.ERR_ACTIVITY_ISNULL);
         }
         // 投资金额小数点后超过两位
         if (account.contains(".")) {
