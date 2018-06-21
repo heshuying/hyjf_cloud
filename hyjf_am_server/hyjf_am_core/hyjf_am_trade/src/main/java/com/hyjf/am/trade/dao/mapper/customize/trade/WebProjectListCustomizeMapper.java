@@ -44,4 +44,38 @@ public interface WebProjectListCustomizeMapper {
      * @date 2018/6/19 16:01
      */
     List<TenderCreditDetailCustomizeVO> searchCreditList(Map<String,Object> params);
+
+
+    // ----------------------------------web end -----------------------------------------------
+    // ---------------------------------- app start --------------------------------------------
+
+    /**
+     * 获取可投资项目列表
+     * @param params
+     * @return
+     */
+    List<WebProjectListCustomize> searchAppProjectList(Map<String, Object> params);
+
+    /**
+     * 获取可投资项目列表count
+     * @param params
+     * @return
+     */
+    int countAppProject(Map<String, Object> params);
+
+
+    /**
+     * 获取可投资项目列表
+     * @param params
+     * @return
+     */
+    List<WebProjectListCustomize> searchAppCreditList(Map<String, Object> params);
+
+    /**
+     * 获取可投资项目列表count
+     * @param params
+     * @return
+     */
+    int countAppCredit(Map<String, Object> params);
+    // -----------------------------------app end ----------------------------------------------
 }
