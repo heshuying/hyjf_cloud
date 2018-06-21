@@ -192,4 +192,10 @@ public class BankOpenController {
 		boolean result = this.bankOpenService.saveCardNoToBank(request);
 		return result ? 1 : 0;
 	}
+
+	@GetMapping("/bankopen/getBankOpenAccountFiledMess/{logOrdId}")
+	public String getBankOpenAccountFiledMess(@PathVariable String logOrdId){
+		return bankOpenService.getBankOpenAccountFiledMess(logOrdId);
+	}
+
 }
