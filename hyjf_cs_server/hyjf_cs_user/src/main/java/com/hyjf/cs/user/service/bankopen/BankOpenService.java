@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.bankopen;
 
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
@@ -40,7 +41,7 @@ public interface BankOpenService extends BaseUserService {
 	 * @Version v0.1
 	 * @Date 2018/6/15 17:19
 	 */
-	ModelAndView getOpenAccountMV(OpenAccountPageBean openBean);
+	Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean);
 
 	/**
 	 * @Description 开户异步逻辑处理
@@ -51,4 +52,6 @@ public interface BankOpenService extends BaseUserService {
 	BankCallResult openAccountBgReturn(BankCallBean bean);
 
     Map<String,String> checkApiParam(ApiBankOpenRequestBean requestBean);
+
+	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 }

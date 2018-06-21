@@ -9,5 +9,6 @@ import com.hyjf.am.trade.dao.model.auto.AccountList;
 public interface AccountListService {
 
 	int addAccountList(AccountList convertBean);
-	
+
+    AccountList countAccountListByOrdId(String ordId, String type);
 }

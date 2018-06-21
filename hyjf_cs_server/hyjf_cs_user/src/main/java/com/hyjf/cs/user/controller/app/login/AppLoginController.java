@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.app.login;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.LoginRequestVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.util.CommonUtils;
@@ -49,10 +50,10 @@ public class AppLoginController extends BaseUserController {
      */
     @ApiOperation(value = "登录", notes = "登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public AppResult<UserVO> login(@RequestHeader String key,@RequestBody LoginRequestVO user,
-                                   HttpServletRequest request) {
+    public AppResult<WebViewUserVO> login(@RequestHeader String key, @RequestBody LoginRequestVO user,
+                                          HttpServletRequest request) {
         logger.info("App端登录接口, user is :{}", JSONObject.toJSONString(user));
-        AppResult<UserVO> result = new AppResult<UserVO>();
+        AppResult<WebViewUserVO> result = new AppResult<WebViewUserVO>();
         // 账户密码解密
         String loginUserName = DES.decodeValue(key, user.getUsername());
         String loginPassword = DES.decodeValue(key, user.getPassword());
@@ -61,7 +62,15 @@ public class AppLoginController extends BaseUserController {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
         }
-        loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+        WebViewUserVO webViewUserVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+        if (webViewUserVO != null) {
+            logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
+            result.setData(webViewUserVO);
+        } else {
+            logger.error("app端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
+        }
         return result;
     }
 

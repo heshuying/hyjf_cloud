@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.CouponCustomizeMapper">
+
+   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+        <result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+        <result column="coupon_type" property="couponType" jdbcType="INTEGER" />
+        <result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />
+        <result column="coupon_system" property="couponSystem" jdbcType="INTEGER" />
+        <result column="project_expiration_type" property="projectExpirationType" jdbcType="INTEGER" />
+        <result column="project_expiration_length" property="projectExpirationLength" jdbcType="INTEGER" />
+        <result column="project_expiration_length_min" property="projectExpirationLengthMin" jdbcType="INTEGER" />
+        <result column="project_expiration_length_max" property="projectExpirationLengthMax" jdbcType="INTEGER" />
+        <result column="project_type" property="projectType" jdbcType="VARCHAR" />
+        <result column="tender_quota_type" property="tenderQuotaType" jdbcType="INTEGER" />
+        <result column="tender_quota" property="tenderQuota" jdbcType="INTEGER" />
+        <result column="tender_quota_min" property="tenderQuotaMin" jdbcType="INTEGER" />
+        <result column="tender_quota_max" property="tenderQuotaMax" jdbcType="INTEGER" />
+        <result column="end_time" property="endTime" jdbcType="INTEGER" />
+        <result column="used_flag" property="usedFlag" jdbcType="INTEGER" />
+        <result column="update_time" property="userUpdateTime" jdbcType="INTEGER" />
+        <result column="add_flg" property="addFlg" jdbcType="INTEGER" />
+        <result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
+        <result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />
+        <result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="selectCouponConfigByGrantId" resultMap="BaseResultMap" parameterType="java.util.Map">
+	    SELECT
+			cc.coupon_code,
+			cc.coupon_type,
+			cc.coupon_system,
+			cc.coupon_quota,
+			cc.project_expiration_type,
+			cc.project_expiration_length,
+			cc.project_expiration_length_min,
+			cc.project_expiration_length_max,
+			cc.project_type,
+			cc.tender_quota_type,
+			cc.tender_quota,
+			cc.tender_quota_min,
+			cc.tender_quota_max,
+			cu.coupon_user_code,
+			cu.end_time,
+			cu.used_flag,
+			cu.update_time,
+			cc.add_flg add_flg,
+			cc.coupon_profit_time coupon_profit_time,
+			cc.repay_time_config repayTimeConfig,
+			cc.coupon_profit_time couponProfitTime
+		FROM
+			hyjf_coupon_user cu
+		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+			cu.id = #{couponGrantId}
+		AND cu.user_id=#{userId}
+		AND cu.del_flag = 0
+		AND cc.del_flg = 0
+	</select>
+
+</mapper>

@@ -13,7 +13,7 @@ import java.util.Map;
  * @author
  * @version hyjf 1.0
  * @since hyjf 1.0 2017年10月26日
- * @see 上午9:34:48
+ * @see :34:48
  */
 public class AutoPlusRequestBean extends BaseBean{
 
@@ -138,7 +138,7 @@ public class AutoPlusRequestBean extends BaseBean{
      * 
      * 检查参数是否为空
      * @author
-     * @param modelAndView
+     * @param
      * @return
      */
     public boolean checkParmIsNull() {

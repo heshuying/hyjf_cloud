@@ -98,7 +98,7 @@ public class AppBankOpenController extends BaseUserController {
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_APP);
         openBean.setPlatform(platform);
         // 组装调用江西银行的MV
-        reuslt = bankOpenService.getOpenAccountMV(openBean);
+        //reuslt = bankOpenService.getOpenAccountMV(openBean);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), platform, openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {

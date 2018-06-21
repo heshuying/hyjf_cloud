@@ -29,14 +29,12 @@ public interface AdminAccountCustomizeMapper {
 	List<AdminAccountListCustomize> selectAccountList(Map<String, Object> accountUser);
 
 	/**
-	 * @param userListCustomizeBean
 	 * @return
 	 */
 	int countRecordTotal(Map<String, Object> accountUser);
 
 
 	/**
-	 * @param updateOfLoansTender
 	 * @return
 	 */
 	int updateOfLoansTender(Account account);
@@ -52,25 +50,21 @@ public interface AdminAccountCustomizeMapper {
 	 */
 	int updateOfPlanLoansTender(Account account);
 	/**
-	 * @param updateOfLoansBorrow
 	 * @return
 	 */
 	int updateOfLoansBorrow(Account account);
 
 	/**
-	 * @param updateOfRepayTender
 	 * @return
 	 */
 	int updateOfRepayTender(Account account);
 
 	/**
-	 * @param updateOfRepayBorrow
 	 * @return
 	 */
 	int updateOfRepayBorrow(Account account);
 
 	/**
-	 * @param updateOfTender
 	 * @return
 	 */
 	int updateOfTender(Account account);
@@ -116,16 +110,14 @@ public interface AdminAccountCustomizeMapper {
 
 	/**
 	 * 更新相应的汇添金计划专属标的加入的用户的账户信息
-	 * 
-	 * @param Account
+	 *
 	 * @return
 	 */
 	int updateOfPlanJoin(Account investAccount);
 
 	/**
 	 * 更新相应的汇添金计划专属标解冻用户信息
-	 * 
-	 * @param Account
+	 *
 	 * @return
 	 */
 	int updateOfPlanUnFreeze(Account account);
@@ -179,7 +171,6 @@ public interface AdminAccountCustomizeMapper {
 	int updateOfPlanRepayAll(Account investAccount);
 
 	/**
-	 * @param updateOfRepayBorrowUser
 	 * @return
 	 */
 	int updateOfRepayBorrowUser(Account account);
@@ -206,7 +197,6 @@ public interface AdminAccountCustomizeMapper {
 	List<AdminAccountListCustomize> selectBankAccountList(Map<String, Object> accountUser);
 
 	/**
-	 * @param userListCustomizeBean
 	 * @return
 	 */
 	int countBankRecordTotal(Map<String, Object> accountUser);
@@ -342,7 +332,6 @@ public interface AdminAccountCustomizeMapper {
 
 	/**
 	 * 债权迁移后,更新借款人的待还金额
-	 * @param param
 	 * @return
 	 */
 	int updateBorrowUserBankWaitRepay(Account newAccount);

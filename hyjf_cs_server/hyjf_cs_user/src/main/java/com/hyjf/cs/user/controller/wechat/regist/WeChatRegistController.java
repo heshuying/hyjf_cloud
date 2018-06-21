@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.wechat.regist;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.am.vo.user.WebViewUserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,17 @@ import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.vo.RegisterVO;
-
+import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author zhangqingqing
@@ -64,14 +72,14 @@ public class WeChatRegistController extends BaseUserController {
 
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WechatResult register(@RequestHeader String key, @RequestBody RegisterVO register, HttpServletRequest request, HttpServletResponse response) {
-        logger.info("register start, mobile is :{}", JSONObject.toJSONString(register));
+    public WechatResult register(@RequestHeader String key, @RequestBody RegisterRequest registerRequest, HttpServletRequest request, HttpServletResponse response) {
+        logger.info("register start, mobile is :{}", JSONObject.toJSONString(registerRequest));
         WechatResult resultBean = new WechatResult();
 
-        String mobilephone = DES.decodeValue(key, register.getMobilephone());
-        String smsCode = DES.decodeValue(key, register.getSmsCode());
-        String pwd = DES.decodeValue(key, register.getPassword());
-        String reffer = DES.decodeValue(key, register.getReffer());
+        String mobilephone = DES.decodeValue(key, registerRequest.getMobilephone());
+        String smsCode = DES.decodeValue(key, registerRequest.getSmsCode());
+        String pwd = DES.decodeValue(key, registerRequest.getPassword());
+        String reffer = DES.decodeValue(key, registerRequest.getReffer());
         if (StringUtils.isNotBlank(reffer)) {
             int count = amUserClient.countUserByRecommendName(reffer);
             if (count == 0) {
@@ -80,13 +88,13 @@ public class WeChatRegistController extends BaseUserController {
                 return resultBean;
             }
         }
-        RegisterVO registerVO = new RegisterVO();
-        registerVO.setMobilephone(mobilephone);
-        registerVO.setPassword(pwd);
-        registerVO.setReffer(reffer);
-        registerVO.setSmsCode(smsCode);
-        registService.registerCheckParam(ClientConstants.WECHAT_CLIENT,registerVO);
-        UserVO userVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
+        registerRequest = new RegisterRequest();
+        registerRequest.setMobilephone(mobilephone);
+        registerRequest.setPassword(pwd);
+        registerRequest.setReffer(reffer);
+        registerRequest.setSmsCode(smsCode);
+        registService.registerCheckParam(ClientConstants.WECHAT_CLIENT,registerRequest);
+        WebViewUserVO userVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
 
         if (userVO != null) {
             logger.info("register success, userId is :{}", userVO.getUserId());

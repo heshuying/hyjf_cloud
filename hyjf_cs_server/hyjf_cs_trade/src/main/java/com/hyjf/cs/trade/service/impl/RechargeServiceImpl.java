@@ -6,14 +6,10 @@ import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.BankCardVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -341,7 +337,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 
 	@Override
 	public BankCallBean rechargeService(String  token, String ipAddr, String mobile, String money) throws Exception {
-		WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+		WebViewUserVO user = RedisUtils.getObj(token, WebViewUserVO.class);
 		Integer userId = user.getUserId();
 		// 信息校验
 		BankCardVO bankCard = this.selectBankCardByUserId(userId);

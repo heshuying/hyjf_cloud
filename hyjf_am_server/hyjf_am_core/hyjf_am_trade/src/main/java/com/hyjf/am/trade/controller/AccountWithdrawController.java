@@ -3,6 +3,10 @@ package com.hyjf.am.trade.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hyjf.am.response.trade.AccountRechargeResponse;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -17,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
 import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -26,8 +29,6 @@ import com.hyjf.common.util.CommonUtils;
 /**
  * @author pangchengchao
  * @version AccountWithdrawController, v0.1 2018/6/11 11:56
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @RestController
 @RequestMapping("/am-trade/accountWithdraw")
@@ -142,9 +143,31 @@ public class AccountWithdrawController {
         try {
 			accountWithdrawService.selectAndUpdateAccountWithdraw(pamaMap);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
-    
+
+    @PostMapping("/getBorrowTender/{userId}")
+    public int getBorrowTender(@RequestBody Integer userId) {
+        int updateBorrowApicronFlag = accountWithdrawService.getBorrowTender(userId);
+        return updateBorrowApicronFlag;
+    }
+
+    @PostMapping("/getTodayRecharge/{userId}")
+    public AccountRechargeResponse getTodayRecharge(@RequestBody Integer userId) {
+        AccountRechargeResponse response = new AccountRechargeResponse();
+        List<AccountRecharge> accountRechargeList = accountWithdrawService.getTodayRecharge(userId);
+        List<AccountRechargeVO> accountRechargeVOS=null;
+        if (accountRechargeList != null) {
+            accountRechargeVOS=new ArrayList<>(accountRechargeList.size());
+            for (AccountRecharge accountRecharge:accountRechargeList) {
+                AccountRechargeVO vo=new AccountRechargeVO();
+                BeanUtils.copyProperties(accountRecharge,vo);;
+                accountRechargeVOS.add(vo);
+            }
+        }
+        response.setResultList(accountRechargeVOS);
+        return response;
+    }
+
 }

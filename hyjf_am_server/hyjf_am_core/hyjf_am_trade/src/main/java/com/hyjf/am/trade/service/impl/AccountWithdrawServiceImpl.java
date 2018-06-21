@@ -1,23 +1,24 @@
 package com.hyjf.am.trade.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.common.util.GetOrderIdUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountwithdrawMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
-import com.hyjf.am.trade.dao.model.auto.AccountwithdrawExample;
 import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -27,8 +28,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 /**
  * @author pangchengchao
  * @version AccountWithdrawServiceImpl, v0.1 2018/6/11 13:47
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
 public class AccountWithdrawServiceImpl implements AccountWithdrawService {
@@ -50,6 +49,12 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
     private AccountMapper accountMapper;
     @Autowired
     private AccountListMapper accountListMapper;
+    @Autowired
+    private AccountRechargeMapper accountRechargeMapper;
+
+    @Autowired
+    private BorrowCustomizeMapper borrowCustomizeMapper;
+
     @Autowired
     private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
@@ -219,5 +224,38 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
             }
         }
 
+    }
+
+    @Override
+    public int getBorrowTender(Integer userId) {
+        int tenderRecord = borrowCustomizeMapper.countInvest(userId);
+        return tenderRecord;
+    }
+
+    @Override
+    public List<AccountRecharge> getTodayRecharge(Integer userId) {
+        String txTime = GetOrderIdUtils.getTxTime();// 当前时间
+        Date date = new Date();
+        Date date2 = new Date(new Date().getTime()-24*60*60*1000);
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+
+        String formatTime = format.format(date);
+        String formatTime2 = format.format(date2);
+
+        Integer day = Integer.valueOf(formatTime);
+        Integer yesterday = Integer.valueOf(formatTime2);
+
+        AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
+        accountRechargeExample.createCriteria().andTxDateEqualTo(day).andUserIdEqualTo(userId).andStatusEqualTo(2);
+        List<AccountRecharge> accountRecharges = this.accountRechargeMapper.selectByExample(accountRechargeExample);
+        AccountRechargeExample accountRechargeExample2 = new AccountRechargeExample();
+        accountRechargeExample2.createCriteria().andUserIdEqualTo(userId).andTxDateEqualTo(yesterday).andTxTimeGreaterThan(Integer.valueOf(txTime)).andStatusEqualTo(2);;
+        List<AccountRecharge> accountRecharges2 = this.accountRechargeMapper.selectByExample(accountRechargeExample2);
+        if(accountRecharges!=null&&!accountRecharges.isEmpty()){
+            accountRecharges.addAll(accountRecharges2);
+            return accountRecharges;
+        }
+
+        return accountRecharges2;
     }
 }

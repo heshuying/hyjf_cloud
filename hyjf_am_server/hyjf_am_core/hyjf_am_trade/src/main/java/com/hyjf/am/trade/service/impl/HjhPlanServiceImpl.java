@@ -5,13 +5,12 @@ package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhLabelMapper;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
-import com.hyjf.am.trade.dao.model.auto.HjhLabel;
-import com.hyjf.am.trade.dao.model.auto.HjhLabelExample;
+import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.HjhPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -27,6 +26,9 @@ public class HjhPlanServiceImpl implements HjhPlanService {
 
 	@Autowired
 	private HjhLabelMapper hjhLabelMapper;
+
+	@Autowired
+	private HjhPlanMapper hjhPlanMapper;
 
 	@Override
 	public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
@@ -52,5 +54,24 @@ public class HjhPlanServiceImpl implements HjhPlanService {
 
 		List<HjhLabel> list = this.hjhLabelMapper.selectByExample(example);
 		return list;
+	}
+
+	/**
+	 * @param planNid
+	 * @Description 根据计划编号查询计划
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 14:08
+	 */
+	@Override
+	public HjhPlan getHjhPlanByNid(String planNid) {
+		HjhPlanExample example = new HjhPlanExample();
+		HjhPlanExample.Criteria cra = example.createCriteria();;
+		cra.andPlanNidEqualTo(planNid);
+		List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.get(0);
+		}
+		return null;
 	}
 }

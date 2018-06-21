@@ -12,6 +12,7 @@
 package com.hyjf.common.enums;
 
 import com.hyjf.common.constants.MsgCode;
+
 /**
  * 信息代码和信息本体的枚举
  * @author liubin
@@ -97,6 +98,7 @@ public enum MsgEnum implements MsgCode {
 
 	ERR("1", "开户失败"),
 	ERR_REGISTER("1", "注册失败"),
+	ERR_PARAM_ERROR("1", "登录失败,账号或密码错误"),
 	ERR_MOBILE_IS_NOT_NULL("1", "请填写手机号"),
 	ERR_SMSCODE_IS_NOT_NULL("1", "验证码不能为空"),
 	ERR_PASSWORD_IS_NOT_NULL("1", "密码不能为空"),
@@ -119,6 +121,15 @@ public enum MsgEnum implements MsgCode {
 	ERR_INST_CODE("1", "机构编号不能为空"),
 	ERR_PLATEFORM("1", "注册平台不能为空"),
 	ERR_UTMID("1", "推广渠道不能为空"),
+
+	//活动编号不能为空
+	ERR_ACTIVITYID_IS_NULL("1","活动编号不能为空"),
+	//该活动不存在
+	ERR_ACTIVITY_ISNULL("1","该活动不存在"),
+	//该活动不存在
+	ERR_ACTIVITY_TIME_NOT_START("1","该活动还未开始"),
+	//该活动已结束
+	ERR_ACTIVITY_TIME_END("1","您来晚了，活动已过期~~"),
 	// 时间日期相关错误信息ERR_DATE_
 
 	// DB相关错误信息ERR_DB_
@@ -159,9 +170,9 @@ public enum MsgEnum implements MsgCode {
 	STATUS_ZC000015("ZC000015","验证码错误"),
 	STATUS_ZC000016("ZC000016","银行卡与姓名不符"),
 	STATUS_ZC000017("ZC000017","银行卡与证件不符"),
-	
-    // 还款信息接口项目编号不能为空
-    STATUS_ZC000018("ZC000018","资产编号不能为空"),
+
+	// 还款信息接口项目编号不能为空
+	STATUS_ZC000018("ZC000018","资产编号不能为空"),
 	// ----------资产机能用错误信息------------
 	STATUS_ZT000001("ZT000001","没有用户信息"),
 	STATUS_ZT000002("ZT000002","没有用户开户信息"),
@@ -219,5 +230,3 @@ public enum MsgEnum implements MsgCode {
 		return this.code;
 	}
 }
-
-	

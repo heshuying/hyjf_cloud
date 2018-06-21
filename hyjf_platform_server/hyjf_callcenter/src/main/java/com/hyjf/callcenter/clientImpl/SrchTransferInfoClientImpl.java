@@ -29,4 +29,16 @@ public class SrchTransferInfoClientImpl implements SrchTransferInfoClient{
         }
 		return null;
 	}
+	
+	@Override
+	public List<CallCenterBorrowCreditVO> selectBorrowCreditTenderList(
+			SrchTransferInfoRequest srchTransferInfoRequest) {
+		SrchTransferInfoResponse srchTransferInfoResponse = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/callcenter/selectBorrowCreditTenderList", srchTransferInfoRequest, SrchTransferInfoResponse.class)
+                .getBody();
+        if (srchTransferInfoResponse != null) {
+            return srchTransferInfoResponse.getResultList();
+        }
+		return null;
+	}
 }

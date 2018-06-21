@@ -41,6 +41,12 @@ public class SystemConfig {
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
 
+    @Value("${hyjf.bank.instcode}")
+    public String instcode;
+
+    @Value("${hyjf.bank.bankcode}")
+    public String bankcode;
+
     public String getForgetpassword() {
         return forgetpassword;
     }

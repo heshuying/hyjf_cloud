@@ -42,13 +42,6 @@ public class HztInvestServer extends CallcenterBaseController {
 	private HztInvestService hztInvestService;
 	
 	/**
-	 * 呼叫中心接口调用入口
-	 * @param request
-	 * @param response
-	 * @param bean
-	 * @return
-	 */
-	/**
 	 * @param request,response,UserBean
 	 * @Author: libin
 	 * @Desc :查询呼叫中心未分配客服的用户名/手机号调用入口

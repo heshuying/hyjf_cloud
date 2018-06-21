@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 
 import java.util.List;
 
@@ -28,4 +29,12 @@ public interface HjhPlanService {
      * @return
      */
     List<HjhLabel> seleHjhLabelByBorrowStyle(String borrowStyle);
+
+    /**
+     * @Description 根据计划编号查询计划
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/19 14:08
+     */
+    HjhPlan getHjhPlanByNid(String planNid);
 }
