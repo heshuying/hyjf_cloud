@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -902,6 +902,10 @@
         <!-- 债转 -->
         <table tableName="ht_credit_tender_log" domainObjectName="CreditTenderLog">
             <generatedKey column="assign_id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+        <!-- 结束债权 -->
+        <table tableName="ht_bank_credit_end" domainObjectName="BankCreditEnd">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
         </table>
 
 
