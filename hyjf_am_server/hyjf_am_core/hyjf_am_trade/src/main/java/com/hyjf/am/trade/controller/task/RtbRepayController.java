@@ -13,6 +13,7 @@ import com.hyjf.am.trade.service.IncreaseInterestInvestService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -40,29 +41,9 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/batch/rtb")
+@RequestMapping("/am-trade/batch/rtb")
 public class RtbRepayController {
 	private static final Logger logger = LoggerFactory.getLogger(RtbRepayController.class);
-
-	/**
-	 * 任务状态:未执行
-	 */
-	private static final Integer STATUS_WAIT = 0;
-
-	/**
-	 * 任务状态:已完成
-	 */
-	private static final Integer STATUS_SUCCESS = 1;
-
-	/**
-	 * 任务状态:执行中
-	 */
-	private static final Integer STATUS_RUNNING = 2;
-
-	/**
-	 * 任务状态:错误
-	 */
-	private static final Integer STATUS_ERROR = 9;
 
 	/**
 	 * 任务执行次数
@@ -99,7 +80,8 @@ public class RtbRepayController {
 		try {
 			logger.info("融通宝加息自动还款任务开始。[借款编号:" + borrowApicron.getBorrowNid() + "]");
 			// 更新任务API状态为进行中
-			Integer updateFlag = borrowApicronService.updateBorrowApicron(borrowApicron.getId(), STATUS_RUNNING);
+			Integer updateFlag = borrowApicronService.updateBorrowApicron(borrowApicron.getId(),
+					CommonConstant.APICRON_EXTRA_YIELD_REPAY_STATUS_RUNNING);
 			if (updateFlag < 1) {
 				throw new RuntimeException("更新apicron失败...apicron is :{}" + JSONObject.toJSON(borrowApicron));
 			}
@@ -116,8 +98,8 @@ public class RtbRepayController {
 				for (IncreaseInterestLoan increaseInterestLoan : increaseInterestLoans) {
 					try {
 						// 自动还款
-						increaseInterestService.increaseInterestRepay(borrowApicron,
-								increaseInterestLoan, request.getAccount(), request.getCompanyAccount());
+						increaseInterestService.increaseInterestRepay(borrowApicron, increaseInterestLoan,
+								request.getAccount(), request.getCompanyAccount());
 					} catch (Exception e) {
 						sbError.append(e.getMessage()).append("<br/>");
 						logger.info("exception is :" + e);
@@ -149,7 +131,8 @@ public class RtbRepayController {
 				logger.error("还款明细件数为0件。[标号：" + borrowNid + "]");
 			}
 			// 更新任务API状态为完成
-			this.borrowApicronService.updateBorrowApicron(borrowApicron.getId(), STATUS_SUCCESS);
+			this.borrowApicronService.updateBorrowApicron(borrowApicron.getId(),
+					CommonConstant.APICRON_EXTRA_YIELD_REPAY_STATUS_FINISH);
 		} catch (Exception e) {
 			int runCnt = 1;
 			if (runTimes.containsKey(borrowApicron.getBorrowNid())) {
@@ -172,7 +155,8 @@ public class RtbRepayController {
 					sbError.append(e.getMessage());
 				}
 				// 更新任务API状态为错误
-				borrowApicronService.updateBorrowApicron(borrowApicron.getId(), STATUS_ERROR, sbError.toString());
+				borrowApicronService.updateBorrowApicron(borrowApicron.getId(),
+						CommonConstant.APICRON_EXTRA_YIELD_REPAY_STATUS_ERROR, sbError.toString());
 				// 发送失败短信
 				Borrow borrow = increaseInterestService.selectBorrowByNid(borrowApicron.getBorrowNid());
 				// 是否分期(true:分期, false:单期)
@@ -194,34 +178,12 @@ public class RtbRepayController {
 				}
 			} else {
 				// 更新任务API状态为重新执行
-				borrowApicronService.updateBorrowApicron(borrowApicron.getId(), STATUS_WAIT);
+				borrowApicronService.updateBorrowApicron(borrowApicron.getId(),
+						CommonConstant.APICRON_EXTRA_YIELD_REPAY_STATUS_INIT);
 			}
 
-			// 发送错误邮件
-			StringBuffer msg = new StringBuffer();
-			msg.append("借款标号：").append(borrowApicron.getBorrowNid()).append("<br/>");
-			msg.append("当前期数：").append(borrowApicron.getPeriodNow()).append("<br/>");
-			msg.append("还款时间：").append(GetDate.formatTime()).append("<br/>");
-			msg.append("执行次数：").append("第" + runCnt + "次").append("<br/>");
-			msg.append("错误信息：").append(e.getMessage()).append("<br/>");
-			msg.append("详细错误信息：<br/>").append(sbError.toString());
-
-			String[] toMail;
-
-			if (envTest) {
-				toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com" };
-			} else {
-				toMail = new String[] { "wangkun@hyjf.com", "gaohonggang@hyjf.com" };
-			}
-			MailMessage mailMessage = new MailMessage(null, null,
-					borrowApicron.getBorrowNid() + "-" + borrowApicron.getPeriodNow() + "融通宝加息还款,第" + runCnt + "次还款失败",
-					msg.toString(), null, toMail, null, MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
-			try {
-				mailProducer
-						.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));
-			} catch (MQException e1) {
-				logger.error("发送邮件失败..", e1);
-			}
+			this.sendFailMail(borrowApicron.getBorrowNid(), borrowApicron.getPeriodNow(), runCnt, e.getMessage(),
+					sbError.toString());
 			logger.error("融通宝加息自动还款任务发生错误。[订单号：" + borrowApicron.getBorrowNid() + "]");
 		} finally {
 			Long endTime = GetDate.getMillis();
@@ -229,6 +191,43 @@ public class RtbRepayController {
 					+ "s");
 		}
 
+	}
+
+	/**
+	 * 融通宝加息自动还款任务失败发送邮件通知相关人员
+	 * 
+	 * @param borrowNid
+	 * @param periodNow
+	 * @param runCnt
+	 * @param errorMessage
+	 * @param errorDetail
+	 */
+	private void sendFailMail(String borrowNid, Integer periodNow, int runCnt, String errorMessage,
+			String errorDetail) {
+		// 发送错误邮件
+		StringBuffer msg = new StringBuffer();
+		msg.append("借款标号：").append(borrowNid).append("<br/>");
+		msg.append("当前期数：").append(periodNow).append("<br/>");
+		msg.append("还款时间：").append(GetDate.formatTime()).append("<br/>");
+		msg.append("执行次数：").append("第" + runCnt + "次").append("<br/>");
+		msg.append("错误信息：").append(errorMessage).append("<br/>");
+		msg.append("详细错误信息：<br/>").append(errorDetail);
+
+		String[] toMail;
+
+		if (envTest) {
+			toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com" };
+		} else {
+			toMail = new String[] { "zhangjinpeng@hyjf.com", "gaohonggang@hyjf.com" };
+		}
+		MailMessage mailMessage = new MailMessage(null, null,
+				borrowNid + "-" + periodNow + "融通宝加息还款,第" + runCnt + "次还款失败", msg.toString(), null, toMail, null,
+				MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+		try {
+			mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));
+		} catch (MQException e) {
+			logger.error("发送邮件失败..", e);
+		}
 	}
 
 	class TimesBean {
