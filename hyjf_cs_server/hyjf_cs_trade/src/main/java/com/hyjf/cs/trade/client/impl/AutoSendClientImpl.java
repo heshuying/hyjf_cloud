@@ -92,7 +92,7 @@ public class AutoSendClientImpl implements AutoSendClient {
     }
 
     @Override
-    public void insertSelective(BorrowWithBLOBsVO borrow) {
+    public void insertSelective(BorrowVO borrow) {
         restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/insertBorrow", borrow, int.class).getBody();
     }
 

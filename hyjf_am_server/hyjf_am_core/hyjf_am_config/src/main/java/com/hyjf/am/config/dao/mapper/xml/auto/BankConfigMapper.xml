@@ -19,7 +19,7 @@
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="month_card_quota" property="monthCardQuota" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -83,7 +83,7 @@
   <sql id="Base_Column_List" >
     id, bank_id, bank_name, pay_alliance_code, bank_code, bank_icon, bank_logo, quick_payment, 
     single_quota, single_card_quota, fee_withdraw, sort_id, remark, create_user_id, update_user_id, 
-    create_time, update_time, del_flg, month_card_quota
+    create_time, update_time, del_flag, month_card_quota
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.BankConfigExample" >
     select
@@ -127,14 +127,14 @@
       quick_payment, single_quota, single_card_quota, 
       fee_withdraw, sort_id, remark, 
       create_user_id, update_user_id, create_time, 
-      update_time, del_flg, month_card_quota
+      update_time, del_flag, month_card_quota
       )
     values (#{bankId,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, #{payAllianceCode,jdbcType=VARCHAR}, 
       #{bankCode,jdbcType=VARCHAR}, #{bankIcon,jdbcType=VARCHAR}, #{bankLogo,jdbcType=VARCHAR}, 
       #{quickPayment,jdbcType=TINYINT}, #{singleQuota,jdbcType=DECIMAL}, #{singleCardQuota,jdbcType=DECIMAL}, 
       #{feeWithdraw,jdbcType=DECIMAL}, #{sortId,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, 
       #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{delFlg,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}, #{monthCardQuota,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.BankConfig" >
@@ -191,8 +191,8 @@
       <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="delFlg != null" >
-        del_flg,
+      <if test="delFlag != null" >
+        del_flag,
       </if>
       <if test="monthCardQuota != null" >
         month_card_quota,
@@ -247,8 +247,8 @@
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="monthCardQuota != null" >
         #{monthCardQuota,jdbcType=DECIMAL},
@@ -315,8 +315,8 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=TINYINT},
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.monthCardQuota != null" >
         month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL},
@@ -345,7 +345,7 @@
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      del_flg = #{record.delFlg,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       month_card_quota = #{record.monthCardQuota,jdbcType=DECIMAL}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -402,8 +402,8 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=TINYINT},
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="monthCardQuota != null" >
         month_card_quota = #{monthCardQuota,jdbcType=DECIMAL},
@@ -429,7 +429,7 @@
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      del_flg = #{delFlg,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       month_card_quota = #{monthCardQuota,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>

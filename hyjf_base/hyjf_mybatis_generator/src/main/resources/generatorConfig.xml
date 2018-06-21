@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -318,6 +318,63 @@
         <table tableName="ht_callcenter_service_users" domainObjectName="CallcenterServiceUsers">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="assigned" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 管理人员信息表 -->
+        <table tableName="ht_admin" domainObjectName="Admin">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 人员与角色关联表 -->
+        <table tableName="ht_admin_role" domainObjectName="AdminRole">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 人员与角色关联表 -->
+        <table tableName="ht_admin_and_role" domainObjectName="AdminAndRole"></table>
+        <!-- 角色菜单权限关联表 -->
+        <table tableName="ht_admin_role_menu_permissions" domainObjectName="AdminRoleMenuPermissions">
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 菜单维护表 -->
+        <table tableName="ht_admin_menu" domainObjectName="AdminMenu">
+            <columnOverride column="menu_hide" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 权限菜单表 -->
+        <table tableName="ht_admin_menu_permssions" domainObjectName="AdminMenuPermissions">
+
+        </table>
+        <!-- 权限维护表 -->
+        <table tableName="ht_admin_permissions" domainObjectName="AdminPermissions">
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- app 存储版本号信息 -->
+        <table tableName="ht_version" domainObjectName="Version">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_update" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- app 存储用户角标数 -->
+        <table tableName="ht_user_corner" domainObjectName="UserCorner">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 友情链接表 -->
+        <table tableName="ht_team" domainObjectName="Team">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 意见反馈表 -->
+        <table tableName="ht_submissions" domainObjectName="Submissions">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 问卷问题表 -->
+        <table tableName="ht_question" domainObjectName="Question">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <!-- 3. hyjf_trade -->
@@ -903,6 +960,7 @@
         <table tableName="ht_credit_tender_log" domainObjectName="CreditTenderLog">
             <generatedKey column="assign_id" sqlStatement="MySql" type="post" identity="true"/>
         </table>
+
 
 
     </context>
