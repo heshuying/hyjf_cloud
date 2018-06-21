@@ -8,7 +8,7 @@ import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserManagerVO;
-import com.hyjf.cs.common.util.Page;
+//import com.hyjf.cs.common.util.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +42,12 @@ public class UserCenterServiceImpl implements UserCenterService {
         Map<String, Object> mapReturn = new HashMap<String, Object>();
         String status = "0";//0->成功,99->失败
         // 初始化分页参数，并组合到请求参数
-        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+       /* Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         // 查询count
         int userCount = userCenterClient.countRecordTotal(request);
-        page.setTotal(userCount);
+        page.setTotal(userCount);*/
         // 关联hyjf_trade库的ht_hjh_inst_config表
         List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectHjhInstConfigListByInstCode(null);
         // 查询列表
@@ -61,7 +61,7 @@ public class UserCenterServiceImpl implements UserCenterService {
                 }
             }
             //页数信息
-            mapReturn.put("page", page);
+           // mapReturn.put("page", page);
             //用户列表信息
             mapReturn.put("data", listHjhInstConfig);
         } else {
