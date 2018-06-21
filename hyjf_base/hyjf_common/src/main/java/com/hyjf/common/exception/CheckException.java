@@ -65,8 +65,6 @@ public class CheckException extends RuntimeException{
 		
 	public CheckException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
-			
 	}
 
 	public CheckException(String code, String message) {

@@ -23,6 +23,7 @@ import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author GOGTZ-T
@@ -33,47 +34,25 @@ public class ChinaPnrApiImpl implements PnrApi {
     private static final String THIS_CLASS = ChinaPnrApiImpl.class.getName();
 
     /** 版本号 */
+    @Value("${hyjf.chinapnr.version}")
     private String _version;
 
     /** 商户客户号 */
+    @Value("${hyjf.chinapnr.mercustid}")
     private String _merCustId;
 
     /** 商户子账户号 */
+    @Value("${hyjf.chinapnr.meracctId}")
     private String _merAcctId;
 
     /** 商户后台回调地址 */
+    @Value("${hyjf.chinapnr.callback.url}")
     private String _bgRetUrl;
 
-    public ChinaPnrApiImpl() {
-        // 版本号
-        if (Validator.isNull(_version)) {
-            //   todo xiashuqing 20180615
-            _version = "";
-           // _version = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_VERSION_KEY);
-            // _version ="20";
-        }
+    /** 汇付天下地址 */
+    @Value("${hyjf.chinapnr.url}")
+    private String chinapnrUrl;
 
-        // 商户客户号
-        if (Validator.isNull(_merCustId)) {
-            //   todo xiashuqing 20180615
-           // _merCustId = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERCUSTID);
-            _merCustId = "";
-        }
-
-        // 商户子账户号
-        if (Validator.isNull(_merAcctId)) {
-            //   todo xiashuqing 20180615
-            //_merAcctId = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERACCTID);
-            _merAcctId = "";
-        }
-
-        // 商户后台回调地址
-        if (Validator.isNull(_bgRetUrl)) {
-            //   todo xiashuqing 20180615
-            //_bgRetUrl = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_CALLBACK_URL);
-            _bgRetUrl = "";
-        }
-    }
 
     /**
      * 调用汇付天下API接口
@@ -101,10 +80,8 @@ public class ChinaPnrApiImpl implements PnrApi {
         }
 
         try {
-            // 发送请求 //   todo xiashuqing 20180615
-            //String HTTP_URL = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_URL);
-            String HTTP_URL = "";
-            result = HttpDeal.post(HTTP_URL, bean.getAllParams());
+            // 发送请求
+            result = HttpDeal.post(chinapnrUrl, bean.getAllParams());
             log.debug("[返回结果:" + result + "]");
         } catch (Exception e) {
             log.error(String.valueOf(e));

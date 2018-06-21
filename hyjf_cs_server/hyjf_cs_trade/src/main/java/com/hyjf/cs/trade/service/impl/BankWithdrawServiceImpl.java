@@ -527,11 +527,11 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             accountList.setTxTime(Integer.parseInt(bean.getTxTime()));
             accountList.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
             accountList.setAccountId(bean.getAccountId());
-            accountList.setRemark(accountWithdraw.getRemark());//TODO
+            accountList.setRemark(accountWithdraw.getRemark());
             accountList.setCreateTime(nowTime);
             accountList.setBaseUpdate(nowTime);
             accountList.setOperator(String.valueOf(userId));
-            accountList.setIp(accountWithdraw.getAddip());//TODO
+            accountList.setIp(accountWithdraw.getAddip());
             accountList.setIsUpdate(0);
             accountList.setBaseUpdate(0);
             accountList.setInterest(null);
