@@ -59,5 +59,9 @@ public interface BankWithdrawService {
 
     WebResult<Object> toWithdraw(WebViewUser user);
 
-    void withdraw();
+    /**
+     * 定时任务提现
+     * add by jijun 20180621
+     */
+    void batchWithdraw();
 }
