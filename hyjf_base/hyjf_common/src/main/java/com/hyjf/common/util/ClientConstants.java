@@ -133,7 +133,7 @@ public class ClientConstants implements Serializable {
 	public static final String BANK_URL_REPAY_AUTH_PAGE = "/p2p/page/repayAuthPage";
 
 	/** 提现手续费 */
-	public static final String BANK_FEE = "hyjf.bank.fee";
+	public static final String BANK_FEE = "1.00";
 
 	/** 后台交易类型 线下充值 7820 */
     public static final String TRANS_TYPE_7820 = "7820";

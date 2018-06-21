@@ -38,6 +38,18 @@ public class BankCardController {
 		}
 		return response;
 	}
-	
-
+	/**
+	 * 查询用户已绑定的有效卡
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/getBankCard/{userId}")
+	public BankCardResponse getBankCard(@PathVariable Integer userId) {
+		BankCardResponse response = new BankCardResponse();
+		BankCard card = bankCardService.getBankCard(userId);
+		if (card != null) {
+			response.setResult(CommonUtils.convertBean(card, BankCardVO.class));
+		}
+		return response;
+	}
 }

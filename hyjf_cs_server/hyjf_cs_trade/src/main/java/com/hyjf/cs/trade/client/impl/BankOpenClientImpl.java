@@ -83,13 +83,5 @@ public class BankOpenClientImpl implements BankOpenClient {
 	}
 
 
-	@Override
-	public BankCardVO selectBankCardByUserId(Integer userId) {
-		BankCardResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/selectByUserId/" + userId, BankCardResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
+
 }

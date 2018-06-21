@@ -147,14 +147,16 @@ public class AccountWithdrawController {
 		}
     }
 
-    @PostMapping("/getBorrowTender/{userId}")
-    public int getBorrowTender(@RequestBody Integer userId) {
-        int updateBorrowApicronFlag = accountWithdrawService.getBorrowTender(userId);
-        return updateBorrowApicronFlag;
+    @GetMapping("/getBorrowTender/{userId}")
+    public AccountwithdrawResponse getBorrowTender(@PathVariable Integer userId) {
+        AccountwithdrawResponse response=new AccountwithdrawResponse();
+        int userBorrowTenderCounte = accountWithdrawService.getBorrowTender(userId);
+        response.setUserBorrowTenderCounte(userBorrowTenderCounte);
+        return response;
     }
 
-    @PostMapping("/getTodayRecharge/{userId}")
-    public AccountRechargeResponse getTodayRecharge(@RequestBody Integer userId) {
+    @GetMapping("/getTodayRecharge/{userId}")
+    public AccountRechargeResponse getTodayRecharge(@PathVariable Integer userId) {
         AccountRechargeResponse response = new AccountRechargeResponse();
         List<AccountRecharge> accountRechargeList = accountWithdrawService.getTodayRecharge(userId);
         List<AccountRechargeVO> accountRechargeVOS=null;
