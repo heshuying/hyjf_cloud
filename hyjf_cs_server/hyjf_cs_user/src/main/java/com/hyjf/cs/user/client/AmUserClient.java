@@ -132,4 +132,11 @@ public interface AmUserClient {
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 
     List<BankCardVO> getBankOpenAccountById(UserVO user);
+
+    /**
+     * @Description 查询开户失败原因
+     * @Author sunss
+     * @Date 2018/6/21 15:45
+     */
+	String getBankOpenAccountFiledMess(String logOrdId);
 }

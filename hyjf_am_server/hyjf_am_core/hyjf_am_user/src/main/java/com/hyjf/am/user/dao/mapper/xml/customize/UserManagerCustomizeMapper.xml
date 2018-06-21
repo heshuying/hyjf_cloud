@@ -160,7 +160,7 @@
         </where>
     </sql>
 
-    <select id="countUserRecord" parameterType="Map" resultMap="java.lang.Integer">
+    <select id="countUserRecord" parameterType="Map" resultType="java.lang.Integer">
         <choose>
             <when test='whereFlag == "0"'>
                 SELECT
@@ -236,5 +236,6 @@
             </otherwise>
         </choose>
     </select>
+
 
 </mapper>

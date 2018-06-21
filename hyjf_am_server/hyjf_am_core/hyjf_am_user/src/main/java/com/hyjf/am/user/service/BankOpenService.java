@@ -57,4 +57,11 @@ public interface BankOpenService {
 	 * @return
 	 */
 	boolean saveCardNoToBank(BankCardRequest request);
+
+	/**
+	 * @Description 根据订单号查询失败原因
+	 * @Author sunss
+	 * @Date 2018/6/21 15:52
+	 */
+    String getBankOpenAccountFiledMess(String logOrdId);
 }

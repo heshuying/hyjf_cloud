@@ -4,6 +4,7 @@
 package com.hyjf.pay.call.impl;
 
 import com.hyjf.common.http.HttpDealBank;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.call.BankCallApi;
 import com.hyjf.pay.call.util.BankCallSignUtils_;
@@ -178,6 +179,22 @@ public class BankCallApiImpl implements BankCallApi {
         // 交易渠道
         if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_CHANNEL)) {
             bean.set(BankCallConstant.PARAM_CHANNEL, _coinstChannel);
+        }
+        // 交易日期
+        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_TXDATE)) {
+            bean.set(BankCallConstant.PARAM_TXDATE, GetOrderIdUtils.getTxDate());
+        }
+        // 交易时间
+        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_TXTIME)) {
+            bean.set(BankCallConstant.PARAM_TXTIME, GetOrderIdUtils.getTxTime());
+        }
+        // 交易流水号
+        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_SEQNO)) {
+            bean.set(BankCallConstant.PARAM_SEQNO, GetOrderIdUtils.getSeqNo(6));
+        }
+        // 订单日期
+        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_LOGORDERDATE)) {
+            bean.set(BankCallConstant.PARAM_LOGORDERDATE, GetOrderIdUtils.getOrderDate());
         }
     }
 
