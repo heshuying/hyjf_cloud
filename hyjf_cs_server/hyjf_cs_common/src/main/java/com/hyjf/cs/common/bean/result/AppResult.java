@@ -13,6 +13,7 @@ package com.hyjf.cs.common.bean.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.Page;
 
 import java.io.Serializable;
 
@@ -31,9 +32,18 @@ public class AppResult<T> extends BaseResult<T> implements Serializable {
 			super.setStatus(SUCCESS);
 		}
 	}
-
+    // 分页参数
+	private Page page;
 	// 跳转前端地址
 	private String callBackAction;
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
 
 	public String getCallBackAction() {
 		return callBackAction;

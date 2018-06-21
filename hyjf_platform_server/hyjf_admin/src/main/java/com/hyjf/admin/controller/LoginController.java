@@ -77,9 +77,9 @@ public class LoginController {
      * @Return: JSONObject
      */
     @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/getMenuTree")
 	@ResponseBody
-	public JSONObject login(HttpServletRequest request, HttpServletResponse response) {
+	public JSONObject getMenuTree(HttpServletRequest request, HttpServletResponse response) {
     	JSONObject info = new JSONObject();
     	
     	//TODO需要从redis里取userId
