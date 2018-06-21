@@ -775,6 +775,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andIconUrlIsNull() {
+            addCriterion("icon_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlIsNotNull() {
+            addCriterion("icon_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlEqualTo(String value) {
+            addCriterion("icon_url =", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlNotEqualTo(String value) {
+            addCriterion("icon_url <>", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlGreaterThan(String value) {
+            addCriterion("icon_url >", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("icon_url >=", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlLessThan(String value) {
+            addCriterion("icon_url <", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlLessThanOrEqualTo(String value) {
+            addCriterion("icon_url <=", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlLike(String value) {
+            addCriterion("icon_url like", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlNotLike(String value) {
+            addCriterion("icon_url not like", value, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlIn(List<String> values) {
+            addCriterion("icon_url in", values, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlNotIn(List<String> values) {
+            addCriterion("icon_url not in", values, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlBetween(String value1, String value2) {
+            addCriterion("icon_url between", value1, value2, "iconUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andIconUrlNotBetween(String value1, String value2) {
+            addCriterion("icon_url not between", value1, value2, "iconUrl");
+            return (Criteria) this;
+        }
+
         public Criteria andIfReceiveNoticeIsNull() {
             addCriterion("if_receive_notice is null");
             return (Criteria) this;
@@ -1752,6 +1822,66 @@ public class UserExample {
 
         public Criteria andIsEvaluationFlagNotBetween(Integer value1, Integer value2) {
             addCriterion("is_evaluation_flag not between", value1, value2, "isEvaluationFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeIsNull() {
+            addCriterion("evaluation_expired_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeIsNotNull() {
+            addCriterion("evaluation_expired_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeEqualTo(Date value) {
+            addCriterion("evaluation_expired_time =", value, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeNotEqualTo(Date value) {
+            addCriterion("evaluation_expired_time <>", value, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeGreaterThan(Date value) {
+            addCriterion("evaluation_expired_time >", value, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("evaluation_expired_time >=", value, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeLessThan(Date value) {
+            addCriterion("evaluation_expired_time <", value, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeLessThanOrEqualTo(Date value) {
+            addCriterion("evaluation_expired_time <=", value, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeIn(List<Date> values) {
+            addCriterion("evaluation_expired_time in", values, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeNotIn(List<Date> values) {
+            addCriterion("evaluation_expired_time not in", values, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeBetween(Date value1, Date value2) {
+            addCriterion("evaluation_expired_time between", value1, value2, "evaluationExpiredTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationExpiredTimeNotBetween(Date value1, Date value2) {
+            addCriterion("evaluation_expired_time not between", value1, value2, "evaluationExpiredTime");
             return (Criteria) this;
         }
 

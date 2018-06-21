@@ -17,6 +17,8 @@
     <result column="acq_res" property="acqRes" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="ret_code" property="retCode" jdbcType="VARCHAR" />
+    <result column="ret_msg" property="retMsg" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -82,8 +84,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, user_name, order_id, mobile, id_type, id_no, `name`, card_no, acct_use, 
-    last_srv_auth_code, user_ip, acq_res, client, `status`, create_user_id, update_user_id, 
-    create_time, update_time
+    last_srv_auth_code, user_ip, acq_res, client, `status`, ret_code, ret_msg, create_user_id, 
+    update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample" >
     select
@@ -126,16 +128,16 @@
       mobile, id_type, id_no, 
       `name`, card_no, acct_use, 
       last_srv_auth_code, user_ip, acq_res, 
-      client, `status`, create_user_id, 
-      update_user_id, create_time, update_time
-      )
+      client, `status`, ret_code, 
+      ret_msg, create_user_id, update_user_id, 
+      create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=CHAR}, #{idType,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{acctUse,jdbcType=VARCHAR}, 
       #{lastSrvAuthCode,jdbcType=VARCHAR}, #{userIp,jdbcType=VARCHAR}, #{acqRes,jdbcType=VARCHAR}, 
-      #{client,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{client,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{retCode,jdbcType=VARCHAR}, 
+      #{retMsg,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.BankOpenAccountLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -184,6 +186,12 @@
       </if>
       <if test="status != null" >
         `status`,
+      </if>
+      <if test="retCode != null" >
+        ret_code,
+      </if>
+      <if test="retMsg != null" >
+        ret_msg,
       </if>
       <if test="createUserId != null" >
         create_user_id,
@@ -240,6 +248,12 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
+      </if>
+      <if test="retCode != null" >
+        #{retCode,jdbcType=VARCHAR},
+      </if>
+      <if test="retMsg != null" >
+        #{retMsg,jdbcType=VARCHAR},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -309,6 +323,12 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
+      <if test="record.retCode != null" >
+        ret_code = #{record.retCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.retMsg != null" >
+        ret_msg = #{record.retMsg,jdbcType=VARCHAR},
+      </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
@@ -343,6 +363,8 @@
       acq_res = #{record.acqRes,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
+      ret_code = #{record.retCode,jdbcType=VARCHAR},
+      ret_msg = #{record.retMsg,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -396,6 +418,12 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
       </if>
+      <if test="retCode != null" >
+        ret_code = #{retCode,jdbcType=VARCHAR},
+      </if>
+      <if test="retMsg != null" >
+        ret_msg = #{retMsg,jdbcType=VARCHAR},
+      </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
@@ -427,6 +455,8 @@
       acq_res = #{acqRes,jdbcType=VARCHAR},
       client = #{client,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
+      ret_code = #{retCode,jdbcType=VARCHAR},
+      ret_msg = #{retMsg,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
