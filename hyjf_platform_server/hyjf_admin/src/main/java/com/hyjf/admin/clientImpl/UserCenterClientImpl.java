@@ -24,4 +24,52 @@ import java.util.List;
  */
 @Service
 public class UserCenterClientImpl implements UserCenterClient {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    /**
+     *查找用户信息
+     * @param request
+     * @return
+     */
+    @Override
+    public List<UserManagerVO> selectUserMemberList(UserManagerRequest request) {
+        UserManagerResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/userslist", request, UserManagerResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据机构编号获取机构列表
+     * @param instCode
+     * @return
+     */
+    @Override
+    public List<HjhInstConfigVO> selectHjhInstConfigListByInstCode(String instCode) {
+        HjhInstConfigResponse response = restTemplate.
+                getForEntity("http://AM-TRADE/am-trade/trade/selectInstConfigListByInstCode/" + instCode, HjhInstConfigResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据筛选条件查找用户总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int countRecordTotal(UserManagerRequest request) {
+        UserManagerResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/countUserList", request, UserManagerResponse.class)
+                .getBody();
+        return response.getCount();
+    }
 }
