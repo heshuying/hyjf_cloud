@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.mybatis.mapper.customize.AdminSystemMapper">
-	<resultMap id="selectLeftMenuTreeMap" type="com.hyjf.mybatis.model.customize.AdminSystem">
+	<resultMap id="selectLeftMenuTreeMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		<result column="menu_puuid" property="menuPuuid" jdbcType="VARCHAR" />
 		<result column="menu_uuid" property="menuUuid" jdbcType="VARCHAR" />
 		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
@@ -9,7 +9,7 @@
 		<result column="menu_icon" property="menuIcon" jdbcType="VARCHAR" />
 		<result column="menu_sort" property="menuSort" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="selectLeftMenuTree" resultMap="selectLeftMenuTreeMap" parameterType="com.hyjf.mybatis.model.customize.AdminSystem">
+	<select id="selectLeftMenuTree" resultMap="selectLeftMenuTreeMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		SELECT DISTINCT
 			m.menu_puuid AS menu_puuid,
 			m.menu_uuid AS menu_uuid,
@@ -39,11 +39,11 @@
 			m.menu_sort ASC
 	</select>
 
-	<resultMap id="getUserPermissionResultMap" type="com.hyjf.mybatis.model.customize.AdminSystem">
+	<resultMap id="getUserPermissionResultMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		<result column="menu_ctrl" property="menuCtrl" jdbcType="VARCHAR" />
 		<result column="permission" property="permission" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="getUserPermission" resultMap="getUserPermissionResultMap" parameterType="com.hyjf.mybatis.model.customize.AdminSystem">
+	<select id="getUserPermission" resultMap="getUserPermissionResultMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		SELECT DISTINCT
 		  CASE WHEN m.menu_ctrl IS NULL OR m.menu_ctrl = '' THEN m.menu_uuid ELSE m.menu_ctrl END AS menu_ctrl,
 	      p.permission
@@ -64,14 +64,14 @@
 		    AND a.del_flag = '0'
 	</select>
 
-	<resultMap id="UserInfoResultMap" type="com.hyjf.mybatis.model.customize.AdminSystem">
+	<resultMap id="UserInfoResultMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		<result column="id" property="id" jdbcType="VARCHAR" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
 		<result column="truename" property="truename" jdbcType="VARCHAR" />
 		<result column="role_id" property="roleId" jdbcType="INTEGER" />
 		<result column="state" property="state" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="getUserInfo" resultMap="UserInfoResultMap" parameterType="com.hyjf.mybatis.model.customize.AdminSystem">
+	<select id="getUserInfo" resultMap="UserInfoResultMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		SELECT DISTINCT
 		  a.id,
 		  a.username,
@@ -92,7 +92,7 @@
 	    AND a.del_flag = '0'
 	</select>
 	
-	<select id="updatePassword" resultType="java.lang.Integer" parameterType="com.hyjf.mybatis.model.customize.AdminSystem">
+	<select id="updatePassword" resultType="java.lang.Integer" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		update 
 		  hyjf_admin a
 		  set a.password=#{password, jdbcType=VARCHAR}
@@ -100,7 +100,7 @@
 		  a.id = #{id, jdbcType=VARCHAR}
 	</select>
 	
-	<select id="selectByUsername" parameterType="string" resultType="com.hyjf.mybatis.model.auto.Admin">
+	<select id="selectByUsername" parameterType="string" resultType="com.hyjf.am.config.dao.model.auto.Admin">
 		SELECT
 			*
 		FROM

@@ -44,6 +44,22 @@
         <google.coll.version>1.0-rc2</google.coll.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang3.version}</version>
+        </dependency>
+
+
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <!-- sping cloud -->
@@ -69,20 +85,6 @@
                 <version>2.0.0</version>
             </dependency>
 
-            <!-- zipkin start -->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework.cloud</groupId>-->
-                <!--<artifactId>spring-cloud-stream-binder-kafka</artifactId>-->
-                <!--<version>1.2.1.RELEASE</version>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-                <!--<groupId>org.springframework.cloud</groupId>-->
-                <!--<artifactId>spring-cloud-sleuth-stream</artifactId>-->
-                <!--<version>1.2.6.RELEASE</version>-->
-            <!--</dependency>-->
-            <!-- zipkin end -->
-
             <!-- sping mybatis -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -102,12 +104,6 @@
                 <version>${rocketmq.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
-
             <!--spring2.0 need common-pool2-->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -119,12 +115,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>1.3.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons.lang3.version}</version>
             </dependency>
 
             <!-- gen token -->
