@@ -464,4 +464,10 @@ public class UserController {
 		return response;
 	}
 
+	@RequestMapping("/isCompAccount/{userId}")
+	public int isCompAccount(Integer userId){
+		int count = userService.isCompAccount(userId);
+		return count;
+	}
+
 }

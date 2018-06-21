@@ -23,9 +23,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value = "充值接口")
 @RestController
-@RequestMapping("am-trade/trad")
+@RequestMapping("am-trade/trade")
 public class RechargeController {
     private static Logger logger = LoggerFactory.getLogger(RechargeController.class);
 
@@ -40,7 +39,6 @@ public class RechargeController {
      * @param userId
      * @return
      */
-    @ApiOperation(value = " Account", notes = " Account")
     @GetMapping("/getAccount/{userId}")
     public AccountResponse getAccount(@PathVariable(value = "userId") Integer userId){
         logger.info("getAccount...param is :{}", JSONObject.toJSONString(userId));
@@ -59,7 +57,6 @@ public class RechargeController {
      * @param
      * @return
      */
-    @ApiOperation(value = " 查询充值记录", notes = " 查询充值记录")
     @GetMapping("/selectByOrderId/{orderId}")
     public AccountRechargeResponse selectByOrderId(@PathVariable String orderId){
         logger.info("selectByOrderId...param is :{}", JSONObject.toJSONString(orderId));
@@ -80,7 +77,6 @@ public class RechargeController {
      * @param newAccount
      * @return
      */
-    @ApiOperation(value = " updateBankRechargeSuccess", notes = " updateBankRechargeSuccess")
     @PostMapping("/updateBankRechargeSuccess")
     public int updateBankRechargeSuccess(@RequestBody Account newAccount){
         logger.info("updateBankRechargeSuccess...param is :{}", JSONObject.toJSONString(newAccount));
@@ -105,7 +101,6 @@ public class RechargeController {
      *
      * @param accountRecharge
      */
-    @ApiOperation(value = " 更新", notes = " 更新")
     @PutMapping("/updateByPrimaryKeySelective")
     public void updateByPrimaryKeySelective(@RequestBody AccountRecharge accountRecharge){
         logger.info("updateByPrimaryKeySelective...param is :{}", JSONObject.toJSONString(accountRecharge));

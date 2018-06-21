@@ -550,7 +550,7 @@
     </sql>
 
     <!--app 债转count-->
-    <select id="countAppCredit" resultMap="int" parameterType="Map">
+    <select id="countAppCredit" resultType="int" parameterType="Map">
         SELECT
         COUNT(credit_nid)
         from huiyingdai_borrow_credit

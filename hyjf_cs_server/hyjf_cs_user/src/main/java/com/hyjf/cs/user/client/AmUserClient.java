@@ -132,4 +132,6 @@ public interface AmUserClient {
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 
     List<BankCardVO> getBankOpenAccountById(UserVO user);
+
+	int isCompAccount(Integer userId);
 }

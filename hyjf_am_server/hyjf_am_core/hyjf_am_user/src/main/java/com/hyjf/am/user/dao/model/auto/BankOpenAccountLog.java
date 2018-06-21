@@ -3,9 +3,7 @@ package com.hyjf.am.user.dao.model.auto;
 import java.io.Serializable;
 import java.util.Date;
 
-public class BankOpenAccountLog implements Serializable {
-    private Integer id;
-
+public class BankOpenAccountLog extends BankOpenAccountLogKey implements Serializable {
     private Integer userId;
 
     private String userName;
@@ -34,6 +32,8 @@ public class BankOpenAccountLog implements Serializable {
 
     private Integer status;
 
+    private String retCode;
+
     private Integer createUserId;
 
     private Integer updateUserId;
@@ -43,14 +43,6 @@ public class BankOpenAccountLog implements Serializable {
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getUserId() {
         return userId;
@@ -162,6 +154,14 @@ public class BankOpenAccountLog implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getRetCode() {
+        return retCode;
+    }
+
+    public void setRetCode(String retCode) {
+        this.retCode = retCode == null ? null : retCode.trim();
     }
 
     public Integer getCreateUserId() {
