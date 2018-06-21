@@ -19,7 +19,6 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.BindEmailError;
@@ -51,9 +50,6 @@ import java.util.Map.Entry;
 public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
-
-    @Autowired
-    private BankOpenClient bankOpenClient;
 
     @Autowired
     private AmUserClient amUserClient;
@@ -97,15 +93,18 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @Return: String
      */
     @Override
-    public Map<String,Object> safeInit(WebViewUser webViewUser) {
+    public Map<String,Object> safeInit(WebViewUserVO webViewUserVO) {
         Map<String,Object> resultMap = new HashMap<>();
-        UserVO user = amUserClient.findUserById(webViewUser.getUserId());
+        UserVO user = amUserClient.findUserById(webViewUserVO.getUserId());
+        // 用户角色
+        UserInfoVO userInfo = this.amUserClient.findUsersInfoById(user.getUserId());
+
         resultMap.put("webViewUser", user);
-        if (user.getTruename() != null && user.getTruename().length() >= 1) {
-            resultMap.put("truename", user.getTruename().substring(0, 1) + "**");
+        if (userInfo.getTruename() != null && userInfo.getTruename().length() >= 1) {
+            resultMap.put("truename", userInfo.getTruename().substring(0, 1) + "**");
         }
-        if (user.getIdcard() != null && user.getIdcard().length() >= 15) {
-            resultMap.put("idcard", user.getIdcard().substring(0, 3) + "***********" + user.getIdcard().substring(user.getIdcard().length() - 4));
+        if (userInfo.getIdcard() != null && userInfo.getIdcard().length() >= 15) {
+            resultMap.put("idcard", userInfo.getIdcard().substring(0, 3) + "***********" + userInfo.getIdcard().substring(userInfo.getIdcard().length() - 4));
         }
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
@@ -117,8 +116,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
 
-        // 用户角色
-        UserInfoVO userInfo = this.amUserClient.findUsersInfoById(user.getUserId());
+
         resultMap.put("roleId", userInfo.getRoleId());
         // 是否设置交易密码
         resultMap.put("isSetPassword", user.getIsSetPassword());
@@ -130,12 +128,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
 		resultMap.put("userRelation", result);
 		
-        BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(user.getUserId());
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectById(user.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);
         resultMap.put("chinapnr", chinapnr);
 
-        UserEvalationResultVO userEvalationResult = bankOpenClient.selectUserEvalationResultByUserId(user.getUserId());
+        UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(user.getUserId());
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(),1,1).getTime();
@@ -162,9 +160,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
         String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty( user.getIconurl())){
-            resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconurl());
-        }
+        //todo  图像删除了？
+//        if(org.apache.commons.lang3.StringUtils.isNotEmpty(user.getIconurl())){
+//            resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconurl());
+//        }
         resultMap.put("inviteLink", systemConfig.getWebHost()+"/web/user/regist/init?from="+user.getUserId());
         return resultMap;
     }
@@ -217,6 +216,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     @Override
     public boolean sendEmailActive(Integer userId, String email) throws MQException {
         UserVO user = amUserClient.findUserById(userId);
+        UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         String activeCode = GetCode.getRandomCode(6);
 
         // 保存发送的激活邮件记录
@@ -234,8 +234,8 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
         Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.put("url_name", url);
-        if (StringUtils.isNotBlank(user.getNickname())) {
-            replaceMap.put("username_name", user.getNickname());
+        if (StringUtils.isNotBlank(userInfoVO.getNickname())) {
+            replaceMap.put("username_name", userInfoVO.getNickname());
         } else {
             replaceMap.put("username_name", user.getUsername());
         }
@@ -276,7 +276,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @param
      */
     @Override
-    public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUser user) {
+    public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUserVO user) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
             throw new ReturnMessageException(BindEmailError.REQUEST_PARAM_ERROR);
@@ -324,7 +324,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 紧急联系人参数校验
      */
     @Override
-    public void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUser user) {
+    public void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUserVO user) {
         // 请求参数空值校验
         if (StringUtils.isBlank(relationId) || StringUtils.isBlank(rlName) || StringUtils.isBlank(rlPhone)) {
             throw new ReturnMessageException(ContractSetError.REQUEST_PARAM_ERROR);
@@ -343,7 +343,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 保存紧急联系人
      */
     @Override
-    public boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUser user) throws MQException {
+    public boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUserVO user) throws MQException {
         UsersContractRequest requestBean = new UsersContractRequest();
         requestBean.setRelation(Integer.parseInt(relationId));
         requestBean.setRlName(rlName);

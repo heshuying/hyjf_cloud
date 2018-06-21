@@ -43,6 +43,7 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 	@Autowired
 	private CallcenterServiceUsersMapper callcenterServiceUsersMapper;
 
+	@Override
 	public List<BankCard> getTiedCardOfAccountBank(Integer userId){
 		BankCardExample example = new BankCardExample();
 		BankCardExample.Criteria cra = example.createCriteria();
@@ -147,5 +148,10 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 	public List<CallcenterAccountHuifuCustomize> getHuifuTiedcardInfo(CallcenterAccountHuifuRequest callcenterAccountHuifuRequest) {
 		List<CallcenterAccountHuifuCustomize> callcenterAccountHuifuCustomizeList = callCenterAccountHuifuMapper.findHuifuTiedcardInfo(callcenterAccountHuifuRequest);
 		return callcenterAccountHuifuCustomizeList;
+	}
+
+	@Override
+	public String getCouponContent(String couponSource){
+		return callCenterCustomizeMapper.getCouponContent(couponSource);
 	}
 }

@@ -25,7 +25,6 @@ public class CouponExpiredController {
 
     @RequestMapping("/expired")
     public void updateCouponExpired() {
-        String methodName = "updateCouponExpired";
         logger.info("检查优惠券使用是否过期 开始");
         couponExpiredService.updateCouponExpired();
         logger.info("检查优惠券使用是否过期 结束");

@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.login;
 
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
 /**
@@ -19,5 +20,5 @@ public interface LoginService extends BaseUserService {
      * @param loginPassword
      * @param ip
      */
-    UserVO login(String loginUserName, String loginPassword, String ip);
+    WebViewUserVO login(String loginUserName, String loginPassword, String ip);
 }

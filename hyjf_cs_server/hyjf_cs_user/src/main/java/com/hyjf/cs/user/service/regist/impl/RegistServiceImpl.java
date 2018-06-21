@@ -3,28 +3,13 @@
  */
 package com.hyjf.cs.user.service.regist.impl;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -33,6 +18,7 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
@@ -42,6 +28,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
+import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.CouponProducer;
@@ -49,7 +36,21 @@ import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.mq.SmsProducer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.cs.user.vo.RegisterVO;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author zhangqingqing
@@ -64,54 +65,63 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     private AmUserClient amUserClient;
 
     @Autowired
+    private AmTradeClient amTradeClient;
+
+    @Autowired
     private CouponProducer couponProducer;
 
     @Autowired
     private SmsProducer smsProducer;
+
+
 
     @Autowired
     SystemConfig systemConfig;
 
     @Value("${hyjf.activity.888.id}")
     private Integer activityId;
+    @Value("${file.domain.head.url}")
+    private String fileHeadUrl;
+    @Value("${file.upload.head.path}")
+    private String fileHeadPath;
 
     /**
      * 1. 必要参数检查 2. 注册 3. 注册后处理
-     * @param registerVO
+     * @param registerRequest
      * @param
      * @param
      * @return
      * @throws ReturnMessageException
      */
     @Override
-    public UserVO register(RegisterVO registerVO, String ip)
+    public WebViewUserVO register(RegisterRequest registerRequest, String ip)
             throws ReturnMessageException {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
-        BeanUtils.copyProperties(registerVO, registerUserRequest);
+        BeanUtils.copyProperties(registerRequest, registerUserRequest);
         registerUserRequest.setLoginIp(ip);
         registerUserRequest.setInstCode(1);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_REGISTER);
         // 3.注册后处理
-        this.afterRegisterHandle(userVO);
-
-        return userVO;
+        return this.afterRegisterHandle(userVO);
     }
 
     /**
      * api注册
-     * @param registerVO
+     * @param
      * @param ipAddr
      * @return
      */
     @Override
-    public UserVO apiRegister(RegisterVO registerVO, String ipAddr) {
+    public UserVO apiRegister(RegisterRequest registerRequest, String ipAddr) {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
-        BeanUtils.copyProperties(registerVO, registerUserRequest);
+        BeanUtils.copyProperties(registerRequest, registerUserRequest);
+        RegisterVO registerVO = new RegisterVO();
+        BeanUtils.copyProperties(registerRequest, registerVO);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
-        HjhInstConfigVO instConfig = this.amUserClient.selectInstConfigByInstCode(registerVO.getInstCode());
+        HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
         // 机构编号
         CheckUtil.check(instConfig != null, MsgEnum.ERR_INSTCODE);
         // 验签
@@ -127,30 +137,30 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     /**
      * 注册参数校验
      *
-     * @param registerVO
+     * @param
      */
     @Override
-    public void registerCheckParam(int client, RegisterVO registerVO) {
+    public void registerCheckParam(int client, RegisterRequest registerRequest) {
         if(ClientConstants.API_CLIENT == client){
             // 机构编号
-            String instCode = registerVO.getInstCode();
+            String instCode = registerRequest.getInstCode();
             // 注册平台
-            String platform = registerVO.getPlatform();
+            String platform = registerRequest.getPlatform();
             // 注册渠道
-            String utmId = registerVO.getUtmId();
+            String utmId = registerRequest.getUtmId();
             // 机构编号
             CheckUtil.check(StringUtils.isNotEmpty(instCode), MsgEnum.ERR_INSTCODE);
             // 注册平台
             CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.ERR_PLATEFORM);
             // 推广渠道
             CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.ERR_UTMID);
-            CheckUtil.check(registerVO != null, MsgEnum.ERR_REGISTER);
+            CheckUtil.check(registerRequest != null, MsgEnum.ERR_REGISTER);
         }
-        String mobile = registerVO.getMobilephone();
+        String mobile = registerRequest.getMobilephone();
         CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.ERR_MOBILE_IS_NOT_NULL);
-        String smsCode = registerVO.getSmsCode();
+        String smsCode = registerRequest.getSmsCode();
         CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.ERR_SMSCODE_IS_NOT_NULL);
-        String password = registerVO.getPassword();
+        String password = registerRequest.getPassword();
         CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.ERR_PASSWORD_IS_NOT_NULL);
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_MOBILE_IS_NOT_REAL);
         CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
@@ -171,7 +181,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
       /*  int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
         CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);*/
-        String reffer = registerVO.getReffer();
+        String reffer = registerRequest.getReffer();
         if(StringUtils.isNotEmpty(reffer)){
             CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_REFFER_INVALID);
         }
@@ -183,16 +193,16 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
      *
      * @param userVO
      */
-    private void afterRegisterHandle(UserVO userVO) {
+    private WebViewUserVO afterRegisterHandle(UserVO userVO) {
+
         int userId = userVO.getUserId();
 
         // 1. 注册成功之后登录
         String token = generatorToken(userId, userVO.getUsername());
-        WebViewUser webViewUser = new WebViewUser();
-        BeanUtils.copyProperties(userVO,webViewUser);
-        webViewUser.setToken(token);
-        userVO.setToken(token);
-        RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUser, 7 * 24 * 60 * 60);
+        WebViewUserVO webViewUserVO = this.assembleWebViewUserVO(userVO);
+        webViewUserVO.setToken(token);
+        RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+
         // 2. 注册送188元新手红包
         if (!checkActivityIfAvailable(activityId)) {
             try {
@@ -217,7 +227,64 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 logger.error("短信发送失败...", e);
             }
         }
+
+        return webViewUserVO;
     }
+
+
+    private WebViewUserVO assembleWebViewUserVO(UserVO userVO) {
+        WebViewUserVO webViewUserVO = new WebViewUserVO();
+        BeanUtils.copyProperties(userVO, webViewUserVO);
+        UserInfoVO usersInfo = amUserClient.findUserInfoById(userVO.getUserId());
+        if (usersInfo != null) {
+            webViewUserVO.setSex(usersInfo.getSex());
+            webViewUserVO.setTruename(usersInfo.getTruename());
+            webViewUserVO.setIdcard(usersInfo.getIdcard());
+            webViewUserVO.setRoleId(usersInfo.getRoleId() + "");
+            webViewUserVO.setBorrowerType(usersInfo.getBorrowerType());
+        }
+        webViewUserVO.setIconurl(this.assembleIconUrl(userVO));
+        webViewUserVO.setOpenAccount(false);
+        webViewUserVO.setBankOpenAccount(false);
+        if(null != userVO.getOpenAccount()&&userVO.getOpenAccount()==1){
+            AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(userVO.getUserId());
+            webViewUserVO.setOpenAccount(true);
+            //咱们平台的汇付账号
+            webViewUserVO.setChinapnrUsrid(chinapnr.getChinapnrUsrid());
+            webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
+        }
+        if(null!=userVO.getBankOpenAccount()&&userVO.getBankOpenAccount()==1){
+            List<BankCardVO> bankCardVOList = amUserClient.getBankOpenAccountById(userVO);
+            if(null!=bankCardVOList&&bankCardVOList.size()>0){
+                BankCardVO bankCardVO = bankCardVOList.get(0);
+                webViewUserVO.setBankOpenAccount(true);
+                webViewUserVO.setBankAccount(bankCardVO.getCardNo());
+            }
+        }
+        UsersContactVO usersContactVO = amUserClient.selectUserContact(userVO.getUserId());
+        webViewUserVO.setUsersContact(usersContactVO);
+        userVO.setOpenAccount(null);
+        userVO.setBankOpenAccount(null);
+        return webViewUserVO;
+    }
+
+    /**
+     * 组装图像url
+     *
+     * @param userVO
+     * @return
+     */
+    private String assembleIconUrl(UserVO userVO) {
+        String iconUrl = ""; // todo getUrlcron
+        if (StringUtils.isNotBlank(iconUrl)) {
+            String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
+            imghost = imghost.substring(0, imghost.length() - 1);
+            String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
+            return imghost + fileUploadTempPath + iconUrl;
+        }
+        return iconUrl;
+    }
+
 
     /**
      * jwt生成token

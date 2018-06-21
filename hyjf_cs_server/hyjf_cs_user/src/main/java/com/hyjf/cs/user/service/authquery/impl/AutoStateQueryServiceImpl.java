@@ -10,7 +10,6 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.bean.AutoStateQueryRequest;
 import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.AutoStateError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
@@ -31,9 +30,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AutoStateQueryServiceImpl extends BaseUserServiceImpl implements AutoStateQueryService {
     private static final Logger logger = LoggerFactory.getLogger(AutoStateQueryServiceImpl.class);
-
-    @Autowired
-    BankOpenClient bankOpenClient;
 
     @Autowired
     AmUserClient amUserClient;
@@ -61,7 +57,7 @@ public class AutoStateQueryServiceImpl extends BaseUserServiceImpl implements Au
         }
         // 用户ID
         // 根据电子账户号查询用户ID
-        BankOpenAccountVO bankOpenAccount = bankOpenClient.selectByAccountId(accountId);
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(accountId);
         if (bankOpenAccount == null) {
             logger.info("查询用户开户信息失败,用户电子账户号:[" + accountId + "]");
             throw new ReturnMessageException(AutoStateError.CHECK_USER_INFO_ERROR);

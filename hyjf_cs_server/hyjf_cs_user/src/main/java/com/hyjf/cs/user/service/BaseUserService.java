@@ -3,7 +3,7 @@ package com.hyjf.cs.user.service;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUser;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.BaseBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -17,7 +17,7 @@ public interface BaseUserService extends BaseService{
 	 * @Version v0.1
 	 * @Date 2018/6/12 10:34
 	 */
-	WebViewUser getUsersByToken(String token);
+	WebViewUserVO getUsersByToken(String token);
 
 	/**
 	 * @Description 查询用户对象

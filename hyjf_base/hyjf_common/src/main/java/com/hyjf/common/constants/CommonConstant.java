@@ -45,4 +45,34 @@ public class CommonConstant {
 
     /** 更换手机号-绑定新手机号 */
     public static final String PARAM_TPL_BDYSJH = "TPL_BDYSJH";
+
+
+
+	/** borrow_apicron 字段说明 */
+	// api_type = 0 放款
+	public static final int APICRON_API_TYPE_BORROW = 0;
+	// api_type = 1 还款
+	public static final int APICRON_API_TYPE_REPAY = 1;
+	// status 初始
+	public static final int APICRON_STATUS_INIT = 0;
+	// 1 放款/还款 请求中
+	public static final int APICRON_STATUS_REQUESTING = 1;
+	// 2 放款/还款 请求成功
+	public static final int APICRON_STATUS_REQUEST_SUCCESS = 2;
+	// 3 放款/还款 校验成功
+	public static final int APICRON_STATUS_CHECK_SUCCESS = 3;
+	// 4 放款/还款 校验失败
+	public static final int APICRON_STATUS_CHECK_FAIL = 4;
+	// 5 放款/还款 失败
+	public static final int APICRON_STATUS_RESULT_FAIL_ = 5;
+	// 6 放款/还款 成功
+	public static final int APICRON_STATUS_RESULT_SUCCESS_ = 6;
+    // 融通宝加息利息还款状态 0-未完成
+	public static final int APICRON_EXTRA_YIELD_REPAY_STATUS_INIT = 0;
+    // 融通宝加息利息还款状态 1-已完成
+	public static final int APICRON_EXTRA_YIELD_REPAY_STATUS_FINISH = 1;
+    // 融通宝加息利息还款状态 2-进行中
+    public static final int APICRON_EXTRA_YIELD_REPAY_STATUS_RUNNING = 2;
+    // 融通宝加息利息还款状态 9-错误
+    public static final int APICRON_EXTRA_YIELD_REPAY_STATUS_ERROR = 9;
 }

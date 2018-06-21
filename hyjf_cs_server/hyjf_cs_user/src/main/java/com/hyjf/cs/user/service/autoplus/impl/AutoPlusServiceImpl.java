@@ -11,6 +11,7 @@ import java.util.Map;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.user.client.AmConfigClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,6 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
-import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
@@ -54,7 +54,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     private AmUserClient amUserClient;
 
     @Autowired
-    private BankOpenClient bankOpenClient;
+    private AmConfigClient amConfigClient;
 
     @Autowired
     SystemConfig systemConfig;
@@ -164,7 +164,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         Map<String,String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         bean.convert();
-        WebViewUser user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         if (user == null) {
             throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
         }
@@ -254,10 +254,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         }else {
             String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());
             // 取得用户在江西银行的客户号
-            BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(users.getUserId());
+            BankOpenAccountVO bankOpenAccount = amUserClient.selectById(users.getUserId());
             bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
-            bean.setInstCode(systemConfig.getBankInstcode());
-            bean.setBankCode(systemConfig.getBankCode());
             bean.setTxDate(GetOrderIdUtils.getTxDate());
             bean.setTxTime(GetOrderIdUtils.getTxTime());
             bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -358,7 +356,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000002);
         }
         // 根据电子账户号查询用户ID
-        BankOpenAccountVO bankOpenAccount = this.bankOpenClient.selectByAccountId(payRequestBean.getAccountId());
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(payRequestBean.getAccountId());
         if(bankOpenAccount == null){
             logger.info("-------------------没有根据电子银行卡找到用户"+payRequestBean.getAccountId()+"！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004,"没有根据电子银行卡找到用户");
@@ -413,7 +411,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Override
     public BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean) {
-        BankOpenAccountVO bankOpenAccount = this.bankOpenClient.selectByAccountId(payRequestBean.getAccountId());
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(payRequestBean.getAccountId());
         UserVO user= amUserClient.findUserById(bankOpenAccount.getUserId());
         Integer userId = user.getUserId();
         // 同步调用路径
@@ -441,7 +439,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.convert();
         //业务变更，银行不直接返回accountId，需要根据用户Id查询账号
         if (StringUtils.isNotBlank(bean.getLogUserId())) {
-            BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(Integer.parseInt(bean.getLogUserId()));
+            BankOpenAccountVO bankOpenAccount = amUserClient.selectById(Integer.parseInt(bean.getLogUserId()));
             repwdResult.set("accountId", bankOpenAccount.getAccount());
         }else{
             repwdResult.set("accountId", bean.getAccountId());
@@ -514,7 +512,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         }
         // 返回值
         if (StringUtils.isNotBlank(bean.getLogUserId())) {
-            BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(Integer.parseInt(bean.getLogUserId()));
+            BankOpenAccountVO bankOpenAccount = amUserClient.selectById(Integer.parseInt(bean.getLogUserId()));
             params.put("accountId", bankOpenAccount.getAccount()==null?bean.getAccountId():bankOpenAccount.getAccount());
         }else{
             params.put("accountId", bean.getAccountId());
@@ -535,12 +533,10 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     public BankCallBean getUserAuthQUery(Integer userId,String type) {
         // 调用查询投资人签约状态查询
-        BankOpenAccountVO bankOpenAccount = bankOpenClient.selectById(userId);
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectById(userId);
         BankCallBean selectbean = new BankCallBean();
         selectbean.setVersion(BankCallConstant.VERSION_10);
         selectbean.setTxCode(BankCallConstant.TXCODE_CREDIT_AUTH_QUERY);
-        selectbean.setInstCode(systemConfig.getBankInstcode());
-        selectbean.setBankCode(systemConfig.getBankCode());
         selectbean.setTxDate(GetOrderIdUtils.getTxDate());
         selectbean.setTxTime(GetOrderIdUtils.getTxTime());
         selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -591,7 +587,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
         bean.setOrderId(bean.getLogOrderId());
         bean.setAccountId(accountId);
-        // bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);todo
+        bean.setForgotPwdUrl(systemConfig.getForgetpassword());
         bean.setLastSrvAuthCode(lastSrvAuthCode);
         bean.setSmsCode(smsCode);
         bean.setLogRemark(remark);
@@ -608,8 +604,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         selectbean.setVersion(BankCallConstant.VERSION_10);
         selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);
         // 机构代码
-        //selectbean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE)); todo
-        // selectbean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE)); todo
+        selectbean.setInstCode(systemConfig.getBankInstcode());
+         selectbean.setBankCode(systemConfig.getBankCode());
         selectbean.setTxDate(GetOrderIdUtils.getTxDate());
         selectbean.setTxTime(GetOrderIdUtils.getTxTime());
         selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -631,7 +627,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public String getBankRetMsg(String retCode) {
         //如果错误码不为空
         if (StringUtils.isNotBlank(retCode)) {
-            BankReturnCodeConfigVO retCodes = this.amUserClient.getBankReturnCodeConfig(retCode);
+            BankReturnCodeConfigVO retCodes = this.amConfigClient.getBankReturnCodeConfig(retCode);
             if (retCodes != null) {
                 String retMsg = retCodes.getErrorMsg();
                 if (StringUtils.isNotBlank(retMsg)) {

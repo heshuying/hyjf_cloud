@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper">
+    <select id="countInvest" resultType="INTEGER" parameterType="INTEGER">
+        SELECT SUM(a) FROM (SELECT COUNT(*) a FROM ht_borrow_tender WHERE user_id = #{userId}
+          UNION ALL
+        SELECT COUNT(*) a FROM ht_credit_tender WHERE user_id = #{userId}
+          UNION ALL
+        SELECT COUNT(*) a FROM ht_borrow_tender_cpn WHERE user_id = #{userId}
+          UNION ALL
+        SELECT COUNT(*) a FROM ht_hjh_accede  WHERE user_id =  #{userId})b
+    </select>
+</mapper>

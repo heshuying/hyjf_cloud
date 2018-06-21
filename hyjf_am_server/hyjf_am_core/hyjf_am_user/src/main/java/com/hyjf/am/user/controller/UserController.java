@@ -54,7 +54,7 @@ public class UserController {
 			} else {
 				UserVO userVO = new UserVO();
 				BeanUtils.copyProperties(user, userVO);
-				userResponse.setResult(userService.assembleUserVO(userVO));
+				userResponse.setResult(userVO);
 			}
 		} catch (MQException e) {
 			logger.error("user register error...", e);
@@ -117,7 +117,7 @@ public class UserController {
 		if (user != null) {
 			UserVO userVO = new UserVO();
 			BeanUtils.copyProperties(user, userVO);
-			response.setResult(userService.assembleUserVO(userVO));
+			response.setResult(userVO);
 		}
 		return response;
 	}
@@ -423,7 +423,6 @@ public class UserController {
 		return response;
 	}
 
-
 	@RequestMapping("/getEvalationByCountScore/{countScore}")
 	public EvalationResponse getEvalationByCountScore(@PathVariable short countScore) {
 		EvalationResponse response = new EvalationResponse();
@@ -464,18 +463,5 @@ public class UserController {
 		}
 		return response;
 	}
-
-	@RequestMapping("/selectActivityList/{activityId}")
-	public ActivityListResponse selectActivityList(@PathVariable int activityId){
-		ActivityList activityList = userService.selectActivityList(activityId);
-		ActivityListResponse response = new ActivityListResponse();
-		if(null != activityList){
-			ActivityListVO activityListVO = new ActivityListVO();
-			BeanUtils.copyProperties(activityList,activityListVO);
-			response.setResult(activityListVO);
-		}
-		return response;
-	}
-
 
 }

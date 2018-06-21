@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.hyjf.common.constants.CommonConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,8 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 	@Override
 	public void execute() {
 		// 取得未放款任务
-		List<BorrowApicronVO> listApicron = borrowApicronClient.getBorrowApicronList(0, 1);
+		List<BorrowApicronVO> listApicron = borrowApicronClient.getBorrowApicronList(
+				CommonConstant.APICRON_EXTRA_YIELD_REPAY_STATUS_INIT, CommonConstant.APICRON_API_TYPE_REPAY);
 		if (!CollectionUtils.isEmpty(listApicron)) {
 			// 循环进行还款
 			for (BorrowApicronVO borrowApicron : listApicron) {
@@ -102,6 +104,7 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 		BankOpenAccountVO bankOpenAccountVO = bankOpenClient.selectByAccountId(merrpAccount);
 		if (bankOpenAccountVO == null)
 			throw new RuntimeException("公司红包账户未开户...");
+
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 版本号
 		bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);// 交易代码
