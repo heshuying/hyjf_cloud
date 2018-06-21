@@ -192,6 +192,10 @@ public class BankCallApiImpl implements BankCallApi {
         if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_SEQNO)) {
             bean.set(BankCallConstant.PARAM_SEQNO, GetOrderIdUtils.getSeqNo(6));
         }
+        // 订单日期
+        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_LOGORDERDATE)) {
+            bean.set(BankCallConstant.PARAM_LOGORDERDATE, GetOrderIdUtils.getOrderDate());
+        }
     }
 
     /**

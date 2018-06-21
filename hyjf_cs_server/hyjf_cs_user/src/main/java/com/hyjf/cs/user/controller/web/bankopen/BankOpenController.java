@@ -126,4 +126,17 @@ public class BankOpenController extends BaseUserController {
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);
         return result;
     }
+
+    /**
+     * @Description 查询开户失败原因
+     * @Author sunss
+     */
+    @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
+    @RequestMapping("/seachFiledMess")
+    @ResponseBody
+    public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+        return result;
+    }
 }
