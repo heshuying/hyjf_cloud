@@ -2,40 +2,33 @@ package com.hyjf.cs.user.controller.web.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.*;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.AuthorizedError;
-import com.hyjf.cs.user.constants.BindCardError;
-import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -62,10 +55,10 @@ public class BankOpenController extends BaseUserController {
         UserVO user = this.bankOpenService.getUsers(token);
         WebResult<Object> result = new WebResult<Object>();
         if(user==null){
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
-        if(user.getBankOpenAccount()==0){
-            throw new ReturnMessageException(OpenAccountError.OPEN_ACCOUNTED_ERROR);
+        if(user.getBankOpenAccount()==1){
+            throw new CheckException(MsgEnum.OPEN_ACCOUNTED_ERROR);
         }
         result.setStatus(ApiResult.SUCCESS);
         Map<String,String> map = new HashedMap();
@@ -88,7 +81,7 @@ public class BankOpenController extends BaseUserController {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         if (token == null) {
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         UserVO user = this.bankOpenService.getUsers(token);
         // 检查请求参数
@@ -112,7 +105,7 @@ public class BankOpenController extends BaseUserController {
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
-            throw new ReturnMessageException(OpenAccountError.SYSTEM_ERROR);
+            throw new CheckException(MsgEnum.STATUS_CE999999);
         }
         logger.info("开户end");
 		return result;

@@ -2,9 +2,11 @@ package com.hyjf.am.trade.controller.task;
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.BankCallBeanResponse;
 import com.hyjf.am.response.trade.CreditTenderLogResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
+import com.hyjf.am.resquest.trade.TenderCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.service.task.BankCreditTenderService;
@@ -46,7 +48,6 @@ public class BankExceptionController {
         logger.info("recharge...");
         bankRechargeService.recharge();
     }
-
 
 
     @GetMapping("/selectCreditTender/{assignNid}")
@@ -119,6 +120,67 @@ public class BankExceptionController {
         }else {
             return false;
         }
+    }
+
+    /**
+     * 同步回调收到后,根据logOrderId检索投资记录表
+     * @param logOrderId
+     * @return
+     */
+    @GetMapping(value = "/selectCreditTenderLogByOrderId")
+    public CreditTenderLogResponse selectCreditTenderLogByOrderId(@PathVariable String logOrderId){
+        logger.info("selectCreditTenderLogByOrderId...");
+        CreditTenderLogResponse response = new CreditTenderLogResponse();
+        CreditTenderLog creditTenderLog =bankCreditTenderService.selectCreditTenderLogByOrderId(logOrderId);
+        if(null != creditTenderLog){
+            response.setResult(CommonUtils.convertBean(creditTenderLog,CreditTenderLogVO.class));
+        }
+        return response;
+    }
+
+
+    @GetMapping("/selectByOrderIdAndUserId/{assignOrderId}/{userId}")
+    public CreditTenderLogResponse selectByOrderIdAndUserId(@PathVariable String assignOrderId,@PathVariable Integer userId){
+        CreditTenderLogResponse response = new CreditTenderLogResponse();
+        List<CreditTenderLog> creditTenderLogs=bankCreditTenderService.selectByOrderIdAndUserId(assignOrderId,userId);
+        if(CollectionUtils.isNotEmpty(creditTenderLogs)){
+            List<CreditTenderLogVO> voList = CommonUtils.convertBeanList(creditTenderLogs, CreditTenderLogVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 刪除
+     * @param assignOrderId
+     * @param userId
+     * @return
+     */
+    @GetMapping("/deleteByOrderIdAndUserId/{assignOrderId}/{userId}")
+    public Boolean deleteByOrderIdAndUserId(@PathVariable String assignOrderId,@PathVariable Integer userId){
+        int count=bankCreditTenderService.deleteByOrderIdAndUserId(assignOrderId,userId);
+        if(count>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 用户提现回调方法
+     * @param para
+     * @return
+     */
+    @PostMapping("/handlerAfterCash")
+    public Boolean handlerAfterCash(@RequestBody JSONObject para){
+        Boolean ret = true;
+        try {
+            ret = bankWithdrawService.updateHandlerAfterCash(para);
+        }catch (Exception e){
+            ret = false;
+        }
+        return ret;
+
     }
 
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.hyjf.am.vo.BaseVO;
 
 /**
- * �������з�������
+ * 接收银行数据的bean
  * @author jun 20180619
  *
  */
@@ -29,7 +29,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String logTime;
 	/** 备注 */
 	public String logRemark;
-	/** 订单�? */
+	/** 订单�? */
 	public String logOrderId;
 	/** 订单日期 */
 	public String logOrderDate;
@@ -39,17 +39,17 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String logUuid;
 	/** 用户操作平台 */
 	public int logClient;
-	/** 验证状�?? */
+	/** 验证状�?? */
 	public boolean logVerifyFlag;
 	/** 验证结果返回 */
 	public String logVerifyResult;
-	/** 订单状�?? */
+	/** 订单状�?? */
 	public String logOrderStatus;
 	/** 回调url类型 */
 	public String logNotifyType;
 
-	// 共�?�参�?
-	/** 版本�? */
+	// 共�?�参�?
+	/** 版本�? */
 	public String version;
 	/** 交易代码 */
 	public String txCode;
@@ -61,17 +61,17 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String txDate;
 	/** 交易时间 */
 	public String txTime;
-	/** 交易流水�? */
+	/** 交易流水�? */
 	public String seqNo;
 	/** 交易金额 */
 	public String txAmount;
-	/** 手续�? */
+	/** 手续�? */
 	public String txFee;
 	/** 交易渠道 */
 	public String channel;
 	/** 电子账号 */
 	public String accountId;
-	/** 订单�? */
+	/** 订单�? */
 	public String orderId;
 	/** 前台跳转链接 */
 	public String retUrl;
@@ -79,9 +79,9 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String notifyUrl;
 	/** 客户IP */
 	public String userIP;
-	/** 请求方保�? */
+	/** 请求方保�? */
 	public String acqRes;
-	/** 验证�? */
+	/** 验证�? */
 	public String sign;
 	/** 响应代码 */
 	public String retCode;
@@ -95,21 +95,21 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String idNo;
 	/** 姓名 */
 	public String name;
-	/** 手机�? */
+	/** 手机�? */
 	public String mobile;
 	/** 银行卡号 */
 	public String cardNo;
 	/** 邮箱 */
 	public String email;
-	/** 账户用�?? */
+	/** 账户用�?? */
 	public String acctUse;
 	/** 交易币种 */
 	public String currency;
 	/** srvTxCode */
 	public String srvTxCode;
-	/** 前导业务授权�? */
+	/** 前导业务授权�? */
 	public String lastSrvAuthCode;
-	/** 验证�? */
+	/** 验证�? */
 	public String smsCode;
 	/** 选项 */
 	public String option;
@@ -117,14 +117,14 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String startDate;
 	/** 结束日期 */
 	public String endDate;
-	/** 交易种类 0-�?有交�? 1-转入交易 2-转出交易 9-指定交易类型 */
+	/** 交易种类 0-�?有交�? 1-转入交易 2-转出交易 9-指定交易类型 */
 	public String type;
 	/** 交易类型 */
 	public String tranType;
 	/** 页数 */
 	public String pageNum;
 	
-	/** 自动投标总金额上限（不算已还金额�? */
+	/** 自动投标总金额上限（不算已还金额�? */
 	public String totAmount;
 	/** 原订单号 */
 	public String orgOrderId;
@@ -132,39 +132,39 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String srvAuthCode;
 	/** 交易利息 */
 	public String intAmount;
-	/** 还款手续�?:向融资人收取的手续费 */
+	/** 还款手续�?:向融资人收取的手续费 */
 	public String txFeeOut;
-	/** 收款手续�?:向投资人收取的手续费 */
+	/** 收款手续�?:向投资人收取的手续费 */
 	public String txFeeIn;
-	/** 对手电子账号:投资人账�? */
+	/** 对手电子账号:投资人账�? */
 	public String forAccountId;
-	/** 标的�? */
+	/** 标的�? */
 	public String productId;
-	/** 授权�?:投资人投标成功的授权�? */
+	/** 授权�?:投资人投标成功的授权�? */
 	public String authCode;
-	/** 冻结资金�?�? */
+	/** 冻结资金�?�? */
 	public String frzFlag;
-	/** 是否使用红包 0-不使用红�?,1-使用红包 */
+	/** 是否使用红包 0-不使用红�?,1-使用红包 */
 	public String bonusFlag;
 	/** 抵扣红包金额 */
 	public String bonusAmount;
-	/** 路由代码0-本行通道 1-银联通道 2-人行通道�?-自动选择 */
+	/** 路由代码0-本行通道 1-银联通道 2-人行通道�?-自动选择 */
 	public String routeCode;
-	/** 绑定银行联行号人民银行分配的12位联行号 routeCode=2，必�? 或�?�routeCode为空，但交易金额>20万，必输 */
+	/** 绑定银行联行号人民银行分配的12位联行号 routeCode=2，必�? 或�?�routeCode为空，但交易金额>20万，必输 */
 	public String cardBankCnaps;
-	/** 绑定银行中文名称 ,绑定的银行卡对应的银行中文名�? */
+	/** 绑定银行中文名称 ,绑定的银行卡对应的银行中文名�? */
 	public String cardBankNameCn;
-	/** 绑定银行英文名称 ,绑定的银行卡对应的银行英文名称缩�? */
+	/** 绑定银行英文名称 ,绑定的银行卡对应的银行英文名称缩�? */
 	public String cardBankNameEn;
-	/** 绑定银行卡开户省�? ,绑定的银行卡的开户省�? */
+	/** 绑定银行卡开户省�? ,绑定的银行卡的开户省�? */
 	public String cardBankProvince;
-	/** 绑定银行卡开户城�?,绑定的银行卡的开户城�? */
+	/** 绑定银行卡开户城�?,绑定的银行卡的开户城�? */
 	public String cardBankCity;
 	/** 忘记密码跳转 ,忘记密码的跳转URL */
 	public String forgotPwdUrl;
-	/** 绑定银行代码 ,绑定的银行卡对应的银行代�? */
+	/** 绑定银行代码 ,绑定的银行卡对应的银行代�? */
 	public String cardBankCode;
-	/** 批次�? */
+	/** 批次�? */
 	public String batchNo;
 	/** 交易笔数 */
 	public String txCounts;
@@ -172,25 +172,25 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String notifyURL;
 	/** 业务结果通知 */
 	public String retNotifyURL;
-	/** 转让金额 卖出的�?�权金额 */
+	/** 转让金额 卖出的�?�权金额 */
 	public String tsfAmount;
-	/** 原交易金�? 卖出方投标的原交易金额（或卖出方购买债权的原交易金额�? */
+	/** 原交易金�? 卖出方投标的原交易金额（或卖出方购买债权的原交易金额�? */
 	public String orgTxAmount;
 	/** 请求数组 */
 	public String subPacks;
 	/** 接收结果 */
 	public String received;
-	/** 签约状�?? 0：未签约 1：已签约 */
+	/** 签约状�?? 0：未签约 1：已签约 */
 	public String state;
 	/** 批次交易日期 */
 	public String batchTxDate;
 
-	/** 总记录数 �?�?10条记�? */
+	/** 总记录数 �?�?10条记�? */
 	public String totalItems;
 
-	/** 投资手续�? */
+	/** 投资手续�? */
 	public String bidFee;
-	/** 融资手续�? */
+	/** 融资手续�? */
 	public String debtFee;
 
 	/**
@@ -204,11 +204,11 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String reqTxDate;
 	/** 查询交易时间 */
 	public String reqTxTime;
-	/** 查询交易流水�? */
+	/** 查询交易流水�? */
 	public String reqSeqNo;
-	/** 查询订单�? */
+	/** 查询订单�? */
 	public String reqOrderId;
-	/** 交易状�?�S-成功 F-失败 N-交易不存�? Z-未知 D-待处�? */
+	/** 交易状�?�S-成功 F-失败 N-交易不存�? Z-未知 D-待处�? */
 	public String txState;
 	/** 可用余额 */
 	public String availBal;
@@ -216,13 +216,13 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String currBal;
 	/** 标的描述 */
 	public String productDesc;
-	/** 募集�? */
+	/** 募集�? */
 	public String raiseDate;
 	/** 募集结束日期 */
 	public String raiseEndDate;
-	/** 付息方式 0-到期与本金一起归�? 1-每月固定日期支付 2-每月不确定日期支�? */
+	/** 付息方式 0-到期与本金一起归�? 1-每月固定日期支付 2-每月不确定日期支�? */
 	public String intType;
-	/** 利息每月支付�? */
+	/** 利息每月支付�? */
 	public String intPayDay;
 	/** 借款期限 */
 	public String duration;
@@ -230,7 +230,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String rate;
 	/** 担保账户 */
 	public String bailAccountId;
-	/** 名义借款人电子帐�? */
+	/** 名义借款人电子帐�? */
 	public String nominalAccountId;
 	/** 是否使用交易描述 */
 	public String desLineFlag;
@@ -248,7 +248,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String relAmount;
 	/** 批次处理笔数 */
 	public String relCounts;
-	/** 批次处理状�?? */
+	/** 批次处理状�?? */
 	public String batchState;
 	/** 批次交易代码 */
 	public String batchTxCode;
@@ -256,34 +256,34 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String failMsg;
 	/** 账户类型 */
 	public String accType;
-	/** 提现�?�? */
+	/** 提现�?�? */
 	public String withdrawFlag;
-	/** 是否设置过密�? */
+	/** 是否设置过密�? */
 	public String pinFlag;
 	/** 对手姓名 */
 	public String forName;
-	/** 剩余可转让金�? */
+	/** 剩余可转让金�? */
 	public String availAmount;
-	/** 转让�?�? */
+	/** 转让�?�? */
 	public String txIncome;
 	/**预期收益*/
 	public String forIncome;
 	/**投标日期*/
 	public String buyDate;
-	/**�?户日�?*/
+	/**�?户日�?*/
 	public String openDate;
-	/**账户状�??*/
+	/**账户状�??*/
 	public String acctState;
 	/**冻结业务类别*/
 	public String frzState;
 
-	/**密码挂失状�??*/
+	/**密码挂失状�??*/
 	public String pinLosCd;
-	/** 联行�?*/
+	/** 联行�?*/
 	public String payAllianceCode;
-	/** 原交易日�? */
+	/** 原交易日�? */
 	public String orgTxDate;
-	/** 原交易时�? */
+	/** 原交易时�? */
 	public String orgTxTime;
 	/** 原交易流水号 */
 	public String orgSeqNo;
@@ -295,11 +295,11 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String caccount;
 	/**证件号码*/
 	public String busId;
-	/**税务登记�?*/ 
+	/**税务登记�?*/ 
 	public String taxId;
-	/**冻结状�??*/
+	/**冻结状�??*/
     public String frzType;
-	/** 预期年化收益�?*/
+	/** 预期年化收益�?*/
 	public String yield;
 	/** 预期本息收益*/
 	public String intTotal;
@@ -310,44 +310,44 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	/** 交易描述 */
 	public String description;
 	
-	/** 短信发�?�时�?*/
+	/** 短信发�?�时�?*/
 	public String sendTime;
 	/** 短信序号*/
 	public String smsSeq;
-	/** 验证码有效时�?*/
+	/** 验证码有效时�?*/
 	public String validTime;
-	/** 签约订单�?*/
+	/** 签约订单�?*/
 	public String contOrderId;
-	/** 手续费金�?*/
+	/** 手续费金�?*/
 	public String feeAmount;
-	/** 风险准备�?*/
+	/** 风险准备�?*/
 	public String riskAmount;
-	/**申请订单�?*/
+	/**申请订单�?*/
 	public String lendPayOrderId;
 	
 	/**签约日期*/
     public String txnDate;
     /**签约时间*/
     public String txnTime;
-    /**性别 M  男�??  F  女�??*/
+    /**性别 M  男�??  F  女�??*/
     public String gender;
-    /** 身份属�?? 1：出借角�?2：�?�款角色3：代偿角�?*/
+    /** 身份属�?? 1：出借角�?2：�?�款角色3：代偿角�?*/
     public String identity;
 
     
-    //是否维护标志�? �?0�?1组成的标志位�?0表示不维护，1表示维护，共20位，�?1位表�?12域是否生效，�?2位表�?13域是否生效，其余以此类推�?
+    //是否维护标志�? �?0�?1组成的标志位�?0表示不维护，1表示维护，共20位，�?1位表�?12域是否生效，�?2位表�?13域是否生效，其余以此类推�?
     private String bitMap;
-    //�?通自动投标功能标�? 0：取�? 1：开�?
+    //�?通自动投标功能标�? 0：取�? 1：开�?
     private String autoBid;
-    //�?通自动�?�转功能标志 0：取�? 1：开�?
+    //�?通自动�?�转功能标志 0：取�? 1：开�?
     private String autoTransfer;
-    //�?通预约取现功能标�? 0：取�? 1：开�?
+    //�?通预约取现功能标�? 0：取�? 1：开�?
     private String agreeWithdraw;
-    //�?通无密消费功能标�? 0：取�? 1：开�?
+    //�?通无密消费功能标�? 0：取�? 1：开�?
     private String directConsume;
     /**返回交易页面链接*/
     private String transactionUrl ;
-    /**订单有效性连�?*/
+    /**订单有效性连�?*/
     private String verifyOrderUrl ;
 
     /** 备注 */
@@ -358,17 +358,17 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
     /**交易确认时间*/
     public String affirmTime;
     
-    /**翻页标识 空：首次查询�?1：翻页查询；其它：非�?*/
+    /**翻页标识 空：首次查询�?1：翻页查询；其它：非�?*/
     public String rtnInd;
 
-    /**交易日期 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录交易日期；YYYYMMDD */
+    /**交易日期 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录交易日期；YYYYMMDD */
     public String inpDate;
 
-    /**交易时间 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录交易时间；HH24MISSTT */
+    /**交易时间 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录交易时间；HH24MISSTT */
     public String inpTime;
-    /**自然日期 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录自然日期；YYYYMMDD */
+    /**自然日期 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录自然日期；YYYYMMDD */
     public String relDate;
-    /**流水�? 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录流水号�? */
+    /**流水�? 翻页控制使用；首次查询上送空；翻页查询时上�?�上页返回的�?后一条记录流水号�? */
     public String traceNo;
 
     /** 地址*/
@@ -378,7 +378,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
     public String deadline;
     /** 签约到期日期*/
     public String bidDeadline;
-    /*签约�?大金�?*/
+    /*签约�?大金�?*/
     public String maxAmt;
 
     /** 缴费授权*/
@@ -387,18 +387,18 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
     /** 还款授权*/
     public String repayAuth;
 
-    /** 自动投标到期�?*/
+    /** 自动投标到期�?*/
     public String autoBidDeadline;
 
-    /** 自动投标签约�?高金�?*/
+    /** 自动投标签约�?高金�?*/
     public String autoBidMaxAmt;
-    /** 缴费授权到期�?*/
+    /** 缴费授权到期�?*/
     public String paymentDeadline;
-    /** 缴费签约�?高金�?*/
+    /** 缴费签约�?高金�?*/
     public String paymentMaxAmt;
-    /** 还款授权到期�?*/
+    /** 还款授权到期�?*/
     public String repayDeadline;
-    /** 还款签约�?高金�?*/
+    /** 还款签约�?高金�?*/
     public String repayMaxAmt;
 
 
@@ -411,7 +411,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
     /** cancelTime*/
     public String cancelTime;
 
-    /** 验证码类�?*/
+    /** 验证码类�?*/
     public String smsType;
 
     //缴费授权
@@ -432,14 +432,14 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
         this.verifyOrderUrl = verifyOrderUrl;
     }
 
-    //保留�?
+    //保留�?
     private String reserved;
     
     //受托支付flg 0:否，1：是
     private String entrustFlag;
-    //(受托)收款人电子账�?
+    //(受托)收款人电子账�?
     private String receiptAccountId;
-    // 页面调用成功后跳转连�?
+    // 页面调用成功后跳转连�?
     private String successfulUrl;
     // 商户名称
     private String coinstName;

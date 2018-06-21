@@ -12,6 +12,8 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
@@ -19,14 +21,13 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CouponClient;
+import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.constants.TenderError;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.HjhTenderService;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,7 +71,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     @Override
     public void joinPlan(TenderRequest request) {
-        WebViewUser loginUser = RedisUtils.getObj(request.getToken(), WebViewUser.class);
+        WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
         // 查询选择的优惠券
@@ -303,7 +303,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 3)
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 1
                 && cuc.getAddFlg() == 1))) {
-            throw new ReturnMessageException(TenderError.MONEY_NULL_ERROR);
+            throw new CheckException(MsgEnum.ERR_ACTIVITY_ISNULL);
         }
         // 投资金额小数点后超过两位
         if (account.contains(".")) {

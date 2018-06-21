@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service;
 
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -435,4 +436,14 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
 	}*/
 
+	/**
+	 * 根据用户ID查询企业用户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
+		return amUserClient.getCorpOpenAccountRecord(userId);
+	}
 }
