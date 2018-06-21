@@ -166,8 +166,6 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
                     boolean debtRegistingFlag = autoRecordClient.updateBorrowRegist(req);
                     if (debtRegistingFlag) {
                         // 获取共同参数
-                        //String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE); todo
-                        //String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE); todo
                         String channel = BankCallConstant.CHANNEL_PC;
                         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
                         String orderDate = GetOrderIdUtils.getOrderDate();
@@ -178,8 +176,6 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
                         BankCallBean debtRegistBean = new BankCallBean();
                         debtRegistBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
                         debtRegistBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER);// 消息类型(用户开户)
-                        //debtRegistBean.setInstCode(instCode);// 机构代码  todo
-                       // debtRegistBean.setBankCode(bankCode); //todo
                         debtRegistBean.setTxDate(txDate);
                         debtRegistBean.setTxTime(txTime);
                         debtRegistBean.setSeqNo(seqNo);

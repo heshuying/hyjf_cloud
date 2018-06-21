@@ -209,8 +209,9 @@ public enum MsgEnum implements MsgCode {
 
 
 
-
-
+	//------------------------开户用到的BankOpenServiceImpl
+	OPEN_ACCOUNTED_ERROR("EV000001","用户已开户"),
+	IDNO_FORMAT_ERROR("1", "身份证号格式错误"),
 
 	// 枚举终结
 	ERR_ENUM("", "");

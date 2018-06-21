@@ -64,7 +64,7 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 					Integer userId = JSONObject.parseObject(msg.getBody(), Integer.class);
 					if (userId == null) {
 						logger.error("参数错误，userId is null...");
-						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 					}
 					// 更新AppChannelStatisticsDetailDao开户时间
 					AppChannelStatisticsDetail entity = appChannelStatisticsDetailDao.findByUserId(userId);

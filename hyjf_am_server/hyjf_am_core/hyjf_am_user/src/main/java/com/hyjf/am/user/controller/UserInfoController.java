@@ -1,8 +1,11 @@
 package com.hyjf.am.user.controller;
 
+import com.hyjf.am.response.user.UserInfoCrmResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.UserInfoService;
+import com.hyjf.am.vo.user.UserInfoCrmVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +57,18 @@ public class UserInfoController {
 		UserInfoVO userInfoVO = new UserInfoVO();
 		if (userInfo != null) {
 			BeanUtils.copyProperties(userInfo, userInfoVO);
+			response.setResult(userInfoVO);
+		}
+		return response;
+	}
+
+	@RequestMapping("/findUserCrmInfoByUserId/{idNo}")
+	public UserInfoCrmResponse findUserCrmInfoByUserId(@PathVariable String idNo) {
+		UserInfoCrmResponse response = new UserInfoCrmResponse();
+		UserCrmInfoCustomize usersInfo = null;//userInfoService.findUserInfoByIdNo(idNo);
+		if (usersInfo != null) {
+			UserInfoCrmVO userInfoVO = new UserInfoCrmVO();
+			BeanUtils.copyProperties(usersInfo, userInfoVO);
 			response.setResult(userInfoVO);
 		}
 		return response;
