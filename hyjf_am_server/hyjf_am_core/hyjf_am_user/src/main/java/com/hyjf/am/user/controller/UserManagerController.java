@@ -14,7 +14,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -27,4 +26,35 @@ import java.util.List;
 @RestController
 @RequestMapping("/am-user/userManager")
 public class UserManagerController {
+    @Autowired
+    private UserManagerService userManagerService;
+
+    /**
+     * 根据筛选条件查找(用户管理列表显示)
+     * @param request
+     * @return
+     */
+    @RequestMapping("/userslist")
+    public UserManagerResponse findUserslist(@RequestBody @Valid UserManagerRequest request) {
+        UserManagerResponse response = new UserManagerResponse();
+        List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(request);
+        if(!CollectionUtils.isEmpty(userManagerCustomizeList)){
+            List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList,UserManagerVO.class);
+            response.setResultList(userVoList);
+        }
+        return response;
+    }
+
+    /**
+     * 获取列表总数
+     * @param request
+     * @return
+     */
+    @RequestMapping("/countUserList")
+    public UserManagerResponse countUserList(@RequestBody @Valid UserManagerRequest request){
+        UserManagerResponse response = new UserManagerResponse();
+        int usesrCount = userManagerService.countUserRecord(request);
+        response.setCount(usesrCount);
+        return response;
+    }
 }
