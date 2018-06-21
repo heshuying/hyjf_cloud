@@ -8,6 +8,8 @@ import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
@@ -102,46 +104,46 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     @Override
     public void checkRequestParam(UserVO user, BankOpenVO bankOpenVO) {
         if (user == null) {
-            throw new ReturnMessageException(OpenAccountError.GET_USER_INFO_ERROR);
+            throw new CheckException(MsgEnum.ERR_GET_USER);
         }
         if(user.getBankOpenAccount()!=null&&"1".equals(user.getBankOpenAccount())){
             // 用户已开户
-            throw new ReturnMessageException(OpenAccountError.OPEN_ACCOUNTED_ERROR);
+            throw new CheckException(MsgEnum.OPEN_ACCOUNTED_ERROR);
         }
         // 手机号
         if (StringUtils.isEmpty(bankOpenVO.getMobile())) {
-            throw new ReturnMessageException(OpenAccountError.MOBILE_NULL_ERROR);
+            throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
         // 姓名
         if (StringUtils.isEmpty(bankOpenVO.getTrueName())) {
-            throw new ReturnMessageException(OpenAccountError.TRUENAME_NULL_ERROR);
+            throw new CheckException(MsgEnum.STATUS_ZC000007);
         }else{
             //判断真实姓名是否包含空格
             if (!ValidatorCheckUtil.verfiyChinaFormat(bankOpenVO.getTrueName())) {
-                throw new ReturnMessageException(OpenAccountError.TRUENAME_BLANKL_ERROR);
+                throw new CheckException(MsgEnum.STATUS_ZC000012);
             }
             //判断真实姓名的长度,不能超过10位
             if (bankOpenVO.getTrueName().length() > 10) {
-                throw new ReturnMessageException(OpenAccountError.TRUENAME_LENGTH_ERROR);
+                throw new CheckException(MsgEnum.STATUS_ZC000013);
             }
         }
         // 身份证号
         if (StringUtils.isEmpty(bankOpenVO.getIdNo())) {
-            throw new ReturnMessageException(OpenAccountError.IDNO_NULL_ERROR);
+            throw new CheckException(MsgEnum.STATUS_ZC000008);
         }
 
         if (bankOpenVO.getIdNo().length() != 18) {
-            throw new ReturnMessageException(OpenAccountError.IDNO_FORMAT_ERROR);
+            throw new CheckException(MsgEnum.IDNO_FORMAT_ERROR);
         }
         String idNo = bankOpenVO.getIdNo().toUpperCase().trim();
         bankOpenVO.setIdNo(idNo);
         //增加身份证唯一性校验
         boolean isOnly = this.checkIdNo(idNo);
         if (isOnly) {
-            throw new ReturnMessageException(OpenAccountError.IDNO_USED_ERROR);
+            throw new CheckException(MsgEnum.STATUS_ZC000014);
         }
         if(!Validator.isMobile(bankOpenVO.getMobile())){
-            throw new ReturnMessageException(OpenAccountError.MOBILE_FORMAT_ERROR);
+            throw new CheckException(MsgEnum.ERR_MOBILE_FORMAT);
         }
         String mobile = user.getMobile();
         if (StringUtils.isBlank(mobile)) {
@@ -149,14 +151,14 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 if(!this.existUser(bankOpenVO.getMobile())){
                     mobile = bankOpenVO.getMobile();
                 }else{
-                    throw new ReturnMessageException(OpenAccountError.MOBILE_USED_ERROR);
+                    throw new CheckException(MsgEnum.ERR_MOBILE_EXISTS);
                 }
             } else {
-                throw new ReturnMessageException(OpenAccountError.MOBILE_ERROR);
+                throw new CheckException(MsgEnum.ERR_MOBILE_IS_NOT_REAL);
             }
         } else {
             if (StringUtils.isNotBlank(bankOpenVO.getMobile()) && !mobile.equals(bankOpenVO.getMobile())) {
-                throw new ReturnMessageException(OpenAccountError.MOBILE_ERROR);
+                throw new CheckException(MsgEnum.ERR_MOBILE_IS_NOT_REAL);
             }
         }
     }
