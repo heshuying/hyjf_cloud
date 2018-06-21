@@ -45,4 +45,6 @@ public interface BorrowService {
      * @return
      */
     int updateBorrowRegist(BorrowRegistRequest request);
+
+
 }

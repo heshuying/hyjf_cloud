@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl.task;
 
+import com.hyjf.am.resquest.trade.TenderCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CreditTenderLogMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
@@ -67,4 +68,52 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	public int updateCreditTenderLog(CreditTenderLogVO creditTenderLog) {
 		return this.creditTenderLogMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(creditTenderLog,CreditTenderLog.class));
 	}
+
+	/**
+	 * 同步回调收到后,根据logOrderId检索投资记录表
+	 * @param logOrderId
+	 * @return
+	 */
+	@Override
+	public CreditTenderLog selectCreditTenderLogByOrderId(String logOrderId) {
+		CreditTenderLogExample example = new CreditTenderLogExample();
+		CreditTenderLogExample.Criteria cra = example.createCriteria();
+		cra.andLogOrderIdEqualTo(logOrderId);
+		List<CreditTenderLog> list = this.creditTenderLogMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+
+	/**
+	 * 获取CreditTenderLog信息
+	 * @param assignOrderId
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<CreditTenderLog> selectByOrderIdAndUserId(String assignOrderId, Integer userId) {
+		CreditTenderLogExample tenderLogExample = new CreditTenderLogExample();
+		CreditTenderLogExample.Criteria tenderLogCra = tenderLogExample.createCriteria();
+		tenderLogCra.andAssignNidEqualTo(assignOrderId).andUserIdEqualTo(userId);
+		return this.creditTenderLogMapper.selectByExample(tenderLogExample);
+	}
+
+	/**
+	 * 刪除
+	 * @param assignOrderId
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int deleteByOrderIdAndUserId(String assignOrderId, Integer userId) {
+		CreditTenderLogExample tenderLogExample = new CreditTenderLogExample();
+		CreditTenderLogExample.Criteria tenderLogCra = tenderLogExample.createCriteria();
+		tenderLogCra.andAssignNidEqualTo(assignOrderId).andUserIdEqualTo(userId);
+		return this.creditTenderLogMapper.deleteByExample(tenderLogExample);
+	}
+
+
 }
