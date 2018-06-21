@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.callcenter.CallCenterBankAccountManageMapper">
+	<resultMap id="accountInfoMapResult" type="com.hyjf.am.trade.dao.model.customize.callcenter.CallCenterBankAccountManageCustomize">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" /> <!-- 用户id -->
+		<result column="bankTotal" property="bankTotal" /> <!-- 资产总额-->
+		<result column="bank_balance" property="bankBalance" /> <!-- 可用金额-->
+		<result column="bank_frost" property="bankFrost" /><!-- 银行冻结金额 -->
+		<result column="bank_wait_repay" property="bankWaitRepay" /><!-- 银行待还金额 -->
+		<result column="bank_await" property="bankAwait"/><!-- 银行待收 -->
+		<result column="bank_balance_cash" property="bankBalanceCash"/><!-- 江西银行可提现金额(银行电子账户余额) -->
+		<result column="bank_frost_cash" property="bankFrostCash"/><!-- 江西银行冻结金额(银行电子账户冻结金额) -->
+		<result column="vip_name" property="vipName" /> <!-- 会员等级 -->
+		<result column="account" property="account" /> <!-- 电子账户 -->
+		<result column="truename" property="truename" /> <!-- 真实姓名 -->
+		<result column="username" property="username" /> <!-- 用户名 -->
+		<result column="mobile" property="mobile" /> <!-- 手机号 -->
+		<result column="user_attribute" property="userAttribute" /> <!-- 用户属性（当前） -->
+		<result column="roleid" property="roleid" /> <!-- 角色 -->
+		<result column="user_region_name" property="userRegionName" /> <!-- 用户所属一级分部（当前）-->
+		<result column="user_branch_name" property="userBranchName" /> <!-- 用户所属二级分部（当前） -->
+		<result column="user_department_name" property="userDepartmentName" /> <!-- 用户所属三级分部（当前） -->
+		<result column="referrer_name" property="referrerName" jdbcType="VARCHAR" /> <!-- 推荐人用户名（当前） -->
+		<result column="referrer_true_name" property="referrerTrueName" jdbcType="VARCHAR" /><!-- 推荐人姓名（当前） -->
+		<result column="referrer_region_name" property="referrerRegionName" jdbcType="VARCHAR" /><!-- 推荐人所属一级分部（当前） -->
+		<result column="referrer_branch_name" property="referrerBranchName" jdbcType="VARCHAR" /><!-- 推荐人所属二级分部（当前） -->
+		<result column="referrer_department_name" property="referrerDepartmentName" jdbcType="VARCHAR" /><!-- 推荐人所属三级分部（当前） -->
+		<result column="regionName" property="regionName" /> <!-- 大区 -->
+		<result column="branchName" property="branchName" /> <!-- 分公司  -->
+		<result column="departmentName" property="departmentName" /> <!-- 部门  -->
+	</resultMap>
+ 	<select id="queryAccountInfos" resultMap="accountInfoMapResult" parameterType="com.hyjf.am.resquest.callcenter.CallCenterBankAccountManageRequest">
+		SELECT
+			a.user_id,
+			a.user_name AS username,
+			ru.mobile,   
+			a.bank_balance + a.bank_frost + a.bank_await AS bankTotal,
+			a.bank_balance,
+			a.bank_frost,
+			a.bank_await,
+			a.bank_wait_repay,
+			a.bank_balance_cash,
+			a.bank_frost_cash,
+			IFNULL(a.balance,0) + IFNULL(a.plan_balance,0) as balance_total,
+			IFNULL(a.frost,0) + IFNULL(a.plan_frost,0) as frost_total
+		FROM
+			ht_account a	
+		LEFT JOIN ht_r_user ru ON a.user_id = ru.user_id
+		WHERE 1=1
+		<if test="userName != null and userName != ''">
+			AND a.user_name = #{userName}
+		</if>
+		ORDER BY
+		a.user_id DESC
+		<if test="limitStart >= 0" >
+			limit #{limitStart} , #{limitSize}
+		</if>
+	</select> 
+</mapper>

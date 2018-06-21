@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.callcenter;
 
 import com.hyjf.am.response.callcenter.*;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
+import com.hyjf.am.resquest.callcenter.CallCenterBankAccountManageRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
@@ -240,5 +241,22 @@ public class CallCenterTradeController {
             callcenterHtjInvestResponse.setResultList(callcenterHtjInvestVO);
         }
         return callcenterHtjInvestResponse;
+    }
+    
+    /**
+     * 查询账户余额
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryAccountInfos", method = RequestMethod.POST)
+    public CallCenterBankAccountManageResponse queryAccountInfos(@RequestBody @Valid CallCenterBankAccountManageRequest request){
+    	CallCenterBankAccountManageResponse callCenterBankAccountManageResponse = new CallCenterBankAccountManageResponse();
+    	List<CallCenterBankAccountManageCustomize> list = callCenterTradeService.queryAccountInfos(request);
+    	 if(!CollectionUtils.isEmpty(list)){
+    		 List<CallCenterBankAccountManageVO> callCenterBankAccountManageVO = CommonUtils.convertBeanList(list,CallCenterBankAccountManageVO.class);
+    		 callCenterBankAccountManageResponse.setResultList(callCenterBankAccountManageVO);
+    	 }
+    	 return callCenterBankAccountManageResponse;
     }
 }
