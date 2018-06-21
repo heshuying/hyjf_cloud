@@ -185,76 +185,6 @@ public class BankOpenAccountLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andRetMsgIsNull() {
-            addCriterion("ret_msg is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgIsNotNull() {
-            addCriterion("ret_msg is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgEqualTo(String value) {
-            addCriterion("ret_msg =", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgNotEqualTo(String value) {
-            addCriterion("ret_msg <>", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgGreaterThan(String value) {
-            addCriterion("ret_msg >", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgGreaterThanOrEqualTo(String value) {
-            addCriterion("ret_msg >=", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgLessThan(String value) {
-            addCriterion("ret_msg <", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgLessThanOrEqualTo(String value) {
-            addCriterion("ret_msg <=", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgLike(String value) {
-            addCriterion("ret_msg like", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgNotLike(String value) {
-            addCriterion("ret_msg not like", value, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgIn(List<String> values) {
-            addCriterion("ret_msg in", values, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgNotIn(List<String> values) {
-            addCriterion("ret_msg not in", values, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgBetween(String value1, String value2) {
-            addCriterion("ret_msg between", value1, value2, "retMsg");
-            return (Criteria) this;
-        }
-
-        public Criteria andRetMsgNotBetween(String value1, String value2) {
-            addCriterion("ret_msg not between", value1, value2, "retMsg");
-            return (Criteria) this;
-        }
-
         public Criteria andUserIdIsNull() {
             addCriterion("user_id is null");
             return (Criteria) this;
@@ -1272,6 +1202,76 @@ public class BankOpenAccountLogExample {
 
         public Criteria andRetCodeNotBetween(String value1, String value2) {
             addCriterion("ret_code not between", value1, value2, "retCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgIsNull() {
+            addCriterion("ret_msg is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgIsNotNull() {
+            addCriterion("ret_msg is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgEqualTo(String value) {
+            addCriterion("ret_msg =", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgNotEqualTo(String value) {
+            addCriterion("ret_msg <>", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgGreaterThan(String value) {
+            addCriterion("ret_msg >", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgGreaterThanOrEqualTo(String value) {
+            addCriterion("ret_msg >=", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgLessThan(String value) {
+            addCriterion("ret_msg <", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgLessThanOrEqualTo(String value) {
+            addCriterion("ret_msg <=", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgLike(String value) {
+            addCriterion("ret_msg like", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgNotLike(String value) {
+            addCriterion("ret_msg not like", value, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgIn(List<String> values) {
+            addCriterion("ret_msg in", values, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgNotIn(List<String> values) {
+            addCriterion("ret_msg not in", values, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgBetween(String value1, String value2) {
+            addCriterion("ret_msg between", value1, value2, "retMsg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRetMsgNotBetween(String value1, String value2) {
+            addCriterion("ret_msg not between", value1, value2, "retMsg");
             return (Criteria) this;
         }
 

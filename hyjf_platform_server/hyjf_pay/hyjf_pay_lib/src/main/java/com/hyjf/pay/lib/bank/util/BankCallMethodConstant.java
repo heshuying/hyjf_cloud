@@ -366,4 +366,7 @@ public class BankCallMethodConstant implements Serializable {
 
     public static final String TXCODE_AUTO_PAY_AUTH_CANCEL = "paymentAuthCancel";
     public static final String TXCODE_AUTO_REPAY_AUTH_CANCEL = "repayAuthCancel";
+
+	/**2.2.5绑定银行卡（页面）*/
+	public static final String TXCODE_BIND_CARD_PAGE = "bindCardPage";
 }
