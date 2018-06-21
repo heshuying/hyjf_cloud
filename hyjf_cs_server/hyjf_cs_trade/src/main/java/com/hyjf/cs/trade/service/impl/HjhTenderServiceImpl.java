@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.service.impl;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -16,6 +17,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.constants.TenderError;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
@@ -29,8 +32,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description 加入计划
@@ -53,10 +61,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
     @Autowired
     private RechargeClient rechargeClient;
-
-    @Autowired
-    private AmBankOpenClient amBankOpenClient;
-
 
     /**
      * @param request
@@ -113,21 +117,173 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         tender(request, plan, account, cuc, tenderAccount);
     }
 
-    // 开始投资
+    /**
+     * @Description 开始投资
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/20 14:56
+     */
     private void tender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount) {
         Integer userId = request.getUser().getUserId();
         BigDecimal decimalAccount = new BigDecimal(request.getAccount());
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
-            logger.info("体验{},优惠金投资开始:userId{},平台券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
+            logger.info("体验{},优惠金投资开始:userId:{},平台券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // TODO: 2018/6/20 体验金投资
             /*couponTender(modelAndView,result, planNid, account,ip,cuc, userId, couponOldTime,platform,couponGrantId);*/
             logger.info("体验金投资结束:userId{}" + userId);
             return;
         }
-        // 生成冻结订单
-        String frzzeOrderId = GetOrderIdUtils.getOrderId0(Integer.valueOf(userId));
+        String redisKey = RedisConstants.HJH_PLAN + plan.getPlanNid();
+        // 计划剩余金额
+        String balance = RedisUtils.get(redisKey);
+        JedisPool pool = RedisUtils.getPool();
+        Jedis jedis = pool.getResource();
+        // 操作redis----------------------------------------------
+        if (StringUtils.isNotBlank(balance)) {
+            MsgCode redisMsgCode = null;
+            try {
+                while ("OK".equals(jedis.watch(redisKey))) {
+                    if (StringUtils.isNotBlank(balance)) {
+                        logger.info("加入计划冻结前可用金额为:{},userId:{},planNid:{},平台:{}", decimalAccount, userId, plan.getPlanNid(), request.getPlatform());
+                        logger.info("加计划未减前可用开放额度redis:{},userId:{},planNid:{},平台:{}", balance, userId, plan.getPlanNid(), request.getPlatform());
+                        if (new BigDecimal(balance).compareTo(BigDecimal.ZERO) == 0) {
+                            logger.info("planNid:{},可加入剩余金额为{}元", plan.getPlanNid(), balance);
+                            redisMsgCode = TenderError.JOIN_PLAN_LATE_ERROR;
+                        } else {
+                            Transaction tx = jedis.multi();
+                            // 事务：计划当前可用额度 = 计划未投前可用余额 - 用户投资额度
+                            BigDecimal lastAccount = new BigDecimal(balance).subtract(decimalAccount);
+                            tx.set(redisKey, lastAccount + "");
+                            List<Object> result1 = tx.exec();
+                            if (result1 == null || result1.isEmpty()) {
+                                jedis.unwatch();
+                                logger.info("计划可用开放额度redis扣除失败：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
+                                redisMsgCode = TenderError.JOIN_PLAN_ERROR;
+                            } else {
+                                logger.info("加计划redis操作成功userId:{},平台:{},planNid{},计划扣除后可用开放额度redis", userId, request.getPlatform(), plan.getPlanNid(), lastAccount);
+                                // 写队列
+                                break;
+                            }
+                        }
+                    } else {
+                        logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
+                        redisMsgCode = TenderError.JOIN_PLAN_LATE_ERROR;
+                    }
+                }
+            } catch (Exception e) {
+                if (redisMsgCode != null) {
+                    throw new ReturnMessageException(redisMsgCode);
+                } else {
+                    throw new ReturnMessageException(TenderError.JOIN_PLAN_ERROR);
+                }
+            } finally {
+                RedisUtils.returnResource(pool, jedis);
+            }
+        }else{
+            logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
+            throw new ReturnMessageException(TenderError.JOIN_PLAN_LATE_ERROR);
+        }
+
+        // 生成冻结订单-----------------------
+
+        boolean afterDealFlag = false;
+        String couponInterest="0";
+        // 插入数据库  真正开始操作加入计划表
+        afterDealFlag = updateAfterPlanRedis(request, plan);
+    }
+
+
+    /**
+     * @Description 真正开始加入计划
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/20 15:04
+     */
+    private boolean updateAfterPlanRedis(TenderRequest request, HjhPlanVO plan) {
+        String accountStr = request.getAccount();
+        Integer userId = request.getUser().getUserId();
+        String frzzeOrderId = GetOrderIdUtils.getOrderId0(userId);
         String frzzeOrderDate = GetOrderIdUtils.getOrderDate();
+        String planOrderId = GetOrderIdUtils.getOrderId0(userId);
+        int nowTime = GetDate.getNowTime10();
+        UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+        BigDecimal planApr = plan.getExpectApr();// 预期年利率
+        Integer planPeriod = plan.getLockPeriod();// 周期
+        String borrowStyle = plan.getBorrowStyle();// 还款方式
+        BigDecimal earnings = BigDecimal.ZERO;// 预期收益
+        if ("endday".equals(borrowStyle)) {
+            // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷365*锁定期；
+            earnings = DuePrincipalAndInterestUtils
+                    .getDayInterest(new BigDecimal(accountStr), planApr.divide(new BigDecimal("100")), planPeriod)
+                    .divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+        } else {
+            // 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+            earnings = DuePrincipalAndInterestUtils
+                    .getMonthInterest(new BigDecimal(accountStr), planApr.divide(new BigDecimal("100")), planPeriod)
+                    .divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+
+        }
+        // 当大于等于100时 取百位 小于100 时 取十位
+        BigDecimal accountDecimal = new BigDecimal(accountStr);//用户投资金额
+        /*(1)汇计划加入明细表插表开始*/
+
+        //处理汇计划加入明细表(以下涵盖所有字段)
+        HjhAccedeVO planAccede = new HjhAccedeVO();
+        planAccede.setAccedeOrderId(planOrderId);
+        planAccede.setPlanNid(request.getBorrowNid());
+        planAccede.setUserId(userId);
+        planAccede.setUserName(request.getUser().getUsername());
+        planAccede.setUserAttribute(userInfo.getAttribute());//用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+        planAccede.setAccedeAccount(accountDecimal);// 加入金额
+        planAccede.setAlreadyInvest(BigDecimal.ZERO);//已投资金额(投资时维护)
+        planAccede.setClient(Integer.parseInt(request.getPlatform()));
+        planAccede.setOrderStatus(0);//0自动投标中 2自动投标成功 3锁定中 5退出中 7已退出 99 自动投资异常(投资时维护)
+        planAccede.setAddTime(nowTime);
+        planAccede.setCountInterestTime(0);//计息时间(最后放款时维护)
+        planAccede.setSendStatus(0);//协议发送状态0未发送 1已发送
+        planAccede.setLockPeriod(planPeriod);
+        planAccede.setCommissionStatus(0);//提成计算状态:0:未计算,1:已计算
+        planAccede.setAvailableInvestAccount(accountDecimal);//可投金额初始与加入金额一致
+        planAccede.setWaitTotal(BigDecimal.ZERO);//(投资时维护)
+        planAccede.setWaitCaptical(BigDecimal.ZERO);//(投资时维护)
+        planAccede.setWaitInterest(BigDecimal.ZERO);//(投资时维护)
+        planAccede.setReceivedTotal(BigDecimal.ZERO);//(退出时维护)
+        planAccede.setReceivedInterest(BigDecimal.ZERO);//(退出时维护)
+        planAccede.setReceivedCapital(BigDecimal.ZERO);//(退出时维护)
+        planAccede.setQuitTime(0);//(退出时维护)
+        planAccede.setLastPaymentTime(0);//最后回款时间(复审时维护)
+        planAccede.setAcctualPaymentTime(0);//实际回款时间(退出时维护)
+        planAccede.setShouldPayTotal(accountDecimal.add(earnings));//应还总额 = 应还本金 +应还利息
+        planAccede.setShouldPayCapital(accountDecimal);
+        planAccede.setShouldPayInterest(earnings);
+        planAccede.setCreateUser(userId);
+        planAccede.setDelFlag(0);//初始未未删除
+
+        if (Validator.isNotNull(userInfo)) {
+            UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
+
+            if (spreadsUsers != null) {
+                int refUserId = spreadsUsers.getUserId();
+                logger.info("推荐人信息：" + refUserId);
+                // 查找用户推荐人详情信息  部门啥的
+                // TODO: 2018/6/20
+               UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(refUserId);
+                if (Validator.isNotNull(userInfoCustomize)) {
+                    planAccede.setInviteUserId(userInfoCustomize.getUserId());
+                    planAccede.setInviteUserName(userInfoCustomize.getUserName());
+                    planAccede.setInviteUserAttribute(userInfoCustomize.getAttribute());
+                    planAccede.setInviteUserRegionname(userInfoCustomize.getRegionName());
+                    planAccede.setInviteUserBranchname(userInfoCustomize.getBranchName());
+                    planAccede.setInviteUserDepartmentname(userInfoCustomize.getDepartmentName());
+                    logger.info("InviteUserName: " + userInfoCustomize.getUserName());
+                    logger.info("InviteUserRegionname: " + userInfoCustomize.getRegionName());
+                    logger.info("InviteUserBranchname: " + userInfoCustomize.getBranchName());
+                    logger.info("InviteUserDepartmentname: " + userInfoCustomize.getDepartmentName());
+                }
+            }
+        }
+        return false;
     }
 
     /**

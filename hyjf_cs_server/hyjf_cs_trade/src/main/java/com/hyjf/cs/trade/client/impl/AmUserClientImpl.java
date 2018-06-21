@@ -99,4 +99,38 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * @param userId
+	 * @Description 根据userId查询推荐人
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/20 16:11
+	 */
+	@Override
+	public UserVO getSpreadsUsersByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/user/findReffer/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * @param userId
+	 * @Description 根据用户ID查询查询CRM
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/20 18:13
+	 */
+	@Override
+	public UserInfoCrmVO queryUserCrmInfoByUserId(int userId) {
+		String url = "http://AM-USER/am-user/user/findReffer/" + userId;
+		UserInfoCrmResponse response = restTemplate.getForEntity(url, UserInfoCrmResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 }

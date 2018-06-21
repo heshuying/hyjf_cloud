@@ -57,9 +57,9 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
      */
     @Override
 	public boolean checkForMobileModifyOpened(String newMobile, String smsCode, String srvAuthCode) {
-        CheckUtil.check(!StringUtils.isBlank(newMobile), MsgEnum.ERR_REQUEST_PARAM_LACK);
+        /*CheckUtil.check(!StringUtils.isBlank(newMobile), MsgEnum.ERR_REQUEST_PARAM_LACK);
         CheckUtil.check(!StringUtils.isBlank(smsCode), MsgEnum.ERR_REQUEST_PARAM_LACK);
-        CheckUtil.check(!StringUtils.isBlank(srvAuthCode), MsgEnum.ERR_REQUEST_PARAM_LACK);
+        CheckUtil.check(!StringUtils.isBlank(srvAuthCode), MsgEnum.ERR_REQUEST_PARAM_LACK);*/
         return true;
     }
 

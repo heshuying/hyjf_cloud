@@ -13,6 +13,7 @@ package com.hyjf.pay.lib.bank.util;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +96,7 @@ public class BankCallUtils implements Serializable {
 //			String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIPAGE, allParams);
 			String url = payurl + REQUEST_MAPPING_CALLAPIPAGE;
 			String result = restTemplate
-					 .postForEntity(url, allParams, String.class).getBody();
+					.postForEntity(url, allParams, String.class).getBody();
 			// 将返回字符串转换成Map
 			if (Validator.isNotNull(result)) {
 				@SuppressWarnings("unchecked")
@@ -109,6 +110,65 @@ public class BankCallUtils implements Serializable {
 			logger.debug("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		}
 		return modelAndView;
+	}
+
+	public static Map<String, Object> callApiMap(BankCallBean bean) throws Exception {
+		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		// 跳转页面
+		try {
+			// 取出调用汇付接口的url
+			String payurl =  paySystemConfig.getBankUrl();
+			if (Validator.isNull(payurl)) {
+				throw new Exception("接口工程URL不能为空");
+			}
+			Map<String, String> allParams = bean.getAllParams();
+			if (StringUtils.isNotBlank(bean.getLogUserId())) {
+				allParams.put("logUserId", bean.getLogUserId());
+			}
+			if (StringUtils.isNotBlank(bean.getLogOrderId())) {
+				allParams.put("logOrderId", bean.getLogOrderId());
+			}
+			if (StringUtils.isNotBlank(bean.getLogType())) {
+				allParams.put("logType", bean.getLogType());
+			}
+			if (StringUtils.isNotBlank(bean.getLogIp())) {
+				allParams.put("logIp", bean.getLogIp());
+			}
+			if (StringUtils.isNotBlank(bean.getLogTime())) {
+				allParams.put("logTime", bean.getLogTime());
+			}
+			if (StringUtils.isNotBlank(bean.getLogRemark())) {
+				allParams.put("logRemark", bean.getLogRemark());
+			}
+			if (StringUtils.isNotBlank(bean.getLogOrderDate())) {
+				allParams.put("logOrderDate", bean.getLogOrderDate());
+			}
+			if (StringUtils.isNotBlank(bean.getLogBankDetailUrl())) {
+				allParams.put("logBankDetailUrl", bean.getLogBankDetailUrl());
+			}
+			// 调用汇付接口
+//			String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIPAGE, allParams);
+			String url = payurl + REQUEST_MAPPING_CALLAPIPAGE;
+			String result = restTemplate
+					.postForEntity(url, allParams, String.class).getBody();
+			// 将返回字符串转换成Map
+			if (Validator.isNotNull(result)) {
+				@SuppressWarnings("unchecked")
+				Map<String, ?> map = JSONObject.parseObject(result, Map.class);
+				Map<String, ?> bankForm = (Map)map.get("bankForm");
+				JSONObject allParam = JSONObject.parseObject((String)bankForm.get("json"),JSONObject.class);
+				Map<String, Object> retMap = new HashedMap();
+				retMap.put("allParams",allParam);
+				retMap.put("action",(String)bankForm.get("action"));
+				return retMap;
+			}
+		} catch (Exception e) {
+			logger.error(String.valueOf(e));
+			throw e;
+		} finally {
+			logger.debug("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		}
+		return null;
 	}
 
 	/**

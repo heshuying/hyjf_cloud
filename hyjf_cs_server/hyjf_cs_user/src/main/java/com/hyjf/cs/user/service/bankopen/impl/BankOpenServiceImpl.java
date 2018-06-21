@@ -170,7 +170,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/15 17:20
      */
     @Override
-    public ModelAndView getOpenAccountMV(OpenAccountPageBean openBean) {
+    public Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean) {
         ModelAndView mv = new ModelAndView();
         // 根据身份证号码获取性别
         String gender = "";
@@ -209,11 +209,12 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setLogIp(openBean.getIp());
         openBean.setOrderId(openAccoutBean.getLogOrderId());
         try {
-            mv = BankCallUtils.callApi(openAccoutBean);
+            Map<String,Object> map = BankCallUtils.callApiMap(openAccoutBean);
+            return map;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return mv;
+        return null;
     }
 
     /**

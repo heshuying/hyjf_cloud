@@ -45,6 +45,8 @@ public enum TenderError implements MsgCode {
     PLAN_MONEY_LESS_ERROR("1", "项目太抢手了！剩余可加入金额只有{}元！"),
     MONEY_INTEGRAL_MULTIPLE_ERROR("1", "加入递增金额须为{}元的整数倍"),
     USER_EVALUATION_ERROR("1", "根据监管要求，投资前必须进行风险测评。"),
+    JOIN_PLAN_LATE_ERROR("1", "您来晚了，下次再来抢吧。"),
+    JOIN_PLAN_ERROR("1", "抱歉，投资失败，请重试！"),
 
 	BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS("0", "江西银行提现掉单处理成功！");
 
