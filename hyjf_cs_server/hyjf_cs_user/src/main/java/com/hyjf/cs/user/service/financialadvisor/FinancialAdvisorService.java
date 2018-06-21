@@ -9,6 +9,7 @@ import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -32,4 +33,6 @@ public interface FinancialAdvisorService extends BaseUserService {
     String checkActivityIfAvailable(String activityId);
 
     List<EvalationVO> getEvalationRecord();
+
+    Map<String,Object> answerAnalysisAndCoupon(String userAnswer, Integer userId);
 }

@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 /**
  * @author pangchengchao
  * @version BankWithdrawBeanRequest, v0.1 2018/6/13 15:00
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 public class BankWithdrawBeanRequest {
 

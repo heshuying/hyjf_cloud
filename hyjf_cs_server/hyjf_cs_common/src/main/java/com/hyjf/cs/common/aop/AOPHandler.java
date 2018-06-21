@@ -19,6 +19,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -28,18 +29,23 @@ import org.springframework.web.servlet.ModelAndView;
  * @author liubin
  */
 @Aspect
+@Order(1)
 @Component
 public class AOPHandler {
 
 	private	static final Logger logger = LoggerFactory.getLogger(AOPHandler.class);
+
+	@Pointcut("execution(public * com.hyjf.cs..*controller.*(..))")
+	public void controllerLog(){}
+
 
 	/**
 	 * api用日志处理
 	 * @param pjp
 	 * @return
 	 */
-	@Pointcut("execution(* com.hyjf.cs..*controller.*(..)))")
-	public Object apiLogAOPHandler(ProceedingJoinPoint pjp) {
+	@Pointcut("controllerLog()")
+	public Object controllerLogAOPHandler(ProceedingJoinPoint pjp) {
 
 		long startTime = System.currentTimeMillis();
 		BaseResult<?> result;
@@ -124,7 +130,7 @@ public class AOPHandler {
 	 * @return
 	 * @throws Throwable
 	 */
-	@Pointcut("execution(public com.hyjf.cs.common.bean.result.BaseResult *(..))")
+	@Pointcut("execution(public com.hyjf.cs.common.bean.result.WebResult *(..))")
 	public Object webApiLogAOPHandler(ProceedingJoinPoint pjp) throws Throwable {
 
 		long startTime = System.currentTimeMillis();

@@ -43,6 +43,7 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 	@Autowired
 	private CallcenterServiceUsersMapper callcenterServiceUsersMapper;
 
+	@Override
 	public List<BankCard> getTiedCardOfAccountBank(Integer userId){
 		BankCardExample example = new BankCardExample();
 		BankCardExample.Criteria cra = example.createCriteria();

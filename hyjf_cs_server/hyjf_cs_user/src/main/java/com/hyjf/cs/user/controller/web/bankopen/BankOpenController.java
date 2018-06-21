@@ -6,9 +6,12 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
+import com.hyjf.cs.user.constants.BindCardError;
 import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -20,6 +23,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +57,21 @@ public class BankOpenController extends BaseUserController {
 	SystemConfig systemConfig;
 
 	@GetMapping(value = "/init")
-	public String init(Model model) {
-		return "bankopen/init";
+    @ResponseBody
+	public WebResult<Object> init(@RequestHeader(value = "token", required = true) String token) {
+        UserVO user = this.bankOpenService.getUsers(token);
+        WebResult<Object> result = new WebResult<Object>();
+        if(user==null){
+            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+        }
+        if(user.getBankOpenAccount()==0){
+            throw new ReturnMessageException(OpenAccountError.OPEN_ACCOUNTED_ERROR);
+        }
+        result.setStatus(ApiResult.SUCCESS);
+        Map<String,String> map = new HashedMap();
+        map.put("mobile",user.getMobile());
+        result.setData(map);
+		return result;
 	}
 
 	/**
@@ -65,10 +82,10 @@ public class BankOpenController extends BaseUserController {
 	 */
     @ApiOperation(value = "web端用户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
-	public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    @ResponseBody
+	public WebResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("web  openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
-		
-		ModelAndView reuslt = new ModelAndView();
+        WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         if (token == null) {
             throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
@@ -89,7 +106,8 @@ public class BankOpenController extends BaseUserController {
         openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
         // 组装参数
-        reuslt = bankOpenService.getOpenAccountMV(openBean);
+        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
+        result.setData(data);
         //保存开户日志
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"");
         if (uflag == 0) {
@@ -97,7 +115,7 @@ public class BankOpenController extends BaseUserController {
             throw new ReturnMessageException(OpenAccountError.SYSTEM_ERROR);
         }
         logger.info("开户end");
-		return reuslt;
+		return result;
 	}
 
     /**

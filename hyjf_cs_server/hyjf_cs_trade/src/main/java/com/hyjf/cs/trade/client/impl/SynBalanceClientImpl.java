@@ -9,8 +9,6 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @author pangchengchao
  * @version SynBalanceClientImpl, v0.1 2018/6/20 9:40
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
 public class SynBalanceClientImpl implements SynBalanceClient {

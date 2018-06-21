@@ -65,4 +65,72 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * @param userId
+	 * @Description 查询用户授权状态
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 11:52
+	 */
+	@Override
+	public HjhUserAuthVO getHjhUserAuthVO(Integer userId) {
+		HjhUserAuthResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getHjhUserAuthByUserId/" + userId, HjhUserAuthResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * @param userId
+	 * @Description 根据userId查询开户信息
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 15:32
+	 */
+	@Override
+	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * @param userId
+	 * @Description 根据userId查询推荐人
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/20 16:11
+	 */
+	@Override
+	public UserVO getSpreadsUsersByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/user/findReffer/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * @param userId
+	 * @Description 根据用户ID查询查询CRM
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/20 18:13
+	 */
+	@Override
+	public UserInfoCrmVO queryUserCrmInfoByUserId(int userId) {
+		String url = "http://AM-USER/am-user/user/findReffer/" + userId;
+		UserInfoCrmResponse response = restTemplate.getForEntity(url, UserInfoCrmResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 }

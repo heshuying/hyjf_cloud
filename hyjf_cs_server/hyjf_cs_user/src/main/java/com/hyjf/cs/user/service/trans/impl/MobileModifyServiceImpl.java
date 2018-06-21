@@ -3,12 +3,6 @@
  */
 package com.hyjf.cs.user.service.trans.impl;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.bank.LogAcqResBean;
@@ -16,7 +10,6 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.user.client.BankOpenClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
@@ -24,6 +17,11 @@ import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author zhangqingqing
@@ -35,8 +33,6 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
 
     @Autowired
     AmUserClient amUserClient;
-    @Autowired
-    BankOpenClient bankOpenClient;
     
     /**
      * 更换手机号条件校验
@@ -57,10 +53,9 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
      */
     @Override
 	public boolean checkForMobileModifyOpened(String newMobile, String smsCode, String srvAuthCode) {
-//        CheckUtil.check(!StringUtils.isBlank(newMobile), MsgEnum.ERR_REQUEST_PARAM_LACK);
-//        CheckUtil.check(!StringUtils.isBlank(smsCode), MsgEnum.ERR_REQUEST_PARAM_LACK);
-//        CheckUtil.check(!StringUtils.isBlank(srvAuthCode), MsgEnum.ERR_REQUEST_PARAM_LACK);
-        // todo   报错 
+        CheckUtil.check(!StringUtils.isBlank(newMobile), MsgEnum.ERR_PARAM_NUM);
+        CheckUtil.check(!StringUtils.isBlank(smsCode), MsgEnum.ERR_PARAM_NUM);
+        CheckUtil.check(!StringUtils.isBlank(srvAuthCode), MsgEnum.ERR_PARAM_NUM);
         return true;
     }
 
@@ -85,7 +80,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     
     @Override
 	public BankCallBean callMobileModify(Integer userId, String newMobile, String smsCode, String srvAuthCode) {
-    	BankOpenAccountVO bankAccount = bankOpenClient.selectById(userId);
+    	BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
     	// 调用电子账号手机号修改增强
 		BankCallBean bean = new BankCallBean();
 		bean.setTxCode(BankCallConstant.TXCODE_MOBILE_MODIFY_PLUS);

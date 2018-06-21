@@ -18,8 +18,6 @@ import java.util.List;
 /**
  * @author pangchengchao
  * @version WithdrawClientImpl, v0.1 2018/6/13 11:18
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
 public class WithdrawClientImpl implements WithdrawClient {

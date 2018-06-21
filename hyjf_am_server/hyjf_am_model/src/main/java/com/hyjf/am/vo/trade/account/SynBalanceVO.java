@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 /**
  * @author pangchengchao
  * @version SynBalanceVO, v0.1 2018/6/19 20:09
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 public class SynBalanceVO {
     private String accDate;//   入账日期

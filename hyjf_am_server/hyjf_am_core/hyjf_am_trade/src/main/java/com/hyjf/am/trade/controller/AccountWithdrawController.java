@@ -29,8 +29,6 @@ import com.hyjf.common.util.CommonUtils;
 /**
  * @author pangchengchao
  * @version AccountWithdrawController, v0.1 2018/6/11 11:56
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @RestController
 @RequestMapping("/am-trade/accountWithdraw")

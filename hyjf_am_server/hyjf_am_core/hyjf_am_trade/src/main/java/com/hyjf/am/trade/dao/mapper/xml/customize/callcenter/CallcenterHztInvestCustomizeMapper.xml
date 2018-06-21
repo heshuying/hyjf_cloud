@@ -63,4 +63,77 @@
 			</if>
 		</where>
 	</sql>
+	
+
+	<resultMap id="ResultMap" type="com.hyjf.am.trade.dao.model.customize.callcenter.CallcenterHtjInvestCustomize">
+		<!-- 推荐人 -->
+		<result column="referee_name" property="refereeUserName" jdbcType="VARCHAR" />
+		<!-- 计划编号 -->
+		<result column="plan_nid" property="debtPlanNid" jdbcType="VARCHAR" />
+		<!-- 预期年化 -->
+		<result column="expect_apr" property="expectApr" jdbcType="VARCHAR" />
+		<!-- 期限 -->
+		<result column="debt_lock_period" property="debtLockPeriod" jdbcType="VARCHAR" />
+		<!-- 加入金额 -->
+		<result column="accede_account" property="accedeAccount" jdbcType="VARCHAR" />
+		<!-- 还款方式 -->
+		<result column="repayment_method" property="repaymentMethod" jdbcType="VARCHAR" />
+		<!-- 用户属性 -->
+		<result column="user_attribute" property="userAttribute" jdbcType="VARCHAR" />
+		<!-- 平台 -->
+		<result column="client" property="platform" jdbcType="VARCHAR" />
+		<!-- 加入时间 -->
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getHtjBorrowInvestList" resultMap="ResultMap" parameterType="com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest">
+		SELECT
+			hdpa.invite_user_name referee_name,
+			hdpa.plan_nid,
+			CONCAT(hdp.expect_apr,'%') expect_apr,
+			CONCAT(hdp.debt_lock_period,'个月') debt_lock_period,
+			hdpa.accede_account,
+			'到期一次性还本付息' repayment_method,
+			CASE hdpa.user_attribute
+			WHEN 0 THEN
+				'无主单'
+			WHEN 1 THEN
+				'有主单'
+			WHEN 2 THEN
+				'线下员工'
+			WHEN 3 THEN
+				'线上员工'
+			ELSE
+				''
+			END AS user_attribute,
+			hdpa.client client,
+			CASE
+				WHEN hcc.coupon_type = '1' THEN '体验金'
+				WHEN hcc.coupon_type = '2' THEN '加息券'
+				WHEN hcc.coupon_type = '3' THEN '代金券'
+			ELSE
+				'现金'
+			END AS tender_type,
+			FROM_UNIXTIME(hdpa.create_time,'%Y-%m-%d %H:%i') AS create_time,
+			hdpa.create_time AS add_time_long
+		FROM
+			ht_debt_plan_accede hdpa
+		LEFT JOIN 
+			ht_debt_plan hdp ON hdpa.plan_nid = hdp.debt_plan_nid
+		LEFT JOIN ht_coupon_real_tender hcrt ON hcrt.real_tender_id = hdpa.accede_order_id	
+		LEFT JOIN ht_coupon_tender hct ON hct.order_id = hcrt.coupon_tender_id	
+		LEFT JOIN ht_coupon_user hcu ON hcu.id = hct.coupon_grant_id
+		LEFT JOIN ht_coupon_config hcc ON hcc.coupon_code = hcu.coupon_code
+		<include refid="Where_Htj_Clause" />
+		ORDER BY hdpa.create_time DESC
+		<if test="limitStart != null and limitStart >= 0" >
+			limit #{limitStart} , #{limitSize}
+		</if>
+	</select>
+	<sql id="Where_Htj_Clause">
+		<where>
+			<if test="userName != null and userName !=''">
+				AND hdpa.user_name = #{userName}
+			</if>
+		</where>
+	</sql>
 </mapper>

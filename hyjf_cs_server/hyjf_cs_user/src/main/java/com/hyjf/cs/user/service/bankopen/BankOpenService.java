@@ -41,7 +41,7 @@ public interface BankOpenService extends BaseUserService {
 	 * @Version v0.1
 	 * @Date 2018/6/15 17:19
 	 */
-	ModelAndView getOpenAccountMV(OpenAccountPageBean openBean);
+	Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean);
 
 	/**
 	 * @Description 开户异步逻辑处理

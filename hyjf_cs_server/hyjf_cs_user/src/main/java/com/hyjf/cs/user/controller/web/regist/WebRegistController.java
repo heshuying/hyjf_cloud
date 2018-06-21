@@ -3,25 +3,9 @@
  */
 package com.hyjf.cs.user.controller.web.regist;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.hyjf.am.vo.user.WebViewUserVO;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.SmsCodeVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
@@ -34,11 +18,18 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.vo.RegisterVO;
-
+import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -65,12 +56,12 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult<WebViewUserVO> register(@RequestBody RegisterVO registerVO, HttpServletRequest request) {
-        logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerVO));
+    public WebResult<WebViewUserVO> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+        logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
         WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
         // 1. 参数检查
-        registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerVO);
-        WebViewUserVO webViewUserVO = registService.register(registerVO, GetCilentIP.getIpAddr(request));
+        registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerRequest);
+        WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
         if (webViewUserVO != null) {
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
             result.setData(webViewUserVO);

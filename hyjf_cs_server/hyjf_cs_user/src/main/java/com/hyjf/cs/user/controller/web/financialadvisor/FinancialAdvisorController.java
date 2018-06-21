@@ -3,13 +3,11 @@
  */
 package com.hyjf.cs.user.controller.web.financialadvisor;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -18,7 +16,6 @@ import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,39 +55,6 @@ public class FinancialAdvisorController extends BaseUserController {
         List<EvalationVO> evalationList = financialAdvisorService.getEvalationRecord();
         result.put("evalationList",evalationList);
         return result;
-    }
-
-    /**
-     * 插入评测数据并发券
-     * @param
-     * @param
-     * @return
-     */
-    public synchronized Map<String,Object> answerAnalysisAndCoupon(String userAnswer,Integer userId){
-        Map<String,Object> returnMap  = new HashMap<String,Object>();
-        //发放优惠券 start
-        UserEvalationResultVO ueResult = financialAdvisorService.selectUserEvalationResultByUserId(userId);
-        // 是否已经参加过测评（true：已测评过，false：测评）
-        boolean isAdvisor = ueResult != null ? true : false;
-        // 发放优惠券 end
-        // 1_1,2_8
-        UserEvalationResultVO userEvalationResult = financialAdvisorService.answerAnalysis(userAnswer, new Integer(userId));
-        // 发放优惠券 start
-        if(!isAdvisor){
-            String platform = CustomConstants.CLIENT_PC;
-            // 发放优惠券
-            String result = financialAdvisorService.sendCoupon(userId, platform);
-            if(StringUtils.isNotEmpty(result)){
-                JSONObject resultObj = JSONObject.parseObject(result);
-                if(resultObj.getIntValue("status") == 0 && resultObj.getIntValue("couponCount") > 0){
-                    int sendCount = resultObj.getIntValue("couponCount");
-                    returnMap.put("sendCount", sendCount);
-                }
-            }
-        }
-        returnMap.put("userEvalationResult", userEvalationResult);
-        return returnMap;
-        // 发放优惠券 end
     }
 
     /**
@@ -166,7 +130,7 @@ public class FinancialAdvisorController extends BaseUserController {
         CheckUtil.check(userId != null && userId!= 0, MsgEnum.ERR_USER_NOT_LOGIN);
         //用户答案
         String userAnswer = param.get("userAnswer");
-        Map<String,Object> returnMap = this.answerAnalysisAndCoupon(userAnswer, userId);
+        Map<String,Object> returnMap = financialAdvisorService.answerAnalysisAndCoupon(userAnswer, userId);
         //优惠券发放
         if(returnMap.get("sendCount") != null){
             int sendCount = (int)returnMap.get("sendCount");

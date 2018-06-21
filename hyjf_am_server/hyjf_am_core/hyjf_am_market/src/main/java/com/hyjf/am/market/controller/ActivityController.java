@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/activity")
+@RequestMapping("/am-market/activity")
 public class ActivityController {
     private static final Logger logger = LoggerFactory.getLogger(ActivityController.class);
 

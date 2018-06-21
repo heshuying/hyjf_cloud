@@ -22,8 +22,6 @@ import org.springframework.stereotype.Service;
 /**
  * @author pangchengchao
  * @version SynBalanceServiceImpl, v0.1 2018/6/19 18:05
- *//*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
 public class SynBalanceServiceImpl implements SynBalanceService {

@@ -98,6 +98,7 @@ public enum MsgEnum implements MsgCode {
 
 	ERR("1", "开户失败"),
 	ERR_REGISTER("1", "注册失败"),
+	ERR_PARAM_ERROR("1", "登录失败,账号或密码错误"),
 	ERR_MOBILE_IS_NOT_NULL("1", "请填写手机号"),
 	ERR_SMSCODE_IS_NOT_NULL("1", "验证码不能为空"),
 	ERR_PASSWORD_IS_NOT_NULL("1", "密码不能为空"),
@@ -120,6 +121,15 @@ public enum MsgEnum implements MsgCode {
 	ERR_INST_CODE("1", "机构编号不能为空"),
 	ERR_PLATEFORM("1", "注册平台不能为空"),
 	ERR_UTMID("1", "推广渠道不能为空"),
+
+	//活动编号不能为空
+	ERR_ACTIVITYID_IS_NULL("1","活动编号不能为空"),
+	//该活动不存在
+	ERR_ACTIVITY_ISNULL("1","该活动不存在"),
+	//该活动不存在
+	ERR_ACTIVITY_TIME_NOT_START("1","该活动还未开始"),
+	//该活动已结束
+	ERR_ACTIVITY_TIME_END("1","您来晚了，活动已过期~~"),
 	// 时间日期相关错误信息ERR_DATE_
 
 	// DB相关错误信息ERR_DB_
