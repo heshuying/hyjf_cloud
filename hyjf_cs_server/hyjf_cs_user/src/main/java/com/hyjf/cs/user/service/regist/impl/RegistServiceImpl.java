@@ -102,7 +102,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         registerUserRequest.setInstCode(1);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
-        CheckUtil.check(userVO != null, MsgEnum.ERR_REGISTER);
+        CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
     }
@@ -129,7 +129,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         registerUserRequest.setInstCode(instConfig.getInstType());
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
-        CheckUtil.check(userVO != null, MsgEnum.ERR_REGISTER);
+        CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         return userVO;
     }
 
@@ -151,17 +151,17 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             // 机构编号
             CheckUtil.check(StringUtils.isNotEmpty(instCode), MsgEnum.ERR_INSTCODE);
             // 注册平台
-            CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.ERR_PLATEFORM);
+            CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.ERR_OBJECT_REQUIRED,"注册平台");//注册平台不能为空
             // 推广渠道
-            CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.ERR_UTMID);
-            CheckUtil.check(registerRequest != null, MsgEnum.ERR_REGISTER);
+            CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.ERR_OBJECT_REQUIRED,"推广渠道");//推广渠道不能为空
+            CheckUtil.check(registerRequest != null, MsgEnum.ERR_USER_REGISTER);
         }
         String mobile = registerRequest.getMobilephone();
-        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.ERR_MOBILE_IS_NOT_NULL);
+        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.ERR_OBJECT_BLANK,"手机号");//手机号未填写
         String smsCode = registerRequest.getSmsCode();
-        CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.ERR_SMSCODE_IS_NOT_NULL);
+        CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.ERR_OBJECT_REQUIRED,"验证码");//验证码不能为空
         String password = registerRequest.getPassword();
-        CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.ERR_PASSWORD_IS_NOT_NULL);
+        CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.ERR_OBJECT_REQUIRED,"密码");//密码不能为空
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_MOBILE_IS_NOT_REAL);
         CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
         CheckUtil.check(password.length() >= 6 && password.length() <= 16, MsgEnum.ERR_PASSWORD_LENGTH);
@@ -176,14 +176,14 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         String regEx = "^[a-zA-Z0-9]+$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
-        CheckUtil.check(m.matches(), MsgEnum.ERR_PASSWORD_FORMAT);
+        CheckUtil.check(m.matches(), MsgEnum.ERR_FMT_PASSWORD);
 		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
       /*  int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
         CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);*/
         String reffer = registerRequest.getReffer();
         if(StringUtils.isNotEmpty(reffer)){
-            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_REFFER_INVALID);
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
 
     }

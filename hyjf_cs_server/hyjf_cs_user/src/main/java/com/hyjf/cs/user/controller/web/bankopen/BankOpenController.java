@@ -58,7 +58,7 @@ public class BankOpenController extends BaseUserController {
             throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         if(user.getBankOpenAccount()==1){
-            throw new CheckException(MsgEnum.OPEN_ACCOUNTED_ERROR);
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ALREADY_OPEN);
         }
         result.setStatus(ApiResult.SUCCESS);
         Map<String,String> map = new HashedMap();
