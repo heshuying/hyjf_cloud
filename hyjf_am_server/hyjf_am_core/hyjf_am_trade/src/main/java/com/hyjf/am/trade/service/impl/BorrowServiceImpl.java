@@ -111,4 +111,11 @@ public class BorrowServiceImpl implements BorrowService {
         BeanUtils.copyProperties(borrowVO, borrow);
         return borrowMapper.updateByExampleSelective(borrow, example);
     }
+
+    /**
+     * 项目详情
+     * @param borrowNid
+     * @return
+     */
+
 }

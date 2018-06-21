@@ -10,12 +10,7 @@ import org.springframework.util.CollectionUtils;
 import com.hyjf.am.config.dao.mapper.auto.BankConfigMapper;
 import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
 import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankConfigExample;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.CardBin;
-import com.hyjf.am.config.dao.model.auto.CardBinExample;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.service.BankConfigService;
 
 @Service
@@ -39,7 +34,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 			return null;
 		}
 		BankConfigExample example = new BankConfigExample();
-		example.createCriteria().andIdEqualTo(bankId).andDelFlgEqualTo(0);
+		example.createCriteria().andIdEqualTo(bankId).andDelFlagEqualTo(0);
 		List<BankConfig> BankConfigList = bankConfigMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(BankConfigList)) {
 			return BankConfigList.get(0);

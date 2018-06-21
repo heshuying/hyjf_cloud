@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service.bankopen;
 
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
@@ -9,7 +8,6 @@ import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 
@@ -54,9 +52,7 @@ public interface BankOpenService extends BaseUserService {
 
     Map<String,String> checkApiParam(ApiBankOpenRequestBean requestBean);
 
-	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
-
-	/**
+		/**
 	 * @Description 根据 logOrdId查询失败原因
 	 * @Author sunss
 	 * @Date 2018/6/21 15:34

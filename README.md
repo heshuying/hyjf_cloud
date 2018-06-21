@@ -36,7 +36,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 |   ├── hyjf_cs_message         -- 消息组合微服务 [端口:8084] 
 |   └── hyjf_cs_user            -- 用户组合微服务 [端口:8081] 
 ├── hyjf_platform_server        -- 平台服务
-|   ├── hyjf-admin              -- 后台系统
+|   ├── hyjf-admin              -- 后台系统[端口:9093]
 |   ├── hyjf_batch              -- 批处理[端口:9091]
 |   └── hyjf_pay                -- 银行接口模块
 |        ├── hyjf_pay_server    -- 银行接口服务工程[端口:9092]

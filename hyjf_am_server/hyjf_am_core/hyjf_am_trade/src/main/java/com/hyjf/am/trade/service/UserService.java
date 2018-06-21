@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+import java.util.List;
 
 /**
  * @author zhangqingqing
@@ -18,4 +19,11 @@ public interface UserService {
      * @return
      */
     HjhInstConfig selectInstConfigByInstCode(String instCode);
+
+    /**
+     * 根据机构编号查询机构列表
+     * @param instCode
+     * @return
+     */
+    List<HjhInstConfig> selectInstConfigListByInstCode(String instCode);
 }

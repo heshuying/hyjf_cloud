@@ -6,6 +6,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -40,6 +41,23 @@ public class WebBankWithdrawController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
     @Autowired
     private BankWithdrawService webBorrowService;
+
+
+    /**
+     *
+     * 跳转到提现页面
+     *
+     * @author renxingchen
+     * @return
+     */
+    @ApiOperation(value = "获取用户银行提现", notes = "用户提现")
+    @PostMapping("/toWithdraw")
+    public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+
+        WebResult<Object> objectWebResult=webBorrowService.toWithdraw(user);
+        return objectWebResult;
+    }
 
 
     /**

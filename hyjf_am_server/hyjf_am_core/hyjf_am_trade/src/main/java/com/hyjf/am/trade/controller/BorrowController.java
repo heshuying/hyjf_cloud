@@ -113,4 +113,16 @@ public class BorrowController {
 		}
 		return response;
 	}
+
+
+//	@GetMapping("/getBorrowWithBLOBsByNid/{borrowNid}")
+//	public BorrowWithBLOBsResponse getBorrowWithBLOBsByNid(@PathVariable String borrowNid){
+//		BorrowWithBLOBsResponse response = new BorrowWithBLOBsResponse();
+//		BorrowWithBLOBsVO borrowWithBLOBs=borrowService.getBorrowWithBLOBsByNid(borrowNid);
+//		if (borrowWithBLOBs!=null){
+//			response.setResult(borrowWithBLOBs);
+//		}
+//		return response;
+//	}
+
 }

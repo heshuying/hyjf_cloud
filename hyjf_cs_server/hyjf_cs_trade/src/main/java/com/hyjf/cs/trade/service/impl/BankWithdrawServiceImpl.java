@@ -19,9 +19,9 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.CheckResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
-import com.hyjf.cs.trade.bean.CheckResult;
 import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -297,9 +297,15 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
      */
     @Override
     public WebResult<Object> toWithdraw(WebViewUser user) {
-        Integer userId = user.getUserId();
+
         WebResult<Object> result = new WebResult<Object>();
         JSONObject ret = new JSONObject();
+        if(user==null){
+            result.setStatus(BankWithdrawError.USER_LOGIN_ERROR.getCode());
+            result.setStatusDesc(BankWithdrawError.USER_LOGIN_ERROR.getMsg());
+            return result;
+        }
+        Integer userId = user.getUserId();
         DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
         // 取得用户当前余额
         AccountVO account = this.bindCardClient.getAccount(userId);

@@ -127,7 +127,95 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("capitalSort",request.getCapitalSort());
         // 进度排序
         params.put("inProgressSort",request.getInProgressSort());
+        params.put("limitStart",request.getLimitStart());
+        params.put("limitEnd", request.getLimitEnd());
         List<TenderCreditDetailCustomizeVO> list = webProjectListCustomizeMapper.searchCreditList(params);
         return list;
     }
+
+
+
+    // ----------------------------------------web end ----------------------------------------------------
+    // ----------------------------------------app start --------------------------------------------------
+
+    /**
+     * app端获取散标投资count
+     * @author zhangyk
+     * @date 2018/6/20 16:13
+     */
+    @Override
+    public int countAppProjectList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        return webProjectListCustomizeMapper.countAppProject(params);
+    }
+
+    /**
+     * app端获取散标投资数据list
+     * @author zhangyk
+     * @date 2018/6/20 16:11
+     */
+    @Override
+    public List<WebProjectListCustomize> searchAppProjectList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        params.put("limitStart",limitStart);
+        params.put("limitEnd", limitEnd);
+        return webProjectListCustomizeMapper.searchAppProjectList(params);
+    }
+
+    @Override
+    public int countAppCreditList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        return webProjectListCustomizeMapper.countAppCredit(params);
+    }
+
+    @Override
+    public List<WebProjectListCustomize> searchAppCreditList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        params.put("limitStart",limitStart);
+        params.put("limitEnd", limitEnd);
+        return webProjectListCustomizeMapper.searchAppCreditList(params);
+    }
+
+
+    // ----------------------------------------app end ----------------------------------------------------
 }

@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -41,7 +40,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -237,7 +235,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 开户失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 开户失败   将开户记录状态改为4
-            // TODO: 2018/6/21  记录失败原因 
+            // TODO: 2018/6/21  记录失败原因
             this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4);
             logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
             result.setStatus(false);
@@ -473,18 +471,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             idNo = idNo.replace(idNo.charAt(idNo.length() - 1) + "", "X");
         }
         return idNo;
-    }
-
-
-    /**
-     * 根据用户ID查询企业用户信息
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
-        return amUserClient.getCorpOpenAccountRecord(userId);
     }
 
     /**

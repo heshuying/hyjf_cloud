@@ -29,10 +29,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -100,7 +99,8 @@ public class WebAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping(value = "/userAuthInves" , produces = "application/json; charset=utf-8")
-    public ModelAndView userAuthInves(@RequestHeader(value = "token", required = true) String token, @RequestBody AuthorizedVO authorizedVO) {
+    public  WebResult<Object> userAuthInves(@RequestHeader(value = "token", required = true) String token, @RequestBody AuthorizedVO authorizedVO) {
+        WebResult<Object> result = new WebResult<Object>();
         String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
@@ -111,14 +111,16 @@ public class WebAutoPlusController extends BaseUserController {
         //检查用户信息
        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
         BankCallBean bean = autoPlusService.userCreditAuthInves(user, ClientConstants.WEB_CLIENT, ClientConstants.QUERY_TYPE_1, ClientConstants.CHANNEL_PC, lastSrvAuthCode, smsCode);
-        ModelAndView modelAndView = new ModelAndView();
+        Map<String,Object> map = new HashMap<>();
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            map = BankCallUtils.callApiMap(bean);
+
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ReturnMessageException(MsgEnum.ERR_CALL_BANK);
+            CheckUtil.check(false,MsgEnum.ERR_CALL_BANK);
         }
-        return modelAndView;
+        result.setData(map);
+        return result;
     }
 
     /**
@@ -131,7 +133,8 @@ public class WebAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
     @PostMapping(value = "/creditUserAuthInves", produces = "application/json; charset=utf-8")
-    public ModelAndView creditUserAuthInves(@RequestHeader(value = "token", required = true) String token,@RequestBody AuthorizedVO authorizedVO) {
+    public  WebResult<Object> creditUserAuthInves(@RequestHeader(value = "token", required = true) String token,@RequestBody AuthorizedVO authorizedVO) {
+        WebResult<Object> result = new WebResult<Object>();
         String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
@@ -142,17 +145,18 @@ public class WebAutoPlusController extends BaseUserController {
         //检查用户信息
         autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
         BankCallBean bean = autoPlusService.userCreditAuthInves(user, ClientConstants.WEB_CLIENT, ClientConstants.QUERY_TYPE_2, ClientConstants.CHANNEL_PC, lastSrvAuthCode, smsCode);
-        ModelAndView modelAndView = new ModelAndView();
+        Map<String,Object> map = new HashMap<>();
         try {
-            modelAndView = com.hyjf.pay.lib.bank.util.BankCallUtils.callApi(bean);
+            map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_CALL_BANK);
         }
-        return modelAndView;
+        result.setData(map);
+        return result;
     }
 
-    /**
+  /*  *//**
      * @Author: zhangqingqing
      * @Desc :用户授权自动投资同步回调
      * @Param: * @param token
@@ -160,7 +164,7 @@ public class WebAutoPlusController extends BaseUserController {
      * @param bean
      * @Date: 16:42 2018/5/30
      * @Return: Map
-     */
+     *//*
     @ApiOperation(value = "用户授权自动投资同步回调", notes = "用户授权自动投资同步回调")
     @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
     public Map<String, String> userAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,@RequestBody @Valid BankCallBean bean) {
@@ -170,7 +174,7 @@ public class WebAutoPlusController extends BaseUserController {
         return result;
     }
 
-    /**
+    *//**
      * @Author: zhangqingqing
      * @Desc :用户授权自动债转同步回调
      * @Param: * @param token
@@ -178,7 +182,7 @@ public class WebAutoPlusController extends BaseUserController {
      * @param bean
      * @Date: 16:42 2018/5/30
      * @Return: Map
-     */
+     *//*
     @ApiOperation(value = "用户授权自动债转同步回调", notes = "用户授权自动债转同步回调")
     @PostMapping(value = "/credituserAuthInvesReturn", produces = "application/json; charset=utf-8")
     public Map<String, String> userCreditAuthInvesReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
@@ -187,7 +191,7 @@ public class WebAutoPlusController extends BaseUserController {
         String isSuccess = request.getParameter("isSuccess");
         Map<String, String> result = autoPlusService.userAuthReturn(token, bean, ClientConstants.CREDIT_URL_TYPE, isSuccess);
         return result;
-    }
+    }*/
 
     /**
      * @Author: zhangqingqing

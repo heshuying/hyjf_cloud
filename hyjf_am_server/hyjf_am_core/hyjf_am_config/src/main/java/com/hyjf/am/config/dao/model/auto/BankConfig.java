@@ -39,7 +39,7 @@ public class BankConfig implements Serializable {
 
     private Date updateTime;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private BigDecimal monthCardQuota;
 
@@ -181,12 +181,12 @@ public class BankConfig implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public BigDecimal getMonthCardQuota() {
