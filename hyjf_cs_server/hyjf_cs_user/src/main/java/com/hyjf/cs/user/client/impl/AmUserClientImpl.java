@@ -659,4 +659,24 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public int isCompAccount(Integer userId) {
+		int result = restTemplate
+				.getForEntity("http://AM-USER//am-user/user/isCompAccount/" + userId, Integer.class).getBody();
+		return result;
+	}
+
+	/**
+	 * @param logOrdId
+	 * @Description 查询开户失败原因
+	 * @Author sunss
+	 * @Date 2018/6/21 15:45
+	 */
+	@Override
+	public String getBankOpenAccountFiledMess(String logOrdId) {
+		String mess = restTemplate
+				.getForEntity("http://AM-USER//am-user/bankopen/getBankOpenAccountFiledMess/" + logOrdId, String.class).getBody();
+		return mess;
+	}
 }

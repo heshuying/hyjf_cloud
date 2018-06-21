@@ -5,9 +5,9 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
@@ -339,7 +339,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
 
     @Override
-    public HjhLabelVO getLabelId(BorrowWithBLOBsVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
+    public HjhLabelVO getLabelId(BorrowVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
 
         HjhLabelVO resultLabel = null;
 

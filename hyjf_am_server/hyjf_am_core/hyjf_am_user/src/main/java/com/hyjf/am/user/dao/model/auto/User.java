@@ -24,6 +24,8 @@ public class User implements Serializable {
 
     private Integer withdrawSms;
 
+    private String iconUrl;
+
     private Boolean ifReceiveNotice;
 
     private Integer investSms;
@@ -55,6 +57,8 @@ public class User implements Serializable {
     private Integer bankAccountEsb;
 
     private Integer isEvaluationFlag;
+
+    private Date evaluationExpiredTime;
 
     private Integer isCaFlag;
 
@@ -148,6 +152,14 @@ public class User implements Serializable {
 
     public void setWithdrawSms(Integer withdrawSms) {
         this.withdrawSms = withdrawSms;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl == null ? null : iconUrl.trim();
     }
 
     public Boolean getIfReceiveNotice() {
@@ -276,6 +288,14 @@ public class User implements Serializable {
 
     public void setIsEvaluationFlag(Integer isEvaluationFlag) {
         this.isEvaluationFlag = isEvaluationFlag;
+    }
+
+    public Date getEvaluationExpiredTime() {
+        return evaluationExpiredTime;
+    }
+
+    public void setEvaluationExpiredTime(Date evaluationExpiredTime) {
+        this.evaluationExpiredTime = evaluationExpiredTime;
     }
 
     public Integer getIsCaFlag() {

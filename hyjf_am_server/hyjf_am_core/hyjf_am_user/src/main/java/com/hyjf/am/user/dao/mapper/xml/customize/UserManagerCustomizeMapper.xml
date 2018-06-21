@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper">
+    <resultMap id="UserListVOMap" type="com.hyjf.am.user.dao.model.customize.UserManagerCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="user_role" property="userRole" jdbcType="VARCHAR"/>
+        <result column="user_type" property="userType" jdbcType="VARCHAR"/>
+        <result column="user_property" property="userProperty" jdbcType="VARCHAR"/>
+        <result column="account_status" property="accountStatus" jdbcType="VARCHAR"/>
+        <result column="open_account" property="openAccount" jdbcType="VARCHAR"/>
+        <result column="bank_open_account" property="bankOpenAccount" jdbcType="VARCHAR"/>
+        <result column="bank_open_time" property="bankOpenTime" jdbcType="VARCHAR"/>
+        <result column="user_status" property="userStatus" jdbcType="VARCHAR"/>
+        <result column="recommend_name" property="recommendName" jdbcType="VARCHAR"/>
+        <result column="regist_plat" property="registPlat" jdbcType="VARCHAR"/>
+        <result column="reg_time" property="regTime" jdbcType="VARCHAR"/>
+        <result column="regionName" property="regionName"/> <!-- 大区 -->
+        <result column="branchName" property="branchName"/> <!-- 分公司  -->
+        <result column="departmentName" property="departmentName"/> <!-- 部门  -->
+        <result column="borrower_type" property="borrowerType" jdbcType="INTEGER"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="birthday" property="birthday" jdbcType="VARCHAR"/>
+        <result column="regist_area" property="registArea" jdbcType="VARCHAR"/>
+        <result column="idcard" property="idcard" jdbcType="VARCHAR"/>
+        <result column="customer_id" property="customerId" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="instCode" property="instCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectUserMemberList" parameterType="Map" resultMap="UserListVOMap">
+        SELECT
+        t.*,
+        `od3`.`name` AS `regionName`,
+        `od2`.`name` AS `branchName`,
+        `od`.`name` AS `departmentName`
+        FROM
+        (
+        SELECT
+        hydu.user_id,
+        hydu.username AS user_name,
+        hydui.truename AS real_name,
+        hydu.mobile,
+        hydu.user_type AS type_id,
+        hydui.role_id,
+        hydui.attribute,
+        hydui.birthday,
+        hydui.sex,
+        hydui.idcard,
+        concat(province, city, area) AS regist_area,
+        hydu.open_account,
+        hydu.`status`,
+        hydu.reg_esb,
+        hydu.reg_time AS regTime,
+        hydui.role_id AS user_role,
+        hydui.attribute AS user_property,
+        hydu.open_account AS account_status,
+        hydu.`status` AS user_status,
+        hydu.reg_esb AS regist_plat,
+        hydu.user_type AS AS user_type,
+        hydur.username AS recommend_name,
+        FROM_UNIXTIME(
+        hydu.reg_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS reg_time,
+        CASE
+        WHEN hydui.attribute = 2
+        OR hydui.attribute = 3 THEN
+        hydu.user_id
+        ELSE
+        hydsu.spreads_user_id
+        END AS hyd_id,
+        hydui.borrower_type,
+        hydu.bank_open_account bank_open_account,
+        hydu.inst_code AS instCode,
+        hca.customer_id,
+        hboa.account,
+        hboa.create_time AS bank_open_time
+        FROM
+        <choose>
+            <when test='whereFlag == "0"'>
+                (SELECT * FROM ht_user
+                ORDER BY reg_time DESC
+                <if test="limitStart != null and limitEnd !=null">
+                    LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+                </if>
+                ) hydu
+            </when>
+            <otherwise>
+                ht_user hydu
+            </otherwise>
+        </choose>
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
+        LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
+        LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
+        WHERE 1=1
+        <if test="userName != null and userName !=''">
+            AND hydu.username = #{userName}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            AND hydu.mobile = #{mobile}
+        </if>
+        <if test="userType != null and userType != ''">
+            AND hydu.user_type = #{userType,jdbcType=INTEGER}
+        </if>
+        ) t
+        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        <include refid="Admin_Where_Clause"/>
+        <if test='whereFlag != "0"'>
+            ORDER BY t.reg_time DESC
+            <if test="limitStart != null and limitEnd !=null">
+                LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+            </if>
+        </if>
+    </select>
+    <!-- 查询条件 -->
+    <sql id="Admin_Where_Clause">
+        <where>
+            <if test="realName != null and realName != ''">
+                AND t.real_name LIKE CONCAT('%', #{realName}, '%')
+            </if>
+            <if test="recommendName != null and recommendName != ''">
+                AND t.recommend_name LIKE CONCAT('%', #{recommendName}, '%')
+            </if>
+            <if test="userRole != null and userRole != ''">
+                AND t.role_id = #{userRole,jdbcType=INTEGER}
+            </if>
+            <if test="userProperty != null and userProperty != ''">
+                AND t.attribute = #{userProperty,jdbcType=INTEGER}
+            </if>
+            <if test="accountStatus != null and accountStatus != ''">
+                AND t.bank_open_account = #{accountStatus,jdbcType=INTEGER}
+            </if>
+            <if test="userStatus != null and userStatus != ''">
+                AND t.`status` = #{userStatus,jdbcType=INTEGER}
+            </if>
+
+            <if test="regTimeStart != null and regTimeStart != '' ">
+                AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[>=]]> #{regTimeStart}
+            </if>
+            <if test="regTimeEnd != null and regTimeEnd != ''">
+                AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[<=]]> #{regTimeEnd}
+            </if>
+            <if test="combotreeListSrch != null and combotreeListSrch != ''">
+                AND od.id in
+                <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
+                    #{dep}
+                </foreach>
+            </if>
+            <if test="instCodeSrch != null and instCodeSrch != ''">
+                AND t.instCode = #{instCodeSrch,jdbcType=INTEGER}
+            </if>
+        </where>
+    </sql>
+
+    <select id="countUserRecord" parameterType="Map" resultType="java.lang.Integer">
+        <choose>
+            <when test='whereFlag == "0"'>
+                SELECT
+                COUNT(*)
+                FROM
+                ht_user
+            </when>
+            <otherwise>
+                SELECT COUNT(*) FROM(
+                SELECT
+                hydu.user_id,
+                hydu.username AS user_name,
+                hydui.truename AS real_name,
+                hydu.mobile,
+                hydu.user_type AS type_id,
+                hydui.role_id,
+                hydui.attribute,
+                hydui.birthday,
+                hydui.sex,
+                hydui.idcard,
+                concat(province, city, area) AS regist_area,
+                hydu.open_account,
+                hydu.`status`,
+                hydu.reg_esb,
+                hydu.reg_time AS regTime,
+                hydui.role_id AS user_role,
+                hydui.attribute AS user_property,
+                hydu.open_account AS account_status,
+                hydu.`status` AS user_status,
+                hydu.reg_esb AS regist_plat,
+                hydu.user_type AS AS user_type,
+                hydur.username AS recommend_name,
+                FROM_UNIXTIME(
+                hydu.reg_time,
+                '%Y-%m-%d %H:%i:%s'
+                ) AS reg_time,
+                CASE
+                WHEN hydui.attribute = 2
+                OR hydui.attribute = 3 THEN
+                hydu.user_id
+                ELSE
+                hydsu.spreads_user_id
+                END AS hyd_id,
+                hydui.borrower_type,
+                hydu.bank_open_account bank_open_account,
+                hydu.inst_code AS instCode,
+                hca.customer_id,
+                hboa.account,
+                hboa.create_time AS bank_open_time
+                FROM
+                ht_user hydu
+                LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+                LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+                LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
+                LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
+                LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
+                WHERE 1=1
+                <if test="userName != null and userName !=''">
+                    AND hydu.username = #{userName}
+                </if>
+                <if test="mobile != null and mobile != ''">
+                    AND hydu.mobile = #{mobile}
+                </if>
+                <if test="userType != null and userType != ''">
+                    AND hydu.user_type = #{userType,jdbcType=INTEGER}
+                </if>
+                ) t
+                LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2','Q21')
+                LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+                LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+                LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+                <include refid="Admin_Where_Clause"/>
+            </otherwise>
+        </choose>
+    </select>
+
+
+</mapper>

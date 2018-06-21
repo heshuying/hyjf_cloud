@@ -4,7 +4,11 @@
 package com.hyjf.am.trade.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,8 @@ import com.hyjf.am.trade.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    AssetManageCustomizeMapper assetManageCustomizeMapper;
 
     @Autowired
     HjhInstConfigMapper hjhInstConfigMapper;
@@ -41,4 +47,24 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /**
+     * 根据机构编号获取机构列表
+     * @param instCode
+     * @return
+     */
+    @Override
+    public  List<HjhInstConfig> selectInstConfigListByInstCode(String instCode){
+        HjhInstConfigExample example = new HjhInstConfigExample();
+        HjhInstConfigExample.Criteria cra = example.createCriteria();
+        if(StringUtils.isNotEmpty(instCode)){
+            cra.andInstCodeEqualTo(instCode);
+        }
+        List<HjhInstConfig> hjhInstConfigList = this.hjhInstConfigMapper.selectByExample(example);
+        return  hjhInstConfigList;
+    }
+
+    @Override
+    public List<RecentPaymentListCustomize> selectRecentPaymentList(Map<String, Object> paraMap) {
+        return assetManageCustomizeMapper.selectRecentPaymentList(paraMap);
+    }
 }

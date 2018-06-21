@@ -243,7 +243,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             webViewUserVO.setRoleId(usersInfo.getRoleId() + "");
             webViewUserVO.setBorrowerType(usersInfo.getBorrowerType());
         }
-        webViewUserVO.setIconurl(this.assembleIconUrl(userVO));
+        webViewUserVO.setIconUrl(this.assembleIconUrl(userVO));
         webViewUserVO.setOpenAccount(false);
         webViewUserVO.setBankOpenAccount(false);
         if(null != userVO.getOpenAccount()&&userVO.getOpenAccount()==1){
@@ -275,7 +275,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
      * @return
      */
     private String assembleIconUrl(UserVO userVO) {
-        String iconUrl = ""; // todo getUrlcron
+        String iconUrl = userVO.getIconUrl();
         if (StringUtils.isNotBlank(iconUrl)) {
             String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
             imghost = imghost.substring(0, imghost.length() - 1);
