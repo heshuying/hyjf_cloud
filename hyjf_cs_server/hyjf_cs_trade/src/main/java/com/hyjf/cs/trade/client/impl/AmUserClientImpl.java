@@ -125,7 +125,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserInfoCrmVO queryUserCrmInfoByUserId(int userId) {
-		String url = "http://AM-USER/am-user/user/findReffer/" + userId;
+		String url = "http://AM-USER/am-user/userInfo/findUserCrmInfoByUserId/" + userId;
 		UserInfoCrmResponse response = restTemplate.getForEntity(url, UserInfoCrmResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
