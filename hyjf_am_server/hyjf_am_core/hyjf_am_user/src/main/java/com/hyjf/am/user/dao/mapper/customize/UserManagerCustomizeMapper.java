@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
+import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
 
 import java.util.List;
 import java.util.Map;
@@ -35,12 +36,19 @@ public interface UserManagerCustomizeMapper {
      * @param userId
      * @return
      */
-    UserManagerDetailCustomize selectUserDetailById(int userId);
+    List<UserManagerDetailCustomize> selectUserDetailById(int userId);
 
     /**
      *根据用户id获取开户信息
      * @param userId
      * @return
      */
-    UserBankOpenAccountCustomize selectBankOpenAccountByUserId(int userId);
+    List<UserBankOpenAccountCustomize> selectBankOpenAccountByUserId(int userId);
+
+    /**
+     * 根据用户id获取用户修改信息
+     * @param userId
+     * @return
+     */
+    List<UserManagerUpdateCustomize> selectUserUpdateInfoByUserId(int userId);
 }
