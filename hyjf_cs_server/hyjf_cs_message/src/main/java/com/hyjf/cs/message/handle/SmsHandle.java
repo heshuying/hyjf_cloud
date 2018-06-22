@@ -65,7 +65,7 @@ public class SmsHandle {
 	@Value("${sms.send.market.key}")
 	private String marketKey;
 
-	@Value(("${env.test}"))
+	@Value(("${hyjf.env.test}"))
 	private boolean envTest;
 
 	/**

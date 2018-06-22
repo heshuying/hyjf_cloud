@@ -1,6 +1,6 @@
 spring:
   application:
-    name: AM-STATISTICS
+    name: AM-DATA-COLLECT
   boot:
     admin:
       client:
@@ -26,4 +26,4 @@ server:
   port: 8085
 
 logging:
-  file: am-statistics.log
+  file: am-data-collect.log
