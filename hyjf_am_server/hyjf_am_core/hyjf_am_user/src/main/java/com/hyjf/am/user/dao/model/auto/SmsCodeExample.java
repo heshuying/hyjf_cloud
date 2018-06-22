@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SmsCodeExample {
+public class SmscodeExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class SmsCodeExample {
 
     protected int limitEnd = -1;
 
-    public SmsCodeExample() {
+    public SmscodeExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

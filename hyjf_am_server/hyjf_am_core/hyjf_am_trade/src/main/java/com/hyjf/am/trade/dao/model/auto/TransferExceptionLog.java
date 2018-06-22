@@ -31,7 +31,7 @@ public class TransferExceptionLog implements Serializable {
 
     private String remark;
 
-    private Boolean delFlag;
+    private Integer delFlag;
 
     private String addUser;
 
@@ -147,11 +147,11 @@ public class TransferExceptionLog implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Boolean delFlag) {
+    public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
 

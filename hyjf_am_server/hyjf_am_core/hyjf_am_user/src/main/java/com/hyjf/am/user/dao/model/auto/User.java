@@ -26,7 +26,7 @@ public class User implements Serializable {
 
     private String iconUrl;
 
-    private Boolean ifReceiveNotice;
+    private Integer ifReceiveNotice;
 
     private Integer investSms;
 
@@ -48,7 +48,7 @@ public class User implements Serializable {
 
     private Integer userType;
 
-    private Boolean paymentAuthStatus;
+    private Integer paymentAuthStatus;
 
     private Integer isSetPassword;
 
@@ -162,11 +162,11 @@ public class User implements Serializable {
         this.iconUrl = iconUrl == null ? null : iconUrl.trim();
     }
 
-    public Boolean getIfReceiveNotice() {
+    public Integer getIfReceiveNotice() {
         return ifReceiveNotice;
     }
 
-    public void setIfReceiveNotice(Boolean ifReceiveNotice) {
+    public void setIfReceiveNotice(Integer ifReceiveNotice) {
         this.ifReceiveNotice = ifReceiveNotice;
     }
 
@@ -250,11 +250,11 @@ public class User implements Serializable {
         this.userType = userType;
     }
 
-    public Boolean getPaymentAuthStatus() {
+    public Integer getPaymentAuthStatus() {
         return paymentAuthStatus;
     }
 
-    public void setPaymentAuthStatus(Boolean paymentAuthStatus) {
+    public void setPaymentAuthStatus(Integer paymentAuthStatus) {
         this.paymentAuthStatus = paymentAuthStatus;
     }
 

@@ -1,30 +1,30 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowTypeExample;
+import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
+import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtypeExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface HjhAssetBorrowTypeMapper {
-    int countByExample(HjhAssetBorrowTypeExample example);
+public interface HjhAssetBorrowtypeMapper {
+    int countByExample(HjhAssetBorrowtypeExample example);
 
-    int deleteByExample(HjhAssetBorrowTypeExample example);
+    int deleteByExample(HjhAssetBorrowtypeExample example);
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(HjhAssetBorrowType record);
+    int insert(HjhAssetBorrowtype record);
 
-    int insertSelective(HjhAssetBorrowType record);
+    int insertSelective(HjhAssetBorrowtype record);
 
-    List<HjhAssetBorrowType> selectByExample(HjhAssetBorrowTypeExample example);
+    List<HjhAssetBorrowtype> selectByExample(HjhAssetBorrowtypeExample example);
 
-    HjhAssetBorrowType selectByPrimaryKey(Integer id);
+    HjhAssetBorrowtype selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") HjhAssetBorrowType record, @Param("example") HjhAssetBorrowTypeExample example);
+    int updateByExampleSelective(@Param("record") HjhAssetBorrowtype record, @Param("example") HjhAssetBorrowtypeExample example);
 
-    int updateByExample(@Param("record") HjhAssetBorrowType record, @Param("example") HjhAssetBorrowTypeExample example);
+    int updateByExample(@Param("record") HjhAssetBorrowtype record, @Param("example") HjhAssetBorrowtypeExample example);
 
-    int updateByPrimaryKeySelective(HjhAssetBorrowType record);
+    int updateByPrimaryKeySelective(HjhAssetBorrowtype record);
 
-    int updateByPrimaryKey(HjhAssetBorrowType record);
+    int updateByPrimaryKey(HjhAssetBorrowtype record);
 }

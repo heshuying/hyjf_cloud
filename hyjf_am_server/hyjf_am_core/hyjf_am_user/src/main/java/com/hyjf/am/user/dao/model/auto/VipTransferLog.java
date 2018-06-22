@@ -1,7 +1,6 @@
 package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class VipTransferLog implements Serializable {
     private Integer id;
@@ -16,7 +15,7 @@ public class VipTransferLog implements Serializable {
 
     private String transferOutCustid;
 
-    private BigDecimal transAmt;
+    private Long transAmt;
 
     private Integer transType;
 
@@ -86,11 +85,11 @@ public class VipTransferLog implements Serializable {
         this.transferOutCustid = transferOutCustid == null ? null : transferOutCustid.trim();
     }
 
-    public BigDecimal getTransAmt() {
+    public Long getTransAmt() {
         return transAmt;
     }
 
-    public void setTransAmt(BigDecimal transAmt) {
+    public void setTransAmt(Long transAmt) {
         this.transAmt = transAmt;
     }
 

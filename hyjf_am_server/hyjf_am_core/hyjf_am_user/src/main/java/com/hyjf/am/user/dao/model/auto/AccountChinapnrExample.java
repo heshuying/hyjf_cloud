@@ -385,52 +385,52 @@ public class AccountChinapnrExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsokEqualTo(Boolean value) {
+        public Criteria andIsokEqualTo(Integer value) {
             addCriterion("isok =", value, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokNotEqualTo(Boolean value) {
+        public Criteria andIsokNotEqualTo(Integer value) {
             addCriterion("isok <>", value, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokGreaterThan(Boolean value) {
+        public Criteria andIsokGreaterThan(Integer value) {
             addCriterion("isok >", value, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsokGreaterThanOrEqualTo(Integer value) {
             addCriterion("isok >=", value, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokLessThan(Boolean value) {
+        public Criteria andIsokLessThan(Integer value) {
             addCriterion("isok <", value, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsokLessThanOrEqualTo(Integer value) {
             addCriterion("isok <=", value, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokIn(List<Boolean> values) {
+        public Criteria andIsokIn(List<Integer> values) {
             addCriterion("isok in", values, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokNotIn(List<Boolean> values) {
+        public Criteria andIsokNotIn(List<Integer> values) {
             addCriterion("isok not in", values, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsokBetween(Integer value1, Integer value2) {
             addCriterion("isok between", value1, value2, "isok");
             return (Criteria) this;
         }
 
-        public Criteria andIsokNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsokNotBetween(Integer value1, Integer value2) {
             addCriterion("isok not between", value1, value2, "isok");
             return (Criteria) this;
         }

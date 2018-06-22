@@ -4,8 +4,8 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.AppointmentAuthLog" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="auth_type" property="authType" jdbcType="BIT" />
-    <result column="auth_status" property="authStatus" jdbcType="BIT" />
+    <result column="auth_type" property="authType" jdbcType="TINYINT" />
+    <result column="auth_status" property="authStatus" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -109,7 +109,7 @@
     </selectKey>
     insert into ht_appointment_auth_log (user_id, auth_type, auth_status, 
       create_time, update_time)
-    values (#{userId,jdbcType=INTEGER}, #{authType,jdbcType=BIT}, #{authStatus,jdbcType=BIT}, 
+    values (#{userId,jdbcType=INTEGER}, #{authType,jdbcType=TINYINT}, #{authStatus,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentAuthLog" >
@@ -139,10 +139,10 @@
         #{userId,jdbcType=INTEGER},
       </if>
       <if test="authType != null" >
-        #{authType,jdbcType=BIT},
+        #{authType,jdbcType=TINYINT},
       </if>
       <if test="authStatus != null" >
-        #{authStatus,jdbcType=BIT},
+        #{authStatus,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -168,10 +168,10 @@
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
       <if test="record.authType != null" >
-        auth_type = #{record.authType,jdbcType=BIT},
+        auth_type = #{record.authType,jdbcType=TINYINT},
       </if>
       <if test="record.authStatus != null" >
-        auth_status = #{record.authStatus,jdbcType=BIT},
+        auth_status = #{record.authStatus,jdbcType=TINYINT},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -188,8 +188,8 @@
     update ht_appointment_auth_log
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
-      auth_type = #{record.authType,jdbcType=BIT},
-      auth_status = #{record.authStatus,jdbcType=BIT},
+      auth_type = #{record.authType,jdbcType=TINYINT},
+      auth_status = #{record.authStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -203,10 +203,10 @@
         user_id = #{userId,jdbcType=INTEGER},
       </if>
       <if test="authType != null" >
-        auth_type = #{authType,jdbcType=BIT},
+        auth_type = #{authType,jdbcType=TINYINT},
       </if>
       <if test="authStatus != null" >
-        auth_status = #{authStatus,jdbcType=BIT},
+        auth_status = #{authStatus,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -220,8 +220,8 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.AppointmentAuthLog" >
     update ht_appointment_auth_log
     set user_id = #{userId,jdbcType=INTEGER},
-      auth_type = #{authType,jdbcType=BIT},
-      auth_status = #{authStatus,jdbcType=BIT},
+      auth_type = #{authType,jdbcType=TINYINT},
+      auth_status = #{authStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

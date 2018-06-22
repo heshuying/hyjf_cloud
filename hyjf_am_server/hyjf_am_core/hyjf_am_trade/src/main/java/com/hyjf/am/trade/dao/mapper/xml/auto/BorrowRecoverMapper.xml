@@ -37,7 +37,7 @@
     <result column="credit_status" property="creditStatus" jdbcType="TINYINT" />
     <result column="recover_fee" property="recoverFee" jdbcType="DECIMAL" />
     <result column="recover_late_fee" property="recoverLateFee" jdbcType="DECIMAL" />
-    <result column="advance_status" property="advanceStatus" jdbcType="TINYINT" />
+    <result column="advance_status" property="advanceStatus" jdbcType="INTEGER" />
     <result column="charge_days" property="chargeDays" jdbcType="INTEGER" />
     <result column="charge_interest" property="chargeInterest" jdbcType="DECIMAL" />
     <result column="late_days" property="lateDays" jdbcType="INTEGER" />
@@ -211,7 +211,7 @@
       #{recoverFeeYes,jdbcType=DECIMAL}, #{repayChargeInterest,jdbcType=DECIMAL}, #{repayDelayInterest,jdbcType=DECIMAL}, 
       #{creditManageFee,jdbcType=DECIMAL}, #{repayLateInterest,jdbcType=DECIMAL}, #{debtStatus,jdbcType=TINYINT}, 
       #{creditStatus,jdbcType=TINYINT}, #{recoverFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
-      #{advanceStatus,jdbcType=TINYINT}, #{chargeDays,jdbcType=INTEGER}, #{chargeInterest,jdbcType=DECIMAL}, 
+      #{advanceStatus,jdbcType=INTEGER}, #{chargeDays,jdbcType=INTEGER}, #{chargeInterest,jdbcType=DECIMAL}, 
       #{lateDays,jdbcType=INTEGER}, #{lateInterest,jdbcType=DECIMAL}, #{delayDays,jdbcType=INTEGER}, 
       #{delayInterest,jdbcType=DECIMAL}, #{delayRate,jdbcType=DECIMAL}, #{addTime,jdbcType=INTEGER}, 
       #{addip,jdbcType=VARCHAR}, #{sendmail,jdbcType=TINYINT}, #{web,jdbcType=TINYINT}, 
@@ -523,7 +523,7 @@
         #{recoverLateFee,jdbcType=DECIMAL},
       </if>
       <if test="advanceStatus != null" >
-        #{advanceStatus,jdbcType=TINYINT},
+        #{advanceStatus,jdbcType=INTEGER},
       </if>
       <if test="chargeDays != null" >
         #{chargeDays,jdbcType=INTEGER},
@@ -726,7 +726,7 @@
         recover_late_fee = #{record.recoverLateFee,jdbcType=DECIMAL},
       </if>
       <if test="record.advanceStatus != null" >
-        advance_status = #{record.advanceStatus,jdbcType=TINYINT},
+        advance_status = #{record.advanceStatus,jdbcType=INTEGER},
       </if>
       <if test="record.chargeDays != null" >
         charge_days = #{record.chargeDays,jdbcType=INTEGER},
@@ -854,7 +854,7 @@
       credit_status = #{record.creditStatus,jdbcType=TINYINT},
       recover_fee = #{record.recoverFee,jdbcType=DECIMAL},
       recover_late_fee = #{record.recoverLateFee,jdbcType=DECIMAL},
-      advance_status = #{record.advanceStatus,jdbcType=TINYINT},
+      advance_status = #{record.advanceStatus,jdbcType=INTEGER},
       charge_days = #{record.chargeDays,jdbcType=INTEGER},
       charge_interest = #{record.chargeInterest,jdbcType=DECIMAL},
       late_days = #{record.lateDays,jdbcType=INTEGER},
@@ -993,7 +993,7 @@
         recover_late_fee = #{recoverLateFee,jdbcType=DECIMAL},
       </if>
       <if test="advanceStatus != null" >
-        advance_status = #{advanceStatus,jdbcType=TINYINT},
+        advance_status = #{advanceStatus,jdbcType=INTEGER},
       </if>
       <if test="chargeDays != null" >
         charge_days = #{chargeDays,jdbcType=INTEGER},
@@ -1118,7 +1118,7 @@
       credit_status = #{creditStatus,jdbcType=TINYINT},
       recover_fee = #{recoverFee,jdbcType=DECIMAL},
       recover_late_fee = #{recoverLateFee,jdbcType=DECIMAL},
-      advance_status = #{advanceStatus,jdbcType=TINYINT},
+      advance_status = #{advanceStatus,jdbcType=INTEGER},
       charge_days = #{chargeDays,jdbcType=INTEGER},
       charge_interest = #{chargeInterest,jdbcType=DECIMAL},
       late_days = #{lateDays,jdbcType=INTEGER},

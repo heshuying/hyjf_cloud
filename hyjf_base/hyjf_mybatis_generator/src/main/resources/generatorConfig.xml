@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -49,7 +49,6 @@
         <table tableName="ht_account_bank" domainObjectName="AccountBank">
             <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="bank_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="default" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_account_chinapnr" domainObjectName="AccountChinapnr">

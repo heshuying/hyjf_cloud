@@ -1,30 +1,30 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import com.hyjf.am.trade.dao.model.auto.STZHWhiteList;
-import com.hyjf.am.trade.dao.model.auto.STZHWhiteListExample;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface STZHWhiteListMapper {
-    int countByExample(STZHWhiteListExample example);
+public interface StzhWhiteListMapper {
+    int countByExample(StzhWhiteListExample example);
 
-    int deleteByExample(STZHWhiteListExample example);
+    int deleteByExample(StzhWhiteListExample example);
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(STZHWhiteList record);
+    int insert(StzhWhiteList record);
 
-    int insertSelective(STZHWhiteList record);
+    int insertSelective(StzhWhiteList record);
 
-    List<STZHWhiteList> selectByExample(STZHWhiteListExample example);
+    List<StzhWhiteList> selectByExample(StzhWhiteListExample example);
 
-    STZHWhiteList selectByPrimaryKey(Integer id);
+    StzhWhiteList selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") STZHWhiteList record, @Param("example") STZHWhiteListExample example);
+    int updateByExampleSelective(@Param("record") StzhWhiteList record, @Param("example") StzhWhiteListExample example);
 
-    int updateByExample(@Param("record") STZHWhiteList record, @Param("example") STZHWhiteListExample example);
+    int updateByExample(@Param("record") StzhWhiteList record, @Param("example") StzhWhiteListExample example);
 
-    int updateByPrimaryKeySelective(STZHWhiteList record);
+    int updateByPrimaryKeySelective(StzhWhiteList record);
 
-    int updateByPrimaryKey(STZHWhiteList record);
+    int updateByPrimaryKey(StzhWhiteList record);
 }

@@ -404,52 +404,52 @@ public class GatewayApiConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andRetryableEqualTo(Boolean value) {
+        public Criteria andRetryableEqualTo(Integer value) {
             addCriterion("retryable =", value, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableNotEqualTo(Boolean value) {
+        public Criteria andRetryableNotEqualTo(Integer value) {
             addCriterion("retryable <>", value, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableGreaterThan(Boolean value) {
+        public Criteria andRetryableGreaterThan(Integer value) {
             addCriterion("retryable >", value, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andRetryableGreaterThanOrEqualTo(Integer value) {
             addCriterion("retryable >=", value, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableLessThan(Boolean value) {
+        public Criteria andRetryableLessThan(Integer value) {
             addCriterion("retryable <", value, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableLessThanOrEqualTo(Boolean value) {
+        public Criteria andRetryableLessThanOrEqualTo(Integer value) {
             addCriterion("retryable <=", value, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableIn(List<Boolean> values) {
+        public Criteria andRetryableIn(List<Integer> values) {
             addCriterion("retryable in", values, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableNotIn(List<Boolean> values) {
+        public Criteria andRetryableNotIn(List<Integer> values) {
             addCriterion("retryable not in", values, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableBetween(Boolean value1, Boolean value2) {
+        public Criteria andRetryableBetween(Integer value1, Integer value2) {
             addCriterion("retryable between", value1, value2, "retryable");
             return (Criteria) this;
         }
 
-        public Criteria andRetryableNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andRetryableNotBetween(Integer value1, Integer value2) {
             addCriterion("retryable not between", value1, value2, "retryable");
             return (Criteria) this;
         }
@@ -464,52 +464,52 @@ public class GatewayApiConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andEnabledEqualTo(Boolean value) {
+        public Criteria andEnabledEqualTo(Integer value) {
             addCriterion("enabled =", value, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledNotEqualTo(Boolean value) {
+        public Criteria andEnabledNotEqualTo(Integer value) {
             addCriterion("enabled <>", value, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledGreaterThan(Boolean value) {
+        public Criteria andEnabledGreaterThan(Integer value) {
             addCriterion("enabled >", value, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andEnabledGreaterThanOrEqualTo(Integer value) {
             addCriterion("enabled >=", value, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledLessThan(Boolean value) {
+        public Criteria andEnabledLessThan(Integer value) {
             addCriterion("enabled <", value, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledLessThanOrEqualTo(Boolean value) {
+        public Criteria andEnabledLessThanOrEqualTo(Integer value) {
             addCriterion("enabled <=", value, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledIn(List<Boolean> values) {
+        public Criteria andEnabledIn(List<Integer> values) {
             addCriterion("enabled in", values, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledNotIn(List<Boolean> values) {
+        public Criteria andEnabledNotIn(List<Integer> values) {
             addCriterion("enabled not in", values, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledBetween(Boolean value1, Boolean value2) {
+        public Criteria andEnabledBetween(Integer value1, Integer value2) {
             addCriterion("enabled between", value1, value2, "enabled");
             return (Criteria) this;
         }
 
-        public Criteria andEnabledNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andEnabledNotBetween(Integer value1, Integer value2) {
             addCriterion("enabled not between", value1, value2, "enabled");
             return (Criteria) this;
         }

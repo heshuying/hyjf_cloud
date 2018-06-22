@@ -1,30 +1,30 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
-import com.hyjf.am.trade.dao.model.auto.AccountwithdrawExample;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdrawExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface AccountwithdrawMapper {
-    int countByExample(AccountwithdrawExample example);
+public interface AccountWithdrawMapper {
+    int countByExample(AccountWithdrawExample example);
 
-    int deleteByExample(AccountwithdrawExample example);
+    int deleteByExample(AccountWithdrawExample example);
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(Accountwithdraw record);
+    int insert(AccountWithdraw record);
 
-    int insertSelective(Accountwithdraw record);
+    int insertSelective(AccountWithdraw record);
 
-    List<Accountwithdraw> selectByExample(AccountwithdrawExample example);
+    List<AccountWithdraw> selectByExample(AccountWithdrawExample example);
 
-    Accountwithdraw selectByPrimaryKey(Integer id);
+    AccountWithdraw selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") Accountwithdraw record, @Param("example") AccountwithdrawExample example);
+    int updateByExampleSelective(@Param("record") AccountWithdraw record, @Param("example") AccountWithdrawExample example);
 
-    int updateByExample(@Param("record") Accountwithdraw record, @Param("example") AccountwithdrawExample example);
+    int updateByExample(@Param("record") AccountWithdraw record, @Param("example") AccountWithdrawExample example);
 
-    int updateByPrimaryKeySelective(Accountwithdraw record);
+    int updateByPrimaryKeySelective(AccountWithdraw record);
 
-    int updateByPrimaryKey(Accountwithdraw record);
+    int updateByPrimaryKey(AccountWithdraw record);
 }

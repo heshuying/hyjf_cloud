@@ -1,8 +1,9 @@
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.SmsCodeMapper;
-import com.hyjf.am.user.dao.model.auto.SmsCode;
-import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
+import com.hyjf.am.user.dao.mapper.auto.SmscodeMapper;
+import com.hyjf.am.user.dao.mapper.auto.SmscodeMapper;
+import com.hyjf.am.user.dao.model.auto.Smscode;
+import com.hyjf.am.user.dao.model.auto.SmscodeExample;
 import com.hyjf.am.user.service.SmsService;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.MD5;
@@ -20,28 +21,28 @@ import java.util.List;
 @Service
 public class SmsServiceImpl implements SmsService {
 	@Autowired
-	private SmsCodeMapper smsCodeMapper;
+	private SmscodeMapper smsCodeMapper;
 
 	@Override
 	public int save(String mobile, String verificationType, String verificationCode, String platform, Integer status) {
 		// 删除其他验证码
-		SmsCodeExample example = new SmsCodeExample();
-		SmsCodeExample.Criteria cra = example.createCriteria();
+		SmscodeExample example = new SmscodeExample();
+		SmscodeExample.Criteria cra = example.createCriteria();
 		cra.andMobileEqualTo(mobile);
 		List<Integer> statusList = new ArrayList<Integer>();
 		statusList.add(CommonConstant.CKCODE_NEW);
 		statusList.add(CommonConstant.CKCODE_YIYAN);
 		cra.andStatusIn(statusList);
-		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
+		List<Smscode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
-			for (SmsCode smsCode : codeList) {
+			for (Smscode smsCode : codeList) {
 				// 失效7
 				smsCode.setStatus(CommonConstant.CKCODE_FAILED);
 				smsCodeMapper.updateByPrimaryKey(smsCode);
 			}
 		}
 		// 保存新验证码到数据库
-		SmsCode smsCode = new SmsCode();
+		Smscode smsCode = new Smscode();
 		smsCode.setCheckfor(MD5.toMD5Code(mobile + verificationCode + verificationType + platform));
 		smsCode.setMobile(mobile);
 		smsCode.setCheckcode(verificationCode);
@@ -53,10 +54,10 @@ public class SmsServiceImpl implements SmsService {
 	}
 
 	@Override
-	public int saveSmsCode(String mobile, String verificationCode, String verificationType, Integer status, String platform) {
+	public int saveSmscode(String mobile, String verificationCode, String verificationType, Integer status, String platform) {
 		// 使之前的验证码无效
-		SmsCodeExample example = new SmsCodeExample();
-		SmsCodeExample.Criteria cra = example.createCriteria();
+		SmscodeExample example = new SmscodeExample();
+		SmscodeExample.Criteria cra = example.createCriteria();
 		cra.andMobileEqualTo(mobile);
 		List<Integer> statusList = new ArrayList<Integer>();
 		//短信验证码状态,新验证码
@@ -64,16 +65,16 @@ public class SmsServiceImpl implements SmsService {
 		//短信验证码状态,已验
 		statusList.add(8);
 		cra.andStatusIn(statusList);
-		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
+		List<Smscode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
-			for (SmsCode smsCode : codeList) {
+			for (Smscode smsCode : codeList) {
 				// 失效7
 				smsCode.setStatus(7);
 				smsCodeMapper.updateByPrimaryKey(smsCode);
 			}
 		}
 		// 保存新验证码到数据库
-		SmsCode smsCode = new SmsCode();
+		Smscode smsCode = new Smscode();
 		smsCode.setCheckfor(MD5.toMD5Code(mobile + verificationCode + verificationType + platform));
 		smsCode.setMobile(mobile);
 		smsCode.setCheckcode(verificationCode);
@@ -100,8 +101,8 @@ public class SmsServiceImpl implements SmsService {
 		int time = (int) (System.currentTimeMillis()/1000);
 		// 15分钟有效 900
 		int timeAfter = time - 900;
-		SmsCodeExample example = new SmsCodeExample();
-		SmsCodeExample.Criteria cra = example.createCriteria();
+		SmscodeExample example = new SmscodeExample();
+		SmscodeExample.Criteria cra = example.createCriteria();
 		cra.andPosttimeGreaterThanOrEqualTo(timeAfter);
 		cra.andPosttimeLessThanOrEqualTo(time);
 		cra.andMobileEqualTo(mobile);
@@ -110,9 +111,9 @@ public class SmsServiceImpl implements SmsService {
 		status.add(CommonConstant.CKCODE_NEW);
 		status.add(searchStatus);
 		cra.andStatusIn(status);
-		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
+		List<Smscode> codeList = smsCodeMapper.selectByExample(example);
 		if (codeList != null && codeList.size() > 0) {
-			for (SmsCode smsCode : codeList) {
+			for (Smscode smsCode : codeList) {
 				if (smsCode.getCheckfor().equals(MD5.toMD5Code(mobile + verificationCode + verificationType + platform))) {
 					// 已验8或已读9
 					smsCode.setStatus(updateStatus);

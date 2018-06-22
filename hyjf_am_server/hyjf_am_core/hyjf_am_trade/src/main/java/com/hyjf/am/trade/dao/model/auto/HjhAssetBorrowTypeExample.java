@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HjhAssetBorrowTypeExample {
+public class HjhAssetBorrowtypeExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class HjhAssetBorrowTypeExample {
 
     protected int limitEnd = -1;
 
-    public HjhAssetBorrowTypeExample() {
+    public HjhAssetBorrowtypeExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
