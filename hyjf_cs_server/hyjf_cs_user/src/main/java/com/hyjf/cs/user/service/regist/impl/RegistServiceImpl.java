@@ -218,7 +218,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
             // 短信通知用户发券成功
             SmsMessage smsMessage = new SmsMessage(userId, null, userVO.getMobile(), null,
-                    MessageConstant.SMSSENDFORMOBILE, null, CustomConstants.PARAM_TPL_TZJ_188HB,
+                    MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_TZJ_188HB,
                     CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(

@@ -29,20 +29,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SmsHandle {
 	private static Logger logger = LoggerFactory.getLogger(SmsHandle.class);
-
-	private static final String TITLE = "【汇盈金服】";
-	private static final String SUFFIX = " 回复TD退订";
-	/** 软件序列号 */
-	private static final String SOFT_SERIALNO = "9SDK-EMY-0999-JBVLP";
-	/** 自定义关键字(key值) */
-	private static final String KEY = "286141";
-	/** 软件序列号 */
-	private static final String SOFT_SERIALNO_MAKETING = "6SDK-EMY-6688-JCQTL";
-	/** 自定义关键字(key值) */
-	private static final String KEY_MAKETING = "756526";
-	private static final String URL = "http://sh999.eucp.b2m.cn:8080/sdkproxy/sendsms.action";
-	private static final String URL_MAKETING = "http://sdk4rptws.eucp.b2m.cn:8080/sdkproxy/sendsms.action";
-
 	/**
 	 * http请求参数集合
 	 */
@@ -60,9 +46,27 @@ public class SmsHandle {
 	@Autowired
 	private AmConfigClient amConfigClient;
 
+	@Value("${sms.send.title}")
+	private String title;
+	@Value("${sms.send.suffix}")
+	private String suffix;
+
+	@Value("${sms.send.url}")
+	private String url;
+	@Value("${sms.send.softSerialNo}")
+	private String softSerialNo;
+	@Value("${sms.send.key}")
+	private String key;
+
+	@Value("${sms.send.market.url}")
+	private String marketUrl;
+	@Value("${sms.send.market.softSerialNo}")
+	private String marketSoftSerialNo;
+	@Value("${sms.send.market.key}")
+	private String marketKey;
+
 	@Value(("${env.test}"))
 	private boolean envTest;
-
 
 	/**
 	 * 获取参数集合
@@ -85,11 +89,11 @@ public class SmsHandle {
 		if (parmMap == null || parmMapMaketing == null) {
 			try {
 				parmMap = new HashMap<String, String>();
-				parmMap.put("cdkey", SOFT_SERIALNO);
-				parmMap.put("password", KEY);
+				parmMap.put("cdkey", softSerialNo);
+				parmMap.put("password", key);
 				parmMapMaketing = new HashMap<String, String>();
-				parmMapMaketing.put("cdkey", SOFT_SERIALNO_MAKETING);
-				parmMapMaketing.put("password", KEY_MAKETING);
+				parmMapMaketing.put("cdkey", marketSoftSerialNo);
+				parmMapMaketing.put("password", marketKey);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -113,19 +117,19 @@ public class SmsHandle {
 	 */
 	public Integer sendMessage(String mobile, String messageStr, String type, String sender, String channelType)
 			throws Exception {
-		String url = URL;
+		String smsSendUrl = url;
 		Map<String, String> parmMap = getParmMap(channelType);
 		parmMap.put("phone", mobile);
 		if (CustomConstants.CHANNEL_TYPE_MARKETING.equals(channelType)) {
-			parmMap.put("message", SmsHandle.TITLE + messageStr + SmsHandle.SUFFIX);
-			url = URL_MAKETING;
+			parmMap.put("message", title + messageStr + suffix);
+			smsSendUrl = marketUrl;
 		} else {
-			parmMap.put("message", SmsHandle.TITLE + messageStr);
+			parmMap.put("message", title + messageStr);
 		}
 
-		String result = HttpDeal.post(url, parmMap).trim();
+		String result = HttpDeal.post(smsSendUrl, parmMap).trim();
 		logger.info("短信发送结果: {}", result);
-		if(StringUtils.isBlank(result)){
+		if (StringUtils.isBlank(result)) {
 			logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(parmMap));
 			return 0;
 		}
@@ -140,7 +144,7 @@ public class SmsHandle {
 		smsLog.setPosttime(GetDate.getNowTime10());
 		smsLog.setMobile(mobile);
 		if (StringUtils.isEmpty(sender)) {
-			smsLog.setSender(SmsHandle.TITLE);
+			smsLog.setSender(title);
 		} else {
 			smsLog.setSender(sender);
 		}
@@ -197,8 +201,7 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String sender,
-			String channelType) {
+	public Integer sendMessages(String tplCode, Map<String, String> replaceStrs, String sender, String channelType) {
 		int status = -1;
 		try {
 			// 获取模板信息
@@ -238,8 +241,7 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public Integer sendMessages(Integer userId, String tplCode, Map<String, String> replaceStrs,
-			String channelType) {
+	public Integer sendMessages(Integer userId, String tplCode, Map<String, String> replaceStrs, String channelType) {
 		int status = -1;
 		try {
 			if (Validator.isNull(userId)) {
@@ -300,8 +302,7 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	public Integer sendMessages(String mobile, String tplCode, Map<String, String> replaceStrs,
-			String channelType) {
+	public Integer sendMessages(String mobile, String tplCode, Map<String, String> replaceStrs, String channelType) {
 		int status = -1;
 		try {
 			SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplateByCode(tplCode);

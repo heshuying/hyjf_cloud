@@ -8,10 +8,8 @@ import java.util.Map;
 
 /**
  * 邮件消息实体类
- * @author renxingchen
- * @version hyjf 1.0
- * @since hyjf 1.0 2016年6月17日
- * @see 下午2:25:36
+ * @author xiasq
+ * @version AppMsMessage, v0.1 2018/6/22 14:08
  */
 public class MailMessage extends HyjfMessage {
 
@@ -19,6 +17,18 @@ public class MailMessage extends HyjfMessage {
      * 此处为属性说明
      */
     private static final long serialVersionUID = -2686602497364771708L;
+
+    private String subject;
+
+    private String body;
+
+    private String[] fileNames;
+
+    private String[] toMailArray;
+
+    private String mailKbn;
+
+    private String serviceType;
 
     public MailMessage() {
         super();
@@ -94,17 +104,5 @@ public class MailMessage extends HyjfMessage {
                 ", serviceType='" + serviceType + '\'' +
                 '}';
     }
-
-    private String subject;
-
-    private String body;
-
-    private String[] fileNames;
-
-    private String[] toMailArray;
-
-    private String mailKbn;
-
-    private String serviceType;
 
 }

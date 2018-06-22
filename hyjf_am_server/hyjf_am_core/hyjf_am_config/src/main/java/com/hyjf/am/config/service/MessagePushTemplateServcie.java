@@ -25,5 +25,5 @@ public interface MessagePushTemplateServcie {
      * 查询所有模版
      * @return
      */
-    List<MessagePushTemplateVO> getAllTemplates();
+    List<MessagePushTemplate> getAllTemplates();
 }
