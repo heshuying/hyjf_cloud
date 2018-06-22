@@ -1328,20 +1328,6 @@
             <columnOverride column="reward_send" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_r_oa_department" domainObjectName="ROaDepartment">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="ishead" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="ishr" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="isfinance" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="cuttype" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="listorder" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
-        <table tableName="ht_r_oa_users" domainObjectName="ROaUsers">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="education" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
         <table tableName="ht_r_user" domainObjectName="RUser">
             <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1608,20 +1594,9 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_poundage_ledger" domainObjectName="PoundageLedger">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
         <table tableName="ht_question" domainObjectName="Question">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-
-        <table tableName="ht_r_user" domainObjectName="RUser">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_site_setting" domainObjectName="SiteSetting">
@@ -1702,8 +1677,6 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
-
 
     </context>
 </generatorConfiguration>
