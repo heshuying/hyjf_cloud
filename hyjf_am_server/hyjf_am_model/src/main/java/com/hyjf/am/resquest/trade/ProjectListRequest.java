@@ -20,6 +20,12 @@ public class ProjectListRequest extends BaseVO {
     private Integer limitStart;
 
     private Integer limitEnd;
+    /**
+     * app端计划列表查询使用
+     */
+    private String isHome;
+
+    private String borrowNid;
 
     public String getProjectType() {
         return projectType;
@@ -51,5 +57,21 @@ public class ProjectListRequest extends BaseVO {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getIsHome() {
+        return isHome;
+    }
+
+    public void setIsHome(String isHome) {
+        this.isHome = isHome;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }
