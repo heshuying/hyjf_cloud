@@ -741,6 +741,69 @@
         </if>
     </select>
 
+    <!--app债转list-->
+    <select id="searchAppPlanList" resultMap="HjhPlanMap" parameterType="Map">
+        SELECT
+        hp.plan_nid AS plan_nid,
+        hp.plan_name AS plan_name,
+        hp.expect_apr AS expect_apr,
+        hp.lock_period AS lock_period,
+        hp.is_month,
+        CASE
+        WHEN hp.plan_invest_status = 1
+        THEN FORMAT(IF(hp.available_invest_account <![CDATA[<=]]> 0, 0, hp.available_invest_account) , 2)
+        WHEN hp.plan_invest_status = 2
+        THEN '0.00'
+        ELSE '0.00'
+        END AS available_invest_account,
+        hp.plan_invest_status AS plan_invest_status,
+        CASE
+        WHEN hp.plan_invest_status = 1 AND FORMAT(hp.available_invest_account , 2) <![CDATA[<=]]> 0.00
+        THEN '稍后开启'
+        WHEN hp.plan_invest_status = 1
+        THEN '立即加入'
+        WHEN hp.plan_invest_status = 2
+        THEN '稍后开启'
+        ELSE ''
+        END AS plan_invest_status_name
+        FROM
+        hyjf_hjh_plan hp
+        <include refid="App_PLan_Where_Clause" />
+        ORDER BY
+        <if test="isHome != null" >
+            hp.lock_period asc,
+            hp.plan_invest_status asc, hp.available_invest_account desc, hp.id
+        </if>
+        <if test="isHome == null" >
+            hp.is_month asc,
+            hp.lock_period asc,
+            hp.id
+        </if>
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <!--app计划list-->
+    <select id="countAppPlanList" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(hp.id) AS recordTotal
+        FROM
+        hyjf_hjh_plan hp
+        <include refid="App_PLan_Where_Clause" />
+    </select>
+
+    <!--app计划where-->
+    <sql id="App_PLan_Where_Clause">
+        <where>
+            hp.del_flg = 0
+            AND hp.plan_display_status = 1
+            <if test="isHome != null" >
+                AND hp.is_month = 1
+                AND hp.lock_period IN(1 , 3 , 6 , 12)
+            </if>
+        </where>
+    </sql>
 
     <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>app end<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
 

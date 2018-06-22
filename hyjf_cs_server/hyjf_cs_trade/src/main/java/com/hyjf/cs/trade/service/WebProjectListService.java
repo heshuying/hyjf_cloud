@@ -4,6 +4,8 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 
+import java.util.Map;
+
 /**
  * web端项目列表Service
  *
@@ -22,9 +24,36 @@ public interface WebProjectListService extends BaseTradeService{
 
 
     /**
+     * web端散标标的详情
+     * @author zhangyk
+     * @date 2018/6/22 16:40
+     */
+    public WebResult getBorrowDetail(Map map);
+
+
+    /**
      * 获取散标专区债转列表
      * @author zhangyk
      * @date 2018/6/19 16:33
      */
     public WebResult searchCreditList(CreditListRequest request);
+
+
+    /**
+     * 计划专区上部统计数据
+     * @author zhangyk
+     * @date 2018/6/19 16:33
+     */
+    public WebResult searchPlanData(ProjectListRequest request);
+
+
+    /**
+     * 计划专区计划列表数据
+     * @author zhangyk
+     * @date 2018/6/21 15:21
+     */
+    public WebResult searchPlanList(ProjectListRequest request);
+
+
+
 }
