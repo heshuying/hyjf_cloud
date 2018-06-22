@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.PermissionsBean;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
@@ -52,6 +53,7 @@ public class LoginController extends BaseController {
     @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
     @PostMapping(value = "/login")
 	@ResponseBody
+	@AuthorityAnnotation(key = "312", value = "123")
 	public JSONObject login(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> map) {
     	System.out.println(request.getRequestURI());
     	JSONObject info = new JSONObject();
@@ -64,6 +66,7 @@ public class LoginController extends BaseController {
 		if(StringUtils.isNotBlank(prs.getMessage())) {
 			info.put("status", "99");
 			info.put("msg", prs.getMessage());
+			return info;
 		}
 		this.setUser(request, prs.getResult());
 		info.put("status", "0");
@@ -82,8 +85,8 @@ public class LoginController extends BaseController {
 	@ResponseBody
 	public JSONObject getMenuTree(HttpServletRequest request, HttpServletResponse response) {
     	JSONObject info = new JSONObject();
-    	AdminSystemVO user = this.getUser(request);
-		List<TreeVO> prs = loginService.selectLeftMenuTree2(user.getId());
+    	//AdminSystemVO user = this.getUser(request);
+		List<TreeVO> prs = loginService.selectLeftMenuTree2("1");
 		JSONArray jsonArray1 = (JSONArray) JSONArray.toJSON(prs);
 		info.put("status", "0");
 		info.put("msg", "成功");
@@ -104,14 +107,17 @@ public class LoginController extends BaseController {
     	JSONObject info = new JSONObject();
 		 List<AdminSystemVO> prs = loginService.getUserPermission(this.getUser(request).getUsername());
 		 JSONArray jsonArray1 = new JSONArray();
+		 List<String> perm = null;
 		 for (AdminSystemVO adminSystemVO : prs) {
 				if (adminSystemVO != null) {
 					PermissionsBean pb=new PermissionsBean();
 					pb.setPermissionName(adminSystemVO.getMenuCtrl());
 					pb.setPermissionKey(adminSystemVO.getPermission());
 					jsonArray1.add(pb);
+					perm.add(adminSystemVO.getMenuCtrl()+":"+adminSystemVO.getPermission());
 				}
 		}
+		request.getSession().setAttribute("permission", perm);
 		info.put("status", "0");
 		info.put("msg", "成功");
 		info.put("permissions",jsonArray1);

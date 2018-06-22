@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.mybatis.mapper.customize.AdminSystemMapper">
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper">
 	<resultMap id="selectLeftMenuTreeMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		<result column="menu_puuid" property="menuPuuid" jdbcType="VARCHAR" />
 		<result column="menu_uuid" property="menuUuid" jdbcType="VARCHAR" />
@@ -18,15 +18,15 @@
 			m.menu_icon AS menu_icon,
 			m.menu_sort AS menu_sort
 		FROM
-			hyjf_admin a
-			INNER JOIN hyjf_admin_and_role anr ON a.id = anr.user_id
-			INNER JOIN hyjf_admin_role ar ON anr.role_id = ar.id and ar.state = '0'
+			ht_admin a
+			INNER JOIN ht_admin_and_role anr ON a.id = anr.user_id
+			INNER JOIN ht_admin_role ar ON anr.role_id = ar.id 
 			AND ar.del_flag = '0'
-			INNER JOIN hyjf_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
+			INNER JOIN ht_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
 			AND mp.del_flag = '0'
-			INNER JOIN hyjf_admin_menu m ON mp.menu_uuid = m.menu_uuid
+			INNER JOIN ht_admin_menu m ON mp.menu_uuid = m.menu_uuid
 			AND m.del_flag = '0'
-			INNER JOIN hyjf_admin_permissions p ON p.permission_uuid = mp.permission_uuid
+			INNER JOIN ht_admin_permissions p ON p.permission_uuid = mp.permission_uuid
 			AND p.del_flag = '0'
 			AND m.menu_hide = '0'
 		WHERE
@@ -48,15 +48,15 @@
 		  CASE WHEN m.menu_ctrl IS NULL OR m.menu_ctrl = '' THEN m.menu_uuid ELSE m.menu_ctrl END AS menu_ctrl,
 	      p.permission
 		FROM
-			hyjf_admin a
-			INNER JOIN hyjf_admin_and_role anr ON a.id = anr.user_id
-			INNER JOIN hyjf_admin_role ar ON anr.role_id = ar.id and ar.state = '0'
+			ht_admin a
+			INNER JOIN ht_admin_and_role anr ON a.id = anr.user_id
+			INNER JOIN ht_admin_role ar ON anr.role_id = ar.id and ar.state = '0'
 			AND ar.del_flag = '0'
-			INNER JOIN hyjf_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
+			INNER JOIN ht_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
 			AND mp.del_flag = '0'
-			INNER JOIN hyjf_admin_menu m ON mp.menu_uuid = m.menu_uuid
+			INNER JOIN ht_admin_menu m ON mp.menu_uuid = m.menu_uuid
 			AND m.del_flag = '0'
-			INNER JOIN hyjf_admin_permissions p ON p.permission_uuid = mp.permission_uuid
+			INNER JOIN ht_admin_permissions p ON p.permission_uuid = mp.permission_uuid
 			AND p.del_flag = '0'
 		WHERE
 		    a.id = #{id, jdbcType=VARCHAR}
@@ -79,8 +79,8 @@
 		  anr.role_id,
 		  a.state
 		FROM
-		  hyjf_admin a
-		  LEFT JOIN hyjf_admin_and_role anr ON a.id = anr.user_id
+		  ht_admin a
+		  LEFT JOIN ht_admin_and_role anr ON a.id = anr.user_id
 		WHERE
 		  a.username = #{username, jdbcType=VARCHAR}
 		<if test="password != null and password != ''">
@@ -94,7 +94,7 @@
 	
 	<select id="updatePassword" resultType="java.lang.Integer" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		update 
-		  hyjf_admin a
+		  ht_admin a
 		  set a.password=#{password, jdbcType=VARCHAR}
 		WHERE
 		  a.id = #{id, jdbcType=VARCHAR}
@@ -104,7 +104,7 @@
 		SELECT
 			*
 		FROM
-			hyjf_admin a
+			ht_admin a
 		WHERE
 			username = #{username} 
 	</select>
