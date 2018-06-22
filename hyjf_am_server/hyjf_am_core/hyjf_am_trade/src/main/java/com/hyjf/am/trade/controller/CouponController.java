@@ -1,13 +1,9 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
-import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.trade.service.CouponService;
-import com.hyjf.am.trade.service.UserService;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.trade.CouponUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;

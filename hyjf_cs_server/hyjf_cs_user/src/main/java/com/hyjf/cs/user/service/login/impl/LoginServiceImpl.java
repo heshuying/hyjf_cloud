@@ -45,12 +45,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
     @Override
     public WebViewUserVO login(String loginUserName, String loginPassword, String ip) {
         if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
-            CheckUtil.check(false,MsgEnum.ERR_PARAM_ERROR);
+            CheckUtil.check(false,MsgEnum.ERR_USER_LOGIN);
         }
         // 获取密码错误次数
         String errCount = RedisUtils.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
         if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
-            CheckUtil.check(false,MsgEnum.ERR_PWD_ERROR_TOO_MANEY);
+            CheckUtil.check(false,MsgEnum.ERR_PASSWORD_ERROR_TOO_MANEY);
         }
         return this.doLogin(loginUserName, loginPassword, ip);
     }
@@ -65,7 +65,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
     private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip) {
         UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
         WebViewUserVO webViewUserVO = new WebViewUserVO();
-        CheckUtil.check(userVO != null,MsgEnum.ERR_PARAM_ERROR);
+        CheckUtil.check(userVO != null,MsgEnum.ERR_USER_LOGIN);
         int userId = userVO.getUserId();
         String codeSalt = userVO.getSalt();
         String passwordDb = userVO.getPassword();
@@ -94,7 +94,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         } else {
             // 密码错误，增加错误次数
             RedisUtils.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
-            CheckUtil.check(false, MsgEnum.ERR_PARAM_ERROR);
+            CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
         }
         return webViewUserVO;
     }

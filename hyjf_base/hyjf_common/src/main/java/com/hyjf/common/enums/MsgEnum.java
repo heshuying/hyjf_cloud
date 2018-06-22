@@ -34,14 +34,20 @@ public enum MsgEnum implements MsgCode {
 	//通用警告信息
 	WARN_BUILING("WTY000001","接口访问量过大"),
 
+	// 已确定删除的错误信息
 
 	// ----------错误信息ERR-------------
 	// 通用错误信息
 	ERR_OBJECT_REQUIRED("ETY000001","{0}不能为空"),
-	ERR_OBJECT_DIGIT("ETY000002","{0}不能存在非数字"),
-	ERR_OBJECT_DATE("ETY000003","{0}非日期格式"),
-	ERR_OBJECT_MAIL("ETY000004","{0}非法邮件地址"),
-	ERR_OBJECT_VALUE("ETY000005","传入参数{0}的值非法"),
+	ERR_OBJECT_BLANK("ETY000002","{0}未填写"),//**未填写错误
+	ERR_OBJECT_DIGIT("ETY000003","{0}不能存在非数字"),
+	ERR_OBJECT_DATE("ETY000004","{0}非日期格式"),
+	ERR_OBJECT_MAIL("ETY000005","{0}非法邮件地址"),
+	ERR_OBJECT_VALUE("ETY000006","传入参数{0}的值非法"),
+	ERR_OBJECT_GET("ETY000007","获取{0}失败"),//提取通用
+	ERR_OBJECT_INVALID("ETY000008","无效的{0}"),//提取通用
+	ERR_OBJECT_UNMATCH("ETY000104","{0}不符合接口要求，请重新传入"),
+
 	ERR_SIGN("ETY000101","签名验证失败"),
 	ERR_PARAM_TYPE("ETY000102","传入参数类型错误"),
 	ERR_JSON("ETY000103","传入JSON错误"),
@@ -49,87 +55,85 @@ public enum MsgEnum implements MsgCode {
 	ERR_SYSTEM("ETY000199","接口调用发生异常，请联系服务方"),
 	ERR_PAGE_MAX("ETY000202","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
-	ERR_OBJECT_UNMATCH("ETY000104","{0}不符合接口要求，请重新传入"),
+
+
+	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
+	ERR_INSTCODE("ETY000401","机构编号错误"),
+	ERR_AUTHORIZE_REPEAT("ETY000501","用户已授权,无需重复授权"),
+	ERR_CHECK_USER_INFO("ETY000601", "根据电子账户号查询用户信息失败"),
+
 	// 格式错误信息ERR_FMT_
+	ERR_FMT_NAME("EFM000101", "联系人姓名格式错误"),
+	ERR_FMT_PHONE("EFM000102", "联系人手机号码格式错误"),
+	ERR_FMT_MOBILE("EFM000103", "手机号格式不正确"),
+	ERR_FMT_EMAIL("EFM000104", "邮箱格式不正确"),
+	ERR_FMT_IDCARDNO("EFM000105", "身份证号格式错误"),//孙帅帅新加-----已修改
+	ERR_FMT_PASSWORD("EFM000106", "密码必须由数字和字母组成，如abc123"),
 
 	// 用户相关错误信息ERR_USER_
 	ERR_USER_NOT_LOGIN("EUS000001", "用户未登录"),
-	ERR_USER_LOGIN("EUS000002", "登录失败,请重新登陆"),
-
+	ERR_USER_LOGIN("EUS000002", "登录失败,账号或密码错误"),
+	ERR_USER_NOT_EXISTS("EUS000003", "不存在用户"),
+	ERR_USER_INVALID("EUS000004", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
+	ERR_USER_REGISTER("EUS000005","注册失败"),
 
 	// 资金相关错误信息ERR_AMT_
 
+	// 银行相关错误信息ERR_BANK_
+	ERR_BANK_CALL("EBK000001", "调用银行接口失败"),
+	ERR_BANK_ACCOUNT_OPEN("EBK000002", "开户失败"),
+	ERR_BANK_ACCOUNT_NOT_OPEN("EBK000003", "用户未开户"),
+	ERR_BANK_ACCOUNT_ALREADY_OPEN("EBK000004","用户已开户"),//孙帅帅新加-----已修改
 
 
-	ERR_CANNOT_REPEAT("1", "用户已授权,无需重复授权"),
-	ERR_CALL_BANK("1", "调用银行接口失败"),
-	ERR_CHECK_USER_INFO("1", "根据电子账户号查询用户信息失败"),
-	ERR_GET_USER("1", "查询用户失败"),
-	ERR_NOT_PASSWD("1", "未设置交易密码"),
-	ERR_AUTH("1", "授权状态查询接口失败！"),
-	ERR_CARD_NO("1", "银行卡号未填写"),
-	ERR_MOBILE("1", "手机号未填写"),
-	ERR_SMSCODE("1", "短信验证码未填写"),
-	ERR_AUTH_CODE("1", "短信授权码为空"),
-	ERR_BANK_NOT_OPEN("1", "用户未开户"),
-	ERR_BANK_CALL("1", "请求银行接口失败"),
-	ERR_CARD_SAVE("1", "银行卡信息保存失败"),
-	ERR_BANK_BALANCE("1", "账户尚有余额，不能解绑银行卡"),
-	ERR_CARD_NOT_EXIST("1", "没有要解绑的银行卡"),
-	ERR_CARD_DELETE("1", "银行卡删除失败"),
-	ERR_EMAIL_EMPTY("1", "待绑定的邮箱不能为空"),
-	ERR_EMAIL_USED("1", "邮箱已被占用"),
-	ERR_EMAIL_FORMAT("1", "邮箱格式不正确"),
-	ERR_EMAIL_ACTIVE_SEND("1", "发送激活邮件失败"),
-	ERR_EMAIL_ACTIVE_ERROR_1("1", "激活邮件未验证"),
-	ERR_EMAIL_ACTIVE_ERROR_2("1", "激活邮件已验证"),
-	ERR_EMAIL_ACTIVE_ERROR_3("1", "激活邮件已过期"),
-	ERR_EMAIL_ACTIVE_ERROR_4("1", "激活邮件不存在"),
-	ERR_EMAIL_ACTIVE("1", "激活失败"),
-	ERR_NAME_FORMAT("1", "联系人姓名格式错误"),
-	ERR_PHONE_FORMAT("1", "联系人手机号码格式错误"),
-	ERR_RELATION_NOTEXIST("1", "无效的紧急联系人关系"),
-	ERR_CONTRACT_SAVE("1", "紧急联系人保存错误"),
-	ERR_USER_INVALID("1", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
-	ERR_CHECK_NULL("1", "用户名或密码不能为空！"),
-	ERR_REFFER_INVALID("1", "无效的推荐人！"),
-	ERR_PWD_ERROR_TOO_MANEY("1", "登录失败,当日密码错误已打上限，请明日再试！"),
-	ERR_SUCCESS("0", ""),
+	// 银行卡相关错误信息ERR_CARD_
+	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
+	ERR_CARD_SAVE("ECD000002", "银行卡信息保存失败"),
+	ERR_CARD_NOT_EXIST("ECD000003", "没有要解绑的银行卡"),
+	ERR_CARD_DELETE("ECD000004", "银行卡删除失败"),
 
-	ERR("1", "开户失败"),
-	ERR_REGISTER("1", "注册失败"),
-	ERR_PARAM_ERROR("1", "登录失败,账号或密码错误"),
-	ERR_MOBILE_IS_NOT_NULL("1", "请填写手机号"),
-	ERR_SMSCODE_IS_NOT_NULL("1", "验证码不能为空"),
-	ERR_PASSWORD_IS_NOT_NULL("1", "密码不能为空"),
-	ERR_MOBILE_IS_NOT_REAL("1", "请填写您的真实手机号码"),
-	ERR_MOBILE_EXISTS("1", "手机号已存在"),
-	ERR_PASSWORD_LENGTH("1", "密码长度6-16位"),
-	ERR_PASSWORD_NO_NUMBER("1", "密码必须包含数字"),
-	ERR_PASSWORD_FORMAT("1", "密码必须由数字和字母组成，如abc123"),
-	ERR_SMSCODE_INVALID("1", "验证码无效"),
-	ERR_MOBILE_NEED_SAME("1", "获取验证码手机号与注册手机号不一致!"),
-	ERR_MOBILE_MODIFY("1", "修改手机号与原手机号不能相同!"),
-	ERR_SEND_SMSCODE_TOO_FAST("1", "请求验证码操作过快!"),
-	ERR_SEND_SMSCODE_TOO_MANNY("1", "该设备短信请求次数超限，请明日再试!"),
-	ERR_IP_VISIT_TOO_MANNY("1", "IP访问次数超限!"),
-	ERR_FIND_SMSCONFIG("1", "获取短信配置失败!"),
-	ERR_INSTCODE("1","机构编号错误"),
-	ERR_CODETYPE_INVALID("1", "无效的验证码类型!"),
-	ERR_MOBILE_FORMAT("1", "手机号格式不正确"),
-	ERR_USER_NOT_EXISTS("1", "不存在用户"),
-	ERR_INST_CODE("1", "机构编号不能为空"),
-	ERR_PLATEFORM("1", "注册平台不能为空"),
-	ERR_UTMID("1", "推广渠道不能为空"),
 
-	//活动编号不能为空
-	ERR_ACTIVITYID_IS_NULL("1","活动编号不能为空"),
-	//该活动不存在
-	ERR_ACTIVITY_ISNULL("1","该活动不存在"),
-	//该活动不存在
-	ERR_ACTIVITY_TIME_NOT_START("1","该活动还未开始"),
-	//该活动已结束
-	ERR_ACTIVITY_TIME_END("1","您来晚了，活动已过期~~"),
+	// 邮件相关错误信息ERR_EMAIL_
+	ERR_EMAIL_USED("EEM000001", "邮箱已被占用"),
+	//邮件激活相关错误信息ERR_EMAIL_ACTIVE_
+	ERR_EMAIL_ACTIVE_SEND("EEM000002", "激活邮件发送失败"),
+	ERR_EMAIL_ACTIVE_NOT_VALIDATE("EEM000003", "激活邮件未验证"),
+	ERR_EMAIL_ACTIVE_ALREADY_VALIDATE("EEM000004", "激活邮件已验证"),
+	ERR_EMAIL_ACTIVE_OVERDUE("EEM000005", "激活邮件已过期"),
+	ERR_EMAIL_ACTIVE_NOT_EXIST("EEM000006", "激活邮件不存在"),
+	ERR_EMAIL_ACTIVE("EEM000007", "激活失败"),
+
+	// 手机号相关错误信息ERR_MOBILE
+	ERR_MOBILE_NEED_SAME("EMB000001", "获取验证码手机号与注册手机号不一致!"),
+	ERR_MOBILE_NEED_DIFFERENT("EMB000002", "修改手机号与原手机号不能相同!"),//different
+	ERR_MOBILE_IS_NOT_REAL("EMB000003", "请填写您的真实手机号码"),
+	ERR_MOBILE_EXISTS("EMB000004", "手机号已存在"),
+
+	//密码相关错误信息ERR_PASSWORD_
+	ERR_PASSWORD_ERROR_TOO_MANEY("EPW000001", "登录失败,当日密码错误已打上限，请明日再试！"),
+	ERR_PASSWORD_LENGTH("EPW000002", "密码长度6-16位"),
+	ERR_PASSWORD_NO_NUMBER("EPW000003", "密码必须包含数字"),
+	ERR_PASSWORD_NOT_SET("EPW000004", "未设置交易密码"),
+
+
+	// 验证码相关错误信息ERR_SMSCODE_
+	ERR_SMSCODE_SEND_TOO_FAST("ESC000002", "请求验证码操作过快"),
+	ERR_SMSCODE_SEND_TOO_MANNY("ESC000003", "该设备短信请求次数超限，请明日再试"),
+
+
+
+
+	// 紧急联系人错误信息ERR_CONTACT_
+	ERR_CONTACT_SAVE("ECT000002", "紧急联系人保存错误"),
+
+
+
+	//活动错误信息ERR_ACTIVITY_
+	ERR_ACTIVITY_NOT_EXIST("EAC000001","该活动不存在"),
+	ERR_ACTIVITY_NOT_START("EAC000002","该活动还未开始"),
+	ERR_ACTIVITY_END("EAC000003","该活动已结束"),
+
+
 	// 时间日期相关错误信息ERR_DATE_
 
 	// DB相关错误信息ERR_DB_
@@ -207,12 +211,7 @@ public enum MsgEnum implements MsgCode {
 
 
 
-
-
-	//------------------------开户用到的BankOpenServiceImpl
-	OPEN_ACCOUNTED_ERROR("EV000001","用户已开户"),
-	IDNO_FORMAT_ERROR("1", "身份证号格式错误"),
-
+	ERR_SUCCESS("0", ""),
 	// 枚举终结
 	ERR_ENUM("", "");
 

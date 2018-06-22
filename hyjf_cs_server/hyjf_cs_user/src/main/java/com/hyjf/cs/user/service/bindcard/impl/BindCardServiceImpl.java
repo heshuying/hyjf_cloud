@@ -6,15 +6,15 @@ import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringUtil;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -40,6 +40,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 绑卡服务类
@@ -111,6 +112,66 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         if (!this.checkIsOpen(userId)) {
         	throw new ReturnMessageException(BindCardError.BANK_NOT_OPEN_ERROR);
         }
+	}
+
+    /**
+     * 绑卡校验
+     * @param user
+     */
+	@Override
+	public void checkParamBindCardPage(WebViewUserVO user) {
+		// 登录校验
+		CheckUtil.check(user != null, MsgEnum.ERR_USER_NOT_LOGIN);
+		// 开户校验
+		CheckUtil.check(this.checkIsOpen(user.getUserId()), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+		// 交易密码设置校验
+		CheckUtil.check(user.getIsSetPassword() == 1, MsgEnum.STATUS_TP000002);
+		// 已绑卡校验
+		int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+		CheckUtil.check(count<=0, MsgEnum.STATUS_BC000001);
+
+	}
+
+	/**
+	 * 绑卡接口请求
+	 * @auther: hesy
+	 * @date: 2018/6/22
+	 */
+	@Override
+	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception {
+        // 回调路径
+        String retUrl = systemConfig.getFrontHost().trim();
+        // 交易成功跳转链接
+        String successfulUrl = systemConfig.getFrontHost().trim();
+		// 商户后台应答地址(必须)
+		String notifyUrl = systemConfig.getWebHost().trim() + "/web/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
+        // 忘记密码跳转链接
+        String forgotPwdUrl = systemConfig.getWebHost().trim();
+
+		// 调用开户接口
+		BankCallBean bindCardBean = new BankCallBean();
+		bindCardBean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
+		bindCardBean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+		bindCardBean.setIdNo(user.getIdcard());
+		bindCardBean.setName(user.getTruename());
+		bindCardBean.setAccountId(user.getBankAccount());
+		bindCardBean.setUserIP(userIp);
+		bindCardBean.setRetUrl(retUrl);
+		bindCardBean.setSuccessfulUrl(successfulUrl);
+		bindCardBean.setForgotPwdUrl(forgotPwdUrl);
+		bindCardBean.setNotifyUrl(notifyUrl);
+		// 页面调用必须传的
+		String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
+		bindCardBean.setLogBankDetailUrl(BankCallConstant.BANK_URL_BIND_CARD_PAGE);
+		bindCardBean.setLogOrderId(orderId);
+		bindCardBean.setLogUserId(String.valueOf(user.getUserId()));
+		bindCardBean.setLogRemark("外部服务接口:绑卡页面");
+		bindCardBean.setLogIp(userIp);
+		bindCardBean.setLogClient(ClientConstants.WEB_CLIENT);
+
+		Map<String,Object> map = BankCallUtils.callApiMap(bindCardBean);
+
+		return map;
 	}
 	
 	/**

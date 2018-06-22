@@ -6,7 +6,7 @@ package com.hyjf.cs.trade.service.impl;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
@@ -460,7 +460,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 3)
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 1
                 && cuc.getAddFlg() == 1))) {
-            throw new CheckException(MsgEnum.ERR_ACTIVITY_ISNULL);
+            throw new CheckException(MsgEnum.ERR_ACTIVITY_NOT_EXIST);
         }
         // 投资金额小数点后超过两位
         if (account.contains(".")) {

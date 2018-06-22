@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.CouponUserVo;
+import com.hyjf.am.vo.trade.CouponUserVO;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ import java.util.List;
  * @version CouponUserClient, v0.1 2018/6/19 18:28
  */
 public interface CouponUserClient {
-    List<CouponUserVo> selectCouponUser(int nowBeginDate, int nowEndDate);
+    List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate);
 }

@@ -147,13 +147,13 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
      */
     @Override
     public String checkActivityIfAvailable(String activityId) {
-        CheckUtil.check(null!=activityId, MsgEnum.ERR_ACTIVITYID_IS_NULL);
+        CheckUtil.check(null!=activityId, MsgEnum.ERR_OBJECT_REQUIRED,"活动编号");//活动编号不能为空
 
         ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
-        CheckUtil.check(null!=activityList, MsgEnum.ERR_ACTIVITY_ISNULL);
-        CheckUtil.check(null!=activityList, MsgEnum.ERR_ACTIVITY_ISNULL);
-        CheckUtil.check(activityList.getTimeStart()<=System.currentTimeMillis()/1000, MsgEnum.ERR_ACTIVITY_TIME_NOT_START);
-        CheckUtil.check(activityList.getTimeEnd()>=System.currentTimeMillis()/1000, MsgEnum.ERR_ACTIVITY_TIME_END);
+        CheckUtil.check(null!=activityList, MsgEnum.ERR_ACTIVITY_NOT_EXIST);
+        CheckUtil.check(null!=activityList, MsgEnum.ERR_ACTIVITY_NOT_EXIST);
+        CheckUtil.check(activityList.getTimeStart()<=System.currentTimeMillis()/1000, MsgEnum.ERR_ACTIVITY_NOT_START);
+        CheckUtil.check(activityList.getTimeEnd()>=System.currentTimeMillis()/1000, MsgEnum.ERR_ACTIVITY_END);
         return "";
     }
 
@@ -164,7 +164,7 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
     }
 
     public String checkActivityPlatform(String activityId, String platform) {
-        CheckUtil.check(null!=activityId, MsgEnum.ERR_ACTIVITYID_IS_NULL);
+        CheckUtil.check(null!=activityId, MsgEnum.ERR_OBJECT_REQUIRED,"活动编号");//活动编号不能为空
         ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
         if(activityList.getPlatform().indexOf(platform)==-1){
 

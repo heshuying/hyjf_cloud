@@ -2,12 +2,20 @@ package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.service.BaseService;
 
 import java.math.BigDecimal;
 
 
 public interface BaseTradeService extends BaseService{
+    /**
+     * @Description 根据token查询user
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/12 10:34
+     */
+    WebViewUserVO getUsersByToken(String token);
     /**
      * 获取银行开户信息
      *
@@ -31,4 +39,5 @@ public interface BaseTradeService extends BaseService{
      * @Date 2018/6/20 11:43
      */
     public void checkEvaluation(UserVO user);
+
 }

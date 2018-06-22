@@ -65,11 +65,11 @@ public class WithdrawClientImpl implements WithdrawClient {
     }
 
     @Override
-    public int getBorrowTender(Integer userId) {
+    public Integer getBorrowTender(Integer userId) {
         String url = "http://AM-TRADE/am-trade/accountWithdraw/getBorrowTender/"+userId;
-        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        AccountwithdrawResponse response= restTemplate.getForEntity(url,AccountwithdrawResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getUserBorrowTenderCounte();
         }
         return 0;
     }

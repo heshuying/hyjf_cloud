@@ -14,6 +14,7 @@ import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
 import cn.jpush.api.report.ReceivedsResult;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 极光接口
@@ -21,7 +22,7 @@ import cn.jpush.api.report.ReceivedsResult;
  * @author Michael
  */
 public class JPush {
-    protected static final Logger LOG = LoggerFactory.getLogger(JPush.class);
+    protected static final Logger logger = LoggerFactory.getLogger(JPush.class);
 
     private static final String appKey = "da091acf1579e500b6d68642";
 
@@ -34,10 +35,10 @@ public class JPush {
     private static String soundName="music.caf";
 
     /**
-     * ios是否为开发环境 true为生产 false 为开发环境 todo
+     * ios是否为开发环境
      */
-    private static boolean isProduction = Boolean.TRUE;
-    // private static boolean isProduction = Boolean.valueOf(PropUtils.getSystem("hyjf.jpush.isproduction"));
+    @Value("${hyjf.env.test}")
+    private static boolean envTest;
 
     /**
      * 调用样例
@@ -46,12 +47,9 @@ public class JPush {
     public static void main(String[] args) {
         // ios用户
         PushPayload payload = buildPushObject_ios_tag_alert("汇盈金服测试样例1", 1, 1, "0");
-        System.out.println(payload.toString());
         PushResult result = null;
         try {
             result = JPush.getClientInstance().sendPush(payload);
-            System.out.println(result.isResultOK());
-            System.out.println(result.msg_id);
         } catch (APIConnectionException e) {
             e.printStackTrace();
         } catch (APIRequestException e) {
@@ -66,7 +64,7 @@ public class JPush {
     public static JPushClient getClientInstance() {
         if (jpushClient == null) {
             ClientConfig clientConfig = ClientConfig.getInstance();
-            clientConfig.setApnsProduction(isProduction);
+            clientConfig.setApnsProduction(!envTest);
             jpushClient = new JPushClient(masterSecret, appKey, null, clientConfig);
         }
         return jpushClient;
@@ -174,7 +172,7 @@ public class JPush {
 										.addExtra("operation", operation)
 										.addExtra("msgAction", msgAction).build())
 								.build())
-				.setMessage(Message.content(alert)).setOptions(Options.newBuilder().setApnsProduction(isProduction)
+				.setMessage(Message.content(alert)).setOptions(Options.newBuilder().setApnsProduction(!envTest)
 						.build())
 				.build();
 	}
@@ -201,7 +199,7 @@ public class JPush {
 										.addExtra("operation", operation)
 										.addExtra("msgAction", msgAction).build())
 								.build())
-				.setMessage(Message.content(alert)).setOptions(Options.newBuilder().setApnsProduction(isProduction)
+				.setMessage(Message.content(alert)).setOptions(Options.newBuilder().setApnsProduction(!envTest)
 						.build())
 				.build();
 	}

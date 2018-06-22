@@ -58,7 +58,7 @@ public class ApiRegisterController extends BaseUserController {
         } else {
             logger.error("api端注册失败...");
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_REGISTER.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_USER_REGISTER.getMsg());
         }
         return result;
     }

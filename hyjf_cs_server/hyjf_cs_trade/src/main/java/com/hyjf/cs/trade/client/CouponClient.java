@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.CouponUserVO;
 
 /**
  * @Description 优惠券相关
