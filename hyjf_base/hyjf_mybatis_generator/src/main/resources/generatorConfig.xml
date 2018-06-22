@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -480,6 +480,28 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <!-- 着落页管理 -->
+        <table tableName="ht_landing_page" domainObjectName="LandingPage">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 着落页配置表 -->
+        <table tableName="ht_whereabouts_page_config" domainObjectName="WhereaboutsPageConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status_on" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 着落页配置图片表 -->
+        <table tableName="ht_whereabouts_page_picture" domainObjectName="WhereaboutsPagePicture">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <table tableName="ht_bank_interface" domainObjectName="BankInterface">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="interface_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_usable" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_delete" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+
+
         <!-- 3. hyjf_trade -->
 
         <!-- 标的详情 -->
@@ -606,6 +628,7 @@
         <table tableName="ht_account" domainObjectName="Account">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="isok" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!-- 资产与标的类型映射表 -->
         <table tableName="ht_hjh_inst_config" domainObjectName="HjhInstConfig">
@@ -1015,6 +1038,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="client" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="invest_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!-- 融通宝加息项目放款总表 -->
@@ -1039,6 +1063,7 @@
             <columnOverride column="remain_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="already_repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!-- 融通宝加息还款详情表 -->
         <table tableName="ht_increase_interest_repay_detail" domainObjectName="IncreaseInterestRepayDetail">
@@ -1094,6 +1119,11 @@
             <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <!-- 平台数据统计表 -->
+        <table tableName="ht_calculate_invest_interest" domainObjectName="CalculateInvestInterest">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
         <table tableName="ht_coupon_repay_monitor" domainObjectName="CouponRepayMonitor">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
         </table>
@@ -1108,25 +1138,6 @@
             <columnOverride column="flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <!-- 着落页管理 -->
-        <table tableName="ht_landing_page" domainObjectName="LandingPage">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-        <!-- 着落页配置表 -->
-        <table tableName="ht_whereabouts_page_config" domainObjectName="WhereaboutsPageConfig">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="status_on" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-        <!-- 着落页配置图片表 -->
-        <table tableName="ht_whereabouts_page_picture" domainObjectName="WhereaboutsPagePicture">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-        <table tableName="ht_bank_interface" domainObjectName="BankInterface">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
-            <columnOverride column="interface_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="is_usable" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="is_delete" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
 
     </context>
 </generatorConfiguration>

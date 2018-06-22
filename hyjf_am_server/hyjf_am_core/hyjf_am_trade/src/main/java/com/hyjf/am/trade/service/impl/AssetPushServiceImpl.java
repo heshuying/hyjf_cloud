@@ -41,9 +41,6 @@ public class AssetPushServiceImpl implements AssetPushService {
     @Autowired
     private HjhPlanAssetMapper hjhPlanAssetMapper;
 
-    @Autowired
-    private HjhAssetRiskInfoMapper hjhAssetRiskInfoMapper;
-
     @Override
     public HjhAssetBorrowType selectAssetBorrowType(String instCode, int assetType) {
         HjhAssetBorrowTypeExample example = new HjhAssetBorrowTypeExample();
@@ -106,31 +103,32 @@ public class AssetPushServiceImpl implements AssetPushService {
     @Override
     public void insertRiskInfo(List<InfoBean> infobeans) {
         for (InfoBean infobean : infobeans) {
-            HjhAssetRiskInfoWithBLOBs riskInfo = new HjhAssetRiskInfoWithBLOBs();
-
-            riskInfo.setCreateUser(1);// 默认系统用户
-            riskInfo.setUpdateUserId(1);
-
-            riskInfo.setAssetId(infobean.getAssetId());
-            riskInfo.setAmazonInfo(infobean.getAmazonInfo());
-            riskInfo.setEbayInfo(infobean.getEbayInfo());
-            riskInfo.setJingdongInfo(infobean.getJingdongInfo());
-            riskInfo.setTaobaoInfo(infobean.getTaobaoInfo());
-            riskInfo.setTianmaoInfo(infobean.getTianmaoInfo());
-
-            HjhAssetRiskInfoExample example = new HjhAssetRiskInfoExample();
-            HjhAssetRiskInfoExample.Criteria crt =example.createCriteria();
-            crt.andAssetIdEqualTo(riskInfo.getAssetId());
-            //已存在的assetid做更新处理
-            if (this.hjhAssetRiskInfoMapper.countByExample(example) > 0) {
-                if (this.hjhAssetRiskInfoMapper.updateByExampleSelective(riskInfo,example) > 0 ? false : true) {
-                    _log.error("----------------------商家信息更新失败,资产编号：" + infobean.getAssetId() +"-----------------------------");
-                }
-            } else {
-                if (this.hjhAssetRiskInfoMapper.insertSelective(riskInfo) > 0 ? false : true) {
-                    _log.error("----------------------商家信息插入失败,资产编号：" + infobean.getAssetId() +"-----------------------------");
-                }
-            }
+            // todo riskinfo 迁移到mongo  data-center
+//            HjhAssetRiskInfoWithBLOBs riskInfo = new HjhAssetRiskInfoWithBLOBs();
+//
+//            riskInfo.setCreateUser(1);// 默认系统用户
+//            riskInfo.setUpdateUserId(1);
+//
+//            riskInfo.setAssetId(infobean.getAssetId());
+//            riskInfo.setAmazonInfo(infobean.getAmazonInfo());
+//            riskInfo.setEbayInfo(infobean.getEbayInfo());
+//            riskInfo.setJingdongInfo(infobean.getJingdongInfo());
+//            riskInfo.setTaobaoInfo(infobean.getTaobaoInfo());
+//            riskInfo.setTianmaoInfo(infobean.getTianmaoInfo());
+//
+//            HjhAssetRiskInfoExample example = new HjhAssetRiskInfoExample();
+//            HjhAssetRiskInfoExample.Criteria crt =example.createCriteria();
+//            crt.andAssetIdEqualTo(riskInfo.getAssetId());
+//            //已存在的assetid做更新处理
+//            if (this.hjhAssetRiskInfoMapper.countByExample(example) > 0) {
+//                if (this.hjhAssetRiskInfoMapper.updateByExampleSelective(riskInfo,example) > 0 ? false : true) {
+//                    _log.error("----------------------商家信息更新失败,资产编号：" + infobean.getAssetId() +"-----------------------------");
+//                }
+//            } else {
+//                if (this.hjhAssetRiskInfoMapper.insertSelective(riskInfo) > 0 ? false : true) {
+//                    _log.error("----------------------商家信息插入失败,资产编号：" + infobean.getAssetId() +"-----------------------------");
+//                }
+//            }
         }
     }
 
