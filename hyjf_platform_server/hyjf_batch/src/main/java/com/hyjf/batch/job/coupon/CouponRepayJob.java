@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author ${yaoy}
+ * @author yaoy
  * @version CouponRepayJob, v0.1 2018/6/12 15:23
  *体验金按收益期限还款
  */
@@ -22,7 +22,7 @@ public class CouponRepayJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponRepayJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/batch/coupon/periodRepay", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/batch/coupon/periodRepay", String.class);
         logger.info("CouponRepayJob execute end...");
     }
 }

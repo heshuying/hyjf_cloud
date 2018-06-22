@@ -10,9 +10,9 @@ import java.util.Date;
 
 /**
  * @author yaoy
- * @version CouponUserVo, v0.1 2018/6/19 16:38
+ * @version CouponUserVO, v0.1 2018/6/19 16:38
  */
-public class CouponUserVo extends BaseVO implements Serializable{
+public class CouponUserVO extends BaseVO implements Serializable{
     private Integer id;
 
     private String couponCode;

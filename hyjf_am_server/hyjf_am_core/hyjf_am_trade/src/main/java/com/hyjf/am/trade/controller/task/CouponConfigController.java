@@ -6,18 +6,14 @@ package com.hyjf.am.trade.controller.task;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.service.CouponConfigService;
-import com.hyjf.am.vo.trade.CouponConfigVo;
-import com.hyjf.common.util.CommonUtils;
+import com.hyjf.am.vo.trade.CouponConfigVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author yaoy
@@ -36,9 +32,9 @@ public class CouponConfigController {
 		CouponConfigResponse response = new CouponConfigResponse();
 		CouponConfig couponConfig = couponConfigService.selectCouponConfig(couponCode);
 		if (couponConfig != null) {
-			CouponConfigVo couponConfigVo = new CouponConfigVo();
-			BeanUtils.copyProperties(couponConfig,couponConfigVo);
-			response.setResult(couponConfigVo);
+			CouponConfigVO couponConfigVO = new CouponConfigVO();
+			BeanUtils.copyProperties(couponConfig, couponConfigVO);
+			response.setResult(couponConfigVO);
 		}
 		return response;
 	}

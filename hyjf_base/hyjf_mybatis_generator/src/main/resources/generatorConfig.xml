@@ -853,6 +853,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        <!-- 优惠券用户表 -->
         <table tableName="ht_coupon_user" domainObjectName="CouponUser">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="coupon_source" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1009,13 +1010,14 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        <!-- 融通宝加息投资表 -->
         <table tableName="ht_increase_interest_invest" domainObjectName="IncreaseInterestInvest">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="client" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="invest_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        <!-- 融通宝加息项目放款总表 -->
         <table tableName="ht_increase_interest_loan" domainObjectName="IncreaseInterestLoan">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="remain_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1023,12 +1025,14 @@
             <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        <!-- 融通宝加息项目放款详情表 -->
         <table tableName="ht_increase_interest_loan_detail" domainObjectName="IncreaseInterestLoanDetail">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        <!-- 融通宝加息还款表 -->
         <table tableName="ht_increase_interest_repay" domainObjectName="IncreaseInterestRepay">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1036,12 +1040,14 @@
             <columnOverride column="already_repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        <!-- 融通宝加息还款详情表 -->
         <table tableName="ht_increase_interest_repay_detail" domainObjectName="IncreaseInterestRepayDetail">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="web" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        <!-- 标的还款方式 -->
         <table tableName="ht_borrow_style" domainObjectName="BorrowStyle">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
         </table>
@@ -1051,7 +1057,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
+        <!-- 优惠券还款 -->
         <table tableName="ht_coupon_recover" domainObjectName="CouponRecover">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
@@ -1063,8 +1069,29 @@
         <table tableName="ht_credit_tender_log" domainObjectName="CreditTenderLog">
             <generatedKey column="assign_id" sqlStatement="MySql" type="post" identity="true"/>
         </table>
+        <!-- 优惠券配置表 -->
+        <table tableName="ht_coupon_config" domainObjectName="CouponConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="expiration_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="expiration_length" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="add_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="coupon_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="project_expiration_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="project_expiration_length" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="project_expiration_length_min" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="project_expiration_length_max" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="tender_quota_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_time_config" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
-
-
+        <table tableName="ht_coupon_repay_monitor" domainObjectName="CouponRepayMonitor">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+        <!-- 节假日配置表 -->
+        <table tableName="ht_holidays_config" domainObjectName="HolidaysConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>
