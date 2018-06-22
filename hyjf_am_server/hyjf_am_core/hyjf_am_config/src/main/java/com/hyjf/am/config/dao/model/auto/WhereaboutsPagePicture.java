@@ -15,17 +15,17 @@ public class WhereaboutsPagePicture implements Serializable {
 
     private Integer sort;
 
-    private Boolean deleteStatus;
+    private String remark;
+
+    private Boolean delFlag;
+
+    private String createUserId;
+
+    private String updateUserId;
 
     private Integer createTime;
 
-    private String createUser;
-
     private Integer updateTime;
-
-    private String updateUser;
-
-    private String remark;
 
     private static final long serialVersionUID = 1L;
 
@@ -77,12 +77,36 @@ public class WhereaboutsPagePicture implements Serializable {
         this.sort = sort;
     }
 
-    public Boolean getDeleteStatus() {
-        return deleteStatus;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDeleteStatus(Boolean deleteStatus) {
-        this.deleteStatus = deleteStatus;
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Boolean getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public String getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId == null ? null : createUserId.trim();
+    }
+
+    public String getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(String updateUserId) {
+        this.updateUserId = updateUserId == null ? null : updateUserId.trim();
     }
 
     public Integer getCreateTime() {
@@ -93,35 +117,11 @@ public class WhereaboutsPagePicture implements Serializable {
         this.createTime = createTime;
     }
 
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
-    }
-
     public Integer getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
     }
 }

@@ -38,7 +38,6 @@ public class CouponExpiredSmsServiceImpl implements CouponExpiredSmsService {
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredSmsServiceImpl.class);
 
     @Autowired
-    @Qualifier("smsProcesser")
     private SmsProducer smsProcesser;
     @Autowired
     private CouponExpiredSmsClient couponExpiredSmsClient;

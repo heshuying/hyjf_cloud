@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.service.CouponExpiredSmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,10 @@ public class CouponExpiredSmsController {
     @RequestMapping("/expiredSms")
     public void sendExpiredMsg() {
         logger.info("优惠券过期短信提醒开始");
-        couponExpiredSmsService.sendExpiredMsg();
+        try {
+            couponExpiredSmsService.sendExpiredMsg();
+        } catch (MQException e) {
+            logger.error("优惠券过期短信失败...", e);
+        }
     }
 }
