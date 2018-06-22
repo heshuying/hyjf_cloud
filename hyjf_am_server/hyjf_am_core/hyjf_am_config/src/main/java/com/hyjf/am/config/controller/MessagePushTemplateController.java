@@ -11,9 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 消息推送模板
@@ -50,4 +53,15 @@ public class MessagePushTemplateController {
         response.setResult(messagePushTemplateVO);
         return response;
     }
+
+	@RequestMapping("/getAllTemplates")
+	public MessagePushTemplateResponse getAllTemplates() {
+		logger.info("查询所有消息推送模板开始...");
+		MessagePushTemplateResponse response = new MessagePushTemplateResponse();
+		List<MessagePushTemplateVO> templateVOList = templateServcie.getAllTemplates();
+		if (!CollectionUtils.isEmpty(templateVOList)) {
+			response.setResultList(templateVOList);
+		}
+		return response;
+	}
 }
