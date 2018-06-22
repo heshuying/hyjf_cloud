@@ -1,7 +1,9 @@
 package com.hyjf.cs.user.service.bindcard;
 
 import java.text.ParseException;
+import java.util.Map;
 
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -9,6 +11,10 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 public interface BindCardService extends BaseUserService {
 
 	void checkParamBindCard(BindCardVO bindCardVO, Integer userId);
+
+	void checkParamBindCardPage(WebViewUserVO user);
+
+	Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception;
 
 	BankCallBean callBankBindCard(BindCardVO bindCardVO, Integer userId, String userIp);
 

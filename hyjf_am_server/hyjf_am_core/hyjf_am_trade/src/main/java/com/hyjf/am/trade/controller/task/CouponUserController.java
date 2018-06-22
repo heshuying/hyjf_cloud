@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.task;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.service.CouponUserService;
-import com.hyjf.am.vo.trade.CouponUserVo;
+import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +35,8 @@ public class CouponUserController {
         CouponUserResponse response = new CouponUserResponse();
         List<CouponUser> couponUserList = couponUserService.selectCouponUser(nowBeginDate,nowEndDate);
         if (!CollectionUtils.isEmpty(couponUserList)) {
-            List<CouponUserVo> couponUserVoList = CommonUtils.convertBeanList(couponUserList,CouponUserVo.class);
-            response.setResultList(couponUserVoList);
+            List<CouponUserVO> couponUserVOList = CommonUtils.convertBeanList(couponUserList,CouponUserVO.class);
+            response.setResultList(couponUserVOList);
         }
         return response;
     }

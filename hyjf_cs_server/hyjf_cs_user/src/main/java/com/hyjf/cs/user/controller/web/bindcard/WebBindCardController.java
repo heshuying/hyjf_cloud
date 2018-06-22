@@ -110,46 +110,6 @@ public class WebBindCardController extends BaseUserController {
 		return result;
 	}
 	
-	@ApiOperation(value = "用户解绑卡", notes = "用户解绑卡")
-	@PostMapping(value = "/unBindCard", produces = "application/json; charset=utf-8")
-	public WebResult<Object> unBindCard(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
-			HttpServletResponse response) {
-		logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
-		WebResult<Object> result = new WebResult<Object>();
-		
-		WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
-        
-        bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
-        
-        // 请求银行绑卡接口
-        BankCallBean bankBean = null;
-		try {
-			bankBean = bindCardService.callBankUnBindCard(bindCardVO, user.getUserId());
-		} catch (Exception e) {
-			result.setStatus(ApiResult.FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
-			logger.error("请求解绑卡接口发生异常", e);
-		}
-        
-        if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
-        	result.setStatus(ApiResult.FAIL);
-			result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
-			logger.error("请求解绑卡接口失败");
-        }
-        
-        // 绑卡请求后业务处理
-        try {
-			bindCardService.updateAfterUnBindCard(bankBean);
-		} catch (Exception e) {
-			result.setStatus(ApiResult.FAIL);
-			result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMsg());
-			logger.error("解绑卡后处理异常", e);
-		}
-        
-		return result;
-	}
-	
-	
 
 }
 

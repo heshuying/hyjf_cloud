@@ -1,9 +1,11 @@
 package com.hyjf.cs.trade.client.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import com.hyjf.am.response.trade.HjhAssetBorrowTypeResponse;
+import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.resquest.trade.RtbIncreaseRepayRequest;
+import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,5 +57,35 @@ public class AmTradeClientImpl implements AmTradeClient {
 		repayRequest.setCompanyAccount(companyAccount);
 
 		restTemplate.postForEntity(url, repayRequest, Object.class);
+	}
+
+	/**
+	 * 统计加息券每日待收收益
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<CouponRecoverCustomizeVO> selectCouponInterestWaitToday(long timeStart, long timeEnd) {
+		String url = "http://AM-TRADE/am-trade/batch/selectCouponInterestWaitToday/"+timeStart+"/"+timeEnd;
+        CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 统计加息券每日已收收益
+	 * @param
+	 * @return
+	 */
+	@Override
+	public BigDecimal selectCouponInterestReceivedToday(long timeStart, long timeEnd) {
+		String url = "http://AM-TRADE/am-trade/batch/selectCouponInterestReceivedToday/"+timeStart+"/"+timeEnd;
+		BigDecimal interest = restTemplate.getForEntity(url,BigDecimal.class).getBody();
+		if (interest != null) {
+			return interest;
+		}
+		return null;
 	}
 }

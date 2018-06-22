@@ -12,7 +12,7 @@
     <artifactId>hyjf_am_config</artifactId>
 
     <dependencies>
-        <!-- spring cloud eureka client -->
+        <!-- spring cloud starter start -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -38,13 +38,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        <!-- spring cloud starter end -->
 
         <!-- spring boot admin start -->
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -72,18 +72,19 @@
             <!--<groupId>org.springframework.cloud</groupId>-->
             <!--<artifactId>spring-cloud-stream-binder-kafka</artifactId>-->
         <!--</dependency>-->
-
         <!-- zipkin end -->
 
+
+        <!-- db start -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <!-- db end -->
 
         <dependency>
             <groupId>com.hyjf</groupId>
