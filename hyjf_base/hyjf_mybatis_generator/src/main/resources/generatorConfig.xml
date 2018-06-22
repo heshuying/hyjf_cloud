@@ -1063,6 +1063,12 @@
         <table tableName="ht_credit_tender_log" domainObjectName="CreditTenderLog">
             <generatedKey column="assign_id" sqlStatement="MySql" type="post" identity="true"/>
         </table>
+        <!-- 银行卡号手机号同步表 -->
+        <table tableName="ht_account_mobile_synch" domainObjectName="AccountMobileSynch">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
 
 
