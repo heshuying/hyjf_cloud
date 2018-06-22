@@ -12,17 +12,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author yaoy
- * @version CouponRepayJob, v0.1 2018/6/12 15:23
- *体验金按收益期限还款
+ * @version CouponRepayStatisticJob, v0.1 2018/6/19 11:50
+ * 加息券还款统计定时任务
  */
-public class CouponRepayJob extends BaseJob implements Job {
-
+public class CouponRepayStatisticJob extends BaseJob implements Job {
     private static final Logger logger = LoggerFactory.getLogger(CouponRepayJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("CouponRepayJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/batch/coupon/periodRepay", String.class);
-        logger.info("CouponRepayJob execute end...");
+        logger.info("CouponRepayStatisticJob: {} execute...", context.getJobDetail().getKey().getName());
+        restTemplate.getForEntity("http://CS-TRADE/batch/coupon/couponRepayStatistic", String.class);
+        logger.info("CouponRepayStatisticJob execute end...");
     }
 }
