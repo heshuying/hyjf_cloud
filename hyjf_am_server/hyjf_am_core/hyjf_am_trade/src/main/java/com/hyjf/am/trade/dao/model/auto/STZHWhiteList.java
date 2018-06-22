@@ -26,18 +26,6 @@ public class STZHWhiteList implements Serializable {
 
     private String stCustomerName;
 
-    private Integer state;
-
-    private Date createTime;
-
-    private String createuser;
-
-    private Date updateTime;
-
-    private String updateuser;
-
-    private Integer delFlag;
-
     private String approvalName;
 
     private String approvalTime;
@@ -47,6 +35,18 @@ public class STZHWhiteList implements Serializable {
     private String instcode;
 
     private String instname;
+
+    private Integer state;
+
+    private Integer delFlag;
+
+    private String createUser;
+
+    private String updateUser;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -138,54 +138,6 @@ public class STZHWhiteList implements Serializable {
         this.stCustomerName = stCustomerName == null ? null : stCustomerName.trim();
     }
 
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateuser() {
-        return createuser;
-    }
-
-    public void setCreateuser(String createuser) {
-        this.createuser = createuser == null ? null : createuser.trim();
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdateuser() {
-        return updateuser;
-    }
-
-    public void setUpdateuser(String updateuser) {
-        this.updateuser = updateuser == null ? null : updateuser.trim();
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-    }
-
     public String getApprovalName() {
         return approvalName;
     }
@@ -224,5 +176,53 @@ public class STZHWhiteList implements Serializable {
 
     public void setInstname(String instname) {
         this.instname = instname == null ? null : instname.trim();
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser == null ? null : createUser.trim();
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser == null ? null : updateUser.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

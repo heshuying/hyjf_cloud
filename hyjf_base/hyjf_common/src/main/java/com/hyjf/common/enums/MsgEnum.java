@@ -149,7 +149,7 @@ public enum MsgEnum implements MsgCode {
 	STATUS_CE000005("CE000005","银行处理中，请稍后查看"),
 	STATUS_CE000006("CE000006","没有用户信息"),
 	STATUS_CE000007("CE000007","没有用户开户信息"),
-	STATUS_CE000008("CE000008","请求日期格式错误"),
+	STATUS_CE000008("CE000008","未查询到短信授权码"),
 	STATUS_CE000009("CE000009","请求开始日期大于结束日期"),
 	STATUS_CE000010("CE000010","请求手机号格式错误"),
 	STATUS_CE000011("CE000011","请求手机号不存在"),

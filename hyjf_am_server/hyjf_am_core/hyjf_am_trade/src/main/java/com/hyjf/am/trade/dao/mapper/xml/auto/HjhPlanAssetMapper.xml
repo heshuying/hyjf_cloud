@@ -43,10 +43,6 @@
     <result column="overdue_amount" property="overdueAmount" jdbcType="VARCHAR" />
     <result column="litigation" property="litigation" jdbcType="VARCHAR" />
     <result column="asset_info" property="assetInfo" jdbcType="VARCHAR" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="annual_income" property="annualIncome" jdbcType="VARCHAR" />
     <result column="overdue_report" property="overdueReport" jdbcType="VARCHAR" />
     <result column="debt_situation" property="debtSituation" jdbcType="VARCHAR" />
@@ -57,6 +53,10 @@
     <result column="is_overdue" property="isOverdue" jdbcType="VARCHAR" />
     <result column="is_complaint" property="isComplaint" jdbcType="VARCHAR" />
     <result column="is_punished" property="isPunished" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -122,9 +122,9 @@
     `status`, recieve_time, label_id, label_name, sex, age, marriage, entrusted_flg, 
     entrusted_user_id, entrusted_user_name, entrusted_account_id, work_city, `position`, 
     domicile, credit_level, useage, monthly_income, first_payment, second_payment, cost_introdution, 
-    overdue_times, overdue_amount, litigation, asset_info, create_user_id, create_time, 
-    update_user_id, update_time, annual_income, overdue_report, debt_situation, other_borrowed, 
-    is_funds, is_managed, is_ability, is_overdue, is_complaint, is_punished
+    overdue_times, overdue_amount, litigation, asset_info, annual_income, overdue_report, 
+    debt_situation, other_borrowed, is_funds, is_managed, is_ability, is_overdue, is_complaint, 
+    is_punished, create_user_id, update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample" >
     select
@@ -176,11 +176,11 @@
       credit_level, useage, monthly_income, 
       first_payment, second_payment, cost_introdution, 
       overdue_times, overdue_amount, litigation, 
-      asset_info, create_user_id, create_time, 
-      update_user_id, update_time, annual_income, 
-      overdue_report, debt_situation, other_borrowed, 
-      is_funds, is_managed, is_ability, 
-      is_overdue, is_complaint, is_punished
+      asset_info, annual_income, overdue_report, 
+      debt_situation, other_borrowed, is_funds, 
+      is_managed, is_ability, is_overdue, 
+      is_complaint, is_punished, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{assetId,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
       #{borrowNid,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
@@ -195,11 +195,11 @@
       #{creditLevel,jdbcType=VARCHAR}, #{useage,jdbcType=VARCHAR}, #{monthlyIncome,jdbcType=VARCHAR}, 
       #{firstPayment,jdbcType=VARCHAR}, #{secondPayment,jdbcType=VARCHAR}, #{costIntrodution,jdbcType=VARCHAR}, 
       #{overdueTimes,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=VARCHAR}, #{litigation,jdbcType=VARCHAR}, 
-      #{assetInfo,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{annualIncome,jdbcType=VARCHAR}, 
-      #{overdueReport,jdbcType=VARCHAR}, #{debtSituation,jdbcType=VARCHAR}, #{otherBorrowed,jdbcType=VARCHAR}, 
-      #{isFunds,jdbcType=VARCHAR}, #{isManaged,jdbcType=VARCHAR}, #{isAbility,jdbcType=VARCHAR}, 
-      #{isOverdue,jdbcType=VARCHAR}, #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR}
+      #{assetInfo,jdbcType=VARCHAR}, #{annualIncome,jdbcType=VARCHAR}, #{overdueReport,jdbcType=VARCHAR}, 
+      #{debtSituation,jdbcType=VARCHAR}, #{otherBorrowed,jdbcType=VARCHAR}, #{isFunds,jdbcType=VARCHAR}, 
+      #{isManaged,jdbcType=VARCHAR}, #{isAbility,jdbcType=VARCHAR}, #{isOverdue,jdbcType=VARCHAR}, 
+      #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
@@ -328,18 +328,6 @@
       <if test="assetInfo != null" >
         asset_info,
       </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="annualIncome != null" >
         annual_income,
       </if>
@@ -369,6 +357,18 @@
       </if>
       <if test="isPunished != null" >
         is_punished,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -492,18 +492,6 @@
       <if test="assetInfo != null" >
         #{assetInfo,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="annualIncome != null" >
         #{annualIncome,jdbcType=VARCHAR},
       </if>
@@ -533,6 +521,18 @@
       </if>
       <if test="isPunished != null" >
         #{isPunished,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -668,18 +668,6 @@
       <if test="record.assetInfo != null" >
         asset_info = #{record.assetInfo,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.annualIncome != null" >
         annual_income = #{record.annualIncome,jdbcType=VARCHAR},
       </if>
@@ -709,6 +697,18 @@
       </if>
       <if test="record.isPunished != null" >
         is_punished = #{record.isPunished,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -758,10 +758,6 @@
       overdue_amount = #{record.overdueAmount,jdbcType=VARCHAR},
       litigation = #{record.litigation,jdbcType=VARCHAR},
       asset_info = #{record.assetInfo,jdbcType=VARCHAR},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       annual_income = #{record.annualIncome,jdbcType=VARCHAR},
       overdue_report = #{record.overdueReport,jdbcType=VARCHAR},
       debt_situation = #{record.debtSituation,jdbcType=VARCHAR},
@@ -771,7 +767,11 @@
       is_ability = #{record.isAbility,jdbcType=VARCHAR},
       is_overdue = #{record.isOverdue,jdbcType=VARCHAR},
       is_complaint = #{record.isComplaint,jdbcType=VARCHAR},
-      is_punished = #{record.isPunished,jdbcType=VARCHAR}
+      is_punished = #{record.isPunished,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -899,18 +899,6 @@
       <if test="assetInfo != null" >
         asset_info = #{assetInfo,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="annualIncome != null" >
         annual_income = #{annualIncome,jdbcType=VARCHAR},
       </if>
@@ -940,6 +928,18 @@
       </if>
       <if test="isPunished != null" >
         is_punished = #{isPunished,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -986,10 +986,6 @@
       overdue_amount = #{overdueAmount,jdbcType=VARCHAR},
       litigation = #{litigation,jdbcType=VARCHAR},
       asset_info = #{assetInfo,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       annual_income = #{annualIncome,jdbcType=VARCHAR},
       overdue_report = #{overdueReport,jdbcType=VARCHAR},
       debt_situation = #{debtSituation,jdbcType=VARCHAR},
@@ -999,7 +995,11 @@
       is_ability = #{isAbility,jdbcType=VARCHAR},
       is_overdue = #{isOverdue,jdbcType=VARCHAR},
       is_complaint = #{isComplaint,jdbcType=VARCHAR},
-      is_punished = #{isPunished,jdbcType=VARCHAR}
+      is_punished = #{isPunished,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

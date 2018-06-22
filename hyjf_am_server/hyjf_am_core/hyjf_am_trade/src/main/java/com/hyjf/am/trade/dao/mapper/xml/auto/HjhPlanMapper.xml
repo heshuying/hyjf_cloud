@@ -23,11 +23,11 @@
     <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
     <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
     <result column="plan_repay_capital" property="planRepayCapital" jdbcType="DECIMAL" />
-    <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs" extends="BaseResultMap" >
     <result column="plan_concept" property="planConcept" jdbcType="LONGVARCHAR" />
@@ -98,8 +98,8 @@
     id, plan_nid, plan_name, lock_period, is_month, expect_apr, min_investment, max_investment, 
     investment_increment, available_invest_account, repay_wait_all, plan_invest_status, 
     add_time, borrow_style, coupon_config, join_total, plan_wait_captical, plan_wait_interest, 
-    repay_total, plan_repay_interest, plan_repay_capital, create_user, create_time, update_user, 
-    update_time, del_flag
+    repay_total, plan_repay_interest, plan_repay_capital, del_flag, create_user, update_user, 
+    create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     plan_concept, plan_principle, safeguard_measures, margin_measures, normal_questions
@@ -168,9 +168,9 @@
       repay_wait_all, plan_invest_status, add_time, 
       borrow_style, coupon_config, join_total, 
       plan_wait_captical, plan_wait_interest, repay_total, 
-      plan_repay_interest, plan_repay_capital, create_user, 
-      create_time, update_user, update_time, 
-      del_flag, plan_concept, plan_principle, 
+      plan_repay_interest, plan_repay_capital, del_flag, 
+      create_user, update_user, create_time, 
+      update_time, plan_concept, plan_principle, 
       safeguard_measures, margin_measures, 
       normal_questions)
     values (#{planNid,jdbcType=VARCHAR}, #{planName,jdbcType=VARCHAR}, #{lockPeriod,jdbcType=TINYINT}, 
@@ -179,9 +179,9 @@
       #{repayWaitAll,jdbcType=DECIMAL}, #{planInvestStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, 
       #{borrowStyle,jdbcType=VARCHAR}, #{couponConfig,jdbcType=VARCHAR}, #{joinTotal,jdbcType=DECIMAL}, 
       #{planWaitCaptical,jdbcType=DECIMAL}, #{planWaitInterest,jdbcType=DECIMAL}, #{repayTotal,jdbcType=DECIMAL}, 
-      #{planRepayInterest,jdbcType=DECIMAL}, #{planRepayCapital,jdbcType=DECIMAL}, #{createUser,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{delFlag,jdbcType=TINYINT}, #{planConcept,jdbcType=LONGVARCHAR}, #{planPrinciple,jdbcType=LONGVARCHAR}, 
+      #{planRepayInterest,jdbcType=DECIMAL}, #{planRepayCapital,jdbcType=DECIMAL}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{planConcept,jdbcType=LONGVARCHAR}, #{planPrinciple,jdbcType=LONGVARCHAR}, 
       #{safeguardMeasures,jdbcType=LONGVARCHAR}, #{marginMeasures,jdbcType=LONGVARCHAR}, 
       #{normalQuestions,jdbcType=LONGVARCHAR})
   </insert>
@@ -251,20 +251,20 @@
       <if test="planRepayCapital != null" >
         plan_repay_capital,
       </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
       <if test="createUser != null" >
         create_user,
-      </if>
-      <if test="createTime != null" >
-        create_time,
       </if>
       <if test="updateUser != null" >
         update_user,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
       <if test="updateTime != null" >
         update_time,
-      </if>
-      <if test="delFlag != null" >
-        del_flag,
       </if>
       <if test="planConcept != null" >
         plan_concept,
@@ -343,20 +343,20 @@
       <if test="planRepayCapital != null" >
         #{planRepayCapital,jdbcType=DECIMAL},
       </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="delFlag != null" >
-        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="planConcept != null" >
         #{planConcept,jdbcType=LONGVARCHAR},
@@ -447,20 +447,20 @@
       <if test="record.planRepayCapital != null" >
         plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
       </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.planConcept != null" >
         plan_concept = #{record.planConcept,jdbcType=LONGVARCHAR},
@@ -505,11 +505,11 @@
       repay_total = #{record.repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
-      create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_user = #{record.updateUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       plan_concept = #{record.planConcept,jdbcType=LONGVARCHAR},
       plan_principle = #{record.planPrinciple,jdbcType=LONGVARCHAR},
       safeguard_measures = #{record.safeguardMeasures,jdbcType=LONGVARCHAR},
@@ -542,11 +542,11 @@
       repay_total = #{record.repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user = #{record.updateUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      del_flag = #{record.delFlag,jdbcType=TINYINT}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -614,20 +614,20 @@
       <if test="planRepayCapital != null" >
         plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
       </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="planConcept != null" >
         plan_concept = #{planConcept,jdbcType=LONGVARCHAR},
@@ -669,11 +669,11 @@
       repay_total = #{repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
-      create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       del_flag = #{delFlag,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       plan_concept = #{planConcept,jdbcType=LONGVARCHAR},
       plan_principle = #{planPrinciple,jdbcType=LONGVARCHAR},
       safeguard_measures = #{safeguardMeasures,jdbcType=LONGVARCHAR},
@@ -703,11 +703,11 @@
       repay_total = #{repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=TINYINT}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

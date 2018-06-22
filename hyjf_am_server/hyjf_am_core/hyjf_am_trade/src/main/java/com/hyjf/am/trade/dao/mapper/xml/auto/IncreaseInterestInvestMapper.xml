@@ -16,7 +16,7 @@
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
     <result column="account" property="account" jdbcType="DECIMAL" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="loan_order_date" property="loanOrderDate" jdbcType="VARCHAR" />
     <result column="loan_order_id" property="loanOrderId" jdbcType="VARCHAR" />
     <result column="repay_interest" property="repayInterest" jdbcType="DECIMAL" />
@@ -29,12 +29,12 @@
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="invest_type" property="investType" jdbcType="TINYINT" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -98,8 +98,8 @@
     id, user_id, invest_user_name, tender_id, tender_nid, borrow_nid, borrow_apr, borrow_extra_yield, 
     borrow_period, borrow_style, borrow_style_name, order_id, order_date, account, `status`, 
     loan_order_date, loan_order_id, repay_interest, repay_interest_yes, repay_interest_wait, 
-    repay_times, loan_amount, client, addip, web, remark, invest_type, create_time, create_user_id, 
-    create_user_name, update_time, update_user_id, update_user_name
+    repay_times, loan_amount, client, addip, web, remark, invest_type, create_user_id, 
+    create_user_name, update_user_id, update_user_name, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample" >
     select
@@ -146,20 +146,20 @@
       loan_order_id, repay_interest, repay_interest_yes, 
       repay_interest_wait, repay_times, loan_amount, 
       client, addip, web, 
-      remark, invest_type, create_time, 
-      create_user_id, create_user_name, update_time, 
-      update_user_id, update_user_name)
+      remark, invest_type, create_user_id, 
+      create_user_name, update_user_id, update_user_name, 
+      create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{investUserName,jdbcType=VARCHAR}, #{tenderId,jdbcType=INTEGER}, 
       #{tenderNid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{borrowApr,jdbcType=DECIMAL}, 
       #{borrowExtraYield,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, 
       #{borrowStyleName,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{orderDate,jdbcType=VARCHAR}, 
-      #{account,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{loanOrderDate,jdbcType=VARCHAR}, 
+      #{account,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{loanOrderDate,jdbcType=VARCHAR}, 
       #{loanOrderId,jdbcType=VARCHAR}, #{repayInterest,jdbcType=DECIMAL}, #{repayInterestYes,jdbcType=DECIMAL}, 
       #{repayInterestWait,jdbcType=DECIMAL}, #{repayTimes,jdbcType=INTEGER}, #{loanAmount,jdbcType=DECIMAL}, 
       #{client,jdbcType=TINYINT}, #{addip,jdbcType=VARCHAR}, #{web,jdbcType=TINYINT}, 
-      #{remark,jdbcType=VARCHAR}, #{investType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, #{investType,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -245,23 +245,23 @@
       <if test="investType != null" >
         invest_type,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
       </if>
       <if test="createUserName != null" >
         create_user_name,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="updateUserId != null" >
         update_user_id,
       </if>
       <if test="updateUserName != null" >
         update_user_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -305,7 +305,7 @@
         #{account,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="loanOrderDate != null" >
         #{loanOrderDate,jdbcType=VARCHAR},
@@ -343,23 +343,23 @@
       <if test="investType != null" >
         #{investType,jdbcType=TINYINT},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateUserName != null" >
         #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -415,7 +415,7 @@
         account = #{record.account,jdbcType=DECIMAL},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.loanOrderDate != null" >
         loan_order_date = #{record.loanOrderDate,jdbcType=VARCHAR},
@@ -453,23 +453,23 @@
       <if test="record.investType != null" >
         invest_type = #{record.investType,jdbcType=TINYINT},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.updateUserName != null" >
         update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -492,7 +492,7 @@
       order_id = #{record.orderId,jdbcType=VARCHAR},
       order_date = #{record.orderDate,jdbcType=VARCHAR},
       account = #{record.account,jdbcType=DECIMAL},
-      `status` = #{record.status,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       loan_order_date = #{record.loanOrderDate,jdbcType=VARCHAR},
       loan_order_id = #{record.loanOrderId,jdbcType=VARCHAR},
       repay_interest = #{record.repayInterest,jdbcType=DECIMAL},
@@ -505,12 +505,12 @@
       web = #{record.web,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       invest_type = #{record.investType,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -558,7 +558,7 @@
         account = #{account,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="loanOrderDate != null" >
         loan_order_date = #{loanOrderDate,jdbcType=VARCHAR},
@@ -596,23 +596,23 @@
       <if test="investType != null" >
         invest_type = #{investType,jdbcType=TINYINT},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateUserName != null" >
         update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -632,7 +632,7 @@
       order_id = #{orderId,jdbcType=VARCHAR},
       order_date = #{orderDate,jdbcType=VARCHAR},
       account = #{account,jdbcType=DECIMAL},
-      `status` = #{status,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       loan_order_date = #{loanOrderDate,jdbcType=VARCHAR},
       loan_order_id = #{loanOrderId,jdbcType=VARCHAR},
       repay_interest = #{repayInterest,jdbcType=DECIMAL},
@@ -645,12 +645,12 @@
       web = #{web,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       invest_type = #{investType,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
