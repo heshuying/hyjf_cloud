@@ -31,7 +31,7 @@ public class SmsTest {
         Map<String, String> param = new HashMap<String, String>();
         param.put("val_code", "123456");
 
-        SmsMessage smsMessage = new SmsMessage(null, param, "15311062331", null, MessageConstant.SMSSENDFORMOBILE, null,
+        SmsMessage smsMessage = new SmsMessage(null, param, "15311062331", null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
                 "TPL_ZHUCE", CustomConstants.CHANNEL_TYPE_NORMAL);
 
         // 发送

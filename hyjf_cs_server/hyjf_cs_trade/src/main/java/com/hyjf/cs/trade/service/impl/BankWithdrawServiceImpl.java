@@ -231,9 +231,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 UserInfoVO info = amUserClient.findUsersInfoById(userId);
                                 replaceMap.put("val_name", info.getTruename().substring(0, 1));
                                 replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
-                                SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
+                                SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
                                         CustomConstants.CHANNEL_TYPE_NORMAL);
-                                AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
+                                AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                                 smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
                                         JSON.toJSONBytes(smsMessage)));
                                 appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
@@ -247,7 +247,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 UserInfoVO info = amUserClient.findUsersInfoById(userId);
                                 replaceMap.put("val_name", info.getTruename().substring(0, 1));
                                 replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
-                                AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
+                                AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                                 appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
                                         JSON.toJSONBytes(appMsMessage)));
                             }

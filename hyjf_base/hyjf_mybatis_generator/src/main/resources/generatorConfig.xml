@@ -1100,6 +1100,19 @@
             <columnOverride column="flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <!-- 着落页管理 -->
+        <table tableName="ht_landing_page" domainObjectName="LandingPage">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- 着落页配置表 -->
+        <table tableName="ht_whereabouts_page_config" domainObjectName="WhereaboutsPageConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status_on" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 着落页配置图片表 -->
+        <table tableName="ht_whereabouts_page_picture" domainObjectName="WhereaboutsPagePicture">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
         <table tableName="ht_bank_interface" domainObjectName="BankInterface">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
             <columnOverride column="interface_status" javaType="java.lang.Integer" jdbcType="TINYINT" />

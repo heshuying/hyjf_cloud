@@ -237,7 +237,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 		// 管理员发送成功短信
 		Map<String, String> replaceStrs = new HashMap<String, String>();
 		replaceStrs.put("val_title", borrowNid);
-		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SHIBAI, CustomConstants.CHANNEL_TYPE_NORMAL);
+		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SHIBAI, CustomConstants.CHANNEL_TYPE_NORMAL);
 
         try {
             smsProducer.messageSend(
