@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhLabelMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.HjhPlanService;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,57 +21,74 @@ import java.util.List;
 @Service
 public class HjhPlanServiceImpl implements HjhPlanService {
 
-	@Autowired
-	private HjhInstConfigMapper hjhInstConfigMapper;
+    @Autowired
+    private HjhInstConfigMapper hjhInstConfigMapper;
 
-	@Autowired
-	private HjhLabelMapper hjhLabelMapper;
+    @Autowired
+    private HjhLabelMapper hjhLabelMapper;
 
-	@Autowired
-	private HjhPlanMapper hjhPlanMapper;
+    @Autowired
+    private HjhPlanMapper hjhPlanMapper;
 
-	@Override
-	public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
-		HjhInstConfigExample example = new HjhInstConfigExample();
-		HjhInstConfigExample.Criteria cra = example.createCriteria();
-		cra.andInstCodeEqualTo(instCode);
-		cra.andDelFlagEqualTo(0);
-		List<HjhInstConfig> list = this.hjhInstConfigMapper.selectByExample(example);
-		return list;
-	}
+    @Autowired
+    private HjhAccedeMapper hjhAccedeMapper;
 
-	@Override
-	public List<HjhLabel> seleHjhLabelByBorrowStyle(String borrowStyle) {
-		HjhLabelExample example = new HjhLabelExample();
-		HjhLabelExample.Criteria cra = example.createCriteria();
+    @Override
+    public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
+        HjhInstConfigExample example = new HjhInstConfigExample();
+        HjhInstConfigExample.Criteria cra = example.createCriteria();
+        cra.andInstCodeEqualTo(instCode);
+        cra.andDelFlagEqualTo(0);
+        List<HjhInstConfig> list = this.hjhInstConfigMapper.selectByExample(example);
+        return list;
+    }
 
-		cra.andDelFlagEqualTo(0);
-		cra.andLabelStateEqualTo(1);
-		cra.andBorrowStyleEqualTo(borrowStyle);
-		cra.andIsCreditEqualTo(0); // 原始标
-		cra.andIsLateEqualTo(0); // 是否逾期
-		example.setOrderByClause(" update_time desc ");
+    @Override
+    public List<HjhLabel> seleHjhLabelByBorrowStyle(String borrowStyle) {
+        HjhLabelExample example = new HjhLabelExample();
+        HjhLabelExample.Criteria cra = example.createCriteria();
 
-		List<HjhLabel> list = this.hjhLabelMapper.selectByExample(example);
-		return list;
-	}
+        cra.andDelFlagEqualTo(0);
+        cra.andLabelStateEqualTo(1);
+        cra.andBorrowStyleEqualTo(borrowStyle);
+        cra.andIsCreditEqualTo(0); // 原始标
+        cra.andIsLateEqualTo(0); // 是否逾期
+        example.setOrderByClause(" update_time desc ");
 
-	/**
-	 * @param planNid
-	 * @Description 根据计划编号查询计划
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/19 14:08
-	 */
-	@Override
-	public HjhPlan getHjhPlanByNid(String planNid) {
-		HjhPlanExample example = new HjhPlanExample();
-		HjhPlanExample.Criteria cra = example.createCriteria();;
-		cra.andPlanNidEqualTo(planNid);
-		List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(0);
-		}
-		return null;
-	}
+        List<HjhLabel> list = this.hjhLabelMapper.selectByExample(example);
+        return list;
+    }
+
+    /**
+     * @param planNid
+     * @Description 根据计划编号查询计划
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/19 14:08
+     */
+    @Override
+    public HjhPlan getHjhPlanByNid(String planNid) {
+        HjhPlanExample example = new HjhPlanExample();
+        HjhPlanExample.Criteria cra = example.createCriteria();
+        ;
+        cra.andPlanNidEqualTo(planNid);
+        List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 插入计划明细表
+     *
+     * @param accedeVO
+     * @return
+     */
+    @Override
+    public int insertHJHPlanAccede(HjhAccedeVO accedeVO) {
+        HjhAccede planAccede = new HjhAccede();
+        BeanUtils.copyProperties(accedeVO, planAccede);
+        return hjhAccedeMapper.insertSelective(planAccede);
+    }
 }

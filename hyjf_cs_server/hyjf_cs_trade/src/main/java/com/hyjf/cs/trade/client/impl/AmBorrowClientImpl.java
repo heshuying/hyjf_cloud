@@ -8,6 +8,7 @@ import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -44,10 +45,26 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 	@Override
 	public HjhPlanVO getPlanByNid(String borrowNid) {
 		HjhPlanResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-trade/hjhPlan/getHjhPlanByPlanNid/" + borrowNid, HjhPlanResponse.class).getBody();
+				.getForEntity("http://AM-TRADE/am-trade/hjhPlan/getHjhPlanByPlanNid/" + borrowNid, HjhPlanResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * @param planAccede
+	 * @Description 插入计划交易明细表
+	 * @Author sunss
+	 * @Date 2018/6/22 10:34
+	 */
+	@Override
+	public boolean insertHJHPlanAccede(HjhAccedeVO planAccede) {
+		Integer result = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/hjhPlan/insertHJHPlanAccede", planAccede, Integer.class).getBody();
+		if (result != null) {
+			return result == 0 ? false : true;
+		}
+		return false;
 	}
 }

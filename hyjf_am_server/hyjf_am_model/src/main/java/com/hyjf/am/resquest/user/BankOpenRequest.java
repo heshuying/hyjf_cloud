@@ -31,6 +31,10 @@ public class BankOpenRequest extends BaseVO {
 	
 	private Integer bankAccountEsb;
 
+	private String retCode;
+
+	private String retMsg;
+
 	public Integer getUserId() {
 		return userId;
 	}
@@ -118,7 +122,20 @@ public class BankOpenRequest extends BaseVO {
 	public void setBankAccountEsb(Integer bankAccountEsb) {
 		this.bankAccountEsb = bankAccountEsb;
 	}
-	
-	
-	
+
+	public String getRetCode() {
+		return retCode;
+	}
+
+	public void setRetCode(String retCode) {
+		this.retCode = retCode;
+	}
+
+	public String getRetMsg() {
+		return retMsg;
+	}
+
+	public void setRetMsg(String retMsg) {
+		this.retMsg = retMsg;
+	}
 }

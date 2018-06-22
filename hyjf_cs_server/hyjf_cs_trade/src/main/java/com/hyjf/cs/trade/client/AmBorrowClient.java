@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 /**
@@ -18,4 +19,11 @@ public interface AmBorrowClient {
      * @Date 2018/6/19 13:53
      */
     public HjhPlanVO getPlanByNid(String borrowNid) ;
+
+    /**
+     * @Description 插入计划交易明细表
+     * @Author sunss
+     * @Date 2018/6/22 10:34
+     */
+    boolean insertHJHPlanAccede(HjhAccedeVO planAccede);
 }

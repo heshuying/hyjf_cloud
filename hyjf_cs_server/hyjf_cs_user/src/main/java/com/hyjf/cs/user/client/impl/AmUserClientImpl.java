@@ -499,13 +499,16 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @param userId
 	 * @param logOrderId
 	 * @param state
+	 * @param retCode
 	 */
 	@Override
-	public Integer updateUserAccountLogState(int userId, String logOrderId, int state) {
+	public Integer updateUserAccountLogState(int userId, String logOrderId, int state, String retCode, String retMsg) {
 		BankOpenRequest request = new BankOpenRequest();
 		request.setOrderId(logOrderId);
 		request.setUserId(userId);
 		request.setStatus(state);
+		request.setRetCode(retCode);
+		request.setRetMsg(retMsg);
 		Integer result = restTemplate
 				.postForEntity("http://AM-USER/am-user/bankopen/updateUserAccountLogStatus", request, Integer.class).getBody();
 		if (result != null) {

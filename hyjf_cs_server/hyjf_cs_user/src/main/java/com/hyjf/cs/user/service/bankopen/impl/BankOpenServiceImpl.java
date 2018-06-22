@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -236,7 +237,13 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 开户失败   将开户记录状态改为4
             // TODO: 2018/6/21  记录失败原因
-            this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4);
+            // 查询失败原因
+            String retMsg = bean.getRetMsg();
+            BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
+            if (retMsgVo != null) {
+                retMsg = retMsgVo.getErrorMsg();
+            }
+            this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4,retCode,retMsg);
             logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
             result.setStatus(false);
             return result;

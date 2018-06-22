@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 
 import java.util.List;
 
@@ -37,4 +38,11 @@ public interface HjhPlanService {
      * @Date 2018/6/19 14:08
      */
     HjhPlan getHjhPlanByNid(String planNid);
+
+    /**
+     * 插入计划明细表
+     * @param planAccede
+     * @return
+     */
+    int insertHJHPlanAccede(HjhAccedeVO planAccede);
 }

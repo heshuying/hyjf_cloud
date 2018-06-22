@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 
 /**
@@ -31,6 +33,13 @@ public class TenderRequest extends BaseVO {
     private WebViewUserVO user;
     // 投资金额
     private String account;
+
+    // 内部操作用
+    private BankOpenAccountVO bankOpenAccount;
+
+    private AccountVO tenderAccount ;
+
+    private String planOrderId;
 
     public String getCreditNid() {
         return creditNid;
@@ -102,5 +111,29 @@ public class TenderRequest extends BaseVO {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public BankOpenAccountVO getBankOpenAccount() {
+        return bankOpenAccount;
+    }
+
+    public void setBankOpenAccount(BankOpenAccountVO bankOpenAccount) {
+        this.bankOpenAccount = bankOpenAccount;
+    }
+
+    public AccountVO getTenderAccount() {
+        return tenderAccount;
+    }
+
+    public void setTenderAccount(AccountVO tenderAccount) {
+        this.tenderAccount = tenderAccount;
+    }
+
+    public String getPlanOrderId() {
+        return planOrderId;
+    }
+
+    public void setPlanOrderId(String planOrderId) {
+        this.planOrderId = planOrderId;
     }
 }
