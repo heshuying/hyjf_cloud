@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawService, v0.1 2018/6/14 14:31
  */
-public interface BankWithdrawService {
+public interface BankWithdrawService extends BaseTradeService {
     /**
      * 构建银行调用数据
      * @param user
@@ -57,7 +58,7 @@ public interface BankWithdrawService {
      * @Date
      */
 
-    WebResult<Object> toWithdraw(WebViewUser user);
+    WebResult<Object> toWithdraw(WebViewUserVO user);
 
     /**
      * 定时任务提现

@@ -21,7 +21,7 @@ public interface WithdrawClient {
 
     int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankWithdrawBeanRequest);
 
-    int getBorrowTender(Integer userId);
+    Integer getBorrowTender(Integer userId);
 
     List<AccountRechargeVO> getTodayRecharge(Integer userId);
 }

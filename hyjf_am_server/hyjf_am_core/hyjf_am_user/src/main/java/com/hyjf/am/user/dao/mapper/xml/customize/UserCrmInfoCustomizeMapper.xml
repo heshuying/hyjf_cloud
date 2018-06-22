@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper">
+
+    <resultMap id="UserCrmInfoMapResult"
+               type="com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize">
+        <result column="user_id" property="userId" /> <!-- 用户名 -->
+        <result column="username" property="userName" /> <!-- 用户名 -->
+        <result column="truename" property="trueName" /> <!--   -->
+        <result column="sex" property="sex" /><!-- 性别 -->
+        <result column="mobile" property="mobile" /> <!-- 手机 -->
+        <result column="regionName" property="regionName" /> <!-- 大区 -->
+        <result column="branchName" property="branchName" /> <!-- 分公司  -->
+        <result column="departmentName" property="departmentName" /> <!-- 部门  -->
+        <result column="referrer" property="referrer" /> <!-- 推荐人 -->
+        <result column="attribute" property="attribute" /> <!-- 属性-->
+    </resultMap>
+
+    <select id="findUserCrmInfoByUserId" parameterType="int" resultMap="UserCrmInfoMapResult">
+        SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
+        od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+        FROM ht_user u
+        LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
+        LEFT JOIN ht_r_oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid
+        LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
+        LEFT JOIN ht_r_oa_department od3 on od3.id = od2.parentid
+        WHERE 1=1
+        <if test="userId != null">
+            AND u.user_id= #{userId}
+        </if>
+        group by u.user_id
+    </select>
+
+</mapper>

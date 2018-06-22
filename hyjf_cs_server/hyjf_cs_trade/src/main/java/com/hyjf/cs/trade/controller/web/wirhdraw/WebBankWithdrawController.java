@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.web.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -53,8 +54,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "获取用户银行提现", notes = "用户提现")
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
-
+        WebViewUserVO user=webBorrowService.getUsersByToken(token);
         WebResult<Object> objectWebResult=webBorrowService.toWithdraw(user);
         return objectWebResult;
     }

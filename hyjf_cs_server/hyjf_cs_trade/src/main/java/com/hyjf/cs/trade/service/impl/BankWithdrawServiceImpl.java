@@ -29,6 +29,7 @@ import com.hyjf.cs.trade.mq.AppMessageProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
 import com.hyjf.cs.trade.service.BankWithdrawService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -57,7 +58,7 @@ import java.util.Map;
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
-public class BankWithdrawServiceImpl implements BankWithdrawService {
+public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements BankWithdrawService {
     private static final Logger logger = LoggerFactory.getLogger(WebBorrowServiceImpl.class);
 
     @Autowired
@@ -168,7 +169,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
         // 查询账户信息
         AccountVO account = this.bindCardClient.getAccount(userId);
         // 根据用户ID查询用户银行卡信息
-        BankCardVO bankCard = this.bankOpenClient.selectBankCardByUserId(userId);
+        BankCardVO bankCard = this.bindCardClient.selectBankCardByUserId(userId);
         String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
         // 银联行号
         String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
@@ -297,7 +298,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
      * @Date
      */
     @Override
-    public WebResult<Object> toWithdraw(WebViewUser user) {
+    public WebResult<Object> toWithdraw(WebViewUserVO user) {
 
         WebResult<Object> result = new WebResult<Object>();
         JSONObject ret = new JSONObject();
@@ -316,7 +317,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             return result;
         }
         // 查询页面上可以挂载的银行列表
-        BankCardVO banks = bankOpenClient.selectBankCardByUserId(userId);
+        BankCardVO banks = bindCardClient.selectBankCardByUserId(userId);
         if (banks == null) {
             // 用户未绑卡
             result.setStatus(BankWithdrawError.NOT_CARD_NO_ERROR.getCode());
@@ -370,6 +371,8 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             BanksConfigVO banksConfig = bindCardClient.getBanksConfigByBankId(bankId + "");
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankName())) {
                 bankCardBean.setBank(banksConfig.getBankName());
+                bankCardBean.setBankCode(banksConfig.getBankCode());
+                bankCardBean.setLogo(banksConfig.getBankLogo());
             }
 
             feeWithdraw = this.getWithdrawFee(userId, banks.getCardNo());

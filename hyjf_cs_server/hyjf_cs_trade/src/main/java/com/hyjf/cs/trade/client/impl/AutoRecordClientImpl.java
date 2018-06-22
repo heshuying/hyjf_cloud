@@ -25,7 +25,7 @@ public class AutoRecordClientImpl implements AutoRecordClient {
 
     @Override
     public BorrowVO selectBorrowByNid(String borrowNid) {
-        BorrowResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/selectBorrowByNid/" + borrowNid, BorrowResponse.class).getBody();
+        BorrowResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/trade/selectBorrowByNid/" + borrowNid, BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -34,7 +34,7 @@ public class AutoRecordClientImpl implements AutoRecordClient {
 
     @Override
     public boolean updateBorrowRegist(BorrowRegistRequest request) {
-        Integer result = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/updateBorrowRegist", request, int.class).getBody();
+        Integer result = restTemplate.postForEntity("http://AM-TRADE/am-trade/trade/updateBorrowRegist", request, int.class).getBody();
         return result>0?true:false;
     }
 

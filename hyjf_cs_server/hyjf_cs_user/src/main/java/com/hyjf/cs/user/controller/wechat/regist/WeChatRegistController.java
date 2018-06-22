@@ -101,7 +101,7 @@ public class WeChatRegistController extends BaseUserController {
         } else {
             logger.error("register failed...");
             resultBean.setStatus("1");
-            resultBean.setStatusDesc(MsgEnum.ERR_REGISTER.getMsg());
+            resultBean.setStatusDesc(MsgEnum.ERR_USER_REGISTER.getMsg());
         }
         return resultBean;
     }

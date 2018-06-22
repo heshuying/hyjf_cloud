@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 
 /**
  * @author xiasq
@@ -24,4 +25,11 @@ public interface UserInfoService {
      * @return
      */
     UserInfo selectUserInfoByNameAndCard(String truename, String idcard);
+
+    /**
+     * 根据用户ID查询crm信息
+     * @param userId
+     * @return
+     */
+    UserCrmInfoCustomize findUserCrmInfoByUserId(Integer userId);
 }

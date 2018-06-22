@@ -2,6 +2,9 @@ package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -23,6 +26,18 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     @Autowired
     RechargeClient rechargeClient;
 
+    /**
+     * @param token
+     * @Description 根据token查询user
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/12 10:34
+     */
+    @Override
+    public WebViewUserVO getUsersByToken(String token) {
+        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+        return user;
+    }
     /**
      * 获取用户在银行的开户信息
      * @param userId

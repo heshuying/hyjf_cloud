@@ -1,8 +1,10 @@
 package com.hyjf.am.user.service.impl;
 
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
+import com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+
+	@Autowired
+	private UserCrmInfoCustomizeMapper userCrmInfoCustomizeMapper;
 
 	@Override
 	public UserInfo findUserInfoById(int userId) {
@@ -62,6 +67,17 @@ public class UserInfoServiceImpl implements UserInfoService {
 		}else{
 			return null;
 		}
+	}
+
+	/**
+	 * 根据用户ID查询crm信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserCrmInfoCustomize findUserCrmInfoByUserId(Integer userId) {
+		List<UserCrmInfoCustomize> list = userCrmInfoCustomizeMapper.findUserCrmInfoByUserId(userId);
+		return null;
 	}
 
 }

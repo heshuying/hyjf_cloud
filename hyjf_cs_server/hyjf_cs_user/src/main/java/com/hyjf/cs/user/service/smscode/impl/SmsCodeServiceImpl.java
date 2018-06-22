@@ -92,8 +92,8 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 
 		List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
 				CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
-		CheckUtil.check(Validator.isNotNull(validCodeType) && codeTypes.contains(validCodeType), MsgEnum.ERR_CODETYPE_INVALID);
-		CheckUtil.check(Validator.isNotNull(mobile) && Validator.isMobile(mobile), MsgEnum.ERR_MOBILE_FORMAT);
+		CheckUtil.check(Validator.isNotNull(validCodeType) && codeTypes.contains(validCodeType), MsgEnum.ERR_OBJECT_INVALID,"验证码类型");//无效的验证码类型
+		CheckUtil.check(Validator.isNotNull(mobile) && Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
 		if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
 			// 注册时要判断不能重复
 			CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
@@ -109,7 +109,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 				}
 				// 绑定新手机号校验
 				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-					CheckUtil.check(!webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_MODIFY);
+					CheckUtil.check(!webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_DIFFERENT);
 					CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
 				}
 			}
@@ -118,7 +118,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 		// 判断发送间隔时间
 		String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
 		logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
-		CheckUtil.check(StringUtils.isBlank(intervalTime), MsgEnum.ERR_SEND_SMSCODE_TOO_FAST);
+		CheckUtil.check(StringUtils.isBlank(intervalTime), MsgEnum.ERR_SMSCODE_SEND_TOO_FAST);
 		String ipCount = RedisUtils.get(ip + ":MaxIpCount");
 		if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
 			ipCount = "0";
@@ -126,9 +126,9 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 		}
 		logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
 		SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
-		CheckUtil.check(smsConfig != null, MsgEnum.ERR_FIND_SMSCONFIG);
+		CheckUtil.check(smsConfig != null, MsgEnum.ERR_OBJECT_GET,"短信配置");//获取短信配置失败
 		if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
-			CheckUtil.check(Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount()), MsgEnum.ERR_SEND_SMSCODE_TOO_MANNY);
+			CheckUtil.check(Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount()), MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
 				try {
 					// 发送短信通知
 					Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -156,7 +156,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 		}
 		logger.info(mobile + "----------MaxPhoneCount-----------" + count);
 		if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
-			CheckUtil.check(Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount()), MsgEnum.ERR_SEND_SMSCODE_TOO_MANNY);
+			CheckUtil.check(Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount()), MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
 				try {
 					// 发送短信通知
 					Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -172,7 +172,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 						logger.error("短信发送失败...", e);
 					}
 				} catch (Exception e) {
-					CheckUtil.check(false, MsgEnum.ERR_SEND_SMSCODE_TOO_MANNY);
+					CheckUtil.check(false, MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
 				}
 				RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
 		}
