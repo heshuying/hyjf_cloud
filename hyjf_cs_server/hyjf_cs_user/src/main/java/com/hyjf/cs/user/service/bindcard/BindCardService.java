@@ -14,7 +14,7 @@ public interface BindCardService extends BaseUserService {
 
 	void checkParamBindCardPage(WebViewUserVO user);
 
-	Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp) throws Exception;
+	Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception;
 
 	BankCallBean callBankBindCard(BindCardVO bindCardVO, Integer userId, String userIp);
 

@@ -47,17 +47,18 @@ public class WebBindCardPageController {
      * @return
      */
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindCardPage(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public WebResult<Object> bindCardPage(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
 
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         String userIp = GetCilentIP.getIpAddr(request);
+        String urlstatus = param.get("urlstatus"); // 请求来源
         // 条件校验
         bindCardService.checkParamBindCardPage(user);
 
         // 请求银行接口
         try {
-            Map<String,Object> data = bindCardService.callBankBindCardPage(user, userIp);
+            Map<String,Object> data = bindCardService.callBankBindCardPage(user, userIp, urlstatus);
             result.setData(data);
         } catch (Exception e) {
             result.setStatus(WebResult.ERROR);

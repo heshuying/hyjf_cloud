@@ -114,6 +114,10 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         }
 	}
 
+    /**
+     * 绑卡校验
+     * @param user
+     */
 	@Override
 	public void checkParamBindCardPage(WebViewUserVO user) {
 		// 登录校验
@@ -128,14 +132,19 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 
 	}
 
+	/**
+	 * 绑卡接口请求
+	 * @auther: hesy
+	 * @date: 2018/6/22
+	 */
 	@Override
-	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp) throws Exception {
+	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception {
         // 回调路径
         String retUrl = systemConfig.getFrontHost().trim();
         // 交易成功跳转链接
         String successfulUrl = systemConfig.getFrontHost().trim();
 		// 商户后台应答地址(必须)
-		String notifyUrl = systemConfig.getWebHost().trim() + "/web/card/bgReturn";
+		String notifyUrl = systemConfig.getWebHost().trim() + "/web/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getWebHost().trim();
 
@@ -162,8 +171,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 
 		Map<String,Object> map = BankCallUtils.callApiMap(bindCardBean);
 
-
-		return null;
+		return map;
 	}
 	
 	/**
