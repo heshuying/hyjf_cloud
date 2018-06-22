@@ -14,12 +14,12 @@
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="transfer_type" property="transferType" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
     <result column="reconciliation_id" property="reconciliationId" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -81,8 +81,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, order_id, out_user_id, out_user_name, in_user_id, in_user_name, transfer_amount, 
-    transfer_url, transfer_time, `status`, transfer_type, remark, create_user_id, create_time, 
-    update_user_id, update_time, create_user_name, reconciliation_id
+    transfer_url, transfer_time, `status`, transfer_type, remark, create_user_name, reconciliation_id, 
+    create_user_id, update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.UserTransferExample" >
     select
@@ -124,15 +124,15 @@
     insert into ht_user_transfer (order_id, out_user_id, out_user_name, 
       in_user_id, in_user_name, transfer_amount, 
       transfer_url, transfer_time, `status`, 
-      transfer_type, remark, create_user_id, 
-      create_time, update_user_id, update_time, 
-      create_user_name, reconciliation_id)
+      transfer_type, remark, create_user_name, 
+      reconciliation_id, create_user_id, update_user_id, 
+      create_time, update_time)
     values (#{orderId,jdbcType=VARCHAR}, #{outUserId,jdbcType=INTEGER}, #{outUserName,jdbcType=VARCHAR}, 
       #{inUserId,jdbcType=INTEGER}, #{inUserName,jdbcType=VARCHAR}, #{transferAmount,jdbcType=DECIMAL}, 
       #{transferUrl,jdbcType=VARCHAR}, #{transferTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
-      #{transferType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{createUserName,jdbcType=VARCHAR}, #{reconciliationId,jdbcType=VARCHAR})
+      #{transferType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, 
+      #{reconciliationId,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.UserTransfer" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -173,23 +173,23 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="createUserName != null" >
         create_user_name,
       </if>
       <if test="reconciliationId != null" >
         reconciliation_id,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -226,23 +226,23 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="reconciliationId != null" >
         #{reconciliationId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -291,23 +291,23 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.reconciliationId != null" >
         reconciliation_id = #{record.reconciliationId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -328,12 +328,12 @@
       `status` = #{record.status,jdbcType=TINYINT},
       transfer_type = #{record.transferType,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      reconciliation_id = #{record.reconciliationId,jdbcType=VARCHAR}
+      reconciliation_id = #{record.reconciliationId,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -374,23 +374,23 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="reconciliationId != null" >
         reconciliation_id = #{reconciliationId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -408,12 +408,12 @@
       `status` = #{status,jdbcType=TINYINT},
       transfer_type = #{transferType,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      reconciliation_id = #{reconciliationId,jdbcType=VARCHAR}
+      reconciliation_id = #{reconciliationId,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -7,11 +7,11 @@
     <result column="plan_name" property="planName" jdbcType="VARCHAR" />
     <result column="config_add_time" property="configAddTime" jdbcType="INTEGER" />
     <result column="config_status" property="configStatus" jdbcType="TINYINT" />
-    <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, plan_nid, plan_name, config_add_time, config_status, create_user, create_time, 
-    update_user, update_time, del_flag
+    id, plan_nid, plan_name, config_add_time, config_status, del_flag, create_user, update_user, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRegionExample" >
     select
@@ -113,12 +113,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_hjh_region (plan_nid, plan_name, config_add_time, 
-      config_status, create_user, create_time, 
-      update_user, update_time, del_flag
+      config_status, del_flag, create_user, 
+      update_user, create_time, update_time
       )
     values (#{planNid,jdbcType=VARCHAR}, #{planName,jdbcType=VARCHAR}, #{configAddTime,jdbcType=INTEGER}, 
-      #{configStatus,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}
+      #{configStatus,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, 
+      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRegion" >
@@ -139,20 +139,20 @@
       <if test="configStatus != null" >
         config_status,
       </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
       <if test="createUser != null" >
         create_user,
-      </if>
-      <if test="createTime != null" >
-        create_time,
       </if>
       <if test="updateUser != null" >
         update_user,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
       <if test="updateTime != null" >
         update_time,
-      </if>
-      <if test="delFlag != null" >
-        del_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -168,20 +168,20 @@
       <if test="configStatus != null" >
         #{configStatus,jdbcType=TINYINT},
       </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="delFlag != null" >
-        #{delFlag,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -209,20 +209,20 @@
       <if test="record.configStatus != null" >
         config_status = #{record.configStatus,jdbcType=TINYINT},
       </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -236,11 +236,11 @@
       plan_name = #{record.planName,jdbcType=VARCHAR},
       config_add_time = #{record.configAddTime,jdbcType=INTEGER},
       config_status = #{record.configStatus,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user = #{record.updateUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      del_flag = #{record.delFlag,jdbcType=TINYINT}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -260,20 +260,20 @@
       <if test="configStatus != null" >
         config_status = #{configStatus,jdbcType=TINYINT},
       </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -284,11 +284,11 @@
       plan_name = #{planName,jdbcType=VARCHAR},
       config_add_time = #{configAddTime,jdbcType=INTEGER},
       config_status = #{configStatus,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=TINYINT}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

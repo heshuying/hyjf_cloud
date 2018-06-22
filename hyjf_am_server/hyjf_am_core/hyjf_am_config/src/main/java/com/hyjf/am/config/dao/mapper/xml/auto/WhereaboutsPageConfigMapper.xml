@@ -12,14 +12,14 @@
     <result column="bottom_button" property="bottomButton" jdbcType="VARCHAR" />
     <result column="download_path" property="downloadPath" jdbcType="VARCHAR" />
     <result column="describe" property="describe" jdbcType="VARCHAR" />
-    <result column="status_on" property="statusOn" jdbcType="TINYINT" />
-    <result column="delete_status" property="deleteStatus" jdbcType="BIT" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="style" property="style" jdbcType="INTEGER" />
+    <result column="status_on" property="statusOn" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -81,8 +81,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, title, utm_id, referrer, top_button, jump_path, bottom_button_status, bottom_button, 
-    download_path, `describe`, status_on, delete_status, create_time, create_user, update_time, 
-    update_user, remark, `style`
+    download_path, `describe`, remark, `style`, status_on, del_flag, create_user_id, 
+    update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.WhereaboutsPageConfigExample" >
     select
@@ -124,15 +124,15 @@
     insert into ht_whereabouts_page_config (title, utm_id, referrer, 
       top_button, jump_path, bottom_button_status, 
       bottom_button, download_path, `describe`, 
-      status_on, delete_status, create_time, 
-      create_user, update_time, update_user, 
-      remark, `style`)
+      remark, `style`, status_on, 
+      del_flag, create_user_id, update_user_id, 
+      create_time, update_time)
     values (#{title,jdbcType=VARCHAR}, #{utmId,jdbcType=INTEGER}, #{referrer,jdbcType=INTEGER}, 
       #{topButton,jdbcType=VARCHAR}, #{jumpPath,jdbcType=VARCHAR}, #{bottomButtonStatus,jdbcType=BIT}, 
       #{bottomButton,jdbcType=VARCHAR}, #{downloadPath,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
-      #{statusOn,jdbcType=TINYINT}, #{deleteStatus,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{style,jdbcType=INTEGER})
+      #{remark,jdbcType=VARCHAR}, #{style,jdbcType=INTEGER}, #{statusOn,jdbcType=TINYINT}, 
+      #{delFlag,jdbcType=BIT}, #{createUserId,jdbcType=VARCHAR}, #{updateUserId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.WhereaboutsPageConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -167,29 +167,29 @@
       <if test="describe != null" >
         `describe`,
       </if>
-      <if test="statusOn != null" >
-        status_on,
-      </if>
-      <if test="deleteStatus != null" >
-        delete_status,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="createUser != null" >
-        create_user,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="updateUser != null" >
-        update_user,
-      </if>
       <if test="remark != null" >
         remark,
       </if>
       <if test="style != null" >
         `style`,
+      </if>
+      <if test="statusOn != null" >
+        status_on,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -220,29 +220,29 @@
       <if test="describe != null" >
         #{describe,jdbcType=VARCHAR},
       </if>
-      <if test="statusOn != null" >
-        #{statusOn,jdbcType=TINYINT},
-      </if>
-      <if test="deleteStatus != null" >
-        #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="style != null" >
         #{style,jdbcType=INTEGER},
+      </if>
+      <if test="statusOn != null" >
+        #{statusOn,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -285,29 +285,29 @@
       <if test="record.describe != null" >
         `describe` = #{record.describe,jdbcType=VARCHAR},
       </if>
-      <if test="record.statusOn != null" >
-        status_on = #{record.statusOn,jdbcType=TINYINT},
-      </if>
-      <if test="record.deleteStatus != null" >
-        delete_status = #{record.deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUser != null" >
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=VARCHAR},
-      </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.style != null" >
         `style` = #{record.style,jdbcType=INTEGER},
+      </if>
+      <if test="record.statusOn != null" >
+        status_on = #{record.statusOn,jdbcType=TINYINT},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=BIT},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -326,14 +326,14 @@
       bottom_button = #{record.bottomButton,jdbcType=VARCHAR},
       download_path = #{record.downloadPath,jdbcType=VARCHAR},
       `describe` = #{record.describe,jdbcType=VARCHAR},
-      status_on = #{record.statusOn,jdbcType=TINYINT},
-      delete_status = #{record.deleteStatus,jdbcType=BIT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_user = #{record.updateUser,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      `style` = #{record.style,jdbcType=INTEGER}
+      `style` = #{record.style,jdbcType=INTEGER},
+      status_on = #{record.statusOn,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=BIT},
+      create_user_id = #{record.createUserId,jdbcType=VARCHAR},
+      update_user_id = #{record.updateUserId,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -368,29 +368,29 @@
       <if test="describe != null" >
         `describe` = #{describe,jdbcType=VARCHAR},
       </if>
-      <if test="statusOn != null" >
-        status_on = #{statusOn,jdbcType=TINYINT},
-      </if>
-      <if test="deleteStatus != null" >
-        delete_status = #{deleteStatus,jdbcType=BIT},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null" >
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="style != null" >
         `style` = #{style,jdbcType=INTEGER},
+      </if>
+      <if test="statusOn != null" >
+        status_on = #{statusOn,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -406,14 +406,14 @@
       bottom_button = #{bottomButton,jdbcType=VARCHAR},
       download_path = #{downloadPath,jdbcType=VARCHAR},
       `describe` = #{describe,jdbcType=VARCHAR},
-      status_on = #{statusOn,jdbcType=TINYINT},
-      delete_status = #{deleteStatus,jdbcType=BIT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      `style` = #{style,jdbcType=INTEGER}
+      `style` = #{style,jdbcType=INTEGER},
+      status_on = #{statusOn,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=BIT},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
