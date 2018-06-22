@@ -107,7 +107,7 @@ public interface MQConstant {
 	 * 法大大
 	 */
 	String FDD_GROUP = "FDD_GROUP";
-	String BORROW_GENERATE_CONTRACT_TOPIC = "BORROW_GENERATE_CONTRACT_TOPIC";
+	String FDD_CONTRACT_TOPIC = "FDD_CONTRACT_TOPIC";
 
 
 }

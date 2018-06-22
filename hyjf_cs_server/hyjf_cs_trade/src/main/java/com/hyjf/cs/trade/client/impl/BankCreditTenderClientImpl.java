@@ -1,10 +1,15 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.BorrowWithBLOBsResponse;
 import com.hyjf.am.response.trade.CreditTenderLogResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.resquest.trade.TenderCreditRequest;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +86,79 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
     public Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog) {
         String url = "http://AM-TRADE/am-trade/bankException/updateCreditTenderLog";
         return restTemplate.postForEntity(url, creditTenderLog, Boolean.class).getBody();
+    }
+
+    /**
+     *同步回调收到后,根据logOrderId检索投资记录表
+     * @param logOrderId
+     * @return
+     */
+    @Override
+    public CreditTenderLogVO selectCreditTenderLogByOrderId(String logOrderId) {
+        CreditTenderLogResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/bankException/selectCreditTenderLogByOrderId/" + logOrderId, CreditTenderLogResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     *获取CreditTenderLog信息
+     * @param assignOrderId
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CreditTenderLogVO> selectByOrderIdAndUserId(String assignOrderId, Integer userId) {
+        CreditTenderLogResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/bankException/selectByOrderIdAndUserId/" + assignOrderId+"/"+userId, CreditTenderLogResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 刪除
+     * @param assignOrderId
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean deleteByOrderIdAndUserId(String assignOrderId, Integer userId) {
+        return restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/bankException/deleteByOrderIdAndUserId/" + assignOrderId+"/"+userId, Boolean.class).getBody();
+    }
+
+    /**
+     * 獲取賬戶信息
+     * @param sellerUserId
+     * @return
+     */
+    @Override
+    public AccountVO getAccount(int userId) {
+        AccountResponse response
+                = restTemplate.getForEntity("http://AM-TRADE/am-trade/account/getAccountByUserId/" + userId, AccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 项目详情
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowWithBLOBsVO getBorrowByNid(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowWithBLOBsByNid/" + borrowNid;
+        BorrowWithBLOBsResponse response = restTemplate.getForEntity(url,BorrowWithBLOBsResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
     }
 
 

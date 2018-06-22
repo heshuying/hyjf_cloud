@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.CouponRecoverCustomizeMapper">
-	<resultMap id="currentCouponRecover" type="com.hyjf.mybatis.model.customize.coupon.CouponRecoverCustomize">
+	<resultMap id="currentCouponRecover" type="com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize">
 		<result column="id" property="id" jdbcType="INTEGER" />
 		<result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
 		<result column="recover_account" property="recoverAccount" jdbcType="VARCHAR" />
@@ -20,10 +20,10 @@
 				cc.coupon_type,
 				cu.coupon_user_code
 			FROM
-				hyjf_coupon_recover cr
-			INNER JOIN hyjf_coupon_tender ct ON cr.tender_id = ct.order_id
-			INNER JOIN hyjf_coupon_user cu ON ct.coupon_grant_id = cu.id
-			INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
+				ht_coupon_recover cr
+			INNER JOIN ht_coupon_tender ct ON cr.tender_id = ct.order_id
+			INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+			INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 			WHERE
 				cr.tender_id = #{tenderNid}
 			AND cr.recover_period = #{periodNow}
@@ -44,10 +44,10 @@
 				cu.coupon_user_code,
 				cc.coupon_type
 			FROM
-				hyjf_coupon_recover cr
-			INNER JOIN hyjf_coupon_tender ct ON cr.tender_id = ct.order_id
-			INNER JOIN hyjf_coupon_user cu ON ct.coupon_grant_id = cu.id
-			INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
+				ht_coupon_recover cr
+			INNER JOIN ht_coupon_tender ct ON cr.tender_id = ct.order_id
+			INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+			INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 			WHERE
 				cr.tender_id = #{tenderNid}
 			AND cr.recover_period = #{periodNow}
@@ -59,7 +59,7 @@
 			AND cc.del_flg = 0
 	</select>
 	
-	<resultMap id="couponRecoverResult" type="com.hyjf.mybatis.model.customize.coupon.CouponRecoverCustomize">
+	<resultMap id="couponRecoverResult" type="com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize">
 		<result column="id" property="id" jdbcType="INTEGER" />
 		<result column="tender_id" property="tenderNid" jdbcType="VARCHAR" />
 		<result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
@@ -79,9 +79,9 @@
 				b.addip,
 				cr.update_time
 			FROM
-				hyjf_coupon_recover cr
-			INNER JOIN hyjf_borrow_tender_cpn bt ON bt.nid = cr.tender_id
-			INNER JOIN huiyingdai_borrow b ON bt.borrow_nid = b.borrow_nid
+				ht_coupon_recover cr
+			INNER JOIN ht_borrow_tender_cpn bt ON bt.nid = cr.tender_id
+			INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 			WHERE
 				bt.user_id = #{userId}
 			AND cr.recover_status = 1
@@ -89,81 +89,81 @@
 			AND cr.del_flag = 0
 	</select>
 
-	<resultMap id="couponRecoverPnr" type="com.hyjf.mybatis.model.auto.CouponRecover">
-		<result column="id" property="id" jdbcType="INTEGER" />
-	</resultMap>
-		
-	<select id="selectCrWaitPnr" resultMap="couponRecoverPnr" >
-			SELECT
-				cr.id
-			FROM
-				hyjf_coupon_recover cr
-			INNER JOIN hyjf_coupon_real_tender crt ON cr.tender_id = crt.coupon_tender_id
-			WHERE
-				(
-					ISNULL(crt.real_tender_id)
-					OR crt.real_tender_id = ''
-				)
-			AND cr.recover_time <![CDATA[>=]]> unix_timestamp(now())
-			AND cr.recover_status = 0
-	</select>
-	
-	<resultMap id="couponRecoverAll" type="com.hyjf.mybatis.model.customize.coupon.CouponTenderCustomize">
-		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
-		<result column="user_id" property="userId" jdbcType="INTEGER" />
-		<result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
-		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
-		<result column="borrow_nid" property="borrowNid" />
-	</resultMap>
-		
-	<select id="selectCouponRecoverAll" resultMap="couponRecoverAll" parameterType="java.util.Map">
-			SELECT
-				ct.order_id,
-				bt.user_id,
-				ct.coupon_grant_id,
-				cu.coupon_user_code,
-				bt.borrow_nid
-			FROM
-				hyjf_borrow_tender_cpn bt
-			INNER JOIN hyjf_coupon_tender ct ON bt.nid = ct.order_id
-			INNER JOIN hyjf_coupon_user cu ON ct.coupon_grant_id = cu.id
-			INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-			WHERE
-				bt.borrow_nid = #{borrowNid}
-				<if test="repayTimeConfig != null">
-				AND cc.repay_time_config = #{repayTimeConfig}
-				</if>
-			AND ct.del_flg = 0
-	</select>
-	
-	<select id="selectCouponRecoverHjh" resultMap="couponRecoverAll" parameterType="java.util.Map">
-			SELECT
-				ct.order_id,
-				bt.user_id,
-				ct.coupon_grant_id,
-				cu.coupon_user_code,
-				bt.borrow_nid
-			FROM
-				hyjf_borrow_tender_cpn bt
-			INNER JOIN hyjf_coupon_real_tender crt ON crt.coupon_tender_id = bt.nid
-			INNER JOIN hyjf_coupon_tender ct ON bt.nid = ct.order_id
-			INNER JOIN hyjf_coupon_user cu ON ct.coupon_grant_id = cu.id
-			INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-			WHERE
-				crt.real_tender_id = #{orderId}
-				<if test="repayTimeConfig != null">
-				AND cc.repay_time_config = #{repayTimeConfig}
-				</if>
-			AND ct.del_flg = 0
-	</select>
+	<!--<resultMap id="couponRecoverPnr" type="com.hyjf.mybatis.model.auto.CouponRecover">-->
+		<!--<result column="id" property="id" jdbcType="INTEGER" />-->
+	<!--</resultMap>-->
+		<!---->
+	<!--<select id="selectCrWaitPnr" resultMap="couponRecoverPnr" >-->
+			<!--SELECT-->
+				<!--cr.id-->
+			<!--FROM-->
+				<!--ht_coupon_recover cr-->
+			<!--INNER JOIN ht_coupon_real_tender crt ON cr.tender_id = crt.coupon_tender_id-->
+			<!--WHERE-->
+				<!--(-->
+					<!--ISNULL(crt.real_tender_id)-->
+					<!--OR crt.real_tender_id = ''-->
+				<!--)-->
+			<!--AND cr.recover_time <![CDATA[>=]]> unix_timestamp(now())-->
+			<!--AND cr.recover_status = 0-->
+	<!--</select>-->
+	<!---->
+	<!--<resultMap id="couponRecoverAll" type="com.hyjf.mybatis.model.customize.coupon.CouponTenderCustomize">-->
+		<!--<result column="order_id" property="orderId" jdbcType="VARCHAR" />-->
+		<!--<result column="user_id" property="userId" jdbcType="INTEGER" />-->
+		<!--<result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />-->
+		<!--<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />-->
+		<!--<result column="borrow_nid" property="borrowNid" />-->
+	<!--</resultMap>-->
+		<!---->
+	<!--<select id="selectCouponRecoverAll" resultMap="couponRecoverAll" parameterType="java.util.Map">-->
+			<!--SELECT-->
+				<!--ct.order_id,-->
+				<!--bt.user_id,-->
+				<!--ct.coupon_grant_id,-->
+				<!--cu.coupon_user_code,-->
+				<!--bt.borrow_nid-->
+			<!--FROM-->
+				<!--ht_borrow_tender_cpn bt-->
+			<!--INNER JOIN ht_coupon_tender ct ON bt.nid = ct.order_id-->
+			<!--INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id-->
+			<!--INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code-->
+			<!--WHERE-->
+				<!--bt.borrow_nid = #{borrowNid}-->
+				<!--<if test="repayTimeConfig != null">-->
+				<!--AND cc.repay_time_config = #{repayTimeConfig}-->
+				<!--</if>-->
+			<!--AND ct.del_flg = 0-->
+	<!--</select>-->
+	<!---->
+	<!--<select id="selectCouponRecoverHjh" resultMap="couponRecoverAll" parameterType="java.util.Map">-->
+			<!--SELECT-->
+				<!--ct.order_id,-->
+				<!--bt.user_id,-->
+				<!--ct.coupon_grant_id,-->
+				<!--cu.coupon_user_code,-->
+				<!--bt.borrow_nid-->
+			<!--FROM-->
+				<!--ht_borrow_tender_cpn bt-->
+			<!--INNER JOIN ht_coupon_real_tender crt ON crt.coupon_tender_id = bt.nid-->
+			<!--INNER JOIN ht_coupon_tender ct ON bt.nid = ct.order_id-->
+			<!--INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id-->
+			<!--INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code-->
+			<!--WHERE-->
+				<!--crt.real_tender_id = #{orderId}-->
+				<!--<if test="repayTimeConfig != null">-->
+				<!--AND cc.repay_time_config = #{repayTimeConfig}-->
+				<!--</if>-->
+			<!--AND ct.del_flg = 0-->
+	<!--</select>-->
 
 	<!-- 优惠券待收收益  -->
 	<select id="selectCouponInterestTotal" resultType="String" parameterType="java.lang.Integer">
 			SELECT
 				SUM(IFNULL(cr.recover_account,0)) AS recover_interest
 			FROM
-				hyjf_coupon_recover cr
-			INNER JOIN hyjf_borrow_tender_cpn bt ON bt.nid = cr.tender_id
+				ht_coupon_recover cr
+			INNER JOIN ht_borrow_tender_cpn bt ON bt.nid = cr.tender_id
 			WHERE
 				bt.user_id = #{userId}
 			AND bt.tender_type = 1
@@ -176,8 +176,8 @@
 			SELECT
 				SUM(IFNULL(cr.recover_interest_yes,0) + IFNULL(cr.recover_capital_yes,0)) AS recover_interest
 			FROM
-				hyjf_coupon_recover cr
-			INNER JOIN hyjf_borrow_tender_cpn bt ON bt.nid = cr.tender_id
+				ht_coupon_recover cr
+			INNER JOIN ht_borrow_tender_cpn bt ON bt.nid = cr.tender_id
 			WHERE
 				bt.user_id = #{userId}
 			AND bt.tender_type = 1
@@ -238,7 +238,7 @@
 	</select>
 	
 	<update id="crRecoverPeriod" parameterType="java.util.Map">
-		UPDATE hyjf_coupon_recover r
+		UPDATE ht_coupon_recover r
 		SET r.current_recover_flg = #{currentRecoverFlg}
 		WHERE
 			r.tender_id = #{tenderNid}

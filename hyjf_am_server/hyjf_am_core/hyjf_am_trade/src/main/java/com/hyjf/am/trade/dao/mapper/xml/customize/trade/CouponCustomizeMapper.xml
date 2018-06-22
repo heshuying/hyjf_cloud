@@ -51,8 +51,8 @@
 			cc.repay_time_config repayTimeConfig,
 			cc.coupon_profit_time couponProfitTime
 		FROM
-			hyjf_coupon_user cu
-		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
+			ht_coupon_user cu
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		WHERE
 			cu.id = #{couponGrantId}
 		AND cu.user_id=#{userId}
