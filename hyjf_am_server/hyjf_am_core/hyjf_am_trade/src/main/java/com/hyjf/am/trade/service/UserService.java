@@ -25,10 +25,9 @@ public interface UserService {
 
     /**
      * 根据机构编号查询机构列表
-     * @param instCode
      * @return
      */
-    List<HjhInstConfig> selectInstConfigListByInstCode(String instCode);
+    List<HjhInstConfig> selectInstConfigAll();
 
     List<RecentPaymentListCustomize> selectRecentPaymentList(Map<String, Object> paraMap);
 }

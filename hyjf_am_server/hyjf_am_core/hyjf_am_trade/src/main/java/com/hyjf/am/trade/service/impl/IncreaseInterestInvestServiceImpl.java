@@ -508,11 +508,11 @@ public class IncreaseInterestInvestServiceImpl implements IncreaseInterestInvest
 									msg.put("val_profit", repayInterest == null ? "0.00" : repayInterest.toString());
 
 									SmsMessage smsMessage = new SmsMessage(investUserId, msg, null, null,
-											MessageConstant.SMSSENDFORUSER, null,
+											MessageConstant.SMS_SEND_FOR_USER, null,
 											CustomConstants.PARAM_TPL_JIAXIHUANKUAN,
 											CustomConstants.CHANNEL_TYPE_NORMAL);
 									AppMsMessage appMsMessage = new AppMsMessage(investUserId, msg, null,
-											MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_JIAXIHUANKUAN);
+											MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_JIAXIHUANKUAN);
 									try {
 										smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
 												JSON.toJSONBytes(smsMessage)));

@@ -13,8 +13,11 @@ import com.hyjf.am.config.dao.mapper.auto.MessagePushTemplateMapper;
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample;
 import com.hyjf.am.config.service.MessagePushTemplateServcie;
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
 
 /**
  * @author fuqiang
@@ -42,5 +45,14 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 			}
 		}
 		return messagePushTemplate;
+	}
+
+	@Override
+	public List<MessagePushTemplate> getAllTemplates() {
+		MessagePushTemplateExample example = new MessagePushTemplateExample();
+		MessagePushTemplateExample.Criteria cra = example.createCriteria();
+		cra.andStatusEqualTo(CustomConstants.MSG_PUSH_STATUS_1);// 启用
+		List<MessagePushTemplate> templateList = this.templateMapper.selectByExample(example);
+		return templateList;
 	}
 }

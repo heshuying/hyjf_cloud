@@ -31,7 +31,7 @@ public class MqTest {
     public void sendSmscode() throws MQException {
 
 
-        MailMessage mailMessage = new MailMessage(399044, null, "邮件主题aaa", "12345,上山打老虎",  null, null, null, MessageConstant.MAILSENDFORUSER);
+        MailMessage mailMessage = new MailMessage(399044, null, "邮件主题aaa", "12345,上山打老虎",  null, null, null, MessageConstant.MAIL_SEND_FOR_USER);
 
         // 发送
         mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));

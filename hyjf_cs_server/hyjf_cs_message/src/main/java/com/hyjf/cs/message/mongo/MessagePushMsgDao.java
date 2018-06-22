@@ -35,8 +35,28 @@ public class MessagePushMsgDao extends BaseMongoDao<MessagePush> {
 		return mongoTemplate.find(query, getEntityClass());
 	}
 
+	/**
+	 * 根据时间取发送记录
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public List<MessagePush> getMsgStaticsListByTime(Integer startTime, Integer endTime) {
+		Query query = new Query();
+		Criteria criteria = Criteria.where("msgSendStatus").is(CustomConstants.MSG_PUSH_MSG_STATUS_1);
+		if (startTime != null) {
+			criteria.and("sendTime").gte(startTime);
+		}
+		if (endTime != null) {
+			criteria.and("endTime").lte(endTime);
+		}
+		query.addCriteria(criteria);
+		return mongoTemplate.find(query, getEntityClass());
+	}
+
 	@Override
 	protected Class<MessagePush> getEntityClass() {
 		return MessagePush.class;
 	}
+
 }

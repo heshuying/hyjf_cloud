@@ -3,7 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
 
 /**
  * @author fuqiang
@@ -17,4 +20,10 @@ public interface MessagePushTemplateServcie {
      * @return
      */
     MessagePushTemplate findMessagePushTemplateByCode(String tplCode);
+
+    /**
+     * 查询所有模版
+     * @return
+     */
+    List<MessagePushTemplate> getAllTemplates();
 }

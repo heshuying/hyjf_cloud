@@ -1,4 +1,7 @@
-package com.hyjf.am.vo.trade.coupon;
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -7,13 +10,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @Description 优惠券相关
- * @Author sunss
- * @Version v0.1
- * @Date 2018/6/19 13:48
+ * @author yaoy
+ * @version CouponConfigVO, v0.1 2018/6/22 10:31
  */
-public class CouponUserVO extends BaseVO implements Serializable {
-
+public class CouponConfigVO extends BaseVO implements Serializable {
     private Integer id;
 
     private String couponCode;
@@ -24,7 +24,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     private Integer couponQuantity;
 
-    private Integer couponProfitTime;
+    private Short couponProfitTime;
 
     private Integer expirationType;
 
@@ -32,7 +32,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     private Integer expirationLength;
 
-    private Integer expirationLengthDay;
+    private Short expirationLengthDay;
 
     private Integer addFlg;
 
@@ -70,24 +70,17 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     private Integer repayTimeConfig;
 
-    private Integer addTime;
-
-    private String addUser;
-
-    private Integer updateTime;
-
-    private String updateUser;
-
     private Integer delFlg;
 
-    // 使用截止时间
-    private int endTime;
-    // 优惠券状态
-    private int usedFlag;
-    // 更新时间
-    private int userUpdateTime;
-    // 发放给用户的优惠券编号
-    private String couponUserCode;
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -102,7 +95,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
 
     public void setCouponCode(String couponCode) {
-        this.couponCode = couponCode;
+        this.couponCode = couponCode == null ? null : couponCode.trim();
     }
 
     public String getCouponName() {
@@ -110,7 +103,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
 
     public void setCouponName(String couponName) {
-        this.couponName = couponName;
+        this.couponName = couponName == null ? null : couponName.trim();
     }
 
     public BigDecimal getCouponQuota() {
@@ -129,11 +122,11 @@ public class CouponUserVO extends BaseVO implements Serializable {
         this.couponQuantity = couponQuantity;
     }
 
-    public Integer getCouponProfitTime() {
+    public Short getCouponProfitTime() {
         return couponProfitTime;
     }
 
-    public void setCouponProfitTime(Integer couponProfitTime) {
+    public void setCouponProfitTime(Short couponProfitTime) {
         this.couponProfitTime = couponProfitTime;
     }
 
@@ -161,11 +154,11 @@ public class CouponUserVO extends BaseVO implements Serializable {
         this.expirationLength = expirationLength;
     }
 
-    public Integer getExpirationLengthDay() {
+    public Short getExpirationLengthDay() {
         return expirationLengthDay;
     }
 
-    public void setExpirationLengthDay(Integer expirationLengthDay) {
+    public void setExpirationLengthDay(Short expirationLengthDay) {
         this.expirationLengthDay = expirationLengthDay;
     }
 
@@ -182,7 +175,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
 
     public void setCouponSystem(String couponSystem) {
-        this.couponSystem = couponSystem;
+        this.couponSystem = couponSystem == null ? null : couponSystem.trim();
     }
 
     public Integer getCouponType() {
@@ -198,7 +191,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
 
     public void setProjectType(String projectType) {
-        this.projectType = projectType;
+        this.projectType = projectType == null ? null : projectType.trim();
     }
 
     public Integer getProjectExpirationType() {
@@ -270,7 +263,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.content = content == null ? null : content.trim();
     }
 
     public Integer getStatus() {
@@ -286,7 +279,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
 
     public void setAuditContent(String auditContent) {
-        this.auditContent = auditContent;
+        this.auditContent = auditContent == null ? null : auditContent.trim();
     }
 
     public String getAuditUser() {
@@ -294,7 +287,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
 
     public void setAuditUser(String auditUser) {
-        this.auditUser = auditUser;
+        this.auditUser = auditUser == null ? null : auditUser.trim();
     }
 
     public Integer getAuditTime() {
@@ -313,38 +306,6 @@ public class CouponUserVO extends BaseVO implements Serializable {
         this.repayTimeConfig = repayTimeConfig;
     }
 
-    public Integer getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddUser() {
-        return addUser;
-    }
-
-    public void setAddUser(String addUser) {
-        this.addUser = addUser;
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
-
     public Integer getDelFlg() {
         return delFlg;
     }
@@ -353,35 +314,35 @@ public class CouponUserVO extends BaseVO implements Serializable {
         this.delFlg = delFlg;
     }
 
-    public int getEndTime() {
-        return endTime;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setEndTime(int endTime) {
-        this.endTime = endTime;
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public int getUsedFlag() {
-        return usedFlag;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUsedFlag(int usedFlag) {
-        this.usedFlag = usedFlag;
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
-    public int getUserUpdateTime() {
-        return userUpdateTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setUserUpdateTime(int userUpdateTime) {
-        this.userUpdateTime = userUpdateTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public String getCouponUserCode() {
-        return couponUserCode;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setCouponUserCode(String couponUserCode) {
-        this.couponUserCode = couponUserCode;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

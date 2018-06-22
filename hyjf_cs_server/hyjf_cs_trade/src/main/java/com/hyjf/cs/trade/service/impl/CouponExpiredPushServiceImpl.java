@@ -5,8 +5,8 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.AppMsMessage;
-import com.hyjf.am.vo.trade.CouponConfigVo;
-import com.hyjf.am.vo.trade.CouponUserVo;
+import com.hyjf.am.vo.trade.CouponConfigVO;
+import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
@@ -52,10 +52,10 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
         int yestodayEndDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf));
 
         // 取得体验金投资（无真实投资）的还款列表
-        List<CouponUserVo> couponUsers = couponUserClient.selectCouponUser(nowBeginDate, nowEndDate);
+        List<CouponUserVO> couponUsers = couponUserClient.selectCouponUser(nowBeginDate, nowEndDate);
 
-        for (CouponUserVo cUser : couponUsers) {
-            CouponConfigVo config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
+        for (CouponUserVO cUser : couponUsers) {
+            CouponConfigVO config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
             if (config == null ) {
                 logger.info("根据优惠券编号没有查询到优惠券配置，编号：{}", cUser.getCouponCode());
                 continue;
@@ -80,9 +80,9 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
             appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(appMsMessage)));
         }
 
-        List<CouponUserVo> couponUsersExp = couponUserClient.selectCouponUser(yestodayBeginDate, yestodayEndDate);
-        for (CouponUserVo cUser : couponUsersExp) {
-            CouponConfigVo config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
+        List<CouponUserVO> couponUsersExp = couponUserClient.selectCouponUser(yestodayBeginDate, yestodayEndDate);
+        for (CouponUserVO cUser : couponUsersExp) {
+            CouponConfigVO config = couponConfigClient.selectCouponConfig(cUser.getCouponCode());
             if (config == null ) {
                 logger.info("根据优惠券编号没有查询到优惠券配置，编号：{}", cUser.getCouponCode());
                 continue;

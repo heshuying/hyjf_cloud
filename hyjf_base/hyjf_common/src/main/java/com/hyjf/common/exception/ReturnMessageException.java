@@ -1,7 +1,6 @@
 package com.hyjf.common.exception;
 
 import com.hyjf.common.constants.MsgCode;
-import org.apache.log4j.spi.ErrorCode;
 
 /**
  * @author xiasq

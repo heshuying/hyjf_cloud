@@ -1,9 +1,10 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.resquest.trade.RtbIncreaseRepayRequest;
+import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -26,4 +27,21 @@ public interface AmTradeClient {
      * @param companyAccount
      */
     void rtbIncreaseReapy(BorrowApicronVO borrowApicronVO, String account, String companyAccount);
+
+    /**
+     * 统计加息券每日待收收益
+     * @param timeStart
+     * @param timeEnd
+     * @return
+     */
+    List<CouponRecoverCustomizeVO> selectCouponInterestWaitToday(long timeStart, long timeEnd);
+
+    /**
+     * 统计加息券每日已收收益
+     * @param timeStart
+     * @return timeEnd
+     */
+    BigDecimal selectCouponInterestReceivedToday(long timeStart, long timeEnd);
+
+
 }

@@ -4,7 +4,9 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.resquest.user.UserManagerRequest;
+import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
+import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +29,18 @@ public interface UserManagerCustomizeMapper {
      * @return
      */
     Integer countUserRecord(UserManagerRequest userRequest);
+
+    /**
+     * 根据用户id获取用户详情
+     * @param userId
+     * @return
+     */
+    UserManagerDetailCustomize selectUserDetailById(int userId);
+
+    /**
+     *根据用户id获取开户信息
+     * @param userId
+     * @return
+     */
+    UserBankOpenAccountCustomize selectBankOpenAccountByUserId(int userId);
 }

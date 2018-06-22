@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.vo.trade.CouponUserVo;
+import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.cs.trade.client.CouponUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class CouponUserClientImpl implements CouponUserClient {
     private RestTemplate restTemplate;
 
     @Override
-    public List<CouponUserVo> selectCouponUser(int nowBeginDate, int nowEndDate) {
+    public List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate) {
         CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/selectCouponUser/" + nowBeginDate + "/" + nowEndDate, CouponUserResponse.class).getBody();
         if (response != null) {
             return response.getResultList();

@@ -1,11 +1,12 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.BankCallBeanVO;
+import java.util.List;
+
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-
-import java.util.List;
 
 /**
  * 债转投资异常
@@ -22,4 +23,14 @@ public interface BankCreditTenderClient {
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
     Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog);
+
+    CreditTenderLogVO selectCreditTenderLogByOrderId(String logOrderId);
+
+    List<CreditTenderLogVO> selectByOrderIdAndUserId(String assignOrderId, Integer userId);
+
+    boolean deleteByOrderIdAndUserId(String assignOrderId, Integer userId);
+
+    AccountVO getAccount(int sellerUserId);
+
+    BorrowVO getBorrowByNid(String borrowNid);
 }
