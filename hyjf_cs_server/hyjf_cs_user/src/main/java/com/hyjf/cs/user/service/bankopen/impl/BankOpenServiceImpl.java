@@ -11,6 +11,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -105,11 +106,12 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     @Override
     public void checkRequestParam(UserVO user, BankOpenVO bankOpenVO) {
         if (user == null) {
-            throw new CheckException(MsgEnum.ERR_GET_USER);
+            CheckUtil.check(false,MsgEnum.ERR_OBJECT_GET,"用户信息");// 获取用户信息失败
+            // throw new CheckException(MsgEnum.ERR_GET_USER);
         }
         if(user.getBankOpenAccount()!=null&&"1".equals(user.getBankOpenAccount())){
             // 用户已开户
-            throw new CheckException(MsgEnum.OPEN_ACCOUNTED_ERROR);
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ALREADY_OPEN);
         }
         // 手机号
         if (StringUtils.isEmpty(bankOpenVO.getMobile())) {
@@ -134,7 +136,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         }
 
         if (bankOpenVO.getIdNo().length() != 18) {
-            throw new CheckException(MsgEnum.IDNO_FORMAT_ERROR);
+            throw new CheckException(MsgEnum.ERR_FMT_IDCARDNO);
         }
         String idNo = bankOpenVO.getIdNo().toUpperCase().trim();
         bankOpenVO.setIdNo(idNo);
@@ -144,7 +146,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             throw new CheckException(MsgEnum.STATUS_ZC000014);
         }
         if(!Validator.isMobile(bankOpenVO.getMobile())){
-            throw new CheckException(MsgEnum.ERR_MOBILE_FORMAT);
+            throw new CheckException(MsgEnum.ERR_FMT_MOBILE);
         }
         String mobile = user.getMobile();
         if (StringUtils.isBlank(mobile)) {
@@ -200,7 +202,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 同步地址  是否跳转到前端页面
         //String retUrl = systemConfig.getFrontHost() + openBean.getClientHeader() + "/open/faild?phone=" + openBean.getMobile()+"&logOrdId="+openAccoutBean.getLogOrderId();
         String retUrl = systemConfig.getFrontHost() + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() +"/open/openSuccess";
+        String successUrl = systemConfig.getFrontHost() +"/user/openSuccess";
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);

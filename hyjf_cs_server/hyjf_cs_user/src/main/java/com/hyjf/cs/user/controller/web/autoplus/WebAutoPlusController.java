@@ -67,7 +67,7 @@ public class WebAutoPlusController extends BaseUserController {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = autoPlusService.getUsers(token);
         CheckUtil.check(user!=null,MsgEnum.ERR_USER_NOT_LOGIN);
-        CheckUtil.check(user.getMobile()!=null,MsgEnum.ERR_MOBILE);
+        CheckUtil.check(user.getMobile()!=null,MsgEnum.ERR_OBJECT_BLANK,"手机号");//手机号未填写
         CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("type")), MsgEnum.ERR_PARAM_TYPE);
         String srvTxCode = "1".equals(param.get("type"))? BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS:BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS;
                 // 请求银行绑卡接口
@@ -117,7 +117,7 @@ public class WebAutoPlusController extends BaseUserController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            CheckUtil.check(false,MsgEnum.ERR_CALL_BANK);
+            CheckUtil.check(false,MsgEnum.ERR_BANK_CALL);
         }
         result.setData(map);
         return result;
@@ -150,7 +150,7 @@ public class WebAutoPlusController extends BaseUserController {
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ReturnMessageException(MsgEnum.ERR_CALL_BANK);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
         result.setData(map);
         return result;

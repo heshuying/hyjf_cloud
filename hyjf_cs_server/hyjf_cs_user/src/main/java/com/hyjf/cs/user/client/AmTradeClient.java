@@ -5,6 +5,9 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing
@@ -15,4 +18,6 @@ public interface AmTradeClient {
     HjhInstConfigVO selectInstConfigByInstCode(String instCode);
 
     AccountVO getAccount(Integer userId);
+
+    List<RecentPaymentListCustomizeVO> selectRecentPaymentList(Integer userId);
 }

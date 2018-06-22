@@ -1,38 +1,38 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.market.dao.mapper.auto.AdsTypeMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.AdsType" >
-    <id column="type_id" property="typeId" jdbcType="INTEGER" />
-    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="order" property="order" jdbcType="INTEGER" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="client_type" property="clientType" jdbcType="TINYINT" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyjf.am.market.dao.mapper.auto.AdsTypeMapper">
+  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.AdsType">
+    <id column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="order" jdbcType="INTEGER" property="order" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="client_type" jdbcType="TINYINT" property="clientType" />
+    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+    <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -43,25 +43,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -72,44 +72,44 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     type_id, type_name, code, `order`, remark, `status`, client_type, create_user_id, 
     update_user_id, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.AdsTypeExample" >
+  <select id="selectByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsTypeExample" resultMap="BaseResultMap">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     from ht_ads_type
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
-    <if test="limitStart >= 0" >
+    <if test="limitStart &gt;= 0">
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from ht_ads_type
     where type_id = #{typeId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ht_ads_type
     where type_id = #{typeId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsTypeExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsTypeExample">
     delete from ht_ads_type
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.AdsType" >
+  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.AdsType">
     insert into ht_ads_type (type_id, type_name, code, 
       `order`, remark, `status`, 
       client_type, create_user_id, update_user_id, 
@@ -119,127 +119,127 @@
       #{clientType,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.AdsType" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.AdsType">
     insert into ht_ads_type
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="typeId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="typeId != null">
         type_id,
       </if>
-      <if test="typeName != null" >
+      <if test="typeName != null">
         type_name,
       </if>
-      <if test="code != null" >
+      <if test="code != null">
         code,
       </if>
-      <if test="order != null" >
+      <if test="order != null">
         `order`,
       </if>
-      <if test="remark != null" >
+      <if test="remark != null">
         remark,
       </if>
-      <if test="status != null" >
+      <if test="status != null">
         `status`,
       </if>
-      <if test="clientType != null" >
+      <if test="clientType != null">
         client_type,
       </if>
-      <if test="createUserId != null" >
+      <if test="createUserId != null">
         create_user_id,
       </if>
-      <if test="updateUserId != null" >
+      <if test="updateUserId != null">
         update_user_id,
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         create_time,
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         update_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="typeId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="typeId != null">
         #{typeId,jdbcType=INTEGER},
       </if>
-      <if test="typeName != null" >
+      <if test="typeName != null">
         #{typeName,jdbcType=VARCHAR},
       </if>
-      <if test="code != null" >
+      <if test="code != null">
         #{code,jdbcType=VARCHAR},
       </if>
-      <if test="order != null" >
+      <if test="order != null">
         #{order,jdbcType=INTEGER},
       </if>
-      <if test="remark != null" >
+      <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
+      <if test="status != null">
         #{status,jdbcType=TINYINT},
       </if>
-      <if test="clientType != null" >
+      <if test="clientType != null">
         #{clientType,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
+      <if test="createUserId != null">
         #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserId != null" >
+      <if test="updateUserId != null">
         #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsTypeExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.AdsTypeExample" resultType="java.lang.Integer">
     select count(*) from ht_ads_type
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update ht_ads_type
-    <set >
-      <if test="record.typeId != null" >
+    <set>
+      <if test="record.typeId != null">
         type_id = #{record.typeId,jdbcType=INTEGER},
       </if>
-      <if test="record.typeName != null" >
+      <if test="record.typeName != null">
         type_name = #{record.typeName,jdbcType=VARCHAR},
       </if>
-      <if test="record.code != null" >
+      <if test="record.code != null">
         code = #{record.code,jdbcType=VARCHAR},
       </if>
-      <if test="record.order != null" >
+      <if test="record.order != null">
         `order` = #{record.order,jdbcType=INTEGER},
       </if>
-      <if test="record.remark != null" >
+      <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.status != null" >
+      <if test="record.status != null">
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
-      <if test="record.clientType != null" >
+      <if test="record.clientType != null">
         client_type = #{record.clientType,jdbcType=TINYINT},
       </if>
-      <if test="record.createUserId != null" >
+      <if test="record.createUserId != null">
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUserId != null" >
+      <if test="record.updateUserId != null">
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null" >
+      <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updateTime != null" >
+      <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update ht_ads_type
     set type_id = #{record.typeId,jdbcType=INTEGER},
       type_name = #{record.typeName,jdbcType=VARCHAR},
@@ -252,47 +252,47 @@
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.AdsType" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.AdsType">
     update ht_ads_type
-    <set >
-      <if test="typeName != null" >
+    <set>
+      <if test="typeName != null">
         type_name = #{typeName,jdbcType=VARCHAR},
       </if>
-      <if test="code != null" >
+      <if test="code != null">
         code = #{code,jdbcType=VARCHAR},
       </if>
-      <if test="order != null" >
+      <if test="order != null">
         `order` = #{order,jdbcType=INTEGER},
       </if>
-      <if test="remark != null" >
+      <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
+      <if test="status != null">
         `status` = #{status,jdbcType=TINYINT},
       </if>
-      <if test="clientType != null" >
+      <if test="clientType != null">
         client_type = #{clientType,jdbcType=TINYINT},
       </if>
-      <if test="createUserId != null" >
+      <if test="createUserId != null">
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUserId != null" >
+      <if test="updateUserId != null">
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where type_id = #{typeId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.AdsType" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.AdsType">
     update ht_ads_type
     set type_name = #{typeName,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},

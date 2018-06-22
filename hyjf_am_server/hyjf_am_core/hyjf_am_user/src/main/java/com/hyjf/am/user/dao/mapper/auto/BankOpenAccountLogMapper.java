@@ -2,6 +2,7 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountLogKey;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,7 +11,7 @@ public interface BankOpenAccountLogMapper {
 
     int deleteByExample(BankOpenAccountLogExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(BankOpenAccountLogKey key);
 
     int insert(BankOpenAccountLog record);
 
@@ -18,7 +19,7 @@ public interface BankOpenAccountLogMapper {
 
     List<BankOpenAccountLog> selectByExample(BankOpenAccountLogExample example);
 
-    BankOpenAccountLog selectByPrimaryKey(Integer id);
+    BankOpenAccountLog selectByPrimaryKey(BankOpenAccountLogKey key);
 
     int updateByExampleSelective(@Param("record") BankOpenAccountLog record, @Param("example") BankOpenAccountLogExample example);
 

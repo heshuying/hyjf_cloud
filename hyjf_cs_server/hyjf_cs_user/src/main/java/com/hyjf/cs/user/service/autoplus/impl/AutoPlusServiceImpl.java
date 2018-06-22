@@ -294,7 +294,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             throw new ReturnMessageException(AuthorizedError.NOT_REGIST_ERROR);
         }
         // 判断用户是否设置过交易密码
-        CheckUtil.check(users.getIsSetPassword() == 1, MsgEnum.ERR_NOT_PASSWD);
+        CheckUtil.check(users.getIsSetPassword() == 1, MsgEnum.ERR_PASSWORD_NOT_SET);
     }
 
     /**

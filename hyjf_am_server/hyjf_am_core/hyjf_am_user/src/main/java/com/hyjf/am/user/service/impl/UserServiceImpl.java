@@ -11,11 +11,9 @@ import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
 import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
-import com.hyjf.am.user.utils.UploadFileUtils;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
@@ -93,6 +91,10 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
+
+
+	@Autowired
+	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -1011,5 +1013,22 @@ public class UserServiceImpl implements UserService {
 		EvalationExample example = new EvalationExample();
 		example.createCriteria().andStatusEqualTo(0);
 		return evalationMapper.selectByExample(example);
+	}
+
+	/**
+	 * 企业用户是否已开户
+	 *
+	 * @param userId
+	 * @return 0 未开户 1已开户
+	 * @author Michael
+	 */
+
+	@Override
+	public int isCompAccount(Integer userId) {
+		CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
+		CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
+		cra.andUserIdEqualTo(userId);
+		cra.andStatusEqualTo(6);// 已开户成功
+		return corpOpenAccountRecordMapper.countByExample(example);
 	}
 }

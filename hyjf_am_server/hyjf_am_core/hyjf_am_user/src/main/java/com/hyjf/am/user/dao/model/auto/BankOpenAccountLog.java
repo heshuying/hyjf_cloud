@@ -34,6 +34,10 @@ public class BankOpenAccountLog implements Serializable {
 
     private Integer status;
 
+    private String retCode;
+
+    private String retMsg;
+
     private Integer createUserId;
 
     private Integer updateUserId;
@@ -162,6 +166,22 @@ public class BankOpenAccountLog implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getRetCode() {
+        return retCode;
+    }
+
+    public void setRetCode(String retCode) {
+        this.retCode = retCode == null ? null : retCode.trim();
+    }
+
+    public String getRetMsg() {
+        return retMsg;
+    }
+
+    public void setRetMsg(String retMsg) {
+        this.retMsg = retMsg == null ? null : retMsg.trim();
     }
 
     public Integer getCreateUserId() {

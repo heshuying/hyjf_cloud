@@ -62,10 +62,15 @@ public class UserInfoController {
 		return response;
 	}
 
-	@RequestMapping("/findUserCrmInfoByUserId/{idNo}")
-	public UserInfoCrmResponse findUserCrmInfoByUserId(@PathVariable String idNo) {
+	/**
+	 * @Description 根据用户ID查询CRM信息
+	 * @Author sunss
+	 * @Date 2018/6/21 17:25
+	 */
+	@RequestMapping("/findUserCrmInfoByUserId/{userId}")
+	public UserInfoCrmResponse findUserCrmInfoByUserId(@PathVariable Integer userId) {
 		UserInfoCrmResponse response = new UserInfoCrmResponse();
-		UserCrmInfoCustomize usersInfo = null;//userInfoService.findUserInfoByIdNo(idNo);
+		UserCrmInfoCustomize usersInfo = userInfoService.findUserCrmInfoByUserId(userId);
 		if (usersInfo != null) {
 			UserInfoCrmVO userInfoVO = new UserInfoCrmVO();
 			BeanUtils.copyProperties(usersInfo, userInfoVO);

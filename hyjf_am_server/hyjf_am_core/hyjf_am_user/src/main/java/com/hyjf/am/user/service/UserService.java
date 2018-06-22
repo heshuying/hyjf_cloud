@@ -6,7 +6,6 @@ import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -127,4 +126,5 @@ public interface UserService {
 
 	List<Evalation> getEvalationRecord();
 
+    int isCompAccount(Integer userId);
 }

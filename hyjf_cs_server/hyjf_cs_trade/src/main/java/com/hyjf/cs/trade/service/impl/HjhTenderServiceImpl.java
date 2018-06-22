@@ -303,7 +303,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 3)
                 || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 1
                 && cuc.getAddFlg() == 1))) {
-            throw new CheckException(MsgEnum.ERR_ACTIVITY_ISNULL);
+            throw new CheckException(MsgEnum.ERR_ACTIVITY_NOT_EXIST);
         }
         // 投资金额小数点后超过两位
         if (account.contains(".")) {

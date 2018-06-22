@@ -36,4 +36,18 @@ public class BankCardServiceImpl implements BankCardService {
 		return null;
 	}
 
+	@Override
+	public BankCard getBankCard(Integer userId) {
+		if (userId != null) {
+			// 取得用户银行卡信息
+			BankCardExample bankCardExample = new BankCardExample();
+			bankCardExample.createCriteria().andUserIdEqualTo(userId);
+			List<BankCard> listBankCard = this.bankCardMapper.selectByExample(bankCardExample);
+			if (listBankCard != null && listBankCard.size() > 0) {
+				return listBankCard.get(0);
+			}
+		}
+		return null;
+	}
+
 }
