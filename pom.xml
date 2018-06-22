@@ -33,15 +33,18 @@
         <java.version>1.8</java.version>
         <spring.cloud.version>Finchley.M9</spring.cloud.version>
         <spring.cloud.sleuth.version>2.0.0.RC2</spring.cloud.sleuth.version>
+        <spring.boot.admin.vesion>2.0.0</spring.boot.admin.vesion>
         <spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
         <druid.version>1.1.1</druid.version>
         <fastjson.version>1.2.47</fastjson.version>
         <rocketmq.version>4.2.0</rocketmq.version>
         <common.pool2.version>2.4.2</common.pool2.version>
+        <commons.lang.version>2.4</commons.lang.version>
         <commons.lang3.version>3.7</commons.lang3.version>
         <commons.io.version>2.6</commons.io.version>
         <jwt.version>3.3.0</jwt.version>
         <google.coll.version>1.0-rc2</google.coll.version>
+        <springfox.swagger.version>2.2.2</springfox.swagger.version>
     </properties>
 
     <dependencies>
@@ -49,6 +52,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons.lang.version}</version>
         </dependency>
 
         <dependency>
@@ -61,13 +70,13 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.2.2</version>
+            <version>${springfox.swagger.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.2.2</version>
+            <version>${springfox.swagger.version}</version>
         </dependency>
 
     </dependencies>
@@ -94,7 +103,7 @@
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-client</artifactId>
-                <version>2.0.0</version>
+                <version>${spring.boot.admin.vesion}</version>
             </dependency>
 
             <!-- sping mybatis -->

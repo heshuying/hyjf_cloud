@@ -60,5 +60,9 @@ public interface BankWithdrawService extends BaseTradeService {
 
     WebResult<Object> toWithdraw(WebViewUserVO user);
 
-    void withdraw();
+    /**
+     * 定时任务提现
+     * add by jijun 20180621
+     */
+    void batchWithdraw();
 }

@@ -1,7 +1,18 @@
 package com.hyjf.cs.trade.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.fdd.fddgeneratecontract.FddGenerateContractBean;
+import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.mq.SmsProducer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,80 +46,22 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     @Autowired
     private BankCreditTenderClient bankCreditTenderClient;
 
+    @Autowired
+    private SmsProducer smsProducer;
     /**
      * 处理债转投资异常
      */
     @Override
     public void handle() {
         List<CreditTenderLogVO> creditTenderLogs = bankCreditTenderClient.selectCreditTenderLogs();
-        if (CollectionUtils.isNotEmpty(creditTenderLogs)) {
-            logger.info("待处理数据:size:[" + creditTenderLogs.size() + "].");
-            for (CreditTenderLogVO creditTenderLog : creditTenderLogs) {
-                // 承接订单号
-                String assignNid = creditTenderLog.getAssignNid();
-                // 根据承接订单号查询债转投资表
-                List<CreditTenderVO> creditTenderList = this.bankCreditTenderClient.selectCreditTender(assignNid);
-                if (creditTenderList != null && creditTenderList.size() > 0) {
-                    continue;
-                }
+        if (CollectionUtils.isNotEmpty(creditTenderLogs)){
 
-                Integer userId = creditTenderLog.getUserId();
-                String logOrderId = creditTenderLog.getLogOrderId();
-                BankCallBean tenderQueryBean = this.queryCreditInvest(logOrderId, userId);
-                if (tenderQueryBean!=null){
-                    tenderQueryBean.convert();
-                    // 获取债转查询返回码
-                    String retCode = StringUtils.isNotBlank(tenderQueryBean.getRetCode()) ? tenderQueryBean.getRetCode() : "";
-                    // 承接成功
-                    if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-                        // 直接返回查询银行债转状态查询失败
-                        // mod by nxl 20180412 更新log表中的状态(有几个固定的状态，待确认)需将状态设置为9 start
-                        if("CA110112".equals(retCode)) {
-                            //投标记录不存在
-                            creditTenderLog.setStatus((byte) 9);
-
-                            boolean tenderLogsFlag = this.bankCreditTenderClient.updateCreditTenderLog(creditTenderLog);
-                            if(tenderLogsFlag) {
-                                logger.info("债转投资记录日志表creditTenderLog表更新成功，承接订单号编号：" + assignNid+"，应答码："+retCode);
-                            }
-                        }
-
-                        continue;
-                    }
-                }
-
-            }
         }
-
     }
 
 
 
 
 
-
-    /**
-     * 调用江西银行购买债券查询接口
-     * @param assignOrderId
-     * @param userId
-     * @return
-     */
-    public BankCallBean queryCreditInvest(String assignOrderId, Integer userId) {
-        // 承接人用户Id
-        BankOpenAccountVO tenderOpenAccount = this.bankCreditTenderClient.getBankOpenAccount(userId);
-        BankCallBean bean = new BankCallBean();
-        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-        bean.setTxCode(BankCallMethodConstant.TXCODE_CREDIT_INVEST_QUERY);
-        bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
-        bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
-        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
-        bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
-        bean.setAccountId(tenderOpenAccount.getAccount());// 存管平台分配的账号
-        bean.setOrgOrderId(assignOrderId);// 原购买债权订单号
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        bean.setLogUserId(String.valueOf(userId));
-        return BankCallUtils.callApiBg(bean);
-    }
 
 }

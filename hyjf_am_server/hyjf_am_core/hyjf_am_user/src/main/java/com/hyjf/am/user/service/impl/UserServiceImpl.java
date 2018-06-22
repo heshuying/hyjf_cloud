@@ -92,6 +92,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
 
+	@Autowired
+	UtmRegMapper utmRegMapper;
 
 	@Autowired
 	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
@@ -559,7 +561,7 @@ public class UserServiceImpl implements UserService {
 		utmReg.setUserId(userId);
 		utmReg.setOpenAccount(0);
 		utmReg.setBindCard(0);
-		// todo save reg
+		utmRegMapper.insertSelective(utmReg);
 		logger.info("注册插入utmReg：{}", JSON.toJSONString(utmReg));
 	}
 

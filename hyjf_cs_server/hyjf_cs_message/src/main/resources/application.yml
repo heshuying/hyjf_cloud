@@ -47,5 +47,6 @@ am:
     service:
       name: AM-TRADE
 
-env:
-  test : true
+hyjf:
+  env:
+    test : true

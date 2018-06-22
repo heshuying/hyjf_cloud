@@ -5,10 +5,12 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.UserCenterClient;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserManagerVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.*;
 //import com.hyjf.cs.common.util.Page;
+import com.hyjf.common.cache.CacheUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         int userCount = userCenterClient.countRecordTotal(request);
         page.setTotal(userCount);*/
         // 关联hyjf_trade库的ht_hjh_inst_config表
-        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectHjhInstConfigListByInstCode(null);
+        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
         // 查询列表
         List<UserManagerVO> listUserMember = userCenterClient.selectUserMemberList(request);
         if (!CollectionUtils.isEmpty(listUserMember)) {
@@ -74,13 +76,75 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     /**
      * 根据机构编号获取机构列表
-     * @param instCode
      * @return
      */
     @Override
-    public List<HjhInstConfigVO> selectHjhInstConfigList(String instCode) {
-        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectHjhInstConfigListByInstCode(instCode);
+    public List<HjhInstConfigVO> selectInstConfigAll() {
+        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
         return listHjhInstConfig;
     }
 
+    /**
+     * 根据用户id获取用户详情
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserManagerDetailVO selectUserDetail(String userId){
+        UserManagerDetailVO userManagerDetailVO = userCenterClient.selectUserDetailById(userId);
+        return userManagerDetailVO;
+    }
+
+    /**
+     * 根据用户id获取测评信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserEvalationResultVO getUserEvalationResult(String userId) {
+        UserEvalationResultVO userEvalationResultVO = userCenterClient.getUserEvalationResult(userId);
+        return  userEvalationResultVO;
+    }
+    /**
+     * 根据用户id获取开户信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserBankOpenAccountVO selectBankOpenAccountByUserId(String userId){
+        UserBankOpenAccountVO userBankOpenAccountVO = userCenterClient.selectBankOpenAccountByUserId(userId);
+        return userBankOpenAccountVO;
+    }
+    /**
+     * 根据用户id获取企业用户开户信息
+     * @param userId
+     * @return
+     */
+    @Override
+   public CorpOpenAccountRecordVO selectCorpOpenAccountRecordByUserId(String userId){
+        CorpOpenAccountRecordVO corpOpenAccountRecordVO = userCenterClient.selectCorpOpenAccountRecordByUserId(userId);
+        return  corpOpenAccountRecordVO;
+    }
+
+    /**
+     * 根据用户id获取第三方平台绑定信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public BindUserVo selectBindeUserByUserI(String userId){
+        BindUserVo bindUserVo = userCenterClient.selectBindeUserByUserId(userId);
+        return  bindUserVo;
+    }
+
+    /**
+     * 根据用户id获取用户CA认证记录表
+     * @param userId
+     * @return
+     */
+    @Override
+    public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId){
+        CertificateAuthorityVO certificateAuthorityVO = userCenterClient.selectCertificateAuthorityByUserId(userId);
+        return certificateAuthorityVO;
+    }
 }

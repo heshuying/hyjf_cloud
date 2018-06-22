@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankCardVO;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -83,24 +84,6 @@ public class BankWithdrawClientImpl implements BankWithdrawClient {
 	}
 
 	/**
-	 * 更新账户提现 add by jijun 20180616
-	 */
-	@Override
-	public boolean updateAccountwithdraw(AccountWithdrawVO accountWithdraw) {
-		String url = "http://AM-TRADE/am-trade/accountWithdraw/updateAccountwithdraw";
-		return restTemplate.postForEntity(url, accountWithdraw, Boolean.class).getBody();
-	}
-
-	/**
-	 * 更新银行提现 add by jijun 20180616
-	 */
-	@Override
-	public boolean updateBankWithdraw(AccountVO newAccount) {
-		String url = "http://AM-TRADE/am-trade/bankException/updateBankWithdraw";
-		return restTemplate.postForEntity(url, newAccount, Boolean.class).getBody();
-	}
-
-	/**
 	 * 获取账户
 	 * add by jijun 20180616
 	 */
@@ -115,23 +98,6 @@ public class BankWithdrawClientImpl implements BankWithdrawClient {
 		return null;
 	}
 
-	/**
-	 * 保存accountList
-	 * add by jijun 20180616
-	 */
-	@Override
-	public boolean addAccountList(AccountListVO accountList) {
-		String url = "http://AM-TRADE/am-trade/accountList/addAccountList";
-		return restTemplate.postForEntity(url,accountList,Boolean.class).getBody();
-	}
-
-	@Override
-	public void selectAndUpdateAccountWithdraw(JSONObject paraMap) {
-		restTemplate
-				.postForEntity("http://AM-TRADE/am-trade/accountWithdraw/selectAndUpdateAccountWithdraw",paraMap, AccountwithdrawResponse.class)
-				.getBody();
-
-	}
 
 	/**
 	 * 提现费率
@@ -159,6 +125,23 @@ public class BankWithdrawClientImpl implements BankWithdrawClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 调用后平台操作
+	 * @param bean
+	 * @param accountwithdraw
+	 * @param bankCard
+	 */
+	@Override
+	public Boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,String withdrawFee) {
+		JSONObject para = new JSONObject();
+		para.put("bankCallBeanVO",bean);
+		para.put("accountWithdrawVO",accountwithdraw);
+		para.put("bankCardVO",bankCard);
+		para.put("withdrawFee",withdrawFee);
+		String url = "http://AM-TRADE/am-trade/bankException/handlerAfterCash";
+		return restTemplate.postForEntity(url,para,Boolean.class).getBody();
 	}
 
 

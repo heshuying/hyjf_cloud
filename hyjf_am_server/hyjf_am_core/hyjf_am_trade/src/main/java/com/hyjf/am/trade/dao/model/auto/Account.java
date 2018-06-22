@@ -2,11 +2,16 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class Account implements Serializable {
     private Integer id;
 
     private Integer userId;
+
+    private String userName;
+
+    private String accountId;
 
     private BigDecimal total;
 
@@ -70,6 +75,16 @@ public class Account implements Serializable {
 
     private BigDecimal bankFrostCash;
 
+    private Integer delFlag;
+
+    private Integer createUser;
+
+    private Integer updateUser;
+
+    private Date createTime;
+
+    private Date updateTime;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -86,6 +101,22 @@ public class Account implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId == null ? null : accountId.trim();
     }
 
     public BigDecimal getTotal() {
@@ -334,5 +365,45 @@ public class Account implements Serializable {
 
     public void setBankFrostCash(BigDecimal bankFrostCash) {
         this.bankFrostCash = bankFrostCash;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

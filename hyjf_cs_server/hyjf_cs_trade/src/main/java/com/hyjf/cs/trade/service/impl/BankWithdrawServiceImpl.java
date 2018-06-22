@@ -7,7 +7,6 @@ import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -55,6 +54,8 @@ import java.util.Map;
 /**
  * @author pangchengchao
  * @version BankWithdrawServiceImpl, v0.1 2018/6/14 14:32
+ *//*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 @Service
 public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements BankWithdrawService {
@@ -392,179 +393,42 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         return result;
     }
 
+    /**
+     * 定时任务提现
+     */
     @Override
-    public void withdraw() {
+    public void batchWithdraw() {
         List<AccountWithdrawVO> withdrawList = this.bankWithdrawClient.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             for (AccountWithdrawVO accountWithdraw : withdrawList) {
                 this.updateWithdraw(accountWithdraw);
             }
         }
+
     }
 
     /**
-     * 更新处理中的提现记录
-     * @param accountWithdraw
+     * 更新银行提现掉单
+     * add by jijun 20180621
+     * @param accountwithdraw
      */
-    private void updateWithdraw(AccountWithdrawVO accountWithdraw) {
-        try {
-            //调用银行接口
-            BankCallBeanVO bean = bankWithdrawClient.bankCallFundTransQuery(accountWithdraw);
-            if (bean != null) {
-                //调用后平台操作
-                this.handlerAfterCash(bean, accountWithdraw);
-            }else{
-                throw new Exception("调用银行接口,银行返回NULL,充值订单号:"
-                        + accountWithdraw.getNid()
-                        + ",用户Id:" + accountWithdraw.getUserId());
-            }
-        } catch (Exception e) {
-            logger.info("更新处理中的提现记录出錯...");
-        }
-    }
-
-    /**
-     * 用户提现回调方法
-     * @param bean
-     * @param accountWithdraw
-     * @throws Exception
-     */
-    private void handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountWithdraw) throws Exception {
-
-        // 当前时间
-        int nowTime = GetDate.getNowTime10();
-        // 用户ID
-        int userId = accountWithdraw.getUserId();
-        // 提现订单号
-        String ordId = accountWithdraw.getNid();
-        // 根据用户ID查询用户银行卡信息
-        String bankId=bean.getBankCode();
-
-        BankCardVO bankCard = this.bankWithdrawClient.selectBankCardByUserId(userId);
-
-        // 1.该银行接口的 业务是否成功
-        // 返回值=000成功 ,大额提现返回值为 CE999028
-        // 并且Result = "00"
-        // 冲正撤销标志为0
-        // 返回retcode的错误码和result返回其他这两个都是有可能的，具体的是哪个和银行内部的操作有关，所以retcode和result这个你们都需要判断下
-        // 其它:无该交易或者处理失败
-        if ((BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode()))
-                && "00".equals(bean.getResult())
-                && !("1".equals(bean.getOrFlag()))) {
-
-            //2.银行接口返回与本地记录匹配验证
-            CheckResult rtCheck = this.checkCallRetAndHyjf(bean,accountWithdraw);
-            if (!rtCheck.isResultBool()) {
-                // 验证失败，异常信息抛出
-                throw new Exception(rtCheck.getResultMsg());
-            }
-
-            //3.DB防并发处理
-            rtCheck = this.checkConcurrencyDB(accountWithdraw, userId, ordId);;
-            if (!rtCheck.isResultBool()) {
-                // 记录被其他进程处理，日志信息输出
-                logger.info(this.getClass().getName(), "handlerAfterCash",
-                        rtCheck.getResultMsg());
-                return;
-            }
-
-
-            //4.DB更新操作
-            // 提现金额
+    private void updateWithdraw(AccountWithdrawVO accountwithdraw) {
+        //调用银行接口
+        BankCallBeanVO bean = this.bankWithdrawClient.bankCallFundTransQuery(accountwithdraw);
+        if (bean != null) {
+            int userId = accountwithdraw.getUserId();
+            BankCardVO bankCard = this.bankWithdrawClient.selectBankCardByUserId(userId);
             BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
-
-            String fee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()),transAmt);
-            // 提现手续费
-            BigDecimal feeAmt = new BigDecimal(fee);
-            // 总的交易金额
-            BigDecimal total = transAmt.add(feeAmt);
-            // 更新订单信息
-            accountWithdraw.setFee((CustomUtil.formatAmount(feeAmt.toString()))); // 更新手续费
-            accountWithdraw.setCredited(transAmt); // 更新到账金额
-            accountWithdraw.setTotal(total); // 更新到总额
-            accountWithdraw.setStatus(WITHDRAW_STATUS_SUCCESS);// 4:成功
-            accountWithdraw.setUpdateTime(nowTime);
-            accountWithdraw.setAccount(bean.getAccountId());
-            accountWithdraw.setReason("");
-
-            boolean isAccountwithdrawFlag=this.bankWithdrawClient.updateAccountwithdraw(accountWithdraw);
-            if (!isAccountwithdrawFlag) {
-                throw new Exception("提现后,更新用户提现记录表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
+            String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
+            //调用后平台操作
+            Boolean result=this.bankWithdrawClient.handlerAfterCash(bean, accountwithdraw,bankCard,withdrawFee);
+            if (result){
+                logger.info("银行提现掉单修复成功!");
+            }else{
+                logger.info("银行提现掉单修复失败！");
             }
-            AccountVO newAccount = new AccountVO();
-            // 更新账户信息
-            newAccount.setUserId(userId);// 用户Id
-            newAccount.setBankTotal(total); // 累加到账户总资产
-            newAccount.setBankBalance(total); // 累加可用余额
-            newAccount.setBankBalanceCash(total);// 江西银行可用余额
-
-            //更新银行提现
-            boolean isAccountUpdateFlag = this.bankWithdrawClient.updateBankWithdraw(newAccount);
-            if (!isAccountUpdateFlag) {
-                throw new Exception("提现后,更新用户Account表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
-            }
-            // 重新获取用户信息
-            AccountVO account = this.bankWithdrawClient.getAccount(userId);
-            // 写入收支明细
-            AccountListVO accountList = new AccountListVO();
-            accountList.setNid(ordId);
-            accountList.setUserId(userId);
-            accountList.setAmount(total);
-            accountList.setType(2);
-            accountList.setTrade("cash_success");
-            accountList.setTradeCode("balance");
-            accountList.setTotal(account.getTotal());
-            accountList.setBalance(account.getBalance());
-            accountList.setFrost(account.getFrost());
-            accountList.setAwait(account.getAwait());
-            accountList.setRepay(account.getRepay());
-            accountList.setBankTotal(account.getBankTotal()); // 银行总资产
-            accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
-            accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
-            accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
-            accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
-            accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
-            accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
-            accountList.setBankAwait(account.getBankAwait());// 银行待收总额
-            accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-            accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
-            accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
-            accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
-            accountList.setPlanFrost(account.getPlanFrost());
-            accountList.setSeqNo(bean.getSeqNo());
-            accountList.setTxDate(Integer.parseInt(bean.getTxDate()));
-            accountList.setTxTime(Integer.parseInt(bean.getTxTime()));
-            accountList.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
-            accountList.setAccountId(bean.getAccountId());
-            accountList.setRemark(accountWithdraw.getRemark());
-            accountList.setCreateTime(nowTime);
-            accountList.setBaseUpdate(nowTime);
-            accountList.setOperator(String.valueOf(userId));
-            accountList.setIp(accountWithdraw.getAddip());
-            accountList.setIsUpdate(0);
-            accountList.setBaseUpdate(0);
-            accountList.setInterest(null);
-            accountList.setIsBank(1);
-            accountList.setWeb(0);
-            accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账
-            accountList.setTradeStatus(1);// 0失败1成功2失败
-
-            boolean isAccountListFlag = this.bankWithdrawClient.addAccountList(accountList);
-            if (!isAccountListFlag) {
-                throw new Exception("提现成功后,插入交易明细表失败~!" + "提现订单号:" + ordId + ",用户ID:" + userId);
-            }
-        } else {
-            // 提现失败,更新处理中订单状态为失败
-            JSONObject paraMap = new JSONObject();
-            paraMap.put("ordId",ordId);
-            paraMap.put("accountWithdraw",accountWithdraw);
-            paraMap.put("bankCallBeanVO",bean);
-            this.bankWithdrawClient.selectAndUpdateAccountWithdraw(paraMap);
         }
-
-
     }
-
 
 
     /**

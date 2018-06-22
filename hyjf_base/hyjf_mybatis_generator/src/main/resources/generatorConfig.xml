@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1069,6 +1069,14 @@
         <table tableName="ht_credit_tender_log" domainObjectName="CreditTenderLog">
             <generatedKey column="assign_id" sqlStatement="MySql" type="post" identity="true"/>
         </table>
+        <!-- 结束债权 -->
+        <table tableName="ht_bank_credit_end" domainObjectName="BankCreditEnd">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="credit_end_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="received" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="state" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
         <!-- 优惠券配置表 -->
         <table tableName="ht_coupon_config" domainObjectName="CouponConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
@@ -1100,7 +1108,12 @@
             <columnOverride column="flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-
+        <table tableName="ht_bank_interface" domainObjectName="BankInterface">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+            <columnOverride column="interface_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_usable" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_delete" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
     </context>
 </generatorConfiguration>
