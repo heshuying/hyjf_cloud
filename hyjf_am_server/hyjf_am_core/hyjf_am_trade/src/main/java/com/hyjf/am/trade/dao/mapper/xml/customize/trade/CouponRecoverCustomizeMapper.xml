@@ -185,7 +185,7 @@
 			AND cr.del_flag = 0
 	</select>
 	
-	<select id="selectCouponInterestWaitToday" resultType="currentCouponRecover" parameterType="java.util.Map">
+	<select id="selectCouponInterestWaitToday" resultMap="currentCouponRecover" parameterType="java.util.Map">
 			SELECT
 				t.recover_time,
 				SUM(
