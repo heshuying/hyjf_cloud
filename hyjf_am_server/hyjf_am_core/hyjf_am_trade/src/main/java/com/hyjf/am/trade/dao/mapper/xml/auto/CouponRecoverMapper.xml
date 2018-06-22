@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.CouponRecoverMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.CouponRecover" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tender_id" property="tenderId" jdbcType="VARCHAR" />
+    <result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
+    <result column="recover_status" property="recoverStatus" jdbcType="INTEGER" />
+    <result column="received_flg" property="receivedFlg" jdbcType="INTEGER" />
+    <result column="recover_period" property="recoverPeriod" jdbcType="INTEGER" />
+    <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
+    <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
+    <result column="recover_yestime" property="recoverYestime" jdbcType="INTEGER" />
+    <result column="main_recover_yestime" property="mainRecoverYestime" jdbcType="INTEGER" />
+    <result column="recover_interest" property="recoverInterest" jdbcType="DECIMAL" />
+    <result column="recover_interest_yes" property="recoverInterestYes" jdbcType="DECIMAL" />
+    <result column="recover_account" property="recoverAccount" jdbcType="DECIMAL" />
+    <result column="recover_account_yes" property="recoverAccountYes" jdbcType="DECIMAL" />
+    <result column="recover_capital" property="recoverCapital" jdbcType="DECIMAL" />
+    <result column="recover_capital_yes" property="recoverCapitalYes" jdbcType="DECIMAL" />
+    <result column="current_recover_flg" property="currentRecoverFlg" jdbcType="INTEGER" />
+    <result column="recover_type" property="recoverType" jdbcType="INTEGER" />
+    <result column="notice_flg" property="noticeFlg" jdbcType="INTEGER" />
+    <result column="exp_time" property="expTime" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="add_user" property="addUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, tender_id, transfer_id, recover_status, received_flg, recover_period, transfer_time, 
+    recover_time, recover_yestime, main_recover_yestime, recover_interest, recover_interest_yes, 
+    recover_account, recover_account_yes, recover_capital, recover_capital_yes, current_recover_flg, 
+    recover_type, notice_flg, exp_time, add_time, add_user, update_time, update_user, 
+    del_flag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecoverExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_coupon_recover
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_coupon_recover
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_coupon_recover
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecoverExample" >
+    delete from ht_coupon_recover
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecover" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_coupon_recover (tender_id, transfer_id, recover_status, 
+      received_flg, recover_period, transfer_time, 
+      recover_time, recover_yestime, main_recover_yestime, 
+      recover_interest, recover_interest_yes, recover_account, 
+      recover_account_yes, recover_capital, recover_capital_yes, 
+      current_recover_flg, recover_type, notice_flg, 
+      exp_time, add_time, add_user, 
+      update_time, update_user, del_flag
+      )
+    values (#{tenderId,jdbcType=VARCHAR}, #{transferId,jdbcType=VARCHAR}, #{recoverStatus,jdbcType=INTEGER}, 
+      #{receivedFlg,jdbcType=INTEGER}, #{recoverPeriod,jdbcType=INTEGER}, #{transferTime,jdbcType=INTEGER}, 
+      #{recoverTime,jdbcType=INTEGER}, #{recoverYestime,jdbcType=INTEGER}, #{mainRecoverYestime,jdbcType=INTEGER}, 
+      #{recoverInterest,jdbcType=DECIMAL}, #{recoverInterestYes,jdbcType=DECIMAL}, #{recoverAccount,jdbcType=DECIMAL}, 
+      #{recoverAccountYes,jdbcType=DECIMAL}, #{recoverCapital,jdbcType=DECIMAL}, #{recoverCapitalYes,jdbcType=DECIMAL}, 
+      #{currentRecoverFlg,jdbcType=INTEGER}, #{recoverType,jdbcType=INTEGER}, #{noticeFlg,jdbcType=INTEGER}, 
+      #{expTime,jdbcType=INTEGER}, #{addTime,jdbcType=INTEGER}, #{addUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecover" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_coupon_recover
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tenderId != null" >
+        tender_id,
+      </if>
+      <if test="transferId != null" >
+        transfer_id,
+      </if>
+      <if test="recoverStatus != null" >
+        recover_status,
+      </if>
+      <if test="receivedFlg != null" >
+        received_flg,
+      </if>
+      <if test="recoverPeriod != null" >
+        recover_period,
+      </if>
+      <if test="transferTime != null" >
+        transfer_time,
+      </if>
+      <if test="recoverTime != null" >
+        recover_time,
+      </if>
+      <if test="recoverYestime != null" >
+        recover_yestime,
+      </if>
+      <if test="mainRecoverYestime != null" >
+        main_recover_yestime,
+      </if>
+      <if test="recoverInterest != null" >
+        recover_interest,
+      </if>
+      <if test="recoverInterestYes != null" >
+        recover_interest_yes,
+      </if>
+      <if test="recoverAccount != null" >
+        recover_account,
+      </if>
+      <if test="recoverAccountYes != null" >
+        recover_account_yes,
+      </if>
+      <if test="recoverCapital != null" >
+        recover_capital,
+      </if>
+      <if test="recoverCapitalYes != null" >
+        recover_capital_yes,
+      </if>
+      <if test="currentRecoverFlg != null" >
+        current_recover_flg,
+      </if>
+      <if test="recoverType != null" >
+        recover_type,
+      </if>
+      <if test="noticeFlg != null" >
+        notice_flg,
+      </if>
+      <if test="expTime != null" >
+        exp_time,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="addUser != null" >
+        add_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tenderId != null" >
+        #{tenderId,jdbcType=VARCHAR},
+      </if>
+      <if test="transferId != null" >
+        #{transferId,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverStatus != null" >
+        #{recoverStatus,jdbcType=INTEGER},
+      </if>
+      <if test="receivedFlg != null" >
+        #{receivedFlg,jdbcType=INTEGER},
+      </if>
+      <if test="recoverPeriod != null" >
+        #{recoverPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="transferTime != null" >
+        #{transferTime,jdbcType=INTEGER},
+      </if>
+      <if test="recoverTime != null" >
+        #{recoverTime,jdbcType=INTEGER},
+      </if>
+      <if test="recoverYestime != null" >
+        #{recoverYestime,jdbcType=INTEGER},
+      </if>
+      <if test="mainRecoverYestime != null" >
+        #{mainRecoverYestime,jdbcType=INTEGER},
+      </if>
+      <if test="recoverInterest != null" >
+        #{recoverInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverInterestYes != null" >
+        #{recoverInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccount != null" >
+        #{recoverAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountYes != null" >
+        #{recoverAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverCapital != null" >
+        #{recoverCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverCapitalYes != null" >
+        #{recoverCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="currentRecoverFlg != null" >
+        #{currentRecoverFlg,jdbcType=INTEGER},
+      </if>
+      <if test="recoverType != null" >
+        #{recoverType,jdbcType=INTEGER},
+      </if>
+      <if test="noticeFlg != null" >
+        #{noticeFlg,jdbcType=INTEGER},
+      </if>
+      <if test="expTime != null" >
+        #{expTime,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="addUser != null" >
+        #{addUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecoverExample" resultType="java.lang.Integer" >
+    select count(*) from ht_coupon_recover
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_coupon_recover
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderId != null" >
+        tender_id = #{record.tenderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transferId != null" >
+        transfer_id = #{record.transferId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recoverStatus != null" >
+        recover_status = #{record.recoverStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.receivedFlg != null" >
+        received_flg = #{record.receivedFlg,jdbcType=INTEGER},
+      </if>
+      <if test="record.recoverPeriod != null" >
+        recover_period = #{record.recoverPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.transferTime != null" >
+        transfer_time = #{record.transferTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.recoverTime != null" >
+        recover_time = #{record.recoverTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.recoverYestime != null" >
+        recover_yestime = #{record.recoverYestime,jdbcType=INTEGER},
+      </if>
+      <if test="record.mainRecoverYestime != null" >
+        main_recover_yestime = #{record.mainRecoverYestime,jdbcType=INTEGER},
+      </if>
+      <if test="record.recoverInterest != null" >
+        recover_interest = #{record.recoverInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverInterestYes != null" >
+        recover_interest_yes = #{record.recoverInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccount != null" >
+        recover_account = #{record.recoverAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountYes != null" >
+        recover_account_yes = #{record.recoverAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverCapital != null" >
+        recover_capital = #{record.recoverCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverCapitalYes != null" >
+        recover_capital_yes = #{record.recoverCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.currentRecoverFlg != null" >
+        current_recover_flg = #{record.currentRecoverFlg,jdbcType=INTEGER},
+      </if>
+      <if test="record.recoverType != null" >
+        recover_type = #{record.recoverType,jdbcType=INTEGER},
+      </if>
+      <if test="record.noticeFlg != null" >
+        notice_flg = #{record.noticeFlg,jdbcType=INTEGER},
+      </if>
+      <if test="record.expTime != null" >
+        exp_time = #{record.expTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.addUser != null" >
+        add_user = #{record.addUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_coupon_recover
+    set id = #{record.id,jdbcType=INTEGER},
+      tender_id = #{record.tenderId,jdbcType=VARCHAR},
+      transfer_id = #{record.transferId,jdbcType=VARCHAR},
+      recover_status = #{record.recoverStatus,jdbcType=INTEGER},
+      received_flg = #{record.receivedFlg,jdbcType=INTEGER},
+      recover_period = #{record.recoverPeriod,jdbcType=INTEGER},
+      transfer_time = #{record.transferTime,jdbcType=INTEGER},
+      recover_time = #{record.recoverTime,jdbcType=INTEGER},
+      recover_yestime = #{record.recoverYestime,jdbcType=INTEGER},
+      main_recover_yestime = #{record.mainRecoverYestime,jdbcType=INTEGER},
+      recover_interest = #{record.recoverInterest,jdbcType=DECIMAL},
+      recover_interest_yes = #{record.recoverInterestYes,jdbcType=DECIMAL},
+      recover_account = #{record.recoverAccount,jdbcType=DECIMAL},
+      recover_account_yes = #{record.recoverAccountYes,jdbcType=DECIMAL},
+      recover_capital = #{record.recoverCapital,jdbcType=DECIMAL},
+      recover_capital_yes = #{record.recoverCapitalYes,jdbcType=DECIMAL},
+      current_recover_flg = #{record.currentRecoverFlg,jdbcType=INTEGER},
+      recover_type = #{record.recoverType,jdbcType=INTEGER},
+      notice_flg = #{record.noticeFlg,jdbcType=INTEGER},
+      exp_time = #{record.expTime,jdbcType=INTEGER},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      add_user = #{record.addUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      del_flag = #{record.delFlag,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecover" >
+    update ht_coupon_recover
+    <set >
+      <if test="tenderId != null" >
+        tender_id = #{tenderId,jdbcType=VARCHAR},
+      </if>
+      <if test="transferId != null" >
+        transfer_id = #{transferId,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverStatus != null" >
+        recover_status = #{recoverStatus,jdbcType=INTEGER},
+      </if>
+      <if test="receivedFlg != null" >
+        received_flg = #{receivedFlg,jdbcType=INTEGER},
+      </if>
+      <if test="recoverPeriod != null" >
+        recover_period = #{recoverPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="transferTime != null" >
+        transfer_time = #{transferTime,jdbcType=INTEGER},
+      </if>
+      <if test="recoverTime != null" >
+        recover_time = #{recoverTime,jdbcType=INTEGER},
+      </if>
+      <if test="recoverYestime != null" >
+        recover_yestime = #{recoverYestime,jdbcType=INTEGER},
+      </if>
+      <if test="mainRecoverYestime != null" >
+        main_recover_yestime = #{mainRecoverYestime,jdbcType=INTEGER},
+      </if>
+      <if test="recoverInterest != null" >
+        recover_interest = #{recoverInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverInterestYes != null" >
+        recover_interest_yes = #{recoverInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccount != null" >
+        recover_account = #{recoverAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountYes != null" >
+        recover_account_yes = #{recoverAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverCapital != null" >
+        recover_capital = #{recoverCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverCapitalYes != null" >
+        recover_capital_yes = #{recoverCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="currentRecoverFlg != null" >
+        current_recover_flg = #{currentRecoverFlg,jdbcType=INTEGER},
+      </if>
+      <if test="recoverType != null" >
+        recover_type = #{recoverType,jdbcType=INTEGER},
+      </if>
+      <if test="noticeFlg != null" >
+        notice_flg = #{noticeFlg,jdbcType=INTEGER},
+      </if>
+      <if test="expTime != null" >
+        exp_time = #{expTime,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="addUser != null" >
+        add_user = #{addUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecover" >
+    update ht_coupon_recover
+    set tender_id = #{tenderId,jdbcType=VARCHAR},
+      transfer_id = #{transferId,jdbcType=VARCHAR},
+      recover_status = #{recoverStatus,jdbcType=INTEGER},
+      received_flg = #{receivedFlg,jdbcType=INTEGER},
+      recover_period = #{recoverPeriod,jdbcType=INTEGER},
+      transfer_time = #{transferTime,jdbcType=INTEGER},
+      recover_time = #{recoverTime,jdbcType=INTEGER},
+      recover_yestime = #{recoverYestime,jdbcType=INTEGER},
+      main_recover_yestime = #{mainRecoverYestime,jdbcType=INTEGER},
+      recover_interest = #{recoverInterest,jdbcType=DECIMAL},
+      recover_interest_yes = #{recoverInterestYes,jdbcType=DECIMAL},
+      recover_account = #{recoverAccount,jdbcType=DECIMAL},
+      recover_account_yes = #{recoverAccountYes,jdbcType=DECIMAL},
+      recover_capital = #{recoverCapital,jdbcType=DECIMAL},
+      recover_capital_yes = #{recoverCapitalYes,jdbcType=DECIMAL},
+      current_recover_flg = #{currentRecoverFlg,jdbcType=INTEGER},
+      recover_type = #{recoverType,jdbcType=INTEGER},
+      notice_flg = #{noticeFlg,jdbcType=INTEGER},
+      exp_time = #{expTime,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=INTEGER},
+      add_user = #{addUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

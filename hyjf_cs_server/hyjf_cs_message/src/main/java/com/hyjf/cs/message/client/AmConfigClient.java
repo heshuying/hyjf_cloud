@@ -1,6 +1,10 @@
 package com.hyjf.cs.message.client;
 
+import java.util.List;
+
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.user.UserVO;
 
 /**
  * @author xiasq
@@ -46,4 +50,12 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	SiteSettingsVO findSiteSetting();
+
+	/**
+	 * 在筛选条件下查询出用户
+	 * 
+	 * @param params
+	 * @return
+	 */
+	List<UserVO> queryUser(JSONObject params);
 }

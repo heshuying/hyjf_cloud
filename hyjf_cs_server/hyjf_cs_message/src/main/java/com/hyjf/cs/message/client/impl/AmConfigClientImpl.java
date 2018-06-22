@@ -1,12 +1,16 @@
 package com.hyjf.cs.message.client.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.message.client.AmConfigClient;
 
 /**
@@ -110,5 +114,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	@Override
+	public List<UserVO> queryUser(JSONObject params) {
+		return null;// todo
 	}
 }

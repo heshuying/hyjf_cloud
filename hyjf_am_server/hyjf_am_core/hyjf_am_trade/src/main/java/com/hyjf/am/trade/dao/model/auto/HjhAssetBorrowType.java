@@ -36,9 +36,9 @@ public class HjhAssetBorrowType implements Serializable {
 
     private Integer createUser;
 
-    private Date createTime;
-
     private Integer updateUser;
+
+    private Date createTime;
 
     private Date updateTime;
 
@@ -172,20 +172,20 @@ public class HjhAssetBorrowType implements Serializable {
         this.createUser = createUser;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getUpdateUser() {
         return updateUser;
     }
 
     public void setUpdateUser(Integer updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {

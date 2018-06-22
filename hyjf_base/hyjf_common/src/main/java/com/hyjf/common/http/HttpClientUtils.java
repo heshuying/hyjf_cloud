@@ -24,19 +24,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpClientUtils {
-	private static Logger log = Logger.getLogger(HttpClientUtils.class);  
+	private static Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
     
     public static String post(String url, Map<String, String> params) {  
         HttpClient httpclient = HttpClients.createDefault();
         
-        String body = null;  
-        
-        log.info("create httppost:" + url);  
+        String body = null;
+
+        logger.info("create httppost:" + url);
         HttpPost post = postForm(url, params);  
           
         body = invoke(httpclient, post);  
@@ -109,11 +108,11 @@ public class HttpClientUtils {
     
     
   
-    private static String paseResponse(CloseableHttpResponse response) {  
-        log.info("get response from http server..");  
-        HttpEntity entity = response.getEntity();  
-          
-        log.info("response status: " + response.getStatusLine());  
+    private static String paseResponse(CloseableHttpResponse response) {
+        logger.info("get response from http server..");
+        HttpEntity entity = response.getEntity();
+
+        logger.info("response status: " + response.getStatusLine());
           
         String body = null;  
         try {  
@@ -135,8 +134,8 @@ public class HttpClientUtils {
     }  
   
     private static CloseableHttpResponse sendRequest(HttpClient httpclient,  
-            HttpUriRequest httpost) {  
-        log.info("execute post...");  
+            HttpUriRequest httpost) {
+        logger.info("execute post...");
         CloseableHttpResponse response = null;  
         try {  
             response = (CloseableHttpResponse) httpclient.execute(httpost);  
@@ -164,8 +163,8 @@ public class HttpClientUtils {
             nvps.add(new BasicNameValuePair(key, params.get(key)));  
         }  
           
-        try {  
-            log.info("set utf-8 form entity to httppost");  
+        try {
+            logger.info("set utf-8 form entity to httppost");
             httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));  
         } catch (UnsupportedEncodingException e) {  
             e.printStackTrace();  

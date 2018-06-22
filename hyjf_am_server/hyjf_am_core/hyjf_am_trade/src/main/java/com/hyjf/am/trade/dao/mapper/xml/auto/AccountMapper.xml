@@ -4,6 +4,8 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.Account" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
     <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="balance" property="balance" jdbcType="DECIMAL" />
     <result column="balance_cash" property="balanceCash" jdbcType="DECIMAL" />
@@ -35,6 +37,11 @@
     <result column="bank_await_org" property="bankAwaitOrg" jdbcType="DECIMAL" />
     <result column="bank_balance_cash" property="bankBalanceCash" jdbcType="DECIMAL" />
     <result column="bank_frost_cash" property="bankFrostCash" jdbcType="DECIMAL" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -95,12 +102,13 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, total, balance, balance_cash, balance_frost, frost, await, repay, plan_repay_interest, 
-    plan_balance, plan_frost, plan_accede_total, plan_accede_balance, plan_accede_frost, 
-    plan_account_wait, plan_capital_wait, plan_interest_wait, bank_total, bank_balance, 
-    bank_frost, bank_wait_repay, bank_wait_capital, bank_wait_interest, bank_wait_repay_org, 
-    bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, bank_await_interest, 
-    bank_await_org, bank_balance_cash, bank_frost_cash
+    id, user_id, user_name, account_id, total, balance, balance_cash, balance_frost, 
+    frost, await, repay, plan_repay_interest, plan_balance, plan_frost, plan_accede_total, 
+    plan_accede_balance, plan_accede_frost, plan_account_wait, plan_capital_wait, plan_interest_wait, 
+    bank_total, bank_balance, bank_frost, bank_wait_repay, bank_wait_capital, bank_wait_interest, 
+    bank_wait_repay_org, bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, 
+    bank_await_interest, bank_await_org, bank_balance_cash, bank_frost_cash, del_flag, 
+    create_user, update_user, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountExample" >
     select
@@ -139,28 +147,34 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_account (user_id, total, balance, 
-      balance_cash, balance_frost, frost, 
-      await, repay, plan_repay_interest, 
-      plan_balance, plan_frost, plan_accede_total, 
-      plan_accede_balance, plan_accede_frost, plan_account_wait, 
-      plan_capital_wait, plan_interest_wait, bank_total, 
-      bank_balance, bank_frost, bank_wait_repay, 
-      bank_wait_capital, bank_wait_interest, bank_wait_repay_org, 
-      bank_interest_sum, bank_invest_sum, bank_await, 
-      bank_await_capital, bank_await_interest, bank_await_org, 
-      bank_balance_cash, bank_frost_cash)
-    values (#{userId,jdbcType=INTEGER}, #{total,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, 
-      #{balanceCash,jdbcType=DECIMAL}, #{balanceFrost,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, 
-      #{await,jdbcType=DECIMAL}, #{repay,jdbcType=DECIMAL}, #{planRepayInterest,jdbcType=DECIMAL}, 
-      #{planBalance,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, #{planAccedeTotal,jdbcType=DECIMAL}, 
-      #{planAccedeBalance,jdbcType=DECIMAL}, #{planAccedeFrost,jdbcType=DECIMAL}, #{planAccountWait,jdbcType=DECIMAL}, 
-      #{planCapitalWait,jdbcType=DECIMAL}, #{planInterestWait,jdbcType=DECIMAL}, #{bankTotal,jdbcType=DECIMAL}, 
-      #{bankBalance,jdbcType=DECIMAL}, #{bankFrost,jdbcType=DECIMAL}, #{bankWaitRepay,jdbcType=DECIMAL}, 
-      #{bankWaitCapital,jdbcType=DECIMAL}, #{bankWaitInterest,jdbcType=DECIMAL}, #{bankWaitRepayOrg,jdbcType=DECIMAL}, 
-      #{bankInterestSum,jdbcType=DECIMAL}, #{bankInvestSum,jdbcType=DECIMAL}, #{bankAwait,jdbcType=DECIMAL}, 
-      #{bankAwaitCapital,jdbcType=DECIMAL}, #{bankAwaitInterest,jdbcType=DECIMAL}, #{bankAwaitOrg,jdbcType=DECIMAL}, 
-      #{bankBalanceCash,jdbcType=DECIMAL}, #{bankFrostCash,jdbcType=DECIMAL})
+    insert into ht_account (user_id, user_name, account_id, 
+      total, balance, balance_cash, 
+      balance_frost, frost, await, 
+      repay, plan_repay_interest, plan_balance, 
+      plan_frost, plan_accede_total, plan_accede_balance, 
+      plan_accede_frost, plan_account_wait, plan_capital_wait, 
+      plan_interest_wait, bank_total, bank_balance, 
+      bank_frost, bank_wait_repay, bank_wait_capital, 
+      bank_wait_interest, bank_wait_repay_org, bank_interest_sum, 
+      bank_invest_sum, bank_await, bank_await_capital, 
+      bank_await_interest, bank_await_org, bank_balance_cash, 
+      bank_frost_cash, del_flag, create_user, 
+      update_user, create_time, update_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, 
+      #{total,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{balanceCash,jdbcType=DECIMAL}, 
+      #{balanceFrost,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, #{await,jdbcType=DECIMAL}, 
+      #{repay,jdbcType=DECIMAL}, #{planRepayInterest,jdbcType=DECIMAL}, #{planBalance,jdbcType=DECIMAL}, 
+      #{planFrost,jdbcType=DECIMAL}, #{planAccedeTotal,jdbcType=DECIMAL}, #{planAccedeBalance,jdbcType=DECIMAL}, 
+      #{planAccedeFrost,jdbcType=DECIMAL}, #{planAccountWait,jdbcType=DECIMAL}, #{planCapitalWait,jdbcType=DECIMAL}, 
+      #{planInterestWait,jdbcType=DECIMAL}, #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, 
+      #{bankFrost,jdbcType=DECIMAL}, #{bankWaitRepay,jdbcType=DECIMAL}, #{bankWaitCapital,jdbcType=DECIMAL}, 
+      #{bankWaitInterest,jdbcType=DECIMAL}, #{bankWaitRepayOrg,jdbcType=DECIMAL}, #{bankInterestSum,jdbcType=DECIMAL}, 
+      #{bankInvestSum,jdbcType=DECIMAL}, #{bankAwait,jdbcType=DECIMAL}, #{bankAwaitCapital,jdbcType=DECIMAL}, 
+      #{bankAwaitInterest,jdbcType=DECIMAL}, #{bankAwaitOrg,jdbcType=DECIMAL}, #{bankBalanceCash,jdbcType=DECIMAL}, 
+      #{bankFrostCash,jdbcType=DECIMAL}, #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, 
+      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Account" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -170,6 +184,12 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="accountId != null" >
+        account_id,
       </if>
       <if test="total != null" >
         total,
@@ -264,10 +284,31 @@
       <if test="bankFrostCash != null" >
         bank_frost_cash,
       </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="total != null" >
         #{total,jdbcType=DECIMAL},
@@ -362,6 +403,21 @@
       <if test="bankFrostCash != null" >
         #{bankFrostCash,jdbcType=DECIMAL},
       </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountExample" resultType="java.lang.Integer" >
@@ -378,6 +434,12 @@
       </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountId != null" >
+        account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
       <if test="record.total != null" >
         total = #{record.total,jdbcType=DECIMAL},
@@ -472,6 +534,21 @@
       <if test="record.bankFrostCash != null" >
         bank_frost_cash = #{record.bankFrostCash,jdbcType=DECIMAL},
       </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -481,6 +558,8 @@
     update ht_account
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
       total = #{record.total,jdbcType=DECIMAL},
       balance = #{record.balance,jdbcType=DECIMAL},
       balance_cash = #{record.balanceCash,jdbcType=DECIMAL},
@@ -511,7 +590,12 @@
       bank_await_interest = #{record.bankAwaitInterest,jdbcType=DECIMAL},
       bank_await_org = #{record.bankAwaitOrg,jdbcType=DECIMAL},
       bank_balance_cash = #{record.bankBalanceCash,jdbcType=DECIMAL},
-      bank_frost_cash = #{record.bankFrostCash,jdbcType=DECIMAL}
+      bank_frost_cash = #{record.bankFrostCash,jdbcType=DECIMAL},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -521,6 +605,12 @@
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="total != null" >
         total = #{total,jdbcType=DECIMAL},
@@ -615,12 +705,29 @@
       <if test="bankFrostCash != null" >
         bank_frost_cash = #{bankFrostCash,jdbcType=DECIMAL},
       </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.Account" >
     update ht_account
     set user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      account_id = #{accountId,jdbcType=VARCHAR},
       total = #{total,jdbcType=DECIMAL},
       balance = #{balance,jdbcType=DECIMAL},
       balance_cash = #{balanceCash,jdbcType=DECIMAL},
@@ -651,7 +758,12 @@
       bank_await_interest = #{bankAwaitInterest,jdbcType=DECIMAL},
       bank_await_org = #{bankAwaitOrg,jdbcType=DECIMAL},
       bank_balance_cash = #{bankBalanceCash,jdbcType=DECIMAL},
-      bank_frost_cash = #{bankFrostCash,jdbcType=DECIMAL}
+      bank_frost_cash = #{bankFrostCash,jdbcType=DECIMAL},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

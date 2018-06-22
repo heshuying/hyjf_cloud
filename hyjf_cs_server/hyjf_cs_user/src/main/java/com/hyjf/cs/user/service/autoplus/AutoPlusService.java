@@ -29,7 +29,7 @@ public interface AutoPlusService extends BaseUserService {
      * @param smsCode
      * @return
      */
-    BankCallBean userCreditAuthInves(UserVO user, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode);
+    Map<String,Object> userCreditAuthInves(UserVO user, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode);
 
     /**
      * app、wechat授权自动债转、投资同步回调
@@ -41,15 +41,6 @@ public interface AutoPlusService extends BaseUserService {
      * @return
      */
     Map<String,BaseMapBean> userAuthCreditReturn(String token, BankCallBean bean, String userAutoType, String sign, String isSuccess);
-    /**
-     * web自动投资授权同步回调
-     * @param token
-     * @param bean
-     * @param urlType
-     * @param isSuccess
-     * @return
-     */
-    Map<String,String> userAuthReturn(String token, BankCallBean bean, String urlType, String isSuccess);
 
     /**
      * 异步回调接口
@@ -62,7 +53,7 @@ public interface AutoPlusService extends BaseUserService {
 
     Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status);
 
-    BankCallBean apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
+    Map<String,Object> apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
 
     AutoPlusRetBean userAuthCreditReturn(BankCallBean bean, String callback, String acqRes, String type);
 
@@ -72,4 +63,5 @@ public interface AutoPlusService extends BaseUserService {
 
     void checkUserMessage(UserVO users, String lastSrvAuthCode, String smsCode);
 
+    Map<String,Integer> userAutoStatus(Integer userId);
 }

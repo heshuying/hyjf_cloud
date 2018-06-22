@@ -59,17 +59,17 @@ public class IncreaseInterestInvest implements Serializable {
 
     private Integer investType;
 
-    private Date createTime;
-
     private Integer createUserId;
 
     private String createUserName;
 
-    private Date updateTime;
-
     private Integer updateUserId;
 
     private String updateUserName;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -289,14 +289,6 @@ public class IncreaseInterestInvest implements Serializable {
         this.investType = investType;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getCreateUserId() {
         return createUserId;
     }
@@ -313,14 +305,6 @@ public class IncreaseInterestInvest implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
@@ -335,5 +319,21 @@ public class IncreaseInterestInvest implements Serializable {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

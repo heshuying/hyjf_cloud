@@ -23,12 +23,10 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -40,7 +38,6 @@
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -68,8 +65,8 @@
 		<!--<groupId>org.springframework.cloud</groupId>-->
 		<!--<artifactId>spring-cloud-stream-binder-kafka</artifactId>-->
 		<!--</dependency>-->
-
 		<!-- zipkin end -->
+
 		<dependency>
 			<groupId>com.hyjf</groupId>
 			<artifactId>hyjf_cs_common</artifactId>

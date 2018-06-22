@@ -26,8 +26,6 @@ import redis.clients.jedis.Transaction;
 
 public class GetOrderIdUtils {
 
-	public static JedisPool pool = RedisUtils.getPool();
-
 	/**
 	 * 根据用户id获取订单id 规则：用户id加1000000,拼接yyMMddHHmmss再拼接0-9一位随机数
 	 * 示例：用户id为852628,当前时间为2015年12月5号11点48分25秒，生成的随机数为3，
@@ -189,7 +187,6 @@ public class GetOrderIdUtils {
 	/**
 	 * 获得汇天利订单号 1+随机+当前时间 + 一位随机数 则用户的订单号为18526281512051148253
 	 *
-	 * @param userId
 	 * @return 订单id
 	 */
 	public static String getHtlOrderId() {
@@ -244,102 +241,4 @@ public class GetOrderIdUtils {
         return randomValueS.substring(randomValueS.indexOf(".")+1, 8);
 	}
 
-	/**
-	 * 获取订单时间时分秒
-	 *
-	 * @return
-	 */
-	public static synchronized String getBatchNo() {
-
-		int batchNo = 100000;
-		Jedis jedis = pool.getResource();
-		String batchNoStr = RedisUtils.get("batchNo");
-		if (StringUtils.isNotBlank(batchNoStr)) {
-			// 操作redis
-			while ("OK".equals(jedis.watch(batchNoStr))) {
-				batchNoStr = RedisUtils.get("batchNo");
-				if (StringUtils.isNotBlank(batchNoStr)) {
-					if (Integer.parseInt(batchNoStr) < 999999) {
-						batchNo = Integer.parseInt(batchNoStr) + 1;
-					}
-					Transaction transaction = jedis.multi();
-					transaction.set("batchNo", String.valueOf(batchNo));
-					List<Object> result = transaction.exec();
-					if (result == null || result.isEmpty()) {
-						jedis.unwatch();
-					} else {
-						String ret = (String) result.get(0);
-						if (ret != null && "OK".equals(ret)) {
-							break;
-						} else {
-							jedis.unwatch();
-						}
-					}
-				} else {
-					break;
-				}
-			}
-		} else {
-			jedis.set("batchNo", String.valueOf(batchNo));
-			batchNoStr = String.valueOf(batchNo);
-		}
-		return batchNoStr;
-	}
-	
-	
-	/**
-	 * 获取数据迁移批次号
-	 *
-	 * @return
-	 */
-	public static synchronized String getDataBatchNo() {
-
-		int batchNo = 100000;
-		Jedis jedis = pool.getResource();
-		String batchNoStr = RedisUtils.get("dataBatchNo");
-		if (StringUtils.isNotBlank(batchNoStr)) {
-			// 操作redis
-			while ("OK".equals(jedis.watch(batchNoStr))) {
-				batchNoStr = RedisUtils.get("dataBatchNo");
-				if (StringUtils.isNotBlank(batchNoStr)) {
-					if (Integer.parseInt(batchNoStr) < 999999) {
-						batchNo = Integer.parseInt(batchNoStr) + 1;
-					}
-					Transaction transaction = jedis.multi();
-					transaction.set("dataBatchNo", String.valueOf(batchNo));
-					List<Object> result = transaction.exec();
-					if (result == null || result.isEmpty()) {
-						jedis.unwatch();
-					} else {
-						String ret = (String) result.get(0);
-						if (ret != null && "OK".equals(ret)) {
-							break;
-						} else {
-							jedis.unwatch();
-						}
-					}
-				} else {
-					break;
-				}
-			}
-		} else {
-			jedis.set("dataBatchNo", String.valueOf(batchNo));
-			batchNoStr = String.valueOf(batchNo);
-		}
-		return batchNoStr;
-	}
-
-	/**
-	 * 获取当前数据迁移批次号
-	 * 
-	 * @author Libin
-	 * @return
-	 */
-	public static String getCurrentBatchId() {
-		
-		int batchNoStr = Integer.valueOf(RedisUtils.get("dataBatchNo")) - 1;
-
-		return String.valueOf(batchNoStr);
-	}
-	
 }

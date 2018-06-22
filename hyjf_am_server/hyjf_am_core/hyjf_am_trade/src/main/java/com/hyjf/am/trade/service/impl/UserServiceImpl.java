@@ -48,17 +48,13 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据机构编号获取机构列表
-     * @param instCode
+     * 获取所有机构列表
      * @return
      */
     @Override
-    public  List<HjhInstConfig> selectInstConfigListByInstCode(String instCode){
+    public  List<HjhInstConfig> selectInstConfigAll(){
         HjhInstConfigExample example = new HjhInstConfigExample();
         HjhInstConfigExample.Criteria cra = example.createCriteria();
-        if(StringUtils.isNotEmpty(instCode)){
-            cra.andInstCodeEqualTo(instCode);
-        }
         List<HjhInstConfig> hjhInstConfigList = this.hjhInstConfigMapper.selectByExample(example);
         return  hjhInstConfigList;
     }

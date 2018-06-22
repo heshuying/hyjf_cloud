@@ -48,18 +48,19 @@ public class HjhInstConfigController {
 	}
 
     /**
-     * 根据机构编号查询机构列表
-     * @param instCode
+     * 获取所有的机构信息
      * @return
      */
 	@ApiOperation(value = " 根据机构编号检索机构列表")
-	@GetMapping("/selectInstConfigListByInstCode/{instCode}")
-	public HjhInstConfigResponse selectInstConfigListByInstCode(@PathVariable(value = "instCode") String instCode){
+	@GetMapping("/selectInstConfigAll")
+	public HjhInstConfigResponse selectInstConfigListByInstCode(){
         HjhInstConfigResponse response = new HjhInstConfigResponse();
-        List<HjhInstConfig> hjhInstConfigList = userService.selectInstConfigListByInstCode(instCode);
+		String returnCode = "00";//代表成功
+        List<HjhInstConfig> hjhInstConfigList = userService.selectInstConfigAll();
         if (null!=hjhInstConfigList&&hjhInstConfigList.size()>0) {
             List<HjhInstConfigVO> hjhInstConfigVO = CommonUtils.convertBeanList(hjhInstConfigList,HjhInstConfigVO.class);
             response.setResultList(hjhInstConfigVO);
+			response.setRtn(returnCode);
         }
         return response;
     }

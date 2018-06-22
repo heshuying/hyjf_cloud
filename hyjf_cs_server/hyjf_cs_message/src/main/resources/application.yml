@@ -47,5 +47,19 @@ am:
     service:
       name: AM-TRADE
 
-env:
-  test : true
+hyjf:
+  env:
+    test : true
+
+sms:
+  send:
+    title: 【汇盈金服】
+    suffix: 回复TD退订
+    url: http://sh999.eucp.b2m.cn:8080/sdkproxy/sendsms.action
+    #软件序列号
+    softSerialNo: 9SDK-EMY-0999-JBVLP
+    key: 286141
+    market:
+      url: http://sdk4rptws.eucp.b2m.cn:8080/sdkproxy/sendsms.action
+      softSerialNo: 6SDK-EMY-6688-JCQTL
+      key: 756526

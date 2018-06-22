@@ -14,15 +14,15 @@ public class HjhRegion implements Serializable {
 
     private Integer configStatus;
 
-    private Integer createUser;
+    private Integer delFlag;
 
-    private Date createTime;
+    private Integer createUser;
 
     private Integer updateUser;
 
-    private Date updateTime;
+    private Date createTime;
 
-    private Integer delFlag;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -66,20 +66,20 @@ public class HjhRegion implements Serializable {
         this.configStatus = configStatus;
     }
 
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
     public Integer getCreateUser() {
         return createUser;
     }
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public Integer getUpdateUser() {
@@ -90,19 +90,19 @@ public class HjhRegion implements Serializable {
         this.updateUser = updateUser;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
     }
 }
