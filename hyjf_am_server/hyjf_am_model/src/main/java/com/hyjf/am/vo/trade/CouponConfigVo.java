@@ -11,7 +11,7 @@ import java.util.Date;
 
 /**
  * @author yaoy
- * @version CouponConfigVO, v0.1 2018/6/19 16:47
+ * @version CouponConfigVO, v0.1 2018/6/22 10:31
  */
 public class CouponConfigVO extends BaseVO implements Serializable {
     private Integer id;

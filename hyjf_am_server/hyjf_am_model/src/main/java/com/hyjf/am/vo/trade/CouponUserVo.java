@@ -1,63 +1,95 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author yaoy
- * @version CouponUserVO, v0.1 2018/6/19 16:38
+ * @Description 优惠券相关
+ * @Author sunss
+ * @Version v0.1
+ * @Date 2018/6/19 13:48
  */
-public class CouponUserVO extends BaseVO implements Serializable{
+public class CouponUserVO extends BaseVO implements Serializable {
+
     private Integer id;
 
     private String couponCode;
 
-    private String couponUserCode;
-
-    private String couponGroupCode;
+    private String couponName;
 
     private Integer userId;
 
-    private Integer activityId;
+    private BigDecimal couponQuota;
 
-    private Integer couponSource;
+    private Integer couponQuantity;
 
-    private Integer usedFlag;
+    private Integer couponProfitTime;
 
-    private Integer readFlag;
+    private Integer expirationType;
 
-    private Integer endTime;
+    private Integer expirationDate;
+
+    private Integer expirationLength;
+
+    private Integer expirationLengthDay;
+
+    private Integer addFlg;
+
+    private String couponSystem;
+
+    private Integer couponType;
+
+    private String projectType;
+
+    private Integer projectExpirationType;
+
+    private Integer projectExpirationLength;
+
+    private Integer projectExpirationLengthMin;
+
+    private Integer projectExpirationLengthMax;
+
+    private Integer tenderQuotaType;
+
+    private Integer tenderQuota;
+
+    private Integer tenderQuotaMin;
+
+    private Integer tenderQuotaMax;
 
     private String content;
 
-    private String auditContent;
+    private Integer status;
 
-    private String deleteContent;
+    private String auditContent;
 
     private String auditUser;
 
     private Integer auditTime;
 
-    private Integer attribute;
+    private Integer repayTimeConfig;
 
-    private String channel;
-
-    private Integer delFlag;
+    private Integer addTime;
 
     private String addUser;
 
+    private Integer updateTime;
+
     private String updateUser;
 
-    private Date addTime;
+    private Integer delFlg;
 
-    private Date updateTime;
-
-    private static final long serialVersionUID = 1L;
+    // 使用截止时间
+    private int endTime;
+    // 优惠券状态
+    private int usedFlag;
+    // 更新时间
+    private int userUpdateTime;
+    // 发放给用户的优惠券编号
+    private String couponUserCode;
 
     public Integer getId() {
         return id;
@@ -72,71 +104,167 @@ public class CouponUserVO extends BaseVO implements Serializable{
     }
 
     public void setCouponCode(String couponCode) {
-        this.couponCode = couponCode == null ? null : couponCode.trim();
+        this.couponCode = couponCode;
     }
 
-    public String getCouponUserCode() {
-        return couponUserCode;
+    public String getCouponName() {
+        return couponName;
     }
 
-    public void setCouponUserCode(String couponUserCode) {
-        this.couponUserCode = couponUserCode == null ? null : couponUserCode.trim();
+    public void setCouponName(String couponName) {
+        this.couponName = couponName;
     }
 
-    public String getCouponGroupCode() {
-        return couponGroupCode;
+    public BigDecimal getCouponQuota() {
+        return couponQuota;
     }
 
-    public void setCouponGroupCode(String couponGroupCode) {
-        this.couponGroupCode = couponGroupCode == null ? null : couponGroupCode.trim();
+    public void setCouponQuota(BigDecimal couponQuota) {
+        this.couponQuota = couponQuota;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getCouponQuantity() {
+        return couponQuantity;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setCouponQuantity(Integer couponQuantity) {
+        this.couponQuantity = couponQuantity;
     }
 
-    public Integer getActivityId() {
-        return activityId;
+    public Integer getCouponProfitTime() {
+        return couponProfitTime;
     }
 
-    public void setActivityId(Integer activityId) {
-        this.activityId = activityId;
+    public void setCouponProfitTime(Integer couponProfitTime) {
+        this.couponProfitTime = couponProfitTime;
     }
 
-    public Integer getCouponSource() {
-        return couponSource;
+    public Integer getExpirationType() {
+        return expirationType;
     }
 
-    public void setCouponSource(Integer couponSource) {
-        this.couponSource = couponSource;
+    public void setExpirationType(Integer expirationType) {
+        this.expirationType = expirationType;
     }
 
-    public Integer getUsedFlag() {
-        return usedFlag;
+    public Integer getExpirationDate() {
+        return expirationDate;
     }
 
-    public void setUsedFlag(Integer usedFlag) {
-        this.usedFlag = usedFlag;
+    public void setExpirationDate(Integer expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
-    public Integer getReadFlag() {
-        return readFlag;
+    public Integer getExpirationLength() {
+        return expirationLength;
     }
 
-    public void setReadFlag(Integer readFlag) {
-        this.readFlag = readFlag;
+    public void setExpirationLength(Integer expirationLength) {
+        this.expirationLength = expirationLength;
     }
 
-    public Integer getEndTime() {
-        return endTime;
+    public Integer getExpirationLengthDay() {
+        return expirationLengthDay;
     }
 
-    public void setEndTime(Integer endTime) {
-        this.endTime = endTime;
+    public void setExpirationLengthDay(Integer expirationLengthDay) {
+        this.expirationLengthDay = expirationLengthDay;
+    }
+
+    public Integer getAddFlg() {
+        return addFlg;
+    }
+
+    public void setAddFlg(Integer addFlg) {
+        this.addFlg = addFlg;
+    }
+
+    public String getCouponSystem() {
+        return couponSystem;
+    }
+
+    public void setCouponSystem(String couponSystem) {
+        this.couponSystem = couponSystem;
+    }
+
+    public Integer getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(Integer couponType) {
+        this.couponType = couponType;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
+
+    public Integer getProjectExpirationType() {
+        return projectExpirationType;
+    }
+
+    public void setProjectExpirationType(Integer projectExpirationType) {
+        this.projectExpirationType = projectExpirationType;
+    }
+
+    public Integer getProjectExpirationLength() {
+        return projectExpirationLength;
+    }
+
+    public void setProjectExpirationLength(Integer projectExpirationLength) {
+        this.projectExpirationLength = projectExpirationLength;
+    }
+
+    public Integer getProjectExpirationLengthMin() {
+        return projectExpirationLengthMin;
+    }
+
+    public void setProjectExpirationLengthMin(Integer projectExpirationLengthMin) {
+        this.projectExpirationLengthMin = projectExpirationLengthMin;
+    }
+
+    public Integer getProjectExpirationLengthMax() {
+        return projectExpirationLengthMax;
+    }
+
+    public void setProjectExpirationLengthMax(Integer projectExpirationLengthMax) {
+        this.projectExpirationLengthMax = projectExpirationLengthMax;
+    }
+
+    public Integer getTenderQuotaType() {
+        return tenderQuotaType;
+    }
+
+    public void setTenderQuotaType(Integer tenderQuotaType) {
+        this.tenderQuotaType = tenderQuotaType;
+    }
+
+    public Integer getTenderQuota() {
+        return tenderQuota;
+    }
+
+    public void setTenderQuota(Integer tenderQuota) {
+        this.tenderQuota = tenderQuota;
+    }
+
+    public Integer getTenderQuotaMin() {
+        return tenderQuotaMin;
+    }
+
+    public void setTenderQuotaMin(Integer tenderQuotaMin) {
+        this.tenderQuotaMin = tenderQuotaMin;
+    }
+
+    public Integer getTenderQuotaMax() {
+        return tenderQuotaMax;
+    }
+
+    public void setTenderQuotaMax(Integer tenderQuotaMax) {
+        this.tenderQuotaMax = tenderQuotaMax;
     }
 
     public String getContent() {
@@ -144,7 +272,15 @@ public class CouponUserVO extends BaseVO implements Serializable{
     }
 
     public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+        this.content = content;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getAuditContent() {
@@ -152,15 +288,7 @@ public class CouponUserVO extends BaseVO implements Serializable{
     }
 
     public void setAuditContent(String auditContent) {
-        this.auditContent = auditContent == null ? null : auditContent.trim();
-    }
-
-    public String getDeleteContent() {
-        return deleteContent;
-    }
-
-    public void setDeleteContent(String deleteContent) {
-        this.deleteContent = deleteContent == null ? null : deleteContent.trim();
+        this.auditContent = auditContent;
     }
 
     public String getAuditUser() {
@@ -168,7 +296,7 @@ public class CouponUserVO extends BaseVO implements Serializable{
     }
 
     public void setAuditUser(String auditUser) {
-        this.auditUser = auditUser == null ? null : auditUser.trim();
+        this.auditUser = auditUser;
     }
 
     public Integer getAuditTime() {
@@ -179,28 +307,20 @@ public class CouponUserVO extends BaseVO implements Serializable{
         this.auditTime = auditTime;
     }
 
-    public Integer getAttribute() {
-        return attribute;
+    public Integer getRepayTimeConfig() {
+        return repayTimeConfig;
     }
 
-    public void setAttribute(Integer attribute) {
-        this.attribute = attribute;
+    public void setRepayTimeConfig(Integer repayTimeConfig) {
+        this.repayTimeConfig = repayTimeConfig;
     }
 
-    public String getChannel() {
-        return channel;
+    public Integer getAddTime() {
+        return addTime;
     }
 
-    public void setChannel(String channel) {
-        this.channel = channel == null ? null : channel.trim();
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
+    public void setAddTime(Integer addTime) {
+        this.addTime = addTime;
     }
 
     public String getAddUser() {
@@ -208,7 +328,15 @@ public class CouponUserVO extends BaseVO implements Serializable{
     }
 
     public void setAddUser(String addUser) {
-        this.addUser = addUser == null ? null : addUser.trim();
+        this.addUser = addUser;
+    }
+
+    public Integer getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Integer updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getUpdateUser() {
@@ -216,22 +344,54 @@ public class CouponUserVO extends BaseVO implements Serializable{
     }
 
     public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
+        this.updateUser = updateUser;
     }
 
-    public Date getAddTime() {
-        return addTime;
+    public Integer getDelFlg() {
+        return delFlg;
     }
 
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
+    public void setDelFlg(Integer delFlg) {
+        this.delFlg = delFlg;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public int getEndTime() {
+        return endTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getUsedFlag() {
+        return usedFlag;
+    }
+
+    public void setUsedFlag(int usedFlag) {
+        this.usedFlag = usedFlag;
+    }
+
+    public int getUserUpdateTime() {
+        return userUpdateTime;
+    }
+
+    public void setUserUpdateTime(int userUpdateTime) {
+        this.userUpdateTime = userUpdateTime;
+    }
+
+    public String getCouponUserCode() {
+        return couponUserCode;
+    }
+
+    public void setCouponUserCode(String couponUserCode) {
+        this.couponUserCode = couponUserCode;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
