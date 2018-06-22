@@ -31,7 +31,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-
         <spring.cloud.version>Finchley.M9</spring.cloud.version>
         <spring.cloud.sleuth.version>2.0.0.RC2</spring.cloud.sleuth.version>
         <spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
@@ -40,6 +39,7 @@
         <rocketmq.version>4.2.0</rocketmq.version>
         <common.pool2.version>2.4.2</common.pool2.version>
         <commons.lang3.version>3.7</commons.lang3.version>
+        <commons.io.version>2.6</commons.io.version>
         <jwt.version>3.3.0</jwt.version>
         <google.coll.version>1.0-rc2</google.coll.version>
     </properties>
@@ -57,6 +57,18 @@
             <version>${commons.lang3.version}</version>
         </dependency>
 
+        <!--swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.2.2</version>
+        </dependency>
 
     </dependencies>
 
@@ -111,12 +123,6 @@
                 <version>${common.pool2.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>1.3.2</version>
-            </dependency>
-
             <!-- gen token -->
             <dependency>
                 <groupId>com.auth0</groupId>
@@ -128,6 +134,12 @@
                 <groupId>com.google.collections</groupId>
                 <artifactId>google-collections</artifactId>
                 <version>${google.coll.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
             </dependency>
 
         </dependencies>

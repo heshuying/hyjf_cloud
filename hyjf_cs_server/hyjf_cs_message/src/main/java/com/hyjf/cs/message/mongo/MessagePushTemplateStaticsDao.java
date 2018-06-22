@@ -9,11 +9,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.hyjf.cs.message.bean.MessagePushTemplateStatics;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author fuqiang
  * @version MessagePushTemplateStaticsDao, v0.1 2018/6/22 9:27
  */
+@Repository
 public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTemplateStatics> {
 
 	/**
