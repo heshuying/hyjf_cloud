@@ -9,5 +9,5 @@ import com.hyjf.am.user.dao.model.auto.BankCard;
 public interface BankCardService {
 
 	BankCard getBankCard(Integer userId, String bankId);
-	
+	BankCard getBankCard(Integer userId);
 }

@@ -180,8 +180,8 @@ public class MobileModifyController extends BaseUserController {
         WebResult<Object> result = new WebResult<Object>();
 
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
-        CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("mobile")), MsgEnum.ERR_MOBILE);
-        CheckUtil.check(mobileModifyService.checkIsOpen(user.getUserId()),MsgEnum.ERR_BANK_NOT_OPEN);
+        CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("mobile")), MsgEnum.ERR_OBJECT_BLANK,"手机号");//手机号未填写
+        CheckUtil.check(mobileModifyService.checkIsOpen(user.getUserId()),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
         try {

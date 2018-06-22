@@ -660,6 +660,13 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public int isCompAccount(Integer userId) {
+		int result = restTemplate
+				.getForEntity("http://AM-USER//am-user/user/isCompAccount/" + userId, Integer.class).getBody();
+		return result;
+	}
+
 	/**
 	 * @param logOrdId
 	 * @Description 查询开户失败原因

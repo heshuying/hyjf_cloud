@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -247,8 +247,111 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
+        <!-- vip相关表 -->
+        <!-- vip权限 -->
+        <table tableName="ht_vip_auth" domainObjectName="VipAuth">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- vip信息 -->
+        <table tableName="ht_vip_info" domainObjectName="VipInfo">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- vip用户投资 -->
+        <table tableName="ht_vip_user_tender" domainObjectName="VipUserTender">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- vip用户成长 -->
+        <table tableName="ht_vip_user_upgrade" domainObjectName="VipUserUpgrade">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!-- vip转账日志 -->
+        <table tableName="ht_vip_transfer_log" domainObjectName="VipTransferLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="trans_amt" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+        </table>
 
+        <!-- 安融相关 -->
+        <table tableName="ht_msp_apply" domainObjectName="MspApply">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_fqz" domainObjectName="MspFqz">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_DegreeResult" domainObjectName="MspDegreeResult">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_anliInfos" domainObjectName="MspAnliInfos">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_shixinInfos" domainObjectName="MspShixinInfos">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_zhixingInfos" domainObjectName="MspZhixingInfos">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_title" domainObjectName="MspTitle">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_NormalCreditDetail" domainObjectName="MspNormalCreditDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_applyDetails" domainObjectName="MspApplyDetails">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_QueryDetail" domainObjectName="MspQueryDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_BlackData" domainObjectName="MspBlackData">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_AbnormalCredit" domainObjectName="MspAbnormalCredit">
 
+        </table>
+        <!-- 安融反欺诈借款人查询表 -->
+        <table tableName="ht_msp_AbnormalCreditDetail" domainObjectName="MspAbnormalCreditDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+        <table tableName="ht_msp_region" domainObjectName="MspRegion">
+            <generatedKey column="region_id" sqlStatement="MySql"
+                          type="post" identity="true" />
+        </table>
+        <table tableName="ht_msp_configure" domainObjectName="MspConfigure">
+            <generatedKey column="id" sqlStatement="MySql" type="post"
+                          identity="true" />
+        </table>
+
+        <table tableName="ht_users_change_log" domainObjectName="UsersChangeLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="role" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="attribute" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is51" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="change_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="borrower_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
         <!-- 2. hyjf_config -->
 
@@ -816,7 +919,7 @@
             <columnOverride column="lock_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!--汇计划第三方推送资产风控信息表-->
-        <table tableName="hyjf_hjh_asset_risk_info" domainObjectName="HjhAssetRiskInfo">
+        <table tableName="ht_hjh_asset_risk_info" domainObjectName="HjhAssetRiskInfo">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>

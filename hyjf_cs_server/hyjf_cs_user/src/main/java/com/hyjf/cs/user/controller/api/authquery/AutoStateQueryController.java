@@ -41,7 +41,7 @@ public class AutoStateQueryController extends BaseUserController {
             result.setData(resultBean);
         } else {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_REGISTER.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_USER_REGISTER.getMsg());
         }
         return result;
     }

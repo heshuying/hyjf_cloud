@@ -4,7 +4,10 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -26,4 +29,6 @@ public interface UserService {
      * @return
      */
     List<HjhInstConfig> selectInstConfigListByInstCode(String instCode);
+
+    List<RecentPaymentListCustomize> selectRecentPaymentList(Map<String, Object> paraMap);
 }

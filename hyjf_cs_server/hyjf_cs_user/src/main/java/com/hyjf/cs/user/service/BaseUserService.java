@@ -3,6 +3,7 @@ package com.hyjf.cs.user.service;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.service.BaseService;
@@ -57,4 +58,6 @@ public interface BaseUserService extends BaseService{
 	boolean updateAfterSendCode(BankSmsLogRequest request);
 
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
+
+	UserInfoVO getUserInfo(int userId);
 }

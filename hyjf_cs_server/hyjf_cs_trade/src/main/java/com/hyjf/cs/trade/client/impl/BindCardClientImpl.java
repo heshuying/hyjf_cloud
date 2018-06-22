@@ -67,6 +67,16 @@ public class BindCardClientImpl implements BindCardClient {
 		return result;
 	}
 
+	@Override
+	public BankCardVO selectBankCardByUserId(Integer userId) {
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankCard/getBankCard/" + userId, BankCardResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 
 	/**
 	 * 获取用户account信息
@@ -76,7 +86,7 @@ public class BindCardClientImpl implements BindCardClient {
 	@Override
 	public AccountVO getAccount(Integer userId) {
         AccountResponse response = restTemplate
-                .getForEntity("http://AM-BORROW/am-borrow/recharge/getAccount/" + userId, AccountResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/recharge/getAccount/" + userId, AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
