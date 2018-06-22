@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BankCreditEndMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BankCreditEnd" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="batch_no" property="batchNo" jdbcType="CHAR" />
+    <result column="tx_date" property="txDate" jdbcType="CHAR" />
+    <result column="tx_time" property="txTime" jdbcType="CHAR" />
+    <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
+    <result column="tx_counts" property="txCounts" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="tender_user_id" property="tenderUserId" jdbcType="INTEGER" />
+    <result column="tender_username" property="tenderUsername" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="tender_account_id" property="tenderAccountId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="org_order_id" property="orgOrderId" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="auth_code" property="authCode" jdbcType="VARCHAR" />
+    <result column="credit_end_type" property="creditEndType" jdbcType="TINYINT" />
+    <result column="received" property="received" jdbcType="TINYINT" />
+    <result column="check_retcode" property="checkRetcode" jdbcType="VARCHAR" />
+    <result column="check_retmsg" property="checkRetmsg" jdbcType="VARCHAR" />
+    <result column="retcode" property="retcode" jdbcType="VARCHAR" />
+    <result column="retmsg" property="retmsg" jdbcType="VARCHAR" />
+    <result column="suc_counts" property="sucCounts" jdbcType="INTEGER" />
+    <result column="fail_counts" property="failCounts" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="failmsg" property="failmsg" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, batch_no, tx_date, tx_time, seq_no, tx_counts, user_id, username, tender_user_id, 
+    tender_username, account_id, tender_account_id, order_id, org_order_id, borrow_nid, 
+    auth_code, credit_end_type, received, check_retcode, check_retmsg, retcode, retmsg, 
+    suc_counts, fail_counts, `state`, `status`, failmsg, create_user, create_time, update_user, 
+    update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BankCreditEndExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_bank_credit_end
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_bank_credit_end
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_bank_credit_end
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BankCreditEndExample" >
+    delete from ht_bank_credit_end
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BankCreditEnd" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_bank_credit_end (batch_no, tx_date, tx_time, 
+      seq_no, tx_counts, user_id, 
+      username, tender_user_id, tender_username, 
+      account_id, tender_account_id, order_id, 
+      org_order_id, borrow_nid, auth_code, 
+      credit_end_type, received, check_retcode, 
+      check_retmsg, retcode, retmsg, 
+      suc_counts, fail_counts, `state`, 
+      `status`, failmsg, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{batchNo,jdbcType=CHAR}, #{txDate,jdbcType=CHAR}, #{txTime,jdbcType=CHAR}, 
+      #{seqNo,jdbcType=VARCHAR}, #{txCounts,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{username,jdbcType=VARCHAR}, #{tenderUserId,jdbcType=INTEGER}, #{tenderUsername,jdbcType=VARCHAR}, 
+      #{accountId,jdbcType=VARCHAR}, #{tenderAccountId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
+      #{orgOrderId,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{authCode,jdbcType=VARCHAR}, 
+      #{creditEndType,jdbcType=TINYINT}, #{received,jdbcType=TINYINT}, #{checkRetcode,jdbcType=VARCHAR}, 
+      #{checkRetmsg,jdbcType=VARCHAR}, #{retcode,jdbcType=VARCHAR}, #{retmsg,jdbcType=VARCHAR}, 
+      #{sucCounts,jdbcType=INTEGER}, #{failCounts,jdbcType=INTEGER}, #{state,jdbcType=TINYINT}, 
+      #{status,jdbcType=TINYINT}, #{failmsg,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BankCreditEnd" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_bank_credit_end
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="batchNo != null" >
+        batch_no,
+      </if>
+      <if test="txDate != null" >
+        tx_date,
+      </if>
+      <if test="txTime != null" >
+        tx_time,
+      </if>
+      <if test="seqNo != null" >
+        seq_no,
+      </if>
+      <if test="txCounts != null" >
+        tx_counts,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="tenderUserId != null" >
+        tender_user_id,
+      </if>
+      <if test="tenderUsername != null" >
+        tender_username,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="tenderAccountId != null" >
+        tender_account_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orgOrderId != null" >
+        org_order_id,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="authCode != null" >
+        auth_code,
+      </if>
+      <if test="creditEndType != null" >
+        credit_end_type,
+      </if>
+      <if test="received != null" >
+        received,
+      </if>
+      <if test="checkRetcode != null" >
+        check_retcode,
+      </if>
+      <if test="checkRetmsg != null" >
+        check_retmsg,
+      </if>
+      <if test="retcode != null" >
+        retcode,
+      </if>
+      <if test="retmsg != null" >
+        retmsg,
+      </if>
+      <if test="sucCounts != null" >
+        suc_counts,
+      </if>
+      <if test="failCounts != null" >
+        fail_counts,
+      </if>
+      <if test="state != null" >
+        `state`,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="failmsg != null" >
+        failmsg,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=CHAR},
+      </if>
+      <if test="txDate != null" >
+        #{txDate,jdbcType=CHAR},
+      </if>
+      <if test="txTime != null" >
+        #{txTime,jdbcType=CHAR},
+      </if>
+      <if test="seqNo != null" >
+        #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="txCounts != null" >
+        #{txCounts,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserId != null" >
+        #{tenderUserId,jdbcType=INTEGER},
+      </if>
+      <if test="tenderUsername != null" >
+        #{tenderUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAccountId != null" >
+        #{tenderAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgOrderId != null" >
+        #{orgOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="authCode != null" >
+        #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="creditEndType != null" >
+        #{creditEndType,jdbcType=TINYINT},
+      </if>
+      <if test="received != null" >
+        #{received,jdbcType=TINYINT},
+      </if>
+      <if test="checkRetcode != null" >
+        #{checkRetcode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkRetmsg != null" >
+        #{checkRetmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="retcode != null" >
+        #{retcode,jdbcType=VARCHAR},
+      </if>
+      <if test="retmsg != null" >
+        #{retmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="sucCounts != null" >
+        #{sucCounts,jdbcType=INTEGER},
+      </if>
+      <if test="failCounts != null" >
+        #{failCounts,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="failmsg != null" >
+        #{failmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BankCreditEndExample" resultType="java.lang.Integer" >
+    select count(*) from ht_bank_credit_end
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_bank_credit_end
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.batchNo != null" >
+        batch_no = #{record.batchNo,jdbcType=CHAR},
+      </if>
+      <if test="record.txDate != null" >
+        tx_date = #{record.txDate,jdbcType=CHAR},
+      </if>
+      <if test="record.txTime != null" >
+        tx_time = #{record.txTime,jdbcType=CHAR},
+      </if>
+      <if test="record.seqNo != null" >
+        seq_no = #{record.seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.txCounts != null" >
+        tx_counts = #{record.txCounts,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderUserId != null" >
+        tender_user_id = #{record.tenderUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderUsername != null" >
+        tender_username = #{record.tenderUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountId != null" >
+        account_id = #{record.accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderAccountId != null" >
+        tender_account_id = #{record.tenderAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgOrderId != null" >
+        org_order_id = #{record.orgOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authCode != null" >
+        auth_code = #{record.authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creditEndType != null" >
+        credit_end_type = #{record.creditEndType,jdbcType=TINYINT},
+      </if>
+      <if test="record.received != null" >
+        received = #{record.received,jdbcType=TINYINT},
+      </if>
+      <if test="record.checkRetcode != null" >
+        check_retcode = #{record.checkRetcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkRetmsg != null" >
+        check_retmsg = #{record.checkRetmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.retcode != null" >
+        retcode = #{record.retcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.retmsg != null" >
+        retmsg = #{record.retmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sucCounts != null" >
+        suc_counts = #{record.sucCounts,jdbcType=INTEGER},
+      </if>
+      <if test="record.failCounts != null" >
+        fail_counts = #{record.failCounts,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        `state` = #{record.state,jdbcType=TINYINT},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.failmsg != null" >
+        failmsg = #{record.failmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_bank_credit_end
+    set id = #{record.id,jdbcType=INTEGER},
+      batch_no = #{record.batchNo,jdbcType=CHAR},
+      tx_date = #{record.txDate,jdbcType=CHAR},
+      tx_time = #{record.txTime,jdbcType=CHAR},
+      seq_no = #{record.seqNo,jdbcType=VARCHAR},
+      tx_counts = #{record.txCounts,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      tender_user_id = #{record.tenderUserId,jdbcType=INTEGER},
+      tender_username = #{record.tenderUsername,jdbcType=VARCHAR},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
+      tender_account_id = #{record.tenderAccountId,jdbcType=VARCHAR},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      org_order_id = #{record.orgOrderId,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      auth_code = #{record.authCode,jdbcType=VARCHAR},
+      credit_end_type = #{record.creditEndType,jdbcType=TINYINT},
+      received = #{record.received,jdbcType=TINYINT},
+      check_retcode = #{record.checkRetcode,jdbcType=VARCHAR},
+      check_retmsg = #{record.checkRetmsg,jdbcType=VARCHAR},
+      retcode = #{record.retcode,jdbcType=VARCHAR},
+      retmsg = #{record.retmsg,jdbcType=VARCHAR},
+      suc_counts = #{record.sucCounts,jdbcType=INTEGER},
+      fail_counts = #{record.failCounts,jdbcType=INTEGER},
+      `state` = #{record.state,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=TINYINT},
+      failmsg = #{record.failmsg,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BankCreditEnd" >
+    update ht_bank_credit_end
+    <set >
+      <if test="batchNo != null" >
+        batch_no = #{batchNo,jdbcType=CHAR},
+      </if>
+      <if test="txDate != null" >
+        tx_date = #{txDate,jdbcType=CHAR},
+      </if>
+      <if test="txTime != null" >
+        tx_time = #{txTime,jdbcType=CHAR},
+      </if>
+      <if test="seqNo != null" >
+        seq_no = #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="txCounts != null" >
+        tx_counts = #{txCounts,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserId != null" >
+        tender_user_id = #{tenderUserId,jdbcType=INTEGER},
+      </if>
+      <if test="tenderUsername != null" >
+        tender_username = #{tenderUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAccountId != null" >
+        tender_account_id = #{tenderAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgOrderId != null" >
+        org_order_id = #{orgOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="authCode != null" >
+        auth_code = #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="creditEndType != null" >
+        credit_end_type = #{creditEndType,jdbcType=TINYINT},
+      </if>
+      <if test="received != null" >
+        received = #{received,jdbcType=TINYINT},
+      </if>
+      <if test="checkRetcode != null" >
+        check_retcode = #{checkRetcode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkRetmsg != null" >
+        check_retmsg = #{checkRetmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="retcode != null" >
+        retcode = #{retcode,jdbcType=VARCHAR},
+      </if>
+      <if test="retmsg != null" >
+        retmsg = #{retmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="sucCounts != null" >
+        suc_counts = #{sucCounts,jdbcType=INTEGER},
+      </if>
+      <if test="failCounts != null" >
+        fail_counts = #{failCounts,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        `state` = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="failmsg != null" >
+        failmsg = #{failmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BankCreditEnd" >
+    update ht_bank_credit_end
+    set batch_no = #{batchNo,jdbcType=CHAR},
+      tx_date = #{txDate,jdbcType=CHAR},
+      tx_time = #{txTime,jdbcType=CHAR},
+      seq_no = #{seqNo,jdbcType=VARCHAR},
+      tx_counts = #{txCounts,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      tender_user_id = #{tenderUserId,jdbcType=INTEGER},
+      tender_username = #{tenderUsername,jdbcType=VARCHAR},
+      account_id = #{accountId,jdbcType=VARCHAR},
+      tender_account_id = #{tenderAccountId,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      org_order_id = #{orgOrderId,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      auth_code = #{authCode,jdbcType=VARCHAR},
+      credit_end_type = #{creditEndType,jdbcType=TINYINT},
+      received = #{received,jdbcType=TINYINT},
+      check_retcode = #{checkRetcode,jdbcType=VARCHAR},
+      check_retmsg = #{checkRetmsg,jdbcType=VARCHAR},
+      retcode = #{retcode,jdbcType=VARCHAR},
+      retmsg = #{retmsg,jdbcType=VARCHAR},
+      suc_counts = #{sucCounts,jdbcType=INTEGER},
+      fail_counts = #{failCounts,jdbcType=INTEGER},
+      `state` = #{state,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
+      failmsg = #{failmsg,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
