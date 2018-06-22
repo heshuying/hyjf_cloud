@@ -76,7 +76,7 @@ public class RedPacketSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl imp
             Map<String, String> messageStrMap = new HashMap<String, String>();
             messageStrMap.put("val_amount", balance.toString());
             // 发送短信通知
-            SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_RED_PACKET,
+            SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_RED_PACKET,
                     CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(

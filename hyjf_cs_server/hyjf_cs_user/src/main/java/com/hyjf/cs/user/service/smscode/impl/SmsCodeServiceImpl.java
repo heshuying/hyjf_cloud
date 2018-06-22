@@ -73,7 +73,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 		// 保存短信验证码
 		amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CommonConstant.CKCODE_NEW, CommonConstant.CLIENT_PC);
 
-		SmsMessage smsMessage = new SmsMessage(null, param, mobile, null, MessageConstant.SMSSENDFORMOBILE, null,
+		SmsMessage smsMessage = new SmsMessage(null, param, mobile, null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
 				validCodeType, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		// 发送
@@ -135,7 +135,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 					replaceStrs.put("var_phonenu", mobile);
 					replaceStrs.put("val_reason", "IP访问次数超限");
 					SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null,
-							MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
+							MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(
@@ -163,7 +163,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 					replaceStrs.put("var_phonenu", mobile);
 					replaceStrs.put("val_reason", "手机验证码发送次数超限");
 					SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null,
-							MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
+							MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(

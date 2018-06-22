@@ -50,7 +50,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					// 添加到发送队列
-					AppMsMessage message = new AppMsMessage(MessageConstant.APPMSSENDFORMSG, list.get(i).getId());
+					AppMsMessage message = new AppMsMessage(MessageConstant.APP_MS_SEND_FOR_MSG, list.get(i).getId());
 					appMessageProducer.messageSend(
 							new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(message)));
 				}

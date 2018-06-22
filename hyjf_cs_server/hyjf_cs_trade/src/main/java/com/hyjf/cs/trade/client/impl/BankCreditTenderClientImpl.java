@@ -1,22 +1,22 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.BorrowWithBLOBsResponse;
-import com.hyjf.am.response.trade.CreditTenderLogResponse;
-import com.hyjf.am.response.trade.CreditTenderResponse;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.resquest.trade.TenderCreditRequest;
-import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowWithBLOBsVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.cs.trade.client.BankCreditTenderClient;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.BorrowResponse;
+import com.hyjf.am.response.trade.CreditTenderLogResponse;
+import com.hyjf.am.response.trade.CreditTenderResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.cs.trade.client.BankCreditTenderClient;
 
 /**
  * 债转投资异常client实现类
@@ -152,9 +152,9 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
      * @return
      */
     @Override
-    public BorrowWithBLOBsVO getBorrowByNid(String borrowNid) {
+    public BorrowVO getBorrowByNid(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowWithBLOBsByNid/" + borrowNid;
-        BorrowWithBLOBsResponse response = restTemplate.getForEntity(url,BorrowWithBLOBsResponse.class).getBody();
+        BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
         if (response!=null){
             return response.getResult();
         }

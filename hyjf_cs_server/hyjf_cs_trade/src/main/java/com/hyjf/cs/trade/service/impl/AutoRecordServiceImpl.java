@@ -100,7 +100,7 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
             // 您好，有一笔标的备案失败，请及时关注！
             Map<String, String> replaceStrs = new HashMap<String, String>();
             replaceStrs.put("val_title", hjhPlanAssetVO.getBorrowNid());
-            SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_NOTICE_BORROW_RECORD_FAIL, CustomConstants.CHANNEL_TYPE_NORMAL);
+            SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_NOTICE_BORROW_RECORD_FAIL, CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
             } catch (MQException e) {

@@ -8,10 +8,8 @@ import java.util.Map;
 
 /**
  * 消息基类
- * @author renxingchen
- * @version hyjf 1.0
- * @since hyjf 1.0 2016年6月17日
- * @see 下午2:16:49
+ * @author xiasq
+ * @version AppMsMessage, v0.1 2018/6/22 14:08
  */
 public class HyjfMessage implements Serializable {
 
@@ -19,6 +17,10 @@ public class HyjfMessage implements Serializable {
      * 此处为属性说明
      */
     private static final long serialVersionUID = 1248384598497228429L;
+
+    protected Integer userId;
+
+    protected Map<String, String> replaceStrs;
 
     public HyjfMessage() {
         super();
@@ -45,9 +47,4 @@ public class HyjfMessage implements Serializable {
     public void setReplaceStrs(Map<String, String> replaceStrs) {
         this.replaceStrs = replaceStrs;
     }
-
-    protected Integer userId;
-
-    protected Map<String, String> replaceStrs;
-
 }

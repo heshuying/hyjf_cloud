@@ -29,10 +29,8 @@ import java.util.Map;
 
 /**
  * app消息实体类
- * @author renxingchen
- * @version hyjf 1.0
- * @since hyjf 1.0 2016年8月17日
- * @see 上午11:15:04
+ * @author xiasq
+ * @version AppMsMessage, v0.1 2018/6/22 14:08
  */
 public class AppMsMessage extends HyjfMessage {
 
@@ -41,6 +39,13 @@ public class AppMsMessage extends HyjfMessage {
      */
     private static final long serialVersionUID = -4172518682626049718L;
 
+    private String mobile;
+
+    private String serviceType;
+
+    private String tplCode;
+
+    private Integer msgId;
     
     public AppMsMessage() {
         super();
@@ -101,13 +106,5 @@ public class AppMsMessage extends HyjfMessage {
                 ", msgId=" + msgId +
                 '}';
     }
-
-    private String mobile;
-
-    private String serviceType;
-
-    private String tplCode;
-    
-    private Integer msgId;
 
 }
