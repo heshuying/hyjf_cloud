@@ -3,35 +3,19 @@
  */
 package com.hyjf.cs.user.controller.wechat.password;
 
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.util.RequestUtil;
-import com.hyjf.cs.user.util.ResultEnum;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.helper.StringUtil;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-
-import io.swagger.annotations.Api;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author wangc
  */
 @Api(value = "密码相关服务")
-@Controller
+@RestController
 @RequestMapping("/wecat/user/password")
 public class WeChatPassWordController {
 
