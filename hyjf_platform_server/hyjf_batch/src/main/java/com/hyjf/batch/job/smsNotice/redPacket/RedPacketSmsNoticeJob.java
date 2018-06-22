@@ -21,7 +21,7 @@ public class RedPacketSmsNoticeJob  extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("RedPacketSmsNoticeJob: {} execute...", context.getJobDetail().getKey().getName());
-        // TODO 调用原子层地址需要修改
+        // 调用原子层地址需要修改
         restTemplate.getForEntity("http://CS-TRADE/tradeBatch/redPacket/smsNotice", String.class);
         logger.info("RedPacketSmsNoticeJob execute end...");
     }
