@@ -3,14 +3,51 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
+import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BankCreditEndMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CreditTenderLogMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
+import com.hyjf.am.trade.dao.model.auto.CreditRepay;
+import com.hyjf.am.trade.dao.model.auto.CreditTender;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderLogExample;
 import com.hyjf.am.trade.mq.AccountWebListProducer;
 import com.hyjf.am.trade.mq.AppMessageProducer;
 import com.hyjf.am.trade.mq.Producer;
@@ -20,7 +57,12 @@ import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.statistics.AccountWebListVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.EmployeeCustomizeVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -31,18 +73,6 @@ import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.validator.Validator;
-import com.netflix.discovery.converters.Auto;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 银行债转异常处理
@@ -92,7 +122,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	public List<CreditTenderLog> selectCreditTenderLogs() {
 		CreditTenderLogExample example = new CreditTenderLogExample();
 		CreditTenderLogExample.Criteria cra = example.createCriteria();
-		cra.andStatusEqualTo((byte) 0);
+		cra.andStatusEqualTo(0);
 		// 添加时间 <当前时间-5分钟
 		cra.andAddTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime10(),-5));
 		cra.andAddTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));//两天之前
