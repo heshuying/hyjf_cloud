@@ -3,24 +3,21 @@ package com.hyjf.am.trade.controller.task;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.BankCallBeanResponse;
 import com.hyjf.am.response.trade.CreditTenderLogResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
-import com.hyjf.am.resquest.trade.TenderCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.service.task.BankCreditTenderService;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
+import com.hyjf.am.response.trade.AccountWithdrawResponse;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.trade.service.BankRechargeService;
 import com.hyjf.am.trade.service.BankWithdrawService;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -84,10 +81,10 @@ public class BankExceptionController {
      * @return
      */
     @RequestMapping(value = "/selectBankWithdrawList")
-    public AccountwithdrawResponse selectBankWithdrawList(){
+    public AccountWithdrawResponse selectBankWithdrawList(){
         logger.info("selectBankWithdrawList...");
-        AccountwithdrawResponse response = new AccountwithdrawResponse();
-        List<Accountwithdraw> withdrawList=bankWithdrawService.selectBankWithdrawList();
+        AccountWithdrawResponse response = new AccountWithdrawResponse();
+        List<AccountWithdraw> withdrawList=bankWithdrawService.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             List<AccountWithdrawVO> voList = CommonUtils.convertBeanList(withdrawList, AccountWithdrawVO.class);
             response.setResultList(voList);

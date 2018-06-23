@@ -525,52 +525,52 @@ public class WhereaboutsPageConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusEqualTo(Boolean value) {
+        public Criteria andBottomButtonStatusEqualTo(Integer value) {
             addCriterion("bottom_button_status =", value, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusNotEqualTo(Boolean value) {
+        public Criteria andBottomButtonStatusNotEqualTo(Integer value) {
             addCriterion("bottom_button_status <>", value, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusGreaterThan(Boolean value) {
+        public Criteria andBottomButtonStatusGreaterThan(Integer value) {
             addCriterion("bottom_button_status >", value, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andBottomButtonStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("bottom_button_status >=", value, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusLessThan(Boolean value) {
+        public Criteria andBottomButtonStatusLessThan(Integer value) {
             addCriterion("bottom_button_status <", value, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andBottomButtonStatusLessThanOrEqualTo(Integer value) {
             addCriterion("bottom_button_status <=", value, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusIn(List<Boolean> values) {
+        public Criteria andBottomButtonStatusIn(List<Integer> values) {
             addCriterion("bottom_button_status in", values, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusNotIn(List<Boolean> values) {
+        public Criteria andBottomButtonStatusNotIn(List<Integer> values) {
             addCriterion("bottom_button_status not in", values, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andBottomButtonStatusBetween(Integer value1, Integer value2) {
             addCriterion("bottom_button_status between", value1, value2, "bottomButtonStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBottomButtonStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andBottomButtonStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("bottom_button_status not between", value1, value2, "bottomButtonStatus");
             return (Criteria) this;
         }

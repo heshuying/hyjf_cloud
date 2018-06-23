@@ -1,6 +1,5 @@
 package com.hyjf.am.config.dao.model.auto;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -186,413 +185,403 @@ public class BankConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andBankIdIsNull() {
-            addCriterion("bank_id is null");
+        public Criteria andNameIsNull() {
+            addCriterion("`name` is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdIsNotNull() {
-            addCriterion("bank_id is not null");
+        public Criteria andNameIsNotNull() {
+            addCriterion("`name` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdEqualTo(Integer value) {
-            addCriterion("bank_id =", value, "bankId");
+        public Criteria andNameEqualTo(String value) {
+            addCriterion("`name` =", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdNotEqualTo(Integer value) {
-            addCriterion("bank_id <>", value, "bankId");
+        public Criteria andNameNotEqualTo(String value) {
+            addCriterion("`name` <>", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdGreaterThan(Integer value) {
-            addCriterion("bank_id >", value, "bankId");
+        public Criteria andNameGreaterThan(String value) {
+            addCriterion("`name` >", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("bank_id >=", value, "bankId");
+        public Criteria andNameGreaterThanOrEqualTo(String value) {
+            addCriterion("`name` >=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdLessThan(Integer value) {
-            addCriterion("bank_id <", value, "bankId");
+        public Criteria andNameLessThan(String value) {
+            addCriterion("`name` <", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdLessThanOrEqualTo(Integer value) {
-            addCriterion("bank_id <=", value, "bankId");
+        public Criteria andNameLessThanOrEqualTo(String value) {
+            addCriterion("`name` <=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdIn(List<Integer> values) {
-            addCriterion("bank_id in", values, "bankId");
+        public Criteria andNameLike(String value) {
+            addCriterion("`name` like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdNotIn(List<Integer> values) {
-            addCriterion("bank_id not in", values, "bankId");
+        public Criteria andNameNotLike(String value) {
+            addCriterion("`name` not like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdBetween(Integer value1, Integer value2) {
-            addCriterion("bank_id between", value1, value2, "bankId");
+        public Criteria andNameIn(List<String> values) {
+            addCriterion("`name` in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("bank_id not between", value1, value2, "bankId");
+        public Criteria andNameNotIn(List<String> values) {
+            addCriterion("`name` not in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameIsNull() {
-            addCriterion("bank_name is null");
+        public Criteria andNameBetween(String value1, String value2) {
+            addCriterion("`name` between", value1, value2, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameIsNotNull() {
-            addCriterion("bank_name is not null");
+        public Criteria andNameNotBetween(String value1, String value2) {
+            addCriterion("`name` not between", value1, value2, "name");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameEqualTo(String value) {
-            addCriterion("bank_name =", value, "bankName");
+        public Criteria andCodeIsNull() {
+            addCriterion("code is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameNotEqualTo(String value) {
-            addCriterion("bank_name <>", value, "bankName");
+        public Criteria andCodeIsNotNull() {
+            addCriterion("code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameGreaterThan(String value) {
-            addCriterion("bank_name >", value, "bankName");
+        public Criteria andCodeEqualTo(String value) {
+            addCriterion("code =", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameGreaterThanOrEqualTo(String value) {
-            addCriterion("bank_name >=", value, "bankName");
+        public Criteria andCodeNotEqualTo(String value) {
+            addCriterion("code <>", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameLessThan(String value) {
-            addCriterion("bank_name <", value, "bankName");
+        public Criteria andCodeGreaterThan(String value) {
+            addCriterion("code >", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameLessThanOrEqualTo(String value) {
-            addCriterion("bank_name <=", value, "bankName");
+        public Criteria andCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("code >=", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameLike(String value) {
-            addCriterion("bank_name like", value, "bankName");
+        public Criteria andCodeLessThan(String value) {
+            addCriterion("code <", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameNotLike(String value) {
-            addCriterion("bank_name not like", value, "bankName");
+        public Criteria andCodeLessThanOrEqualTo(String value) {
+            addCriterion("code <=", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameIn(List<String> values) {
-            addCriterion("bank_name in", values, "bankName");
+        public Criteria andCodeLike(String value) {
+            addCriterion("code like", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameNotIn(List<String> values) {
-            addCriterion("bank_name not in", values, "bankName");
+        public Criteria andCodeNotLike(String value) {
+            addCriterion("code not like", value, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameBetween(String value1, String value2) {
-            addCriterion("bank_name between", value1, value2, "bankName");
+        public Criteria andCodeIn(List<String> values) {
+            addCriterion("code in", values, "code");
             return (Criteria) this;
         }
 
-        public Criteria andBankNameNotBetween(String value1, String value2) {
-            addCriterion("bank_name not between", value1, value2, "bankName");
+        public Criteria andCodeNotIn(List<String> values) {
+            addCriterion("code not in", values, "code");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeIsNull() {
-            addCriterion("pay_alliance_code is null");
+        public Criteria andCodeBetween(String value1, String value2) {
+            addCriterion("code between", value1, value2, "code");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeIsNotNull() {
-            addCriterion("pay_alliance_code is not null");
+        public Criteria andCodeNotBetween(String value1, String value2) {
+            addCriterion("code not between", value1, value2, "code");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeEqualTo(String value) {
-            addCriterion("pay_alliance_code =", value, "payAllianceCode");
+        public Criteria andAppLogoIsNull() {
+            addCriterion("app_logo is null");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeNotEqualTo(String value) {
-            addCriterion("pay_alliance_code <>", value, "payAllianceCode");
+        public Criteria andAppLogoIsNotNull() {
+            addCriterion("app_logo is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeGreaterThan(String value) {
-            addCriterion("pay_alliance_code >", value, "payAllianceCode");
+        public Criteria andAppLogoEqualTo(String value) {
+            addCriterion("app_logo =", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("pay_alliance_code >=", value, "payAllianceCode");
+        public Criteria andAppLogoNotEqualTo(String value) {
+            addCriterion("app_logo <>", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeLessThan(String value) {
-            addCriterion("pay_alliance_code <", value, "payAllianceCode");
+        public Criteria andAppLogoGreaterThan(String value) {
+            addCriterion("app_logo >", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeLessThanOrEqualTo(String value) {
-            addCriterion("pay_alliance_code <=", value, "payAllianceCode");
+        public Criteria andAppLogoGreaterThanOrEqualTo(String value) {
+            addCriterion("app_logo >=", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeLike(String value) {
-            addCriterion("pay_alliance_code like", value, "payAllianceCode");
+        public Criteria andAppLogoLessThan(String value) {
+            addCriterion("app_logo <", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeNotLike(String value) {
-            addCriterion("pay_alliance_code not like", value, "payAllianceCode");
+        public Criteria andAppLogoLessThanOrEqualTo(String value) {
+            addCriterion("app_logo <=", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeIn(List<String> values) {
-            addCriterion("pay_alliance_code in", values, "payAllianceCode");
+        public Criteria andAppLogoLike(String value) {
+            addCriterion("app_logo like", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeNotIn(List<String> values) {
-            addCriterion("pay_alliance_code not in", values, "payAllianceCode");
+        public Criteria andAppLogoNotLike(String value) {
+            addCriterion("app_logo not like", value, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeBetween(String value1, String value2) {
-            addCriterion("pay_alliance_code between", value1, value2, "payAllianceCode");
+        public Criteria andAppLogoIn(List<String> values) {
+            addCriterion("app_logo in", values, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andPayAllianceCodeNotBetween(String value1, String value2) {
-            addCriterion("pay_alliance_code not between", value1, value2, "payAllianceCode");
+        public Criteria andAppLogoNotIn(List<String> values) {
+            addCriterion("app_logo not in", values, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeIsNull() {
-            addCriterion("bank_code is null");
+        public Criteria andAppLogoBetween(String value1, String value2) {
+            addCriterion("app_logo between", value1, value2, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeIsNotNull() {
-            addCriterion("bank_code is not null");
+        public Criteria andAppLogoNotBetween(String value1, String value2) {
+            addCriterion("app_logo not between", value1, value2, "appLogo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeEqualTo(String value) {
-            addCriterion("bank_code =", value, "bankCode");
+        public Criteria andLogoIsNull() {
+            addCriterion("logo is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeNotEqualTo(String value) {
-            addCriterion("bank_code <>", value, "bankCode");
+        public Criteria andLogoIsNotNull() {
+            addCriterion("logo is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeGreaterThan(String value) {
-            addCriterion("bank_code >", value, "bankCode");
+        public Criteria andLogoEqualTo(String value) {
+            addCriterion("logo =", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("bank_code >=", value, "bankCode");
+        public Criteria andLogoNotEqualTo(String value) {
+            addCriterion("logo <>", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeLessThan(String value) {
-            addCriterion("bank_code <", value, "bankCode");
+        public Criteria andLogoGreaterThan(String value) {
+            addCriterion("logo >", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeLessThanOrEqualTo(String value) {
-            addCriterion("bank_code <=", value, "bankCode");
+        public Criteria andLogoGreaterThanOrEqualTo(String value) {
+            addCriterion("logo >=", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeLike(String value) {
-            addCriterion("bank_code like", value, "bankCode");
+        public Criteria andLogoLessThan(String value) {
+            addCriterion("logo <", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeNotLike(String value) {
-            addCriterion("bank_code not like", value, "bankCode");
+        public Criteria andLogoLessThanOrEqualTo(String value) {
+            addCriterion("logo <=", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeIn(List<String> values) {
-            addCriterion("bank_code in", values, "bankCode");
+        public Criteria andLogoLike(String value) {
+            addCriterion("logo like", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeNotIn(List<String> values) {
-            addCriterion("bank_code not in", values, "bankCode");
+        public Criteria andLogoNotLike(String value) {
+            addCriterion("logo not like", value, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeBetween(String value1, String value2) {
-            addCriterion("bank_code between", value1, value2, "bankCode");
+        public Criteria andLogoIn(List<String> values) {
+            addCriterion("logo in", values, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankCodeNotBetween(String value1, String value2) {
-            addCriterion("bank_code not between", value1, value2, "bankCode");
+        public Criteria andLogoNotIn(List<String> values) {
+            addCriterion("logo not in", values, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconIsNull() {
-            addCriterion("bank_icon is null");
+        public Criteria andLogoBetween(String value1, String value2) {
+            addCriterion("logo between", value1, value2, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconIsNotNull() {
-            addCriterion("bank_icon is not null");
+        public Criteria andLogoNotBetween(String value1, String value2) {
+            addCriterion("logo not between", value1, value2, "logo");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconEqualTo(String value) {
-            addCriterion("bank_icon =", value, "bankIcon");
+        public Criteria andPersonalEbankIsNull() {
+            addCriterion("personal_ebank is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconNotEqualTo(String value) {
-            addCriterion("bank_icon <>", value, "bankIcon");
+        public Criteria andPersonalEbankIsNotNull() {
+            addCriterion("personal_ebank is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconGreaterThan(String value) {
-            addCriterion("bank_icon >", value, "bankIcon");
+        public Criteria andPersonalEbankEqualTo(Integer value) {
+            addCriterion("personal_ebank =", value, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconGreaterThanOrEqualTo(String value) {
-            addCriterion("bank_icon >=", value, "bankIcon");
+        public Criteria andPersonalEbankNotEqualTo(Integer value) {
+            addCriterion("personal_ebank <>", value, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconLessThan(String value) {
-            addCriterion("bank_icon <", value, "bankIcon");
+        public Criteria andPersonalEbankGreaterThan(Integer value) {
+            addCriterion("personal_ebank >", value, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconLessThanOrEqualTo(String value) {
-            addCriterion("bank_icon <=", value, "bankIcon");
+        public Criteria andPersonalEbankGreaterThanOrEqualTo(Integer value) {
+            addCriterion("personal_ebank >=", value, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconLike(String value) {
-            addCriterion("bank_icon like", value, "bankIcon");
+        public Criteria andPersonalEbankLessThan(Integer value) {
+            addCriterion("personal_ebank <", value, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconNotLike(String value) {
-            addCriterion("bank_icon not like", value, "bankIcon");
+        public Criteria andPersonalEbankLessThanOrEqualTo(Integer value) {
+            addCriterion("personal_ebank <=", value, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconIn(List<String> values) {
-            addCriterion("bank_icon in", values, "bankIcon");
+        public Criteria andPersonalEbankIn(List<Integer> values) {
+            addCriterion("personal_ebank in", values, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconNotIn(List<String> values) {
-            addCriterion("bank_icon not in", values, "bankIcon");
+        public Criteria andPersonalEbankNotIn(List<Integer> values) {
+            addCriterion("personal_ebank not in", values, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconBetween(String value1, String value2) {
-            addCriterion("bank_icon between", value1, value2, "bankIcon");
+        public Criteria andPersonalEbankBetween(Integer value1, Integer value2) {
+            addCriterion("personal_ebank between", value1, value2, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankIconNotBetween(String value1, String value2) {
-            addCriterion("bank_icon not between", value1, value2, "bankIcon");
+        public Criteria andPersonalEbankNotBetween(Integer value1, Integer value2) {
+            addCriterion("personal_ebank not between", value1, value2, "personalEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoIsNull() {
-            addCriterion("bank_logo is null");
+        public Criteria andEnterpriseEbankIsNull() {
+            addCriterion("enterprise_ebank is null");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoIsNotNull() {
-            addCriterion("bank_logo is not null");
+        public Criteria andEnterpriseEbankIsNotNull() {
+            addCriterion("enterprise_ebank is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoEqualTo(String value) {
-            addCriterion("bank_logo =", value, "bankLogo");
+        public Criteria andEnterpriseEbankEqualTo(Integer value) {
+            addCriterion("enterprise_ebank =", value, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoNotEqualTo(String value) {
-            addCriterion("bank_logo <>", value, "bankLogo");
+        public Criteria andEnterpriseEbankNotEqualTo(Integer value) {
+            addCriterion("enterprise_ebank <>", value, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoGreaterThan(String value) {
-            addCriterion("bank_logo >", value, "bankLogo");
+        public Criteria andEnterpriseEbankGreaterThan(Integer value) {
+            addCriterion("enterprise_ebank >", value, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoGreaterThanOrEqualTo(String value) {
-            addCriterion("bank_logo >=", value, "bankLogo");
+        public Criteria andEnterpriseEbankGreaterThanOrEqualTo(Integer value) {
+            addCriterion("enterprise_ebank >=", value, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoLessThan(String value) {
-            addCriterion("bank_logo <", value, "bankLogo");
+        public Criteria andEnterpriseEbankLessThan(Integer value) {
+            addCriterion("enterprise_ebank <", value, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoLessThanOrEqualTo(String value) {
-            addCriterion("bank_logo <=", value, "bankLogo");
+        public Criteria andEnterpriseEbankLessThanOrEqualTo(Integer value) {
+            addCriterion("enterprise_ebank <=", value, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoLike(String value) {
-            addCriterion("bank_logo like", value, "bankLogo");
+        public Criteria andEnterpriseEbankIn(List<Integer> values) {
+            addCriterion("enterprise_ebank in", values, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoNotLike(String value) {
-            addCriterion("bank_logo not like", value, "bankLogo");
+        public Criteria andEnterpriseEbankNotIn(List<Integer> values) {
+            addCriterion("enterprise_ebank not in", values, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoIn(List<String> values) {
-            addCriterion("bank_logo in", values, "bankLogo");
+        public Criteria andEnterpriseEbankBetween(Integer value1, Integer value2) {
+            addCriterion("enterprise_ebank between", value1, value2, "enterpriseEbank");
             return (Criteria) this;
         }
 
-        public Criteria andBankLogoNotIn(List<String> values) {
-            addCriterion("bank_logo not in", values, "bankLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankLogoBetween(String value1, String value2) {
-            addCriterion("bank_logo between", value1, value2, "bankLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankLogoNotBetween(String value1, String value2) {
-            addCriterion("bank_logo not between", value1, value2, "bankLogo");
+        public Criteria andEnterpriseEbankNotBetween(Integer value1, Integer value2) {
+            addCriterion("enterprise_ebank not between", value1, value2, "enterpriseEbank");
             return (Criteria) this;
         }
 
@@ -656,313 +645,303 @@ public class BankConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaIsNull() {
-            addCriterion("single_quota is null");
+        public Criteria andImmediatelyWithdrawIsNull() {
+            addCriterion("immediately_withdraw is null");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaIsNotNull() {
-            addCriterion("single_quota is not null");
+        public Criteria andImmediatelyWithdrawIsNotNull() {
+            addCriterion("immediately_withdraw is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaEqualTo(BigDecimal value) {
-            addCriterion("single_quota =", value, "singleQuota");
+        public Criteria andImmediatelyWithdrawEqualTo(Integer value) {
+            addCriterion("immediately_withdraw =", value, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaNotEqualTo(BigDecimal value) {
-            addCriterion("single_quota <>", value, "singleQuota");
+        public Criteria andImmediatelyWithdrawNotEqualTo(Integer value) {
+            addCriterion("immediately_withdraw <>", value, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaGreaterThan(BigDecimal value) {
-            addCriterion("single_quota >", value, "singleQuota");
+        public Criteria andImmediatelyWithdrawGreaterThan(Integer value) {
+            addCriterion("immediately_withdraw >", value, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("single_quota >=", value, "singleQuota");
+        public Criteria andImmediatelyWithdrawGreaterThanOrEqualTo(Integer value) {
+            addCriterion("immediately_withdraw >=", value, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaLessThan(BigDecimal value) {
-            addCriterion("single_quota <", value, "singleQuota");
+        public Criteria andImmediatelyWithdrawLessThan(Integer value) {
+            addCriterion("immediately_withdraw <", value, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("single_quota <=", value, "singleQuota");
+        public Criteria andImmediatelyWithdrawLessThanOrEqualTo(Integer value) {
+            addCriterion("immediately_withdraw <=", value, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaIn(List<BigDecimal> values) {
-            addCriterion("single_quota in", values, "singleQuota");
+        public Criteria andImmediatelyWithdrawIn(List<Integer> values) {
+            addCriterion("immediately_withdraw in", values, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaNotIn(List<BigDecimal> values) {
-            addCriterion("single_quota not in", values, "singleQuota");
+        public Criteria andImmediatelyWithdrawNotIn(List<Integer> values) {
+            addCriterion("immediately_withdraw not in", values, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("single_quota between", value1, value2, "singleQuota");
+        public Criteria andImmediatelyWithdrawBetween(Integer value1, Integer value2) {
+            addCriterion("immediately_withdraw between", value1, value2, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleQuotaNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("single_quota not between", value1, value2, "singleQuota");
+        public Criteria andImmediatelyWithdrawNotBetween(Integer value1, Integer value2) {
+            addCriterion("immediately_withdraw not between", value1, value2, "immediatelyWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaIsNull() {
-            addCriterion("single_card_quota is null");
+        public Criteria andQuickWithdrawIsNull() {
+            addCriterion("quick_withdraw is null");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaIsNotNull() {
-            addCriterion("single_card_quota is not null");
+        public Criteria andQuickWithdrawIsNotNull() {
+            addCriterion("quick_withdraw is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaEqualTo(BigDecimal value) {
-            addCriterion("single_card_quota =", value, "singleCardQuota");
+        public Criteria andQuickWithdrawEqualTo(Integer value) {
+            addCriterion("quick_withdraw =", value, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaNotEqualTo(BigDecimal value) {
-            addCriterion("single_card_quota <>", value, "singleCardQuota");
+        public Criteria andQuickWithdrawNotEqualTo(Integer value) {
+            addCriterion("quick_withdraw <>", value, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaGreaterThan(BigDecimal value) {
-            addCriterion("single_card_quota >", value, "singleCardQuota");
+        public Criteria andQuickWithdrawGreaterThan(Integer value) {
+            addCriterion("quick_withdraw >", value, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("single_card_quota >=", value, "singleCardQuota");
+        public Criteria andQuickWithdrawGreaterThanOrEqualTo(Integer value) {
+            addCriterion("quick_withdraw >=", value, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaLessThan(BigDecimal value) {
-            addCriterion("single_card_quota <", value, "singleCardQuota");
+        public Criteria andQuickWithdrawLessThan(Integer value) {
+            addCriterion("quick_withdraw <", value, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("single_card_quota <=", value, "singleCardQuota");
+        public Criteria andQuickWithdrawLessThanOrEqualTo(Integer value) {
+            addCriterion("quick_withdraw <=", value, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaIn(List<BigDecimal> values) {
-            addCriterion("single_card_quota in", values, "singleCardQuota");
+        public Criteria andQuickWithdrawIn(List<Integer> values) {
+            addCriterion("quick_withdraw in", values, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaNotIn(List<BigDecimal> values) {
-            addCriterion("single_card_quota not in", values, "singleCardQuota");
+        public Criteria andQuickWithdrawNotIn(List<Integer> values) {
+            addCriterion("quick_withdraw not in", values, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("single_card_quota between", value1, value2, "singleCardQuota");
+        public Criteria andQuickWithdrawBetween(Integer value1, Integer value2) {
+            addCriterion("quick_withdraw between", value1, value2, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSingleCardQuotaNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("single_card_quota not between", value1, value2, "singleCardQuota");
+        public Criteria andQuickWithdrawNotBetween(Integer value1, Integer value2) {
+            addCriterion("quick_withdraw not between", value1, value2, "quickWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawIsNull() {
-            addCriterion("fee_withdraw is null");
+        public Criteria andNormalWithdrawIsNull() {
+            addCriterion("normal_withdraw is null");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawIsNotNull() {
-            addCriterion("fee_withdraw is not null");
+        public Criteria andNormalWithdrawIsNotNull() {
+            addCriterion("normal_withdraw is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawEqualTo(BigDecimal value) {
-            addCriterion("fee_withdraw =", value, "feeWithdraw");
+        public Criteria andNormalWithdrawEqualTo(Integer value) {
+            addCriterion("normal_withdraw =", value, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawNotEqualTo(BigDecimal value) {
-            addCriterion("fee_withdraw <>", value, "feeWithdraw");
+        public Criteria andNormalWithdrawNotEqualTo(Integer value) {
+            addCriterion("normal_withdraw <>", value, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawGreaterThan(BigDecimal value) {
-            addCriterion("fee_withdraw >", value, "feeWithdraw");
+        public Criteria andNormalWithdrawGreaterThan(Integer value) {
+            addCriterion("normal_withdraw >", value, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("fee_withdraw >=", value, "feeWithdraw");
+        public Criteria andNormalWithdrawGreaterThanOrEqualTo(Integer value) {
+            addCriterion("normal_withdraw >=", value, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawLessThan(BigDecimal value) {
-            addCriterion("fee_withdraw <", value, "feeWithdraw");
+        public Criteria andNormalWithdrawLessThan(Integer value) {
+            addCriterion("normal_withdraw <", value, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("fee_withdraw <=", value, "feeWithdraw");
+        public Criteria andNormalWithdrawLessThanOrEqualTo(Integer value) {
+            addCriterion("normal_withdraw <=", value, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawIn(List<BigDecimal> values) {
-            addCriterion("fee_withdraw in", values, "feeWithdraw");
+        public Criteria andNormalWithdrawIn(List<Integer> values) {
+            addCriterion("normal_withdraw in", values, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawNotIn(List<BigDecimal> values) {
-            addCriterion("fee_withdraw not in", values, "feeWithdraw");
+        public Criteria andNormalWithdrawNotIn(List<Integer> values) {
+            addCriterion("normal_withdraw not in", values, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("fee_withdraw between", value1, value2, "feeWithdraw");
+        public Criteria andNormalWithdrawBetween(Integer value1, Integer value2) {
+            addCriterion("normal_withdraw between", value1, value2, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andFeeWithdrawNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("fee_withdraw not between", value1, value2, "feeWithdraw");
+        public Criteria andNormalWithdrawNotBetween(Integer value1, Integer value2) {
+            addCriterion("normal_withdraw not between", value1, value2, "normalWithdraw");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdIsNull() {
-            addCriterion("sort_id is null");
+        public Criteria andWithdrawDefaulttypeIsNull() {
+            addCriterion("withdraw_defaulttype is null");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdIsNotNull() {
-            addCriterion("sort_id is not null");
+        public Criteria andWithdrawDefaulttypeIsNotNull() {
+            addCriterion("withdraw_defaulttype is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdEqualTo(Short value) {
-            addCriterion("sort_id =", value, "sortId");
+        public Criteria andWithdrawDefaulttypeEqualTo(Integer value) {
+            addCriterion("withdraw_defaulttype =", value, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdNotEqualTo(Short value) {
-            addCriterion("sort_id <>", value, "sortId");
+        public Criteria andWithdrawDefaulttypeNotEqualTo(Integer value) {
+            addCriterion("withdraw_defaulttype <>", value, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdGreaterThan(Short value) {
-            addCriterion("sort_id >", value, "sortId");
+        public Criteria andWithdrawDefaulttypeGreaterThan(Integer value) {
+            addCriterion("withdraw_defaulttype >", value, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdGreaterThanOrEqualTo(Short value) {
-            addCriterion("sort_id >=", value, "sortId");
+        public Criteria andWithdrawDefaulttypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("withdraw_defaulttype >=", value, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdLessThan(Short value) {
-            addCriterion("sort_id <", value, "sortId");
+        public Criteria andWithdrawDefaulttypeLessThan(Integer value) {
+            addCriterion("withdraw_defaulttype <", value, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdLessThanOrEqualTo(Short value) {
-            addCriterion("sort_id <=", value, "sortId");
+        public Criteria andWithdrawDefaulttypeLessThanOrEqualTo(Integer value) {
+            addCriterion("withdraw_defaulttype <=", value, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdIn(List<Short> values) {
-            addCriterion("sort_id in", values, "sortId");
+        public Criteria andWithdrawDefaulttypeIn(List<Integer> values) {
+            addCriterion("withdraw_defaulttype in", values, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdNotIn(List<Short> values) {
-            addCriterion("sort_id not in", values, "sortId");
+        public Criteria andWithdrawDefaulttypeNotIn(List<Integer> values) {
+            addCriterion("withdraw_defaulttype not in", values, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdBetween(Short value1, Short value2) {
-            addCriterion("sort_id between", value1, value2, "sortId");
+        public Criteria andWithdrawDefaulttypeBetween(Integer value1, Integer value2) {
+            addCriterion("withdraw_defaulttype between", value1, value2, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andSortIdNotBetween(Short value1, Short value2) {
-            addCriterion("sort_id not between", value1, value2, "sortId");
+        public Criteria andWithdrawDefaulttypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("withdraw_defaulttype not between", value1, value2, "withdrawDefaulttype");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkIsNull() {
-            addCriterion("remark is null");
+        public Criteria andStatusIsNull() {
+            addCriterion("`status` is null");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkIsNotNull() {
-            addCriterion("remark is not null");
+        public Criteria andStatusIsNotNull() {
+            addCriterion("`status` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkEqualTo(String value) {
-            addCriterion("remark =", value, "remark");
+        public Criteria andStatusEqualTo(Integer value) {
+            addCriterion("`status` =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkNotEqualTo(String value) {
-            addCriterion("remark <>", value, "remark");
+        public Criteria andStatusNotEqualTo(Integer value) {
+            addCriterion("`status` <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkGreaterThan(String value) {
-            addCriterion("remark >", value, "remark");
+        public Criteria andStatusGreaterThan(Integer value) {
+            addCriterion("`status` >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkGreaterThanOrEqualTo(String value) {
-            addCriterion("remark >=", value, "remark");
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("`status` >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkLessThan(String value) {
-            addCriterion("remark <", value, "remark");
+        public Criteria andStatusLessThan(Integer value) {
+            addCriterion("`status` <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkLessThanOrEqualTo(String value) {
-            addCriterion("remark <=", value, "remark");
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("`status` <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkLike(String value) {
-            addCriterion("remark like", value, "remark");
+        public Criteria andStatusIn(List<Integer> values) {
+            addCriterion("`status` in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkNotLike(String value) {
-            addCriterion("remark not like", value, "remark");
+        public Criteria andStatusNotIn(List<Integer> values) {
+            addCriterion("`status` not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkIn(List<String> values) {
-            addCriterion("remark in", values, "remark");
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
+            addCriterion("`status` between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkNotIn(List<String> values) {
-            addCriterion("remark not in", values, "remark");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarkBetween(String value1, String value2) {
-            addCriterion("remark between", value1, value2, "remark");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarkNotBetween(String value1, String value2) {
-            addCriterion("remark not between", value1, value2, "remark");
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("`status` not between", value1, value2, "status");
             return (Criteria) this;
         }
 
@@ -1203,126 +1182,6 @@ public class BankConfigExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagIsNull() {
-            addCriterion("del_flag is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagIsNotNull() {
-            addCriterion("del_flag is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagEqualTo(Integer value) {
-            addCriterion("del_flag =", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagNotEqualTo(Integer value) {
-            addCriterion("del_flag <>", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagGreaterThan(Integer value) {
-            addCriterion("del_flag >", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagGreaterThanOrEqualTo(Integer value) {
-            addCriterion("del_flag >=", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagLessThan(Integer value) {
-            addCriterion("del_flag <", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagLessThanOrEqualTo(Integer value) {
-            addCriterion("del_flag <=", value, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagIn(List<Integer> values) {
-            addCriterion("del_flag in", values, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagNotIn(List<Integer> values) {
-            addCriterion("del_flag not in", values, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagBetween(Integer value1, Integer value2) {
-            addCriterion("del_flag between", value1, value2, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andDelFlagNotBetween(Integer value1, Integer value2) {
-            addCriterion("del_flag not between", value1, value2, "delFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaIsNull() {
-            addCriterion("month_card_quota is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaIsNotNull() {
-            addCriterion("month_card_quota is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaEqualTo(BigDecimal value) {
-            addCriterion("month_card_quota =", value, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaNotEqualTo(BigDecimal value) {
-            addCriterion("month_card_quota <>", value, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaGreaterThan(BigDecimal value) {
-            addCriterion("month_card_quota >", value, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("month_card_quota >=", value, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaLessThan(BigDecimal value) {
-            addCriterion("month_card_quota <", value, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("month_card_quota <=", value, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaIn(List<BigDecimal> values) {
-            addCriterion("month_card_quota in", values, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaNotIn(List<BigDecimal> values) {
-            addCriterion("month_card_quota not in", values, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("month_card_quota between", value1, value2, "monthCardQuota");
-            return (Criteria) this;
-        }
-
-        public Criteria andMonthCardQuotaNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("month_card_quota not between", value1, value2, "monthCardQuota");
             return (Criteria) this;
         }
     }

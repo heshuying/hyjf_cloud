@@ -4,14 +4,15 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.user.dao.model.auto.BindUser;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
+import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
+import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -74,5 +75,44 @@ public interface UserManagerService {
      * @return
      */
     CertificateAuthority selectCertificateAuthorityByUserId(int userId);
+
+    /**
+     * 根据用户id获取用户修改信息
+     * @param userId
+     * @return
+     */
+    UserManagerUpdateCustomize selectUserUpdateInfoByUserId(int userId);
+
+    /**
+     * 更新用户信息
+     * @param request
+     * @return
+     */
+    int updataUserInfo(UserManagerUpdateRequest request);
+
+    /**
+     * 校验手机号
+     * @param userId
+     * @param mobile
+     * @return
+     */
+    int countUserByMobile(int userId, String mobile);
+
+    /**
+     * 校验推荐人
+     * @param userId
+     * @param recommendName
+     * @return
+     */
+    int selectCheckRecommend(int userId, String recommendName);
+    /**
+     * 根据用户id查找用户表
+     * @param userId
+     * @param userId
+     * @return
+     */
+    User selectUserByUserId(int userId);
+
+    BankOpenAccount selectBankOpenAccountByAccountId(String accountId);
 
 }

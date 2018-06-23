@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class STZHWhiteListExample {
+public class StzhWhiteListExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class STZHWhiteListExample {
 
     protected int limitEnd = -1;
 
-    public STZHWhiteListExample() {
+    public StzhWhiteListExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

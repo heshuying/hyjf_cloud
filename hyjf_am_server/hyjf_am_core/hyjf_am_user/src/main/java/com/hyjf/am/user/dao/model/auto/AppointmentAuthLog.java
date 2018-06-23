@@ -8,9 +8,9 @@ public class AppointmentAuthLog implements Serializable {
 
     private Integer userId;
 
-    private Boolean authType;
+    private Integer authType;
 
-    private Boolean authStatus;
+    private Integer authStatus;
 
     private Date createTime;
 
@@ -34,19 +34,19 @@ public class AppointmentAuthLog implements Serializable {
         this.userId = userId;
     }
 
-    public Boolean getAuthType() {
+    public Integer getAuthType() {
         return authType;
     }
 
-    public void setAuthType(Boolean authType) {
+    public void setAuthType(Integer authType) {
         this.authType = authType;
     }
 
-    public Boolean getAuthStatus() {
+    public Integer getAuthStatus() {
         return authStatus;
     }
 
-    public void setAuthStatus(Boolean authStatus) {
+    public void setAuthStatus(Integer authStatus) {
         this.authStatus = authStatus;
     }
 

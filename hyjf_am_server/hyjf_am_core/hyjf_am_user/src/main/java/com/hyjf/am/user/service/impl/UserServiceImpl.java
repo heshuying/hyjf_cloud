@@ -468,7 +468,7 @@ public class UserServiceImpl implements UserService {
 		userInfo.setAddress("");
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
-		userInfo.setIsContact(false);
+		userInfo.setIsContact(0);
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
 		usersInfoMapper.insertSelective(userInfo);
@@ -976,7 +976,7 @@ public class UserServiceImpl implements UserService {
 														 EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult) {
 		UserEvalationResult userEvalationResult=new UserEvalationResult();
 		userEvalationResult.setUserId(userId);
-		userEvalationResult.setScoreCount((byte) countScore);
+		userEvalationResult.setScoreCount(countScore);
 		userEvalationResult.setEvalType(evalation.getEvalType());
 		userEvalationResult.setSummary(evalation.getSummary());
 		userEvalationResult.setCreateTime(new Date());
@@ -998,7 +998,7 @@ public class UserServiceImpl implements UserService {
 				userEvalation.setErId(userEvalationResult.getId());
 				userEvalation.setQuestionId(new Integer(questionList.get(j)));
 				userEvalation.setAnswerId(new Integer(answerList.get(j)));
-				userEvalation.setSort((byte) j);
+				userEvalation.setSort(j);
 				userEvalationMapper.insertSelective(userEvalation);
 			}
 		}

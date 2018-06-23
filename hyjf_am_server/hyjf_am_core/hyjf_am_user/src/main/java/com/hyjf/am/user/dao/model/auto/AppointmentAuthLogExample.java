@@ -255,52 +255,52 @@ public class AppointmentAuthLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeEqualTo(Boolean value) {
+        public Criteria andAuthTypeEqualTo(Integer value) {
             addCriterion("auth_type =", value, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeNotEqualTo(Boolean value) {
+        public Criteria andAuthTypeNotEqualTo(Integer value) {
             addCriterion("auth_type <>", value, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeGreaterThan(Boolean value) {
+        public Criteria andAuthTypeGreaterThan(Integer value) {
             addCriterion("auth_type >", value, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andAuthTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("auth_type >=", value, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeLessThan(Boolean value) {
+        public Criteria andAuthTypeLessThan(Integer value) {
             addCriterion("auth_type <", value, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeLessThanOrEqualTo(Boolean value) {
+        public Criteria andAuthTypeLessThanOrEqualTo(Integer value) {
             addCriterion("auth_type <=", value, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeIn(List<Boolean> values) {
+        public Criteria andAuthTypeIn(List<Integer> values) {
             addCriterion("auth_type in", values, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeNotIn(List<Boolean> values) {
+        public Criteria andAuthTypeNotIn(List<Integer> values) {
             addCriterion("auth_type not in", values, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeBetween(Boolean value1, Boolean value2) {
+        public Criteria andAuthTypeBetween(Integer value1, Integer value2) {
             addCriterion("auth_type between", value1, value2, "authType");
             return (Criteria) this;
         }
 
-        public Criteria andAuthTypeNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andAuthTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("auth_type not between", value1, value2, "authType");
             return (Criteria) this;
         }
@@ -315,52 +315,52 @@ public class AppointmentAuthLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusEqualTo(Boolean value) {
+        public Criteria andAuthStatusEqualTo(Integer value) {
             addCriterion("auth_status =", value, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusNotEqualTo(Boolean value) {
+        public Criteria andAuthStatusNotEqualTo(Integer value) {
             addCriterion("auth_status <>", value, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusGreaterThan(Boolean value) {
+        public Criteria andAuthStatusGreaterThan(Integer value) {
             addCriterion("auth_status >", value, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andAuthStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("auth_status >=", value, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusLessThan(Boolean value) {
+        public Criteria andAuthStatusLessThan(Integer value) {
             addCriterion("auth_status <", value, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andAuthStatusLessThanOrEqualTo(Integer value) {
             addCriterion("auth_status <=", value, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusIn(List<Boolean> values) {
+        public Criteria andAuthStatusIn(List<Integer> values) {
             addCriterion("auth_status in", values, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusNotIn(List<Boolean> values) {
+        public Criteria andAuthStatusNotIn(List<Integer> values) {
             addCriterion("auth_status not in", values, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andAuthStatusBetween(Integer value1, Integer value2) {
             addCriterion("auth_status between", value1, value2, "authStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAuthStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andAuthStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("auth_status not between", value1, value2, "authStatus");
             return (Criteria) this;
         }

@@ -3,7 +3,7 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 import java.util.Date;
 
-public class STZHWhiteList implements Serializable {
+public class StzhWhiteList implements Serializable {
     private Integer id;
 
     private Integer userId;

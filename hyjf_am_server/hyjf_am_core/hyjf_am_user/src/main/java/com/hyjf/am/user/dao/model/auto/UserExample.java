@@ -855,52 +855,52 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeEqualTo(Boolean value) {
+        public Criteria andIfReceiveNoticeEqualTo(Integer value) {
             addCriterion("if_receive_notice =", value, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeNotEqualTo(Boolean value) {
+        public Criteria andIfReceiveNoticeNotEqualTo(Integer value) {
             addCriterion("if_receive_notice <>", value, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeGreaterThan(Boolean value) {
+        public Criteria andIfReceiveNoticeGreaterThan(Integer value) {
             addCriterion("if_receive_notice >", value, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIfReceiveNoticeGreaterThanOrEqualTo(Integer value) {
             addCriterion("if_receive_notice >=", value, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeLessThan(Boolean value) {
+        public Criteria andIfReceiveNoticeLessThan(Integer value) {
             addCriterion("if_receive_notice <", value, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeLessThanOrEqualTo(Boolean value) {
+        public Criteria andIfReceiveNoticeLessThanOrEqualTo(Integer value) {
             addCriterion("if_receive_notice <=", value, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeIn(List<Boolean> values) {
+        public Criteria andIfReceiveNoticeIn(List<Integer> values) {
             addCriterion("if_receive_notice in", values, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeNotIn(List<Boolean> values) {
+        public Criteria andIfReceiveNoticeNotIn(List<Integer> values) {
             addCriterion("if_receive_notice not in", values, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeBetween(Boolean value1, Boolean value2) {
+        public Criteria andIfReceiveNoticeBetween(Integer value1, Integer value2) {
             addCriterion("if_receive_notice between", value1, value2, "ifReceiveNotice");
             return (Criteria) this;
         }
 
-        public Criteria andIfReceiveNoticeNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIfReceiveNoticeNotBetween(Integer value1, Integer value2) {
             addCriterion("if_receive_notice not between", value1, value2, "ifReceiveNotice");
             return (Criteria) this;
         }
@@ -1535,52 +1535,52 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusEqualTo(Boolean value) {
+        public Criteria andPaymentAuthStatusEqualTo(Integer value) {
             addCriterion("payment_auth_status =", value, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusNotEqualTo(Boolean value) {
+        public Criteria andPaymentAuthStatusNotEqualTo(Integer value) {
             addCriterion("payment_auth_status <>", value, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusGreaterThan(Boolean value) {
+        public Criteria andPaymentAuthStatusGreaterThan(Integer value) {
             addCriterion("payment_auth_status >", value, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andPaymentAuthStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("payment_auth_status >=", value, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusLessThan(Boolean value) {
+        public Criteria andPaymentAuthStatusLessThan(Integer value) {
             addCriterion("payment_auth_status <", value, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andPaymentAuthStatusLessThanOrEqualTo(Integer value) {
             addCriterion("payment_auth_status <=", value, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusIn(List<Boolean> values) {
+        public Criteria andPaymentAuthStatusIn(List<Integer> values) {
             addCriterion("payment_auth_status in", values, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusNotIn(List<Boolean> values) {
+        public Criteria andPaymentAuthStatusNotIn(List<Integer> values) {
             addCriterion("payment_auth_status not in", values, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andPaymentAuthStatusBetween(Integer value1, Integer value2) {
             addCriterion("payment_auth_status between", value1, value2, "paymentAuthStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentAuthStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andPaymentAuthStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("payment_auth_status not between", value1, value2, "paymentAuthStatus");
             return (Criteria) this;
         }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Accountwithdraw implements Serializable {
+public class AccountWithdraw implements Serializable {
     private Integer id;
 
     private Integer userId;

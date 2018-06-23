@@ -40,7 +40,7 @@ public class AssetPushController {
     @GetMapping("/selectAssetBorrowType/{instCode}/{assetType}")
     public HjhAssetBorrowTypeResponse selectAssetBorrowType(@PathVariable String instCode, @PathVariable int assetType) {
         HjhAssetBorrowTypeResponse response = new HjhAssetBorrowTypeResponse();
-        HjhAssetBorrowType hjhAssetBorrowType = assetPushService.selectAssetBorrowType(instCode, assetType);
+        HjhAssetBorrowtype hjhAssetBorrowType = assetPushService.selectAssetBorrowType(instCode, assetType);
         if (hjhAssetBorrowType != null) {
             HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO = new HjhAssetBorrowTypeVO();
             BeanUtils.copyProperties(hjhAssetBorrowType, hjhAssetBorrowTypeVO);
@@ -74,7 +74,7 @@ public class AssetPushController {
     @GetMapping("/selectStzfWhiteList/{instCode}/{entrustedAccountId}")
     public STZHWhiteListResponse selectStzfWhiteList(@PathVariable String instCode, @PathVariable String entrustedAccountId) {
         STZHWhiteListResponse response = new STZHWhiteListResponse();
-        STZHWhiteList stzhWhiteList =  assetPushService.selectStzfWhiteList(instCode, entrustedAccountId);
+        StzhWhiteList stzhWhiteList =  assetPushService.selectStzfWhiteList(instCode, entrustedAccountId);
         if (stzhWhiteList != null) {
             STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
             BeanUtils.copyProperties(stzhWhiteList, stzhWhiteListVO);

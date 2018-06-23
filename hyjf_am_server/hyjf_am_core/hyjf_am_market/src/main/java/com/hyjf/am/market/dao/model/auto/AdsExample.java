@@ -925,52 +925,52 @@ public class AdsExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexEqualTo(Byte value) {
+        public Criteria andIsIndexEqualTo(Integer value) {
             addCriterion("is_index =", value, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexNotEqualTo(Byte value) {
+        public Criteria andIsIndexNotEqualTo(Integer value) {
             addCriterion("is_index <>", value, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexGreaterThan(Byte value) {
+        public Criteria andIsIndexGreaterThan(Integer value) {
             addCriterion("is_index >", value, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexGreaterThanOrEqualTo(Byte value) {
+        public Criteria andIsIndexGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_index >=", value, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexLessThan(Byte value) {
+        public Criteria andIsIndexLessThan(Integer value) {
             addCriterion("is_index <", value, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexLessThanOrEqualTo(Byte value) {
+        public Criteria andIsIndexLessThanOrEqualTo(Integer value) {
             addCriterion("is_index <=", value, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexIn(List<Byte> values) {
+        public Criteria andIsIndexIn(List<Integer> values) {
             addCriterion("is_index in", values, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexNotIn(List<Byte> values) {
+        public Criteria andIsIndexNotIn(List<Integer> values) {
             addCriterion("is_index not in", values, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexBetween(Byte value1, Byte value2) {
+        public Criteria andIsIndexBetween(Integer value1, Integer value2) {
             addCriterion("is_index between", value1, value2, "isIndex");
             return (Criteria) this;
         }
 
-        public Criteria andIsIndexNotBetween(Byte value1, Byte value2) {
+        public Criteria andIsIndexNotBetween(Integer value1, Integer value2) {
             addCriterion("is_index not between", value1, value2, "isIndex");
             return (Criteria) this;
         }

@@ -4,23 +4,16 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.service.AccountListService;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.common.util.CommonUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author ${yaoy}
