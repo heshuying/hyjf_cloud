@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.vo.trade.account.AccountVO;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface BankWithdrawService {
 
-    List<Accountwithdraw> selectBankWithdrawList();
+    List<AccountWithdraw> selectBankWithdrawList();
 
 	int updateBankWithdraw(AccountVO accountVO);
 

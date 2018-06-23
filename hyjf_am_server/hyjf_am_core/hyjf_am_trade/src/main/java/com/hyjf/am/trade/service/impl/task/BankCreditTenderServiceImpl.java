@@ -39,7 +39,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	public List<CreditTenderLog> selectCreditTenderLogs() {
 		CreditTenderLogExample example = new CreditTenderLogExample();
 		CreditTenderLogExample.Criteria cra = example.createCriteria();
-		cra.andStatusEqualTo((byte) 0);
+		cra.andStatusEqualTo(0);
 		// 添加时间 <当前时间-5分钟
 		cra.andAddTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime10(),-5));
 		cra.andAddTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));//两天之前
