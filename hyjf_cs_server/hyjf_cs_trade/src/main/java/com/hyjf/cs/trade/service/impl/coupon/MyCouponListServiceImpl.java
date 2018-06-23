@@ -1,9 +1,6 @@
 package com.hyjf.cs.trade.service.impl.coupon;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.vo.trade.MyInviteListCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
@@ -61,19 +58,5 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
         return amTradeClient.selectMyCouponList(requestBean);
     }
 
-    /**
-     * 我的邀请列表
-     */
-    public List<MyInviteListCustomizeVO> selectMyInviteList(String userId){
-        MyInviteListRequest requestBean = new MyInviteListRequest();
-        return null;
-    }
 
-    /**
-     * 我的邀请列表
-     */
-    public List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId){
-
-        return null;
-    }
 }

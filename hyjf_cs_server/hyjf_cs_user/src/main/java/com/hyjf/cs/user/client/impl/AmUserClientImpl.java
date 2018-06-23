@@ -5,6 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -678,5 +679,20 @@ public class AmUserClientImpl implements AmUserClient {
 		String mess = restTemplate
 				.getForEntity("http://AM-USER//am-user/bankopen/getBankOpenAccountFiledMess/" + logOrdId, String.class).getBody();
 		return mess;
+	}
+
+	/**
+	 * 我的邀请列表
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
+		String url = "http://AM-USER//am-user/invite/myInviteList";
+		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
 	}
 }

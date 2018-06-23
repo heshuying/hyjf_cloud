@@ -5,9 +5,11 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.service.coupon.MyCouponListService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +26,7 @@ import java.util.Map;
  */
 @Api(value = "Web端我的优惠券列表")
 @RestController
-@RequestMapping("/web/myCouponList")
+@RequestMapping("/web/coupon")
 public class MyCouponListController {
     private static final Logger logger = LoggerFactory.getLogger(MyCouponListController.class);
 
@@ -36,6 +38,8 @@ public class MyCouponListController {
      * @auther: hesy
      * @date: 2018/6/23
      */
+    @ApiOperation(value = "获取我的优惠券列表", notes = "我的优惠券列表")
+    @PostMapping(value = "/myCouponList", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,List<MyCouponListCustomizeVO>>> selectMyCouponList(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
         WebResult<Map<String,List<MyCouponListCustomizeVO>>> result = new WebResult<Map<String,List<MyCouponListCustomizeVO>>>();
         WebViewUserVO userVO = myCouponListService.getUsersByToken(token);

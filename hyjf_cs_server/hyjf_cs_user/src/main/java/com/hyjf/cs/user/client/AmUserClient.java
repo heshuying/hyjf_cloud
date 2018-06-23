@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -141,4 +142,6 @@ public interface AmUserClient {
 	String getBankOpenAccountFiledMess(String logOrdId);
 
 	int isCompAccount(Integer userId);
+
+    List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 }

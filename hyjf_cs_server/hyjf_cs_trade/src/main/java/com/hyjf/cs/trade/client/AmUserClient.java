@@ -1,8 +1,11 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+
+import java.util.List;
 
 /**
  * @Description 
@@ -51,4 +54,6 @@ public interface AmUserClient {
 	 * @Date 2018/6/20 18:13
 	 */
 	UserInfoCrmVO queryUserCrmInfoByUserId(int userId);
+
+	List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 }

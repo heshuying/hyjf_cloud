@@ -1,8 +1,8 @@
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.trade.MyInviteCustomizeMapper;
-import com.hyjf.am.vo.trade.MyInviteListCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.user.dao.mapper.customize.MyInviteCustomizeMapper;
+import com.hyjf.am.user.service.MyInviteService;
+import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @version MyInviteServiceImpl, v0.1 2018/6/22 20:08
  */
 @Service
-public class MyInviteServiceImpl implements com.hyjf.am.trade.service.MyInviteService {
+public class MyInviteServiceImpl implements MyInviteService {
     @Resource
     MyInviteCustomizeMapper myInviteCustomizeMapper;
 
@@ -33,13 +33,4 @@ public class MyInviteServiceImpl implements com.hyjf.am.trade.service.MyInviteSe
         return myInviteCustomizeMapper.selectMyInviteList(param);
     }
 
-    @Override
-    public List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId, Integer limitStart, Integer limitEnd){
-        Map<String,Object> param = new HashMap<String, Object>();
-        param.put("userId", userId);
-        param.put("limitStart", limitStart);
-        param.put("limitEnd", limitEnd);
-
-        return myInviteCustomizeMapper.selectMyRewardList(param);
-    }
 }

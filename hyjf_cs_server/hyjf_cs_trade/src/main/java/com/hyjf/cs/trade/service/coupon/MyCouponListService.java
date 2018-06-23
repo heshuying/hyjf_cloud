@@ -1,9 +1,5 @@
 package com.hyjf.cs.trade.service.coupon;
 
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.vo.trade.MyInviteListCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
