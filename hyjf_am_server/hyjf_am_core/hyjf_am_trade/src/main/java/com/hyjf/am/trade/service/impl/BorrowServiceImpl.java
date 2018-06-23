@@ -3,31 +3,19 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
+import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.resquest.trade.BorrowRegistRequest;
-import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowManinfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
-import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -124,5 +112,10 @@ public class BorrowServiceImpl implements BorrowService {
         return borrowMapper.updateByExampleSelective(borrow, example);
     }
 
+    /**
+     * 项目详情
+     * @param borrowNid
+     * @return
+     */
 
 }
