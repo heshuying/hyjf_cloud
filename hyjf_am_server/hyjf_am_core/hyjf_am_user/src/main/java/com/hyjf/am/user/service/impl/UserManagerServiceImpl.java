@@ -14,15 +14,14 @@ import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
 import com.hyjf.am.user.service.UserManagerService;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,9 @@ public class UserManagerServiceImpl implements UserManagerService {
     public UserInfoMapper userInfoMapper;
     @Autowired
     public BankOpenAccountMapper bankOpenAccountMapper;
+
+
+    private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
 
 
     /**
@@ -289,8 +291,10 @@ public class UserManagerServiceImpl implements UserManagerService {
                 user.setStatus(Integer.parseInt(request.getStatus()));
                 user.setMobile(request.getMobile());
                 int usersUpdateFlag = userMapper.updateByPrimaryKey(user);
-                if (usersUpdateFlag < 0) {
-                    throw new RuntimeException("用户表更新失败!");
+                if (usersUpdateFlag > 0) {
+                    logger.info("==================用户表变更保存成功!======");
+                } else {
+                    throw new RuntimeException("============用户表更新失败!========");
                 }
                 // 更新info表
                 UserInfoExample example = new UserInfoExample();
@@ -302,8 +306,10 @@ public class UserManagerServiceImpl implements UserManagerService {
                     userInfo.setRoleId(Integer.parseInt(request.getUserRole()));
                     userInfo.setBorrowerType(request.getBorrowerType());
                     int userInfoFlg = userInfoMapper.updateByPrimaryKey(userInfo);
-                    if (userInfoFlg < 0) {
-                        throw new RuntimeException("用户表更新失败!");
+                    if (userInfoFlg > 0) {
+                        logger.info("==================用户信息表变更保存成功!======");
+                    } else {
+                        throw new RuntimeException("============用户信息表更新失败!========");
                     }
                 }
                 return 1;
@@ -353,14 +359,16 @@ public class UserManagerServiceImpl implements UserManagerService {
             return 1;
         }
     }
+
     /**
      * 根据用户id查找用户表
+     *
      * @param userId
      * @param userId
      * @return
      */
     @Override
-    public User selectUserByUserId(int userId){
+    public User selectUserByUserId(int userId) {
         UserExample example = new UserExample();
         example.createCriteria().andUserIdEqualTo(userId);
         List<User> usersList = this.userMapper.selectByExample(example);
@@ -372,11 +380,12 @@ public class UserManagerServiceImpl implements UserManagerService {
 
     /**
      * 根據accounId獲取開戶信息
+     *
      * @param accountId
      * @return
      */
     @Override
-    public BankOpenAccount selectBankOpenAccountByAccountId(String accountId){
+    public BankOpenAccount selectBankOpenAccountByAccountId(String accountId) {
         BankOpenAccountExample openExample = new BankOpenAccountExample();
         openExample.createCriteria().andAccountEqualTo(accountId);
         List<BankOpenAccount> bankOpenAccount = this.bankOpenAccountMapper.selectByExample(openExample);
@@ -385,5 +394,122 @@ public class UserManagerServiceImpl implements UserManagerService {
         }
         return null;
     }
-   
+
+    /**
+     * 更新企业用户开户记录
+     *
+     * @param corpOpenAccountRecord
+     * @return
+     */
+    @Override
+    public int updateCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord) {
+        int intflg = corpOpenAccountRecordMapper.updateByPrimaryKey(corpOpenAccountRecord);
+        if (intflg > 0) {
+            logger.info("==================ht_corp_open_account_record 企业用户信息变更保存成功!======");
+        } else {
+            throw new RuntimeException("============企业信息变更保存异常!========");
+        }
+        return intflg;
+    }
+
+    /**
+     * 插入企业用户开户记录
+     *
+     * @param corpOpenAccountRecord
+     * @return
+     */
+    @Override
+    public int insertCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord) {
+        int intflg = corpOpenAccountRecordMapper.insertSelective(corpOpenAccountRecord);
+        if (intflg > 0) {
+            logger.info("==================ht_corp_open_account_record 企业用户信息变更保存成功!======");
+        } else {
+            throw new RuntimeException("============企业信息变更保存异常!========");
+        }
+        return intflg;
+    }
+
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    @Override
+    public BankOpenAccount queryBankOpenAccountByUserId(int userId) {
+        BankOpenAccountExample openExample = new BankOpenAccountExample();
+        openExample.createCriteria().andUserIdEqualTo(userId);
+        List<BankOpenAccount> bankOpenAccount = this.bankOpenAccountMapper.selectByExample(openExample);
+        if (bankOpenAccount != null && bankOpenAccount.size() > 0) {
+            return bankOpenAccount.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 更新开户信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateBankOpenAccount(BankOpenAccount request) {
+        int openFlag = this.bankOpenAccountMapper.updateByPrimaryKey(request);
+        if (openFlag > 0) {
+            System.out.println("============银行开户修改信息保存成功!=============");
+        } else {
+            throw new RuntimeException("============银行开户信息修改保存异常!==============");
+        }
+        return openFlag;
+    }
+
+    /**
+     * 插入开户信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int insertBankOpenAccount(BankOpenAccount request) {
+        int openFlag = this.bankOpenAccountMapper.insertSelective(request);
+        if (openFlag > 0) {
+            System.out.println("============银行开户信息保存成功!=============");
+        } else {
+            throw new RuntimeException("============银行开户信息保存异常!==============");
+        }
+        return openFlag;
+    }
+
+    /**
+     * 更新用户信息表
+     *
+     * @param userInfo
+     * @return
+     */
+    @Override
+    public int updateUserInfoByUserInfo(UserInfo userInfo) {
+        int userFlag = this.userInfoMapper.updateByPrimaryKey(userInfo);
+        if (userFlag > 0) {
+            System.out.println("=============用户详细信息保存成功!=============");
+        } else {
+            throw new RuntimeException("用户详细信息保存异常!");
+        }
+        return userFlag;
+    }
+
+    /**
+     * 更新用户表
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public int updateUser(User user) {
+        int userFlag = this.userMapper.updateByPrimaryKey(user);
+        if (userFlag > 0) {
+            System.out.println("=============用户表信息保存成功!=============");
+        } else {
+            throw new RuntimeException("用户表信息保存异常!");
+        }
+        return userFlag;
+    }
 }
