@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import java.util.Map;
+
 /**
  * @Description 
  * @Author pangchengchao
@@ -153,5 +155,93 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 查看用户详情
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public SpreadsUserVO querySpreadsUsersByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/querySpreadsUsersByUserId/" + userId;
+		SpreadsUserResponse response = restTemplate.getForEntity(url,SpreadsUserResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public EmployeeCustomizeVO selectEmployeeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/selectEmployeeByUserId/" + userId;
+		EmployeeCustomizeResponse response = restTemplate.getForEntity(url,EmployeeCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 修改用户对象
+	 *
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public boolean updateByPrimaryKeySelective(UserVO user) {
+		Integer result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/updateByUserId", user, Integer.class).getBody();
+		if (result != null) {
+			return result == 0 ? false : true;
+		}
+		return false;
+	}
+
+    /**
+     * 根据userId查询用户推广链接注册
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UtmRegVO findUtmRegByUserId(Integer userId) {
+        String url = "http://AM-USER/am-user/user/findUtmRegByUserId/" + userId;
+        UtmRegResponse response = restTemplate.getForEntity(url, UtmRegResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新huiyingdai_utm_reg的首投信息
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    public boolean updateFirstUtmReg(Map<String, Object> params) {
+        Integer result = restTemplate
+                .postForEntity("http://AM-USER/am-user/user/updateFirstUtmReg", params, Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
+    }
 
 }

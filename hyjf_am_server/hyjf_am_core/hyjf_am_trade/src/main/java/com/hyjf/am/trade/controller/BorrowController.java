@@ -151,4 +151,22 @@ public class BorrowController {
 		return response;
 	}
 */
+
+    /**
+     * 检索正在还款中的标的
+     *
+     * @Author liushouyi
+     * @return
+     */
+	@RequestMapping("/selectBorrowList")
+	public BorrowResponse selectBorrowList(){
+
+		BorrowResponse response = new BorrowResponse();
+		List<Borrow> borrows = borrowService.selectBorrowList();
+		if (borrows != null) {
+			List<BorrowVO> borrowVO = CommonUtils.convertBeanList(borrows,BorrowVO.class);
+			response.setResultList(borrowVO);
+		}
+		return response;
+	}
 }

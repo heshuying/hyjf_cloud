@@ -6,8 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.support.RequestContext;
-import org.springframework.util.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.validator.GenericValidator;
 
@@ -65,7 +66,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 必须输入项目
 	 *
-	 * @param ModelAndView
+	 * @param
 	 * @param itemname
 	 * @param value
 	 * @return true:正常 false:错误
@@ -81,7 +82,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查最小文字数
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param minlength
@@ -113,7 +114,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查最大文字数
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param maxlength
@@ -147,7 +148,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查邮件地址格式和最大长度
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param maxlength
@@ -167,7 +168,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查邮件地址格式
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -194,7 +195,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查是否半角英文
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param maxlength
@@ -217,7 +218,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查是否半角英文数字
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param maxlength
@@ -241,7 +242,7 @@ public class ValidatorCheckUtil {
 	 * 0-9 a-z A-Z
 	 *
 	 * @return boolean
-	 * @throws UnsupportedEncodingException
+	 * @throws
 	 */
 	private static boolean isAlphaNumeric(String value) {
 		for (int i = 0; i < value.length(); i++) {
@@ -256,7 +257,7 @@ public class ValidatorCheckUtil {
 	 * 0-9 a-z A-Z 和下划线
 	 *
 	 * @return boolean
-	 * @throws UnsupportedEncodingException
+	 * @throws
 	 */
 	private static boolean isAlphabetOrNumeric(char Ch) {
 		// 英字判定
@@ -271,7 +272,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查是否半角数字
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -294,7 +295,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查是否汉字
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -317,7 +318,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查是否电话号码
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -340,7 +341,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查是否电话号码
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -363,11 +364,11 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查两个值是否相同
 	 *
-	 * @param mav
-	 * @param errorMsg
+	 * 
+	 * @param
 	 * @param valueBefore
 	 * @param valueAfter
-	 * @param required
+	 * @param
 	 * @return
 	 */
 	public static boolean validateSameInput(JSONObject info, String itemname, String key, String valueBefore,
@@ -383,7 +384,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 自定义错误（前端key与错误消息key相同）
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param errorId
 	 */
@@ -394,9 +395,9 @@ public class ValidatorCheckUtil {
 	/**
 	 * 自定义错误（前端key与错误消息key相同）
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
-	 * @param errorId
+	 * @param
 	 */
 	public static void validateSpecialErrorKey(JSONObject info, String itemname, String key, String message) {
 		if (Validator.isNull(message)) {
@@ -408,7 +409,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 自定义错误(重用共通消息,前端key不同于错误消息key)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param errorId
 	 */
@@ -419,7 +420,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 自定义错误(重用共通消息,前端key不同于错误消息key)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param errorId
 	 */
@@ -434,8 +435,8 @@ public class ValidatorCheckUtil {
 	/**
 	 * 自定义错误(自定义错误消息，前端key不同于错误消息key)
 	 *
-	 * @param mav
-	 * @param itemname
+	 * 
+	 * @param
 	 * @param errorId
 	 */
 	public static void validateSpecialError(JSONObject info, String key, String errorId) {
@@ -445,8 +446,8 @@ public class ValidatorCheckUtil {
 	/**
 	 * 自定义错误(自定义错误消息，前端key不同于错误消息key)
 	 *
-	 * @param mav
-	 * @param itemname
+	 * 
+	 * @param
 	 * @param errorId
 	 */
 	public static void validateSpecialError(JSONObject info, String key, String errorId, String message) {
@@ -459,7 +460,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查半角和区间
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param maxlength
@@ -500,7 +501,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查日期格式(yyyy-mm-dd)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -533,7 +534,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查日期格式(yyyy-mm-dd)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -567,7 +568,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查日期格式(yyyy/mm/dd hh24:mi)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -601,7 +602,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查日期格式(yyyy/m/d)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -635,7 +636,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查日期格式(yyyymmdd)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -664,7 +665,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查日期格式(yyyy/mm)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -694,7 +695,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查日期格式(yyyyMMddHHmmss)
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -723,7 +724,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查固定长度
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param justLength
@@ -744,7 +745,7 @@ public class ValidatorCheckUtil {
 			}
 		}
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -755,11 +756,11 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查固定长度
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param justLength
-	 * @param required
+	 * @param
 	 * @return
 	 */
 	public static boolean validateNum(JSONObject info, String itemname, String key, String value, int justLength) {
@@ -773,7 +774,7 @@ public class ValidatorCheckUtil {
 		}
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -785,7 +786,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查邮政编码
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param required
@@ -807,10 +808,10 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查半角数字最大长度（无小数点）
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
-	 * @param maxlength
+	 * @param
 	 * @param required
 	 * @return
 	 */
@@ -819,7 +820,7 @@ public class ValidatorCheckUtil {
 		boolean retValue = validateMaxLength(info, itemname, key, value, maxLength, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
 				CustomErrors.add(info, itemname, NUM, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -830,10 +831,10 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查半角数字最大长度（无小数点）正整数
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
-	 * @param maxlength
+	 * @param
 	 * @param required
 	 * @return
 	 */
@@ -843,7 +844,7 @@ public class ValidatorCheckUtil {
 		boolean retValue = validateMaxLength(info, itemname, key, value, 0, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0) {
+			if (!GenericValidator.isInt(value) || !StringUtils.isNumeric(value) || Integer.valueOf(value) < 0) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(SIGNLESSNUM, maxLength));
 				retValue = false;
 			}
@@ -854,10 +855,10 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查半角数字最大长度（有小数点）
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
-	 * @param maxlength
+	 * @param
 	 * @param required
 	 * @return
 	 */
@@ -887,7 +888,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查半角数字最大长度（有小数点，整数部和小数部分开）
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param integerMaxLength
@@ -929,7 +930,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查半角正数字最大长度（有小数点，整数部和小数部分开）
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param integerMaxLength
@@ -982,7 +983,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 检查邮件格式和最大长度
 	 *
-	 * @param mav
+	 * 
 	 * @param itemname
 	 * @param value
 	 * @param minlength
@@ -1019,7 +1020,7 @@ public class ValidatorCheckUtil {
 	 * 取得错误信息
 	 *
 	 * @param errKey
-	 * @param param
+	 * @param
 	 * @return
 	 */
 	public static String getErrorMessage(String errKey, Object... params) {
@@ -1045,7 +1046,7 @@ public class ValidatorCheckUtil {
 	/**
 	 * 判断是否有错误
 	 *
-	 * @param mav
+	 * 
 	 * @return
 	 */
 	public static boolean hasValidateError(JSONObject info) {

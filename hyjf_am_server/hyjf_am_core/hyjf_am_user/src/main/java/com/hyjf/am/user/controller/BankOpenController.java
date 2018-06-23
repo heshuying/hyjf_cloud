@@ -65,13 +65,15 @@ public class BankOpenController {
 	@RequestMapping("/updateUserAccountLogStatus")
 	public int updateUserAccountLogStatus(@RequestBody @Valid BankOpenRequest request) {
 		logger.info("updateUserAccountLogStatus...param is :{}", JSONObject.toJSONString(request));
-		
+
 		Integer userId = request.getUserId();
 		String orderId = request.getOrderId();
 		Integer status = request.getStatus();
-		
-		this.bankOpenService.updateUserAccountLog(userId, orderId, status);
-        
+		String retCode = request.getRetCode();
+		String retMsg = request.getRetMsg();
+
+		this.bankOpenService.updateUserAccountLog(userId, orderId, status, retCode, retMsg);
+
 		return 1;
 	}
 
@@ -193,6 +195,11 @@ public class BankOpenController {
 		return result ? 1 : 0;
 	}
 
+	/**
+	 * @Description 根据订单编号查询开户失败的原因
+	 * @Author sunss
+	 * @Date 2018/6/22 9:07
+	 */
 	@GetMapping("/bankopen/getBankOpenAccountFiledMess/{logOrdId}")
 	public String getBankOpenAccountFiledMess(@PathVariable String logOrdId){
 		return bankOpenService.getBankOpenAccountFiledMess(logOrdId);

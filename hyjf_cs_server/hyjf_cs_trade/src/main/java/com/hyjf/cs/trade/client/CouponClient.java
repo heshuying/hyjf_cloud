@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.vo.trade.CouponTenderVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 
 /**
@@ -17,4 +18,11 @@ public interface CouponClient {
 	 * @Date 2018/6/19 16:20
 	 */
 	CouponUserVO getCouponUser(Integer couponGrantId, Integer userId);
+
+	/**
+	 * 优惠券投资
+	 * @param couponTender
+	 * @return
+	 */
+    boolean updateCouponTender(CouponTenderVO couponTender);
 }

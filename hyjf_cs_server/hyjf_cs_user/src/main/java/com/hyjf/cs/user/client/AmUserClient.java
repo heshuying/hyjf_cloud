@@ -98,9 +98,10 @@ public interface AmUserClient {
 	 * @param userId
 	 * @param logOrderId
 	 * @param state
-	 * @return
+	 * @param retCode
+     * @return
 	 */
-	Integer updateUserAccountLogState(int userId, String logOrderId, int state);
+	Integer updateUserAccountLogState(int userId, String logOrderId, int state, String retCode,String retMsg);
 
 	/**
 	 * 开户成功后保存用户开户信息
@@ -142,6 +143,8 @@ public interface AmUserClient {
 	String getBankOpenAccountFiledMess(String logOrdId);
 
 	int isCompAccount(Integer userId);
+
+	UtmPlatVO selectUtmPlatByUtmId(String utmId);
 
     List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 }
