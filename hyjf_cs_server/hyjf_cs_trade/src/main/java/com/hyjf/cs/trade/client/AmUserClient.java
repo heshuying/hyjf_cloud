@@ -12,7 +12,7 @@ import com.hyjf.am.vo.user.*;
  */
 public interface AmUserClient {
 
-	UserVO findUserById(Integer userId);
+	UserVO findUserById(int userId);
 
 	UserInfoVO findUsersInfoById(int userId);
 

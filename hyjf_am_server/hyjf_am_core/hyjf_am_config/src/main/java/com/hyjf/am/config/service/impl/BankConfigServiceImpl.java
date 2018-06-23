@@ -34,7 +34,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 			return null;
 		}
 		BankConfigExample example = new BankConfigExample();
-		example.createCriteria().andIdEqualTo(bankId).andDelFlagEqualTo(0);
+		example.createCriteria().andIdEqualTo(bankId);
 		List<BankConfig> BankConfigList = bankConfigMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(BankConfigList)) {
 			return BankConfigList.get(0);
