@@ -1,15 +1,18 @@
 package com.hyjf.am.resquest.trade;
 
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 
 /**
  * @author jun
  * @since 20180621
  */
-public class CreditTenderRequest extends Response<CreditTenderVO> {
+public class CreditTenderRequest extends Request {
 
     private String assignNid;
     private Integer userId;
