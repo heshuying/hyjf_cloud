@@ -27,7 +27,7 @@ public class AssetPushServiceImpl implements AssetPushService {
     private Logger _log = LoggerFactory.getLogger(AssetPushServiceImpl.class);
 
     @Autowired
-    private HjhAssetBorrowTypeMapper hjhAssetBorrowTypeMapper;
+    private HjhAssetBorrowtypeMapper hjhAssetBorrowTypeMapper;
 
     @Autowired
     private BorrowProjectTypeMapper borrowProjectTypeMapper;
@@ -36,18 +36,18 @@ public class AssetPushServiceImpl implements AssetPushService {
     private BorrowProjectRepayMapper borrowProjectRepayMapper;
 
     @Autowired
-    private STZHWhiteListMapper sTZHWhiteListMapper;
+    private StzhWhiteListMapper sTZHWhiteListMapper;
 
     @Autowired
     private HjhPlanAssetMapper hjhPlanAssetMapper;
 
     @Override
-    public HjhAssetBorrowType selectAssetBorrowType(String instCode, int assetType) {
-        HjhAssetBorrowTypeExample example = new HjhAssetBorrowTypeExample();
-        HjhAssetBorrowTypeExample.Criteria crt = example.createCriteria();
+    public HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType) {
+        HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
+        HjhAssetBorrowtypeExample.Criteria crt = example.createCriteria();
         crt.andInstCodeEqualTo(instCode);
         crt.andAssetTypeEqualTo(assetType);
-        List<HjhAssetBorrowType> list = hjhAssetBorrowTypeMapper.selectByExample(example);
+        List<HjhAssetBorrowtype> list = hjhAssetBorrowTypeMapper.selectByExample(example);
         if(list.size() > 0){
             return list.get(0);
         }else{
@@ -80,14 +80,14 @@ public class AssetPushServiceImpl implements AssetPushService {
     }
 
     @Override
-    public STZHWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId) {
-        STZHWhiteListExample example = new STZHWhiteListExample();
-        STZHWhiteListExample.Criteria crt = example.createCriteria();
+    public StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId) {
+        StzhWhiteListExample example = new StzhWhiteListExample();
+        StzhWhiteListExample.Criteria crt = example.createCriteria();
         crt.andStAccountidEqualTo(entrustedAccountId);
         crt.andInstcodeEqualTo(instCode);
         crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);
-        List<STZHWhiteList> list = this.sTZHWhiteListMapper.selectByExample(example);
+        List<StzhWhiteList> list = this.sTZHWhiteListMapper.selectByExample(example);
         if(list.size() > 0){
             return list.get(0);
         }else{

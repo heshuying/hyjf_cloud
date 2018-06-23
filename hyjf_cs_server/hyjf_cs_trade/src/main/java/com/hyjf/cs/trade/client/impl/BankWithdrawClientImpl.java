@@ -4,19 +4,17 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankCardVO;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.AccountwithdrawResponse;
+import com.hyjf.am.response.trade.AccountWithdrawResponse;
 import com.hyjf.am.response.trade.BankCardBeanResponse;
 import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankCallBeanVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.cs.trade.client.BankWithdrawClient;
@@ -32,9 +30,9 @@ public class BankWithdrawClientImpl implements BankWithdrawClient {
 
 	@Override
 	public List<AccountWithdrawVO> selectBankWithdrawList() {
-		AccountwithdrawResponse response = restTemplate
+		AccountWithdrawResponse response = restTemplate
 				.getForEntity("http://AM-TRADE/bankException/selectBankWithdrawList",
-						AccountwithdrawResponse.class)
+						AccountWithdrawResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResultList();
