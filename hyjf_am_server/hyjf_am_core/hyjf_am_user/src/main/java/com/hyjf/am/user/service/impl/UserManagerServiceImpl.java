@@ -144,7 +144,7 @@ public class UserManagerServiceImpl implements UserManagerService {
     @Override
     public int countUserRecord(UserManagerRequest userRequest) {
         Map<String, Object> mapParam = paramSet(userRequest);
-        Integer integerCount = userManagerCustomizeMapper.countUserRecord(userRequest);
+        Integer integerCount = userManagerCustomizeMapper.countUserRecord(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;
     }

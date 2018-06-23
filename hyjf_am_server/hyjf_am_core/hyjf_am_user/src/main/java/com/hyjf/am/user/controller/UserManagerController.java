@@ -4,6 +4,7 @@
 package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
@@ -55,11 +56,16 @@ public class UserManagerController {
         logger.info("---findUserslist by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
         List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(request);
-        if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
-            List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, UserManagerVO.class);
-            response.setResultList(userVoList);
-            response.setRtn("00");//代表成功
+        int usesrCount = userManagerService.countUserRecord(request);
+        if(usesrCount>0){
+            if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
+                List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, UserManagerVO.class);
+                response.setResultList(userVoList);
+                response.setCount(usesrCount);
+                response.setRtn(Response.SUCCESS);//代表成功
+            }
         }
+
         return response;
     }
 
@@ -95,7 +101,7 @@ public class UserManagerController {
                 UserManagerDetailVO userManagerDetailVO = new UserManagerDetailVO();
                 BeanUtils.copyProperties(userManagerDetailCustomize, userManagerDetailVO);
                 userManagerDetailResponse.setResult(userManagerDetailVO);
-                userManagerDetailResponse.setRtn("00");//代表成功
+                userManagerDetailResponse.setRtn(Response.SUCCESS);//代表成功
             }
             return userManagerDetailResponse;
         }
@@ -119,7 +125,7 @@ public class UserManagerController {
             if (null != bankOpenAccountCustomize) {
                 BeanUtils.copyProperties(bankOpenAccountCustomize, userBankOpenAccountVO);
                 response.setResult(userBankOpenAccountVO);
-                response.setRtn("00");//代表成功
+                response.setRtn(Response.SUCCESS);//代表成功
             }
             return response;
         }
@@ -143,7 +149,7 @@ public class UserManagerController {
             if (null != corpOpenAccountRecord) {
                 BeanUtils.copyProperties(corpOpenAccountRecord, corpOpenAccountRecordVO);
                 response.setResult(corpOpenAccountRecordVO);
-                response.setRtn("00");//代表成功
+                response.setRtn(Response.SUCCESS);//代表成功
             }
             return response;
         }
@@ -191,7 +197,7 @@ public class UserManagerController {
             if (null != certificateAuthority) {
                 BeanUtils.copyProperties(certificateAuthority, certificateAuthorityVO);
                 response.setResult(certificateAuthorityVO);
-                response.setRtn("00");//代表成功
+                response.setRtn(Response.SUCCESS);//代表成功
             }
             return response;
         }
@@ -215,7 +221,7 @@ public class UserManagerController {
             if (null != userManagerUpdateCustomize) {
                 BeanUtils.copyProperties(userManagerUpdateCustomize, userManagerUpdateVo);
                 response.setResult(userManagerUpdateVo);
-                response.setRtn("00");//代表成功
+                response.setRtn(Response.SUCCESS);//代表成功
             }
             return response;
         }
@@ -299,7 +305,7 @@ public class UserManagerController {
         if (null != bankOpenAccount) {
             BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
             response.setResult(bankOpenAccountVO);
-            response.setRtn("00");//代表成功
+            response.setRtn(Response.SUCCESS);//代表成功
             return response;
         }
         return null;
@@ -349,7 +355,7 @@ public class UserManagerController {
         if (null != bankOpenAccount) {
             BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
             response.setResult(bankOpenAccountVO);
-            response.setRtn("00");//代表成功
+            response.setRtn(Response.SUCCESS);//代表成功
         }
         return response;
     }
