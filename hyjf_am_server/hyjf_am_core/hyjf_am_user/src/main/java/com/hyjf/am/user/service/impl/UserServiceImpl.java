@@ -98,6 +98,9 @@ public class UserServiceImpl implements UserService {
 	UtmRegMapper utmRegMapper;
 
 	@Autowired
+	UtmPlatMapper utmPlatMapper;
+
+	@Autowired
 	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
 
     @Autowired
@@ -117,7 +120,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public User register(RegisterUserRequest userRequest) throws MQException {
 
-		String mobile = userRequest.getMobilephone();
+		String mobile = userRequest.getMobile();
 		String loginIp = userRequest.getLoginIp();
 		String reffer = userRequest.getReffer();
 		String platform = userRequest.getPlatform();
@@ -473,7 +476,7 @@ public class UserServiceImpl implements UserService {
 		userInfo.setAddress("");
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
-		userInfo.setIsContact(false);
+		userInfo.setIsContact(0);
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
 		usersInfoMapper.insertSelective(userInfo);
@@ -568,6 +571,19 @@ public class UserServiceImpl implements UserService {
 		utmReg.setBindCard(0);
 		utmRegMapper.insertSelective(utmReg);
 		logger.info("注册插入utmReg：{}", JSON.toJSONString(utmReg));
+	}
+
+	@Override
+	public UtmPlat selectUtmPlatByUtmId(String utmId) {
+		UtmPlatExample example = new UtmPlatExample();
+		UtmPlatExample.Criteria cra = example.createCriteria();
+		cra.andSourceIdEqualTo(Integer.parseInt(utmId));
+		cra.andDelFlagEqualTo(0);
+		List<UtmPlat> list = this.utmPlatMapper.selectByExample(example);
+		if(list!=null&& list.size()>0){
+			return list.get(0);
+		}
+		return null;
 	}
 
 	/**
@@ -981,7 +997,7 @@ public class UserServiceImpl implements UserService {
 														 EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult) {
 		UserEvalationResult userEvalationResult=new UserEvalationResult();
 		userEvalationResult.setUserId(userId);
-		userEvalationResult.setScoreCount((byte) countScore);
+		userEvalationResult.setScoreCount(countScore);
 		userEvalationResult.setEvalType(evalation.getEvalType());
 		userEvalationResult.setSummary(evalation.getSummary());
 		userEvalationResult.setCreateTime(new Date());
@@ -1003,7 +1019,7 @@ public class UserServiceImpl implements UserService {
 				userEvalation.setErId(userEvalationResult.getId());
 				userEvalation.setQuestionId(new Integer(questionList.get(j)));
 				userEvalation.setAnswerId(new Integer(answerList.get(j)));
-				userEvalation.setSort((byte) j);
+				userEvalation.setSort(j);
 				userEvalationMapper.insertSelective(userEvalation);
 			}
 		}

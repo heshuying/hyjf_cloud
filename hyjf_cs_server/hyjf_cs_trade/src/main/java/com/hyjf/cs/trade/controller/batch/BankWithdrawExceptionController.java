@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.service.BankWithdrawService;
 
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +15,7 @@ import io.swagger.annotations.ApiOperation;
  * create by jijun 20180614
  */
 @Controller
-@RequestMapping(value = "/bankWithdrawException")
+@RequestMapping(value = "/cs-trade/bankWithdrawException")
 public class BankWithdrawExceptionController {
 
     Logger logger = LoggerFactory.getLogger(BankWithdrawExceptionController.class);
@@ -31,20 +29,10 @@ public class BankWithdrawExceptionController {
      */
     @ApiOperation(value = "江西银行提现掉单异常处理", notes = "江西银行提现掉单异常处理")
     @RequestMapping(value = "/withdraw")
-    public ApiResult<Object> withdraw(){
-        logger.info("江西银行提现掉单异常处理");
-    	ApiResult<Object> result = new ApiResult<Object>(); 
-        result.setStatus(ApiResult.SUCCESS);
-        result.setStatusDesc(BankWithdrawError.BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS.getMsg());
-
-    	try {
-            bankWithdrawService.withdraw();
-        }catch (Exception e){
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BankWithdrawError.BANK_WITHDRAW_EXCEPTION_HANDLE_ERROR.getMsg());
-        }
-
-    	return result;
+    public void withdraw(){
+        logger.info("江西银行提现掉单异常处理start...");
+        bankWithdrawService.batchWithdraw();
+        logger.info("江西银行提现掉单异常处理end...");
     }
 
 }

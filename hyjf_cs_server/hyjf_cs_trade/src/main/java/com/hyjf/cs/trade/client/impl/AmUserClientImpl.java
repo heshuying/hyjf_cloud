@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -28,10 +29,10 @@ public class AmUserClientImpl implements AmUserClient {
 	@Autowired
 	private RestTemplate restTemplate;
 	@Override
-	public UserVO findUserById(Integer userId) {
+	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class).getBody();
-		if (response != null) {
+				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
@@ -130,6 +131,46 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER/am-user/userInfo/findUserCrmInfoByUserId/" + userId;
 		UserInfoCrmResponse response = restTemplate.getForEntity(url, UserInfoCrmResponse.class).getBody();
 		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查看用户详情
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public SpreadsUserVO querySpreadsUsersByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/querySpreadsUsersByUserId/" + userId;
+		SpreadsUserResponse response = restTemplate.getForEntity(url,SpreadsUserResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public EmployeeCustomizeVO selectEmployeeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/selectEmployeeByUserId/" + userId;
+		EmployeeCustomizeResponse response = restTemplate.getForEntity(url,EmployeeCustomizeResponse.class).getBody();
+		if (response!=null){
 			return response.getResult();
 		}
 		return null;

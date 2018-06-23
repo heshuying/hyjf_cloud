@@ -4,8 +4,7 @@
 package com.hyjf.cs.user.controller.web.login;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.LoginRequestVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;

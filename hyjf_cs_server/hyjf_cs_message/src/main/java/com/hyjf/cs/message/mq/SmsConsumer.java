@@ -57,19 +57,19 @@ public class SmsConsumer extends Consumer {
 			logger.info("SmsConsumer 收到消息，开始处理....smsMessage is :{}", smsMessage);
 			if (null != smsMessage) {
 				switch (smsMessage.getServiceType()) {
-				case MessageConstant.SMSSENDFORMANAGER:
+				case MessageConstant.SMS_SEND_FOR_MANAGER:
 					smsHandle.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),
 							smsMessage.getChannelType());
 					break;
-				case MessageConstant.SMSSENDFORMOBILE:
+				case MessageConstant.SMS_SEND_FOR_MOBILE:
 					smsHandle.sendMessages(smsMessage.getMobile(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
 							smsMessage.getChannelType());
 					break;
-				case MessageConstant.SMSSENDFORUSER:
+				case MessageConstant.SMS_SEND_FOR_USER:
 					smsHandle.sendMessages(smsMessage.getUserId(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
 							smsMessage.getChannelType());
 					break;
-				case MessageConstant.SMSSENDFORUSERSNOTPL:
+				case MessageConstant.SMS_SEND_FOR_USERS_NO_TPL:
 					try {
 						smsHandle.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
 								smsMessage.getServiceType(), null, smsMessage.getChannelType());

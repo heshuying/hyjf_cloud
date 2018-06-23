@@ -12,7 +12,7 @@ public class AccountChinapnr implements Serializable {
 
     private Long chinapnrUsrcustid;
 
-    private Boolean isok;
+    private Integer isok;
 
     private String createIp;
 
@@ -54,11 +54,11 @@ public class AccountChinapnr implements Serializable {
         this.chinapnrUsrcustid = chinapnrUsrcustid;
     }
 
-    public Boolean getIsok() {
+    public Integer getIsok() {
         return isok;
     }
 
-    public void setIsok(Boolean isok) {
+    public void setIsok(Integer isok) {
         this.isok = isok;
     }
 

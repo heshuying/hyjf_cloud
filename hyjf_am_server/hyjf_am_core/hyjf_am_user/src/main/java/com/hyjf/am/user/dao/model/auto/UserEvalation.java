@@ -12,7 +12,7 @@ public class UserEvalation implements Serializable {
 
     private Integer answerId;
 
-    private Byte sort;
+    private Integer sort;
 
     private Date createTime;
 
@@ -52,11 +52,11 @@ public class UserEvalation implements Serializable {
         this.answerId = answerId;
     }
 
-    public Byte getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(Byte sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 

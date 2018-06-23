@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -66,8 +67,8 @@ public class BaseMapBean {
     /**
      * 设置属性值
      *
-     * @param key
-     * @param value
+     * @param
+     * @param
      */
     public void setAll(Map<String, String> map) {
         paramMap.putAll(map);
@@ -111,7 +112,7 @@ public class BaseMapBean {
      */
     public BigDecimal getBigDecimal(String key) {
         String val = paramMap.get(key);
-        if (Validator.isNotNull(val) && NumberUtils.isNumber(val)) {
+        if (Validator.isNotNull(val) && StringUtils.isNumeric(val)) {
             return new BigDecimal(val);
         }
         return BigDecimal.ZERO;

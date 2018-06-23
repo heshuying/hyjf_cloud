@@ -682,4 +682,15 @@ public class AmUserClientImpl implements AmUserClient {
 				.getForEntity("http://AM-USER//am-user/bankopen/getBankOpenAccountFiledMess/" + logOrdId, String.class).getBody();
 		return mess;
 	}
+
+	@Override
+	public UtmPlatVO selectUtmPlatByUtmId(String utmId){
+		UtmPlatResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUtmId/" + utmId,UtmPlatResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

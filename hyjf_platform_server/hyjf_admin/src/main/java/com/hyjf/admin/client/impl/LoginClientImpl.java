@@ -38,7 +38,7 @@ public class LoginClientImpl implements LoginClient {
 	@Override
 	public AdminSystemResponse getUserInfo(AdminSystemRequest adminSystemRequest) {
 		AdminSystemResponse adminSystemResponse = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/adminSystem/getuser/" + adminSystemRequest,
+				.postForEntity("http://AM-CONFIG/am-config/adminSystem/getuser" ,adminSystemRequest,
 						AdminSystemResponse.class)
 				.getBody();
 		if (adminSystemResponse != null) {

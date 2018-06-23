@@ -12,7 +12,7 @@ public class UserEvalationResult implements Serializable {
 
     private String summary;
 
-    private Byte scoreCount;
+    private Integer scoreCount;
 
     private String instCode;
 
@@ -60,11 +60,11 @@ public class UserEvalationResult implements Serializable {
         this.summary = summary == null ? null : summary.trim();
     }
 
-    public Byte getScoreCount() {
+    public Integer getScoreCount() {
         return scoreCount;
     }
 
-    public void setScoreCount(Byte scoreCount) {
+    public void setScoreCount(Integer scoreCount) {
         this.scoreCount = scoreCount;
     }
 

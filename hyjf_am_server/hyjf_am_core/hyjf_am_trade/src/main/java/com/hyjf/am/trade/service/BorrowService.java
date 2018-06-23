@@ -7,6 +7,8 @@ import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 
+import java.util.List;
+
 /**
  * @author fuqiang
  * @version BorrowService, v0.1 2018/6/13 18:52
@@ -46,5 +48,9 @@ public interface BorrowService {
      */
     int updateBorrowRegist(BorrowRegistRequest request);
 
-
+    /**
+     * 检索正在还款中的标的
+     * @return
+     */
+    List<Borrow> selectBorrowList();
 }

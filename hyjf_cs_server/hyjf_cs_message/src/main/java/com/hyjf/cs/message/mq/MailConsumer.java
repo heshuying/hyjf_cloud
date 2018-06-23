@@ -58,15 +58,15 @@ public class MailConsumer extends Consumer {
 			logger.info("MailConsumer 收到消息，开始处理....mailMessage is :{}", mailMessage);
 			if (null != mailMessage) {
 				switch (mailMessage.getServiceType()) {
-				case MessageConstant.MAILSENDFORUSER:
+				case MessageConstant.MAIL_SEND_FOR_USER:
 					mailHandle.sendMail(mailMessage.getUserId(), mailMessage.getSubject(), mailMessage.getBody(),
 							mailMessage.getFileNames());
 					break;
-				case MessageConstant.MAILSENDFORMAILINGADDRESS:
+				case MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS:
 					mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(),
 							mailMessage.getMailKbn(), mailMessage.getReplaceStrs(), mailMessage.getFileNames());
 					break;
-				case MessageConstant.MAILSENDFORMAILINGADDRESSMSG:
+				case MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG:
 					mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(), mailMessage.getBody(),
 							mailMessage.getFileNames());
 					break;

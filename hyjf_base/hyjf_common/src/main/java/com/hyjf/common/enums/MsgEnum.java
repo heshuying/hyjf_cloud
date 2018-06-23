@@ -149,12 +149,13 @@ public enum MsgEnum implements MsgCode {
 	STATUS_CE000005("CE000005","银行处理中，请稍后查看"),
 	STATUS_CE000006("CE000006","没有用户信息"),
 	STATUS_CE000007("CE000007","没有用户开户信息"),
-	STATUS_CE000008("CE000008","请求日期格式错误"),
+	STATUS_CE000008("CE000008","未查询到短信授权码"),
 	STATUS_CE000009("CE000009","请求开始日期大于结束日期"),
 	STATUS_CE000010("CE000010","请求手机号格式错误"),
 	STATUS_CE000011("CE000011","请求手机号不存在"),
 	STATUS_CE000012("CE000012","请求用户电子账号不存在"),
 	STATUS_CE000013("CE000013","请求项目编号不存在"),
+	STATUS_CE000014("CE000014","此版本暂不可用，请更新至最新版本"),
 	STATUS_CE999999("CE999999","系统异常"),
 	// ----------注册机能用错误信息------------
 	STATUS_ZC000001("ZC000001","手机号不能为空"),
@@ -174,9 +175,12 @@ public enum MsgEnum implements MsgCode {
 	STATUS_ZC000015("ZC000015","验证码错误"),
 	STATUS_ZC000016("ZC000016","银行卡与姓名不符"),
 	STATUS_ZC000017("ZC000017","银行卡与证件不符"),
+	STATUS_ZC000018("ZC000018","平台不能为空"),
+	STATUS_ZC000019("ZC000019","渠道不能为空"),
+	STATUS_ZC000020("ZC000020","渠道非法"),
 
 	// 还款信息接口项目编号不能为空
-	STATUS_ZC000018("ZC000018","资产编号不能为空"),
+	//STATUS_ZC000018("ZC000018","资产编号不能为空"),
 	// ----------资产机能用错误信息------------
 	STATUS_ZT000001("ZT000001","没有用户信息"),
 	STATUS_ZT000002("ZT000002","没有用户开户信息"),
@@ -224,9 +228,11 @@ public enum MsgEnum implements MsgCode {
 		this.msg = msg;
 	}
 
-	public String getMsg() { return this.msg; }
+	@Override
+    public String getMsg() { return this.msg; }
 
-	public String getCode() {
+	@Override
+    public String getCode() {
 		return this.code;
 	}
 }

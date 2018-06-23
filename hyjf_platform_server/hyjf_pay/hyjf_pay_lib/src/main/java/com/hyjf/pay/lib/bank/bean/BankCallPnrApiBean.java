@@ -96,8 +96,8 @@ public class BankCallPnrApiBean implements Serializable {
 	/**
 	 * 设置属性值
 	 *
-	 * @param key
-	 * @param value
+	 * @param
+	 * @param
 	 */
 	public void setAll(Map<String, String> map) {
 		paramMap.putAll(map);
@@ -141,7 +141,7 @@ public class BankCallPnrApiBean implements Serializable {
 	 */
 	public BigDecimal getBigDecimal(String key) {
 		String val = paramMap.get(key);
-		if (Validator.isNotNull(val) && NumberUtils.isNumber(val)) {
+		if (Validator.isNotNull(val) && StringUtils.isNumeric(val)) {
 			return new BigDecimal(val);
 		}
 		return BigDecimal.ZERO;
@@ -177,8 +177,7 @@ public class BankCallPnrApiBean implements Serializable {
 	/**
 	 * 取得组合后的签名
 	 *
-	 * @param isEntrypt
-	 *            是否加签(true:加签,false:不加签)
+	 * @param是否加签(true:加签,false:不加签)
 	 * @param keys
 	 * @return
 	 */
@@ -209,8 +208,7 @@ public class BankCallPnrApiBean implements Serializable {
 	/**
 	 * 取得组合后的签名
 	 *
-	 * @param isEntrypt
-	 *            是否加签(true:加签,false:不加签)
+	 * @param是否加签(true:加签,false:不加签)
 	 * @param keys
 	 * @return
 	 */

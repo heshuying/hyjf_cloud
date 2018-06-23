@@ -48,13 +48,11 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 	}
 
 	@Override
-	public List<MessagePushTemplateVO> getAllTemplates() {
+	public List<MessagePushTemplate> getAllTemplates() {
 		MessagePushTemplateExample example = new MessagePushTemplateExample();
 		MessagePushTemplateExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(CustomConstants.MSG_PUSH_STATUS_1);// 启用
 		List<MessagePushTemplate> templateList = this.templateMapper.selectByExample(example);
-		List<MessagePushTemplateVO> templateVOList = CommonUtils.convertBeanList(templateList,
-				MessagePushTemplateVO.class);
-		return templateVOList;
+		return templateList;
 	}
 }

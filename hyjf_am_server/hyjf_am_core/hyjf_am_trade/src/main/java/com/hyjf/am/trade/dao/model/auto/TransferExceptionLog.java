@@ -31,15 +31,15 @@ public class TransferExceptionLog implements Serializable {
 
     private String remark;
 
-    private Date addTime;
+    private Integer delFlag;
 
     private String addUser;
 
-    private Date updateTime;
-
     private String updateUser;
 
-    private Boolean delFlag;
+    private Date addTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -147,12 +147,12 @@ public class TransferExceptionLog implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Date getAddTime() {
-        return addTime;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public String getAddUser() {
@@ -163,14 +163,6 @@ public class TransferExceptionLog implements Serializable {
         this.addUser = addUser == null ? null : addUser.trim();
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getUpdateUser() {
         return updateUser;
     }
@@ -179,11 +171,19 @@ public class TransferExceptionLog implements Serializable {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
 
-    public Boolean getDelFlag() {
-        return delFlag;
+    public Date getAddTime() {
+        return addTime;
     }
 
-    public void setDelFlag(Boolean delFlag) {
-        this.delFlag = delFlag;
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

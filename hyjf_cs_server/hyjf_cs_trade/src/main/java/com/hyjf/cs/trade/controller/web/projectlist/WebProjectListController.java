@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * web端项目列表
@@ -55,11 +56,51 @@ public class WebProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "散标专区债权转让列表", notes = "散标专区债权转让列表")
-    @PostMapping(value = "/getCreditList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/CreditList", produces = "application/json; charset=utf-8")
     public Object getCredittList(@RequestBody @Valid CreditListRequest request){
         WebResult result =  webProjectListService.searchCreditList(request);
         return result;
     }
+
+    /**
+     * 计划专区计划列表上部统计数据
+     * @author zhangyk
+     * @date 2018/6/21 15:18
+     */
+    @ApiOperation(value = "计划专区计划列表上部统计数据", notes = "计划专区计划列表上部统计数据")
+    @PostMapping(value = "/initPlanData", produces = "application/json; charset=utf-8")
+    public Object getPlanData(@RequestBody  ProjectListRequest request){
+        WebResult result =  webProjectListService.searchPlanData(request);
+        return result;
+    }
+
+    /**
+     * 计划专区计划列表数据
+     * @author zhangyk
+     * @date 2018/6/21 15:18
+     */
+    @ApiOperation(value = "计划专区计划列表数据", notes = "计划专区计划列表数据")
+    @PostMapping(value = "/searchPlanList", produces = "application/json; charset=utf-8")
+    public Object getPlanList(@RequestBody @Valid ProjectListRequest request){
+        WebResult result =  webProjectListService.searchPlanList(request);
+        return result;
+    }
+
+
+    /**
+     * web端新手标和散标标的详情
+     * @author zhangyk
+     * @date 2018/6/22 16:06
+     */
+    @ApiOperation(value = "web端新手标和散标标的详情", notes = "web端新手标和散标标的详情")
+    @PostMapping(value = "/borrowDetail", produces = "application/json; charset=utf-8")
+    public Object webBorrowDetail(@RequestBody Map map){
+        WebResult result =  webProjectListService.getBorrowDetail(map);
+        return result;
+    }
+
+
+
 
 
 

@@ -8,7 +8,6 @@ import com.hyjf.am.vo.user.SmsCodeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.RandomValidateCode;
 import com.hyjf.common.validator.Validator;
@@ -29,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -56,15 +56,18 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult<WebViewUserVO> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
-        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
+        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         // 1. 参数检查
-        registService.registerCheckParam(ClientConstants.WEB_CLIENT,registerRequest);
+        registerRequest.setPlatform(CommonConstant.CLIENT_PC);
+        registService.checkParam(registerRequest);
         WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
         if (webViewUserVO != null) {
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
-            result.setData(webViewUserVO);
+            Map<String,Object> resultMap = new HashMap<>();
+            resultMap.put("token",webViewUserVO.getToken());
+            result.setData(resultMap);
         } else {
             logger.error("Web端用户注册失败...");
             result.setStatus(ApiResult.FAIL);

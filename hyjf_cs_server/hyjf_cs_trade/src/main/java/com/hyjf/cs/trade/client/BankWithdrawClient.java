@@ -27,18 +27,11 @@ public interface BankWithdrawClient {
 
     int getAccountlistCntByOrdId(String ordId, String cash_success);
 
-    boolean updateAccountwithdraw(AccountWithdrawVO accountWithdraw);
-
-	boolean updateBankWithdraw(AccountVO newAccount);
-
 	AccountVO getAccount(int userId);
-
-	boolean addAccountList(AccountListVO accountList);
-
-	void selectAndUpdateAccountWithdraw(JSONObject paraMap);
 
 	List<FeeConfigVO> getFeeConfig(String bankCode);
 
 	BankCardVO getBankInfo(Integer userId, String bankId);
 
+	Boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,String withdrawFee);
 }

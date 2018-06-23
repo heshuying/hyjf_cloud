@@ -1045,52 +1045,52 @@ public class UserInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsContactEqualTo(Boolean value) {
+        public Criteria andIsContactEqualTo(Integer value) {
             addCriterion("is_contact =", value, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactNotEqualTo(Boolean value) {
+        public Criteria andIsContactNotEqualTo(Integer value) {
             addCriterion("is_contact <>", value, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactGreaterThan(Boolean value) {
+        public Criteria andIsContactGreaterThan(Integer value) {
             addCriterion("is_contact >", value, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsContactGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_contact >=", value, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactLessThan(Boolean value) {
+        public Criteria andIsContactLessThan(Integer value) {
             addCriterion("is_contact <", value, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsContactLessThanOrEqualTo(Integer value) {
             addCriterion("is_contact <=", value, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactIn(List<Boolean> values) {
+        public Criteria andIsContactIn(List<Integer> values) {
             addCriterion("is_contact in", values, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactNotIn(List<Boolean> values) {
+        public Criteria andIsContactNotIn(List<Integer> values) {
             addCriterion("is_contact not in", values, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsContactBetween(Integer value1, Integer value2) {
             addCriterion("is_contact between", value1, value2, "isContact");
             return (Criteria) this;
         }
 
-        public Criteria andIsContactNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsContactNotBetween(Integer value1, Integer value2) {
             addCriterion("is_contact not between", value1, value2, "isContact");
             return (Criteria) this;
         }

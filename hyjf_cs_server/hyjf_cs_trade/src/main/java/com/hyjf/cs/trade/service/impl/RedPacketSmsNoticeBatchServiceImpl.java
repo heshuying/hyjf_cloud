@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
 import com.hyjf.cs.trade.service.RedPacketSmsNoticeBatchService;
@@ -16,7 +15,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +52,7 @@ public class RedPacketSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl imp
             return;
         }
 
-        // todo 获取红包账户余额
+        // 获取红包账户余额
         BigDecimal balance = this.getBankBalancePay(0, merrpAccount);
         if(balance == null){
             logger.error("【红包账户余额短信提醒】调用即信余额查询接口失败");
@@ -76,7 +74,7 @@ public class RedPacketSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl imp
             Map<String, String> messageStrMap = new HashMap<String, String>();
             messageStrMap.put("val_amount", balance.toString());
             // 发送短信通知
-            SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_RED_PACKET,
+            SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_RED_PACKET,
                     CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(

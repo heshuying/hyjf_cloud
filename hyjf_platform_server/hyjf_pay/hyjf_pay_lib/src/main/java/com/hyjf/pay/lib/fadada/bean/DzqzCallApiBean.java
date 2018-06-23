@@ -93,7 +93,7 @@ public class DzqzCallApiBean implements Serializable{
      */
     public BigDecimal getBigDecimal(String key) {
         String val = allParams.get(key);
-        if (Validator.isNotNull(val) && NumberUtils.isNumber(val)) {
+        if (Validator.isNotNull(val) && StringUtils.isNumeric(val)) {
             return new BigDecimal(val);
         }
         return BigDecimal.ZERO;

@@ -7,7 +7,10 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeCsVO;
 import com.hyjf.am.vo.trade.WebProjectListCsVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.client.WebProjectListClient;
@@ -17,9 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * web端项目列表Service实现类
@@ -37,16 +43,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     /**
      * 获取Web端项目列表
+     *
      * @param request
-     * @author liuyang
      * @return
+     * @author liuyang
      */
     @Override
     public WebResult searchProjectList(ProjectListRequest request) {
         // 参数验证 略
 
         // 初始化分页参数，并组合到请求参数
-        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         // ①查询count
@@ -54,7 +61,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 对调用返回的结果进行转换和拼装
         WebResult webResult = new WebResult();
         // 先抛错方式，避免代码看起来头重脚轻。
-        if (!Response.isSuccess(response)){
+        if (!Response.isSuccess(response)) {
             logger.error("查询散标投资列表原子层count异常");
             throw new RuntimeException("查询散标投资列表原子层count异常");
         }
@@ -62,18 +69,18 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
         webResult.setData(new ArrayList<>());
-        if (count > 0){
+        if (count > 0) {
             List<WebProjectListCsVO> result = new ArrayList<>();
             ProjectListResponse dataResponse = webProjectListClient.searchProjectList(request);
-            if (!Response.isSuccess(dataResponse)){
+            if (!Response.isSuccess(dataResponse)) {
                 logger.error("查询散标投资列表原子层List异常");
-                throw  new RuntimeException("查询散标投资列表原子层list数据异常");
+                throw new RuntimeException("查询散标投资列表原子层list数据异常");
             }
-            result = CommonUtils.convertBeanList(dataResponse.getResultList(),WebProjectListCsVO.class);
+            result = CommonUtils.convertBeanList(dataResponse.getResultList(), WebProjectListCsVO.class);
             webResult.setData(result);
         }
         webResult.setPage(page);
-        return  webResult;
+        return webResult;
 
         //传统的if多重嵌套判断方式
         /*if (Response.isSuccess(response)){
@@ -97,15 +104,26 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     }
 
+    @Override
+    public WebResult getBorrowDetail(Map map) {
+        Object borrowNid = map.get("borrowNid");
+        CheckUtil.check(null == borrowNid, MsgEnum.ERR_OBJECT_REQUIRED,"借款编号");
+        ProjectListRequest request = new ProjectListRequest();
+        request.setBorrowNid(borrowNid.toString());
+        // TODO: 2018/6/22 未完  继续搞 
+        return null;
+    }
+
     /**
-     *  散标专区债权转让列表数据
+     * 散标专区债权转让列表数据
+     *
      * @author zhangyk
      * @date 2018/6/20 9:11
      */
     @Override
     public WebResult searchCreditList(CreditListRequest request) {
         // 初始化分页参数，并组合到请求参数
-        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         // 原逻辑默认写死以下参数
@@ -119,24 +137,75 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         request.setInProgressSort("DESC");
         CreditListResponse res = webProjectListClient.countCreditList(request);
         WebResult webResult = new WebResult();
-        if (!Response.isSuccess(res)){
+        if (!Response.isSuccess(res)) {
             logger.error("查询债权转让原子层count异常");
             throw new RuntimeException("查询债权转让原子层count异常");
         }
         int count = res.getCount();
         page.setTotal(count);
         webResult.setData(new ArrayList<>());
-        if (count > 0){
+        if (count > 0) {
             List<TenderCreditDetailCustomizeCsVO> result = new ArrayList<>();
             CreditListResponse dataResponse = webProjectListClient.searchCreditList(request);
-            if (!Response.isSuccess(dataResponse)){
+            if (!Response.isSuccess(dataResponse)) {
                 logger.error("查询债权转让原子层list数据异常");
-                throw  new RuntimeException("查询债权转让原子层list数据异常");
+                throw new RuntimeException("查询债权转让原子层list数据异常");
             }
-            result = CommonUtils.convertBeanList(dataResponse.getResultList(),TenderCreditDetailCustomizeCsVO.class);
+            result = CommonUtils.convertBeanList(dataResponse.getResultList(), TenderCreditDetailCustomizeCsVO.class);
             webResult.setData(result);
         }
         webResult.setPage(page);
-        return  webResult;
+        return webResult;
     }
+
+    /**
+     * 计划专区上部统计数据
+     *
+     * @author zhangyk
+     * @date 2018/6/19 16:33
+     */
+    @Override
+    public WebResult searchPlanData(ProjectListRequest request) {
+        Map<String,Object> map = webProjectListClient.searchPlanData(request);
+        if (map == null){
+            logger.error("web查询原子层计划专区上部统计数据异常");
+            throw new RuntimeException("web查询原子层计划专区上部统计数据异常");
+        }
+        WebResult webResult = new WebResult();
+        webResult.setData(map);
+        return webResult;
+    }
+
+    /**
+     * 计划专区计划列表数据
+     *
+     * @author zhangyk
+     * @date 2018/6/21 15:21
+     */
+    @Override
+    public WebResult searchPlanList(ProjectListRequest request) {
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
+        Integer count = webProjectListClient.countPlanList(request);
+        WebResult webResult = new WebResult();
+        webResult.setData(new ArrayList<>());
+        if (count == null) {
+            logger.error("web查询原子层计划专区计划列表数据count异常");
+            throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
+        }
+        if (count > 0) {
+            Map<String, Object> map = webProjectListClient.searchPlanData(request);
+            if (map == null) {
+                logger.error("web查询原子层计划专区计划列表数据异常");
+                throw new RuntimeException("web查询原子层计划专区计划列表数据异常");
+            }
+            webResult.setData(map);
+        }
+        page.setTotal(count);
+        webResult.setPage(page);
+        return webResult;
+    }
+
+
 }

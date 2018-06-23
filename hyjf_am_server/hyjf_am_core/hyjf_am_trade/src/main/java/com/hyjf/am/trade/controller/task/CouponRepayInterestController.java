@@ -4,9 +4,12 @@
 package com.hyjf.am.trade.controller.task;
 
 
+import com.hyjf.am.response.trade.BatchCouponTimeoutCommonCustomizeResponse;
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
+import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
 import com.hyjf.am.trade.service.task.CouponRepaySerivce;
+import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
 import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +37,9 @@ public class CouponRepayInterestController {
     @GetMapping("/selectCouponInterestWaitToday/{timeStart}/{timeEnd}")
     public CouponRecoverCustomizeResponse selectCouponInterestWaitToday(@PathVariable long timeStart, @PathVariable long timeEnd) {
         CouponRecoverCustomizeResponse response = new CouponRecoverCustomizeResponse();
-        List<CouponRecoverCustomize> couponRecoverCustomizes = couponRepaySerivce.selectCouponInterestWaitToday(timeStart,timeEnd);
+        List<CouponRecoverCustomize> couponRecoverCustomizes = couponRepaySerivce.selectCouponInterestWaitToday(timeStart, timeEnd);
         if (!CollectionUtils.isEmpty(couponRecoverCustomizes)) {
-            List<CouponRecoverCustomizeVO> couponRecoverCustomizeVOS = CommonUtils.convertBeanList(couponRecoverCustomizes,CouponRecoverCustomizeVO.class);
+            List<CouponRecoverCustomizeVO> couponRecoverCustomizeVOS = CommonUtils.convertBeanList(couponRecoverCustomizes, CouponRecoverCustomizeVO.class);
             response.setResultList(couponRecoverCustomizeVOS);
         }
         return response;
@@ -44,10 +47,21 @@ public class CouponRepayInterestController {
 
     @GetMapping("/selectCouponInterestReceivedToday/{timeStart}/{timeEnd}")
     public BigDecimal selectCouponInterestReceivedToday(@PathVariable long timeStart, @PathVariable long timeEnd) {
-        BigDecimal interestReceived = couponRepaySerivce.selectCouponInterestReceivedToday(timeStart,timeEnd);
+        BigDecimal interestReceived = couponRepaySerivce.selectCouponInterestReceivedToday(timeStart, timeEnd);
         if (interestReceived != null) {
             return interestReceived;
         }
         return null;
+    }
+
+    @GetMapping("/selectCouponQuota/{threeBeginDate}/{threeEndDate}")
+    public BatchCouponTimeoutCommonCustomizeResponse selectCouponQuota(@PathVariable int threeBeginDate, @PathVariable int threeEndDate) {
+        BatchCouponTimeoutCommonCustomizeResponse response = new BatchCouponTimeoutCommonCustomizeResponse();
+        List<BatchCouponTimeoutCommonCustomize> batchCouponTimeoutCommonCustomizes = couponRepaySerivce.selectCouponQuota(threeBeginDate, threeEndDate);
+        if (!CollectionUtils.isEmpty(batchCouponTimeoutCommonCustomizes)) {
+            List<BatchCouponTimeoutCommonCustomizeVO> batchCouponTimeoutCommonCustomizeVOS = CommonUtils.convertBeanList(batchCouponTimeoutCommonCustomizes, BatchCouponTimeoutCommonCustomizeVO.class);
+            response.setResultList(batchCouponTimeoutCommonCustomizeVOS);
+        }
+        return response;
     }
 }

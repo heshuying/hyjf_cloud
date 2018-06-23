@@ -4,6 +4,10 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Web端项目列表Client
@@ -41,6 +45,28 @@ public interface WebProjectListClient {
      */
     public CreditListResponse searchCreditList(CreditListRequest request);
 
+
+    /**
+     * 查询计划专区上部统计数据
+     * @author zhangyk
+     * @date 2018/6/21 15:27
+     */
+    public Map<String,Object>  searchPlanData(ProjectListRequest request);
+
+    /**
+     * 查询计划专区总数据count
+     * @author zhangyk
+     * @date 2018/6/21 15:28
+     */
+    public Integer  countPlanList(ProjectListRequest request);
+
+    /**
+     * 查询计划专区总数据list
+     * @author zhangyk
+     * @date 2018/6/21 15:29
+     */
+    public List<WebProjectListCustomizeVo> searchPlanList(ProjectListRequest request);
+
     // --------------------------- web end  -----------------------------------
 
     /* ************************  app start  **************************************/
@@ -71,7 +97,21 @@ public interface WebProjectListClient {
      * @author zhangyk
      * @date 2018/6/19 16:39
      */
-    public ProjectListResponse searchCreditList(ProjectListRequest request);
+    public ProjectListResponse searchAppCreditList(ProjectListRequest request);
+
+    /**
+     * APP端查询计划数据count
+     * @author zhangyk
+     * @date 2018/6/21 19:17
+     */
+    public Integer countAppPlanList(ProjectListRequest request);
+
+    /**
+     * APP端查询计划数据list
+     * @author zhangyk
+     * @date 2018/6/21 19:17
+     */
+    public List<WebProjectListCustomizeVo> searchAppPlanList(ProjectListRequest request);
     /* ************************  app end  **************************************/
 
 }

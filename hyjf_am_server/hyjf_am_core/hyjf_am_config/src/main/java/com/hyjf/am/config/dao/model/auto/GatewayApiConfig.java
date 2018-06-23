@@ -11,9 +11,9 @@ public class GatewayApiConfig implements Serializable {
 
     private String url;
 
-    private Boolean retryable;
+    private Integer retryable;
 
-    private Boolean enabled;
+    private Integer enabled;
 
     private Integer stripPrefix;
 
@@ -53,19 +53,19 @@ public class GatewayApiConfig implements Serializable {
         this.url = url == null ? null : url.trim();
     }
 
-    public Boolean getRetryable() {
+    public Integer getRetryable() {
         return retryable;
     }
 
-    public void setRetryable(Boolean retryable) {
+    public void setRetryable(Integer retryable) {
         this.retryable = retryable;
     }
 
-    public Boolean getEnabled() {
+    public Integer getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(Integer enabled) {
         this.enabled = enabled;
     }
 

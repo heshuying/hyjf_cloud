@@ -2,7 +2,10 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+
+import java.util.List;
 
 /**
  * @Description 标的操作
@@ -27,4 +30,10 @@ public interface AmBorrowClient {
      * @Date 2018/6/22 10:34
      */
     boolean insertHJHPlanAccede(HjhAccedeVO planAccede);
+
+    /**
+     * 检索正在还款中的标的
+     * @return
+     */
+    List<BorrowVO> selectBorrowList();
 }

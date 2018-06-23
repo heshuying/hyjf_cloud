@@ -1,35 +1,34 @@
 package com.hyjf.am.config.dao.model.auto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class BankConfig implements Serializable {
     private Integer id;
 
-    private Integer bankId;
+    private String name;
 
-    private String bankName;
+    private String code;
 
-    private String payAllianceCode;
+    private String appLogo;
 
-    private String bankCode;
+    private String logo;
 
-    private String bankIcon;
+    private Integer personalEbank;
 
-    private String bankLogo;
+    private Integer enterpriseEbank;
 
     private Integer quickPayment;
 
-    private BigDecimal singleQuota;
+    private Integer immediatelyWithdraw;
 
-    private BigDecimal singleCardQuota;
+    private Integer quickWithdraw;
 
-    private BigDecimal feeWithdraw;
+    private Integer normalWithdraw;
 
-    private Short sortId;
+    private Integer withdrawDefaulttype;
 
-    private String remark;
+    private Integer status;
 
     private Integer createUserId;
 
@@ -38,10 +37,6 @@ public class BankConfig implements Serializable {
     private Date createTime;
 
     private Date updateTime;
-
-    private Integer delFlag;
-
-    private BigDecimal monthCardQuota;
 
     private static final long serialVersionUID = 1L;
 
@@ -53,52 +48,52 @@ public class BankConfig implements Serializable {
         this.id = id;
     }
 
-    public Integer getBankId() {
-        return bankId;
+    public String getName() {
+        return name;
     }
 
-    public void setBankId(Integer bankId) {
-        this.bankId = bankId;
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
-    public String getBankName() {
-        return bankName;
+    public String getCode() {
+        return code;
     }
 
-    public void setBankName(String bankName) {
-        this.bankName = bankName == null ? null : bankName.trim();
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
     }
 
-    public String getPayAllianceCode() {
-        return payAllianceCode;
+    public String getAppLogo() {
+        return appLogo;
     }
 
-    public void setPayAllianceCode(String payAllianceCode) {
-        this.payAllianceCode = payAllianceCode == null ? null : payAllianceCode.trim();
+    public void setAppLogo(String appLogo) {
+        this.appLogo = appLogo == null ? null : appLogo.trim();
     }
 
-    public String getBankCode() {
-        return bankCode;
+    public String getLogo() {
+        return logo;
     }
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode == null ? null : bankCode.trim();
+    public void setLogo(String logo) {
+        this.logo = logo == null ? null : logo.trim();
     }
 
-    public String getBankIcon() {
-        return bankIcon;
+    public Integer getPersonalEbank() {
+        return personalEbank;
     }
 
-    public void setBankIcon(String bankIcon) {
-        this.bankIcon = bankIcon == null ? null : bankIcon.trim();
+    public void setPersonalEbank(Integer personalEbank) {
+        this.personalEbank = personalEbank;
     }
 
-    public String getBankLogo() {
-        return bankLogo;
+    public Integer getEnterpriseEbank() {
+        return enterpriseEbank;
     }
 
-    public void setBankLogo(String bankLogo) {
-        this.bankLogo = bankLogo == null ? null : bankLogo.trim();
+    public void setEnterpriseEbank(Integer enterpriseEbank) {
+        this.enterpriseEbank = enterpriseEbank;
     }
 
     public Integer getQuickPayment() {
@@ -109,44 +104,44 @@ public class BankConfig implements Serializable {
         this.quickPayment = quickPayment;
     }
 
-    public BigDecimal getSingleQuota() {
-        return singleQuota;
+    public Integer getImmediatelyWithdraw() {
+        return immediatelyWithdraw;
     }
 
-    public void setSingleQuota(BigDecimal singleQuota) {
-        this.singleQuota = singleQuota;
+    public void setImmediatelyWithdraw(Integer immediatelyWithdraw) {
+        this.immediatelyWithdraw = immediatelyWithdraw;
     }
 
-    public BigDecimal getSingleCardQuota() {
-        return singleCardQuota;
+    public Integer getQuickWithdraw() {
+        return quickWithdraw;
     }
 
-    public void setSingleCardQuota(BigDecimal singleCardQuota) {
-        this.singleCardQuota = singleCardQuota;
+    public void setQuickWithdraw(Integer quickWithdraw) {
+        this.quickWithdraw = quickWithdraw;
     }
 
-    public BigDecimal getFeeWithdraw() {
-        return feeWithdraw;
+    public Integer getNormalWithdraw() {
+        return normalWithdraw;
     }
 
-    public void setFeeWithdraw(BigDecimal feeWithdraw) {
-        this.feeWithdraw = feeWithdraw;
+    public void setNormalWithdraw(Integer normalWithdraw) {
+        this.normalWithdraw = normalWithdraw;
     }
 
-    public Short getSortId() {
-        return sortId;
+    public Integer getWithdrawDefaulttype() {
+        return withdrawDefaulttype;
     }
 
-    public void setSortId(Short sortId) {
-        this.sortId = sortId;
+    public void setWithdrawDefaulttype(Integer withdrawDefaulttype) {
+        this.withdrawDefaulttype = withdrawDefaulttype;
     }
 
-    public String getRemark() {
-        return remark;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getCreateUserId() {
@@ -179,21 +174,5 @@ public class BankConfig implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-    }
-
-    public BigDecimal getMonthCardQuota() {
-        return monthCardQuota;
-    }
-
-    public void setMonthCardQuota(BigDecimal monthCardQuota) {
-        this.monthCardQuota = monthCardQuota;
     }
 }

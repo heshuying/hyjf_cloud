@@ -21,7 +21,7 @@
     <result column="add_time" property="addTime" jdbcType="INTEGER" />
     <result column="count_interest_time" property="countInterestTime" jdbcType="INTEGER" />
     <result column="send_status" property="sendStatus" jdbcType="TINYINT" />
-    <result column="lock_period" property="lockPeriod" jdbcType="TINYINT" />
+    <result column="lock_period" property="lockPeriod" jdbcType="INTEGER" />
     <result column="commission_status" property="commissionStatus" jdbcType="TINYINT" />
     <result column="commission_count_time" property="commissionCountTime" jdbcType="INTEGER" />
     <result column="available_invest_account" property="availableInvestAccount" jdbcType="DECIMAL" />
@@ -41,10 +41,10 @@
     <result column="should_pay_capital" property="shouldPayCapital" jdbcType="DECIMAL" />
     <result column="should_pay_interest" property="shouldPayInterest" jdbcType="DECIMAL" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -112,7 +112,7 @@
     available_invest_account, end_date, credit_complete_flag, frost_account, wait_total, 
     wait_captical, wait_interest, received_total, received_interest, received_capital, 
     quit_time, last_payment_time, acctual_payment_time, should_pay_total, should_pay_capital, 
-    should_pay_interest, create_user, create_time, update_user, update_time, del_flag
+    should_pay_interest, create_user, update_user, del_flag, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccedeExample" >
     select
@@ -164,23 +164,23 @@
       received_total, received_interest, received_capital, 
       quit_time, last_payment_time, acctual_payment_time, 
       should_pay_total, should_pay_capital, should_pay_interest, 
-      create_user, create_time, update_user, 
-      update_time, del_flag)
+      create_user, update_user, del_flag, 
+      create_time, update_time)
     values (#{accedeOrderId,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{userName,jdbcType=VARCHAR}, #{userAttribute,jdbcType=INTEGER}, #{inviteUserId,jdbcType=INTEGER}, 
       #{inviteUserName,jdbcType=VARCHAR}, #{inviteUserAttribute,jdbcType=INTEGER}, #{inviteUserRegionname,jdbcType=VARCHAR}, 
       #{inviteUserBranchname,jdbcType=VARCHAR}, #{inviteUserDepartmentname,jdbcType=VARCHAR}, 
       #{accedeAccount,jdbcType=DECIMAL}, #{alreadyInvest,jdbcType=DECIMAL}, #{client,jdbcType=TINYINT}, 
       #{orderStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{countInterestTime,jdbcType=INTEGER}, 
-      #{sendStatus,jdbcType=TINYINT}, #{lockPeriod,jdbcType=TINYINT}, #{commissionStatus,jdbcType=TINYINT}, 
+      #{sendStatus,jdbcType=TINYINT}, #{lockPeriod,jdbcType=INTEGER}, #{commissionStatus,jdbcType=TINYINT}, 
       #{commissionCountTime,jdbcType=INTEGER}, #{availableInvestAccount,jdbcType=DECIMAL}, 
       #{endDate,jdbcType=DATE}, #{creditCompleteFlag,jdbcType=TINYINT}, #{frostAccount,jdbcType=DECIMAL}, 
       #{waitTotal,jdbcType=DECIMAL}, #{waitCaptical,jdbcType=DECIMAL}, #{waitInterest,jdbcType=DECIMAL}, 
       #{receivedTotal,jdbcType=DECIMAL}, #{receivedInterest,jdbcType=DECIMAL}, #{receivedCapital,jdbcType=DECIMAL}, 
       #{quitTime,jdbcType=INTEGER}, #{lastPaymentTime,jdbcType=INTEGER}, #{acctualPaymentTime,jdbcType=INTEGER}, 
       #{shouldPayTotal,jdbcType=DECIMAL}, #{shouldPayCapital,jdbcType=DECIMAL}, #{shouldPayInterest,jdbcType=DECIMAL}, 
-      #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT})
+      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -302,17 +302,17 @@
       <if test="createUser != null" >
         create_user,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="updateUser != null" >
         update_user,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="delFlag != null" >
         del_flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -371,7 +371,7 @@
         #{sendStatus,jdbcType=TINYINT},
       </if>
       <if test="lockPeriod != null" >
-        #{lockPeriod,jdbcType=TINYINT},
+        #{lockPeriod,jdbcType=INTEGER},
       </if>
       <if test="commissionStatus != null" >
         #{commissionStatus,jdbcType=TINYINT},
@@ -430,17 +430,17 @@
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -511,7 +511,7 @@
         send_status = #{record.sendStatus,jdbcType=TINYINT},
       </if>
       <if test="record.lockPeriod != null" >
-        lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+        lock_period = #{record.lockPeriod,jdbcType=INTEGER},
       </if>
       <if test="record.commissionStatus != null" >
         commission_status = #{record.commissionStatus,jdbcType=TINYINT},
@@ -570,17 +570,17 @@
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -608,7 +608,7 @@
       add_time = #{record.addTime,jdbcType=INTEGER},
       count_interest_time = #{record.countInterestTime,jdbcType=INTEGER},
       send_status = #{record.sendStatus,jdbcType=TINYINT},
-      lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+      lock_period = #{record.lockPeriod,jdbcType=INTEGER},
       commission_status = #{record.commissionStatus,jdbcType=TINYINT},
       commission_count_time = #{record.commissionCountTime,jdbcType=INTEGER},
       available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
@@ -628,10 +628,10 @@
       should_pay_capital = #{record.shouldPayCapital,jdbcType=DECIMAL},
       should_pay_interest = #{record.shouldPayInterest,jdbcType=DECIMAL},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user = #{record.updateUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      del_flag = #{record.delFlag,jdbcType=TINYINT}
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -694,7 +694,7 @@
         send_status = #{sendStatus,jdbcType=TINYINT},
       </if>
       <if test="lockPeriod != null" >
-        lock_period = #{lockPeriod,jdbcType=TINYINT},
+        lock_period = #{lockPeriod,jdbcType=INTEGER},
       </if>
       <if test="commissionStatus != null" >
         commission_status = #{commissionStatus,jdbcType=TINYINT},
@@ -753,17 +753,17 @@
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -788,7 +788,7 @@
       add_time = #{addTime,jdbcType=INTEGER},
       count_interest_time = #{countInterestTime,jdbcType=INTEGER},
       send_status = #{sendStatus,jdbcType=TINYINT},
-      lock_period = #{lockPeriod,jdbcType=TINYINT},
+      lock_period = #{lockPeriod,jdbcType=INTEGER},
       commission_status = #{commissionStatus,jdbcType=TINYINT},
       commission_count_time = #{commissionCountTime,jdbcType=INTEGER},
       available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
@@ -808,10 +808,10 @@
       should_pay_capital = #{shouldPayCapital,jdbcType=DECIMAL},
       should_pay_interest = #{shouldPayInterest,jdbcType=DECIMAL},
       create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=TINYINT}
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

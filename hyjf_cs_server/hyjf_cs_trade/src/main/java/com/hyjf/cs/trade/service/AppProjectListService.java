@@ -23,9 +23,16 @@ public interface AppProjectListService extends BaseTradeService{
 
 
     /**
-     *  获取移动端散标专区债转列表
+     *  获取移动端债转列表
      * @author zhangyk
      * @date 2018/6/20 15:26
      */
     public AppResult searchAppCreditList(ProjectListRequest request);
+
+    /**
+     * 移动端计划列表
+     * @author zhangyk
+     * @date 2018/6/21 19:12
+     */
+    public AppResult searchAppPlanList(ProjectListRequest request);
 }

@@ -118,7 +118,7 @@ public class RtbRepayController {
 					replaceStrs.put("val_title", borrowApicron.getBorrowNid());
 					replaceStrs.put("val_time", GetDate.formatTime());
 					SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null,
-							MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS,
+							MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS,
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(
@@ -168,7 +168,7 @@ public class RtbRepayController {
 				replaceStrs.put("val_period", isMonth ? "第" + borrowApicron.getPeriodNow() + "期" : "");
 				replaceStrs.put("val_package_error", String.valueOf(errorCnt));
 
-				SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER,
+				SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER,
 						null, CustomConstants.PARAM_TPL_HUANKUAN_FAILD, CustomConstants.CHANNEL_TYPE_NORMAL);
 				try {
 					smsProducer.messageSend(
@@ -222,7 +222,7 @@ public class RtbRepayController {
 		}
 		MailMessage mailMessage = new MailMessage(null, null,
 				borrowNid + "-" + periodNow + "融通宝加息还款,第" + runCnt + "次还款失败", msg.toString(), null, toMail, null,
-				MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+				MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 		try {
 			mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));
 		} catch (MQException e) {

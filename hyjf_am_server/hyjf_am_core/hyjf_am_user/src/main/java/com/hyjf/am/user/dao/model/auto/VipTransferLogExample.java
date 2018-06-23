@@ -1,6 +1,5 @@
 package com.hyjf.am.user.dao.model.auto;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -525,52 +524,52 @@ public class VipTransferLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtEqualTo(BigDecimal value) {
+        public Criteria andTransAmtEqualTo(Long value) {
             addCriterion("trans_amt =", value, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtNotEqualTo(BigDecimal value) {
+        public Criteria andTransAmtNotEqualTo(Long value) {
             addCriterion("trans_amt <>", value, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtGreaterThan(BigDecimal value) {
+        public Criteria andTransAmtGreaterThan(Long value) {
             addCriterion("trans_amt >", value, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andTransAmtGreaterThanOrEqualTo(Long value) {
             addCriterion("trans_amt >=", value, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtLessThan(BigDecimal value) {
+        public Criteria andTransAmtLessThan(Long value) {
             addCriterion("trans_amt <", value, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andTransAmtLessThanOrEqualTo(Long value) {
             addCriterion("trans_amt <=", value, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtIn(List<BigDecimal> values) {
+        public Criteria andTransAmtIn(List<Long> values) {
             addCriterion("trans_amt in", values, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtNotIn(List<BigDecimal> values) {
+        public Criteria andTransAmtNotIn(List<Long> values) {
             addCriterion("trans_amt not in", values, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andTransAmtBetween(Long value1, Long value2) {
             addCriterion("trans_amt between", value1, value2, "transAmt");
             return (Criteria) this;
         }
 
-        public Criteria andTransAmtNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andTransAmtNotBetween(Long value1, Long value2) {
             addCriterion("trans_amt not between", value1, value2, "transAmt");
             return (Criteria) this;
         }

@@ -51,7 +51,7 @@ public class UserController {
 			if (user == null) {
 				userResponse.setRtn(Response.FAIL);
 				userResponse.setMessage(Response.FAIL_MSG);
-				logger.error("user register error,user " + userRequest.getMobilephone());
+				logger.error("user register error,user " + userRequest.getMobile());
 			} else {
 				UserVO userVO = new UserVO();
 				BeanUtils.copyProperties(user, userVO);
@@ -64,6 +64,23 @@ public class UserController {
 		}
 
 		return userResponse;
+	}
+
+	/**
+	 *  根据渠道号检索渠道是否存在
+	 * @param utmId
+	 * @return
+	 */
+	@RequestMapping("/selectUtmPlatByUtmId/{utmId}")
+	public UtmPlatResponse selectUtmPlatByUtmId(String utmId){
+		UtmPlat utmPlat = userService.selectUtmPlatByUtmId(utmId);
+		UtmPlatResponse response = new UtmPlatResponse();
+		if(null!= utmPlat){
+			UtmPlatVO utmPlatVO = new UtmPlatVO();
+			BeanUtils.copyProperties(utmPlat,utmPlatVO);
+			response.setResult(utmPlatVO);
+		}
+		return response;
 	}
 
 	/**

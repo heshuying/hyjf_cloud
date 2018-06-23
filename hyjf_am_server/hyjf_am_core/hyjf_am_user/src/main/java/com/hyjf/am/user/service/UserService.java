@@ -72,6 +72,8 @@ public interface UserService {
 
 	void updateLoginUser(int userId, String ip);
 
+	UtmPlat selectUtmPlatByUtmId(String utmId);
+
 	HjhUserAuth getHjhUserAuthByUserId(Integer userId);
 
 	void insertSelective(HjhUserAuthLog hjhUserAuthLog);

@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface AmUserClient {
 
-	UserVO findUserById(Integer userId);
+	UserVO findUserById(int userId);
 
 	UserInfoVO findUsersInfoById(int userId);
 
@@ -74,4 +74,27 @@ public interface AmUserClient {
      * @return
      */
     boolean updateFirstUtmReg(Map<String,Object> params);
+
+	/**
+	 *	用户详细信息 add by jijun 20180622
+	 * @param userId
+	 * @return
+	 */
+	UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId);
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUserVO querySpreadsUsersByUserId(Integer userId);
+
+	/**
+	 * 获取员工信息
+	 * @param userId
+	 * @return
+	 */
+	EmployeeCustomizeVO selectEmployeeByUserId(Integer userId);
+
+
 }
