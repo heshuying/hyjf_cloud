@@ -5,7 +5,7 @@
     <id column="uuid" property="uuid" jdbcType="VARCHAR" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="recover_id" property="recoverId" jdbcType="INTEGER" />
-    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="respcode" property="respcode" jdbcType="VARCHAR" />
     <result column="trans_amt" property="transAmt" jdbcType="DECIMAL" />
@@ -15,7 +15,7 @@
     <result column="acct_id" property="acctId" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="add_user" property="addUser" jdbcType="VARCHAR" />
     <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
     <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
@@ -145,27 +145,30 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.TransferExceptionLogWithBLOBs" >
-    insert into ht_transfer_exception_log (uuid, order_id, recover_id, 
-      `type`, `status`, respcode, 
-      trans_amt, account_id, seq_no, 
-      cus_id, acct_id, user_id, 
-      remark, del_flag, add_user, 
-      update_user, add_time, update_time, 
-      content, `result`)
-    values (#{uuid,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{recoverId,jdbcType=INTEGER}, 
-      #{type,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{respcode,jdbcType=VARCHAR}, 
-      #{transAmt,jdbcType=DECIMAL}, #{accountId,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, 
-      #{cusId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
-      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=BIT}, #{addUser,jdbcType=VARCHAR}, 
-      #{updateUser,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{content,jdbcType=LONGVARCHAR}, #{result,jdbcType=LONGVARCHAR})
+    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_transfer_exception_log (order_id, recover_id, `type`, 
+      `status`, respcode, trans_amt, 
+      account_id, seq_no, cus_id, 
+      acct_id, user_id, remark, 
+      del_flag, add_user, update_user, 
+      add_time, update_time, content, 
+      `result`)
+    values (#{orderId,jdbcType=VARCHAR}, #{recoverId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{respcode,jdbcType=VARCHAR}, #{transAmt,jdbcType=DECIMAL}, 
+      #{accountId,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, #{cusId,jdbcType=VARCHAR}, 
+      #{acctId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=TINYINT}, #{addUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}, 
+      #{result,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.TransferExceptionLogWithBLOBs" >
+    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_transfer_exception_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="uuid != null" >
-        uuid,
-      </if>
       <if test="orderId != null" >
         order_id,
       </if>
@@ -225,9 +228,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="uuid != null" >
-        #{uuid,jdbcType=VARCHAR},
-      </if>
       <if test="orderId != null" >
         #{orderId,jdbcType=VARCHAR},
       </if>
@@ -235,7 +235,7 @@
         #{recoverId,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
-        #{type,jdbcType=TINYINT},
+        #{type,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
@@ -265,7 +265,7 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=BIT},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="addUser != null" >
         #{addUser,jdbcType=VARCHAR},
@@ -306,7 +306,7 @@
         recover_id = #{record.recoverId,jdbcType=INTEGER},
       </if>
       <if test="record.type != null" >
-        `type` = #{record.type,jdbcType=TINYINT},
+        `type` = #{record.type,jdbcType=INTEGER},
       </if>
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
@@ -336,7 +336,7 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=BIT},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.addUser != null" >
         add_user = #{record.addUser,jdbcType=VARCHAR},
@@ -366,7 +366,7 @@
     set uuid = #{record.uuid,jdbcType=VARCHAR},
       order_id = #{record.orderId,jdbcType=VARCHAR},
       recover_id = #{record.recoverId,jdbcType=INTEGER},
-      `type` = #{record.type,jdbcType=TINYINT},
+      `type` = #{record.type,jdbcType=INTEGER},
       `status` = #{record.status,jdbcType=TINYINT},
       respcode = #{record.respcode,jdbcType=VARCHAR},
       trans_amt = #{record.transAmt,jdbcType=DECIMAL},
@@ -376,7 +376,7 @@
       acct_id = #{record.acctId,jdbcType=VARCHAR},
       user_id = #{record.userId,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=BIT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       add_user = #{record.addUser,jdbcType=VARCHAR},
       update_user = #{record.updateUser,jdbcType=VARCHAR},
       add_time = #{record.addTime,jdbcType=TIMESTAMP},
@@ -392,7 +392,7 @@
     set uuid = #{record.uuid,jdbcType=VARCHAR},
       order_id = #{record.orderId,jdbcType=VARCHAR},
       recover_id = #{record.recoverId,jdbcType=INTEGER},
-      `type` = #{record.type,jdbcType=TINYINT},
+      `type` = #{record.type,jdbcType=INTEGER},
       `status` = #{record.status,jdbcType=TINYINT},
       respcode = #{record.respcode,jdbcType=VARCHAR},
       trans_amt = #{record.transAmt,jdbcType=DECIMAL},
@@ -402,7 +402,7 @@
       acct_id = #{record.acctId,jdbcType=VARCHAR},
       user_id = #{record.userId,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=BIT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       add_user = #{record.addUser,jdbcType=VARCHAR},
       update_user = #{record.updateUser,jdbcType=VARCHAR},
       add_time = #{record.addTime,jdbcType=TIMESTAMP},
@@ -421,7 +421,7 @@
         recover_id = #{recoverId,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
-        `type` = #{type,jdbcType=TINYINT},
+        `type` = #{type,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
@@ -451,7 +451,7 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=BIT},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="addUser != null" >
         add_user = #{addUser,jdbcType=VARCHAR},
@@ -478,7 +478,7 @@
     update ht_transfer_exception_log
     set order_id = #{orderId,jdbcType=VARCHAR},
       recover_id = #{recoverId,jdbcType=INTEGER},
-      `type` = #{type,jdbcType=TINYINT},
+      `type` = #{type,jdbcType=INTEGER},
       `status` = #{status,jdbcType=TINYINT},
       respcode = #{respcode,jdbcType=VARCHAR},
       trans_amt = #{transAmt,jdbcType=DECIMAL},
@@ -488,7 +488,7 @@
       acct_id = #{acctId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=BIT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       add_user = #{addUser,jdbcType=VARCHAR},
       update_user = #{updateUser,jdbcType=VARCHAR},
       add_time = #{addTime,jdbcType=TIMESTAMP},
@@ -501,7 +501,7 @@
     update ht_transfer_exception_log
     set order_id = #{orderId,jdbcType=VARCHAR},
       recover_id = #{recoverId,jdbcType=INTEGER},
-      `type` = #{type,jdbcType=TINYINT},
+      `type` = #{type,jdbcType=INTEGER},
       `status` = #{status,jdbcType=TINYINT},
       respcode = #{respcode,jdbcType=VARCHAR},
       trans_amt = #{transAmt,jdbcType=DECIMAL},
@@ -511,7 +511,7 @@
       acct_id = #{acctId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=BIT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       add_user = #{addUser,jdbcType=VARCHAR},
       update_user = #{updateUser,jdbcType=VARCHAR},
       add_time = #{addTime,jdbcType=TIMESTAMP},

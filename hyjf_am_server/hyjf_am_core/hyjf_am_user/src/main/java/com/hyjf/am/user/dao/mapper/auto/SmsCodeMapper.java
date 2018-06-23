@@ -1,30 +1,30 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import com.hyjf.am.user.dao.model.auto.SmsCode;
-import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
+import com.hyjf.am.user.dao.model.auto.Smscode;
+import com.hyjf.am.user.dao.model.auto.SmscodeExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface SmsCodeMapper {
-    int countByExample(SmsCodeExample example);
+public interface SmscodeMapper {
+    int countByExample(SmscodeExample example);
 
-    int deleteByExample(SmsCodeExample example);
+    int deleteByExample(SmscodeExample example);
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(SmsCode record);
+    int insert(Smscode record);
 
-    int insertSelective(SmsCode record);
+    int insertSelective(Smscode record);
 
-    List<SmsCode> selectByExample(SmsCodeExample example);
+    List<Smscode> selectByExample(SmscodeExample example);
 
-    SmsCode selectByPrimaryKey(Integer id);
+    Smscode selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") SmsCode record, @Param("example") SmsCodeExample example);
+    int updateByExampleSelective(@Param("record") Smscode record, @Param("example") SmscodeExample example);
 
-    int updateByExample(@Param("record") SmsCode record, @Param("example") SmsCodeExample example);
+    int updateByExample(@Param("record") Smscode record, @Param("example") SmscodeExample example);
 
-    int updateByPrimaryKeySelective(SmsCode record);
+    int updateByPrimaryKeySelective(Smscode record);
 
-    int updateByPrimaryKey(SmsCode record);
+    int updateByPrimaryKey(Smscode record);
 }

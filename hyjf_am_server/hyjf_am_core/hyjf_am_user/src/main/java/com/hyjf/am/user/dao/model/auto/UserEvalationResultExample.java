@@ -395,52 +395,52 @@ public class UserEvalationResultExample {
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountEqualTo(Byte value) {
+        public Criteria andScoreCountEqualTo(Integer value) {
             addCriterion("score_count =", value, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountNotEqualTo(Byte value) {
+        public Criteria andScoreCountNotEqualTo(Integer value) {
             addCriterion("score_count <>", value, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountGreaterThan(Byte value) {
+        public Criteria andScoreCountGreaterThan(Integer value) {
             addCriterion("score_count >", value, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountGreaterThanOrEqualTo(Byte value) {
+        public Criteria andScoreCountGreaterThanOrEqualTo(Integer value) {
             addCriterion("score_count >=", value, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountLessThan(Byte value) {
+        public Criteria andScoreCountLessThan(Integer value) {
             addCriterion("score_count <", value, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountLessThanOrEqualTo(Byte value) {
+        public Criteria andScoreCountLessThanOrEqualTo(Integer value) {
             addCriterion("score_count <=", value, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountIn(List<Byte> values) {
+        public Criteria andScoreCountIn(List<Integer> values) {
             addCriterion("score_count in", values, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountNotIn(List<Byte> values) {
+        public Criteria andScoreCountNotIn(List<Integer> values) {
             addCriterion("score_count not in", values, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountBetween(Byte value1, Byte value2) {
+        public Criteria andScoreCountBetween(Integer value1, Integer value2) {
             addCriterion("score_count between", value1, value2, "scoreCount");
             return (Criteria) this;
         }
 
-        public Criteria andScoreCountNotBetween(Byte value1, Byte value2) {
+        public Criteria andScoreCountNotBetween(Integer value1, Integer value2) {
             addCriterion("score_count not between", value1, value2, "scoreCount");
             return (Criteria) this;
         }

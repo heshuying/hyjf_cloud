@@ -1076,52 +1076,52 @@ public class BorrowFinmanNewChargeExample {
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysEqualTo(Byte value) {
+        public Criteria andLateFreeDaysEqualTo(Integer value) {
             addCriterion("late_free_days =", value, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysNotEqualTo(Byte value) {
+        public Criteria andLateFreeDaysNotEqualTo(Integer value) {
             addCriterion("late_free_days <>", value, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysGreaterThan(Byte value) {
+        public Criteria andLateFreeDaysGreaterThan(Integer value) {
             addCriterion("late_free_days >", value, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysGreaterThanOrEqualTo(Byte value) {
+        public Criteria andLateFreeDaysGreaterThanOrEqualTo(Integer value) {
             addCriterion("late_free_days >=", value, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysLessThan(Byte value) {
+        public Criteria andLateFreeDaysLessThan(Integer value) {
             addCriterion("late_free_days <", value, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysLessThanOrEqualTo(Byte value) {
+        public Criteria andLateFreeDaysLessThanOrEqualTo(Integer value) {
             addCriterion("late_free_days <=", value, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysIn(List<Byte> values) {
+        public Criteria andLateFreeDaysIn(List<Integer> values) {
             addCriterion("late_free_days in", values, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysNotIn(List<Byte> values) {
+        public Criteria andLateFreeDaysNotIn(List<Integer> values) {
             addCriterion("late_free_days not in", values, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysBetween(Byte value1, Byte value2) {
+        public Criteria andLateFreeDaysBetween(Integer value1, Integer value2) {
             addCriterion("late_free_days between", value1, value2, "lateFreeDays");
             return (Criteria) this;
         }
 
-        public Criteria andLateFreeDaysNotBetween(Byte value1, Byte value2) {
+        public Criteria andLateFreeDaysNotBetween(Integer value1, Integer value2) {
             addCriterion("late_free_days not between", value1, value2, "lateFreeDays");
             return (Criteria) this;
         }

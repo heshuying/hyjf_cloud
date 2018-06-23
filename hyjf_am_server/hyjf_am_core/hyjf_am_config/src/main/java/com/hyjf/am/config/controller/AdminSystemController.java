@@ -49,7 +49,7 @@ public class AdminSystemController {
      * @param AdminSystemRequest
      * @return
      */
-    @GetMapping("/getuser")
+    @RequestMapping("/getuser")
     public AdminSystemResponse getuser(@RequestBody AdminSystemRequest adminSystemR){
     	AdminSystemResponse asr=new AdminSystemResponse();
 		AdminSystem adminSystem = new AdminSystem();

@@ -15,7 +15,7 @@
     <result column="tender_time" property="tenderTime" jdbcType="INTEGER" />
     <result column="send_time" property="sendTime" jdbcType="INTEGER" />
     <result column="commission" property="commission" jdbcType="DECIMAL" />
-    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="compute_time" property="computeTime" jdbcType="INTEGER" />
     <result column="region_id" property="regionId" jdbcType="INTEGER" />
@@ -24,7 +24,7 @@
     <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
     <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
-    <result column="check_status" property="checkStatus" jdbcType="TINYINT" />
+    <result column="check_status" property="checkStatus" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -140,10 +140,10 @@
       #{tenderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{departmentId,jdbcType=INTEGER}, 
       #{tenderUserId,jdbcType=INTEGER}, #{tenderDepartmentId,jdbcType=INTEGER}, #{accountTender,jdbcType=DECIMAL}, 
       #{tenderTime,jdbcType=INTEGER}, #{sendTime,jdbcType=INTEGER}, #{commission,jdbcType=DECIMAL}, 
-      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{computeTime,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{computeTime,jdbcType=INTEGER}, 
       #{regionId,jdbcType=INTEGER}, #{branchId,jdbcType=INTEGER}, #{regionName,jdbcType=VARCHAR}, 
       #{branchName,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, 
-      #{checkStatus,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP})
+      #{checkStatus,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.TenderCommission" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -259,7 +259,7 @@
         #{commission,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=TINYINT},
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -286,7 +286,7 @@
         #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="checkStatus != null" >
-        #{checkStatus,jdbcType=TINYINT},
+        #{checkStatus,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -342,7 +342,7 @@
         commission = #{record.commission,jdbcType=DECIMAL},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=TINYINT},
+        `status` = #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -369,7 +369,7 @@
         account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
       <if test="record.checkStatus != null" >
-        check_status = #{record.checkStatus,jdbcType=TINYINT},
+        check_status = #{record.checkStatus,jdbcType=INTEGER},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -394,7 +394,7 @@
       tender_time = #{record.tenderTime,jdbcType=INTEGER},
       send_time = #{record.sendTime,jdbcType=INTEGER},
       commission = #{record.commission,jdbcType=DECIMAL},
-      `status` = #{record.status,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
       compute_time = #{record.computeTime,jdbcType=INTEGER},
       region_id = #{record.regionId,jdbcType=INTEGER},
@@ -403,7 +403,7 @@
       branch_name = #{record.branchName,jdbcType=VARCHAR},
       department_name = #{record.departmentName,jdbcType=VARCHAR},
       account_id = #{record.accountId,jdbcType=VARCHAR},
-      check_status = #{record.checkStatus,jdbcType=TINYINT},
+      check_status = #{record.checkStatus,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -449,7 +449,7 @@
         commission = #{commission,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=TINYINT},
+        `status` = #{status,jdbcType=INTEGER},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -476,7 +476,7 @@
         account_id = #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="checkStatus != null" >
-        check_status = #{checkStatus,jdbcType=TINYINT},
+        check_status = #{checkStatus,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -498,7 +498,7 @@
       tender_time = #{tenderTime,jdbcType=INTEGER},
       send_time = #{sendTime,jdbcType=INTEGER},
       commission = #{commission,jdbcType=DECIMAL},
-      `status` = #{status,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       compute_time = #{computeTime,jdbcType=INTEGER},
       region_id = #{regionId,jdbcType=INTEGER},
@@ -507,7 +507,7 @@
       branch_name = #{branchName,jdbcType=VARCHAR},
       department_name = #{departmentName,jdbcType=VARCHAR},
       account_id = #{accountId,jdbcType=VARCHAR},
-      check_status = #{checkStatus,jdbcType=TINYINT},
+      check_status = #{checkStatus,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

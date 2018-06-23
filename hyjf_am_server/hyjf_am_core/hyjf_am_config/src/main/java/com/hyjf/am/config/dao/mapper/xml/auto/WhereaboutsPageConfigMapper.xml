@@ -8,7 +8,7 @@
     <result column="referrer" property="referrer" jdbcType="INTEGER" />
     <result column="top_button" property="topButton" jdbcType="VARCHAR" />
     <result column="jump_path" property="jumpPath" jdbcType="VARCHAR" />
-    <result column="bottom_button_status" property="bottomButtonStatus" jdbcType="BIT" />
+    <result column="bottom_button_status" property="bottomButtonStatus" jdbcType="TINYINT" />
     <result column="bottom_button" property="bottomButton" jdbcType="VARCHAR" />
     <result column="download_path" property="downloadPath" jdbcType="VARCHAR" />
     <result column="describe" property="describe" jdbcType="VARCHAR" />
@@ -128,7 +128,7 @@
       del_flag, create_user_id, update_user_id, 
       create_time, update_time)
     values (#{title,jdbcType=VARCHAR}, #{utmId,jdbcType=INTEGER}, #{referrer,jdbcType=INTEGER}, 
-      #{topButton,jdbcType=VARCHAR}, #{jumpPath,jdbcType=VARCHAR}, #{bottomButtonStatus,jdbcType=BIT}, 
+      #{topButton,jdbcType=VARCHAR}, #{jumpPath,jdbcType=VARCHAR}, #{bottomButtonStatus,jdbcType=TINYINT}, 
       #{bottomButton,jdbcType=VARCHAR}, #{downloadPath,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{style,jdbcType=INTEGER}, #{statusOn,jdbcType=TINYINT}, 
       #{delFlag,jdbcType=BIT}, #{createUserId,jdbcType=VARCHAR}, #{updateUserId,jdbcType=VARCHAR}, 
@@ -209,7 +209,7 @@
         #{jumpPath,jdbcType=VARCHAR},
       </if>
       <if test="bottomButtonStatus != null" >
-        #{bottomButtonStatus,jdbcType=BIT},
+        #{bottomButtonStatus,jdbcType=TINYINT},
       </if>
       <if test="bottomButton != null" >
         #{bottomButton,jdbcType=VARCHAR},
@@ -274,7 +274,7 @@
         jump_path = #{record.jumpPath,jdbcType=VARCHAR},
       </if>
       <if test="record.bottomButtonStatus != null" >
-        bottom_button_status = #{record.bottomButtonStatus,jdbcType=BIT},
+        bottom_button_status = #{record.bottomButtonStatus,jdbcType=TINYINT},
       </if>
       <if test="record.bottomButton != null" >
         bottom_button = #{record.bottomButton,jdbcType=VARCHAR},
@@ -322,7 +322,7 @@
       referrer = #{record.referrer,jdbcType=INTEGER},
       top_button = #{record.topButton,jdbcType=VARCHAR},
       jump_path = #{record.jumpPath,jdbcType=VARCHAR},
-      bottom_button_status = #{record.bottomButtonStatus,jdbcType=BIT},
+      bottom_button_status = #{record.bottomButtonStatus,jdbcType=TINYINT},
       bottom_button = #{record.bottomButton,jdbcType=VARCHAR},
       download_path = #{record.downloadPath,jdbcType=VARCHAR},
       `describe` = #{record.describe,jdbcType=VARCHAR},
@@ -357,7 +357,7 @@
         jump_path = #{jumpPath,jdbcType=VARCHAR},
       </if>
       <if test="bottomButtonStatus != null" >
-        bottom_button_status = #{bottomButtonStatus,jdbcType=BIT},
+        bottom_button_status = #{bottomButtonStatus,jdbcType=TINYINT},
       </if>
       <if test="bottomButton != null" >
         bottom_button = #{bottomButton,jdbcType=VARCHAR},
@@ -402,7 +402,7 @@
       referrer = #{referrer,jdbcType=INTEGER},
       top_button = #{topButton,jdbcType=VARCHAR},
       jump_path = #{jumpPath,jdbcType=VARCHAR},
-      bottom_button_status = #{bottomButtonStatus,jdbcType=BIT},
+      bottom_button_status = #{bottomButtonStatus,jdbcType=TINYINT},
       bottom_button = #{bottomButton,jdbcType=VARCHAR},
       download_path = #{downloadPath,jdbcType=VARCHAR},
       `describe` = #{describe,jdbcType=VARCHAR},

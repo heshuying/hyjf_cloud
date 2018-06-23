@@ -21,7 +21,7 @@
     <result column="add_time" property="addTime" jdbcType="INTEGER" />
     <result column="count_interest_time" property="countInterestTime" jdbcType="INTEGER" />
     <result column="send_status" property="sendStatus" jdbcType="TINYINT" />
-    <result column="lock_period" property="lockPeriod" jdbcType="TINYINT" />
+    <result column="lock_period" property="lockPeriod" jdbcType="INTEGER" />
     <result column="commission_status" property="commissionStatus" jdbcType="TINYINT" />
     <result column="commission_count_time" property="commissionCountTime" jdbcType="INTEGER" />
     <result column="available_invest_account" property="availableInvestAccount" jdbcType="DECIMAL" />
@@ -172,7 +172,7 @@
       #{inviteUserBranchname,jdbcType=VARCHAR}, #{inviteUserDepartmentname,jdbcType=VARCHAR}, 
       #{accedeAccount,jdbcType=DECIMAL}, #{alreadyInvest,jdbcType=DECIMAL}, #{client,jdbcType=TINYINT}, 
       #{orderStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{countInterestTime,jdbcType=INTEGER}, 
-      #{sendStatus,jdbcType=TINYINT}, #{lockPeriod,jdbcType=TINYINT}, #{commissionStatus,jdbcType=TINYINT}, 
+      #{sendStatus,jdbcType=TINYINT}, #{lockPeriod,jdbcType=INTEGER}, #{commissionStatus,jdbcType=TINYINT}, 
       #{commissionCountTime,jdbcType=INTEGER}, #{availableInvestAccount,jdbcType=DECIMAL}, 
       #{endDate,jdbcType=DATE}, #{creditCompleteFlag,jdbcType=TINYINT}, #{frostAccount,jdbcType=DECIMAL}, 
       #{waitTotal,jdbcType=DECIMAL}, #{waitCaptical,jdbcType=DECIMAL}, #{waitInterest,jdbcType=DECIMAL}, 
@@ -371,7 +371,7 @@
         #{sendStatus,jdbcType=TINYINT},
       </if>
       <if test="lockPeriod != null" >
-        #{lockPeriod,jdbcType=TINYINT},
+        #{lockPeriod,jdbcType=INTEGER},
       </if>
       <if test="commissionStatus != null" >
         #{commissionStatus,jdbcType=TINYINT},
@@ -511,7 +511,7 @@
         send_status = #{record.sendStatus,jdbcType=TINYINT},
       </if>
       <if test="record.lockPeriod != null" >
-        lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+        lock_period = #{record.lockPeriod,jdbcType=INTEGER},
       </if>
       <if test="record.commissionStatus != null" >
         commission_status = #{record.commissionStatus,jdbcType=TINYINT},
@@ -608,7 +608,7 @@
       add_time = #{record.addTime,jdbcType=INTEGER},
       count_interest_time = #{record.countInterestTime,jdbcType=INTEGER},
       send_status = #{record.sendStatus,jdbcType=TINYINT},
-      lock_period = #{record.lockPeriod,jdbcType=TINYINT},
+      lock_period = #{record.lockPeriod,jdbcType=INTEGER},
       commission_status = #{record.commissionStatus,jdbcType=TINYINT},
       commission_count_time = #{record.commissionCountTime,jdbcType=INTEGER},
       available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
@@ -694,7 +694,7 @@
         send_status = #{sendStatus,jdbcType=TINYINT},
       </if>
       <if test="lockPeriod != null" >
-        lock_period = #{lockPeriod,jdbcType=TINYINT},
+        lock_period = #{lockPeriod,jdbcType=INTEGER},
       </if>
       <if test="commissionStatus != null" >
         commission_status = #{commissionStatus,jdbcType=TINYINT},
@@ -788,7 +788,7 @@
       add_time = #{addTime,jdbcType=INTEGER},
       count_interest_time = #{countInterestTime,jdbcType=INTEGER},
       send_status = #{sendStatus,jdbcType=TINYINT},
-      lock_period = #{lockPeriod,jdbcType=TINYINT},
+      lock_period = #{lockPeriod,jdbcType=INTEGER},
       commission_status = #{commissionStatus,jdbcType=TINYINT},
       commission_count_time = #{commissionCountTime,jdbcType=INTEGER},
       available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AccountwithdrawExample {
+public class AccountWithdrawExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -16,7 +16,7 @@ public class AccountwithdrawExample {
 
     protected int limitEnd = -1;
 
-    public AccountwithdrawExample() {
+    public AccountWithdrawExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

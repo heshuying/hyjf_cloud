@@ -756,52 +756,52 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentEqualTo(Boolean value) {
+        public Criteria andIsInstallmentEqualTo(Integer value) {
             addCriterion("is_installment =", value, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentNotEqualTo(Boolean value) {
+        public Criteria andIsInstallmentNotEqualTo(Integer value) {
             addCriterion("is_installment <>", value, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentGreaterThan(Boolean value) {
+        public Criteria andIsInstallmentGreaterThan(Integer value) {
             addCriterion("is_installment >", value, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsInstallmentGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_installment >=", value, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentLessThan(Boolean value) {
+        public Criteria andIsInstallmentLessThan(Integer value) {
             addCriterion("is_installment <", value, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsInstallmentLessThanOrEqualTo(Integer value) {
             addCriterion("is_installment <=", value, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentIn(List<Boolean> values) {
+        public Criteria andIsInstallmentIn(List<Integer> values) {
             addCriterion("is_installment in", values, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentNotIn(List<Boolean> values) {
+        public Criteria andIsInstallmentNotIn(List<Integer> values) {
             addCriterion("is_installment not in", values, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsInstallmentBetween(Integer value1, Integer value2) {
             addCriterion("is_installment between", value1, value2, "isInstallment");
             return (Criteria) this;
         }
 
-        public Criteria andIsInstallmentNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsInstallmentNotBetween(Integer value1, Integer value2) {
             addCriterion("is_installment not between", value1, value2, "isInstallment");
             return (Criteria) this;
         }
@@ -816,52 +816,52 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthEqualTo(Boolean value) {
+        public Criteria andIsMonthEqualTo(Integer value) {
             addCriterion("is_month =", value, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthNotEqualTo(Boolean value) {
+        public Criteria andIsMonthNotEqualTo(Integer value) {
             addCriterion("is_month <>", value, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthGreaterThan(Boolean value) {
+        public Criteria andIsMonthGreaterThan(Integer value) {
             addCriterion("is_month >", value, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsMonthGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_month >=", value, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthLessThan(Boolean value) {
+        public Criteria andIsMonthLessThan(Integer value) {
             addCriterion("is_month <", value, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsMonthLessThanOrEqualTo(Integer value) {
             addCriterion("is_month <=", value, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthIn(List<Boolean> values) {
+        public Criteria andIsMonthIn(List<Integer> values) {
             addCriterion("is_month in", values, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthNotIn(List<Boolean> values) {
+        public Criteria andIsMonthNotIn(List<Integer> values) {
             addCriterion("is_month not in", values, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsMonthBetween(Integer value1, Integer value2) {
             addCriterion("is_month between", value1, value2, "isMonth");
             return (Criteria) this;
         }
 
-        public Criteria andIsMonthNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsMonthNotBetween(Integer value1, Integer value2) {
             addCriterion("is_month not between", value1, value2, "isMonth");
             return (Criteria) this;
         }
@@ -1586,52 +1586,52 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusEqualTo(Byte value) {
+        public Criteria andBorrowStatusEqualTo(Integer value) {
             addCriterion("borrow_status =", value, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusNotEqualTo(Byte value) {
+        public Criteria andBorrowStatusNotEqualTo(Integer value) {
             addCriterion("borrow_status <>", value, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusGreaterThan(Byte value) {
+        public Criteria andBorrowStatusGreaterThan(Integer value) {
             addCriterion("borrow_status >", value, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusGreaterThanOrEqualTo(Byte value) {
+        public Criteria andBorrowStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("borrow_status >=", value, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusLessThan(Byte value) {
+        public Criteria andBorrowStatusLessThan(Integer value) {
             addCriterion("borrow_status <", value, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusLessThanOrEqualTo(Byte value) {
+        public Criteria andBorrowStatusLessThanOrEqualTo(Integer value) {
             addCriterion("borrow_status <=", value, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusIn(List<Byte> values) {
+        public Criteria andBorrowStatusIn(List<Integer> values) {
             addCriterion("borrow_status in", values, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusNotIn(List<Byte> values) {
+        public Criteria andBorrowStatusNotIn(List<Integer> values) {
             addCriterion("borrow_status not in", values, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusBetween(Byte value1, Byte value2) {
+        public Criteria andBorrowStatusBetween(Integer value1, Integer value2) {
             addCriterion("borrow_status between", value1, value2, "borrowStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowStatusNotBetween(Byte value1, Byte value2) {
+        public Criteria andBorrowStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("borrow_status not between", value1, value2, "borrowStatus");
             return (Criteria) this;
         }
@@ -1846,52 +1846,52 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusEqualTo(Byte value) {
+        public Criteria andBorrowFullStatusEqualTo(Integer value) {
             addCriterion("borrow_full_status =", value, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusNotEqualTo(Byte value) {
+        public Criteria andBorrowFullStatusNotEqualTo(Integer value) {
             addCriterion("borrow_full_status <>", value, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusGreaterThan(Byte value) {
+        public Criteria andBorrowFullStatusGreaterThan(Integer value) {
             addCriterion("borrow_full_status >", value, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusGreaterThanOrEqualTo(Byte value) {
+        public Criteria andBorrowFullStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("borrow_full_status >=", value, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusLessThan(Byte value) {
+        public Criteria andBorrowFullStatusLessThan(Integer value) {
             addCriterion("borrow_full_status <", value, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusLessThanOrEqualTo(Byte value) {
+        public Criteria andBorrowFullStatusLessThanOrEqualTo(Integer value) {
             addCriterion("borrow_full_status <=", value, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusIn(List<Byte> values) {
+        public Criteria andBorrowFullStatusIn(List<Integer> values) {
             addCriterion("borrow_full_status in", values, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusNotIn(List<Byte> values) {
+        public Criteria andBorrowFullStatusNotIn(List<Integer> values) {
             addCriterion("borrow_full_status not in", values, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusBetween(Byte value1, Byte value2) {
+        public Criteria andBorrowFullStatusBetween(Integer value1, Integer value2) {
             addCriterion("borrow_full_status between", value1, value2, "borrowFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowFullStatusNotBetween(Byte value1, Byte value2) {
+        public Criteria andBorrowFullStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("borrow_full_status not between", value1, value2, "borrowFullStatus");
             return (Criteria) this;
         }
@@ -2856,52 +2856,52 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusEqualTo(Byte value) {
+        public Criteria andRepayFullStatusEqualTo(Integer value) {
             addCriterion("repay_full_status =", value, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusNotEqualTo(Byte value) {
+        public Criteria andRepayFullStatusNotEqualTo(Integer value) {
             addCriterion("repay_full_status <>", value, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusGreaterThan(Byte value) {
+        public Criteria andRepayFullStatusGreaterThan(Integer value) {
             addCriterion("repay_full_status >", value, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusGreaterThanOrEqualTo(Byte value) {
+        public Criteria andRepayFullStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("repay_full_status >=", value, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusLessThan(Byte value) {
+        public Criteria andRepayFullStatusLessThan(Integer value) {
             addCriterion("repay_full_status <", value, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusLessThanOrEqualTo(Byte value) {
+        public Criteria andRepayFullStatusLessThanOrEqualTo(Integer value) {
             addCriterion("repay_full_status <=", value, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusIn(List<Byte> values) {
+        public Criteria andRepayFullStatusIn(List<Integer> values) {
             addCriterion("repay_full_status in", values, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusNotIn(List<Byte> values) {
+        public Criteria andRepayFullStatusNotIn(List<Integer> values) {
             addCriterion("repay_full_status not in", values, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusBetween(Byte value1, Byte value2) {
+        public Criteria andRepayFullStatusBetween(Integer value1, Integer value2) {
             addCriterion("repay_full_status between", value1, value2, "repayFullStatus");
             return (Criteria) this;
         }
 
-        public Criteria andRepayFullStatusNotBetween(Byte value1, Byte value2) {
+        public Criteria andRepayFullStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("repay_full_status not between", value1, value2, "repayFullStatus");
             return (Criteria) this;
         }
