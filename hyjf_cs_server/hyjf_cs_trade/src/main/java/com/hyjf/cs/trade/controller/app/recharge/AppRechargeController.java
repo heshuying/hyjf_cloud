@@ -13,15 +13,15 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +36,9 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Controller
+@Api(value = "app端用户充值接口")
+@CrossOrigin(origins = "*")
+@RestController
 @RequestMapping(value = "/app/recharge")
 public class AppRechargeController extends BaseTradeController{
 	
@@ -49,11 +51,6 @@ public class AppRechargeController extends BaseTradeController{
 	SystemConfig systemConfig;
 
 
-	@RequestMapping(value = "/init")
-	public String init(Model model) {
-		
-		return "recharge/recharge";
-	}
 	
 	/**
 	 * 调用充值接口
@@ -63,7 +60,8 @@ public class AppRechargeController extends BaseTradeController{
 	 * @param money
 	 * @return
 	 */
-	@RequestMapping("/page")
+	@ApiOperation(value = "用户充值", notes = "用户充值")
+	@PostMapping("/page")
 	public ModelAndView recharge(@RequestHeader(value = "token") String token,HttpServletRequest request, String mobile, String money) throws Exception {
 		logger.info("app充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
@@ -86,7 +84,8 @@ public class AppRechargeController extends BaseTradeController{
 	 * @Date: 12:40 2018/6/5
 	 * @Return: ModelAndView
 	 */
-	@RequestMapping("/return")
+	@ApiOperation(value = "用户充值同步回调", notes = "用户充值")
+	@PostMapping("/return")
 	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
 		logger.info("[app页面充值同步回调开始]");
 		ModelAndView modelAndView = new ModelAndView();
@@ -130,8 +129,9 @@ public class AppRechargeController extends BaseTradeController{
 	 * @Date: 12:40 2018/6/5
 	 * @Return: BankCallResult
 	 */
+	@ApiOperation(value = "用户充值异步回调", notes = "用户充值")
 	@ResponseBody
-	@RequestMapping("/bgreturn")
+	@PostMapping("/bgreturn")
 	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
 		logger.info("[app页面充值异步回调开始]");

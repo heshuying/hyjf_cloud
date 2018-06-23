@@ -33,7 +33,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "web端用户提现接口")
+@Api(value = "app端用户提现接口")
 @Controller
 @RequestMapping("/app/withdraw")
 public class AppBankWithdrawController extends BaseTradeController {
@@ -83,7 +83,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "用户银行提现同步回调", notes = "用户银行提现同步回调")
-    @RequestMapping("/userBankWithdrawReturn")
+    @PostMapping("/userBankWithdrawReturn")
     public Map<String, String> userBankWithdrawReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
                                                       @ModelAttribute BankCallBean bean) {
         logger.info("[app用户银行提现同步回调开始]");
@@ -104,7 +104,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
-    @RequestMapping("/userBankWithdrawBgreturn")
+    @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[app用户银行提现异步回调开始]");
         logger.info("app端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));

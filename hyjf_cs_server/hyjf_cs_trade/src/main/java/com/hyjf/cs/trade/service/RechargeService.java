@@ -5,6 +5,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -62,4 +64,11 @@ public interface RechargeService extends BaseTradeService{
 
 
 	BankCallBean rechargeService(String token, String ipAddr, String mobile, String money) throws Exception;
+	/**
+	 * @Description 获取充值页面数据
+	 * @Author pangchengchao
+	 * @Version v0.1
+	 * @Date
+	 */
+    WebResult<Object> toRecharge(WebViewUserVO user);
 }
