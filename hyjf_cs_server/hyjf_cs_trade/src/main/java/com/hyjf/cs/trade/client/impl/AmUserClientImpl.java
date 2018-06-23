@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -26,10 +27,10 @@ public class AmUserClientImpl implements AmUserClient {
 	@Autowired
 	private RestTemplate restTemplate;
 	@Override
-	public UserVO findUserById(Integer userId) {
+	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById" + userId, UserResponse.class).getBody();
-		if (response != null) {
+				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;

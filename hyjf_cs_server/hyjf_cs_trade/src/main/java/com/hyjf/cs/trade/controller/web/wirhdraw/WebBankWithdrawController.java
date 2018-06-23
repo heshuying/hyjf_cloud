@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,26 +69,26 @@ public class WebBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    public ModelAndView userBankWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "token", required = true) String token,
+                                         @RequestParam @Valid String withdrawmoney, @RequestParam @Valid String widCard,
+                                         @RequestParam @Valid String payAllianceCode , HttpServletRequest request) {
         logger.info("web端提现接口, token is :{}", JSONObject.toJSONString(token));
-        String transAmt = request.getParameter("withdrawmoney");// 交易金额
-        String cardNo = request.getParameter("widCard");// 提现银行卡号
-        String payAllianceCode = request.getParameter("payAllianceCode");// 银联行号
-
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebResult<Object> result = new WebResult<Object>();
+        WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
-        ModelAndView modelAndView = new ModelAndView();
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,withdrawmoney,widCard,payAllianceCode,CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
+
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            Map<String,Object> data =  BankCallUtils.callApiMap(bean);
+            result.setData(data);
         } catch (Exception e) {
             logger.info("web端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(BankWithdrawError.CALL_BANK_ERROR);
         }
-        return modelAndView;
+        return result;
     }
 
     /**
