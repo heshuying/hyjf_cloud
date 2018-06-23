@@ -102,6 +102,7 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String BANK_URL_DIRECT_RECHARGE_PAGE = "/p2p/page/directRechargePage";
 	public static final String BANK_URL_PAYMENT_AUTH_PAGE = "/p2p/page/paymentAuthPage";
 	public static final String BANK_URL_REPAY_AUTH_PAGE = "/p2p/page/repayAuthPage";
+	public static final String BANK_URL_BIND_CARD_PAGE = "/p2p/page/bindCardPage";
 	/** 签约状态查询 */
 	public static final String QUERY_TYPE_1 = "1";// 1 自动投标签约
 	/** 签约状态查询 */

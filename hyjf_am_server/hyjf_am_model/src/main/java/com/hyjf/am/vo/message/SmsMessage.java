@@ -7,10 +7,8 @@ import java.util.Map;
 
 /**
  * 短信消息实体类
- * @author renxingchen
- * @version hyjf 1.0
- * @since hyjf 1.0 2016年6月17日
- * @see 下午2:25:49
+ * @author xiasq
+ * @version AppMsMessage, v0.1 2018/6/22 14:08
  */
 public class SmsMessage extends HyjfMessage {
 
@@ -18,6 +16,18 @@ public class SmsMessage extends HyjfMessage {
      * 此处为属性说明
      */
     private static final long serialVersionUID = -5957270230076216841L;
+
+    private String mobile;
+
+    private String message;
+
+    private String serviceType;
+
+    private String sender;
+
+    private String tplCode;
+
+    private String channelType;
 
     public SmsMessage() {
         super();
@@ -93,17 +103,4 @@ public class SmsMessage extends HyjfMessage {
                 ", channelType='" + channelType + '\'' +
                 '}';
     }
-
-    private String mobile;
-
-    private String message;
-
-    private String serviceType;
-
-    private String sender;
-
-    private String tplCode;
-
-    private String channelType;
-
 }

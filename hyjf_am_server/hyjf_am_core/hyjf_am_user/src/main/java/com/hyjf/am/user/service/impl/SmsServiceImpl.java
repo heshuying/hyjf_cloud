@@ -53,7 +53,7 @@ public class SmsServiceImpl implements SmsService {
 	}
 
 	@Override
-	public int saveSmsCode(String mobile, String verificationCode, String verificationType, Integer status, String platform) {
+	public int saveSmscode(String mobile, String verificationCode, String verificationType, Integer status, String platform) {
 		// 使之前的验证码无效
 		SmsCodeExample example = new SmsCodeExample();
 		SmsCodeExample.Criteria cra = example.createCriteria();

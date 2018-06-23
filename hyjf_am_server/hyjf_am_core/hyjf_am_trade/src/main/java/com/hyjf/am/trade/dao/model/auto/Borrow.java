@@ -25,9 +25,9 @@ public class Borrow implements Serializable {
 
     private Integer isEngineUsed;
 
-    private Boolean isInstallment;
+    private Integer isInstallment;
 
-    private Boolean isMonth;
+    private Integer isMonth;
 
     private Integer registStatus;
 
@@ -51,7 +51,7 @@ public class Borrow implements Serializable {
 
     private String verifyContents;
 
-    private Byte borrowStatus;
+    private Integer borrowStatus;
 
     private Integer ontime;
 
@@ -59,7 +59,7 @@ public class Borrow implements Serializable {
 
     private String planNid;
 
-    private Byte borrowFullStatus;
+    private Integer borrowFullStatus;
 
     private Integer borrowFullTime;
 
@@ -91,7 +91,7 @@ public class Borrow implements Serializable {
 
     private Integer repayStatus;
 
-    private Byte repayFullStatus;
+    private Integer repayFullStatus;
 
     private BigDecimal repayFeeNormal;
 
@@ -215,19 +215,19 @@ public class Borrow implements Serializable {
         this.isEngineUsed = isEngineUsed;
     }
 
-    public Boolean getIsInstallment() {
+    public Integer getIsInstallment() {
         return isInstallment;
     }
 
-    public void setIsInstallment(Boolean isInstallment) {
+    public void setIsInstallment(Integer isInstallment) {
         this.isInstallment = isInstallment;
     }
 
-    public Boolean getIsMonth() {
+    public Integer getIsMonth() {
         return isMonth;
     }
 
-    public void setIsMonth(Boolean isMonth) {
+    public void setIsMonth(Integer isMonth) {
         this.isMonth = isMonth;
     }
 
@@ -319,11 +319,11 @@ public class Borrow implements Serializable {
         this.verifyContents = verifyContents == null ? null : verifyContents.trim();
     }
 
-    public Byte getBorrowStatus() {
+    public Integer getBorrowStatus() {
         return borrowStatus;
     }
 
-    public void setBorrowStatus(Byte borrowStatus) {
+    public void setBorrowStatus(Integer borrowStatus) {
         this.borrowStatus = borrowStatus;
     }
 
@@ -351,11 +351,11 @@ public class Borrow implements Serializable {
         this.planNid = planNid == null ? null : planNid.trim();
     }
 
-    public Byte getBorrowFullStatus() {
+    public Integer getBorrowFullStatus() {
         return borrowFullStatus;
     }
 
-    public void setBorrowFullStatus(Byte borrowFullStatus) {
+    public void setBorrowFullStatus(Integer borrowFullStatus) {
         this.borrowFullStatus = borrowFullStatus;
     }
 
@@ -479,11 +479,11 @@ public class Borrow implements Serializable {
         this.repayStatus = repayStatus;
     }
 
-    public Byte getRepayFullStatus() {
+    public Integer getRepayFullStatus() {
         return repayFullStatus;
     }
 
-    public void setRepayFullStatus(Byte repayFullStatus) {
+    public void setRepayFullStatus(Integer repayFullStatus) {
         this.repayFullStatus = repayFullStatus;
     }
 

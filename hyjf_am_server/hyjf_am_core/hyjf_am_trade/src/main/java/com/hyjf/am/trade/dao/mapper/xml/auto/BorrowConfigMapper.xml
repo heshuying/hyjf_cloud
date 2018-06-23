@@ -105,19 +105,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConfig" >
-    insert into ht_borrow_config (config_cd, config_name, config_value, 
-      remark, del_flag, create_time, 
-      update_time)
-    values (#{configCd,jdbcType=VARCHAR}, #{configName,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    <selectKey resultType="java.lang.String" keyProperty="configCd" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_config (config_name, config_value, remark, 
+      del_flag, create_time, update_time
+      )
+    values (#{configName,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConfig" >
+    <selectKey resultType="java.lang.String" keyProperty="configCd" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_borrow_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="configCd != null" >
-        config_cd,
-      </if>
       <if test="configName != null" >
         config_name,
       </if>
@@ -138,9 +141,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="configCd != null" >
-        #{configCd,jdbcType=VARCHAR},
-      </if>
       <if test="configName != null" >
         #{configName,jdbcType=VARCHAR},
       </if>

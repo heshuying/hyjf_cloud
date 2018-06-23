@@ -237,5 +237,158 @@
         </choose>
     </select>
 
+    <resultMap id="UserDetailPOMap" type="com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="user_nick_name" property="userNickName" jdbcType="VARCHAR" />
+        <result column="user_property" property="userProperty" jdbcType="INTEGER" />
+        <result column="role" property="role" jdbcType="INTEGER" />
+        <result column="user_type" property="userType" jdbcType="VARCHAR" />
+        <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
+        <result column="depart_name" property="departName" jdbcType="VARCHAR" />
+        <result column="regist_pid_name" property="registPidName" jdbcType="VARCHAR" />
+        <result column="regist_plat" property="registPlat" jdbcType="INTEGER" />
+        <result column="open_account_plat" property="openAccountPlat" jdbcType="INTEGER" />
+        <result column="regist_ip" property="registIP" jdbcType="VARCHAR" />
+        <result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
+        <result column="open_account_time" property="openAccountTime" jdbcType="TIMESTAMP" />
+        <result column="last_login_ip" property="lastLoginIP" jdbcType="VARCHAR" />
+        <result column="last_login_time" property="lastLoginTime" jdbcType="VARCHAR" />
+        <result column="em_name" property="emName" jdbcType="VARCHAR" />
+        <result column="em_relation" property="emRealtion" jdbcType="INTEGER" />
+        <result column="em_phone" property="emPhone" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="email_status" property="emailStatus" jdbcType="INTEGER" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="mobile_status" property="mobileStatus" jdbcType="INTEGER" />
+        <result column="real_name" property="realName" jdbcType="VARCHAR" />
+        <result column="real_name_status" property="realNameStatus" jdbcType="INTEGER" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+        <result column="account_status" property="accountStatus" jdbcType="INTEGER" />
+        <result column="customer_account" property="customerAccount" jdbcType="VARCHAR" />
+        <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+        <result column="icon_url" property="iconUrl" jdbcType="VARCHAR" />
+        <result column="vip_id" property="vipId" jdbcType="INTEGER" />
+        <result column="vip_value" property="vipValue" jdbcType="INTEGER" />
+        <result column="vip_exp_date" property="vipExpDate" jdbcType="VARCHAR" />
+        <result column="borrower_type" property="borrowerType"  jdbcType="INTEGER" />
+        <result column="is_set_password" property="isSetPassword"  jdbcType="INTEGER" />
+        <result column="is_ca_flag" property="isCaFlag"  jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectUserDetailById" resultMap="UserDetailPOMap" parameterType="java.lang.Integer">
+        SELECT
+        hydu.user_id,
+        hydu.username AS user_name,
+        hydui.nickname AS user_nick_name,
+        hydu.iconUrl AS icon_url,
+        from_unixtime(
+        hydui.vip_exp_date,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS vip_exp_date,
+        hydui.role_id AS role,
+        hydu.user_type AS user_type,
+        hydui.attribute AS user_property,
+        hydurefer.username AS recommend_name,
+        hydd.`name` AS depart_name,
+        source_name AS regist_pid_name,
+        hydu.reg_esb AS regist_plat,
+        hydu.account_esb AS open_account_plat,
+        hydu.reg_ip AS regist_ip,
+        from_unixtime(
+        hydu.reg_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS regist_time,
+        from_unixtime(
+        hydac.addtime,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS open_account_time,
+        hydu.login_ip AS last_login_ip,
+        from_unixtime(
+        hydu.login_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS last_login_time,
+        hyduc.rl_name AS em_name,
+        hyduc.relation AS em_relation,
+        hyduc.rl_phone AS em_phone,
+        hydu.email,
+        hydui.email_isApprove AS email_status,
+        hydu.mobile,
+        hydui.mobile_isApprove AS mobile_status,
+        hydui.truename AS real_name,
+        hydui.truename_isApprove AS real_name_status,
+        hydu.`status` AS account_status,
+        hydac.chinapnr_usrid AS account,
+        hydac.chinapnr_usrcustid AS customer_account,
+        hydui.idcard AS id_card,
+        hydui.borrower_type,
+        hydu.is_ca_flag AS is_ca_flag,
+        hydu.is_set_password AS is_set_password
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        LEFT JOIN ht_users_contact hyduc ON hydu.user_id = hyduc.user_id
+        LEFT JOIN ht_account_chinapnr hydac ON hydac.user_id = hydu.user_id
+        LEFT JOIN ht_utm_reg hydur ON hydur.user_id = hydu.user_id
+        LEFT JOIN ht_utm hydutm ON hydur.utm_id = hydutm.utm_id
+        LEFT JOIN ht_utm_plat hydup ON hydup.source_id = hydutm.source_id
+        LEFT JOIN ht_utm_plat hydup1 ON hydup1.source_id = hydutm.source_id
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_userid
+        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_userid and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
+        WHERE
+        hydu.user_id =#{userId,jdbcType=INTEGER}
+    </select>
+
+    <!-- 根据用户id获取开户信息 -->
+    <resultMap id="BankOpenAccountPOMap" type="com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize">
+        <id column="account" property="account" jdbcType="INTEGER" />
+        <result column="open_account_plat" property="openAccountPlat" jdbcType="VARCHAR" />
+        <result column="open_account_time" property="openAccountTime" jdbcType="VARCHAR" />
+        <result column="user_type" property="userType" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectBankOpenAccountByUserId" resultMap="BankOpenAccountPOMap" parameterType="java.lang.Integer">
+        SELECT
+        hboa.account AS account,
+        hydu.bank_account_esb AS  open_account_plat,
+        date_format(hboa.create_time,'%Y-%c-%d %H:%i:%s') AS open_account_time,
+        hydu.user_type AS user_type,
+        hbc.mobile AS mobile
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_bank_open_account hboa ON hboa.user_id = hydu.user_id
+        LEFT JOIN ht_bank_card hbc ON hydu.user_id = hbc.user_id
+        WHERE
+        hydu.user_id =#{userId,jdbcType=INTEGER}
+    </select>
+
+    <!-- 根据用户id获取用户修改信息-->
+    <resultMap id="UserUpdatePOMap" type="com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="user_role" property="userRole" jdbcType="INTEGER" />
+        <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="borrower_type" property="borrowerType"  jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectUserUpdateById" resultMap="UserUpdatePOMap" parameterType="java.lang.Integer">
+        SELECT
+        hydu.user_id,
+        hydu.username AS user_name,
+        hydu.email,
+        hydu.mobile,
+        hydui.role_id AS user_role,
+        hydu.status,
+        hydui.borrower_type
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        WHERE
+        hydu.user_id = #{userId,jdbcType=INTEGER}
+    </select>
+
 
 </mapper>

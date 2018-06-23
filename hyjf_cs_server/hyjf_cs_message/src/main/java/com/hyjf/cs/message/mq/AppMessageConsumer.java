@@ -57,16 +57,16 @@ public class AppMessageConsumer extends Consumer {
 			logger.info("AppMessageConsumer 收到请求，开始推送app消息....appMsMessage is：{}", appMsMessage);
 			if (null != appMsMessage) {
 				switch (appMsMessage.getServiceType()) {
-				case MessageConstant.APPMSSENDFORMOBILE:
+				case MessageConstant.APP_MS_SEND_FOR_MOBILE:
 					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getMobile());
 					break;
-				case MessageConstant.APPMSSENDFORUSER:
+				case MessageConstant.APP_MS_SEND_FOR_USER:
 					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getUserId());
 					break;
 
-				case MessageConstant.APPMSSENDFORMSG:
+				case MessageConstant.APP_MS_SEND_FOR_MSG:
 					msgPushHandle.sendMessages(appMsMessage.getMsgId());
 					break;
 

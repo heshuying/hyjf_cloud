@@ -83,7 +83,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "用户银行提现同步回调", notes = "用户银行提现同步回调")
-    @RequestMapping("/userBankWithdrawReturn")
+    @PostMapping("/userBankWithdrawReturn")
     public Map<String, String> userBankWithdrawReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
                                                       @ModelAttribute BankCallBean bean) {
         logger.info("[wechat用户银行提现同步回调开始]");
@@ -104,7 +104,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
-    @RequestMapping("/userBankWithdrawBgreturn")
+    @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[wechat用户银行提现异步回调开始]");
         logger.info("wechat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));

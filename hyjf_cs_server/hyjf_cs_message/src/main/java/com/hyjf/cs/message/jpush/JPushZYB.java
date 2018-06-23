@@ -10,6 +10,7 @@ import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.SMS;
 import cn.jpush.api.report.ReceivedsResult;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 极光接口 服务APP：ios-专业版，渠道号150
@@ -32,11 +33,10 @@ public class JPushZYB {
 	private static JPushClient jpushClient = null;
 
 	/**
-	 * ios是否为开发环境 true为生产 false 为开发环境 todo
+	 * ios是否为开发环境
 	 */
-	private static boolean isProduction = Boolean.TRUE;
-	// private static boolean isProduction = Boolean.valueOf(PropUtils.getSystem("hyjf.jpush.isproduction"));
-
+	@Value("${hyjf.env.test}")
+	private static boolean envTest;
 	/**
 	 * 单例 实例化
 	 * 
@@ -45,7 +45,7 @@ public class JPushZYB {
 	public static JPushClient getClientInstance() {
 		if (jpushClient == null) {
 			ClientConfig clientConfig = ClientConfig.getInstance();
-			clientConfig.setApnsProduction(isProduction);
+			clientConfig.setApnsProduction(!envTest);
 			jpushClient = new JPushClient(masterSecret, appKey, null, clientConfig);
 		}
 		return jpushClient;

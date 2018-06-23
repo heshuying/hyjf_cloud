@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.PermissionsBean;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
@@ -37,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "admin登陆相关")
 @RestController
 @RequestMapping("/login")
-public class LoginController {
+public class LoginController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	@Autowired
 	private LoginService loginService;
@@ -52,7 +53,9 @@ public class LoginController {
     @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
     @PostMapping(value = "/login")
 	@ResponseBody
+	@AuthorityAnnotation(key = "312", value = "123")
 	public JSONObject login(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> map) {
+    	System.out.println(request.getRequestURI());
     	JSONObject info = new JSONObject();
 		String username=map.get("username");
 		String password=map.get("password");
@@ -63,8 +66,9 @@ public class LoginController {
 		if(StringUtils.isNotBlank(prs.getMessage())) {
 			info.put("status", "99");
 			info.put("msg", prs.getMessage());
+			return info;
 		}
-		//TODO 需要把用户信息存入redis
+		this.setUser(request, prs.getResult());
 		info.put("status", "0");
 		info.put("msg", "登录成功");
 		return info;
@@ -76,14 +80,13 @@ public class LoginController {
      * @Date: 16:43 2018/6/15
      * @Return: JSONObject
      */
-    @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
+    @ApiOperation(value = "admin获取菜单", notes = "admin获取菜单")
     @PostMapping(value = "/getMenuTree")
 	@ResponseBody
 	public JSONObject getMenuTree(HttpServletRequest request, HttpServletResponse response) {
     	JSONObject info = new JSONObject();
-    	
-    	//TODO需要从redis里取userId
-		List<TreeVO> prs = loginService.selectLeftMenuTree2("");
+    	//AdminSystemVO user = this.getUser(request);
+		List<TreeVO> prs = loginService.selectLeftMenuTree2("1");
 		JSONArray jsonArray1 = (JSONArray) JSONArray.toJSON(prs);
 		info.put("status", "0");
 		info.put("msg", "成功");
@@ -102,17 +105,19 @@ public class LoginController {
 	@ResponseBody
 	public JSONObject getUserPermission(HttpServletRequest request, HttpServletResponse response) {
     	JSONObject info = new JSONObject();
-    	//TODO 需要从redis里取userName
-		 List<AdminSystemVO> prs = loginService.getUserPermission("hhhh");
+		 List<AdminSystemVO> prs = loginService.getUserPermission(this.getUser(request).getUsername());
 		 JSONArray jsonArray1 = new JSONArray();
+		 List<String> perm = null;
 		 for (AdminSystemVO adminSystemVO : prs) {
 				if (adminSystemVO != null) {
 					PermissionsBean pb=new PermissionsBean();
 					pb.setPermissionName(adminSystemVO.getMenuCtrl());
 					pb.setPermissionKey(adminSystemVO.getPermission());
 					jsonArray1.add(pb);
+					perm.add(adminSystemVO.getMenuCtrl()+":"+adminSystemVO.getPermission());
 				}
 		}
+		request.getSession().setAttribute("permission", perm);
 		info.put("status", "0");
 		info.put("msg", "成功");
 		info.put("permissions",jsonArray1);

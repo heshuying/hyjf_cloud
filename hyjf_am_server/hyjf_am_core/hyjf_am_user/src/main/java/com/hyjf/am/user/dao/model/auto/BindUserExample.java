@@ -255,52 +255,52 @@ public class BindUserExample {
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdEqualTo(Long value) {
+        public Criteria andBindUniqueIdEqualTo(Integer value) {
             addCriterion("bind_unique_id =", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdNotEqualTo(Long value) {
+        public Criteria andBindUniqueIdNotEqualTo(Integer value) {
             addCriterion("bind_unique_id <>", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdGreaterThan(Long value) {
+        public Criteria andBindUniqueIdGreaterThan(Integer value) {
             addCriterion("bind_unique_id >", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andBindUniqueIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("bind_unique_id >=", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdLessThan(Long value) {
+        public Criteria andBindUniqueIdLessThan(Integer value) {
             addCriterion("bind_unique_id <", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdLessThanOrEqualTo(Long value) {
+        public Criteria andBindUniqueIdLessThanOrEqualTo(Integer value) {
             addCriterion("bind_unique_id <=", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdIn(List<Long> values) {
+        public Criteria andBindUniqueIdIn(List<Integer> values) {
             addCriterion("bind_unique_id in", values, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdNotIn(List<Long> values) {
+        public Criteria andBindUniqueIdNotIn(List<Integer> values) {
             addCriterion("bind_unique_id not in", values, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdBetween(Long value1, Long value2) {
+        public Criteria andBindUniqueIdBetween(Integer value1, Integer value2) {
             addCriterion("bind_unique_id between", value1, value2, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdNotBetween(Long value1, Long value2) {
+        public Criteria andBindUniqueIdNotBetween(Integer value1, Integer value2) {
             addCriterion("bind_unique_id not between", value1, value2, "bindUniqueId");
             return (Criteria) this;
         }
@@ -375,52 +375,52 @@ public class BindUserExample {
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgEqualTo(Boolean value) {
+        public Criteria andDelFlgEqualTo(Integer value) {
             addCriterion("del_flg =", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotEqualTo(Boolean value) {
+        public Criteria andDelFlgNotEqualTo(Integer value) {
             addCriterion("del_flg <>", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThan(Boolean value) {
+        public Criteria andDelFlgGreaterThan(Integer value) {
             addCriterion("del_flg >", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andDelFlgGreaterThanOrEqualTo(Integer value) {
             addCriterion("del_flg >=", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThan(Boolean value) {
+        public Criteria andDelFlgLessThan(Integer value) {
             addCriterion("del_flg <", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThanOrEqualTo(Boolean value) {
+        public Criteria andDelFlgLessThanOrEqualTo(Integer value) {
             addCriterion("del_flg <=", value, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIn(List<Boolean> values) {
+        public Criteria andDelFlgIn(List<Integer> values) {
             addCriterion("del_flg in", values, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotIn(List<Boolean> values) {
+        public Criteria andDelFlgNotIn(List<Integer> values) {
             addCriterion("del_flg not in", values, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgBetween(Boolean value1, Boolean value2) {
+        public Criteria andDelFlgBetween(Integer value1, Integer value2) {
             addCriterion("del_flg between", value1, value2, "delFlg");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andDelFlgNotBetween(Integer value1, Integer value2) {
             addCriterion("del_flg not between", value1, value2, "delFlg");
             return (Criteria) this;
         }

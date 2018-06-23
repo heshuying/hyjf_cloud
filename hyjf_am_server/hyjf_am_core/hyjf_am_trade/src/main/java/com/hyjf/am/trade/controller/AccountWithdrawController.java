@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
+import com.hyjf.am.response.trade.AccountWithdrawResponse;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.common.util.CommonUtils;
@@ -44,7 +44,7 @@ public class AccountWithdrawController {
      * @Date
      */
     @RequestMapping("/insertAccountWithdrawLog")
-    public void insertAccountWithdrawLog(@RequestBody Accountwithdraw accountWithdraw){
+    public void insertAccountWithdrawLog(@RequestBody AccountWithdraw accountWithdraw){
         logger.info("insertAccountWithdrawLog:" + JSONObject.toJSONString(accountWithdraw));
         accountWithdrawService.insertAccountWithdrawLog(accountWithdraw);
     }
@@ -55,14 +55,14 @@ public class AccountWithdrawController {
      * @Date
      */
     @RequestMapping("/findByOrdId/{ordId}")
-    public AccountwithdrawResponse findByOrdId(@PathVariable String ordId){
+    public AccountWithdrawResponse findByOrdId(@PathVariable String ordId){
         logger.info("findByOrdId:" + ordId);
-        AccountwithdrawResponse response = new AccountwithdrawResponse();
-        List<Accountwithdraw> accountWithdrawList = accountWithdrawService.findByOrdId(ordId);
+        AccountWithdrawResponse response = new AccountWithdrawResponse();
+        List<AccountWithdraw> accountWithdrawList = accountWithdrawService.findByOrdId(ordId);
         List<AccountWithdrawVO> accountWithdrawVoList=null;
         if(!CollectionUtils.isEmpty(accountWithdrawList)){
             accountWithdrawVoList=new ArrayList<>(accountWithdrawList.size());
-            for (Accountwithdraw accountWithdraw:accountWithdrawList) {
+            for (AccountWithdraw accountWithdraw:accountWithdrawList) {
                 AccountWithdrawVO vo=new AccountWithdrawVO();
                 BeanUtils.copyProperties(accountWithdraw,vo);;
                 accountWithdrawVoList.add(vo);
@@ -78,10 +78,10 @@ public class AccountWithdrawController {
      * @Date
      */
     @RequestMapping("/getAccountWithdrawByOrdId/{logOrderId}")
-    public AccountwithdrawResponse getAccountWithdrawByOrdId(@PathVariable String logOrderId){
+    public AccountWithdrawResponse getAccountWithdrawByOrdId(@PathVariable String logOrderId){
         logger.info("getAccountWithdrawByOrdId:" + logOrderId);
-        AccountwithdrawResponse response = new AccountwithdrawResponse();
-        Accountwithdraw accountWithdraw = accountWithdrawService.getAccountWithdrawByOrdId(logOrderId);
+        AccountWithdrawResponse response = new AccountWithdrawResponse();
+        AccountWithdraw accountWithdraw = accountWithdrawService.getAccountWithdrawByOrdId(logOrderId);
         if (accountWithdraw != null) {
             AccountWithdrawVO accountWithdrawVO = new AccountWithdrawVO();
             BeanUtils.copyProperties(accountWithdraw, accountWithdrawVO);
@@ -114,19 +114,19 @@ public class AccountWithdrawController {
      * @Version v0.1
      * @Date
      */
-    @RequestMapping("/updateAccountwithdrawLog")
-    public void updateAccountwithdrawLog(@RequestBody Accountwithdraw accountwithdraw){
-        logger.info("updateAccountwithdrawLog:" + JSONObject.toJSONString(accountwithdraw));
-        accountWithdrawService.updateAccountwithdrawLog(accountwithdraw);
+    @RequestMapping("/updateAccountWithdrawLog")
+    public void updateAccountWithdrawLog(@RequestBody AccountWithdraw accountwithdraw){
+        logger.info("updateAccountWithdrawLog:" + JSONObject.toJSONString(accountwithdraw));
+        accountWithdrawService.updateAccountWithdrawLog(accountwithdraw);
     }
     
     /**
      * 提现掉单更新订单信息
      * add by jijun 20180616
      */
-    @PostMapping("/updateAccountwithdraw")
-    public boolean updateAccountwithdraw(@RequestBody AccountWithdrawVO accountWithdraw){
-        int count=accountWithdrawService.updateAccountwithdraw(CommonUtils.convertBean(accountWithdraw, Accountwithdraw.class));
+    @PostMapping("/updateAccountWithdraw")
+    public boolean updateAccountWithdraw(@RequestBody AccountWithdrawVO accountWithdraw){
+        int count=accountWithdrawService.updateAccountWithdraw(CommonUtils.convertBean(accountWithdraw, AccountWithdraw.class));
         if (count>0) {
             return true;
         }else{
@@ -148,8 +148,8 @@ public class AccountWithdrawController {
     }
 
     @GetMapping("/getBorrowTender/{userId}")
-    public AccountwithdrawResponse getBorrowTender(@PathVariable Integer userId) {
-        AccountwithdrawResponse response=new AccountwithdrawResponse();
+    public AccountWithdrawResponse getBorrowTender(@PathVariable Integer userId) {
+        AccountWithdrawResponse response=new AccountWithdrawResponse();
         int userBorrowTenderCounte = accountWithdrawService.getBorrowTender(userId);
         response.setUserBorrowTenderCounte(userBorrowTenderCounte);
         return response;

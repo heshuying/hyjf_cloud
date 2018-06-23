@@ -12,8 +12,8 @@
     <result column="label_id" property="labelId" jdbcType="INTEGER" />
     <result column="is_show" property="isShow" jdbcType="TINYINT" />
     <result column="is_engine_used" property="isEngineUsed" jdbcType="TINYINT" />
-    <result column="is_installment" property="isInstallment" jdbcType="BIT" />
-    <result column="is_month" property="isMonth" jdbcType="BIT" />
+    <result column="is_installment" property="isInstallment" jdbcType="TINYINT" />
+    <result column="is_month" property="isMonth" jdbcType="TINYINT" />
     <result column="regist_status" property="registStatus" jdbcType="TINYINT" />
     <result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
     <result column="regist_user_id" property="registUserId" jdbcType="INTEGER" />
@@ -202,7 +202,7 @@
     values (#{borrowNid,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{account,jdbcType=DECIMAL}, 
       #{borrowStyle,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowApr,jdbcType=DECIMAL}, 
       #{labelId,jdbcType=INTEGER}, #{isShow,jdbcType=TINYINT}, #{isEngineUsed,jdbcType=TINYINT}, 
-      #{isInstallment,jdbcType=BIT}, #{isMonth,jdbcType=BIT}, #{registStatus,jdbcType=TINYINT}, 
+      #{isInstallment,jdbcType=TINYINT}, #{isMonth,jdbcType=TINYINT}, #{registStatus,jdbcType=TINYINT}, 
       #{registTime,jdbcType=TIMESTAMP}, #{registUserId,jdbcType=INTEGER}, #{registUserName,jdbcType=VARCHAR}, 
       #{verifyStatus,jdbcType=TINYINT}, #{verifyOverTime,jdbcType=INTEGER}, #{verifyTime,jdbcType=INTEGER}, 
       #{verifyUserid,jdbcType=VARCHAR}, #{verifyUserName,jdbcType=VARCHAR}, #{verifyRemark,jdbcType=VARCHAR}, 
@@ -448,10 +448,10 @@
         #{isEngineUsed,jdbcType=TINYINT},
       </if>
       <if test="isInstallment != null" >
-        #{isInstallment,jdbcType=BIT},
+        #{isInstallment,jdbcType=TINYINT},
       </if>
       <if test="isMonth != null" >
-        #{isMonth,jdbcType=BIT},
+        #{isMonth,jdbcType=TINYINT},
       </if>
       <if test="registStatus != null" >
         #{registStatus,jdbcType=TINYINT},
@@ -651,10 +651,10 @@
         is_engine_used = #{record.isEngineUsed,jdbcType=TINYINT},
       </if>
       <if test="record.isInstallment != null" >
-        is_installment = #{record.isInstallment,jdbcType=BIT},
+        is_installment = #{record.isInstallment,jdbcType=TINYINT},
       </if>
       <if test="record.isMonth != null" >
-        is_month = #{record.isMonth,jdbcType=BIT},
+        is_month = #{record.isMonth,jdbcType=TINYINT},
       </if>
       <if test="record.registStatus != null" >
         regist_status = #{record.registStatus,jdbcType=TINYINT},
@@ -829,8 +829,8 @@
       label_id = #{record.labelId,jdbcType=INTEGER},
       is_show = #{record.isShow,jdbcType=TINYINT},
       is_engine_used = #{record.isEngineUsed,jdbcType=TINYINT},
-      is_installment = #{record.isInstallment,jdbcType=BIT},
-      is_month = #{record.isMonth,jdbcType=BIT},
+      is_installment = #{record.isInstallment,jdbcType=TINYINT},
+      is_month = #{record.isMonth,jdbcType=TINYINT},
       regist_status = #{record.registStatus,jdbcType=TINYINT},
       regist_time = #{record.registTime,jdbcType=TIMESTAMP},
       regist_user_id = #{record.registUserId,jdbcType=INTEGER},
@@ -918,10 +918,10 @@
         is_engine_used = #{isEngineUsed,jdbcType=TINYINT},
       </if>
       <if test="isInstallment != null" >
-        is_installment = #{isInstallment,jdbcType=BIT},
+        is_installment = #{isInstallment,jdbcType=TINYINT},
       </if>
       <if test="isMonth != null" >
-        is_month = #{isMonth,jdbcType=BIT},
+        is_month = #{isMonth,jdbcType=TINYINT},
       </if>
       <if test="registStatus != null" >
         regist_status = #{registStatus,jdbcType=TINYINT},
@@ -1093,8 +1093,8 @@
       label_id = #{labelId,jdbcType=INTEGER},
       is_show = #{isShow,jdbcType=TINYINT},
       is_engine_used = #{isEngineUsed,jdbcType=TINYINT},
-      is_installment = #{isInstallment,jdbcType=BIT},
-      is_month = #{isMonth,jdbcType=BIT},
+      is_installment = #{isInstallment,jdbcType=TINYINT},
+      is_month = #{isMonth,jdbcType=TINYINT},
       regist_status = #{registStatus,jdbcType=TINYINT},
       regist_time = #{registTime,jdbcType=TIMESTAMP},
       regist_user_id = #{registUserId,jdbcType=INTEGER},

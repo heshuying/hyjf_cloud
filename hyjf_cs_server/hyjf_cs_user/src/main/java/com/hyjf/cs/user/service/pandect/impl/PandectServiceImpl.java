@@ -47,7 +47,7 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         Map<String,Object> result = new HashMap<>();
         Integer userId = user.getUserId();
         String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
-        imghost = imghost.substring(0, imghost.length() - 1);// http://cdn.huiyingdai.com/
+        imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
         String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
         if(StringUtils.isNotEmpty(user.getIconUrl())){

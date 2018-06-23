@@ -33,7 +33,7 @@ public class BorrowFinmanNewCharge implements Serializable {
 
     private BigDecimal serviceFeeTotal;
 
-    private Byte lateFreeDays;
+    private Integer lateFreeDays;
 
     private Integer autoRepay;
 
@@ -161,11 +161,11 @@ public class BorrowFinmanNewCharge implements Serializable {
         this.serviceFeeTotal = serviceFeeTotal;
     }
 
-    public Byte getLateFreeDays() {
+    public Integer getLateFreeDays() {
         return lateFreeDays;
     }
 
-    public void setLateFreeDays(Byte lateFreeDays) {
+    public void setLateFreeDays(Integer lateFreeDays) {
         this.lateFreeDays = lateFreeDays;
     }
 

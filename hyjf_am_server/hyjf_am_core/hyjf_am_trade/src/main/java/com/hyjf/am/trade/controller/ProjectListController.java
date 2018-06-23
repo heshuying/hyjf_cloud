@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 项目列表
@@ -90,6 +91,49 @@ public class ProjectListController {
     }
 
 
+    /**
+     * 查询web端计划专区上部统计数据
+     * @author zhangyk
+     * @date 2018/6/21 15:40
+     */
+    @RequestMapping("/web/planData")
+    public ProjectListResponse searchPlanData(@RequestBody ProjectListRequest request){
+        ProjectListResponse res = new ProjectListResponse();
+        Map<String,Object> map = projectListService.searchPlanData();
+        res.setTotalData(map);
+        return res;
+    }
+
+    /**
+     * 查询web端计划专区计划列表count
+     * @author zhangyk
+     * @date 2018/6/21 15:49
+     */
+    @RequestMapping("/web/countPlanList")
+    public ProjectListResponse countPlanList(@RequestBody @Valid  ProjectListRequest request){
+        ProjectListResponse res = new ProjectListResponse();
+        int count = projectListService.countWebPlanList(request);
+        res.setCount(count);
+        return res;
+    }
+
+
+    /**
+     * 查询web端计划专区计划列表count
+     * @author zhangyk
+     * @date 2018/6/21 15:49
+     */
+    @RequestMapping("/web/searchPlanList")
+    public ProjectListResponse searchPlanList(@RequestBody @Valid  ProjectListRequest request){
+        ProjectListResponse res = new ProjectListResponse();
+        List<WebProjectListCustomizeVo> list= projectListService.searchWebPlanList(request);
+        res.setResultList(list);
+        return res;
+    }
+
+
+
+
     // --------------------------------------web end------------------------------------------
     //---------------------------------------app start------------------------------------------
     /**
@@ -122,14 +166,14 @@ public class ProjectListController {
     }
 
     /**
-     * App端获取散标投资
+     * App端获取债转投资list
      * @param request
      * @return
      */
     @RequestMapping("/app/searchCreditList")
     public ProjectListResponse searchAppCreditList(@RequestBody @Valid ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
-        List<WebProjectListCustomize> list = projectListService.searchAppProjectList(request);
+        List<WebProjectListCustomize> list = projectListService.searchAppCreditList(request);
         if(!CollectionUtils.isEmpty(list)){
             List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
             projectListResponse.setResultList(webProjectListCustomizeVo);
@@ -138,17 +182,48 @@ public class ProjectListController {
     }
 
     /**
-     * app端散标投资count
+     * app端获取债转投资count
      * @param request
      * @return
      */
     @RequestMapping("/app/countCreditList")
     public ProjectListResponse countAppCreditList(@RequestBody @Valid ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
-        int count = projectListService.countAppProjectList(request);
+        int count = projectListService.countAppCreditList(request);
         projectListResponse.setCount(count);
         return projectListResponse;
     }
+
+    /**
+     * app端获取计划投资count
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @RequestMapping("/app/countPlanList")
+    public ProjectListResponse countAppPlanList(@RequestBody @Valid ProjectListRequest request){
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        int count = projectListService.countAppPlanList(request);
+        projectListResponse.setCount(count);
+        return projectListResponse;
+    }
+
+    /**
+     * app端获取计划投资count
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @RequestMapping("/app/searchPlanList")
+    public ProjectListResponse searchAppPlanList(@RequestBody @Valid ProjectListRequest request){
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        List<WebProjectListCustomize> list = projectListService.searchAppPlanList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
+            projectListResponse.setResultList(webProjectListCustomizeVo);
+        }
+        return projectListResponse;
+    }
+
+
     // --------------------------------------app end-------------------------------------------------
 
 

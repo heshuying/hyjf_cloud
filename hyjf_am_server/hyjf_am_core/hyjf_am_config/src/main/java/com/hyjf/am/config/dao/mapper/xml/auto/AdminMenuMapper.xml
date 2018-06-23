@@ -113,23 +113,26 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.AdminMenu" >
-    insert into ht_admin_menu (menu_uuid, menu_puuid, menu_ctrl, 
-      menu_icon, menu_name, menu_sort, 
-      menu_url, menu_hide, menu_tip, 
-      del_flag, create_user_id, update_user_id, 
-      create_time, update_time)
-    values (#{menuUuid,jdbcType=VARCHAR}, #{menuPuuid,jdbcType=VARCHAR}, #{menuCtrl,jdbcType=VARCHAR}, 
-      #{menuIcon,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, 
-      #{menuUrl,jdbcType=VARCHAR}, #{menuHide,jdbcType=TINYINT}, #{menuTip,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    <selectKey resultType="java.lang.String" keyProperty="menuUuid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_admin_menu (menu_puuid, menu_ctrl, menu_icon, 
+      menu_name, menu_sort, menu_url, 
+      menu_hide, menu_tip, del_flag, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{menuPuuid,jdbcType=VARCHAR}, #{menuCtrl,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, 
+      #{menuName,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{menuUrl,jdbcType=VARCHAR}, 
+      #{menuHide,jdbcType=TINYINT}, #{menuTip,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.AdminMenu" >
+    <selectKey resultType="java.lang.String" keyProperty="menuUuid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_admin_menu
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="menuUuid != null" >
-        menu_uuid,
-      </if>
       <if test="menuPuuid != null" >
         menu_puuid,
       </if>
@@ -171,9 +174,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="menuUuid != null" >
-        #{menuUuid,jdbcType=VARCHAR},
-      </if>
       <if test="menuPuuid != null" >
         #{menuPuuid,jdbcType=VARCHAR},
       </if>

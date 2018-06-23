@@ -57,13 +57,13 @@ public class HjhLabel implements Serializable {
 
     private Integer createUserId;
 
-    private Date createTime;
-
     private Integer updateUserId;
 
-    private Date updateTime;
-
     private Integer delFlag;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -275,14 +275,6 @@ public class HjhLabel implements Serializable {
         this.createUserId = createUserId;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
@@ -291,19 +283,27 @@ public class HjhLabel implements Serializable {
         this.updateUserId = updateUserId;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getDelFlag() {
         return delFlag;
     }
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
