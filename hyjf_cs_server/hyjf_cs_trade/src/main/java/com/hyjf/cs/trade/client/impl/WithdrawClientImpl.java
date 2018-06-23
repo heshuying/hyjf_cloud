@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.AccountRechargeResponse;
-import com.hyjf.am.response.trade.AccountwithdrawResponse;
+import com.hyjf.am.response.trade.AccountWithdrawResponse;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -26,8 +26,8 @@ public class WithdrawClientImpl implements WithdrawClient {
     private RestTemplate restTemplate;
     @Override
     public List<AccountWithdrawVO> selectAccountWithdrawByOrdId(String ordId) {
-        AccountwithdrawResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/accountWithdraw/findByOrdId/" + ordId, AccountwithdrawResponse.class).getBody();
+        AccountWithdrawResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/accountWithdraw/findByOrdId/" + ordId, AccountWithdrawResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -41,8 +41,8 @@ public class WithdrawClientImpl implements WithdrawClient {
 
     @Override
     public AccountWithdrawVO getAccountWithdrawByOrdId(String logOrderId) {
-        AccountwithdrawResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/accountWithdraw/getAccountWithdrawByOrdId/" + logOrderId, AccountwithdrawResponse.class).getBody();
+        AccountWithdrawResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/accountWithdraw/getAccountWithdrawByOrdId/" + logOrderId, AccountWithdrawResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -67,7 +67,7 @@ public class WithdrawClientImpl implements WithdrawClient {
     @Override
     public Integer getBorrowTender(Integer userId) {
         String url = "http://AM-TRADE/am-trade/accountWithdraw/getBorrowTender/"+userId;
-        AccountwithdrawResponse response= restTemplate.getForEntity(url,AccountwithdrawResponse.class).getBody();
+        AccountWithdrawResponse response= restTemplate.getForEntity(url,AccountWithdrawResponse.class).getBody();
         if (response != null) {
             return response.getUserBorrowTenderCounte();
         }

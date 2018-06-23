@@ -16,7 +16,7 @@ public class WhereaboutsPageConfig implements Serializable {
 
     private String jumpPath;
 
-    private Boolean bottomButtonStatus;
+    private Integer bottomButtonStatus;
 
     private String bottomButton;
 
@@ -24,21 +24,21 @@ public class WhereaboutsPageConfig implements Serializable {
 
     private String describe;
 
-    private Integer statusOn;
-
-    private Boolean deleteStatus;
-
-    private Date createTime;
-
-    private String createUser;
-
-    private Date updateTime;
-
-    private String updateUser;
-
     private String remark;
 
     private Integer style;
+
+    private Integer statusOn;
+
+    private Boolean delFlag;
+
+    private String createUserId;
+
+    private String updateUserId;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -90,11 +90,11 @@ public class WhereaboutsPageConfig implements Serializable {
         this.jumpPath = jumpPath == null ? null : jumpPath.trim();
     }
 
-    public Boolean getBottomButtonStatus() {
+    public Integer getBottomButtonStatus() {
         return bottomButtonStatus;
     }
 
-    public void setBottomButtonStatus(Boolean bottomButtonStatus) {
+    public void setBottomButtonStatus(Integer bottomButtonStatus) {
         this.bottomButtonStatus = bottomButtonStatus;
     }
 
@@ -122,54 +122,6 @@ public class WhereaboutsPageConfig implements Serializable {
         this.describe = describe == null ? null : describe.trim();
     }
 
-    public Integer getStatusOn() {
-        return statusOn;
-    }
-
-    public void setStatusOn(Integer statusOn) {
-        this.statusOn = statusOn;
-    }
-
-    public Boolean getDeleteStatus() {
-        return deleteStatus;
-    }
-
-    public void setDeleteStatus(Boolean deleteStatus) {
-        this.deleteStatus = deleteStatus;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -184,5 +136,53 @@ public class WhereaboutsPageConfig implements Serializable {
 
     public void setStyle(Integer style) {
         this.style = style;
+    }
+
+    public Integer getStatusOn() {
+        return statusOn;
+    }
+
+    public void setStatusOn(Integer statusOn) {
+        this.statusOn = statusOn;
+    }
+
+    public Boolean getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public String getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId == null ? null : createUserId.trim();
+    }
+
+    public String getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(String updateUserId) {
+        this.updateUserId = updateUserId == null ? null : updateUserId.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

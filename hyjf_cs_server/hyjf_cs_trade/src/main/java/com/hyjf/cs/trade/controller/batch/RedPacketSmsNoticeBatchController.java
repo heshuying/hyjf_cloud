@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/tradeBatch")
+@RequestMapping("/redPacket")
 public class RedPacketSmsNoticeBatchController {
     private static final Logger logger = LoggerFactory.getLogger(RedPacketSmsNoticeBatchController.class);
 
     @Autowired
     private RedPacketSmsNoticeBatchService redPacketSmsNoticeBatchService;
 
-    @RequestMapping("/redPacket/smsNotice")
+    @RequestMapping("/smsNotice")
     public void entryUpdate(){
         logger.info("【红包账户余额短信提醒】开始。。。");
         redPacketSmsNoticeBatchService.queryAndSend();

@@ -28,7 +28,7 @@ public class Ads implements Serializable {
 
     private String shareImage;
 
-    private Byte isIndex;
+    private Integer isIndex;
 
     private String startTime;
 
@@ -154,11 +154,11 @@ public class Ads implements Serializable {
         this.shareImage = shareImage == null ? null : shareImage.trim();
     }
 
-    public Byte getIsIndex() {
+    public Integer getIsIndex() {
         return isIndex;
     }
 
-    public void setIsIndex(Byte isIndex) {
+    public void setIsIndex(Integer isIndex) {
         this.isIndex = isIndex;
     }
 

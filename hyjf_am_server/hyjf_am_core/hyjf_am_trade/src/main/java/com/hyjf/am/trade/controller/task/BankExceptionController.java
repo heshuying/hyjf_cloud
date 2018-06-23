@@ -1,33 +1,29 @@
 package com.hyjf.am.trade.controller.task;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.BankCallBeanResponse;
-import com.hyjf.am.response.trade.CreditTenderLogResponse;
-import com.hyjf.am.response.trade.CreditTenderResponse;
-import com.hyjf.am.resquest.trade.TenderCreditRequest;
-import com.hyjf.am.trade.dao.model.auto.CreditTender;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
-import com.hyjf.am.trade.service.task.BankCreditTenderService;
+import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.trade.BatchBorrowTenderCustomizeRequest;
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.BankCreditTenderService;
+import com.hyjf.am.trade.service.BankInvestExceptionService;
+import com.hyjf.am.trade.service.BankRechargeService;
+import com.hyjf.am.trade.service.BankWithdrawService;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hyjf.am.response.trade.AccountwithdrawResponse;
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
-import com.hyjf.am.trade.service.BankRechargeService;
-import com.hyjf.am.trade.service.BankWithdrawService;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.common.util.CommonUtils;
-
-import io.swagger.annotations.Api;
+import java.util.List;
 
 @Api(value = "江西银行充值掉单异常处理定时任务")
 @RestController
@@ -42,6 +38,8 @@ public class BankExceptionController {
     private BankWithdrawService bankWithdrawService;
     @Autowired
     private BankCreditTenderService bankCreditTenderService;
+    @Autowired
+    private BankInvestExceptionService bankInvestExceptionService;
 
     @RequestMapping("/recharge")
     public void recharge(){
@@ -84,10 +82,10 @@ public class BankExceptionController {
      * @return
      */
     @RequestMapping(value = "/selectBankWithdrawList")
-    public AccountwithdrawResponse selectBankWithdrawList(){
+    public AccountWithdrawResponse selectBankWithdrawList(){
         logger.info("selectBankWithdrawList...");
-        AccountwithdrawResponse response = new AccountwithdrawResponse();
-        List<Accountwithdraw> withdrawList=bankWithdrawService.selectBankWithdrawList();
+        AccountWithdrawResponse response = new AccountWithdrawResponse();
+        List<AccountWithdraw> withdrawList=bankWithdrawService.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             List<AccountWithdrawVO> voList = CommonUtils.convertBeanList(withdrawList, AccountWithdrawVO.class);
             response.setResultList(voList);
@@ -180,6 +178,49 @@ public class BankExceptionController {
             ret = false;
         }
         return ret;
+
+    }
+    
+    /**
+     * 获取BorrowCredit列表
+     * @param request
+     * @return
+     */
+    @PostMapping("/getBorrowCreditList")
+    public BorrowCreditResponse getBorrowCreditList(@RequestBody BorrowCreditRequest request) {
+    	BorrowCreditResponse response = new BorrowCreditResponse();
+         List<BorrowCredit> borrowCredits=bankCreditTenderService.getBorrowCreditList(request);
+         if(CollectionUtils.isNotEmpty(borrowCredits)){
+             List<BorrowCreditVO> voList = CommonUtils.convertBeanList(borrowCredits, BorrowCreditVO.class);
+             response.setResultList(voList);
+         }
+         return response;
+    }
+
+    /**
+     * 查询出投资表authcode为空的记录
+     * @return
+     */
+    @GetMapping("/queryAuthCodeBorrowTenderList")
+    public BatchBorrowTenderCustomizeResponse queryAuthCodeBorrowTenderList(){
+        BatchBorrowTenderCustomizeResponse response = new BatchBorrowTenderCustomizeResponse();
+        List<BatchBorrowTenderCustomize> list = bankInvestExceptionService.queryAuthCodeBorrowTenderList();
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,BatchBorrowTenderCustomizeVO.class));
+        }
+        return response;
+    }
+
+
+    /**
+     * 处理投资掉单
+     * add by jijun 20180623
+     */
+    @PostMapping("/insertAuthCode")
+    public void insertAuthCode(@RequestBody BatchBorrowTenderCustomizeRequest request){
+        List<BatchBorrowTenderCustomizeVO> batchBorrowTenderCustomizeVOList = request.getBatchBorrowTenderCustomizeList();
+        List<BatchBorrowTenderCustomize> list = CommonUtils.convertBeanList(batchBorrowTenderCustomizeVOList,BatchBorrowTenderCustomize.class);
+        bankInvestExceptionService.insertAuthCode(list);
 
     }
 

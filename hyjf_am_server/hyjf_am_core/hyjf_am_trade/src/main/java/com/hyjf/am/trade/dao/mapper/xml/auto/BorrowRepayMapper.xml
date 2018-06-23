@@ -13,7 +13,7 @@
     <result column="repay_action_time" property="repayActionTime" jdbcType="INTEGER" />
     <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
     <result column="repay_period" property="repayPeriod" jdbcType="TINYINT" />
-    <result column="repay_time" property="repayTime" jdbcType="TINYINT" />
+    <result column="repay_time" property="repayTime" jdbcType="INTEGER" />
     <result column="repay_yestime" property="repayYestime" jdbcType="INTEGER" />
     <result column="repay_account_all" property="repayAccountAll" jdbcType="DECIMAL" />
     <result column="repay_account" property="repayAccount" jdbcType="DECIMAL" />
@@ -161,7 +161,7 @@
     values (#{status,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
       #{borrowNid,jdbcType=VARCHAR}, #{nid,jdbcType=VARCHAR}, #{repayType,jdbcType=VARCHAR}, 
       #{repayFee,jdbcType=DECIMAL}, #{repayActionTime,jdbcType=INTEGER}, #{repayStatus,jdbcType=TINYINT}, 
-      #{repayPeriod,jdbcType=TINYINT}, #{repayTime,jdbcType=TINYINT}, #{repayYestime,jdbcType=INTEGER}, 
+      #{repayPeriod,jdbcType=TINYINT}, #{repayTime,jdbcType=INTEGER}, #{repayYestime,jdbcType=INTEGER}, 
       #{repayAccountAll,jdbcType=DECIMAL}, #{repayAccount,jdbcType=DECIMAL}, #{repayInterest,jdbcType=DECIMAL}, 
       #{repayCapital,jdbcType=DECIMAL}, #{repayAccountYes,jdbcType=DECIMAL}, #{lateRepayDays,jdbcType=INTEGER}, 
       #{repayInterestYes,jdbcType=DECIMAL}, #{repayCapitalYes,jdbcType=DECIMAL}, #{repayCapitalWait,jdbcType=DECIMAL}, 
@@ -322,7 +322,7 @@
         #{repayPeriod,jdbcType=TINYINT},
       </if>
       <if test="repayTime != null" >
-        #{repayTime,jdbcType=TINYINT},
+        #{repayTime,jdbcType=INTEGER},
       </if>
       <if test="repayYestime != null" >
         #{repayYestime,jdbcType=INTEGER},
@@ -447,7 +447,7 @@
         repay_period = #{record.repayPeriod,jdbcType=TINYINT},
       </if>
       <if test="record.repayTime != null" >
-        repay_time = #{record.repayTime,jdbcType=TINYINT},
+        repay_time = #{record.repayTime,jdbcType=INTEGER},
       </if>
       <if test="record.repayYestime != null" >
         repay_yestime = #{record.repayYestime,jdbcType=INTEGER},
@@ -545,7 +545,7 @@
       repay_action_time = #{record.repayActionTime,jdbcType=INTEGER},
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
       repay_period = #{record.repayPeriod,jdbcType=TINYINT},
-      repay_time = #{record.repayTime,jdbcType=TINYINT},
+      repay_time = #{record.repayTime,jdbcType=INTEGER},
       repay_yestime = #{record.repayYestime,jdbcType=INTEGER},
       repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
       repay_account = #{record.repayAccount,jdbcType=DECIMAL},
@@ -610,7 +610,7 @@
         repay_period = #{repayPeriod,jdbcType=TINYINT},
       </if>
       <if test="repayTime != null" >
-        repay_time = #{repayTime,jdbcType=TINYINT},
+        repay_time = #{repayTime,jdbcType=INTEGER},
       </if>
       <if test="repayYestime != null" >
         repay_yestime = #{repayYestime,jdbcType=INTEGER},
@@ -705,7 +705,7 @@
       repay_action_time = #{repayActionTime,jdbcType=INTEGER},
       repay_status = #{repayStatus,jdbcType=TINYINT},
       repay_period = #{repayPeriod,jdbcType=TINYINT},
-      repay_time = #{repayTime,jdbcType=TINYINT},
+      repay_time = #{repayTime,jdbcType=INTEGER},
       repay_yestime = #{repayYestime,jdbcType=INTEGER},
       repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
       repay_account = #{repayAccount,jdbcType=DECIMAL},

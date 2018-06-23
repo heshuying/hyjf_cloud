@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhAssetBorrowTypeMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhAssetBorrowtypeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
     <result column="asset_type" property="assetType" jdbcType="TINYINT" />
@@ -18,8 +18,8 @@
     <result column="repay_org_name" property="repayOrgName" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -83,9 +83,9 @@
   <sql id="Base_Column_List" >
     id, inst_code, asset_type, borrow_cd, is_open, auto_add, auto_record, auto_bail, 
     auto_audit, auto_review, auto_send_minutes, auto_review_minutes, applicant, repay_org_name, 
-    remark, create_user, create_time, update_user, update_time
+    remark, create_user, update_user, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowTypeExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtypeExample" >
     select
     <if test="distinct" >
       distinct
@@ -112,13 +112,13 @@
     delete from ht_hjh_asset_borrowtype
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowTypeExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtypeExample" >
     delete from ht_hjh_asset_borrowtype
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType" >
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -127,17 +127,17 @@
       auto_bail, auto_audit, auto_review, 
       auto_send_minutes, auto_review_minutes, applicant, 
       repay_org_name, remark, create_user, 
-      create_time, update_user, update_time
+      update_user, create_time, update_time
       )
     values (#{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, #{borrowCd,jdbcType=TINYINT}, 
       #{isOpen,jdbcType=TINYINT}, #{autoAdd,jdbcType=TINYINT}, #{autoRecord,jdbcType=TINYINT}, 
       #{autoBail,jdbcType=TINYINT}, #{autoAudit,jdbcType=TINYINT}, #{autoReview,jdbcType=TINYINT}, 
       #{autoSendMinutes,jdbcType=INTEGER}, #{autoReviewMinutes,jdbcType=INTEGER}, #{applicant,jdbcType=VARCHAR}, 
       #{repayOrgName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -188,11 +188,11 @@
       <if test="createUser != null" >
         create_user,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="updateUser != null" >
         update_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
       <if test="updateTime != null" >
         update_time,
@@ -244,18 +244,18 @@
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowTypeExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtypeExample" resultType="java.lang.Integer" >
     select count(*) from ht_hjh_asset_borrowtype
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -312,11 +312,11 @@
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -344,14 +344,14 @@
       repay_org_name = #{record.repayOrgName,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_user = #{record.updateUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype" >
     update ht_hjh_asset_borrowtype
     <set >
       <if test="instCode != null" >
@@ -399,11 +399,11 @@
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -411,7 +411,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowType" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype" >
     update ht_hjh_asset_borrowtype
     set inst_code = #{instCode,jdbcType=VARCHAR},
       asset_type = #{assetType,jdbcType=TINYINT},
@@ -428,8 +428,8 @@
       repay_org_name = #{repayOrgName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

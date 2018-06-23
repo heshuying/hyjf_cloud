@@ -22,7 +22,7 @@ public interface AssetPushService {
      * @param assetType
      * @return
      */
-    HjhAssetBorrowType selectAssetBorrowType(String instCode, int assetType);
+    HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType);
 
     /**
      * 根据项目类型去还款方式
@@ -38,7 +38,7 @@ public interface AssetPushService {
      * @param entrustedAccountId
      * @return
      */
-    STZHWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId);
+    StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId);
 
     /**
      * 插入资产表

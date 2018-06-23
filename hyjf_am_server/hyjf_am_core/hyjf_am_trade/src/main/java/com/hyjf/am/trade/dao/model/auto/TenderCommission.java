@@ -37,8 +37,6 @@ public class TenderCommission implements Serializable {
 
     private Integer computeTime;
 
-    private Date updateTime;
-
     private Integer regionId;
 
     private Integer branchId;
@@ -52,6 +50,8 @@ public class TenderCommission implements Serializable {
     private String accountId;
 
     private Integer checkStatus;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -183,14 +183,6 @@ public class TenderCommission implements Serializable {
         this.computeTime = computeTime;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getRegionId() {
         return regionId;
     }
@@ -245,5 +237,13 @@ public class TenderCommission implements Serializable {
 
     public void setCheckStatus(Integer checkStatus) {
         this.checkStatus = checkStatus;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

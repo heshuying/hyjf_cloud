@@ -57,11 +57,25 @@ public class AppProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "APP端债转列表", notes = "APP端债转列表")
-    @PostMapping(value = "/getCreditList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/creditList", produces = "application/json; charset=utf-8")
     public Object getCredittList(@RequestBody @Valid ProjectListRequest request){
         AppResult result =  appProjectListService.searchAppCreditList(request);
         return result;
     }
+
+
+    /**
+     * app端计划列表数据
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "APP端计划列表", notes = "APP端计划列表")
+    @PostMapping(value = "/planList", produces = "application/json; charset=utf-8")
+    public Object getPlanList(@RequestBody @Valid ProjectListRequest request){
+        AppResult result =  appProjectListService.searchAppPlanList(request);
+        return result;
+    }
+
 
 
 

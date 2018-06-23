@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
  * 呼叫中心:按照用户名/手机号查询账户余额Controller
  * @author LIBIN
  * @version hyjf 1.0
- * @since hyjf 1.0 2017年07月15日 
+ * @since hyjf 1.0 2018年06月23日 
  */
 @Api(value = "查询账户余额")
 @RestController

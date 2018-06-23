@@ -3,7 +3,7 @@ package com.hyjf.am.trade.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
-import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 
 import java.util.List;
 
@@ -12,17 +12,17 @@ import java.util.List;
  * @version AccountWithdrawService, v0.1 2018/6/11 13:47
  */
 public interface AccountWithdrawService {
-    void insertAccountWithdrawLog(Accountwithdraw accountWithdraw);
+    void insertAccountWithdrawLog(AccountWithdraw accountWithdraw);
 
-    List<Accountwithdraw> findByOrdId(String ordId);
+    List<AccountWithdraw> findByOrdId(String ordId);
 
-    Accountwithdraw getAccountWithdrawByOrdId(String logOrderId);
+    AccountWithdraw getAccountWithdrawByOrdId(String logOrderId);
 
     int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankRequest);
 
-    void updateAccountwithdrawLog(Accountwithdraw accountwithdraw);
+    void updateAccountWithdrawLog(AccountWithdraw accountwithdraw);
     
-    int updateAccountwithdraw(Accountwithdraw accountWithdraw);
+    int updateAccountWithdraw(AccountWithdraw accountWithdraw);
 
 	void selectAndUpdateAccountWithdraw(JSONObject pamaMap) throws Exception;
 

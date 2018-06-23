@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -134,6 +135,37 @@ public class ProjectListServiceImpl implements ProjectListService {
     }
 
 
+    /**
+     * Web端获取计划专区上部统计数据
+     * @author zhangyk
+     * @date 2018/6/21 15:42
+     */
+    @Override
+    public Map<String, Object> searchPlanData() {
+        return webProjectListCustomizeMapper.searchPlanData();
+    }
+
+    /**
+     * Web端获取计划专区计划列表count
+     * @author zhangyk
+     * @date 2018/6/21 15:51
+     */
+    @Override
+    public int countWebPlanList(ProjectListRequest request) {
+        return 0;
+    }
+
+
+    /**
+     * Web端获取计划专区计划列表list
+     * @author zhangyk
+     * @date 2018/6/21 15:53
+     */
+    @Override
+    public List<WebProjectListCustomizeVo> searchWebPlanList(ProjectListRequest request) {
+        return null;
+    }
+
 
     // ----------------------------------------web end ----------------------------------------------------
     // ----------------------------------------app start --------------------------------------------------
@@ -214,6 +246,42 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
         return webProjectListCustomizeMapper.searchAppCreditList(params);
+    }
+
+    @Override
+    public int countAppPlanList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("isHome",request.getIsHome());
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        return webProjectListCustomizeMapper.countAppPlanList(params);
+    }
+
+    @Override
+    public List<WebProjectListCustomize> searchAppPlanList(@Valid ProjectListRequest request) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 项目类型
+        String projectType = request.getProjectType();
+        // 项目子类型
+        String borrowClass = request.getBorrowClass();
+        // 分页起始
+        Integer limitStart = request.getLimitStart();
+        // 分页结束
+        Integer limitEnd = request.getLimitEnd();
+        params.put("isHome",request.getIsHome());
+        params.put("projectType", projectType);
+        params.put("borrowClass", borrowClass);
+        params.put("limitStart",limitStart);
+        params.put("limitEnd", limitEnd);
+        return webProjectListCustomizeMapper.searchAppPlanList(params);
     }
 
 

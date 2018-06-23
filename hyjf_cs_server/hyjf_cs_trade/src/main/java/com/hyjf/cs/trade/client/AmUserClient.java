@@ -12,7 +12,7 @@ import com.hyjf.am.vo.user.*;
  */
 public interface AmUserClient {
 
-	UserVO findUserById(Integer userId);
+	UserVO findUserById(int userId);
 
 	UserInfoVO findUsersInfoById(int userId);
 
@@ -51,4 +51,27 @@ public interface AmUserClient {
 	 * @Date 2018/6/20 18:13
 	 */
 	UserInfoCrmVO queryUserCrmInfoByUserId(int userId);
+
+	/**
+	 *	用户详细信息 add by jijun 20180622
+	 * @param userId
+	 * @return
+	 */
+	UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId);
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUserVO querySpreadsUsersByUserId(Integer userId);
+
+	/**
+	 * 获取员工信息
+	 * @param userId
+	 * @return
+	 */
+	EmployeeCustomizeVO selectEmployeeByUserId(Integer userId);
+
+
 }

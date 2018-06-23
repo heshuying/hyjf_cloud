@@ -370,9 +370,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             Integer bankId = banks.getBankId();
             BanksConfigVO banksConfig = bindCardClient.getBanksConfigByBankId(bankId + "");
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankName())) {
-                bankCardBean.setBank(banksConfig.getBankName());
-                bankCardBean.setBankCode(banksConfig.getBankCode());
-                bankCardBean.setLogo(banksConfig.getBankLogo());
+                bankCardBean.setBank(banksConfig.getBankName()==null?"":banksConfig.getBankName());
+                bankCardBean.setBankCode(banksConfig.getBankCode()==null?"":banksConfig.getBankCode());
+                bankCardBean.setLogo(banksConfig.getBankLogo()==null?"":banksConfig.getBankLogo());
             }
 
             feeWithdraw = this.getWithdrawFee(userId, banks.getCardNo());
@@ -384,7 +384,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         ret.put("payAllianceCode", payAllianceCode);
         ret.put("bankType", bankType);
         ret.put("feeWithdraw", DF_FOR_VIEW.format(new BigDecimal(feeWithdraw)));
-        ret.put("roleId", user == null ? "" : user.getRoleId());
+        ret.put("roleId", userRoId);
 //		modelAndView.addObject("paymentAuthStatus", user.getPaymentAuthStatus());
         //update by jijun 2018/04/09 合规接口改造一期
         ret.put("paymentAuthStatus", "");

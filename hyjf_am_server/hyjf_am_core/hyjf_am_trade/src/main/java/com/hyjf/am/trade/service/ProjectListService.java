@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -11,6 +12,7 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
 
 
 /**
@@ -49,6 +51,27 @@ public interface ProjectListService {
      */
     List<TenderCreditDetailCustomizeVO> searchCreditList(@Valid CreditListRequest request);
 
+    /**
+     * Web端获取计划专区上部统计数据
+     * @author zhangyk
+     * @date 2018/6/21 15:42
+     */
+    Map<String,Object>  searchPlanData();
+
+    /**
+     * Web端获取计划专区计划列表count
+     * @author zhangyk
+     * @date 2018/6/21 15:51
+     */
+    int countWebPlanList(ProjectListRequest request);
+
+    /**
+     * Web端获取计划专区计划列表list
+     * @author zhangyk
+     * @date 2018/6/21 15:51
+     */
+    List<WebProjectListCustomizeVo> searchWebPlanList(ProjectListRequest request);
+
     // --------------------------web end --------------------------------------------------
     //---------------------------app start ------------------------------------------------
     /**
@@ -78,5 +101,19 @@ public interface ProjectListService {
      * @date 2018/6/20 16:11
      */
     List<WebProjectListCustomize> searchAppCreditList(@Valid ProjectListRequest request);
+
+    /**
+     * app获取计划列表count
+     * @author zhangyk
+     * @date 2018/6/22 10:27
+     */
+    int countAppPlanList(@Valid ProjectListRequest request);
+
+    /**
+     * app获取计划列表list
+     * @author zhangyk
+     * @date 2018/6/22 10:27
+     */
+    List<WebProjectListCustomize>  searchAppPlanList(@Valid ProjectListRequest request);
     // --------------------------app end --------------------------------------------------
 }

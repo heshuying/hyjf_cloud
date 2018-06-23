@@ -116,25 +116,28 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
-    insert into ht_sms_config (id, max_ip_count, max_machine_count, 
-      max_browser_count, max_phone_count, max_interval_time, 
-      max_valid_time, notice_to_phone, notice_to_email, 
-      notice_to_time, repay_mobiles, full_mobiles, 
-      create_user_id, update_user_id, create_time, 
-      update_time)
-    values (#{id,jdbcType=INTEGER}, #{maxIpCount,jdbcType=INTEGER}, #{maxMachineCount,jdbcType=INTEGER}, 
-      #{maxBrowserCount,jdbcType=INTEGER}, #{maxPhoneCount,jdbcType=INTEGER}, #{maxIntervalTime,jdbcType=INTEGER}, 
-      #{maxValidTime,jdbcType=INTEGER}, #{noticeToPhone,jdbcType=VARCHAR}, #{noticeToEmail,jdbcType=VARCHAR}, 
-      #{noticeToTime,jdbcType=INTEGER}, #{repayMobiles,jdbcType=VARCHAR}, #{fullMobiles,jdbcType=VARCHAR}, 
-      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_sms_config (max_ip_count, max_machine_count, max_browser_count, 
+      max_phone_count, max_interval_time, max_valid_time, 
+      notice_to_phone, notice_to_email, notice_to_time, 
+      repay_mobiles, full_mobiles, create_user_id, 
+      update_user_id, create_time, update_time
+      )
+    values (#{maxIpCount,jdbcType=INTEGER}, #{maxMachineCount,jdbcType=INTEGER}, #{maxBrowserCount,jdbcType=INTEGER}, 
+      #{maxPhoneCount,jdbcType=INTEGER}, #{maxIntervalTime,jdbcType=INTEGER}, #{maxValidTime,jdbcType=INTEGER}, 
+      #{noticeToPhone,jdbcType=VARCHAR}, #{noticeToEmail,jdbcType=VARCHAR}, #{noticeToTime,jdbcType=INTEGER}, 
+      #{repayMobiles,jdbcType=VARCHAR}, #{fullMobiles,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_sms_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="maxIpCount != null" >
         max_ip_count,
       </if>
@@ -182,9 +185,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="maxIpCount != null" >
         #{maxIpCount,jdbcType=INTEGER},
       </if>

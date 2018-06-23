@@ -16,7 +16,7 @@ public interface SmsService {
      * @param platform
      * @return
      */
-    int saveSmsCode(String mobile, String verificationCode, String verificationType, Integer status, String platform);
+    int saveSmscode(String mobile, String verificationCode, String verificationType, Integer status, String platform);
 
     /**
      * 检查短信验证码

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.coupon.MyCouponListCustomizeMapper">
+
+   <resultMap id="MyCouponListResultMap" type="com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO" >
+	   <result column="id" property="id" />
+	   <result column="coupon_user_code" property="couponUserCode" />
+	   <result column="coupon_name" property="couponName" />
+	   <result column="coupon_type" property="couponType" />
+	   <result column="coupon_type_name" property="couponTypeName" />
+	   <result column="coupon_quota" property="couponQuota" />
+	   <result column="add_time" property="addTime" />
+	   <result column="end_time" property="endTime" />
+	   <result column="coupon_system" property="couponSystem" />
+	   <result column="project_type" property="projectType" />
+	   <result column="tender_quota" property="tenderQuota" />
+	   <result column="project_expiration_type" property="projectExpirationType" />
+	   <result column="used_flag" property="usedFlag" />
+    </resultMap>
+
+    <select id="selectMyCouponList" resultMap="MyCouponListResultMap" parameterType="java.util.Map">
+		SELECT
+			cu.id,
+			cu.coupon_user_code,
+			cu.used_flag,
+			cc.coupon_type,
+			CASE cc.coupon_type
+		WHEN 1 THEN
+			'体验金'
+		WHEN 2 THEN
+			'加息券'
+		WHEN 3 THEN
+			'代金券'
+		END AS coupon_type_name,
+		 CASE cc.coupon_type
+		WHEN 1 THEN
+			FORMAT(cc.coupon_quota, 0)
+		WHEN 3 THEN
+			FORMAT(cc.coupon_quota, 0)
+		ELSE
+			cc.coupon_quota
+		END AS coupon_quota,
+		 FROM_UNIXTIME(cu.add_time, '%Y.%m.%d') AS add_time,
+		 FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
+		 cc.coupon_system coupon_system,
+		 cc.project_type project_type,
+		 CASE
+		WHEN cc.tender_quota_type = 0 THEN
+			'不限'
+		WHEN cc.tender_quota_type = 1 THEN
+			CONCAT(
+
+				IF (
+					(
+						cc.tender_quota_min >= 10000
+						AND cc.tender_quota_min MOD 10000 = 0
+					),
+					concat(
+						cc.tender_quota_min DIV 10000,
+						'万'
+					),
+					cc.tender_quota_min
+				),
+				'元~',
+
+			IF (
+				(
+					cc.tender_quota_max >= 10000
+					AND cc.tender_quota_max MOD 10000 = 0
+				),
+				concat(
+					cc.tender_quota_max DIV 10000,
+					'万'
+				),
+				cc.tender_quota_max
+			),
+			'元可用'
+			)
+		WHEN cc.tender_quota_type = 2 THEN
+			CONCAT(
+				'满',
+
+			IF (
+				(
+					cc.tender_quota >= 10000
+					AND cc.tender_quota MOD 10000 = 0
+				),
+				concat(
+					cc.tender_quota DIV 10000,
+					'万'
+				),
+				cc.tender_quota
+			),
+			'元可用'
+			)
+		WHEN cc.tender_quota_type = 3 THEN
+			CONCAT(
+
+				IF (
+					(
+						cc.tender_quota >= 10000
+						AND cc.tender_quota MOD 10000 = 0
+					),
+					concat(
+						cc.tender_quota DIV 10000,
+						'万'
+					),
+					cc.tender_quota
+				),
+				'元（含）内可用'
+			)
+		ELSE
+			'不限'
+		END tender_quota,
+		 CASE
+		WHEN cc.project_expiration_type = 0 THEN
+			'不限'
+		WHEN cc.project_expiration_type = 1 THEN
+			CONCAT(
+				'',
+				cc.project_expiration_length,
+				'个月的项目'
+			)
+		WHEN cc.project_expiration_type = 2 THEN
+			CONCAT(
+				'',
+				cc.project_expiration_length_min,
+				'个月~',
+				cc.project_expiration_length_max,
+				'个月的项目'
+			)
+		WHEN cc.project_expiration_type = 3 THEN
+			CONCAT(
+				'≥',
+				cc.project_expiration_length,
+				'个月的项目'
+			)
+		WHEN cc.project_expiration_type = 4 THEN
+			CONCAT(
+				'≤',
+				cc.project_expiration_length,
+				'个月的项目'
+			)
+		ELSE
+			'不限'
+		END project_expiration_type
+		FROM
+			ht_coupon_user cu
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
+		<include refid="Where_Clause" />
+		ORDER BY cu.update_time DESC, cu.coupon_code ASC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+    </select>
+	<sql id="Where_Clause">
+		<where>
+			cu.del_flag = 0
+			<if test="userId != null and userId != ''">
+				AND cu.user_id = #{userId}
+			</if>
+			<if test="usedFlag != null and usedFlag != ''">
+				AND cu.used_flag = #{usedFlag}
+			</if>
+		</where>
+	</sql>
+</mapper>
