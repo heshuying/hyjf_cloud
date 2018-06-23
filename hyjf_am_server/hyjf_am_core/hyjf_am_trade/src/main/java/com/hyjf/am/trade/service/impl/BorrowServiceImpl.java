@@ -128,8 +128,7 @@ public class BorrowServiceImpl implements BorrowService {
         BorrowExample example = new BorrowExample();
         BorrowExample.Criteria cra = example.createCriteria();
         cra.andStatusEqualTo(3);
-        // todo  自动生成类型有误
-        //cra.andRepayFullStatusEqualTo(0);
+        cra.andRepayFullStatusEqualTo(0);
         List<Borrow> list = this.borrowMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list;
