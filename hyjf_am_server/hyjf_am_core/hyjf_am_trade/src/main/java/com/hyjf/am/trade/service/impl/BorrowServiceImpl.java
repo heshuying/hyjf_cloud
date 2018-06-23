@@ -112,13 +112,6 @@ public class BorrowServiceImpl implements BorrowService {
         return borrowMapper.updateByExampleSelective(borrow, example);
     }
 
-
-    /**
-     * 项目详情
-     * @param borrowNid
-     * @return
-     */
-
     /**
      * 检索正在还款中的标的
      * @return
@@ -135,4 +128,5 @@ public class BorrowServiceImpl implements BorrowService {
         }
         return null;
     }
+
 }

@@ -1,18 +1,23 @@
 package com.hyjf.am.user.controller;
 
-import com.hyjf.am.response.user.UserInfoCrmResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfoCustomize;
+import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.UserInfoService;
-import com.hyjf.am.vo.user.UserInfoCrmVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.*;
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -78,5 +83,43 @@ public class UserInfoController {
 		}
 		return response;
 	}
+
+
+	/**
+	 * 获取用户详细信息
+	 */
+	@GetMapping("/queryUserInfoCustomizeByUserId/{userId}")
+	public UserInfoCustomizeResponse queryUserInfoCustomizeByUserId(@PathVariable Integer userId){
+		UserInfoCustomizeResponse response = new UserInfoCustomizeResponse();
+		UserInfoCustomize userInfoCustomize=userInfoService.queryUserInfoCustomizeByUserId(userId);
+		if (userInfoCustomize!=null){
+			response.setResult(CommonUtils.convertBean(userInfoCustomize,UserInfoCustomizeVO.class));
+		}
+		return response;
+	}
+
+
+	@GetMapping("/querySpreadsUsersByUserId/{userId}")
+	public SpreadsUserResponse querySpreadsUsersByUserId(@PathVariable Integer userId){
+		SpreadsUserResponse response = new SpreadsUserResponse();
+		List<SpreadsUser> list=userInfoService.querySpreadsUsersByUserId(userId);
+		if(CollectionUtils.isNotEmpty(list)){
+			SpreadsUser su=list.get(0);
+			response.setResult(CommonUtils.convertBean(su,SpreadsUserVO.class));
+		}
+		return response;
+	}
+
+
+	@GetMapping("/selectEmployeeByUserId/{userId}")
+	public EmployeeCustomizeResponse selectEmployeeByUserId(@PathVariable Integer userId){
+		EmployeeCustomizeResponse response = new EmployeeCustomizeResponse();
+		EmployeeCustomize employeeCustomize=userInfoService.selectEmployeeByUserId(userId);
+		if (employeeCustomize!=null){
+			response.setResult(CommonUtils.convertBean(employeeCustomize,EmployeeCustomizeVO.class));
+		}
+		return response;
+	}
+
 
 }
