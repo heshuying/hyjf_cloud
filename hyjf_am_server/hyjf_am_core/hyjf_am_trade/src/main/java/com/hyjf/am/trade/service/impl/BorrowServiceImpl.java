@@ -112,10 +112,28 @@ public class BorrowServiceImpl implements BorrowService {
         return borrowMapper.updateByExampleSelective(borrow, example);
     }
 
+
     /**
      * 项目详情
      * @param borrowNid
      * @return
      */
 
+    /**
+     * 检索正在还款中的标的
+     * @return
+     */
+    @Override
+    public List<Borrow> selectBorrowList() {
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(3);
+        // todo  自动生成类型有误
+        //cra.andRepayFullStatusEqualTo(0);
+        List<Borrow> list = this.borrowMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
 }
