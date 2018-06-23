@@ -55,27 +55,6 @@ public interface AmUserClient {
 	UserInfoCrmVO queryUserCrmInfoByUserId(int userId);
 
 	/**
-	 * 修改用户对象
-	 * @param user
-	 * @return
-	 */
-    boolean updateByPrimaryKeySelective(UserVO user);
-
-    /**
-     * 根据userId查询用户推广链接注册
-     * @param userId
-     * @return
-     */
-    UtmRegVO findUtmRegByUserId(Integer userId);
-
-    /**
-     * 更新huiyingdai_utm_reg的首投信息
-     * @param params
-     * @return
-     */
-    boolean updateFirstUtmReg(Map<String,Object> params);
-
-	/**
 	 *	用户详细信息 add by jijun 20180622
 	 * @param userId
 	 * @return
@@ -96,5 +75,24 @@ public interface AmUserClient {
 	 */
 	EmployeeCustomizeVO selectEmployeeByUserId(Integer userId);
 
+	/**
+	 * 修改用户对象
+	 * @param user
+	 * @return
+	 */
+    boolean updateByPrimaryKeySelective(UserVO user);
 
+    /**
+     * 根据userId查询用户推广链接注册
+     * @param userId
+     * @return
+     */
+    UtmRegVO findUtmRegByUserId(Integer userId);
+
+    /**
+     * 更新huiyingdai_utm_reg的首投信息
+     * @param params
+     * @return
+     */
+    boolean updateFirstUtmReg(Map<String,Object> params);
 }
