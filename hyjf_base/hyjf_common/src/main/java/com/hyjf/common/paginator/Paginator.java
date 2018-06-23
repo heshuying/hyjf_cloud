@@ -1,4 +1,4 @@
-package com.hyjf.admin.Utils;
+package com.hyjf.common.paginator;
 
 /**
  * 分页器，根据page,limit,totalCount用于页面上分页显示多项内容，计算页码和当前页的偏移量，方便页面分页使用.
