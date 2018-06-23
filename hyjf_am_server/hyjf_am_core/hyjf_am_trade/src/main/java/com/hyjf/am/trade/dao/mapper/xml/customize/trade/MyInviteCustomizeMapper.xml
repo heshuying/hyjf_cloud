@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.MyInviteCustomizeMapper">
+
+   <resultMap id="MyInviteListResultMap" type="com.hyjf.am.vo.trade.MyInviteListCustomizeVO" >
+	   <result column="user_id" property="userId" />
+	   <result column="username" property="username" />
+	   <result column="inviteTime" property="inviteTime" />
+	   <result column="bank_open_account" property="userStatus" /> <!-- 是否开户 0 未开户；1 已开户 -->
+    </resultMap>
+
+    <select id="selectMyInviteList" resultMap="MyInviteListResultMap" parameterType="java.util.Map">
+		SELECT
+			u.user_id,
+			u.username,
+			FROM_UNIXTIME(
+				u.reg_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS inviteTime,
+			u.bank_open_account
+		FROM
+			huiyingdai_spreads_users su
+		INNER JOIN huiyingdai_users u ON u.user_id = su.user_id
+		INNER JOIN huiyingdai_account a ON u.user_id = a.user_id
+		WHERE
+			su.spreads_userid = #{userId}
+		ORDER BY
+			u.user_id DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+    </select>
+
+	<resultMap id="MyRewardListResultMap" type="com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO">
+		<result column="tender_user_id" property="userId" />
+		<result column="username" property="username" />
+		<result column="rewardTime" property="rewardTime" />
+		<result column="borrow_nid" property="borrowNid" />
+		<result column="account_tender" property="account" />
+		<result column="commission" property="pushMoney" />
+		<result column="type" property="type" />
+		<result column="coupon_type" property="couponType" />
+	</resultMap>
+
+	<select id="selectMyRewardList" resultMap="MyRewardListResultMap" parameterType="java.util.Map">
+		SELECT
+			t.tender_user_id,
+			u.username,
+			t.account_tender,
+			t.commission,
+			FROM_UNIXTIME(
+			t.update_time,
+			'%Y-%m-%d %H:%i:%s'
+			) AS rewardTime,
+			t.borrow_nid,
+			0 type,
+			0 coupon_type
+		FROM
+			ht_tender_commission t
+		INNER JOIN ht_r_user u ON t.tender_user_id = u.user_id
+		WHERE
+			t. STATUS = 1
+		AND t.user_id = #{userId}
+		ORDER BY
+			t.update_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+</mapper>
