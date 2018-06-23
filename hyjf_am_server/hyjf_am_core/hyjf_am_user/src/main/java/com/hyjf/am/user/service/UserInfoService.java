@@ -1,7 +1,12 @@
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfoCustomize;
+import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -32,4 +37,25 @@ public interface UserInfoService {
      * @return
      */
     UserCrmInfoCustomize findUserCrmInfoByUserId(Integer userId);
+
+    /**
+     * 查询用户详情
+     * @param userId
+     * @return
+     */
+	UserInfoCustomize queryUserInfoCustomizeByUserId(Integer userId);
+
+    /**
+     *
+     * @param userId
+     * @return
+     */
+    List<SpreadsUser> querySpreadsUsersByUserId(Integer userId);
+
+    /**
+     * 获取员工信息
+     * @param userId
+     * @return
+     */
+    EmployeeCustomize selectEmployeeByUserId(Integer userId);
 }

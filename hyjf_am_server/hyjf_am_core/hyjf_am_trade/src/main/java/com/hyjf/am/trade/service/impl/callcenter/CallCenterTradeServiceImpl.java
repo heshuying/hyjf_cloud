@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.impl.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
-import com.hyjf.am.resquest.callcenter.CallCenterBankAccountManageRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
@@ -50,10 +49,6 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 
     @Autowired
     private CallCenterCouponUserCustomizeMapper callCenterCouponUserCustomizeMapper;
-    
-    @Autowired
-    private CallCenterBankAccountManageMapper callCenterBankAccountManageMapper;
-    
     /**
      *
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
@@ -241,11 +236,6 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
         	   callcenterHtjInvestCustomize.setPlatform(operatingDeckMap.getOrDefault(callcenterHtjInvestCustomize.getPlatform(),null));
             }
 		}
-		return list;
-	}
-	@Override
-	public List<CallCenterBankAccountManageCustomize> queryAccountInfos(CallCenterBankAccountManageRequest callCenterBankAccountManageRequest) {
-		List<CallCenterBankAccountManageCustomize> list = callCenterBankAccountManageMapper.queryAccountInfos(callCenterBankAccountManageRequest);
 		return list;
 	}
 }

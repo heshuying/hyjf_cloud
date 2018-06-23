@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.service.callcenter;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
-import com.hyjf.am.resquest.callcenter.CallCenterBankAccountManageRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
@@ -107,12 +106,4 @@ public interface CallCenterTradeService {
      * @author libin
      */
     List<CallcenterHtjInvestCustomize> getHtjBorrowInvestList(CallcenterHtjInvestRequest callcenterHtjInvestRequest);
-    
-    /**
-     * 查询账户余额
-     * @param centerBaseRequest
-     * @return List<CallCenterCouponBackMoneyCustomize>
-     * @author libin
-     */
-    List<CallCenterBankAccountManageCustomize> queryAccountInfos(CallCenterBankAccountManageRequest callCenterBankAccountManageRequest);
 }

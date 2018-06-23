@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
@@ -42,10 +43,11 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     private BankCreditTenderClient bankCreditTenderClient;
     @Autowired
     private AmUserClient amUserClient;
-
-
     @Autowired
     private FddProducer fddProducer;
+
+
+
     /**
      * 处理债转投资异常
      */
@@ -148,11 +150,19 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                     userInfoCustomizeRefCr = this.amUserClient.queryUserInfoCustomizeByUserId(refUserId);
 
                                 }
+                                //更新网站收支明细记录
+                                EmployeeCustomizeResponse employeeCustomizeResponse=this.getEmployeeCustomize(userId,spreadsUsers);
+
+                                UserVO investUser = this.amUserClient.findUserById(userId);
+
+                                boolean tenderFlag = this.bankCreditTenderClient.updateTenderCreditInfo(
+                                        logOrderId, userId, authCode,sellerBankAccount,
+                                        assignBankAccount,webUser,userInfo,spreadsUsers,
+                                        userInfoCustomizeRefCj,userInfoCustomize,spreadsUsersSeller,
+                                        userInfoCustomizeSeller,employeeCustomizeResponse,
+                                        investUser);
 
 
-
-                                boolean tenderFlag = this.bankCreditTenderClient.updateTenderCreditInfo(logOrderId, userId, authCode,sellerBankAccount,
-                                        assignBankAccount,webUser,userInfo,userInfoCustomizeRefCj);
                                 if (tenderFlag){
                                     // 查询相应的承接记录，如果相应的承接记录存在，则承接成功
                                     CreditTenderVO creditTender = this.bankCreditTenderClient.selectByAssignNidAndUserId(logOrderId, userId);
@@ -178,6 +188,35 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
         }
 
     }
+
+
+    /**
+     * 网站收支明细记录
+     * @param userId
+     * @return
+     */
+    private EmployeeCustomizeResponse getEmployeeCustomize(Integer userId,SpreadsUserVO spreadsUsers){
+        EmployeeCustomizeResponse response = new EmployeeCustomizeResponse();
+        UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(userId);
+        if(usersInfo!=null){
+            Integer attribute = usersInfo.getAttribute();
+            if (attribute != null) {
+                UserVO users =this.amUserClient.findUserById(userId);
+                Integer refUserId = spreadsUsers.getSpreadsUserId();
+                if (users != null && (attribute == 2 || attribute == 3)) {
+                    EmployeeCustomizeVO employeeCustomize =this.amUserClient.selectEmployeeByUserId(userId);
+                    response.setResult(employeeCustomize);
+                }else if (users != null && (attribute == 1 || attribute == 0)){
+                    EmployeeCustomizeVO employeeCustomize = this.amUserClient.selectEmployeeByUserId(refUserId);
+                    response.setResult(employeeCustomize);
+                }
+            }
+
+            response.setTruename(usersInfo.getTruename());
+        }
+        return response;
+    }
+
 
     /**
      * 发送法大大PDF处理MQ

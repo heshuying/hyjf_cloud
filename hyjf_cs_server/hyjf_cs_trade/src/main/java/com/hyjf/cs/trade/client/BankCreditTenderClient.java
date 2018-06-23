@@ -1,13 +1,11 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 
 import java.util.List;
 
@@ -35,8 +33,13 @@ public interface BankCreditTenderClient {
 
     CreditTenderVO selectByAssignNidAndUserId(String logOrderId, Integer userId);
 
-    boolean updateTenderCreditInfo(String logOrderId, Integer userId, String authCode,BankOpenAccountVO sellerBankAccount,
-                                   BankOpenAccountVO assignBankAccount, UserVO webUser, UserInfoVO usersInfo,UserInfoCustomizeVO userInfoCustomizeRefCj);
+    boolean updateTenderCreditInfo(String logOrderId, Integer userId, String authCode, BankOpenAccountVO sellerBankAccount,
+                                   BankOpenAccountVO assignBankAccount, UserVO webUser, UserInfoVO usersInfo,
+                                   SpreadsUserVO spreadsUsers, UserInfoCustomizeVO userInfoCustomizeRefCj,
+                                   UserInfoCustomizeVO userInfoCustomize,SpreadsUserVO spreadsUsersSeller,
+                                   UserInfoCustomizeVO userInfoCustomizeSeller,EmployeeCustomizeResponse employeeCustomizeResponse,
+                                   UserVO investUser
+                                    );
 
 	List<CreditTenderLogVO> getCreditTenderLogs(String logOrderId, Integer userId);
 

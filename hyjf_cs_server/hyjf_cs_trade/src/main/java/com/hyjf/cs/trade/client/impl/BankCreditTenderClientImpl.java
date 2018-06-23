@@ -5,16 +5,14 @@ import com.hyjf.am.response.trade.BorrowCreditResponse;
 import com.hyjf.am.response.trade.CreditTenderLogResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -141,10 +139,14 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
 
     @Override
     public boolean updateTenderCreditInfo(String assignOrderId, Integer userId, String authCode,
-                                          BankOpenAccountVO sellerBankAccount,BankOpenAccountVO 
-                                          assignBankAccount,UserVO webUser,UserInfoVO userInfo,
-                                          UserInfoCustomizeVO userInfoCustomizeRefCj
-                                          ) {
+                                          BankOpenAccountVO sellerBankAccount, BankOpenAccountVO
+                                          assignBankAccount, UserVO webUser, UserInfoVO userInfo,
+                                          SpreadsUserVO spreadsUsers, UserInfoCustomizeVO userInfoCustomizeRefCj,
+                                          UserInfoCustomizeVO userInfoCustomize,SpreadsUserVO spreadsUsersSeller,
+                                          UserInfoCustomizeVO userInfoCustomizeSeller,
+                                          EmployeeCustomizeResponse employeeCustomizeResponse,
+                                          UserVO investUser
+                                            ) {
         CreditTenderRequest request = new CreditTenderRequest();
         request.setAssignNid(assignOrderId);
         request.setUserId(userId);
@@ -153,9 +155,15 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
         request.setAssignBankAccount(assignBankAccount);
         request.setWebUser(webUser);
         request.setUserInfo(userInfo);
+        request.setSpreadsUsers(spreadsUsers);
         request.setUserInfoCustomizeRefCj(userInfoCustomizeRefCj);
+        request.setUserInfoCustomize(userInfoCustomize);
+        request.setSpreadsUsersSeller(spreadsUsersSeller);
+        request.setUserInfoCustomizeSeller(userInfoCustomizeSeller);
+        request.setEmployeeCustomizeResponse(employeeCustomizeResponse);
+        request.setInvestUser(investUser);
 
-
+        
         String url = "http://AM-TRADE/am-trade/creditTender/updateTenderCreditInfo";
         return restTemplate.postForEntity(url,request,Boolean.class).getBody();
     }

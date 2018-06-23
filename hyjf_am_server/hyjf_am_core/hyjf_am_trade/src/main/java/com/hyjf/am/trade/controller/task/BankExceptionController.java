@@ -3,16 +3,15 @@ package com.hyjf.am.trade.controller.task;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.BankCallBeanResponse;
 import com.hyjf.am.response.trade.CreditTenderLogResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
-import com.hyjf.am.resquest.trade.TenderCreditRequest;
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
-import com.hyjf.am.trade.service.task.BankCreditTenderService;
+import com.hyjf.am.trade.service.BankCreditTenderService;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.trade.AccountwithdrawResponse;
+import com.hyjf.am.response.trade.BorrowCreditResponse;
 import com.hyjf.am.trade.dao.model.auto.Accountwithdraw;
+import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.service.BankRechargeService;
 import com.hyjf.am.trade.service.BankWithdrawService;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -181,6 +182,22 @@ public class BankExceptionController {
         }
         return ret;
 
+    }
+    
+    /**
+     * 获取BorrowCredit列表
+     * @param request
+     * @return
+     */
+    @PostMapping("/getBorrowCreditList")
+    public BorrowCreditResponse getBorrowCreditList(@RequestBody BorrowCreditRequest request) {
+    	BorrowCreditResponse response = new BorrowCreditResponse();
+         List<BorrowCredit> borrowCredits=bankCreditTenderService.getBorrowCreditList(request);
+         if(CollectionUtils.isNotEmpty(borrowCredits)){
+             List<BorrowCreditVO> voList = CommonUtils.convertBeanList(borrowCredits, BorrowCreditVO.class);
+             response.setResultList(voList);
+         }
+         return response;
     }
 
 }

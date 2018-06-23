@@ -133,4 +133,44 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 查看用户详情
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public SpreadsUserVO querySpreadsUsersByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/querySpreadsUsersByUserId/" + userId;
+		SpreadsUserResponse response = restTemplate.getForEntity(url,SpreadsUserResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public EmployeeCustomizeVO selectEmployeeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/selectEmployeeByUserId/" + userId;
+		EmployeeCustomizeResponse response = restTemplate.getForEntity(url,EmployeeCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
 }
