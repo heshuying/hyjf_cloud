@@ -4,8 +4,6 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -17,7 +15,10 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmBorrowRepayClient;
+import com.hyjf.cs.trade.client.AmBorrowRepayPlanClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
@@ -26,7 +27,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,7 +96,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
                             msg.put(VAL_SEX, "先生");
                         }
                     }
-                    SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMSSENDFORUSER, null,
+                    SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             temp, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
                         smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
@@ -131,9 +131,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
     @Override
     public Integer updateBorrowRepay(BorrowRepayVO borrowRepayVO, int i) {
         borrowRepayVO.setRepaySmsReminder(i);
-        BorrowRepay borrowRepay = new BorrowRepay();
-        BeanUtils.copyProperties(borrowRepayVO,borrowRepay);
-        return this.amBorrowRepayClient.updateBorrowRepay(borrowRepay);
+        return this.amBorrowRepayClient.updateBorrowRepay(borrowRepayVO);
     }
 
     /**
@@ -146,9 +144,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
     @Override
     public Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO, Integer repaySmsReminder) {
         borrowRepayPlanVO.setRepaySmsReminder(repaySmsReminder);
-        BorrowRepayPlan borrowRepayPlan = new BorrowRepayPlan();
-        BeanUtils.copyProperties(borrowRepayPlanVO,borrowRepayPlan);
-        return this.amBorrowRepayPlanClient.updateBorrowRepayPlan(borrowRepayPlan);
+        return this.amBorrowRepayPlanClient.updateBorrowRepayPlan(borrowRepayPlanVO);
     }
 
 }

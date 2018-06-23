@@ -7,6 +7,8 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
 import com.hyjf.am.trade.service.BorrowRepayService;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,14 +41,14 @@ public class BorrowRepayServiceImpl implements BorrowRepayService {
 
     /**
      * 更新还款短信提醒次数
-     * @param borrowRepay
+     * @param borrowRepayVO
      * @return
      */
     @Override
-    public Integer updateBorrowRepay(BorrowRepay borrowRepay) {
+    public Integer updateBorrowRepay(BorrowRepayVO borrowRepayVO) {
+        BorrowRepay borrowRepay = new BorrowRepay();
+        BeanUtils.copyProperties(borrowRepayVO,borrowRepay);
         boolean result =  this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) >0 ? true:false;
         return result?1:0;
     }
-
-
 }

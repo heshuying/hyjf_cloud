@@ -22,8 +22,8 @@ public interface BorrowRepayPlanService {
 
     /**
      * 更新标的还款记录分期(借款人)
-     * @param borrowRepayPlan
+     * @param borrowRepayPlanVO
      * @return
      */
-    Integer updateBorrowRepayPlan(BorrowRepayPlan borrowRepayPlan);
+    Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO);
 }

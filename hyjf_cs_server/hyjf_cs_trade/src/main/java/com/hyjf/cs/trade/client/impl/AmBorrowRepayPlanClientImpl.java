@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.cs.trade.client.AmBorrowRepayPlanClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +42,9 @@ public class AmBorrowRepayPlanClientImpl implements AmBorrowRepayPlanClient {
     }
 
     @Override
-    public Integer updateBorrowRepayPlan(BorrowRepayPlan borrowRepayPlan) {
+    public Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO) {
         Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/borrowRepayPlan/updateBorrowRepayPlan/",borrowRepayPlan,
+                "http://AM-TRADE/am-trade/borrowRepayPlan/updateBorrowRepayPlan/",borrowRepayPlanVO,
                 Integer.class).getBody();
         if (result == null) {
             return 0;

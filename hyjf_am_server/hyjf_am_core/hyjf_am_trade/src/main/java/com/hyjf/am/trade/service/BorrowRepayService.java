@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 
 import java.util.List;
 
@@ -21,8 +22,8 @@ public interface BorrowRepayService {
 
     /**
      * 更新标的还款记录（借款人）总表
-     * @param borrowRepay
+     * @param borrowRepayVO
      * @return
      */
-    Integer updateBorrowRepay(BorrowRepay borrowRepay);
+    Integer updateBorrowRepay(BorrowRepayVO borrowRepayVO);
 }

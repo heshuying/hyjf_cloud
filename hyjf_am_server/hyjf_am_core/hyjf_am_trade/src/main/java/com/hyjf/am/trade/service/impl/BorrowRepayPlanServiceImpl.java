@@ -7,7 +7,9 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayPlanMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
 import com.hyjf.am.trade.service.BorrowRepayPlanService;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +41,9 @@ public class BorrowRepayPlanServiceImpl implements BorrowRepayPlanService {
     }
 
     @Override
-    public Integer updateBorrowRepayPlan(BorrowRepayPlan borrowRepayPlan) {
+    public Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO) {
+        BorrowRepayPlan borrowRepayPlan = new BorrowRepayPlan();
+        BeanUtils.copyProperties(borrowRepayPlanVO,borrowRepayPlan);
         boolean result = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
         return result ?1:0;
     }

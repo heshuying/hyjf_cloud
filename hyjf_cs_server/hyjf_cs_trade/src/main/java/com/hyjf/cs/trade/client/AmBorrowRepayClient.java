@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 
 import java.util.List;
@@ -26,8 +25,8 @@ public interface AmBorrowRepayClient {
     /**
      * 更新borrowRepay
      *
-     * @param borrowRepay
+     * @param borrowRepayVO
      * @return
      */
-    Integer updateBorrowRepay(BorrowRepay borrowRepay);
+    Integer updateBorrowRepay(BorrowRepayVO borrowRepayVO);
 }
