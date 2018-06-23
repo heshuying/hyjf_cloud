@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -77,18 +78,22 @@ public class WebRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/page")
-	public ModelAndView recharge(@RequestHeader(value = "token") String token,HttpServletRequest request, String mobile, String money) throws Exception {
+	public WebResult<Object> recharge(@RequestHeader(value = "token") String token,HttpServletRequest request,
+									  @RequestParam @Valid String mobile,
+									  @RequestParam @Valid String money) throws Exception {
 		logger.info("web充值服务");
+		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
 		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,mobile,money);
 		ModelAndView modelAndView = new ModelAndView();
 		try {
-			modelAndView = BankCallUtils.callApi(bean);
+			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
+			result.setData(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ReturnMessageException(RechargeError.CALL_BANK_ERROR);
 		}
-		return modelAndView;
+		return result;
 	}
 
 	/**

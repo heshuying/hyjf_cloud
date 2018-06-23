@@ -33,7 +33,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public BankCardVO selectBankCardByUserId(Integer userId) {
         BankCardResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/bankopen/selectByUserId/" + userId, BankCardResponse.class).getBody();
+                .getForEntity("http://AM-USER/am-user/bankCard/getBankCard/" + userId, BankCardResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -73,7 +73,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public BankCardVO getBankCardByCardNo(Integer userId, String cardNo){
         BankCardResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/bankopen/getBankCardByCardNo/" + userId+"/"+cardNo, BankCardResponse.class).getBody();
+                .getForEntity("http://AM-USER/am-user/bankCard/getBankCard/" + userId+"/"+cardNo, BankCardResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -83,7 +83,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public AccountVO getAccount(Integer userId) {
         AccountResponse response = restTemplate
-                .getForEntity("http://AM-BORROW/am-trade/recharge/getAccount/" + userId, AccountResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/trade/getAccount/" + userId, AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -93,7 +93,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public AccountRechargeVO selectByOrderId(String orderId) {
         AccountRechargeResponse response = restTemplate
-                .getForEntity("http://AM-BORROW/am-trade/recharge/selectByOrderId/"+orderId,AccountRechargeResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/trade/selectByOrderId/"+orderId,AccountRechargeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -102,7 +102,7 @@ public class RechargeClientImpl implements RechargeClient {
 
     @Override
     public void updateByPrimaryKeySelective(AccountRechargeVO accountRecharge) {
-        restTemplate.put("http://AM-BORROW/am-trade/recharge/updateByPrimaryKeySelective",accountRecharge);
+        restTemplate.put("http://AM-TRADE/am-trade/trade/updateByPrimaryKeySelective",accountRecharge);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public int selectByOrdId(String ordId){
         Integer response = restTemplate
-                .getForEntity("http://AM-BORROW/am-trade/recharge/selectByOrdId/"+ordId, Integer.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/trade/selectByOrdId/"+ordId, Integer.class).getBody();
         if (response != null) {
             return response;
         }
@@ -129,7 +129,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public int insertSelectiveBank(BankRequest bankRequest){
         Integer response = restTemplate
-                .postForEntity("http://AM-BORROW/am-trade/recharge/insertSelectiveBank",bankRequest, Integer.class).getBody();
+                .postForEntity("http://AM-TRADE/am-trade/trade/insertSelectiveBank",bankRequest, Integer.class).getBody();
         if (response != null) {
             return response;
         }
@@ -139,7 +139,7 @@ public class RechargeClientImpl implements RechargeClient {
     @Override
     public boolean updateBanks(BankAccountBeanRequest bankAccountBeanRequest) {
         boolean response = restTemplate
-                .postForEntity("http://AM-BORROW/am-trade/recharge/updateBanks",bankAccountBeanRequest, boolean.class).getBody();
+                .postForEntity("http://AM-TRADE/am-trade/trade/updateBanks",bankAccountBeanRequest, boolean.class).getBody();
         return response;
     }
 

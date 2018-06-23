@@ -3,7 +3,7 @@ package com.hyjf.am.user.dao.model.auto;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Smscode implements Serializable {
+public class SmsCode implements Serializable {
     private Integer id;
 
     private Integer userId;
