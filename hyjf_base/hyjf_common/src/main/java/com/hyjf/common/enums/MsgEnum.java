@@ -209,12 +209,12 @@ public enum MsgEnum implements MsgCode {
 
 
 
-
+	//   优惠券相关
+	COUPON_TENDER_FAIL_ERROR("EV000001","优惠券投资失败"),
 
 	ERR_SUCCESS("0", ""),
 	// 枚举终结
 	ERR_ENUM("", "");
-
 
 	private String msg;
 	private String code;

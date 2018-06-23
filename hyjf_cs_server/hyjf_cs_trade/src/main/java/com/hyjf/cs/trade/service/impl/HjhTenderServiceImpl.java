@@ -25,6 +25,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.constants.TenderError;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.cs.trade.service.HjhTenderService;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +67,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Autowired
     private AmMongoClient amMongoClient;
 
+    @Autowired
+    private CouponService couponService;
     /**
      * @param request
      * @Description 检查加入计划的参数
@@ -135,8 +138,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
-            // TODO: 2018/6/20 体验金投资
-            /*couponTender(modelAndView,result, planNid, account,ip,cuc, userId, couponOldTime,platform,couponGrantId);*/
+            // 体验金投资
+            couponService.couponTender(request,plan,account,cuc,tenderAccount);
             logger.info("体验金投资结束:userId{}" + userId);
             return;
         }
@@ -190,9 +193,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
             throw new ReturnMessageException(TenderError.JOIN_PLAN_LATE_ERROR);
         }
-
         // 生成冻结订单-----------------------
-
         boolean afterDealFlag = false;
         // 插入数据库  真正开始操作加入计划表
         afterDealFlag = updateAfterPlanRedis(request, plan);
@@ -318,9 +319,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
-
         }
-
         // 优惠券投资开始
         Integer couponGrantId = request.getCouponGrantId();
         if (couponGrantId != null && couponGrantId != 0) {
@@ -328,19 +327,19 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             try {
                 // 检查优惠券能用不
                 logger.info("优惠券投资校验开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
-                Map<String, String> validateMap = this.validateCoupon(userId, accountStr, couponGrantId, request.getBorrowNid(),
-                        request.getPlatform());
-                logger.info("优惠券投资校验返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
+                Map<String, String> validateMap = couponService.validateCoupon(userId, accountStr, couponGrantId,
+                        request.getPlatform(),plan);
                 if (MapUtils.isEmpty(validateMap)) {
                     // 校验通过 进行优惠券投资投资
+                    logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
                     this.couponTender(request, plan);
+                }else{
+                    logger.info("优惠券投资校验失败返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-
         return false;
     }
 
@@ -461,21 +460,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
 */
 
-    }
-
-    /**
-     * 优惠券投资校验
-     *
-     * @param userId
-     * @param accountStr
-     * @param couponGrantId
-     * @param borrowNid
-     * @param platform
-     * @return
-     */
-    private Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String borrowNid, String platform) {
-        // TODO: 2018/6/22 检查优惠券能用吗
-        return null;
     }
 
     /**

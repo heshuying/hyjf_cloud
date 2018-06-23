@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
+import com.hyjf.am.vo.trade.CouponTenderVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,4 +38,16 @@ public class CouponController {
         }
         return response;
     }
+
+    @ApiOperation(value = " 优惠券投资")
+    @GetMapping("/updateCouponTender")
+    public Integer updateCouponTender(CouponTenderVO couponTender) {
+        try{
+            couponService.updateCouponTender(couponTender);
+            return 1;
+        }catch (Exception e ) {
+            return 0;
+        }
+    }
+
 }

@@ -51,6 +51,11 @@ public class TenderRequest extends BaseVO {
 
     private Integer nowTime;
 
+    // 优惠券投资  排他校验用
+    private Integer couponOldTime;
+
+    private String mainTenderNid;
+
     public String getCreditNid() {
         return creditNid;
     }
@@ -169,5 +174,21 @@ public class TenderRequest extends BaseVO {
 
     public void setNowTime(Integer nowTime) {
         this.nowTime = nowTime;
+    }
+
+    public Integer getCouponOldTime() {
+        return couponOldTime;
+    }
+
+    public void setCouponOldTime(Integer couponOldTime) {
+        this.couponOldTime = couponOldTime;
+    }
+
+    public String getMainTenderNid() {
+        return mainTenderNid;
+    }
+
+    public void setMainTenderNid(String mainTenderNid) {
+        this.mainTenderNid = mainTenderNid;
     }
 }
