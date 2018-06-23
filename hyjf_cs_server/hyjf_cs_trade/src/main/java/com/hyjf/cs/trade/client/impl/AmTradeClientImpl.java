@@ -104,6 +104,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * @auther: hesy
 	 * @date: 2018/6/23
 	 */
+	@Override
 	public List<MyCouponListCustomizeVO> selectMyCouponList(MyCouponListRequest requestBean){
 		String url = urlBase + "coupon/myCouponList";
 		MyCouponListResponse response = restTemplate.postForEntity(url,requestBean,MyCouponListResponse.class).getBody();
@@ -118,6 +119,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * @param requestBean
 	 * @return
 	 */
+	@Override
 	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
 		String url = urlBase + "invite/myInviteList";
 		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
@@ -132,6 +134,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * @param requestBean
 	 * @return
 	 */
+	@Override
 	public List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean){
 		String url = urlBase + "invite/myRewardList";
 		MyRewardListResponse response = restTemplate.postForEntity(url,requestBean,MyRewardListResponse.class).getBody();
