@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
@@ -42,7 +43,8 @@ public interface HjhPlanService {
     /**
      * 插入计划明细表
      * @param planAccede
+     * @param userAccount
      * @return
      */
-    int insertHJHPlanAccede(HjhAccedeVO planAccede);
+    int insertHJHPlanAccede(HjhAccedeVO planAccede, Account userAccount);
 }

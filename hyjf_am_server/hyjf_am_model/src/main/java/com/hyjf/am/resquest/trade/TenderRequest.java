@@ -8,6 +8,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 
+import java.math.BigDecimal;
+
 /**
  * @Description 投资请求参数
  * @Author sss
@@ -40,6 +42,14 @@ public class TenderRequest extends BaseVO {
     private AccountVO tenderAccount ;
 
     private String planOrderId;
+
+    // 预期收益
+    private BigDecimal earnings;
+
+    // 投资金额
+    private BigDecimal accountDecimal;
+
+    private Integer nowTime;
 
     public String getCreditNid() {
         return creditNid;
@@ -135,5 +145,29 @@ public class TenderRequest extends BaseVO {
 
     public void setPlanOrderId(String planOrderId) {
         this.planOrderId = planOrderId;
+    }
+
+    public BigDecimal getEarnings() {
+        return earnings;
+    }
+
+    public void setEarnings(BigDecimal earnings) {
+        this.earnings = earnings;
+    }
+
+    public BigDecimal getAccountDecimal() {
+        return accountDecimal;
+    }
+
+    public void setAccountDecimal(BigDecimal accountDecimal) {
+        this.accountDecimal = accountDecimal;
+    }
+
+    public Integer getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(Integer nowTime) {
+        this.nowTime = nowTime;
     }
 }

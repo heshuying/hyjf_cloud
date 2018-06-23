@@ -6,6 +6,7 @@ import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;

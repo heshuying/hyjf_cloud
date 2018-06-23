@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -469,5 +470,37 @@ public class UserController {
 		int count = userService.isCompAccount(userId);
 		return count;
 	}
+
+    /**
+     * 查询用户推广链接注册
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/findUtmRegByUserId/{userId}")
+    public UtmRegResponse findUtmRegByUserId(@RequestBody Integer userId) {
+        UtmRegResponse response = new UtmRegResponse();
+        UtmReg utmReg = userService.findUtmRegByUserId(userId);
+        if (null != utmReg) {
+            UtmRegVO utmRegVO = new UtmRegVO();
+            BeanUtils.copyProperties(utmReg, utmRegVO);
+            response.setResult(utmRegVO);
+        }
+        return response;
+    }
+
+    /**
+     * 更新渠道用户首次投资信息
+     * @param bean
+     * @return
+     */
+    @RequestMapping("/updateFirstUtmReg")
+    public Integer updateFirstUtmReg(@RequestBody Map<String, Object> bean) {
+        try {
+            userService.updateFirstUtmReg(bean);
+        }catch (Exception e){
+            return 0;
+        }
+        return 1;
+    }
 
 }

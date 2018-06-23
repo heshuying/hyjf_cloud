@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.statistics;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,7 +10,7 @@ import java.util.Date;
  * @author xiasq
  * @version AppChannelStatisticsDetailVO, v0.1 2018/5/15 17:16
  */
-public class AppChannelStatisticsDetailVO implements Serializable {
+public class AppChannelStatisticsDetailVO extends BaseVO implements Serializable {
 
     private Integer sourceId;
 
