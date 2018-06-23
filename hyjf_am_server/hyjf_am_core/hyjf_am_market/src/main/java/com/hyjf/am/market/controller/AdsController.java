@@ -1,16 +1,24 @@
 package com.hyjf.am.market.controller;
 
 import com.hyjf.am.market.dao.model.auto.Ads;
+import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.market.service.AdsService;
 import com.hyjf.am.response.market.AdsResponse;
+import com.hyjf.am.response.market.AppAdsCustomizeResponse;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -45,5 +53,22 @@ import org.springframework.web.bind.annotation.RestController;
     public void updateActivityEndStatus(){
         logger.info("批量更新到期活动...");
         adsService.updateActivityEndStatus();
+    }
+
+    @RequestMapping("/searchBanner")
+    public AppAdsCustomizeResponse searchBanner(@RequestBody  AdsRequest adsRequest){
+        Map<String, Object> ads = new HashMap<>();
+        ads.put("limitStart", adsRequest.getLimitStart());
+        ads.put("limitEnd", adsRequest.getLimitEnd());
+        ads.put("host", adsRequest.getHost());
+        ads.put("code", adsRequest.getCode());
+        AppAdsCustomizeResponse response = new AppAdsCustomizeResponse();
+        AppAdsCustomize appAdsCustomize = adsService.searchBanner(ads);
+        if(null!=appAdsCustomize){
+            AppAdsCustomizeVO appAdsCustomizeVO = new AppAdsCustomizeVO();
+            BeanUtils.copyProperties(appAdsCustomize,appAdsCustomizeVO);
+            response.setResult(appAdsCustomizeVO);
+        }
+        return  response;
     }
 }

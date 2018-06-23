@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.app.AppAdsCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize">
+		<id column="url" property="url" jdbcType="CHAR" />
+		<result column="name" property="bannerName" jdbcType="CHAR" />
+		<result column="image" property="image" jdbcType="CHAR" />
+		<result column="new_user_show" property="newUserShow"/>
+	</resultMap>
+	<select id="selectAdsList" resultMap="BaseResultMap" parameterType="Map">	
+		SELECT
+			ad.`name`,
+			ad.url,
+			CONCAT(#{host},ad.image) AS image,
+			ad.new_user_show
+		FROM
+			ht_ads ad
+		INNER JOIN ht_ads_type adt ON ad.type_id = adt.type_id
+		WHERE
+			ad.`status` = 1
+		<if test="code != null and code != ''">
+			and adt.`code` = #{code}
+		</if>	
+		AND unix_timestamp(ad.start_time) <![CDATA[<=]]> unix_timestamp(NOW())
+		AND unix_timestamp(ad.end_time) <![CDATA[>=]]> unix_timestamp(NOW())
+		ORDER BY
+			ad.`order` ASC,ad.`create_time` desc 
+		<if test="limitStart >= 0">
+			limit #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+</mapper>

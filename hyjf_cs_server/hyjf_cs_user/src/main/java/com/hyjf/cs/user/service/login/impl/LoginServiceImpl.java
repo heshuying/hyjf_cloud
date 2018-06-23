@@ -13,11 +13,12 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.vo.LoginRequestVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
     @Autowired
     private AmUserClient amUserClient;
+
+    @Autowired
+    private SystemConfig systemConfig;
+
     /**
      *登录
      * @param loginUserName
@@ -77,10 +82,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             if (userVO.getStatus() == 1) {
                 throw new ReturnMessageException(LoginError.USER_INVALID_ERROR);
             }
-
             // 更新登录信息
             amUserClient.updateLoginUser(userId, ip);
-
+            updateUserByUserId(userVO);
             // 1. 登录成功将登陆密码错误次数的key删除
             RedisUtils.del(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
 
@@ -89,8 +93,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             BeanUtils.copyProperties(userVO, webViewUserVO);
             webViewUserVO.setToken(token);
             RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
-
-            // 3. todo 登录时自动同步线下充值记录
+            // 3. todo pangchengchao登录时自动同步线下充值记录
         } else {
             // 密码错误，增加错误次数
             RedisUtils.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
@@ -98,6 +101,27 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         }
         return webViewUserVO;
     }
+
+    /**
+     * 校验app参数
+     * @param
+     * @return
+     */
+    @Override
+    public void checkForApp(LoginRequestVO loginRequestVO){
+        CheckUtil.check(loginRequestVO!=null,MsgEnum.STATUS_CE000001);
+        String version = loginRequestVO.getVersion();
+        String platform = loginRequestVO.getPlatform();
+        String netStatus = loginRequestVO.getNetStatus();
+        CheckUtil.check(StringUtils.isNotEmpty(version),MsgEnum.STATUS_CE000014);
+        CheckUtil.check(StringUtils.isNotEmpty(platform)&&StringUtils.isNotEmpty(netStatus),MsgEnum.STATUS_CE000001);
+        if(version.length()>=5){
+            version = version.substring(0, 5);
+        }
+        CheckUtil.check(version.compareTo("1.4.0")>0,MsgEnum.STATUS_CE000014);
+
+    }
+
     /**
      * 字符串长度检查
      *

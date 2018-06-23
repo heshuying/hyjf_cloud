@@ -57,11 +57,13 @@ public class ThirdPartyTransPasswordResultBean extends BaseMapBean {
 		this.errorCode = errorCode;
 	}
 
-	public String getCallBackAction() {
+	@Override
+    public String getCallBackAction() {
 		return callBackAction;
 	}
 
-	public void setCallBackAction(String callBackAction) {
+	@Override
+    public void setCallBackAction(String callBackAction) {
 		this.callBackAction = callBackAction;
 	}
 

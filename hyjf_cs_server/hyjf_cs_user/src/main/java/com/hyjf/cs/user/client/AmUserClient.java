@@ -141,4 +141,6 @@ public interface AmUserClient {
 	String getBankOpenAccountFiledMess(String logOrdId);
 
 	int isCompAccount(Integer userId);
+
+	UtmPlatVO selectUtmPlatByUtmId(String utmId);
 }

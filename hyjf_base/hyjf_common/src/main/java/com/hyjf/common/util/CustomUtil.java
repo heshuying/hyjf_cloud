@@ -1,13 +1,11 @@
 package com.hyjf.common.util;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
+import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.math.NumberUtils;
-
-import com.hyjf.common.validator.Validator;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * <p>
@@ -40,7 +38,7 @@ public class CustomUtil {
         if (Validator.isNull(number)) {
             return ret;
         }
-        if (!NumberUtils.isNumber(number)) {
+        if (!StringUtils.isNumeric(number)) {
             return ret;
         }
 
