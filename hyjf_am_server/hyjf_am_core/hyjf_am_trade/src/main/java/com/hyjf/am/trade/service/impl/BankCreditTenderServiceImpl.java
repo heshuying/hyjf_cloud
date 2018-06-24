@@ -239,7 +239,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	}
 
 
-	public Borrow getBorrowByNid(String borrowNid) {
+	private Borrow getBorrowByNid(String borrowNid) {
 		BorrowExample example = new BorrowExample();
 		BorrowExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);

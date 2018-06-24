@@ -6,6 +6,7 @@ import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
@@ -18,7 +19,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -92,5 +92,19 @@ public class BanksConfigController {
     public int countScore(@RequestBody  AnswerRequest answerList) {
         int countScore = questionService.countScore(answerList.getResultList());
         return countScore;
+    }
+    /**
+     * 获取银行列表
+     */
+    @RequestMapping("/selectBankConfigList")
+    public BanksConfigResponse selectBankConfigList(){
+        BanksConfigResponse response=null;
+        List<BankConfig> listBankConfig = bankConfigService.selectBankConfigList();
+        if(null!=listBankConfig&&listBankConfig.size()>0){
+            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
+            response.setResultList(listBanksConfig);
+            response.setRtn(Response.SUCCESS);//代表成功
+        }
+        return response;
     }
 }

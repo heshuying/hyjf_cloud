@@ -5,6 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -692,5 +693,46 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 我的邀请列表
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
+		String url = "http://AM-USER//am-user/invite/myInviteList";
+		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询同步银行卡号
+	 * @param flag
+	 * @return
+	 */
+	@Override
+	public List<AccountMobileSynchVO> searchAccountMobileSynch(String flag){
+		String url = "http://AM-USER//am-user/batch/searchAccountMobileSynch/" + flag;
+		AccountMobileSynchResponse response = restTemplate.getForEntity(url,AccountMobileSynchResponse.class).getBody();
+		if(response != null){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新银行卡号手机号同步表
+	 * @param accountMobileSynchRequest
+	 * @return
+	 */
+	@Override
+	public boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest){
+		String url = "http://AM-USER//am-user/batch/updateAccountMobileSynch";
+		return restTemplate.postForEntity(url,accountMobileSynchRequest,boolean.class).getBody();
 	}
 }

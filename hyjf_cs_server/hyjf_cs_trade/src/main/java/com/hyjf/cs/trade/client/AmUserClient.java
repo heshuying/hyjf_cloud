@@ -1,8 +1,11 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+
+import java.util.List;
 
 import java.util.Map;
 
@@ -95,4 +98,6 @@ public interface AmUserClient {
      * @return
      */
     boolean updateFirstUtmReg(Map<String,Object> params);
+
+	List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 }

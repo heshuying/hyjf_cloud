@@ -1,8 +1,7 @@
-package com.hyjf.am.response.trade;
+package com.hyjf.am.response.user;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.MyInviteListCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 
 /**
  * @author hesy

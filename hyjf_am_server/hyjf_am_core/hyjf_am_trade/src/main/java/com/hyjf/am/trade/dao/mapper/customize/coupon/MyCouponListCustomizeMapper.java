@@ -10,5 +10,5 @@ import java.util.Map;
  * @version MyCouponListCustomizeMapper, v0.1 2018/6/22 16:36
  */
 public interface MyCouponListCustomizeMapper {
-    List<MyCouponListCustomizeVO> selectCouponUserList(Map<String,Object> paraMap);
+    List<MyCouponListCustomizeVO> selectMyCouponList(Map<String,Object> paraMap);
 }

@@ -42,6 +42,27 @@
         LEFT JOIN ht_user hydur ON hydur.user_id=hydsu.spreads_user_id
         <include refid="Where_Clause" />
     </select>
-
+    <sql id="Where_Clause">
+        <where>
+            <if test="recommendName != null and recommendName !='' ">
+                AND hydur.username LIKE CONCAT('%', #{recommendName}, '%')
+            </if>
+            <if test="userName != null and userName !='' ">
+                AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="regTimeStart != null and regTimeStart !='' ">
+                AND FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{regTimeStart}
+            </if>
+            <if test="regTimeEnd != null and regTimeEnd !='' ">
+                AND FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{regTimeEnd}
+            </if>
+            <if test="registPlat != null and registPlat !='' ">
+                AND hydu.reg_esb = #{registPlat}
+            </if>
+            <if test="mobile != null and mobile !='' ">
+                AND hydu.mobile LIKE CONCAT('%', #{mobile}, '%')
+            </if>
+        </where>
+    </sql>
 
 </mapper>

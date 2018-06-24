@@ -1,7 +1,12 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,4 +49,7 @@ public interface AmTradeClient {
     BigDecimal selectCouponInterestReceivedToday(long timeStart, long timeEnd);
 
 
+    List<MyCouponListCustomizeVO> selectMyCouponList(MyCouponListRequest requestBean);
+
+    List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean);
 }
