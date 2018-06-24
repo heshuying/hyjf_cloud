@@ -709,4 +709,30 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 查询同步银行卡号
+	 * @param flag
+	 * @return
+	 */
+	@Override
+	public List<AccountMobileSynchVO> searchAccountMobileSynch(String flag){
+		String url = "http://AM-USER//am-user/batch/searchAccountMobileSynch/" + flag;
+		AccountMobileSynchResponse response = restTemplate.getForEntity(url,AccountMobileSynchResponse.class).getBody();
+		if(response != null){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新银行卡号手机号同步表
+	 * @param accountMobileSynchRequest
+	 * @return
+	 */
+	@Override
+	public boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest){
+		String url = "http://AM-USER//am-user/batch/updateAccountMobileSynch";
+		return restTemplate.postForEntity(url,accountMobileSynchRequest,boolean.class).getBody();
+	}
 }
