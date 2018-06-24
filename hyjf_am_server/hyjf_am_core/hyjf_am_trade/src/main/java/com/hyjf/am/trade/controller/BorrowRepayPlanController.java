@@ -48,7 +48,7 @@ public class BorrowRepayPlanController {
     }
 
     @RequestMapping("/updateBorrowRepay")
-    public Integer updateBorrowPlanRepay(@RequestBody @Valid BorrowRepayPlan borrowRepayPlan) {
-        return this.borrowRepayPlanService.updateBorrowRepayPlan(borrowRepayPlan);
+    public Integer updateBorrowPlanRepay(@RequestBody @Valid BorrowRepayPlanVO borrowRepayPlanVO) {
+        return this.borrowRepayPlanService.updateBorrowRepayPlan(borrowRepayPlanVO);
     }
 }
