@@ -86,7 +86,6 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         logger.info("优惠券投资开始。。。。。。券编号：" + request.getCouponGrantId());
         // 调用原子层需要
         CouponTenderVO couponTender = new CouponTenderVO();
-        Map<String, Object> retMap = new HashedMap();
         int nowTime = GetDate.getNowTime10();
         String borrowStyle = plan.getBorrowStyle();
         Integer userId = request.getUser().getUserId();
@@ -127,13 +126,6 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             accountDecimal = couponQuota;
             planApr = plan.getExpectApr();
         }
-        // 优惠券投资额度
-        retMap.put("couponAccount", accountDecimal);
-        // 优惠券面值
-        retMap.put("couponQuota", couponQuota);
-        // 优惠券类别
-        retMap.put("couponType", couponType);
-
         BorrowTenderCpnVO borrowTenderCpn = new BorrowTenderCpnVO();
         borrowTenderCpn.setAccount(accountDecimal);
         borrowTenderCpn.setAccountTender(new BigDecimal(0));
@@ -198,7 +190,6 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         decimalFormat.setRoundingMode(RoundingMode.DOWN);
         recoverAccountInterestWait=new BigDecimal(decimalFormat.format(recoverAccountInterestWait));
-        retMap.put("couponInterest", recoverAccountInterestWait);
         borrowTenderCpn.setRecoverAdvanceFee(new BigDecimal(0));
         borrowTenderCpn.setRecoverFee(new BigDecimal(0));
         borrowTenderCpn.setRecoverFullStatus(0);
@@ -293,7 +284,8 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             // TODO: 2018/6/23  如果优惠券单独投资的话就调用进入锁定期  PlanCouponServiceImpl 1323行
             //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
         }
-
+        // 设置优惠券的预期收益
+        request.setCouponInterest(recoverAccountInterestWait);
         return false;
     }
 

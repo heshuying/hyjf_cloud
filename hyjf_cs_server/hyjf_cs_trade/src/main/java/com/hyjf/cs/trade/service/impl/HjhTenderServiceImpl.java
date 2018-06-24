@@ -22,12 +22,14 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.constants.TenderError;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.cs.trade.service.HjhTenderService;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +71,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
     @Autowired
     private CouponService couponService;
+
     /**
      * @param request
      * @Description 检查加入计划的参数
@@ -77,7 +80,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 9:47
      */
     @Override
-    public void joinPlan(TenderRequest request) {
+    public WebResult<Map<String, Object>> joinPlan(TenderRequest request) {
         WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
@@ -121,7 +124,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());
 
         // 开始投资------------------------------------------------------------------------------------------------------------------------------------------
-        tender(request, plan, account, cuc, tenderAccount);
+        return tender(request, plan, account, cuc, tenderAccount);
     }
 
     /**
@@ -130,7 +133,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Version v0.1
      * @Date 2018/6/20 14:56
      */
-    private void tender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount) {
+    private  WebResult<Map<String, Object>> tender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount) {
+        WebResult<Map<String, Object>> result= new WebResult<Map<String, Object>>();
+        result.setStatus(WebResult.ERROR);
         Integer userId = request.getUser().getUserId();
         BigDecimal decimalAccount = new BigDecimal(request.getAccount());
         request.setBankOpenAccount(account);
@@ -139,9 +144,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
-            couponService.couponTender(request,plan,account,cuc,tenderAccount);
+            couponService.couponTender(request, plan, account, cuc, tenderAccount);
+            // 计算收益
+            Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
+            result.setData(tenderEarnings);
+            result.setStatus(WebResult.SUCCESS);
             logger.info("体验金投资结束:userId{}" + userId);
-            return;
+            return result;
         }
         String redisKey = RedisConstants.HJH_PLAN + plan.getPlanNid();
         // 计划剩余金额
@@ -197,6 +206,42 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         boolean afterDealFlag = false;
         // 插入数据库  真正开始操作加入计划表
         afterDealFlag = updateAfterPlanRedis(request, plan);
+
+        // 计算收益
+        Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
+        result.setStatus(WebResult.SUCCESS);
+        result.setData(tenderEarnings);
+        return result;
+    }
+
+    /**
+     * 获取预期收益
+     * @param request
+     * @param plan
+     * @param cuc
+     * @return
+     */
+    private Map<String, Object> getTenderEarnings(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc) {
+        Map<String, Object> result = new HashedMap();
+        // 历史回报
+        result.put("earnings", request.getEarnings());
+        // 优惠券收益
+        result.put("couponInterest", request.getCouponInterest());
+        // 投资金额
+        result.put("account", request.getAccount());
+        // 投资的计划
+        result.put("borrowNid", plan.getPlanNid());
+        // 如果有优惠券  放上优惠券面值和类型
+        if (cuc != null) {
+            // 优惠券类别
+            result.put("couponType", cuc.getCouponType());
+            // 优惠券额度
+            result.put("couponQuota", cuc.getCouponQuota());
+            // 优惠券ID
+            result.put("couponGrantId", cuc.getId());
+        }
+        return result;
+
     }
 
 
@@ -328,12 +373,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 // 检查优惠券能用不
                 logger.info("优惠券投资校验开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
                 Map<String, String> validateMap = couponService.validateCoupon(userId, accountStr, couponGrantId,
-                        request.getPlatform(),plan);
+                        request.getPlatform(), plan);
                 if (MapUtils.isEmpty(validateMap)) {
                     // 校验通过 进行优惠券投资投资
                     logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
                     this.couponTender(request, plan);
-                }else{
+                } else {
                     logger.info("优惠券投资校验失败返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
                 }
             } catch (Exception e) {
@@ -423,43 +468,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String accountStr = request.getAccount();
         Integer userId = request.getUser().getUserId();
         Integer couponGrantId = request.getCouponGrantId();
+        CouponUserVO cuc = couponClient.getCouponUser(request.getCouponGrantId(), userId);
         logger.info("优惠券投资开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
-        // TODO: 2018/6/22  进行优惠券投资
-       /* JSONObject jsonObject = CommonSoaUtils.planCouponInvest(userId + "", planNid, accountStr,
-                plan, couponGrantId, planOrderId, ipAddr, couponOldTime + "");
-                logger.info("优惠券投资结果："+jsonObject);
-        JSONObject result = successMess("投资成功！");
-        if (jsonObject.getIntValue("status") == 0) {
-            // 优惠券收益
-            result.put("couponInterest", jsonObject.getString("couponInterest"));
-            result.put("couponType", jsonObject.getString("couponType"));
-            result.put("couponTypeInt", jsonObject.getString("couponTypeInt"));
-            result.put("couponQuota", jsonObject.getString("couponQuota"));
-            // 优惠券ID
-            result.put("couponGrantId", couponGrantId);
-            // 优惠券额度
-            result.put("couponQuota", jsonObject.getString("couponQuota"));
-            // 投资额度
-            result.put("accountDecimal", jsonObject.getString("accountDecimal"));
-            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
-            //----------old
-            if("0".equals(accountStr)){
-                modelAndView.addObject("plan", 1);
-                modelAndView.addObject("planNid", planNid);
-            }
-
-            modelAndView.addObject("couponInterest", jsonObject.getString("couponInterest"));
-            // 优惠券类别
-            modelAndView.addObject("couponType", jsonObject.getString("couponTypeInt"));
-            // 优惠券额度
-            modelAndView.addObject("couponQuota", jsonObject.getString("couponQuota"));
-            modelAndView.addObject("investDesc", "投资成功！");
-        } else {
-            result = hjhResultMess("投资失败！");
-        }
-
-*/
-
+        couponService.couponTender(request, plan, request.getBankOpenAccount(), cuc, request.getTenderAccount());
     }
 
     /**
