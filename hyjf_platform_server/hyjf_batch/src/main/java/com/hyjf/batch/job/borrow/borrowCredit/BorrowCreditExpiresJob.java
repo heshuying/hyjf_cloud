@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.smsNotice;
+package com.hyjf.batch.job.borrow.borrowCredit;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -13,17 +13,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author PC-LIUSHOUYI
- * @version RepayReminderSmsNoticeJob, v0.1 2018/6/22 10:20
- * 还款前三天提醒借款人还款短信定时
+ * @version BorrowCreditJob, v0.1 2018/6/23 17:00
  */
 @DisallowConcurrentExecution  // 禁止并发执行
-public class RepayReminderSmsNoticeJob extends BaseJob implements Job {
+public class BorrowCreditExpiresJob  extends BaseJob implements Job {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("RepayReminderSmsNoticeJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/repayReminder/smsNotice", String.class);
-        logger.info("RepayReminderSmsNoticeJob execute end...");
+        logger.info("BorrowCreditExpiresJob: {} execute...", context.getJobDetail().getKey().getName());
+
+        restTemplate.getForEntity("http://AM-TRADE/batch/borrowCredit/expires", String.class);
+
+        logger.info("BorrowCreditExpiresJob execute end...");
     }
 }

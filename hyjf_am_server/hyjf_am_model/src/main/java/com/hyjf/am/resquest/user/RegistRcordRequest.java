@@ -18,6 +18,9 @@ public class RegistRcordRequest {
 	//注册时间（结束）
 	private String regTimeEnd;
 
+	private int limitStart;
+	private int limitEnd;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -65,4 +68,21 @@ public class RegistRcordRequest {
 	public void setRegTimeEnd(String regTimeEnd) {
 		this.regTimeEnd = regTimeEnd;
 	}
+
+	public int getLimitStart() {
+		return limitStart;
+	}
+
+	public void setLimitStart(int limitStart) {
+		this.limitStart = limitStart;
+	}
+
+	public int getLimitEnd() {
+		return limitEnd;
+	}
+
+	public void setLimitEnd(int limitEnd) {
+		this.limitEnd = limitEnd;
+	}
 }
+

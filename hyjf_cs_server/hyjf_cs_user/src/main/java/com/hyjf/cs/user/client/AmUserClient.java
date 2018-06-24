@@ -147,4 +147,18 @@ public interface AmUserClient {
 	UtmPlatVO selectUtmPlatByUtmId(String utmId);
 
     List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
+
+	/**
+	 * 查询同步银行卡号
+	 * @param flag
+	 * @return
+	 */
+	List<AccountMobileSynchVO> searchAccountMobileSynch(String flag);
+
+	/**
+	 * 更新银行卡号手机号同步表
+	 * @param accountMobileSynchRequest
+	 * @return
+	 */
+	boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest);
 }
