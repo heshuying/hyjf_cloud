@@ -129,7 +129,7 @@
 	</select>
 
 	<resultMap id="UserDepartmentInfoMapResult"
-		type="com.hyjf.mybatis.model.customize.UserInfoCustomize">
+		type="com.hyjf.am.user.dao.model.auto.UserInfoCustomize">
 		<result column="user_id" property="userId"  jdbcType="INTEGER" /> <!-- 用户名 -->
 		<result column="username" property="userName"  jdbcType="VARCHAR" /> <!-- 用户名 -->
 		<result column="regionId" property="regionId"  jdbcType="INTEGER" /> <!-- 大区 -->
