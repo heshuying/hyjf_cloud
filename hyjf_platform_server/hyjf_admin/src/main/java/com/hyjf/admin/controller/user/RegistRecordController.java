@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.RegistRecordVO;
+import com.hyjf.common.cache.CacheUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -30,48 +31,59 @@ public class RegistRecordController {
     @Autowired
     public RegistRecordService registRecordService;
 
+    @ApiOperation(value = "注册记录", notes = "注册记录页面初始化")
+    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public JSONObject userManagerInit() {
+        JSONObject jsonObject = new JSONObject();
+        // 注册平台
+        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
+        jsonObject.put("registPlat", registPlat);
+        return jsonObject;
+    }
+
     //会员管理列表查询
     @ApiOperation(value = "注册记录", notes = "注册记录列表查询")
     @RequestMapping(value = "/registRecordList", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public JSONObject selectRegistRecordList(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
+    public JSONObject selectRegistRecordList(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = null;
-        RegistRcordRequest registerRcordeRequest =setRequese(map);
-        List<RegistRecordVO> listRgistRecord =registRecordService.findRegistRecordList(registerRcordeRequest);
-        String status="error";
-        if(null!=listRgistRecord&&listRgistRecord.size()>0){
-            jsonObject.put("record",listRgistRecord);
-            status="success";
+        RegistRcordRequest registerRcordeRequest = setRequese(map);
+        List<RegistRecordVO> listRgistRecord = registRecordService.findRegistRecordList(registerRcordeRequest);
+        String status = "error";
+        if (null != listRgistRecord && listRgistRecord.size() > 0) {
+            jsonObject.put("record", listRgistRecord);
+            status = "success";
         }
-        jsonObject.put("status",status);
+        jsonObject.put("status", status);
         return jsonObject;
     }
 
-    private RegistRcordRequest setRequese(Map<String,Object> mapParam){
+    private RegistRcordRequest setRequese(Map<String, Object> mapParam) {
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
-        if(null!=mapParam&&mapParam.size()>0){
-            if(mapParam.containsKey("userName")){
+        if (null != mapParam && mapParam.size() > 0) {
+            if (mapParam.containsKey("userName")) {
                 registerRcordeRequest.setUserName(mapParam.get("userName").toString());
             }
-            if(mapParam.containsKey("mobile")){
+            if (mapParam.containsKey("mobile")) {
                 registerRcordeRequest.setMobile(mapParam.get("mobile").toString());
             }
-            if(mapParam.containsKey("recommendName")){
+            if (mapParam.containsKey("recommendName")) {
                 registerRcordeRequest.setRecommendName(mapParam.get("recommendName").toString());
             }
-            if(mapParam.containsKey("registPlat")){
+            if (mapParam.containsKey("registPlat")) {
                 registerRcordeRequest.setRegistPlat(mapParam.get("registPlat").toString());
             }
-            if(mapParam.containsKey("regTimeStart")){
+            if (mapParam.containsKey("regTimeStart")) {
                 registerRcordeRequest.setRegTimeStart(mapParam.get("regTimeStart").toString());
             }
-            if(mapParam.containsKey("regTimeEnd")){
+            if (mapParam.containsKey("regTimeEnd")) {
                 registerRcordeRequest.setRegTimeEnd(mapParam.get("regTimeEnd").toString());
             }
-            if (mapParam.containsKey("limitStart")&& StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
+            if (mapParam.containsKey("limitStart") && StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
                 registerRcordeRequest.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
             }
-            if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
+            if (mapParam.containsKey("limitEnd") && StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
                 registerRcordeRequest.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
             }
         }

@@ -5,12 +5,10 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.BankOpenRecordService;
-import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
-import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
-import com.hyjf.am.vo.user.RegistRecordVO;
+import com.hyjf.common.cache.CacheUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +31,22 @@ import java.util.Map;
 public class BankOpenRecordController {
     @Autowired
     public BankOpenRecordService bankOpenRecordService;
+
+
+    @ApiOperation(value = "开户记录", notes = "开户记录页面初始化")
+    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public JSONObject userManagerInit() {
+        JSONObject jsonObject = new JSONObject();
+        // 用户属性
+        Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
+        // 注册平台
+        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
+        jsonObject.put("userPropertys", userPropertys);
+        jsonObject.put("registPlat", registPlat);
+        return jsonObject;
+
+    }
 
     //会员管理列表查询
     @ApiOperation(value = "开户记录", notes = "汇付银行开户记录查询")
