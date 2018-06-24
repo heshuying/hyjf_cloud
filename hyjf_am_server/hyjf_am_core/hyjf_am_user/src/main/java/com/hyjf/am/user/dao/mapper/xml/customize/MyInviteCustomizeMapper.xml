@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.MyInviteCustomizeMapper">
+
+   <resultMap id="MyInviteListResultMap" type="com.hyjf.am.vo.user.MyInviteListCustomizeVO" >
+	   <result column="user_id" property="userId" />
+	   <result column="username" property="username" />
+	   <result column="inviteTime" property="inviteTime" />
+	   <result column="bank_open_account" property="userStatus" /> <!-- 是否开户 0 未开户；1 已开户 -->
+    </resultMap>
+
+    <select id="selectMyInviteList" resultMap="MyInviteListResultMap" parameterType="java.util.Map">
+		SELECT
+			u.user_id,
+			u.username,
+			FROM_UNIXTIME(
+				u.reg_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS inviteTime,
+			u.bank_open_account
+		FROM
+			ht_spreads_user su
+		INNER JOIN ht_user u ON u.user_id = su.user_id
+		WHERE
+			su.spreads_user_id = #{userId}
+		ORDER BY
+			u.user_id DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+    </select>
+
+</mapper>

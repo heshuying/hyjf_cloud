@@ -25,9 +25,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 银行债转异常处理
+ * 投資掉單处理
  * @author jun
- * @since 20180620
+ * @since 20180623
  */
 @Service
 public class BankInvestExceptionServiceImpl implements BankInvestExceptionService {

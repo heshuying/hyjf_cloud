@@ -5,6 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -499,13 +500,16 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @param userId
 	 * @param logOrderId
 	 * @param state
+	 * @param retCode
 	 */
 	@Override
-	public Integer updateUserAccountLogState(int userId, String logOrderId, int state) {
+	public Integer updateUserAccountLogState(int userId, String logOrderId, int state, String retCode, String retMsg) {
 		BankOpenRequest request = new BankOpenRequest();
 		request.setOrderId(logOrderId);
 		request.setUserId(userId);
 		request.setStatus(state);
+		request.setRetCode(retCode);
+		request.setRetMsg(retMsg);
 		Integer result = restTemplate
 				.postForEntity("http://AM-USER/am-user/bankopen/updateUserAccountLogStatus", request, Integer.class).getBody();
 		if (result != null) {
@@ -678,5 +682,31 @@ public class AmUserClientImpl implements AmUserClient {
 		String mess = restTemplate
 				.getForEntity("http://AM-USER//am-user/bankopen/getBankOpenAccountFiledMess/" + logOrdId, String.class).getBody();
 		return mess;
+	}
+
+	@Override
+	public UtmPlatVO selectUtmPlatByUtmId(String utmId){
+		UtmPlatResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUtmId/" + utmId,UtmPlatResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 我的邀请列表
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
+		String url = "http://AM-USER//am-user/invite/myInviteList";
+		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
 	}
 }

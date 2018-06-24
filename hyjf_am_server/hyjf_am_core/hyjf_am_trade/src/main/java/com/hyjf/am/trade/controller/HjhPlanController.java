@@ -6,10 +6,13 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.HjhLabelResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.HjhPlanService;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -17,6 +20,7 @@ import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +36,9 @@ public class HjhPlanController {
 
     @Autowired
     private HjhPlanService hjhPlanService;
+
+    @Autowired
+    private AccountService accountService;
 
     /**
      * 获取现金贷资产方信息配置
@@ -82,4 +89,17 @@ public class HjhPlanController {
         response.setResult(result);
         return response;
     }
+
+    /**
+     * 插入计划明细表
+     * @param planAccede
+     * @return
+     */
+    @RequestMapping("/insertHJHPlanAccede")
+    public int insertHJHPlanAccede(@RequestBody HjhAccedeVO planAccede) {
+        Account useraccount  = accountService.getAccount(planAccede.getUserId());
+        return hjhPlanService.insertHJHPlanAccede(planAccede,useraccount);
+    }
+
+
 }

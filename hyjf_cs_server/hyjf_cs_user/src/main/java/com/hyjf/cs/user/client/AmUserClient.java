@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -97,9 +98,10 @@ public interface AmUserClient {
 	 * @param userId
 	 * @param logOrderId
 	 * @param state
-	 * @return
+	 * @param retCode
+     * @return
 	 */
-	Integer updateUserAccountLogState(int userId, String logOrderId, int state);
+	Integer updateUserAccountLogState(int userId, String logOrderId, int state, String retCode,String retMsg);
 
 	/**
 	 * 开户成功后保存用户开户信息
@@ -141,4 +143,8 @@ public interface AmUserClient {
 	String getBankOpenAccountFiledMess(String logOrdId);
 
 	int isCompAccount(Integer userId);
+
+	UtmPlatVO selectUtmPlatByUtmId(String utmId);
+
+    List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 }

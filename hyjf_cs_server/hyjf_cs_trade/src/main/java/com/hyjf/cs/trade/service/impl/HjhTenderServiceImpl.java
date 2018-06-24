@@ -4,8 +4,9 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
@@ -21,13 +22,12 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.AmBorrowClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.CouponClient;
-import com.hyjf.cs.trade.client.RechargeClient;
+import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.constants.TenderError;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.cs.trade.service.HjhTenderService;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,9 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 加入计划
@@ -62,6 +64,11 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Autowired
     private RechargeClient rechargeClient;
 
+    @Autowired
+    private AmMongoClient amMongoClient;
+
+    @Autowired
+    private CouponService couponService;
     /**
      * @param request
      * @Description 检查加入计划的参数
@@ -126,11 +133,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private void tender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount) {
         Integer userId = request.getUser().getUserId();
         BigDecimal decimalAccount = new BigDecimal(request.getAccount());
+        request.setBankOpenAccount(account);
+        request.setTenderAccount(tenderAccount);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
-            logger.info("体验{},优惠金投资开始:userId:{},平台券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
-            // TODO: 2018/6/20 体验金投资
-            /*couponTender(modelAndView,result, planNid, account,ip,cuc, userId, couponOldTime,platform,couponGrantId);*/
+            logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
+            // 体验金投资
+            couponService.couponTender(request,plan,account,cuc,tenderAccount);
             logger.info("体验金投资结束:userId{}" + userId);
             return;
         }
@@ -180,15 +189,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             } finally {
                 RedisUtils.returnResource(pool, jedis);
             }
-        }else{
+        } else {
             logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
             throw new ReturnMessageException(TenderError.JOIN_PLAN_LATE_ERROR);
         }
-
         // 生成冻结订单-----------------------
-
         boolean afterDealFlag = false;
-        String couponInterest="0";
         // 插入数据库  真正开始操作加入计划表
         afterDealFlag = updateAfterPlanRedis(request, plan);
     }
@@ -203,8 +209,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private boolean updateAfterPlanRedis(TenderRequest request, HjhPlanVO plan) {
         String accountStr = request.getAccount();
         Integer userId = request.getUser().getUserId();
-        String frzzeOrderId = GetOrderIdUtils.getOrderId0(userId);
-        String frzzeOrderDate = GetOrderIdUtils.getOrderDate();
         String planOrderId = GetOrderIdUtils.getOrderId0(userId);
         int nowTime = GetDate.getNowTime10();
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
@@ -227,8 +231,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 当大于等于100时 取百位 小于100 时 取十位
         BigDecimal accountDecimal = new BigDecimal(accountStr);//用户投资金额
         /*(1)汇计划加入明细表插表开始*/
-
-        //处理汇计划加入明细表(以下涵盖所有字段)
+        // 处理汇计划加入明细表(以下涵盖所有字段)
         HjhAccedeVO planAccede = new HjhAccedeVO();
         planAccede.setAccedeOrderId(planOrderId);
         planAccede.setPlanNid(request.getBorrowNid());
@@ -259,7 +262,11 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         planAccede.setShouldPayInterest(earnings);
         planAccede.setCreateUser(userId);
         planAccede.setDelFlag(0);//初始未未删除
-
+        // 给加入明细用的
+        request.setPlanOrderId(planOrderId);
+        request.setEarnings(earnings);
+        request.setAccountDecimal(accountDecimal);
+        request.setNowTime(nowTime);
         if (Validator.isNotNull(userInfo)) {
             UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
 
@@ -267,8 +274,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 int refUserId = spreadsUsers.getUserId();
                 logger.info("推荐人信息：" + refUserId);
                 // 查找用户推荐人详情信息  部门啥的
-                // TODO: 2018/6/20
-               UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(refUserId);
+                UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(refUserId);
                 if (Validator.isNotNull(userInfoCustomize)) {
                     planAccede.setInviteUserId(userInfoCustomize.getUserId());
                     planAccede.setInviteUserName(userInfoCustomize.getUserName());
@@ -281,9 +287,179 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     logger.info("InviteUserBranchname: " + userInfoCustomize.getBranchName());
                     logger.info("InviteUserDepartmentname: " + userInfoCustomize.getDepartmentName());
                 }
+            } else if (userInfo.getAttribute() == 2 || userInfo.getAttribute() == 3) {
+                // 查找用户推荐人详情信息
+                UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(userId);
+                if (Validator.isNotNull(userInfoCustomize)) {
+                    planAccede.setInviteUserId(userInfoCustomize.getUserId());
+                    planAccede.setInviteUserName(userInfoCustomize.getUserName());
+                    planAccede.setInviteUserAttribute(userInfoCustomize.getAttribute());
+                    planAccede.setInviteUserRegionname(userInfoCustomize.getRegionName());
+                    planAccede.setInviteUserBranchname(userInfoCustomize.getBranchName());
+                    planAccede.setInviteUserDepartmentname(userInfoCustomize.getDepartmentName());
+                }
+            }
+        }
+        planAccede.setRequest(request);
+        // 插入汇计划加入明细表
+        boolean trenderFlag = amBorrowClient.insertHJHPlanAccede(planAccede);
+        logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
+        if (trenderFlag) {//加入明细表插表成功的前提下，继续
+            //crm投资推送
+            // TODO: 2018/6/22  crm投资推送
+           /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
+                    RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
+            // 更新用户不是新手了
+            UserVO user = amUserClient.findUserById(userId);
+            if (user != null) {
+                if (user.getInvestflag() == 0) {
+                    user.setInvestflag(1);
+                    boolean updateUserFlag = amUserClient.updateByPrimaryKeySelective(user);
+                }
+            }
+            // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
+            this.updateUtm(request, plan);
+        }
+        // 优惠券投资开始
+        Integer couponGrantId = request.getCouponGrantId();
+        if (couponGrantId != null && couponGrantId != 0) {
+            // 优惠券投资校验
+            try {
+                // 检查优惠券能用不
+                logger.info("优惠券投资校验开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
+                Map<String, String> validateMap = couponService.validateCoupon(userId, accountStr, couponGrantId,
+                        request.getPlatform(),plan);
+                if (MapUtils.isEmpty(validateMap)) {
+                    // 校验通过 进行优惠券投资投资
+                    logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
+                    this.couponTender(request, plan);
+                }else{
+                    logger.info("优惠券投资校验失败返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return false;
+    }
+
+    /**
+     * 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
+     *
+     * @param request
+     * @param plan
+     */
+    private void updateUtm(TenderRequest request, HjhPlanVO plan) {
+        //更新汇计划列表成功的前提下
+        // 更新渠道统计用户累计投资
+        // 投资人信息
+        UserVO users = amUserClient.findUserById(request.getUser().getUserId());
+        if (users != null) {
+            // 更新渠道统计用户累计投资 从mongo里面查询
+            AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
+            if (appChannelStatisticsDetails != null) {
+                // TODO: 2018/6/22  发送消息到mq
+                // appChannelStatisticsDetails != null && appChannelStatisticsDetails.size() == 1) {
+              /*  AppChannelStatisticsDetail channelDetail = appChannelStatisticsDetails.get(0);
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("id", channelDetail.getId());
+                // 认购本金
+                params.put("accountDecimal", accountDecimal);
+                // 投资时间
+                params.put("investTime", nowTime);
+                // 项目类型
+                params.put("projectType", "汇计划");
+                // 首次投标项目期限
+                String investProjectPeriod = debtPlan.getLockPeriod() + "天";
+                params.put("investProjectPeriod", investProjectPeriod);
+                // 更新渠道统计用户累计投资
+                if (users.getInvestflag() == 1) {
+                    this.appChannelStatisticsDetailCustomizeMapper.updateAppChannelStatisticsDetail(params);
+                } else if (users.getInvestflag() == 0) {
+                    // 更新首投投资
+                    this.appChannelStatisticsDetailCustomizeMapper.updateFirstAppChannelStatisticsDetail(params);
+                }
+                logger.info("用户:"+ userId+ "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号："+ planAccede.getAccedeOrderId());
+           */
+            } else {
+                // 更新huiyingdai_utm_reg的首投信息
+                UtmRegVO utmReg = amUserClient.findUtmRegByUserId(request.getUser().getUserId());
+                if (utmReg != null) {
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("id", utmReg.getId());
+                    params.put("accountDecimal", request.getAccountDecimal());
+                    // 投资时间
+                    params.put("investTime", request.getNowTime());
+                    // 项目类型
+                    params.put("projectType", "汇计划");
+                    String investProjectPeriod = "";
+                    // 首次投标项目期限
+                    String borrowStyle = plan.getBorrowStyle();// 还款方式
+                    if ("endday".equals(borrowStyle)) {
+                        investProjectPeriod = plan.getLockPeriod() + "天";
+                    } else {
+                        investProjectPeriod = plan.getLockPeriod() + "月";
+                    }
+                    // 首次投标项目期限
+                    params.put("investProjectPeriod", investProjectPeriod);
+                    // 更新渠道统计用户累计投资
+                    if (users.getInvestflag() == 0) {
+                        // 更新huiyingdai_utm_reg的首投信息
+                        boolean updateUtmFlag = amUserClient.updateFirstUtmReg(params);
+                    }
+                }
+            }
+        }
+        /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
+    }
+
+    /**
+     * 进行优惠券投资
+     *
+     * @param request
+     * @param plan
+     */
+    private void couponTender(TenderRequest request, HjhPlanVO plan) {
+        String accountStr = request.getAccount();
+        Integer userId = request.getUser().getUserId();
+        Integer couponGrantId = request.getCouponGrantId();
+        logger.info("优惠券投资开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
+        // TODO: 2018/6/22  进行优惠券投资
+       /* JSONObject jsonObject = CommonSoaUtils.planCouponInvest(userId + "", planNid, accountStr,
+                plan, couponGrantId, planOrderId, ipAddr, couponOldTime + "");
+                logger.info("优惠券投资结果："+jsonObject);
+        JSONObject result = successMess("投资成功！");
+        if (jsonObject.getIntValue("status") == 0) {
+            // 优惠券收益
+            result.put("couponInterest", jsonObject.getString("couponInterest"));
+            result.put("couponType", jsonObject.getString("couponType"));
+            result.put("couponTypeInt", jsonObject.getString("couponTypeInt"));
+            result.put("couponQuota", jsonObject.getString("couponQuota"));
+            // 优惠券ID
+            result.put("couponGrantId", couponGrantId);
+            // 优惠券额度
+            result.put("couponQuota", jsonObject.getString("couponQuota"));
+            // 投资额度
+            result.put("accountDecimal", jsonObject.getString("accountDecimal"));
+            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
+            //----------old
+            if("0".equals(accountStr)){
+                modelAndView.addObject("plan", 1);
+                modelAndView.addObject("planNid", planNid);
+            }
+
+            modelAndView.addObject("couponInterest", jsonObject.getString("couponInterest"));
+            // 优惠券类别
+            modelAndView.addObject("couponType", jsonObject.getString("couponTypeInt"));
+            // 优惠券额度
+            modelAndView.addObject("couponQuota", jsonObject.getString("couponQuota"));
+            modelAndView.addObject("investDesc", "投资成功！");
+        } else {
+            result = hjhResultMess("投资失败！");
+        }
+
+*/
+
     }
 
     /**

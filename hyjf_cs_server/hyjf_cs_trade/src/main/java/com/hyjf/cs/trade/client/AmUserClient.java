@@ -1,8 +1,13 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+
+import java.util.List;
+
+import java.util.Map;
 
 /**
  * @Description 
@@ -73,5 +78,26 @@ public interface AmUserClient {
 	 */
 	EmployeeCustomizeVO selectEmployeeByUserId(Integer userId);
 
+	/**
+	 * 修改用户对象
+	 * @param user
+	 * @return
+	 */
+    boolean updateByPrimaryKeySelective(UserVO user);
 
+    /**
+     * 根据userId查询用户推广链接注册
+     * @param userId
+     * @return
+     */
+    UtmRegVO findUtmRegByUserId(Integer userId);
+
+    /**
+     * 更新huiyingdai_utm_reg的首投信息
+     * @param params
+     * @return
+     */
+    boolean updateFirstUtmReg(Map<String,Object> params);
+
+	List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 }

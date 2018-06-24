@@ -41,6 +41,6 @@ public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon
             param.put("limitEnd", -1);
         }
 
-        return myCouponListCustomizeMapper.selectCouponUserList(param);
+        return myCouponListCustomizeMapper.selectMyCouponList(param);
     }
 }

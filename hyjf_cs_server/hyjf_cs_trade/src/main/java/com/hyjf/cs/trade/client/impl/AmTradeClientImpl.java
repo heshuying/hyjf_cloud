@@ -5,16 +5,16 @@ import java.util.List;
 
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
-import com.hyjf.am.response.trade.MyInviteListResponse;
 import com.hyjf.am.response.trade.MyRewardListResponse;
+import com.hyjf.am.response.user.MyInviteListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.trade.RtbIncreaseRepayRequest;
 import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
-import com.hyjf.am.vo.trade.MyInviteListCustomizeVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +104,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * @auther: hesy
 	 * @date: 2018/6/23
 	 */
+	@Override
 	public List<MyCouponListCustomizeVO> selectMyCouponList(MyCouponListRequest requestBean){
 		String url = urlBase + "coupon/myCouponList";
 		MyCouponListResponse response = restTemplate.postForEntity(url,requestBean,MyCouponListResponse.class).getBody();
@@ -118,20 +119,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * @param requestBean
 	 * @return
 	 */
-	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
-		String url = urlBase + "invite/myInviteList";
-		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
-			if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	/**
-	 * 我的邀请列表
-	 * @param requestBean
-	 * @return
-	 */
+	@Override
 	public List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean){
 		String url = urlBase + "invite/myRewardList";
 		MyRewardListResponse response = restTemplate.postForEntity(url,requestBean,MyRewardListResponse.class).getBody();

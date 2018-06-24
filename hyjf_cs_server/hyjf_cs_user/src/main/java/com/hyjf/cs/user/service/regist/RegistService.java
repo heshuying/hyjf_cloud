@@ -17,7 +17,9 @@ public interface RegistService extends BaseUserService {
 
 
 
-    void registerCheckParam(int client, RegisterRequest registerRequest);
+    void checkParam(RegisterRequest registerRequest);
+
+    void apiCheckParam(RegisterRequest registerRequest);
 
     boolean existUser(String mobile);
 
@@ -49,4 +51,5 @@ public interface RegistService extends BaseUserService {
     int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
 
     int countUserByRecommendName(String recommend);
+
 }

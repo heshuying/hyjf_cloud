@@ -94,8 +94,8 @@ public class AnRongApiBean implements Serializable {
 	/**
 	 * 设置属性值
 	 *
-	 * @param key
-	 * @param value
+	 * @param
+	 * @param
 	 */
 	public void setAll(Map<String, String> map) {
 		paramMap.putAll(map);
@@ -139,7 +139,7 @@ public class AnRongApiBean implements Serializable {
 	 */
 	public BigDecimal getBigDecimal(String key) {
 		String val = paramMap.get(key);
-		if (Validator.isNotNull(val) && NumberUtils.isNumber(val)) {
+		if (Validator.isNotNull(val) && StringUtils.isNumeric(val)) {
 			return new BigDecimal(val);
 		}
 		return BigDecimal.ZERO;
