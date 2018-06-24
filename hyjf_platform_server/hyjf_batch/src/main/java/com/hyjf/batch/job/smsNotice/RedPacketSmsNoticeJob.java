@@ -4,6 +4,7 @@
 package com.hyjf.batch.job.smsNotice;
 
 import com.hyjf.batch.job.BaseJob;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
  * @version RedPacketSmsNoticeJob, v0.1 2018/6/20 12:02
  * 红包账户余额短信提醒
  */
+@DisallowConcurrentExecution  // 禁止并发执行
 public class RedPacketSmsNoticeJob extends BaseJob implements Job {
     Logger logger = LoggerFactory.getLogger(getClass());
 
