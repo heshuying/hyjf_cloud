@@ -131,4 +131,13 @@ public class BankConfigServiceImpl implements BankConfigService {
 		}
 		return null;
 	}
+
+	/**
+	 * 获取银行列表
+	 */
+	@Override
+	public List<BankConfig> selectBankConfigList(){
+		List<BankConfig> banks = bankConfigMapper.selectByExample(new BankConfigExample());
+		return banks;
+	}
 }
