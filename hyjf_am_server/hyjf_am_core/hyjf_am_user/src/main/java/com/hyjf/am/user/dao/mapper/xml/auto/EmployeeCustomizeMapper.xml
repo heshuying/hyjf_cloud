@@ -15,7 +15,7 @@
 
 
 	<select id="selectEmployeeByUserId" resultMap="EmployeeMapResult"
-		parameterType="com.hyjf.mybatis.mapper.customize.EmployeeCustomizeMapper">
+		parameterType="com.hyjf.am.user.dao.mapper.auto.EmployeeCustomizeMapper">
 		SELECT distinct u.hyd_id as user_id, u.hyd_name as user_name, 
 		d3.id as region_id, d3.name as region_name, 
 		d2.id as branch_id, d2.name as branch_name, 
