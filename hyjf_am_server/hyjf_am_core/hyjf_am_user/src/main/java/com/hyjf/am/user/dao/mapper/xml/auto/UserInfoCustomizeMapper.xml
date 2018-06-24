@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.auto.UserInfoCustomizeMapper">
-	<resultMap id="UserInfoMapResult"
-		type="com.hyjf.am.user.dao.model.auto.UserInfoCustomize">
+	<resultMap id="UserInfoMapResult" type="com.hyjf.am.user.dao.model.auto.UserInfoCustomize">
 		<result column="user_id" property="userId" /> <!-- 用户名 -->
 		<result column="username" property="userName" /> <!-- 用户名 -->
 		<result column="truename" property="trueName" /> <!--   -->
@@ -80,8 +79,7 @@
 	</select>
 	
 	<!-- 根据员工user_id 查询员工信息  -->
-	<select id="queryUserInfoByUserId" resultMap="UserInfoMapResult"
-		parameterType="java.lang.String">
+	<select id="queryUserInfoByUserId" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
 		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
 		FROM ht_user u
@@ -98,8 +96,7 @@
 	</select>
 	
 	<!-- 根据员username 查询员工信息  -->
-	<select id="queryUserDepartmentInfoByUserName" resultMap="UserInfoMapResult"
-		parameterType="java.lang.String">
+	<select id="queryUserDepartmentInfoByUserName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
 		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
 		FROM huiyingdai_users u
@@ -116,8 +113,7 @@
 	</select>
 	
 	<!-- 根据员工user_id 查询员工信息  -->
-	<select id="selectUserInfoByUserId" resultMap="UserInfoMapResult"
-		parameterType="java.lang.String">
+	<select id="selectUserInfoByUserId" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.sex
 		FROM huiyingdai_users u
 		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
@@ -128,8 +124,7 @@
 		group by u.user_id
 	</select>
 
-	<resultMap id="UserDepartmentInfoMapResult"
-		type="com.hyjf.mybatis.model.customize.UserInfoCustomize">
+	<resultMap id="UserDepartmentInfoMapResult" type="com.hyjf.am.user.dao.model.auto.UserInfoCustomize">
 		<result column="user_id" property="userId"  jdbcType="INTEGER" /> <!-- 用户名 -->
 		<result column="username" property="userName"  jdbcType="VARCHAR" /> <!-- 用户名 -->
 		<result column="regionId" property="regionId"  jdbcType="INTEGER" /> <!-- 大区 -->
@@ -140,8 +135,7 @@
 		<result column="departmentName" property="departmentName"  jdbcType="VARCHAR" /> <!-- 部门  -->
 	</resultMap>
 	<!-- 根据员工ID 查询部门信息  -->
-	<select id="queryDepartmentInfoByUserId" resultMap="UserDepartmentInfoMapResult"
-		parameterType="java.lang.Integer">
+	<select id="queryDepartmentInfoByUserId" resultMap="UserDepartmentInfoMapResult" parameterType="java.lang.Integer">
 		SELECT
 			`t`.user_id AS user_id,
 			t.username AS username,
