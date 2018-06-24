@@ -27,7 +27,7 @@ import java.util.Map;
 
 @Api(value = "开户记录")
 @RestController
-@RequestMapping("/bankOpenRecord")
+@RequestMapping("/admin/bankOpenRecord")
 public class BankOpenRecordController {
     @Autowired
     public BankOpenRecordService bankOpenRecordService;

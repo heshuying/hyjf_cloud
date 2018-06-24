@@ -26,7 +26,7 @@ import java.util.Map;
 
 @Api(value = "注册记录")
 @RestController
-@RequestMapping("/registRecord")
+@RequestMapping("/admin/registRecord")
 public class RegistRecordController {
     @Autowired
     public RegistRecordService registRecordService;
