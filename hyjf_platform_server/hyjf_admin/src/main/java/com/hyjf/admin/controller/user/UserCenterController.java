@@ -507,49 +507,49 @@ public class UserCenterController {
                 request.setRegTimeStart(mapParam.get("regTimeStart").toString());
             }
             if (mapParam.containsKey("regTimeEnd")) {
-                request.setRegTimeStart(mapParam.get("regTimeEnd").toString());
+                request.setRegTimeEnd(mapParam.get("regTimeEnd").toString());
             }
             if (mapParam.containsKey("userName")) {
-                request.setRegTimeStart(mapParam.get("userName").toString());
+                request.setUserName(mapParam.get("userName").toString());
             }
             if (mapParam.containsKey("realName")) {
-                request.setRegTimeStart(mapParam.get("realName").toString());
+                request.setRealName(mapParam.get("realName").toString());
             }
             if (mapParam.containsKey("mobile")) {
-                request.setRegTimeStart(mapParam.get("mobile").toString());
+                request.setMobile(mapParam.get("mobile").toString());
             }
             if (mapParam.containsKey("recommendName")) {
-                request.setRegTimeStart(mapParam.get("recommendName").toString());
+                request.setRecommendName(mapParam.get("recommendName").toString());
             }
             if (mapParam.containsKey("userRole")) {
-                request.setRegTimeStart(mapParam.get("userRole").toString());
+                request.setUserRole(mapParam.get("userRole").toString());
             }
             if (mapParam.containsKey("userType")) {
-                request.setRegTimeStart(mapParam.get("userType").toString());
+                request.setUserType(mapParam.get("userType").toString());
             }
             if (mapParam.containsKey("userProperty")) {
-                request.setRegTimeStart(mapParam.get("userProperty").toString());
+                request.setUserProperty(mapParam.get("userProperty").toString());
             }
             if (mapParam.containsKey("accountStatus")) {
-                request.setRegTimeStart(mapParam.get("accountStatus").toString());
+                request.setAccountStatus(mapParam.get("accountStatus").toString());
             }
             if (mapParam.containsKey("userStatus")) {
-                request.setRegTimeStart(mapParam.get("userStatus").toString());
+                request.setUserStatus(mapParam.get("userStatus").toString());
             }
             if (mapParam.containsKey("combotreeListSrch")) {
-                request.setRegTimeStart(mapParam.get("combotreeListSrch").toString());
+                request.setCombotreeListSrch(mapParam.get("combotreeListSrch").toString());
             }
             if (mapParam.containsKey("customerId")) {
-                request.setRegTimeStart(mapParam.get("customerId").toString());
+                request.setCustomerId(mapParam.get("customerId").toString());
             }
             if (mapParam.containsKey("instCodeSrch")) {
-                request.setRegTimeStart(mapParam.get("instCodeSrch").toString());
+                request.setInstCodeSrch(mapParam.get("instCodeSrch").toString());
             }
-            if (mapParam.containsKey("limitStart")) {
-                request.setRegTimeStart(mapParam.get("limitStart").toString());
+            if (mapParam.containsKey("limitStart")&& StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
+                request.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
             }
-            if (mapParam.containsKey("limitEnd")) {
-                request.setRegTimeStart(mapParam.get("limitEnd").toString());
+            if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
+                request.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
             }
         }
         return request;

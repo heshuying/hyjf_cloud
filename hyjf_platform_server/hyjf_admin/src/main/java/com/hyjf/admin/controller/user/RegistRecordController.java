@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.RegistRecordVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,19 +54,25 @@ public class RegistRecordController {
                 registerRcordeRequest.setUserName(mapParam.get("userName").toString());
             }
             if(mapParam.containsKey("mobile")){
-                registerRcordeRequest.setUserName(mapParam.get("mobile").toString());
+                registerRcordeRequest.setMobile(mapParam.get("mobile").toString());
             }
             if(mapParam.containsKey("recommendName")){
-                registerRcordeRequest.setUserName(mapParam.get("recommendName").toString());
+                registerRcordeRequest.setRecommendName(mapParam.get("recommendName").toString());
             }
             if(mapParam.containsKey("registPlat")){
-                registerRcordeRequest.setUserName(mapParam.get("registPlat").toString());
+                registerRcordeRequest.setRegistPlat(mapParam.get("registPlat").toString());
             }
             if(mapParam.containsKey("regTimeStart")){
-                registerRcordeRequest.setUserName(mapParam.get("regTimeStart").toString());
+                registerRcordeRequest.setRegTimeStart(mapParam.get("regTimeStart").toString());
             }
             if(mapParam.containsKey("regTimeEnd")){
-                registerRcordeRequest.setUserName(mapParam.get("regTimeEnd").toString());
+                registerRcordeRequest.setRegTimeEnd(mapParam.get("regTimeEnd").toString());
+            }
+            if (mapParam.containsKey("limitStart")&& StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
+                registerRcordeRequest.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
+            }
+            if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
+                registerRcordeRequest.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
             }
         }
         return registerRcordeRequest;

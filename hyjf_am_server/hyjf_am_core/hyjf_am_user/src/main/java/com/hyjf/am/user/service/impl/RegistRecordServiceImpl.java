@@ -69,6 +69,8 @@ public class RegistRecordServiceImpl implements RegistRecordService {
         mapParam.put("mobile", userRequest.getMobile());
         mapParam.put("recommendName", userRequest.getRecommendName());
         mapParam.put("registPlat",userRequest.getRegistPlat());
+        mapParam.put("limitEnd",String.valueOf(userRequest.getLimitEnd()));
+        mapParam.put("limitStart",String.valueOf(userRequest.getLimitStart()));
         return mapParam;
     }
 
