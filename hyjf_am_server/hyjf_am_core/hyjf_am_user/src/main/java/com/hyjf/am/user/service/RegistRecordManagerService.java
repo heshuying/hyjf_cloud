@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -18,16 +19,16 @@ public interface RegistRecordManagerService {
     /**
      * 根据筛选条件查找会员列表
      *
-     * @param userRequest
+     * @param mapParam
      * @return
      */
-    List<RegistRecordCustomize> selectRegistList(RegistRcordRequest userRequest);
+    List<RegistRecordCustomize> selectRegistList(Map<String, Object> mapParam,int limitStart, int limitEnd);
 
     /**
      * 根据条件查询用户管理总数
      *
      * @return
      */
-    int countRecordTotal(RegistRcordRequest userRequest);
+    int countRecordTotal(Map<String, Object> mapParam );
 
 }

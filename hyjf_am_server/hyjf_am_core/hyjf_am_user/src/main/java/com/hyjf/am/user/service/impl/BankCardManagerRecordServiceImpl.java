@@ -36,9 +36,16 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
      * @return
      */
     @Override
-    public List<BankcardManagerCustomize> selectBankCardList(BankCardManagerRequest request) {
+    public List<BankcardManagerCustomize> selectBankCardList(Map<String,Object> mapParam,int limitStart, int limitEnd) {
         //参数设置
-        Map<String, Object> mapParam = paramSet(request);
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", limitStart);
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", limitEnd);
+        }
+//        Map<String, Object> mapParam = paramSet(request);
         List<BankcardManagerCustomize> listBankCard = bankCardManagerCustomizeMapper.selectBankCardList(mapParam);
         return listBankCard;
     }
@@ -49,8 +56,8 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
      * @return
      */
     @Override
-    public int countUserRecord(BankCardManagerRequest request) {
-        Map<String, Object> mapParam = paramSet(request);
+    public int countUserRecord(Map<String,Object> mapParam) {
+//        Map<String, Object> mapParam = paramSet(request);
         Integer integerCount = bankCardManagerCustomizeMapper.countRecordTotal(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;
@@ -61,8 +68,15 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
      * @return
      */
     @Override
-    public List<BankcardManagerCustomize> selectNewBankCardList (BankCardManagerRequest request) {
-        Map<String, Object> mapParam = paramSet(request);
+    public List<BankcardManagerCustomize> selectNewBankCardList (Map<String,Object> mapParam,int limitStart, int limitEnd) {
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", limitStart);
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", limitEnd);
+        }
+//        Map<String, Object> mapParam = paramSet(request);
         List<BankcardManagerCustomize> bankcardManagerCustomizesList = bankCardManagerCustomizeMapper.selectNewBankCardList(mapParam);
         return bankcardManagerCustomizesList;
     }
@@ -73,34 +87,13 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
      * @return
      */
     @Override
-    public int countRecordTotalNew(BankCardManagerRequest request) {
-        Map<String, Object> mapParam = paramSet(request);
+    public int countRecordTotalNew(Map<String,Object> mapParam) {
+//        Map<String, Object> mapParam = paramSet(request);
         Integer integerCount = bankCardManagerCustomizeMapper.countRecordTotalNew(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;
     }
 
-    /**
-     * 查询条件设置
-     *
-     * @param request
-     * @return
-     */
-    private Map<String, Object> paramSet(BankCardManagerRequest request) {
-        Map<String, Object> mapParam = new HashMap<String, Object>();
-        mapParam.put("userName", request.getUserName());
-        mapParam.put("bank", request.getBank());
-        mapParam.put("account", request.getAccount());
-        mapParam.put("cardProperty", request.getCardProperty());
-        mapParam.put("cardType", request.getCardType());
-        mapParam.put("addTimeStart", request.getAddTimeStart());
-        mapParam.put("addTimeEnd", request.getAddTimeEnd());
-        mapParam.put("limitStart", request.getLimitStart());
-        mapParam.put("limitEnd", request.getLimitEnd());
-        mapParam.put("mobile",request.getMobile());
-        mapParam.put("realName",request.getRealName());
-        return mapParam;
-    }
 
 
 }

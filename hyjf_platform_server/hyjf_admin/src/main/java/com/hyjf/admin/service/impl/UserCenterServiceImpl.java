@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.UserCenterClient;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountRequest;
@@ -56,31 +57,28 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public Map<String, Object> selectUserMemberList(UserManagerRequest request) {
         Map<String, Object> mapReturn = new HashMap<String, Object>();
-        String status = "0";//0->成功,99->失败
+        String status = Response.SUCCESS;//0->成功,99->失败
         // 初始化分页参数，并组合到请求参数
-        // 查询count
-        int userCount = userCenterClient.countRecordTotal(request);
-        mapReturn.put("totle", userCount);
         // 关联hyjf_trade库的ht_hjh_inst_config表
         List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
         // 查询列表
         List<UserManagerVO> listUserMember = userCenterClient.selectUserMemberList(request);
         if (!CollectionUtils.isEmpty(listUserMember)) {
-            for (UserManagerVO userManager : listUserMember) {
-                for (HjhInstConfigVO hjhinst : listHjhInstConfig) {
-                    if (hjhinst.getInstCode().equals(userManager.getInstCode())) {
-                        userManager.setInstName(hjhinst.getInstName());
+            if(!CollectionUtils.isEmpty(listHjhInstConfig)){
+                for (UserManagerVO userManager : listUserMember) {
+                    for (HjhInstConfigVO hjhinst : listHjhInstConfig) {
+                        if (hjhinst.getInstCode().equals(userManager.getInstCode())) {
+                            userManager.setInstName(hjhinst.getInstName());
+                        }
                     }
                 }
             }
-            //页数信息
-            // mapReturn.put("page", page);
-            //用户列表信息
-            mapReturn.put("data", listHjhInstConfig);
         } else {
             // 暂无数据
-            status = "99";
+            status = Response.FAIL;
         }
+        //用户列表信息
+        mapReturn.put("data", listUserMember);
         mapReturn.put("status", status);
         return mapReturn;
     }

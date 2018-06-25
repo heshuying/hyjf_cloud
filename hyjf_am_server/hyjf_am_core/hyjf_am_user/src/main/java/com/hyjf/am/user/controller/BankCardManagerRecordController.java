@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
 import com.hyjf.am.user.service.BankCardManagerRecordService;
 import com.hyjf.am.vo.user.BankcardManagerVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -46,8 +49,10 @@ public class BankCardManagerRecordController {
     public BankCardManagerResponse findBankcardlistHF(@RequestBody @Valid BankCardManagerRequest request) {
         logger.info("---findBankcardlistHF by param---  " + JSONObject.toJSON(request));
         BankCardManagerResponse response = new BankCardManagerResponse();
-        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectBankCardList(request);
-        int usesrCount = bankCardManagerServiceService.countUserRecord(request);
+        Map<String,Object> mapParam = paramSet(request);
+        int usesrCount = bankCardManagerServiceService.countUserRecord(mapParam);
+        Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
+        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectBankCardList(mapParam,paginator.getOffset(), paginator.getLimit());
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
@@ -69,7 +74,8 @@ public class BankCardManagerRecordController {
     public UserManagerResponse countBankcardlistHF(@RequestBody @Valid BankCardManagerRequest request) {
         logger.info("---countBankcardlistHF by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
-        int usesrCount =  bankCardManagerServiceService.countUserRecord(request);
+        Map<String,Object> mapParam = paramSet(request);
+        int usesrCount =  bankCardManagerServiceService.countUserRecord(mapParam);
         response.setCount(usesrCount);
         return response;
     }
@@ -84,8 +90,10 @@ public class BankCardManagerRecordController {
     public BankCardManagerResponse bankcardlistJX(@RequestBody @Valid BankCardManagerRequest request) {
         logger.info("---bankcardlistJX by param---  " + JSONObject.toJSON(request));
         BankCardManagerResponse response = new BankCardManagerResponse();
-        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectNewBankCardList(request);
-        int usesrCount = bankCardManagerServiceService.countRecordTotalNew(request);
+        Map<String,Object> mapParam = paramSet(request);
+        int usesrCount = bankCardManagerServiceService.countRecordTotalNew(mapParam);
+        Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
+        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectNewBankCardList(mapParam,paginator.getOffset(), paginator.getLimit());
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
@@ -106,8 +114,30 @@ public class BankCardManagerRecordController {
     public UserManagerResponse countBankcardlistJX(@RequestBody @Valid BankCardManagerRequest request) {
         logger.info("---countBankcardlistJX by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
-        int usesrCount =  bankCardManagerServiceService.countRecordTotalNew(request);
+        Map<String,Object> mapParam = paramSet(request);
+        int usesrCount =  bankCardManagerServiceService.countRecordTotalNew(mapParam);
         response.setCount(usesrCount);
         return response;
     }
+
+    /**
+     * 查询条件设置
+     *
+     * @param request
+     * @return
+     */
+    private Map<String, Object> paramSet(BankCardManagerRequest request) {
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        mapParam.put("userName", request.getUserName());
+        mapParam.put("bank", request.getBank());
+        mapParam.put("account", request.getAccount());
+        mapParam.put("cardProperty", request.getCardProperty());
+        mapParam.put("cardType", request.getCardType());
+        mapParam.put("addTimeStart", request.getAddTimeStart());
+        mapParam.put("addTimeEnd", request.getAddTimeEnd());
+        mapParam.put("mobile",request.getMobile());
+        mapParam.put("realName",request.getRealName());
+        return mapParam;
+    }
+
 }

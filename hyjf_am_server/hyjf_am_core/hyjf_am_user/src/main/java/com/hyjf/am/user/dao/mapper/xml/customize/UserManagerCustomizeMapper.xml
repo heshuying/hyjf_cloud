@@ -59,7 +59,7 @@
         hydu.open_account AS account_status,
         hydu.`status` AS user_status,
         hydu.reg_esb AS regist_plat,
-        hydu.user_type AS AS user_type,
+        hydu.user_type AS user_type,
         hydur.username AS recommend_name,
         FROM_UNIXTIME(
         hydu.reg_time,
@@ -191,7 +191,7 @@
                 hydu.open_account AS account_status,
                 hydu.`status` AS user_status,
                 hydu.reg_esb AS regist_plat,
-                hydu.user_type AS AS user_type,
+                hydu.user_type AS user_type,
                 hydur.username AS recommend_name,
                 FROM_UNIXTIME(
                 hydu.reg_time,
@@ -279,18 +279,18 @@
         SELECT
         hydu.user_id,
         hydu.username AS user_name,
-        hydui.nickname AS user_nick_name,
-        hydu.iconUrl AS icon_url,
-        from_unixtime(
-        hydui.vip_exp_date,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS vip_exp_date,
+        -- hydui.nickname AS user_nick_name,
+        -- hydu.iconUrl AS icon_url,
+--         from_unixtime(
+--         hydui.vip_exp_date,
+--         '%Y-%m-%d %H:%i:%s'
+--         ) AS vip_exp_date,
         hydui.role_id AS role,
         hydu.user_type AS user_type,
         hydui.attribute AS user_property,
         hydurefer.username AS recommend_name,
         hydd.`name` AS depart_name,
-        source_name AS regist_pid_name,
+        hydup.source_name AS regist_pid_name,
         hydu.reg_esb AS regist_plat,
         hydu.account_esb AS open_account_plat,
         hydu.reg_ip AS regist_ip,
@@ -299,14 +299,14 @@
         '%Y-%m-%d %H:%i:%s'
         ) AS regist_time,
         from_unixtime(
-        hydac.addtime,
+        hydac.create_time,
         '%Y-%m-%d %H:%i:%s'
         ) AS open_account_time,
-        hydu.login_ip AS last_login_ip,
-        from_unixtime(
-        hydu.login_time,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS last_login_time,
+--         hydu.login_ip AS last_login_ip,
+--         from_unixtime(
+--         hydu.login_time,
+--         '%Y-%m-%d %H:%i:%s'
+--        ) AS last_login_time,
         hyduc.rl_name AS em_name,
         hyduc.relation AS em_relation,
         hyduc.rl_phone AS em_phone,
@@ -326,15 +326,15 @@
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-        LEFT JOIN ht_users_contact hyduc ON hydu.user_id = hyduc.user_id
+        LEFT JOIN ht_user_contact hyduc ON hydu.user_id = hyduc.user_id
         LEFT JOIN ht_account_chinapnr hydac ON hydac.user_id = hydu.user_id
         LEFT JOIN ht_utm_reg hydur ON hydur.user_id = hydu.user_id
         LEFT JOIN ht_utm hydutm ON hydur.utm_id = hydutm.utm_id
         LEFT JOIN ht_utm_plat hydup ON hydup.source_id = hydutm.source_id
         LEFT JOIN ht_utm_plat hydup1 ON hydup1.source_id = hydutm.source_id
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
-        LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_userid
-        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_userid and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
+        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
         LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
         WHERE
         hydu.user_id =#{userId,jdbcType=INTEGER}
