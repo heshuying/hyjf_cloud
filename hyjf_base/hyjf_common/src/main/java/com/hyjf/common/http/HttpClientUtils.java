@@ -165,7 +165,7 @@ public class HttpClientUtils {
           
         try {
             logger.info("set utf-8 form entity to httppost");
-            httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));  
+            httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
         } catch (UnsupportedEncodingException e) {  
             e.printStackTrace();  
         }  

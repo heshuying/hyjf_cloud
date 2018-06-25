@@ -16,7 +16,7 @@ public class WhereaboutsPageConfig implements Serializable {
 
     private String jumpPath;
 
-    private Boolean bottomButtonStatus;
+    private Integer bottomButtonStatus;
 
     private String bottomButton;
 
@@ -90,11 +90,11 @@ public class WhereaboutsPageConfig implements Serializable {
         this.jumpPath = jumpPath == null ? null : jumpPath.trim();
     }
 
-    public Boolean getBottomButtonStatus() {
+    public Integer getBottomButtonStatus() {
         return bottomButtonStatus;
     }
 
-    public void setBottomButtonStatus(Boolean bottomButtonStatus) {
+    public void setBottomButtonStatus(Integer bottomButtonStatus) {
         this.bottomButtonStatus = bottomButtonStatus;
     }
 

@@ -240,4 +240,10 @@ public class ClientConstants implements Serializable {
 	public static final String CLIENT_HEADER_APP = "app";
 	public static final String CLIENT_HEADER_API = "api";
 	public static final String CLIENT_HEADER_WX = "wechat";
+
+
+	/**
+	 * 投资人投标申请查询
+	 */
+	public static final String TXCODE_BID_APPLY_QUERY = "bidApplyQuery";
 }

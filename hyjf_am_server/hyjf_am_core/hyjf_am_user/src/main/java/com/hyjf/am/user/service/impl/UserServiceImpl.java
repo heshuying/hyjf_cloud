@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
@@ -37,6 +38,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -96,7 +98,13 @@ public class UserServiceImpl implements UserService {
 	UtmRegMapper utmRegMapper;
 
 	@Autowired
+	UtmPlatMapper utmPlatMapper;
+
+	@Autowired
 	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
+
+    @Autowired
+    UtmRegCustomizeMapper utmRegCustomizeMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -112,7 +120,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public User register(RegisterUserRequest userRequest) throws MQException {
 
-		String mobile = userRequest.getMobilephone();
+		String mobile = userRequest.getMobile();
 		String loginIp = userRequest.getLoginIp();
 		String reffer = userRequest.getReffer();
 		String platform = userRequest.getPlatform();
@@ -468,7 +476,7 @@ public class UserServiceImpl implements UserService {
 		userInfo.setAddress("");
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
-		userInfo.setIsContact(false);
+		userInfo.setIsContact(0);
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
 		usersInfoMapper.insertSelective(userInfo);
@@ -563,6 +571,19 @@ public class UserServiceImpl implements UserService {
 		utmReg.setBindCard(0);
 		utmRegMapper.insertSelective(utmReg);
 		logger.info("注册插入utmReg：{}", JSON.toJSONString(utmReg));
+	}
+
+	@Override
+	public UtmPlat selectUtmPlatByUtmId(String utmId) {
+		UtmPlatExample example = new UtmPlatExample();
+		UtmPlatExample.Criteria cra = example.createCriteria();
+		cra.andSourceIdEqualTo(Integer.parseInt(utmId));
+		cra.andDelFlagEqualTo(0);
+		List<UtmPlat> list = this.utmPlatMapper.selectByExample(example);
+		if(list!=null&& list.size()>0){
+			return list.get(0);
+		}
+		return null;
 	}
 
 	/**
@@ -976,7 +997,7 @@ public class UserServiceImpl implements UserService {
 														 EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult) {
 		UserEvalationResult userEvalationResult=new UserEvalationResult();
 		userEvalationResult.setUserId(userId);
-		userEvalationResult.setScoreCount((byte) countScore);
+		userEvalationResult.setScoreCount(countScore);
 		userEvalationResult.setEvalType(evalation.getEvalType());
 		userEvalationResult.setSummary(evalation.getSummary());
 		userEvalationResult.setCreateTime(new Date());
@@ -998,7 +1019,7 @@ public class UserServiceImpl implements UserService {
 				userEvalation.setErId(userEvalationResult.getId());
 				userEvalation.setQuestionId(new Integer(questionList.get(j)));
 				userEvalation.setAnswerId(new Integer(answerList.get(j)));
-				userEvalation.setSort((byte) j);
+				userEvalation.setSort(j);
 				userEvalationMapper.insertSelective(userEvalation);
 			}
 		}
@@ -1033,4 +1054,33 @@ public class UserServiceImpl implements UserService {
 		cra.andStatusEqualTo(6);// 已开户成功
 		return corpOpenAccountRecordMapper.countByExample(example);
 	}
+
+    /**
+     * 根据userId查询推广链接注册
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UtmReg findUtmRegByUserId(Integer userId) {
+        UtmRegExample utmRegExample = new UtmRegExample();
+        UtmRegExample.Criteria utmRegCra = utmRegExample.createCriteria();
+        utmRegCra.andUserIdEqualTo(userId);
+        List<UtmReg> utmRegList = this.utmRegMapper.selectByExample(utmRegExample);
+        if (utmRegList != null && utmRegList.size() > 0) {
+            return utmRegList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 更新渠道用户首次投资信息
+     *
+     * @param bean
+     * @return
+     */
+    @Override
+    public void updateFirstUtmReg(Map<String, Object> bean) {
+        utmRegCustomizeMapper.updateFirstUtmReg(bean);
+    }
 }

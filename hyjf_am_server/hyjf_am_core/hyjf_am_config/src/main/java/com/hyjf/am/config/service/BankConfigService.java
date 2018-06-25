@@ -4,6 +4,8 @@ import com.hyjf.am.config.dao.model.auto.BankConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
 
+import java.util.List;
+
 public interface BankConfigService {
 
     /**
@@ -16,4 +18,9 @@ public interface BankConfigService {
     BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
 
 	String queryBankIdByCardNo(String cardNo);
+
+    /**
+     * 获取银行列表
+     */
+    List<BankConfig> selectBankConfigList();
 }

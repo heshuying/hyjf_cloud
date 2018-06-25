@@ -1,9 +1,12 @@
 package com.hyjf.am.user.service.impl;
 
+import com.hyjf.am.user.dao.mapper.auto.EmployeeCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserInfoCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,15 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 	@Autowired
 	private UserCrmInfoCustomizeMapper userCrmInfoCustomizeMapper;
+
+	@Autowired
+	private UserInfoCustomizeMapper userInfoCustomizeMapper;
+
+	@Autowired
+	private SpreadsUserMapper spreadsUserMapper;
+
+	@Autowired
+	private EmployeeCustomizeMapper employeeCustomizeMapper;
 
 	@Override
 	public UserInfo findUserInfoById(int userId) {
@@ -78,6 +90,34 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public UserCrmInfoCustomize findUserCrmInfoByUserId(Integer userId) {
 		List<UserCrmInfoCustomize> list = userCrmInfoCustomizeMapper.findUserCrmInfoByUserId(userId);
 		return null;
+	}
+
+	/**
+	 * 获取用户详情
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomize queryUserInfoCustomizeByUserId(Integer userId) {
+		return userInfoCustomizeMapper.queryUserInfoByUserId(userId);
+	}
+
+
+	@Override
+	public List<SpreadsUser> querySpreadsUsersByUserId(Integer userId) {
+		SpreadsUserExample example = new SpreadsUserExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		return spreadsUserMapper.selectByExample(example);
+	}
+
+	/**
+	 * 获取员工信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public EmployeeCustomize selectEmployeeByUserId(Integer userId) {
+		return employeeCustomizeMapper.selectEmployeeByUserId(userId);
 	}
 
 }

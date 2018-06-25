@@ -8,7 +8,7 @@ import com.hyjf.am.vo.BaseVO;
 /**
  * @author NXL
  * @version UserMemberParamVO, v0.1 2018/6/19 17:41
- * 会员中心->会员管理(请求参数）
+ *          会员中心->会员管理(请求参数）
  */
 public class UserManagerRequest extends BaseVO {
     //注册开始时间
@@ -43,6 +43,7 @@ public class UserManagerRequest extends BaseVO {
     private Integer limitStart;
     //分页结束
     private Integer limitEnd;
+
     //
     public String getRegTimeStart() {
         return regTimeStart;

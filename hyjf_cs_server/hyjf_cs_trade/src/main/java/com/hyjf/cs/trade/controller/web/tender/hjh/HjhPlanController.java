@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.controller.web.tender.hjh;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.HjhTenderService;
 import io.swagger.annotations.Api;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @Description web端加入计划
@@ -34,14 +36,13 @@ public class HjhPlanController extends BaseTradeController {
     private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "web端加入计划", notes = "web端加入计划")
-    @PostMapping(value = "/homeBorrowProjectList", produces = "application/json; charset=utf-8")
-    public Object homeBorrowProjectList(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> joinPlan(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setToken(token);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        hjhTenderService.joinPlan(tender);
-        return null;
+        return hjhTenderService.joinPlan(tender);
     }
 
 }

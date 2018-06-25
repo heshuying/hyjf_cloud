@@ -6,12 +6,14 @@ import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -21,7 +23,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.CheckResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
@@ -36,7 +37,6 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -370,9 +370,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             Integer bankId = banks.getBankId();
             BanksConfigVO banksConfig = bindCardClient.getBanksConfigByBankId(bankId + "");
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankName())) {
-                bankCardBean.setBank(banksConfig.getBankName());
-                bankCardBean.setBankCode(banksConfig.getBankCode());
-                bankCardBean.setLogo(banksConfig.getBankLogo());
+                bankCardBean.setBank(banksConfig.getBankName()==null?"":banksConfig.getBankName());
+                bankCardBean.setBankCode(banksConfig.getBankCode()==null?"":banksConfig.getBankCode());
+                bankCardBean.setLogo(banksConfig.getBankLogo()==null?"":banksConfig.getBankLogo());
             }
 
             feeWithdraw = this.getWithdrawFee(userId, banks.getCardNo());
@@ -384,7 +384,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         ret.put("payAllianceCode", payAllianceCode);
         ret.put("bankType", bankType);
         ret.put("feeWithdraw", DF_FOR_VIEW.format(new BigDecimal(feeWithdraw)));
-        ret.put("roleId", user == null ? "" : user.getRoleId());
+        ret.put("roleId", userRoId);
 //		modelAndView.addObject("paymentAuthStatus", user.getPaymentAuthStatus());
         //update by jijun 2018/04/09 合规接口改造一期
         ret.put("paymentAuthStatus", "");
@@ -480,7 +480,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 FeeConfigVO feeConfig = listFeeConfig.get(0);
                 BigDecimal takout = BigDecimal.ZERO;
                 BigDecimal percent = BigDecimal.ZERO;
-                if (Validator.isNotNull(feeConfig.getNormalTakeout()) && NumberUtils.isNumber(feeConfig.getNormalTakeout())) {
+                if (Validator.isNotNull(feeConfig.getNormalTakeout()) && StringUtils.isNumeric(feeConfig.getNormalTakeout())) {
                     takout = new BigDecimal(feeConfig.getNormalTakeout());
                 }
                 return takout.add(percent).toString();
@@ -609,7 +609,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new ReturnMessageException(BankWithdrawError.WITHDRAW_SERVICE_CHARGE_ERROR);
         }
         // 检查参数(银行卡ID是否数字)
-        if (Validator.isNotNull(cardNo) && !NumberUtils.isNumber(cardNo)) {
+        if (Validator.isNotNull(cardNo) && !StringUtils.isNumeric(cardNo)) {
             throw new ReturnMessageException(BankWithdrawError.WITHDRAW_CARD_NO_ERROR);
         }
         UserVO users= amUserClient.findUserById(user.getUserId());

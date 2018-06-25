@@ -6,8 +6,8 @@
     <result column="path" property="path" jdbcType="VARCHAR" />
     <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
     <result column="url" property="url" jdbcType="VARCHAR" />
-    <result column="retryable" property="retryable" jdbcType="BIT" />
-    <result column="enabled" property="enabled" jdbcType="BIT" />
+    <result column="retryable" property="retryable" jdbcType="TINYINT" />
+    <result column="enabled" property="enabled" jdbcType="TINYINT" />
     <result column="strip_prefix" property="stripPrefix" jdbcType="INTEGER" />
     <result column="api_name" property="apiName" jdbcType="VARCHAR" />
   </resultMap>
@@ -106,19 +106,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfig" >
-    insert into ht_gateway_api_config (id, `path`, service_id, 
-      url, retryable, enabled, strip_prefix, 
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_gateway_api_config (`path`, service_id, url, 
+      retryable, enabled, strip_prefix, 
       api_name)
-    values (#{id,jdbcType=INTEGER}, #{path,jdbcType=VARCHAR}, #{serviceId,jdbcType=VARCHAR}, 
-      #{url,jdbcType=VARCHAR}, #{retryable,jdbcType=BIT}, #{enabled,jdbcType=BIT}, #{stripPrefix,jdbcType=INTEGER}, 
+    values (#{path,jdbcType=VARCHAR}, #{serviceId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{retryable,jdbcType=TINYINT}, #{enabled,jdbcType=TINYINT}, #{stripPrefix,jdbcType=INTEGER}, 
       #{apiName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_gateway_api_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="path != null" >
         `path`,
       </if>
@@ -142,9 +145,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="path != null" >
         #{path,jdbcType=VARCHAR},
       </if>
@@ -155,10 +155,10 @@
         #{url,jdbcType=VARCHAR},
       </if>
       <if test="retryable != null" >
-        #{retryable,jdbcType=BIT},
+        #{retryable,jdbcType=TINYINT},
       </if>
       <if test="enabled != null" >
-        #{enabled,jdbcType=BIT},
+        #{enabled,jdbcType=TINYINT},
       </if>
       <if test="stripPrefix != null" >
         #{stripPrefix,jdbcType=INTEGER},
@@ -190,10 +190,10 @@
         url = #{record.url,jdbcType=VARCHAR},
       </if>
       <if test="record.retryable != null" >
-        retryable = #{record.retryable,jdbcType=BIT},
+        retryable = #{record.retryable,jdbcType=TINYINT},
       </if>
       <if test="record.enabled != null" >
-        enabled = #{record.enabled,jdbcType=BIT},
+        enabled = #{record.enabled,jdbcType=TINYINT},
       </if>
       <if test="record.stripPrefix != null" >
         strip_prefix = #{record.stripPrefix,jdbcType=INTEGER},
@@ -212,8 +212,8 @@
       `path` = #{record.path,jdbcType=VARCHAR},
       service_id = #{record.serviceId,jdbcType=VARCHAR},
       url = #{record.url,jdbcType=VARCHAR},
-      retryable = #{record.retryable,jdbcType=BIT},
-      enabled = #{record.enabled,jdbcType=BIT},
+      retryable = #{record.retryable,jdbcType=TINYINT},
+      enabled = #{record.enabled,jdbcType=TINYINT},
       strip_prefix = #{record.stripPrefix,jdbcType=INTEGER},
       api_name = #{record.apiName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -233,10 +233,10 @@
         url = #{url,jdbcType=VARCHAR},
       </if>
       <if test="retryable != null" >
-        retryable = #{retryable,jdbcType=BIT},
+        retryable = #{retryable,jdbcType=TINYINT},
       </if>
       <if test="enabled != null" >
-        enabled = #{enabled,jdbcType=BIT},
+        enabled = #{enabled,jdbcType=TINYINT},
       </if>
       <if test="stripPrefix != null" >
         strip_prefix = #{stripPrefix,jdbcType=INTEGER},
@@ -252,8 +252,8 @@
     set `path` = #{path,jdbcType=VARCHAR},
       service_id = #{serviceId,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
-      retryable = #{retryable,jdbcType=BIT},
-      enabled = #{enabled,jdbcType=BIT},
+      retryable = #{retryable,jdbcType=TINYINT},
+      enabled = #{enabled,jdbcType=TINYINT},
       strip_prefix = #{stripPrefix,jdbcType=INTEGER},
       api_name = #{apiName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

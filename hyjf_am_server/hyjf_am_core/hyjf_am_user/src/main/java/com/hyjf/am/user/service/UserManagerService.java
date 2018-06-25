@@ -4,12 +4,12 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.user.dao.model.auto.BindUser;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
+import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
+import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
 
 import java.util.List;
 
@@ -75,4 +75,103 @@ public interface UserManagerService {
      */
     CertificateAuthority selectCertificateAuthorityByUserId(int userId);
 
+    /**
+     * 根据用户id获取用户修改信息
+     *
+     * @param userId
+     * @return
+     */
+    UserManagerUpdateCustomize selectUserUpdateInfoByUserId(int userId);
+
+    /**
+     * 更新用户信息
+     *
+     * @param request
+     * @return
+     */
+    int updataUserInfo(UserManagerUpdateRequest request);
+
+    /**
+     * 校验手机号
+     *
+     * @param userId
+     * @param mobile
+     * @return
+     */
+    int countUserByMobile(int userId, String mobile);
+
+    /**
+     * 校验推荐人
+     *
+     * @param userId
+     * @param recommendName
+     * @return
+     */
+    int selectCheckRecommend(int userId, String recommendName);
+
+    /**
+     * 根据用户id查找用户表
+     *
+     * @param userId
+     * @param userId
+     * @return
+     */
+    User selectUserByUserId(int userId);
+
+    BankOpenAccount selectBankOpenAccountByAccountId(String accountId);
+
+    /**
+     * 更新企业用户开户记录
+     *
+     * @param corpOpenAccountRecord
+     * @return
+     */
+    int updateCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord);
+
+    /**
+     * 插入企业用户开户记录
+     *
+     * @param corpOpenAccountRecord
+     * @return
+     */
+    int insertCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord);
+
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    BankOpenAccount queryBankOpenAccountByUserId(int userId);
+
+    /**
+     * 更新开户信息
+     *
+     * @param request
+     * @return
+     */
+    int updateBankOpenAccount(BankOpenAccount request);
+
+    /**
+     * 插入开户信息
+     *
+     * @param request
+     * @return
+     */
+    int insertBankOpenAccount(BankOpenAccount request);
+
+    /**
+     * 更新用户信息表
+     *
+     * @param userInfo
+     * @return
+     */
+    int updateUserInfoByUserInfo(UserInfo userInfo);
+
+    /**
+     * 更新用户表
+     *
+     * @param user
+     * @return
+     */
+    int updateUser(User user);
 }

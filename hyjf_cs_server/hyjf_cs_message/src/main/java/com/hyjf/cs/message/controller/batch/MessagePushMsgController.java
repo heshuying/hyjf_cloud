@@ -28,7 +28,7 @@ import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
  * @version MessagePushMsgController, v0.1 2018/6/21 15:52
  */
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/messagePush")
 public class MessagePushMsgController extends BaseController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());

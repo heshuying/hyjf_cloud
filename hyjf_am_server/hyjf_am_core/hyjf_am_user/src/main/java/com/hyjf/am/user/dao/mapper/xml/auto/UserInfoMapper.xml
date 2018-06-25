@@ -16,7 +16,7 @@
     <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="attribute" property="attribute" jdbcType="INTEGER" />
-    <result column="is_contact" property="isContact" jdbcType="BIT" />
+    <result column="is_contact" property="isContact" jdbcType="TINYINT" />
     <result column="borrower_type" property="borrowerType" jdbcType="TINYINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -117,25 +117,28 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserInfo" >
-    insert into ht_user_info (user_id, role_id, birthday, 
-      sex, truename, idcard, 
-      truename_isApprove, mobile_isApprove, email_isApprove, 
-      province, city, area, 
-      address, `attribute`, is_contact, 
-      borrower_type, update_time)
-    values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=TINYINT}, #{birthday,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=TINYINT}, #{truename,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
-      #{truenameIsapprove,jdbcType=TINYINT}, #{mobileIsapprove,jdbcType=TINYINT}, #{emailIsapprove,jdbcType=TINYINT}, 
-      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, #{isContact,jdbcType=BIT}, 
-      #{borrowerType,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP})
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_user_info (role_id, birthday, sex, 
+      truename, idcard, truename_isApprove, 
+      mobile_isApprove, email_isApprove, province, 
+      city, area, address, 
+      `attribute`, is_contact, borrower_type, 
+      update_time)
+    values (#{roleId,jdbcType=TINYINT}, #{birthday,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
+      #{truename,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{truenameIsapprove,jdbcType=TINYINT}, 
+      #{mobileIsapprove,jdbcType=TINYINT}, #{emailIsapprove,jdbcType=TINYINT}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{attribute,jdbcType=INTEGER}, #{isContact,jdbcType=TINYINT}, #{borrowerType,jdbcType=TINYINT}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_user_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        user_id,
-      </if>
       <if test="roleId != null" >
         role_id,
       </if>
@@ -186,9 +189,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
       <if test="roleId != null" >
         #{roleId,jdbcType=TINYINT},
       </if>
@@ -229,7 +229,7 @@
         #{attribute,jdbcType=INTEGER},
       </if>
       <if test="isContact != null" >
-        #{isContact,jdbcType=BIT},
+        #{isContact,jdbcType=TINYINT},
       </if>
       <if test="borrowerType != null" >
         #{borrowerType,jdbcType=TINYINT},
@@ -291,7 +291,7 @@
         `attribute` = #{record.attribute,jdbcType=INTEGER},
       </if>
       <if test="record.isContact != null" >
-        is_contact = #{record.isContact,jdbcType=BIT},
+        is_contact = #{record.isContact,jdbcType=TINYINT},
       </if>
       <if test="record.borrowerType != null" >
         borrower_type = #{record.borrowerType,jdbcType=TINYINT},
@@ -320,7 +320,7 @@
       area = #{record.area,jdbcType=VARCHAR},
       address = #{record.address,jdbcType=VARCHAR},
       `attribute` = #{record.attribute,jdbcType=INTEGER},
-      is_contact = #{record.isContact,jdbcType=BIT},
+      is_contact = #{record.isContact,jdbcType=TINYINT},
       borrower_type = #{record.borrowerType,jdbcType=TINYINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -370,7 +370,7 @@
         `attribute` = #{attribute,jdbcType=INTEGER},
       </if>
       <if test="isContact != null" >
-        is_contact = #{isContact,jdbcType=BIT},
+        is_contact = #{isContact,jdbcType=TINYINT},
       </if>
       <if test="borrowerType != null" >
         borrower_type = #{borrowerType,jdbcType=TINYINT},
@@ -396,7 +396,7 @@
       area = #{area,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       `attribute` = #{attribute,jdbcType=INTEGER},
-      is_contact = #{isContact,jdbcType=BIT},
+      is_contact = #{isContact,jdbcType=TINYINT},
       borrower_type = #{borrowerType,jdbcType=TINYINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}

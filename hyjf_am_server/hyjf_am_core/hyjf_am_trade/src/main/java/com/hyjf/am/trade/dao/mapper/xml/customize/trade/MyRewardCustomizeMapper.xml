@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.MyRewardCustomizeMapper">
+
+	<resultMap id="MyRewardListResultMap" type="com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO">
+		<result column="tender_user_id" property="userId" />
+		<result column="username" property="username" />
+		<result column="rewardTime" property="rewardTime" />
+		<result column="borrow_nid" property="borrowNid" />
+		<result column="account_tender" property="account" />
+		<result column="commission" property="pushMoney" />
+		<result column="type" property="type" />
+		<result column="coupon_type" property="couponType" />
+	</resultMap>
+
+	<select id="selectMyRewardList" resultMap="MyRewardListResultMap" parameterType="java.util.Map">
+		SELECT
+			t.tender_user_id,
+			u.username,
+			t.account_tender,
+			t.commission,
+			FROM_UNIXTIME(
+			t.update_time,
+			'%Y-%m-%d %H:%i:%s'
+			) AS rewardTime,
+			t.borrow_nid,
+			0 type,
+			0 coupon_type
+		FROM
+			ht_tender_commission t
+		INNER JOIN ht_r_user u ON t.tender_user_id = u.user_id
+		WHERE
+			t. STATUS = 1
+		AND t.user_id = #{userId}
+		ORDER BY
+			t.update_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+</mapper>

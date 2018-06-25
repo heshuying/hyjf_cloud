@@ -168,7 +168,7 @@ public class ThreeDESUtils {
 		System.out.println("----------示例结束：使用java写的算法加密解密-----------");
 		long end = System.currentTimeMillis();
 		System.out.println("耗时：" + (end - start) + "毫秒");
-		String encode = URLEncoder.encode(encrypt);
+		String encode = URLEncoder.encode(encrypt,"UTF-8");
 		System.out.println("encode:" + encode);
 		String decode = URLDecoder.decode(encode, "UTF-8");
 		System.out.println("decode:" + decode);

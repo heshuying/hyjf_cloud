@@ -86,7 +86,7 @@ public class BindCardClientImpl implements BindCardClient {
 	@Override
 	public AccountVO getAccount(Integer userId) {
         AccountResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/recharge/getAccount/" + userId, AccountResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/trade/getAccount/" + userId, AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

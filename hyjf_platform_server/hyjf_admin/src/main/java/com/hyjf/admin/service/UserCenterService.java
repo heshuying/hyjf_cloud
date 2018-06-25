@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -66,5 +67,70 @@ public interface UserCenterService {
      * @return
      */
     CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId);
+
+    /**
+     * 根据用户id获取用户修改信息
+     * @param userId
+     * @return
+     */
+    UserManagerUpdateVO selectUserUpdateInfoByUserId (String userId);
+
+    /**
+     * 更新用户信息
+     */
+    int updataUserInfo( Map<String, String> map);
+
+    /**
+     * 根据用户id获取推荐人信息
+     * @param userId
+     * @return
+     */
+    UserRecommendVO selectUserRecommendByUserId(String userId);
+
+    /**
+     * 校验手机号
+     * @param userId
+     * @param mobile
+     * @return
+     */
+    int countUserByMobile(int userId, String mobile);
+
+    /**
+     * 校验推荐人
+     * @param userId
+     * @param recommendName
+     * @return
+     */
+    int checkRecommend(String userId, String recommendName);
+    /**
+     * @Description 根据accountid调用接口查找企业信息
+     */
+    CompanyInfoVO queryCompanyInfoByAccoutnId(Integer userId, String accountId);
+    /**
+     * 根据用户id查找用户表
+     * @param userId
+     * @param userId
+     * @return
+     */
+    UserVO selectUserByUserId(String userId);
+
+    /**
+     * 根据用户id查找企业信息
+     * @param userId
+     * @return
+     */
+    CompanyInfoVO selectCompanyInfoByUserId(String userId);
+    /**
+     * 根據accounId獲取開戶信息
+     * @param accountId
+     * @return
+     */
+    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+
+    /**
+     * 保存企业信息
+     * @return
+     */
+    JSONObject saveCompanyInfo(Map<String,String> mapParam);
 
 }

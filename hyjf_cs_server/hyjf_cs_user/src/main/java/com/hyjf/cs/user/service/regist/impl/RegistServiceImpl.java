@@ -6,6 +6,7 @@ package com.hyjf.cs.user.service.regist.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -20,7 +21,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -73,8 +73,6 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     @Autowired
     private SmsProducer smsProducer;
 
-
-
     @Autowired
     SystemConfig systemConfig;
 
@@ -84,6 +82,8 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     private String fileHeadUrl;
     @Value("${file.upload.head.path}")
     private String fileHeadPath;
+
+
 
     /**
      * 1. 必要参数检查 2. 注册 3. 注册后处理
@@ -123,40 +123,26 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         // 根据机构编号检索机构信息
         HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
         // 机构编号
-        CheckUtil.check(instConfig != null, MsgEnum.ERR_INSTCODE);
+        CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
+        registerUserRequest.setInstCode(instConfig.getInstType());
         // 验签
         CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER),MsgEnum.STATUS_CE000002);
-        registerUserRequest.setInstCode(instConfig.getInstType());
+        // 根据渠道号检索推广渠道是否存在
+        UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
+        CheckUtil.check(null!=utmPlat,MsgEnum.STATUS_ZC000020);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         return userVO;
     }
 
-
     /**
-     * 注册参数校验
-     *
-     * @param
+     * 参数校验
+     * @param registerRequest
      */
     @Override
-    public void registerCheckParam(int client, RegisterRequest registerRequest) {
-        if(ClientConstants.API_CLIENT == client){
-            // 机构编号
-            String instCode = registerRequest.getInstCode();
-            // 注册平台
-            String platform = registerRequest.getPlatform();
-            // 注册渠道
-            String utmId = registerRequest.getUtmId();
-            // 机构编号
-            CheckUtil.check(StringUtils.isNotEmpty(instCode), MsgEnum.ERR_INSTCODE);
-            // 注册平台
-            CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.ERR_OBJECT_REQUIRED,"注册平台");//注册平台不能为空
-            // 推广渠道
-            CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.ERR_OBJECT_REQUIRED,"推广渠道");//推广渠道不能为空
-            CheckUtil.check(registerRequest != null, MsgEnum.ERR_USER_REGISTER);
-        }
-        String mobile = registerRequest.getMobilephone();
+    public void checkParam(RegisterRequest registerRequest) {
+        String mobile = registerRequest.getMobile();
         CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.ERR_OBJECT_BLANK,"手机号");//手机号未填写
         String smsCode = registerRequest.getSmsCode();
         CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.ERR_OBJECT_REQUIRED,"验证码");//验证码不能为空
@@ -177,13 +163,48 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
         CheckUtil.check(m.matches(), MsgEnum.ERR_FMT_PASSWORD);
-		String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-      /*  int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
+        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt != 0, MsgEnum.ERR_SMSCODE_INVALID);*/
+        CheckUtil.check(cnt != 0, MsgEnum.STATUS_ZC000015);
         String reffer = registerRequest.getReffer();
         if(StringUtils.isNotEmpty(reffer)){
-            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
+            //无效推荐人
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");
+        }
+    }
+
+    /**
+     * 注册参数校验
+     *
+     * @param
+     */
+    @Override
+    public void apiCheckParam(RegisterRequest registerRequest) {
+        // 手机号
+        String mobile = registerRequest.getMobile();
+        // 机构编号
+        String instCode = registerRequest.getInstCode();
+        // 注册平台
+        String platform = registerRequest.getPlatform();
+        // 注册渠道
+        String utmId = registerRequest.getUtmId();
+        //推荐人
+        String reffer = registerRequest.getReffer();
+        //手机号未填写
+        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.STATUS_ZC000001);
+        // 机构编号
+        CheckUtil.check(StringUtils.isNotEmpty(instCode), MsgEnum.STATUS_ZC000002);
+        // 注册平台
+        CheckUtil.check(StringUtils.isNotEmpty(platform), MsgEnum.STATUS_ZC000018);//注册平台不能为空
+        // 推广渠道
+       CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.STATUS_ZC000019);//推广渠道不能为空
+
+        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.STATUS_ZC000003);
+        CheckUtil.check(!existUser(mobile), MsgEnum.STATUS_ZC000005);
+        // TODO: 2018/6/23 原代码平台推荐人未作处理 
+        if(StringUtils.isNotEmpty(reffer)){
+           // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
 
     }
@@ -194,9 +215,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
      * @param userVO
      */
     private WebViewUserVO afterRegisterHandle(UserVO userVO) {
-
         int userId = userVO.getUserId();
-
         // 1. 注册成功之后登录
         String token = generatorToken(userId, userVO.getUsername());
         WebViewUserVO webViewUserVO = this.assembleWebViewUserVO(userVO);
@@ -205,6 +224,11 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
         // 2. 注册送188元新手红包
         if (!checkActivityIfAvailable(activityId)) {
+            AdsRequest adsRequest = new AdsRequest();
+            adsRequest.setCode("registpop");
+            adsRequest.setHost(systemConfig.getDomainAppUrl());
+            adsRequest.setLimitStart(0);
+            adsRequest.setLimitEnd(1);
             try {
                 JSONObject params = new JSONObject();
                 params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -215,7 +239,6 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             } catch (Exception e) {
                 logger.error("注册发放888红包失败...", e);
             }
-
             // 短信通知用户发券成功
             SmsMessage smsMessage = new SmsMessage(userId, null, userVO.getMobile(), null,
                     MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_TZJ_188HB,
@@ -230,7 +253,6 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
         return webViewUserVO;
     }
-
 
     private WebViewUserVO assembleWebViewUserVO(UserVO userVO) {
         WebViewUserVO webViewUserVO = new WebViewUserVO();

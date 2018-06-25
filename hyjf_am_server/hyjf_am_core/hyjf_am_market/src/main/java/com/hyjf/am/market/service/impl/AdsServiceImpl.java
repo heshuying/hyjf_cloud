@@ -1,8 +1,10 @@
 package com.hyjf.am.market.service.impl;
 
 import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
+import com.hyjf.am.market.dao.mapper.customize.app.AppAdsCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsExample;
+import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.market.service.AdsService;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -20,6 +23,8 @@ public class AdsServiceImpl implements AdsService {
 
 	@Autowired
 	AdsMapper adsMapper;
+	@Autowired
+	AppAdsCustomizeMapper adsCustomizeMapper;
 
 	@Override
 	public void updateActivityEndStatus() {
@@ -58,5 +63,17 @@ public class AdsServiceImpl implements AdsService {
 			return ads;
 		}
 		return null;
+	}
+
+
+	@Override
+	public AppAdsCustomize searchBanner(Map<String, Object> ads) {
+		List<AppAdsCustomize> adsList = adsCustomizeMapper.selectAdsList(ads);
+		if(adsList != null && !adsList.isEmpty()) {
+			// 注册成功发券提示
+			return adsList.get(0);
+		}else{
+			return null;
+		}
 	}
 }

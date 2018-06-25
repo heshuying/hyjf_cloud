@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 
@@ -46,6 +47,28 @@ public interface WebProjectListCustomizeMapper {
     List<TenderCreditDetailCustomizeVO> searchCreditList(Map<String,Object> params);
 
 
+    /**
+     * 获取计划专区上部统计数据
+     * @author zhangyk
+     * @date 2018/6/21 15:54
+     */
+    Map<String,Object> searchPlanData();
+
+    /**
+     * Web端获取计划专区计划列表count
+     * @author zhangyk
+     * @date 2018/6/21 15:54
+     */
+    int countWebPlanList(ProjectListRequest request);
+
+    /**
+     * web端获取计划专区计划列表list
+     * @author zhangyk
+     * @date 2018/6/21 15:55
+     */
+    List<Object> searchWebPlanList(ProjectListRequest request);
+
+
     // ----------------------------------web end -----------------------------------------------
     // ---------------------------------- app start --------------------------------------------
 
@@ -65,17 +88,31 @@ public interface WebProjectListCustomizeMapper {
 
 
     /**
-     * 获取可投资项目列表
+     * 获取债转项目列表
      * @param params
      * @return
      */
     List<WebProjectListCustomize> searchAppCreditList(Map<String, Object> params);
 
     /**
-     * 获取可投资项目列表count
+     * 获取债转列表count
      * @param params
      * @return
      */
     int countAppCredit(Map<String, Object> params);
+
+    /**
+     * app获取计划列表count
+     * @author zhangyk
+     * @date 2018/6/22 11:53
+     */
+    int countAppPlanList(Map<String, Object> params);
+
+    /**
+     * app 获取计划列表list
+     * @param params
+     * @return
+     */
+    List<WebProjectListCustomize> searchAppPlanList(Map<String, Object> params);
     // -----------------------------------app end ----------------------------------------------
 }

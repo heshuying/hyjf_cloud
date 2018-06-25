@@ -20,7 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class BankOpenServiceImpl implements BankOpenService {
     private AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
 
     @Override
-    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc,String name,String idno,String cardNo) {
+    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo) {
         Date date = new Date();
         BankOpenAccountLogExample example = new BankOpenAccountLogExample();
         example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(logOrderId);
@@ -96,7 +95,7 @@ public class BankOpenServiceImpl implements BankOpenService {
      * @param status
      */
     @Override
-    public void updateUserAccountLog(Integer userId, String logOrderId, int status) {
+    public void updateUserAccountLog(Integer userId, String logOrderId, int status , String retCode , String retMsg) {
         Date date = new Date();
         BankOpenAccountLogExample example = new BankOpenAccountLogExample();
         example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(logOrderId);
@@ -107,13 +106,15 @@ public class BankOpenServiceImpl implements BankOpenService {
             openAccountLog.setStatus(status);
             openAccountLog.setUpdateTime(date);
             openAccountLog.setUpdateUserId(userId);
+            openAccountLog.setRetCode(retCode);
+            openAccountLog.setRetMsg(retMsg);
             this.bankOpenAccountLogMapper.updateByPrimaryKeySelective(openAccountLog);
         }
 
     }
 
     @Override
-    public boolean updateUserAccount(Integer userId,String trueName,  String orderId, String accountId, String idNo,Integer bankAccountEsb,String mobile) {
+    public boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile) {
         logger.info("开户成功后,更新用户账户信息");
         // 当前日期
         Date nowDate = new Date();
@@ -348,7 +349,7 @@ public class BankOpenServiceImpl implements BankOpenService {
     }
 
     /**
-     * @Description  开户成功后保存银行卡信息
+     * @Description 开户成功后保存银行卡信息
      * @Author sunss
      * @Version v0.1
      * @Date 2018/6/5 14:02
@@ -356,7 +357,7 @@ public class BankOpenServiceImpl implements BankOpenService {
     @Override
     public boolean saveCardNoToBank(BankCardRequest request) {
         BankCard card = new BankCard();
-        BeanUtils.copyProperties(request,card);
+        BeanUtils.copyProperties(request, card);
         boolean bankCardFlag = this.bankCardMapper.insertSelective(card) > 0 ? true : false;
         return bankCardFlag;
     }
@@ -373,7 +374,7 @@ public class BankOpenServiceImpl implements BankOpenService {
         example.createCriteria().andOrderIdEqualTo(logOrdId);
         List<BankOpenAccountLog> bankOpenAccountLogs = this.bankOpenAccountLogMapper.selectByExample(example);
         if (bankOpenAccountLogs != null && bankOpenAccountLogs.size() == 1) {
-            return "";//bankOpenAccountLogs.get(0).get
+            return bankOpenAccountLogs.get(0).getRetMsg();
         }
         return null;
     }

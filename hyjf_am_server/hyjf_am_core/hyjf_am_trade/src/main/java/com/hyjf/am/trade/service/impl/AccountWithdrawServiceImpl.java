@@ -14,7 +14,7 @@ import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AccountwithdrawMapper;
+import com.hyjf.am.trade.dao.mapper.auto.AccountWithdrawMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -42,7 +42,7 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
     private static final int WITHDRAW_STATUS_SUCCESS = 2;
 
     @Autowired
-    private AccountwithdrawMapper accountWithdrawMapper;
+    private AccountWithdrawMapper accountWithdrawMapper;
 
     @Autowired
     private AccountMapper accountMapper;
@@ -58,23 +58,23 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
     private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
     @Override
-    public void insertAccountWithdrawLog(Accountwithdraw accountWithdraw) {
+    public void insertAccountWithdrawLog(AccountWithdraw accountWithdraw) {
         accountWithdrawMapper.insertSelective(accountWithdraw);
     }
 
     @Override
-    public List<Accountwithdraw> findByOrdId(String ordId) {
-        AccountwithdrawExample accountWithdrawExample = new AccountwithdrawExample();
+    public List<AccountWithdraw> findByOrdId(String ordId) {
+        AccountWithdrawExample accountWithdrawExample = new AccountWithdrawExample();
         accountWithdrawExample.createCriteria().andNidEqualTo(ordId);
-        List<Accountwithdraw> listAccountWithdraw = this.accountWithdrawMapper.selectByExample(accountWithdrawExample);
+        List<AccountWithdraw> listAccountWithdraw = this.accountWithdrawMapper.selectByExample(accountWithdrawExample);
         return listAccountWithdraw;
     }
 
     @Override
-    public Accountwithdraw getAccountWithdrawByOrdId(String logOrderId) {
-        AccountwithdrawExample accountWithdrawExample = new AccountwithdrawExample();
+    public AccountWithdraw getAccountWithdrawByOrdId(String logOrderId) {
+        AccountWithdrawExample accountWithdrawExample = new AccountWithdrawExample();
         accountWithdrawExample.createCriteria().andNidEqualTo(logOrderId).andStatusEqualTo(WITHDRAW_STATUS_SUCCESS);
-        List<Accountwithdraw> list = this.accountWithdrawMapper.selectByExample(accountWithdrawExample);
+        List<AccountWithdraw> list = this.accountWithdrawMapper.selectByExample(accountWithdrawExample);
         if (list != null && list.size() > 0) {
             return list.get(0);
         }
@@ -94,15 +94,15 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
         String accountId=bankRequest.getAccountId();
         String ip=bankRequest.getIp();
         AccountWithdrawVO accountWithdrawVO=bankRequest.getAccountWithdrawVO();
-        Accountwithdraw accountWithdraw=new Accountwithdraw();
+        AccountWithdraw accountWithdraw=new AccountWithdraw();
         BeanUtils.copyProperties(accountWithdrawVO, accountWithdraw);
 
-        AccountwithdrawExample accountWithdrawExample = new AccountwithdrawExample();
+        AccountWithdrawExample accountWithdrawExample = new AccountWithdrawExample();
         accountWithdrawExample.createCriteria().andNidEqualTo(accountWithdraw.getNid());
         // 更新订单信息
 
-        boolean isAccountwithdrawFlag = this.accountWithdrawMapper.updateByExampleSelective(accountWithdraw, accountWithdrawExample) > 0 ? true : false;
-        if (!isAccountwithdrawFlag) {
+        boolean isAccountWithdrawFlag = this.accountWithdrawMapper.updateByExampleSelective(accountWithdraw, accountWithdrawExample) > 0 ? true : false;
+        if (!isAccountWithdrawFlag) {
             throw new RuntimeException("提现后,更新用户提现记录表失败!");
         }
         Account newAccount = new Account();
@@ -167,7 +167,7 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
     }
 
     @Override
-    public void updateAccountwithdrawLog(Accountwithdraw accountwithdraw) {
+    public void updateAccountWithdrawLog(AccountWithdraw accountwithdraw) {
         accountWithdrawMapper.updateByPrimaryKeySelective(accountwithdraw);
     }
     private Account getAccount(Integer userId) {
@@ -186,7 +186,7 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
      * 账户充值更新
      */
 	@Override
-	public int updateAccountwithdraw(Accountwithdraw accountWithdraw) {
+	public int updateAccountWithdraw(AccountWithdraw accountWithdraw) {
 		return this.accountWithdrawMapper.updateByPrimaryKeySelective(accountWithdraw);
 	}
 
@@ -195,14 +195,14 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
     public void selectAndUpdateAccountWithdraw(JSONObject paraMap) throws Exception {
 
         // 提现失败,更新处理中订单状态为失败
-        AccountwithdrawExample example = new AccountwithdrawExample();
-        AccountwithdrawExample.Criteria cra = example.createCriteria();
+        AccountWithdrawExample example = new AccountWithdrawExample();
+        AccountWithdrawExample.Criteria cra = example.createCriteria();
         String ordId = String.valueOf(paraMap.get("ordId"));
         cra.andNidEqualTo(ordId);
-        List<Accountwithdraw> list = this.accountWithdrawMapper.selectByExample(example);
+        List<AccountWithdraw> list = this.accountWithdrawMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
-            Accountwithdraw accountwithdraw = list.get(0);
-            Accountwithdraw accountWithdraw = (Accountwithdraw)paraMap.get("accountWithdraw");
+            AccountWithdraw accountwithdraw = list.get(0);
+            AccountWithdraw accountWithdraw = (AccountWithdraw)paraMap.get("accountWithdraw");
             BankCallBeanVO bean = (BankCallBeanVO)paraMap.get("bankCallBeanVO");
             if (WITHDRAW_STATUS_DEFAULT == accountWithdraw.getStatus()
                     || WITHDRAW_STATUS_WAIT == accountWithdraw.getStatus()) {

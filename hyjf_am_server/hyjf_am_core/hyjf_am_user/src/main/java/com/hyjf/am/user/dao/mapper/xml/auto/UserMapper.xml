@@ -13,7 +13,7 @@
     <result column="recharge_sms" property="rechargeSms" jdbcType="TINYINT" />
     <result column="withdraw_sms" property="withdrawSms" jdbcType="TINYINT" />
     <result column="icon_url" property="iconUrl" jdbcType="VARCHAR" />
-    <result column="if_receive_notice" property="ifReceiveNotice" jdbcType="BIT" />
+    <result column="if_receive_notice" property="ifReceiveNotice" jdbcType="TINYINT" />
     <result column="invest_sms" property="investSms" jdbcType="TINYINT" />
     <result column="recieve_sms" property="recieveSms" jdbcType="TINYINT" />
     <result column="reg_esb" property="regEsb" jdbcType="TINYINT" />
@@ -24,7 +24,7 @@
     <result column="account_esb" property="accountEsb" jdbcType="TINYINT" />
     <result column="investFlag" property="investflag" jdbcType="TINYINT" />
     <result column="user_type" property="userType" jdbcType="TINYINT" />
-    <result column="payment_auth_status" property="paymentAuthStatus" jdbcType="BIT" />
+    <result column="payment_auth_status" property="paymentAuthStatus" jdbcType="TINYINT" />
     <result column="is_set_password" property="isSetPassword" jdbcType="TINYINT" />
     <result column="bank_open_account" property="bankOpenAccount" jdbcType="TINYINT" />
     <result column="bank_account_esb" property="bankAccountEsb" jdbcType="TINYINT" />
@@ -154,11 +154,11 @@
     values (#{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, 
       #{openAccount,jdbcType=TINYINT}, #{rechargeSms,jdbcType=TINYINT}, #{withdrawSms,jdbcType=TINYINT}, 
-      #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=BIT}, #{investSms,jdbcType=TINYINT}, 
+      #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, #{investSms,jdbcType=TINYINT}, 
       #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, #{eprovince,jdbcType=VARCHAR}, 
       #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, #{instCode,jdbcType=VARCHAR}, 
       #{accountEsb,jdbcType=TINYINT}, #{investflag,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
-      #{paymentAuthStatus,jdbcType=BIT}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, 
+      #{paymentAuthStatus,jdbcType=TINYINT}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, 
       #{bankAccountEsb,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
       #{isCaFlag,jdbcType=TINYINT}, #{isSmtp,jdbcType=TINYINT}, #{regIp,jdbcType=VARCHAR}, 
       #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
@@ -302,7 +302,7 @@
         #{iconUrl,jdbcType=VARCHAR},
       </if>
       <if test="ifReceiveNotice != null" >
-        #{ifReceiveNotice,jdbcType=BIT},
+        #{ifReceiveNotice,jdbcType=TINYINT},
       </if>
       <if test="investSms != null" >
         #{investSms,jdbcType=TINYINT},
@@ -335,7 +335,7 @@
         #{userType,jdbcType=TINYINT},
       </if>
       <if test="paymentAuthStatus != null" >
-        #{paymentAuthStatus,jdbcType=BIT},
+        #{paymentAuthStatus,jdbcType=TINYINT},
       </if>
       <if test="isSetPassword != null" >
         #{isSetPassword,jdbcType=TINYINT},
@@ -415,7 +415,7 @@
         icon_url = #{record.iconUrl,jdbcType=VARCHAR},
       </if>
       <if test="record.ifReceiveNotice != null" >
-        if_receive_notice = #{record.ifReceiveNotice,jdbcType=BIT},
+        if_receive_notice = #{record.ifReceiveNotice,jdbcType=TINYINT},
       </if>
       <if test="record.investSms != null" >
         invest_sms = #{record.investSms,jdbcType=TINYINT},
@@ -448,7 +448,7 @@
         user_type = #{record.userType,jdbcType=TINYINT},
       </if>
       <if test="record.paymentAuthStatus != null" >
-        payment_auth_status = #{record.paymentAuthStatus,jdbcType=BIT},
+        payment_auth_status = #{record.paymentAuthStatus,jdbcType=TINYINT},
       </if>
       <if test="record.isSetPassword != null" >
         is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
@@ -501,7 +501,7 @@
       recharge_sms = #{record.rechargeSms,jdbcType=TINYINT},
       withdraw_sms = #{record.withdrawSms,jdbcType=TINYINT},
       icon_url = #{record.iconUrl,jdbcType=VARCHAR},
-      if_receive_notice = #{record.ifReceiveNotice,jdbcType=BIT},
+      if_receive_notice = #{record.ifReceiveNotice,jdbcType=TINYINT},
       invest_sms = #{record.investSms,jdbcType=TINYINT},
       recieve_sms = #{record.recieveSms,jdbcType=TINYINT},
       reg_esb = #{record.regEsb,jdbcType=TINYINT},
@@ -512,7 +512,7 @@
       account_esb = #{record.accountEsb,jdbcType=TINYINT},
       investFlag = #{record.investflag,jdbcType=TINYINT},
       user_type = #{record.userType,jdbcType=TINYINT},
-      payment_auth_status = #{record.paymentAuthStatus,jdbcType=BIT},
+      payment_auth_status = #{record.paymentAuthStatus,jdbcType=TINYINT},
       is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
       bank_open_account = #{record.bankOpenAccount,jdbcType=TINYINT},
       bank_account_esb = #{record.bankAccountEsb,jdbcType=TINYINT},
@@ -562,7 +562,7 @@
         icon_url = #{iconUrl,jdbcType=VARCHAR},
       </if>
       <if test="ifReceiveNotice != null" >
-        if_receive_notice = #{ifReceiveNotice,jdbcType=BIT},
+        if_receive_notice = #{ifReceiveNotice,jdbcType=TINYINT},
       </if>
       <if test="investSms != null" >
         invest_sms = #{investSms,jdbcType=TINYINT},
@@ -595,7 +595,7 @@
         user_type = #{userType,jdbcType=TINYINT},
       </if>
       <if test="paymentAuthStatus != null" >
-        payment_auth_status = #{paymentAuthStatus,jdbcType=BIT},
+        payment_auth_status = #{paymentAuthStatus,jdbcType=TINYINT},
       </if>
       <if test="isSetPassword != null" >
         is_set_password = #{isSetPassword,jdbcType=TINYINT},
@@ -645,7 +645,7 @@
       recharge_sms = #{rechargeSms,jdbcType=TINYINT},
       withdraw_sms = #{withdrawSms,jdbcType=TINYINT},
       icon_url = #{iconUrl,jdbcType=VARCHAR},
-      if_receive_notice = #{ifReceiveNotice,jdbcType=BIT},
+      if_receive_notice = #{ifReceiveNotice,jdbcType=TINYINT},
       invest_sms = #{investSms,jdbcType=TINYINT},
       recieve_sms = #{recieveSms,jdbcType=TINYINT},
       reg_esb = #{regEsb,jdbcType=TINYINT},
@@ -656,7 +656,7 @@
       account_esb = #{accountEsb,jdbcType=TINYINT},
       investFlag = #{investflag,jdbcType=TINYINT},
       user_type = #{userType,jdbcType=TINYINT},
-      payment_auth_status = #{paymentAuthStatus,jdbcType=BIT},
+      payment_auth_status = #{paymentAuthStatus,jdbcType=TINYINT},
       is_set_password = #{isSetPassword,jdbcType=TINYINT},
       bank_open_account = #{bankOpenAccount,jdbcType=TINYINT},
       bank_account_esb = #{bankAccountEsb,jdbcType=TINYINT},

@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.service.BankWithdrawService;
 
 import io.swagger.annotations.ApiOperation;

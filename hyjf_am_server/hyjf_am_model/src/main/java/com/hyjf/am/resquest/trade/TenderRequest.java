@@ -4,7 +4,11 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+
+import java.math.BigDecimal;
 
 /**
  * @Description 投资请求参数
@@ -31,6 +35,28 @@ public class TenderRequest extends BaseVO {
     private WebViewUserVO user;
     // 投资金额
     private String account;
+
+    // 内部操作用
+    private BankOpenAccountVO bankOpenAccount;
+
+    private AccountVO tenderAccount ;
+
+    private String planOrderId;
+
+    // 预期收益
+    private BigDecimal earnings;
+
+    // 投资金额
+    private BigDecimal accountDecimal;
+
+    private Integer nowTime;
+
+    // 优惠券投资  排他校验用
+    private Integer couponOldTime;
+
+    private String mainTenderNid;
+    // 优惠券收益
+    private BigDecimal couponInterest;
 
     public String getCreditNid() {
         return creditNid;
@@ -102,5 +128,77 @@ public class TenderRequest extends BaseVO {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public BankOpenAccountVO getBankOpenAccount() {
+        return bankOpenAccount;
+    }
+
+    public void setBankOpenAccount(BankOpenAccountVO bankOpenAccount) {
+        this.bankOpenAccount = bankOpenAccount;
+    }
+
+    public AccountVO getTenderAccount() {
+        return tenderAccount;
+    }
+
+    public void setTenderAccount(AccountVO tenderAccount) {
+        this.tenderAccount = tenderAccount;
+    }
+
+    public String getPlanOrderId() {
+        return planOrderId;
+    }
+
+    public void setPlanOrderId(String planOrderId) {
+        this.planOrderId = planOrderId;
+    }
+
+    public BigDecimal getEarnings() {
+        return earnings;
+    }
+
+    public void setEarnings(BigDecimal earnings) {
+        this.earnings = earnings;
+    }
+
+    public BigDecimal getAccountDecimal() {
+        return accountDecimal;
+    }
+
+    public void setAccountDecimal(BigDecimal accountDecimal) {
+        this.accountDecimal = accountDecimal;
+    }
+
+    public Integer getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(Integer nowTime) {
+        this.nowTime = nowTime;
+    }
+
+    public Integer getCouponOldTime() {
+        return couponOldTime;
+    }
+
+    public void setCouponOldTime(Integer couponOldTime) {
+        this.couponOldTime = couponOldTime;
+    }
+
+    public String getMainTenderNid() {
+        return mainTenderNid;
+    }
+
+    public void setMainTenderNid(String mainTenderNid) {
+        this.mainTenderNid = mainTenderNid;
+    }
+
+    public BigDecimal getCouponInterest() {
+        return couponInterest;
+    }
+
+    public void setCouponInterest(BigDecimal couponInterest) {
+        this.couponInterest = couponInterest;
     }
 }

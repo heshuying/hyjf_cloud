@@ -32,7 +32,7 @@ public class UserInfo implements Serializable {
 
     private Integer attribute;
 
-    private Boolean isContact;
+    private Integer isContact;
 
     private Integer borrowerType;
 
@@ -152,11 +152,11 @@ public class UserInfo implements Serializable {
         this.attribute = attribute;
     }
 
-    public Boolean getIsContact() {
+    public Integer getIsContact() {
         return isContact;
     }
 
-    public void setIsContact(Boolean isContact) {
+    public void setIsContact(Integer isContact) {
         this.isContact = isContact;
     }
 

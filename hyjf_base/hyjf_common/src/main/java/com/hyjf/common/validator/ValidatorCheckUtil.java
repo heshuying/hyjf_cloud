@@ -2,9 +2,8 @@ package com.hyjf.common.validator;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.util.GetSessionOrRequestUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.support.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -748,7 +747,7 @@ public class ValidatorCheckUtil {
 			}
 		}
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -777,7 +776,7 @@ public class ValidatorCheckUtil {
 		}
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -823,7 +822,7 @@ public class ValidatorCheckUtil {
 		boolean retValue = validateMaxLength(info, itemname, key, value, maxLength, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
 				CustomErrors.add(info, itemname, NUM, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -847,7 +846,7 @@ public class ValidatorCheckUtil {
 		boolean retValue = validateMaxLength(info, itemname, key, value, 0, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0) {
+			if (!GenericValidator.isInt(value) || !StringUtils.isNumeric(value) || Integer.valueOf(value) < 0) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(SIGNLESSNUM, maxLength));
 				retValue = false;
 			}
