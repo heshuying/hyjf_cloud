@@ -8,7 +8,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.customize.*;
-import com.hyjf.am.user.service.RegistRecordService;
+import com.hyjf.am.user.service.RegistRecordManagerService;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -30,10 +30,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/am-user/registRecord")
-public class RegistRecordController {
+public class RegistRecordManagerController {
     @Autowired
-    private RegistRecordService registRecordService;
-    private static Logger logger = LoggerFactory.getLogger(RegistRecordController.class);
+    private RegistRecordManagerService registRecordService;
+    private static Logger logger = LoggerFactory.getLogger(RegistRecordManagerController.class);
 
     /**
      * 根据筛选条件查找(用户管理列表显示)

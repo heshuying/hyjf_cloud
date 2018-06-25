@@ -9,7 +9,7 @@ import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
-import com.hyjf.am.user.service.BankOpenRecordService;
+import com.hyjf.am.user.service.BankOpenRecordManagerService;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -31,10 +31,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/am-user/bankOpenAccountRecord")
-public class BankOpenRecordController {
+public class BankOpenRecordManagerController {
     @Autowired
-    private BankOpenRecordService bankOpenRecordService;
-    private static Logger logger = LoggerFactory.getLogger(BankOpenRecordController.class);
+    private BankOpenRecordManagerService bankOpenRecordService;
+    private static Logger logger = LoggerFactory.getLogger(BankOpenRecordManagerController.class);
 
     /**
      * 根据筛选条件查找(查找江西銀行開戶記錄)

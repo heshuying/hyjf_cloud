@@ -6,7 +6,7 @@ package com.hyjf.am.user.service.impl;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.user.dao.mapper.customize.BankCardManagerCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
-import com.hyjf.am.user.service.BankCardManagerService;
+import com.hyjf.am.user.service.BankCardManagerRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ import java.util.Map;
  *          后台管理系统 ：会员中心->会员管理 接口实现
  */
 @Service
-public class BankCardManagerServiceImpl implements BankCardManagerService {
+public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordService {
 
     @Autowired
     public BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
 
-    private static Logger logger = LoggerFactory.getLogger(BankCardManagerServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(BankCardManagerRecordServiceImpl.class);
 
 
     /**

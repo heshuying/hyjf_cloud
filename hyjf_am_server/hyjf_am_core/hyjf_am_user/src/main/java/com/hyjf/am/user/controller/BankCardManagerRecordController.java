@@ -5,24 +5,17 @@ package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.*;
-import com.hyjf.am.user.service.BankCardManagerService;
-import com.hyjf.am.user.service.UserManagerService;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.response.user.BankCardManagerResponse;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.resquest.user.BankCardManagerRequest;
+import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
+import com.hyjf.am.user.service.BankCardManagerRecordService;
+import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,10 +31,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/am-user/bankCardManager")
-public class BankCardManagerController {
+public class BankCardManagerRecordController {
     @Autowired
-    private BankCardManagerService bankCardManagerServiceService;
-    private static Logger logger = LoggerFactory.getLogger(BankCardManagerController.class);
+    private BankCardManagerRecordService bankCardManagerServiceService;
+    private static Logger logger = LoggerFactory.getLogger(BankCardManagerRecordController.class);
 
     /**
      * 根据筛选条件查找(汇付银行卡管理列表显示)

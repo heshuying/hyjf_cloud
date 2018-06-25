@@ -13,7 +13,7 @@ import java.util.List;
  * @version UserManagerService, v0.1 2018/6/20 9:47
  *          后台管理系统：会员中心->银行卡管理
  */
-public interface BankCardManagerService {
+public interface BankCardManagerRecordService {
 
 
     /**

@@ -13,7 +13,7 @@ import java.util.List;
  * @author nxl
  * @version UserCenterService, v0.1 2018/6/20 15:34
  */
-public interface BankOpenRecordService {
+public interface BankOpenRecordManagerService {
     /**
      * 查找江西银行开户记录
      *
