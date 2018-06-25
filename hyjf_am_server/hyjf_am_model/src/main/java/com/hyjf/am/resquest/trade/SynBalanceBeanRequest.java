@@ -1,5 +1,6 @@
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -8,7 +9,7 @@ import com.hyjf.am.vo.user.BankCardVO;
  * @author pangchengchao
  * @version BankWithdrawBeanRequest, v0.1 2018/6/13 15:00
  */
-public class SynBalanceBeanRequest {
+public class SynBalanceBeanRequest extends Request {
 
     private AccountVO accountUser;
     private SynBalanceVO synBalanceBean;
