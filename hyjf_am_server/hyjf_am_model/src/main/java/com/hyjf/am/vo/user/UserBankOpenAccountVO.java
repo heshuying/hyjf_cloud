@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @version UserBankOpenAccountVO, v0.1 2018/6/21 21:52
  */
 public class UserBankOpenAccountVO extends BaseVO implements Serializable {
+
     //用户银行账户
     private String account;
     //用户开户平台

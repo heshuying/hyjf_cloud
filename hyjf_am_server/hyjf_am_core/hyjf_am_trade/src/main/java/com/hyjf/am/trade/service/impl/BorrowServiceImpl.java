@@ -113,9 +113,20 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     /**
-     * 项目详情
-     * @param borrowNid
+     * 检索正在还款中的标的
      * @return
      */
+    @Override
+    public List<Borrow> selectBorrowList() {
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(3);
+        cra.andRepayFullStatusEqualTo(0);
+        List<Borrow> list = this.borrowMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
 
 }

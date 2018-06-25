@@ -12,7 +12,6 @@ import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -78,6 +77,7 @@ public interface UserManagerService {
 
     /**
      * 根据用户id获取用户修改信息
+     *
      * @param userId
      * @return
      */
@@ -85,6 +85,7 @@ public interface UserManagerService {
 
     /**
      * 更新用户信息
+     *
      * @param request
      * @return
      */
@@ -92,6 +93,7 @@ public interface UserManagerService {
 
     /**
      * 校验手机号
+     *
      * @param userId
      * @param mobile
      * @return
@@ -100,13 +102,16 @@ public interface UserManagerService {
 
     /**
      * 校验推荐人
+     *
      * @param userId
      * @param recommendName
      * @return
      */
     int selectCheckRecommend(int userId, String recommendName);
+
     /**
      * 根据用户id查找用户表
+     *
      * @param userId
      * @param userId
      * @return
@@ -115,4 +120,58 @@ public interface UserManagerService {
 
     BankOpenAccount selectBankOpenAccountByAccountId(String accountId);
 
+    /**
+     * 更新企业用户开户记录
+     *
+     * @param corpOpenAccountRecord
+     * @return
+     */
+    int updateCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord);
+
+    /**
+     * 插入企业用户开户记录
+     *
+     * @param corpOpenAccountRecord
+     * @return
+     */
+    int insertCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord);
+
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    BankOpenAccount queryBankOpenAccountByUserId(int userId);
+
+    /**
+     * 更新开户信息
+     *
+     * @param request
+     * @return
+     */
+    int updateBankOpenAccount(BankOpenAccount request);
+
+    /**
+     * 插入开户信息
+     *
+     * @param request
+     * @return
+     */
+    int insertBankOpenAccount(BankOpenAccount request);
+
+    /**
+     * 更新用户信息表
+     *
+     * @param userInfo
+     * @return
+     */
+    int updateUserInfoByUserInfo(UserInfo userInfo);
+
+    /**
+     * 更新用户表
+     *
+     * @param user
+     * @return
+     */
+    int updateUser(User user);
 }

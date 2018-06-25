@@ -5,14 +5,14 @@ package com.hyjf.cs.user.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author zhangqingqing
  * @version WebMvcConfig, v0.1 2018/6/6 10:56
  */
 @Configuration
-class WebMvcConfig extends WebMvcConfigurerAdapter {
+class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")

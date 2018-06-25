@@ -29,7 +29,7 @@ public interface UserManagerCustomizeMapper {
      * @param userRequest
      * @return
      */
-    Integer countUserRecord(UserManagerRequest userRequest);
+    Integer countUserRecord(Map<String, Object> userRequest);
 
     /**
      * 根据用户id获取用户详情

@@ -5,7 +5,7 @@ package com.hyjf.am.resquest.user;
  * @version RegisterUserRequest, v0.1 2018/4/11 12:49
  */
 public class RegisterUserRequest {
-	private String mobilephone;
+	private String mobile;
 	private String smsCode;
 	private String reffer;
 	private String password;
@@ -14,12 +14,12 @@ public class RegisterUserRequest {
 	private String platform;
 	private int instCode;
 
-	public String getMobilephone() {
-		return mobilephone;
+	public String getMobile() {
+		return mobile;
 	}
 
-	public void setMobilephone(String mobilephone) {
-		this.mobilephone = mobilephone;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public String getSmsCode() {

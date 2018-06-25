@@ -5,11 +5,15 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.UserCenterClient;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.user.UserManagerRequest;
+import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
+import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -173,5 +177,299 @@ public class UserCenterClientImpl implements UserCenterClient {
             return response.getResult();
         }
         return null;
+    }
+
+    /**
+     * 根据用户id获取用户修改信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserManagerUpdateVO selectUserUpdateInfoByUserId(String userId) {
+        UserManagerUpdateResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/selectUserUpdateInfoByUserId/{userId}" + userId, UserManagerUpdateResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int updataUserInfo(UserManagerUpdateRequest request) {
+        int intUpdFlg = restTemplate.
+                postForEntity("http://AM-USER/am-user/userManager/updataUserInfo", request, Integer.class).
+                getBody();
+        return intUpdFlg;
+    }
+
+    /**
+     * 根据用户id获取推荐人信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserRecommendVO selectUserRecommendByUserId(String userId) {
+        UserRecommendResponse response;
+
+        return null;
+    }
+
+    /**
+     * 校验手机号
+     *
+     * @param userId
+     * @param mobile
+     * @return
+     */
+    @Override
+    public int countUserByMobile(int userId, String mobile) {
+        int checkFlg = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/checkMobileByUserId/{userId}/{mobile}" + userId + mobile, Integer.class).
+                getBody();
+        return checkFlg;
+    }
+
+    /**
+     * 校验推荐人
+     *
+     * @param userId
+     * @param recommendName
+     * @return
+     */
+    @Override
+    public int checkRecommend(String userId, String recommendName) {
+        int checkFlg = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/checkRecommend/{userId}/{recommendName}" + userId + recommendName, Integer.class).
+                getBody();
+        return checkFlg;
+    }
+
+    /**
+     * 根据用户id查找用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserVO selectUserByUserId(int userId) {
+        UserResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/{userId}" + userId, UserResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户id查找用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BankCardVO> selectBankCardByUserId(int userId) {
+        BankCardResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/{userId}" + userId, BankCardResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根據accounId獲取開戶信息
+     *
+     * @param accountId
+     * @return
+     */
+    @Override
+    public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
+        BankOpenAccountResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByAccountId/{accountId}" + accountId, BankOpenAccountResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新企业用户开户记录
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateCorpOpenAccountRecord(CorpOpenAccountRecordRequest request) {
+        int updFlg = restTemplate.
+                postForEntity("http://AM-USER/am-user/userManager/updateCorpOpenAccountRecord", request, Integer.class).
+                getBody();
+        return updFlg;
+    }
+
+    /**
+     * 插入企业用户开户记录
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int insertCorpOpenAccountRecord(CorpOpenAccountRecordRequest request) {
+        int instFlg = restTemplate.
+                postForEntity("http://AM-USER/am-user/userManager/insertCorpOpenAccountRecord", request, Integer.class).
+                getBody();
+        return instFlg;
+    }
+
+    /**
+     * 根据银行卡号获取bankId
+     *
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public String queryBankIdByCardNo(String cardNo) {
+        String result = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+        return result;
+    }
+
+    /**
+     * 获取银行卡配置信息
+     *
+     * @param bankId
+     * @return
+     */
+    @Override
+    public BanksConfigVO getBanksConfigByBankId(int bankId) {
+        BanksConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户绑定的银行卡
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateUserCard(BankCardRequest request) {
+        int result = restTemplate
+                .postForEntity("http://AM-USER/am-user/card/updateUserCard", request, Integer.class).getBody();
+        return result;
+    }
+
+    /**
+     * 保存用户绑定的银行卡
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int insertUserCard(BankCardRequest request) {
+        int result = restTemplate
+                .postForEntity("http://AM-USER/am-user/card/insertUserCard", request, Integer.class).getBody();
+        return result;
+    }
+
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    @Override
+    public BankOpenAccountVO queryBankOpenAccountByUserId(int userId) {
+        BankOpenAccountResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/queryBankOpenAccountByUserId/{userId}" + userId, BankOpenAccountResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新开户信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateBankOpenAccount(BankOpenAccountRequest request) {
+        int result = restTemplate
+                .postForEntity("http://AM-USER//am-user/userManager/updateBankOpenAccount", request, Integer.class).getBody();
+        return result;
+    }
+
+    /**
+     * 插入开户信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int insertBankOpenAccount(BankOpenAccountRequest request) {
+        int result = restTemplate
+                .postForEntity("http://AM-USER//am-user/userManager/insertBankOpenAccount", request, Integer.class).getBody();
+        return result;
+    }
+
+    /**
+     * 根据用户id获取用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserInfoVO findUserInfoById(int userId) {
+        UserInfoResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户信息表
+     *
+     * @return
+     */
+    @Override
+    public int updateUserInfoByUserInfo(UserInfoVO userInfoVO) {
+        UserInfoRequest request = null;
+        BeanUtils.copyProperties(userInfoVO, request);
+        int result = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, Integer.class).getBody();
+        return result;
+    }
+
+    /**
+     * 更新用户表
+     *
+     * @return
+     */
+    @Override
+    public int updateUser(UserVO userVO) {
+        UserRequest request = null;
+        BeanUtils.copyProperties(userVO, request);
+        int result = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/updateUser", request, Integer.class).getBody();
+        return result;
     }
 }

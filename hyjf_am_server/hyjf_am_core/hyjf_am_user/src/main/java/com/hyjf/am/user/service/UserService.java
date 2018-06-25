@@ -10,6 +10,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -71,6 +72,8 @@ public interface UserService {
 
 	void updateLoginUser(int userId, String ip);
 
+	UtmPlat selectUtmPlatByUtmId(String utmId);
+
 	HjhUserAuth getHjhUserAuthByUserId(Integer userId);
 
 	void insertSelective(HjhUserAuthLog hjhUserAuthLog);
@@ -127,4 +130,19 @@ public interface UserService {
 	List<Evalation> getEvalationRecord();
 
     int isCompAccount(Integer userId);
+
+
+    /**
+     * 根据userId查询推广链接注册
+     * @param userId
+     * @return
+     */
+    UtmReg findUtmRegByUserId(Integer userId);
+
+    /**
+     * 更新渠道用户首次投资信息
+     * @param bean
+     * @return
+     */
+    void updateFirstUtmReg(Map<String,Object> bean);
 }

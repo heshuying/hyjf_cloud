@@ -5,6 +5,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SystemConfig {
+
+    @Value("${aop.interface.accesskey}")
+    public String aopAccesskey;
+
+    @Value("${hyjf.api.web.url}")
+    public String apiWebUrl;
+
     @Value("${hyjf.web.host}")
     public String webHost;
     
@@ -46,6 +53,49 @@ public class SystemConfig {
 
     @Value("${hyjf.bank.bankcode}")
     public String bankcode;
+
+    @Value("${file.domain.app.url}")
+    public String domainAppUrl;
+
+    public String getDomainAppUrl() {
+        return domainAppUrl;
+    }
+
+    public void setDomainAppUrl(String domainAppUrl) {
+        this.domainAppUrl = domainAppUrl;
+    }
+
+    public String getAopAccesskey() {
+        return aopAccesskey;
+    }
+
+    public void setAopAccesskey(String aopAccesskey) {
+        this.aopAccesskey = aopAccesskey;
+    }
+
+    public String getApiWebUrl() {
+        return apiWebUrl;
+    }
+
+    public void setApiWebUrl(String apiWebUrl) {
+        this.apiWebUrl = apiWebUrl;
+    }
+
+    public String getInstcode() {
+        return instcode;
+    }
+
+    public void setInstcode(String instcode) {
+        this.instcode = instcode;
+    }
+
+    public String getBankcode() {
+        return bankcode;
+    }
+
+    public void setBankcode(String bankcode) {
+        this.bankcode = bankcode;
+    }
 
     public String getForgetpassword() {
         return forgetpassword;

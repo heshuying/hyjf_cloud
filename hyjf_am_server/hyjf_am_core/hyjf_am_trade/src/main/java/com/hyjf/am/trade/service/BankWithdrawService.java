@@ -9,8 +9,7 @@ import java.util.List;
 /**
  *江西银行提现掉单异常处理定时任务
  * create by jijun 20170614
- */
-public interface BankWithdrawService {
+ */public interface BankWithdrawService {
 
     List<AccountWithdraw> selectBankWithdrawList();
 

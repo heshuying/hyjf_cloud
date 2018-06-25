@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.trade.hjh;
 
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
@@ -98,6 +99,8 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
     private Date updateTime;
 
     private Integer delFlag;
+
+    private TenderRequest request;
 
     private static final long serialVersionUID = 1L;
 
@@ -443,5 +446,13 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public TenderRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(TenderRequest request) {
+        this.request = request;
     }
 }

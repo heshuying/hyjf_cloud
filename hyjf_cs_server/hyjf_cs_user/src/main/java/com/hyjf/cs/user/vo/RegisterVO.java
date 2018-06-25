@@ -8,7 +8,8 @@ import com.hyjf.cs.user.bean.BaseBean;
  */
 public class RegisterVO extends BaseBean{
 
-	private String mobilephone;
+	private String mobile;
+
 	private String smsCode;
 	/**推荐人*/
 	private String reffer;
@@ -24,7 +25,7 @@ public class RegisterVO extends BaseBean{
     @Override
     public String toString() {
         return "RegisterVO{" +
-                "mobilephone='" + mobilephone + '\'' +
+                "mobilephone='" + mobile + '\'' +
                 ", smsCode='" + smsCode + '\'' +
                 ", reffer='" + reffer + '\'' +
                 ", password='" + password + '\'' +
@@ -33,20 +34,22 @@ public class RegisterVO extends BaseBean{
                 '}';
     }
 
+    @Override
     public String getPlatform() {
         return platform;
     }
 
+    @Override
     public void setPlatform(String platform) {
         this.platform = platform;
     }
 
-    public String getMobilephone() {
-        return mobilephone;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setMobilephone(String mobilephone) {
-        this.mobilephone = mobilephone;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getReffer() {

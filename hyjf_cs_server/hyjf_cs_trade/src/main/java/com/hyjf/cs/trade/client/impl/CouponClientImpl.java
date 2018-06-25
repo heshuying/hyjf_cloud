@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.CoupUserResponse;
+import com.hyjf.am.vo.trade.CouponTenderVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CouponClient;
@@ -33,11 +34,27 @@ public class CouponClientImpl implements CouponClient {
 	 */
 	@Override
 	public CouponUserVO getCouponUser(Integer couponGrantId, Integer userId) {
-		String url = "http://AM-USER/am-trade/coupon/getCouponUser/" + couponGrantId + "/" + userId;
+		String url = "http://AM-TRADE/am-trade/coupon/getCouponUser/" + couponGrantId + "/" + userId;
 		CoupUserResponse response = restTemplate.getForEntity(url, CoupUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 优惠券投资
+	 *
+	 * @param couponTender
+	 * @return
+	 */
+	@Override
+	public boolean updateCouponTender(CouponTenderVO couponTender) {
+		Integer result = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/coupon/updateCouponTender", couponTender, Integer.class).getBody();
+		if (result != null) {
+			return result == 0 ? false : true;
+		}
+		return false;
 	}
 }

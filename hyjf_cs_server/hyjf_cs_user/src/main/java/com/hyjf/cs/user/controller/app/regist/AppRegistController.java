@@ -5,7 +5,6 @@ package com.hyjf.cs.user.controller.app.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -17,7 +16,6 @@ import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,31 +50,24 @@ public class AppRegistController extends BaseUserController {
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
     public AppResult<WebViewUserVO> register(@RequestHeader String key, @RequestBody RegisterRequest register, HttpServletRequest request) {
-        logger.info("web端注册接口, register is :{}", JSONObject.toJSONString(register));
+        logger.info("app端注册接口, register is :{}", JSONObject.toJSONString(register));
         AppResult<WebViewUserVO> result = new AppResult<>();
-        String mobilephone = DES.decodeValue(key, register.getMobilephone());
+        String mobilephone = DES.decodeValue(key, register.getMobile());
         String smsCode = DES.decodeValue(key,register.getSmsCode());
         String pwd = DES.decodeValue(key, register.getPassword());
         String reffer = DES.decodeValue(key, register.getReffer());
-        if (StringUtils.isNotBlank(reffer)) {
-            int count = amUserClient.countUserByRecommendName(reffer);
-            if (count == 0) {
-                result.setStatus(ApiResult.FAIL);
-                result.setStatusDesc(LoginError.REFFER_INVALID_ERROR.getMsg());
-            }
-        }
         register = new RegisterRequest();
-        register.setMobilephone(mobilephone);
+        register.setMobile(mobilephone);
         register.setPassword(pwd);
         register.setReffer(reffer);
         register.setSmsCode(smsCode);
-        registService.registerCheckParam(ClientConstants.APP_CLIENT,register);
+        registService.checkParam(register);
         WebViewUserVO userVO = registService.register(register, GetCilentIP.getIpAddr(request));
         result.setData(userVO);
         if (userVO != null) {
-            logger.info("web端注册成功, userId is :{}", userVO.getUserId());
+            logger.info("app端注册成功, userId is :{}", userVO.getUserId());
         } else {
-            logger.error("web端注册失败...");
+            logger.error("app端注册失败...");
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
         }

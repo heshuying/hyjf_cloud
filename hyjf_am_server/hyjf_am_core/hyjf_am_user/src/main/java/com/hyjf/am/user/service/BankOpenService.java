@@ -25,7 +25,7 @@ public interface BankOpenService {
      * @param logOrderId
      * @param status
      */
-    void updateUserAccountLog(Integer userId, String logOrderId, int status);
+    void updateUserAccountLog(Integer userId, String logOrderId, int status , String retCode , String retMsg);
 
 
     boolean updateUserAccount(Integer userId,String trueName,  String orderId, String accountId, String idNo,Integer bankAccountEsb,String mobile);

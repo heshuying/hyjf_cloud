@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper">
+    <resultMap id="BankCardListPOMap" type="com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+        <result column="bank" property="bank" jdbcType="VARCHAR" />
+        <result column="card_type" property="cardType" jdbcType="VARCHAR" />
+        <result column="card_property" property="cardProperty" jdbcType="VARCHAR" />
+        <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <!-- *****************************************查找汇付银行卡信息记录***************************************** -->
+    <select id="selectBankCardList" resultMap="BankCardListPOMap" parameterType="Map">
+        SELECT
+        hydu.user_id,
+        hydu.username AS user_name,
+        hyduab.bank AS bank,
+        CASE
+        WHEN hyduab.card_type = 0
+        OR hyduab.card_type = 1 THEN '普通提现卡'
+        ELSE
+        '快捷支付卡'
+        END AS card_property,
+        CASE
+        WHEN hyduab.card_type = 1
+        OR hyduab.card_type = 2 THEN '是'
+        ELSE
+        '否'
+        END AS card_type,
+        hyduab.account AS account,
+        from_unixtime(
+        hyduab.addtime,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS add_time
+        FROM
+        ht_user hydu
+        INNER JOIN ht_account_bank hyduab ON hydu.user_id = hyduab.user_id
+--         LEFT JOIN ht_bank_config hydbc ON hydbc. CODE = hyduab.bank
+        <include refid="Where_Clause" />
+        ORDER BY hyduab.addtime DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+        SELECT
+        COUNT(hydu.user_id)
+        FROM
+        ht_user hydu
+        INNER JOIN ht_account_bank hyduab ON hydu.user_id = hyduab.user_id
+        <include refid="Where_Clause" />
+    </select>
+    <sql id="Where_Clause">
+        <where>
+            hyduab.`status` = 0
+            <if test="userName != null and userName !='' ">
+                AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="bank != null and bank !='' ">
+                AND hyduab.bank = #{bank,jdbcType=INTEGER}
+            </if>
+            <if test="account != null and account !='' ">
+                AND hyduab.account LIKE CONCAT('%', #{account}, '%')
+            </if>
+            <!-- 是否是快捷支付卡 -->
+            <if test="cardProperty != null and cardProperty !='' ">
+                <if test="cardProperty == '1'.toString() ">
+                    AND hyduab.card_type = 2
+                </if>
+                <if test="cardProperty == '0'.toString() ">
+                    AND (hyduab.card_type = 1 OR hyduab.card_type = 0)
+                </if>
+            </if>
+            <!-- 是否是默认卡 -->
+            <if test="cardType != null and cardType !='' ">
+                <if test="cardType == '1'.toString() ">
+                    AND (hyduab.card_type = 1 OR hyduab.card_type = 2)
+                </if>
+                <if test="cardType == '0'.toString() ">
+                    AND hyduab.card_type = 0
+                </if>
+            </if>
+            <if test="addTimeStart != null and addTimeStart !='' ">
+                AND FROM_UNIXTIME( hyduab.addtime, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+            </if>
+            <if test="addTimeEnd != null and addTimeEnd !='' ">
+                AND FROM_UNIXTIME( hyduab.addtime, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+            </if>
+        </where>
+    </sql>
+    <!-- *****************************************查找江西银行卡信息记录***************************************** -->
+    <resultMap id="BankCardListNewPOMap" type="com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="bank_mobile" property="bankMobile" jdbcType="VARCHAR" />
+        <result column="real_name" property  ="realName" jdbcType="VARCHAR" />
+        <result column="id_card" property="idcard" jdbcType="VARCHAR" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+        <result column="bank" property="bank" jdbcType="VARCHAR" />
+        <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <select id="selectNewBankCardList" resultMap="BankCardListNewPOMap" parameterType="Map">
+        SELECT
+        hydu.user_id,
+        hydu.username,
+        hydu.mobile AS mobile,
+        hydui.truename AS real_name,
+        hydui.idcard AS id_card,
+        hbc.card_no AS account,
+        hbc.bank AS bank,
+        hbc.mobile AS bank_mobile,
+        date_format(hbc.create_time,'%Y-%c-%d %h:%i:%s') AS add_time
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        INNER JOIN ht_account_bank hbc ON hbc.user_id = hydu.user_id
+        <include refid="New_Where_Clause" />
+        ORDER BY hbc.create_time DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countRecordTotalNew" resultType="java.lang.Integer" parameterType="Map">
+        SELECT
+        COUNT(hydu.user_id)
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        INNER JOIN ht_account_bank hbc ON hbc.user_id = hydu.user_id
+        <include refid="New_Where_Clause" />
+    </select>
+    <sql id="New_Where_Clause">
+        <where>
+            <if test="userName != null and userName !='' ">
+                AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="mobile != null and mobile !='' ">
+                AND hydu.mobile LIKE CONCAT('%', #{mobile}, '%')
+            </if>
+            <if test="realName != null and realName !='' ">
+                AND hydui.truename LIKE CONCAT('%', #{realName}, '%')
+            </if>
+            <if test="addTimeStart != null and addTimeStart !='' ">
+                AND date_format(hbc.create_time,'%Y-%m-%d') <![CDATA[>=]]> #{addTimeStart,jdbcType=VARCHAR}
+            </if>
+            <if test="addTimeEnd != null and addTimeEnd !='' ">
+                AND date_format(hbc.create_time,'%Y-%m-%d') <![CDATA[<=]]> #{addTimeEnd,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+</mapper>

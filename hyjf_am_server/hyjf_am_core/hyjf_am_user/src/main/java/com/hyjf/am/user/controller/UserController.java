@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +51,7 @@ public class UserController {
 			if (user == null) {
 				userResponse.setRtn(Response.FAIL);
 				userResponse.setMessage(Response.FAIL_MSG);
-				logger.error("user register error,user " + userRequest.getMobilephone());
+				logger.error("user register error,user " + userRequest.getMobile());
 			} else {
 				UserVO userVO = new UserVO();
 				BeanUtils.copyProperties(user, userVO);
@@ -63,6 +64,23 @@ public class UserController {
 		}
 
 		return userResponse;
+	}
+
+	/**
+	 *  根据渠道号检索渠道是否存在
+	 * @param utmId
+	 * @return
+	 */
+	@RequestMapping("/selectUtmPlatByUtmId/{utmId}")
+	public UtmPlatResponse selectUtmPlatByUtmId(String utmId){
+		UtmPlat utmPlat = userService.selectUtmPlatByUtmId(utmId);
+		UtmPlatResponse response = new UtmPlatResponse();
+		if(null!= utmPlat){
+			UtmPlatVO utmPlatVO = new UtmPlatVO();
+			BeanUtils.copyProperties(utmPlat,utmPlatVO);
+			response.setResult(utmPlatVO);
+		}
+		return response;
 	}
 
 	/**
@@ -469,5 +487,37 @@ public class UserController {
 		int count = userService.isCompAccount(userId);
 		return count;
 	}
+
+    /**
+     * 查询用户推广链接注册
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/findUtmRegByUserId/{userId}")
+    public UtmRegResponse findUtmRegByUserId(@RequestBody Integer userId) {
+        UtmRegResponse response = new UtmRegResponse();
+        UtmReg utmReg = userService.findUtmRegByUserId(userId);
+        if (null != utmReg) {
+            UtmRegVO utmRegVO = new UtmRegVO();
+            BeanUtils.copyProperties(utmReg, utmRegVO);
+            response.setResult(utmRegVO);
+        }
+        return response;
+    }
+
+    /**
+     * 更新渠道用户首次投资信息
+     * @param bean
+     * @return
+     */
+    @RequestMapping("/updateFirstUtmReg")
+    public Integer updateFirstUtmReg(@RequestBody Map<String, Object> bean) {
+        try {
+            userService.updateFirstUtmReg(bean);
+        }catch (Exception e){
+            return 0;
+        }
+        return 1;
+    }
 
 }

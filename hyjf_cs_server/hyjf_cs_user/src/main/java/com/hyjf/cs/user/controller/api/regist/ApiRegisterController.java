@@ -6,7 +6,6 @@ package com.hyjf.cs.user.controller.api.regist;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -47,19 +48,25 @@ public class ApiRegisterController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public ApiResult<UserVO> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+    public ApiResult<Map<String,Object>> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         logger.info("api端注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
-        ApiResult<UserVO> result = new ApiResult<UserVO>();
-        registService.registerCheckParam(ClientConstants.API_CLIENT,registerRequest);
-        UserVO userVO = registService.apiRegister(registerRequest, GetCilentIP.getIpAddr(request));
+        ApiResult<Map<String,Object>> result = new ApiResult<Map<String,Object>>();
+        Map<String,Object> resultMap = new HashMap<>();
+        registService.apiCheckParam(registerRequest);
+        String ip =  GetCilentIP.getIpAddr(request);
+        UserVO userVO = registService.apiRegister(registerRequest,ip);
         if (userVO != null) {
             logger.info("api端注册成功, userId is :{}", userVO.getUserId());
-            result.setData(userVO);
+            resultMap.put("userId",userVO.getUserId());
+            resultMap.put("userName",userVO.getUsername());
+            resultMap.put("isOpenAccount","0");
+            result.setData(resultMap);
         } else {
             logger.error("api端注册失败...");
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_USER_REGISTER.getMsg());
         }
+
         return result;
     }
 

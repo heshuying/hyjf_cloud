@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper">
+
+
+	<update id="updateOfPlanJoin" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
+		update ht_account
+		set
+		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
+		plan_account_wait = IFNULL(plan_account_wait,0) + #{planAccountWait,jdbcType=DECIMAL},
+		plan_capital_wait = IFNULL(plan_capital_wait,0) + #{planCapitalWait,jdbcType=DECIMAL},
+		plan_interest_wait = IFNULL(plan_interest_wait,0) + #{planInterestWait,jdbcType=DECIMAL}
+		where
+		user_id = #{userId,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByDebtPlanId"  parameterType="Map">
+		UPDATE ht_hjh_plan
+		SET
+		available_invest_account = IFNULL(available_invest_account,0) - #{accountDecimal,jdbcType=DECIMAL},
+		repay_wait_all = IFNULL(repay_wait_all,0) + #{accountDecimal,jdbcType=DECIMAL} + #{earnings,jdbcType=DECIMAL},
+		join_total = IFNULL(join_total,0) + #{accountDecimal,jdbcType=DECIMAL},
+		plan_wait_captical = IFNULL(plan_wait_captical,0) + #{accountDecimal,jdbcType=DECIMAL},
+		plan_wait_interest = IFNULL(plan_wait_interest,0) + #{earnings,jdbcType=DECIMAL}
+		WHERE
+		plan_nid=#{planId}
+	</update>
+
+</mapper>

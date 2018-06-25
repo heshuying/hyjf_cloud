@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
+import com.hyjf.am.vo.trade.CouponTenderVO;
 
 /**
  * @Description 优惠券相关
@@ -20,4 +21,10 @@ public interface CouponService {
      * @Date 2018/6/19 16:51
      */
     CouponCustomize getCouponUser(String couponGrantId, Integer userId);
+
+    /**
+     * 优惠券投资
+     * @param couponTender
+     */
+    void updateCouponTender(CouponTenderVO couponTender);
 }
