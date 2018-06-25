@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.mybatis.mapper.customize.web.WebUserInvestListCustomizeMapper">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.WebUserInvestListCustomizeMapper">
 	<sql id="Where_Clause_Project_List">
 		<where>
 			(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
@@ -25,7 +25,7 @@
 		</where>
 	</sql>
 
-	<resultMap id="UserProjectListMap" type="com.hyjf.mybatis.model.customize.web.WebUserProjectListCustomize">
+	<resultMap id="UserProjectListMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebUserProjectListCustomize">
 		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
 		<result column="project_type" property="projectType" jdbcType="VARCHAR" />
@@ -592,7 +592,7 @@ UNION
 			hiii.tender_nid
 		</if>) AS tablecount
 	</select>
-	<resultMap id="ProjectPersonDetailMap" type="com.hyjf.mybatis.model.customize.web.WebProjectPersonDetailCustomize">
+	<resultMap id="ProjectPersonDetailMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebProjectPersonDetailCustomize">
 		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
@@ -647,7 +647,7 @@ UNION
 		WHERE hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hydb.company_or_personal=2
 	</select>
-	<resultMap id="ProjectCompanyDetailMap" type="com.hyjf.mybatis.model.customize.web.WebProjectCompanyDetailCustomize">
+	<resultMap id="ProjectCompanyDetailMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebProjectCompanyDetailCustomize">
 		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
@@ -709,7 +709,7 @@ UNION
 			</if>
 		</where>
 	</sql>
-	<resultMap id="ProjectInvestListMap" type="com.hyjf.mybatis.model.customize.web.WebProjectInvestListCustomize">
+	<resultMap id="ProjectInvestListMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebProjectInvestListCustomize">
 		<id column="user_id" property="userId" jdbcType="VARCHAR" />
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="vip_id" property="vipId" jdbcType="VARCHAR" />
@@ -753,7 +753,7 @@ UNION
 			</if>
 		</where>
 	</sql>
-	<resultMap id="ProjectConsumeListMap" type="com.hyjf.mybatis.model.customize.web.WebProjectConsumeListCustomize">
+	<resultMap id="ProjectConsumeListMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebProjectConsumeListCustomize">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="person_name" property="personName" jdbcType="VARCHAR" />
 		<result column="account" property="account" jdbcType="VARCHAR" />
@@ -804,7 +804,7 @@ UNION
 			</if>
 		</where>
 	</sql>
-	<resultMap id="UserInvestListMap" type="com.hyjf.mybatis.model.customize.web.WebUserInvestListCustomize">
+	<resultMap id="UserInvestListMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebUserInvestListCustomize">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="real_name" property="realName" jdbcType="VARCHAR" />
 		<result column="recover_account_interest" property="recoverAccountInterest" jdbcType="VARCHAR" />
@@ -878,7 +878,7 @@ UNION
 	</select>
 
 
-	<resultMap id="AppUserInvestListMap" type="com.hyjf.mybatis.model.customize.app.AppUserInvestListCustomize">
+	<resultMap id="AppUserInvestListMap" type="com.hyjf.am.trade.dao.model.customize.trade.AppUserInvestListCustomize">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="real_name" property="realName" jdbcType="VARCHAR" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
@@ -1032,7 +1032,7 @@ UNION
 			</if>
 		</where>
 	</sql>
-	<resultMap id="ProjectRepayListMap" type="com.hyjf.mybatis.model.customize.web.WebProjectRepayListCustomize">
+	<resultMap id="ProjectRepayListMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebProjectRepayListCustomize">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="project_period" property="projectPeriod" jdbcType="VARCHAR" />
 		<result column="project_account" property="projectTotal" jdbcType="VARCHAR" />
