@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1388,7 +1388,7 @@
         </table>
 
         <table tableName="ht_admin_and_role" domainObjectName="AdminAndRole">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_admin_group" domainObjectName="AdminGroup">
