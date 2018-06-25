@@ -3,13 +3,14 @@
  */
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 
 /**
  * @author fuqiang
  * @version BorrowRegistRequest, v0.1 2018/6/14 12:01
  */
-public class BorrowRegistRequest {
+public class BorrowRegistRequest extends Request {
     private BorrowVO borrowVO;
 
     private int status;
