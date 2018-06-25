@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.AppBorrowImageMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.AppBorrowImage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="borrow_image" property="borrowImage" jdbcType="VARCHAR" />
+    <result column="borrow_image_title" property="borrowImageTitle" jdbcType="VARCHAR" />
+    <result column="borrow_image_name" property="borrowImageName" jdbcType="VARCHAR" />
+    <result column="borrow_image_realname" property="borrowImageRealname" jdbcType="VARCHAR" />
+    <result column="borrow_image_url" property="borrowImageUrl" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="TINYINT" />
+    <result column="page_url" property="pageUrl" jdbcType="VARCHAR" />
+    <result column="page_type" property="pageType" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="version_max" property="versionMax" jdbcType="VARCHAR" />
+    <result column="jump_name" property="jumpName" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, borrow_image, borrow_image_title, borrow_image_name, borrow_image_realname, borrow_image_url, 
+    notes, sort, page_url, page_type, version, `status`, version_max, jump_name, create_user_id, 
+    update_user_id, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.AppBorrowImageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_app_borrow_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_app_borrow_image
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_app_borrow_image
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.AppBorrowImageExample" >
+    delete from ht_app_borrow_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.AppBorrowImage" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_app_borrow_image (borrow_image, borrow_image_title, borrow_image_name, 
+      borrow_image_realname, borrow_image_url, notes, 
+      sort, page_url, page_type, 
+      version, `status`, version_max, 
+      jump_name, create_user_id, update_user_id, 
+      create_time, update_time)
+    values (#{borrowImage,jdbcType=VARCHAR}, #{borrowImageTitle,jdbcType=VARCHAR}, #{borrowImageName,jdbcType=VARCHAR}, 
+      #{borrowImageRealname,jdbcType=VARCHAR}, #{borrowImageUrl,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=TINYINT}, #{pageUrl,jdbcType=VARCHAR}, #{pageType,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{versionMax,jdbcType=VARCHAR}, 
+      #{jumpName,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.AppBorrowImage" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_app_borrow_image
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="borrowImage != null" >
+        borrow_image,
+      </if>
+      <if test="borrowImageTitle != null" >
+        borrow_image_title,
+      </if>
+      <if test="borrowImageName != null" >
+        borrow_image_name,
+      </if>
+      <if test="borrowImageRealname != null" >
+        borrow_image_realname,
+      </if>
+      <if test="borrowImageUrl != null" >
+        borrow_image_url,
+      </if>
+      <if test="notes != null" >
+        notes,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="pageUrl != null" >
+        page_url,
+      </if>
+      <if test="pageType != null" >
+        page_type,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="versionMax != null" >
+        version_max,
+      </if>
+      <if test="jumpName != null" >
+        jump_name,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="borrowImage != null" >
+        #{borrowImage,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageTitle != null" >
+        #{borrowImageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageName != null" >
+        #{borrowImageName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageRealname != null" >
+        #{borrowImageRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageUrl != null" >
+        #{borrowImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="notes != null" >
+        #{notes,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=TINYINT},
+      </if>
+      <if test="pageUrl != null" >
+        #{pageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pageType != null" >
+        #{pageType,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="versionMax != null" >
+        #{versionMax,jdbcType=VARCHAR},
+      </if>
+      <if test="jumpName != null" >
+        #{jumpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.AppBorrowImageExample" resultType="java.lang.Integer" >
+    select count(*) from ht_app_borrow_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_app_borrow_image
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowImage != null" >
+        borrow_image = #{record.borrowImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowImageTitle != null" >
+        borrow_image_title = #{record.borrowImageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowImageName != null" >
+        borrow_image_name = #{record.borrowImageName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowImageRealname != null" >
+        borrow_image_realname = #{record.borrowImageRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowImageUrl != null" >
+        borrow_image_url = #{record.borrowImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.notes != null" >
+        notes = #{record.notes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort,jdbcType=TINYINT},
+      </if>
+      <if test="record.pageUrl != null" >
+        page_url = #{record.pageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pageType != null" >
+        page_type = #{record.pageType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.versionMax != null" >
+        version_max = #{record.versionMax,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jumpName != null" >
+        jump_name = #{record.jumpName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_app_borrow_image
+    set id = #{record.id,jdbcType=INTEGER},
+      borrow_image = #{record.borrowImage,jdbcType=VARCHAR},
+      borrow_image_title = #{record.borrowImageTitle,jdbcType=VARCHAR},
+      borrow_image_name = #{record.borrowImageName,jdbcType=VARCHAR},
+      borrow_image_realname = #{record.borrowImageRealname,jdbcType=VARCHAR},
+      borrow_image_url = #{record.borrowImageUrl,jdbcType=VARCHAR},
+      notes = #{record.notes,jdbcType=VARCHAR},
+      sort = #{record.sort,jdbcType=TINYINT},
+      page_url = #{record.pageUrl,jdbcType=VARCHAR},
+      page_type = #{record.pageType,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      version_max = #{record.versionMax,jdbcType=VARCHAR},
+      jump_name = #{record.jumpName,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.AppBorrowImage" >
+    update ht_app_borrow_image
+    <set >
+      <if test="borrowImage != null" >
+        borrow_image = #{borrowImage,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageTitle != null" >
+        borrow_image_title = #{borrowImageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageName != null" >
+        borrow_image_name = #{borrowImageName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageRealname != null" >
+        borrow_image_realname = #{borrowImageRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowImageUrl != null" >
+        borrow_image_url = #{borrowImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="notes != null" >
+        notes = #{notes,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=TINYINT},
+      </if>
+      <if test="pageUrl != null" >
+        page_url = #{pageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pageType != null" >
+        page_type = #{pageType,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="versionMax != null" >
+        version_max = #{versionMax,jdbcType=VARCHAR},
+      </if>
+      <if test="jumpName != null" >
+        jump_name = #{jumpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.AppBorrowImage" >
+    update ht_app_borrow_image
+    set borrow_image = #{borrowImage,jdbcType=VARCHAR},
+      borrow_image_title = #{borrowImageTitle,jdbcType=VARCHAR},
+      borrow_image_name = #{borrowImageName,jdbcType=VARCHAR},
+      borrow_image_realname = #{borrowImageRealname,jdbcType=VARCHAR},
+      borrow_image_url = #{borrowImageUrl,jdbcType=VARCHAR},
+      notes = #{notes,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=TINYINT},
+      page_url = #{pageUrl,jdbcType=VARCHAR},
+      page_type = #{pageType,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      version_max = #{versionMax,jdbcType=VARCHAR},
+      jump_name = #{jumpName,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

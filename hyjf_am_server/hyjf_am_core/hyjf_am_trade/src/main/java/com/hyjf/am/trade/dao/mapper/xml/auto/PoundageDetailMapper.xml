@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.PoundageDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.PoundageDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="nid" property="nid" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="usernname" property="usernname" jdbcType="VARCHAR" />
+    <result column="poundage_type" property="poundageType" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
+    <result column="invite_user_id" property="inviteUserId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="ledger_time" property="ledgerTime" jdbcType="INTEGER" />
+    <result column="ledger_id" property="ledgerId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, nid, borrow_nid, borrow_type, add_time, usernname, poundage_type, `source`, invite_region_name, 
+    invite_user_id, amount, ledger_time, ledger_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_poundage_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_poundage_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_poundage_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetailExample" >
+    delete from ht_poundage_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_poundage_detail (nid, borrow_nid, borrow_type, 
+      add_time, usernname, poundage_type, 
+      `source`, invite_region_name, invite_user_id, 
+      amount, ledger_time, ledger_id
+      )
+    values (#{nid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{borrowType,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{usernname,jdbcType=VARCHAR}, #{poundageType,jdbcType=VARCHAR}, 
+      #{source,jdbcType=VARCHAR}, #{inviteRegionName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
+      #{amount,jdbcType=DECIMAL}, #{ledgerTime,jdbcType=INTEGER}, #{ledgerId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_poundage_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="nid != null" >
+        nid,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="borrowType != null" >
+        borrow_type,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="usernname != null" >
+        usernname,
+      </if>
+      <if test="poundageType != null" >
+        poundage_type,
+      </if>
+      <if test="source != null" >
+        `source`,
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name,
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="ledgerTime != null" >
+        ledger_time,
+      </if>
+      <if test="ledgerId != null" >
+        ledger_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="nid != null" >
+        #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowType != null" >
+        #{borrowType,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usernname != null" >
+        #{usernname,jdbcType=VARCHAR},
+      </if>
+      <if test="poundageType != null" >
+        #{poundageType,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRegionName != null" >
+        #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null" >
+        #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="ledgerTime != null" >
+        #{ledgerTime,jdbcType=INTEGER},
+      </if>
+      <if test="ledgerId != null" >
+        #{ledgerId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetailExample" resultType="java.lang.Integer" >
+    select count(*) from ht_poundage_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_poundage_detail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.nid != null" >
+        nid = #{record.nid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowType != null" >
+        borrow_type = #{record.borrowType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.usernname != null" >
+        usernname = #{record.usernname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.poundageType != null" >
+        poundage_type = #{record.poundageType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null" >
+        `source` = #{record.source,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteRegionName != null" >
+        invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteUserId != null" >
+        invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.ledgerTime != null" >
+        ledger_time = #{record.ledgerTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.ledgerId != null" >
+        ledger_id = #{record.ledgerId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_poundage_detail
+    set id = #{record.id,jdbcType=INTEGER},
+      nid = #{record.nid,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_type = #{record.borrowType,jdbcType=VARCHAR},
+      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      usernname = #{record.usernname,jdbcType=VARCHAR},
+      poundage_type = #{record.poundageType,jdbcType=VARCHAR},
+      `source` = #{record.source,jdbcType=VARCHAR},
+      invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      ledger_time = #{record.ledgerTime,jdbcType=INTEGER},
+      ledger_id = #{record.ledgerId,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetail" >
+    update ht_poundage_detail
+    <set >
+      <if test="nid != null" >
+        nid = #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowType != null" >
+        borrow_type = #{borrowType,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usernname != null" >
+        usernname = #{usernname,jdbcType=VARCHAR},
+      </if>
+      <if test="poundageType != null" >
+        poundage_type = #{poundageType,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        `source` = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="ledgerTime != null" >
+        ledger_time = #{ledgerTime,jdbcType=INTEGER},
+      </if>
+      <if test="ledgerId != null" >
+        ledger_id = #{ledgerId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetail" >
+    update ht_poundage_detail
+    set nid = #{nid,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_type = #{borrowType,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      usernname = #{usernname,jdbcType=VARCHAR},
+      poundage_type = #{poundageType,jdbcType=VARCHAR},
+      `source` = #{source,jdbcType=VARCHAR},
+      invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      ledger_time = #{ledgerTime,jdbcType=INTEGER},
+      ledger_id = #{ledgerId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

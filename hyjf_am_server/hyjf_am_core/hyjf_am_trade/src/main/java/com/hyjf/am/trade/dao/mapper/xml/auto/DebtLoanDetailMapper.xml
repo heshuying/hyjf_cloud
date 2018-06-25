@@ -1,0 +1,1057 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtLoanDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtLoanDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="borrow_user_id" property="borrowUserId" jdbcType="INTEGER" />
+    <result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="plan_order_id" property="planOrderId" jdbcType="VARCHAR" />
+    <result column="invest_id" property="investId" jdbcType="INTEGER" />
+    <result column="invest_order_id" property="investOrderId" jdbcType="VARCHAR" />
+    <result column="loan_account" property="loanAccount" jdbcType="DECIMAL" />
+    <result column="loan_interest" property="loanInterest" jdbcType="DECIMAL" />
+    <result column="loan_capital" property="loanCapital" jdbcType="DECIMAL" />
+    <result column="receive_account_yes" property="receiveAccountYes" jdbcType="DECIMAL" />
+    <result column="receive_capital_yes" property="receiveCapitalYes" jdbcType="DECIMAL" />
+    <result column="receive_interest_yes" property="receiveInterestYes" jdbcType="DECIMAL" />
+    <result column="repay_period" property="repayPeriod" jdbcType="INTEGER" />
+    <result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+    <result column="repay_action_time" property="repayActionTime" jdbcType="VARCHAR" />
+    <result column="repay_account_yes" property="repayAccountYes" jdbcType="DECIMAL" />
+    <result column="repay_interest_yes" property="repayInterestYes" jdbcType="DECIMAL" />
+    <result column="repay_capital_yes" property="repayCapitalYes" jdbcType="DECIMAL" />
+    <result column="repay_account_wait" property="repayAccountWait" jdbcType="DECIMAL" />
+    <result column="repay_capital_wait" property="repayCapitalWait" jdbcType="DECIMAL" />
+    <result column="repay_interest_wait" property="repayInterestWait" jdbcType="DECIMAL" />
+    <result column="repay_status" property="repayStatus" jdbcType="INTEGER" />
+    <result column="manage_fee" property="manageFee" jdbcType="DECIMAL" />
+    <result column="loan_type" property="loanType" jdbcType="VARCHAR" />
+    <result column="advance_status" property="advanceStatus" jdbcType="INTEGER" />
+    <result column="advance_days" property="advanceDays" jdbcType="INTEGER" />
+    <result column="repay_advance_interest" property="repayAdvanceInterest" jdbcType="DECIMAL" />
+    <result column="repay_advance_interest_yes" property="repayAdvanceInterestYes" jdbcType="DECIMAL" />
+    <result column="late_days" property="lateDays" jdbcType="INTEGER" />
+    <result column="repay_late_interest" property="repayLateInterest" jdbcType="DECIMAL" />
+    <result column="repay_late_interest_yes" property="repayLateInterestYes" jdbcType="DECIMAL" />
+    <result column="delay_days" property="delayDays" jdbcType="INTEGER" />
+    <result column="repay_delay_interest" property="repayDelayInterest" jdbcType="DECIMAL" />
+    <result column="repay_delay_interest_yes" property="repayDelayInterestYes" jdbcType="DECIMAL" />
+    <result column="receive_advance_interest" property="receiveAdvanceInterest" jdbcType="DECIMAL" />
+    <result column="receive_late_interest" property="receiveLateInterest" jdbcType="DECIMAL" />
+    <result column="receive_delay_interest" property="receiveDelayInterest" jdbcType="DECIMAL" />
+    <result column="receive_advance_interest_yes" property="receiveAdvanceInterestYes" jdbcType="DECIMAL" />
+    <result column="receive_late_interest_yes" property="receiveLateInterestYes" jdbcType="DECIMAL" />
+    <result column="receive_delay_interest_yes" property="receiveDelayInterestYes" jdbcType="DECIMAL" />
+    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="sendmail" property="sendmail" jdbcType="TINYINT" />
+    <result column="web" property="web" jdbcType="TINYINT" />
+    <result column="credit_amount" property="creditAmount" jdbcType="DECIMAL" />
+    <result column="credit_interest_amount" property="creditInterestAmount" jdbcType="DECIMAL" />
+    <result column="credit_time" property="creditTime" jdbcType="INTEGER" />
+    <result column="repay_order_id" property="repayOrderId" jdbcType="VARCHAR" />
+    <result column="repay_order_date" property="repayOrderDate" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, user_name, borrow_user_id, borrow_user_name, borrow_nid, plan_nid, plan_order_id, 
+    invest_id, invest_order_id, loan_account, loan_interest, loan_capital, receive_account_yes, 
+    receive_capital_yes, receive_interest_yes, repay_period, repay_time, repay_action_time, 
+    repay_account_yes, repay_interest_yes, repay_capital_yes, repay_account_wait, repay_capital_wait, 
+    repay_interest_wait, repay_status, manage_fee, loan_type, advance_status, advance_days, 
+    repay_advance_interest, repay_advance_interest_yes, late_days, repay_late_interest, 
+    repay_late_interest_yes, delay_days, repay_delay_interest, repay_delay_interest_yes, 
+    receive_advance_interest, receive_late_interest, receive_delay_interest, receive_advance_interest_yes, 
+    receive_late_interest_yes, receive_delay_interest_yes, addip, sendmail, web, credit_amount, 
+    credit_interest_amount, credit_time, repay_order_id, repay_order_date, create_time, 
+    create_user_id, create_user_name, update_time, update_user_id, update_user_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_loan_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_loan_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_loan_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanDetailExample" >
+    delete from ht_debt_loan_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanDetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_loan_detail (user_id, user_name, borrow_user_id, 
+      borrow_user_name, borrow_nid, plan_nid, 
+      plan_order_id, invest_id, invest_order_id, 
+      loan_account, loan_interest, loan_capital, 
+      receive_account_yes, receive_capital_yes, receive_interest_yes, 
+      repay_period, repay_time, repay_action_time, 
+      repay_account_yes, repay_interest_yes, repay_capital_yes, 
+      repay_account_wait, repay_capital_wait, repay_interest_wait, 
+      repay_status, manage_fee, loan_type, 
+      advance_status, advance_days, repay_advance_interest, 
+      repay_advance_interest_yes, late_days, repay_late_interest, 
+      repay_late_interest_yes, delay_days, repay_delay_interest, 
+      repay_delay_interest_yes, receive_advance_interest, 
+      receive_late_interest, receive_delay_interest, 
+      receive_advance_interest_yes, receive_late_interest_yes, 
+      receive_delay_interest_yes, addip, sendmail, 
+      web, credit_amount, credit_interest_amount, 
+      credit_time, repay_order_id, repay_order_date, 
+      create_time, create_user_id, create_user_name, 
+      update_time, update_user_id, update_user_name
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
+      #{borrowUserName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
+      #{planOrderId,jdbcType=VARCHAR}, #{investId,jdbcType=INTEGER}, #{investOrderId,jdbcType=VARCHAR}, 
+      #{loanAccount,jdbcType=DECIMAL}, #{loanInterest,jdbcType=DECIMAL}, #{loanCapital,jdbcType=DECIMAL}, 
+      #{receiveAccountYes,jdbcType=DECIMAL}, #{receiveCapitalYes,jdbcType=DECIMAL}, #{receiveInterestYes,jdbcType=DECIMAL}, 
+      #{repayPeriod,jdbcType=INTEGER}, #{repayTime,jdbcType=VARCHAR}, #{repayActionTime,jdbcType=VARCHAR}, 
+      #{repayAccountYes,jdbcType=DECIMAL}, #{repayInterestYes,jdbcType=DECIMAL}, #{repayCapitalYes,jdbcType=DECIMAL}, 
+      #{repayAccountWait,jdbcType=DECIMAL}, #{repayCapitalWait,jdbcType=DECIMAL}, #{repayInterestWait,jdbcType=DECIMAL}, 
+      #{repayStatus,jdbcType=INTEGER}, #{manageFee,jdbcType=DECIMAL}, #{loanType,jdbcType=VARCHAR}, 
+      #{advanceStatus,jdbcType=INTEGER}, #{advanceDays,jdbcType=INTEGER}, #{repayAdvanceInterest,jdbcType=DECIMAL}, 
+      #{repayAdvanceInterestYes,jdbcType=DECIMAL}, #{lateDays,jdbcType=INTEGER}, #{repayLateInterest,jdbcType=DECIMAL}, 
+      #{repayLateInterestYes,jdbcType=DECIMAL}, #{delayDays,jdbcType=INTEGER}, #{repayDelayInterest,jdbcType=DECIMAL}, 
+      #{repayDelayInterestYes,jdbcType=DECIMAL}, #{receiveAdvanceInterest,jdbcType=DECIMAL}, 
+      #{receiveLateInterest,jdbcType=DECIMAL}, #{receiveDelayInterest,jdbcType=DECIMAL}, 
+      #{receiveAdvanceInterestYes,jdbcType=DECIMAL}, #{receiveLateInterestYes,jdbcType=DECIMAL}, 
+      #{receiveDelayInterestYes,jdbcType=DECIMAL}, #{addip,jdbcType=VARCHAR}, #{sendmail,jdbcType=TINYINT}, 
+      #{web,jdbcType=TINYINT}, #{creditAmount,jdbcType=DECIMAL}, #{creditInterestAmount,jdbcType=DECIMAL}, 
+      #{creditTime,jdbcType=INTEGER}, #{repayOrderId,jdbcType=VARCHAR}, #{repayOrderDate,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanDetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_loan_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="borrowUserId != null" >
+        borrow_user_id,
+      </if>
+      <if test="borrowUserName != null" >
+        borrow_user_name,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="planOrderId != null" >
+        plan_order_id,
+      </if>
+      <if test="investId != null" >
+        invest_id,
+      </if>
+      <if test="investOrderId != null" >
+        invest_order_id,
+      </if>
+      <if test="loanAccount != null" >
+        loan_account,
+      </if>
+      <if test="loanInterest != null" >
+        loan_interest,
+      </if>
+      <if test="loanCapital != null" >
+        loan_capital,
+      </if>
+      <if test="receiveAccountYes != null" >
+        receive_account_yes,
+      </if>
+      <if test="receiveCapitalYes != null" >
+        receive_capital_yes,
+      </if>
+      <if test="receiveInterestYes != null" >
+        receive_interest_yes,
+      </if>
+      <if test="repayPeriod != null" >
+        repay_period,
+      </if>
+      <if test="repayTime != null" >
+        repay_time,
+      </if>
+      <if test="repayActionTime != null" >
+        repay_action_time,
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes,
+      </if>
+      <if test="repayInterestYes != null" >
+        repay_interest_yes,
+      </if>
+      <if test="repayCapitalYes != null" >
+        repay_capital_yes,
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait,
+      </if>
+      <if test="repayCapitalWait != null" >
+        repay_capital_wait,
+      </if>
+      <if test="repayInterestWait != null" >
+        repay_interest_wait,
+      </if>
+      <if test="repayStatus != null" >
+        repay_status,
+      </if>
+      <if test="manageFee != null" >
+        manage_fee,
+      </if>
+      <if test="loanType != null" >
+        loan_type,
+      </if>
+      <if test="advanceStatus != null" >
+        advance_status,
+      </if>
+      <if test="advanceDays != null" >
+        advance_days,
+      </if>
+      <if test="repayAdvanceInterest != null" >
+        repay_advance_interest,
+      </if>
+      <if test="repayAdvanceInterestYes != null" >
+        repay_advance_interest_yes,
+      </if>
+      <if test="lateDays != null" >
+        late_days,
+      </if>
+      <if test="repayLateInterest != null" >
+        repay_late_interest,
+      </if>
+      <if test="repayLateInterestYes != null" >
+        repay_late_interest_yes,
+      </if>
+      <if test="delayDays != null" >
+        delay_days,
+      </if>
+      <if test="repayDelayInterest != null" >
+        repay_delay_interest,
+      </if>
+      <if test="repayDelayInterestYes != null" >
+        repay_delay_interest_yes,
+      </if>
+      <if test="receiveAdvanceInterest != null" >
+        receive_advance_interest,
+      </if>
+      <if test="receiveLateInterest != null" >
+        receive_late_interest,
+      </if>
+      <if test="receiveDelayInterest != null" >
+        receive_delay_interest,
+      </if>
+      <if test="receiveAdvanceInterestYes != null" >
+        receive_advance_interest_yes,
+      </if>
+      <if test="receiveLateInterestYes != null" >
+        receive_late_interest_yes,
+      </if>
+      <if test="receiveDelayInterestYes != null" >
+        receive_delay_interest_yes,
+      </if>
+      <if test="addip != null" >
+        addip,
+      </if>
+      <if test="sendmail != null" >
+        sendmail,
+      </if>
+      <if test="web != null" >
+        web,
+      </if>
+      <if test="creditAmount != null" >
+        credit_amount,
+      </if>
+      <if test="creditInterestAmount != null" >
+        credit_interest_amount,
+      </if>
+      <if test="creditTime != null" >
+        credit_time,
+      </if>
+      <if test="repayOrderId != null" >
+        repay_order_id,
+      </if>
+      <if test="repayOrderDate != null" >
+        repay_order_date,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUserId != null" >
+        #{borrowUserId,jdbcType=INTEGER},
+      </if>
+      <if test="borrowUserName != null" >
+        #{borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planOrderId != null" >
+        #{planOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="investId != null" >
+        #{investId,jdbcType=INTEGER},
+      </if>
+      <if test="investOrderId != null" >
+        #{investOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="loanAccount != null" >
+        #{loanAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanInterest != null" >
+        #{loanInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="loanCapital != null" >
+        #{loanCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveAccountYes != null" >
+        #{receiveAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveCapitalYes != null" >
+        #{receiveCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveInterestYes != null" >
+        #{receiveInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayPeriod != null" >
+        #{repayPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="repayTime != null" >
+        #{repayTime,jdbcType=VARCHAR},
+      </if>
+      <if test="repayActionTime != null" >
+        #{repayActionTime,jdbcType=VARCHAR},
+      </if>
+      <if test="repayAccountYes != null" >
+        #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestYes != null" >
+        #{repayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalYes != null" >
+        #{repayCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalWait != null" >
+        #{repayCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestWait != null" >
+        #{repayInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayStatus != null" >
+        #{repayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="manageFee != null" >
+        #{manageFee,jdbcType=DECIMAL},
+      </if>
+      <if test="loanType != null" >
+        #{loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="advanceStatus != null" >
+        #{advanceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="advanceDays != null" >
+        #{advanceDays,jdbcType=INTEGER},
+      </if>
+      <if test="repayAdvanceInterest != null" >
+        #{repayAdvanceInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAdvanceInterestYes != null" >
+        #{repayAdvanceInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="lateDays != null" >
+        #{lateDays,jdbcType=INTEGER},
+      </if>
+      <if test="repayLateInterest != null" >
+        #{repayLateInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayLateInterestYes != null" >
+        #{repayLateInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="delayDays != null" >
+        #{delayDays,jdbcType=INTEGER},
+      </if>
+      <if test="repayDelayInterest != null" >
+        #{repayDelayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayDelayInterestYes != null" >
+        #{repayDelayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveAdvanceInterest != null" >
+        #{receiveAdvanceInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveLateInterest != null" >
+        #{receiveLateInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveDelayInterest != null" >
+        #{receiveDelayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveAdvanceInterestYes != null" >
+        #{receiveAdvanceInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveLateInterestYes != null" >
+        #{receiveLateInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveDelayInterestYes != null" >
+        #{receiveDelayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="addip != null" >
+        #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="sendmail != null" >
+        #{sendmail,jdbcType=TINYINT},
+      </if>
+      <if test="web != null" >
+        #{web,jdbcType=TINYINT},
+      </if>
+      <if test="creditAmount != null" >
+        #{creditAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="creditInterestAmount != null" >
+        #{creditInterestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="creditTime != null" >
+        #{creditTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayOrderId != null" >
+        #{repayOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="repayOrderDate != null" >
+        #{repayOrderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanDetailExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_loan_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_loan_detail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowUserId != null" >
+        borrow_user_id = #{record.borrowUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowUserName != null" >
+        borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planOrderId != null" >
+        plan_order_id = #{record.planOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investId != null" >
+        invest_id = #{record.investId,jdbcType=INTEGER},
+      </if>
+      <if test="record.investOrderId != null" >
+        invest_order_id = #{record.investOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanAccount != null" >
+        loan_account = #{record.loanAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanInterest != null" >
+        loan_interest = #{record.loanInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanCapital != null" >
+        loan_capital = #{record.loanCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveAccountYes != null" >
+        receive_account_yes = #{record.receiveAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveCapitalYes != null" >
+        receive_capital_yes = #{record.receiveCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveInterestYes != null" >
+        receive_interest_yes = #{record.receiveInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayPeriod != null" >
+        repay_period = #{record.repayPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayTime != null" >
+        repay_time = #{record.repayTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repayActionTime != null" >
+        repay_action_time = #{record.repayActionTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repayAccountYes != null" >
+        repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayInterestYes != null" >
+        repay_interest_yes = #{record.repayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayCapitalYes != null" >
+        repay_capital_yes = #{record.repayCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountWait != null" >
+        repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayCapitalWait != null" >
+        repay_capital_wait = #{record.repayCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayInterestWait != null" >
+        repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayStatus != null" >
+        repay_status = #{record.repayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.manageFee != null" >
+        manage_fee = #{record.manageFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanType != null" >
+        loan_type = #{record.loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.advanceStatus != null" >
+        advance_status = #{record.advanceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.advanceDays != null" >
+        advance_days = #{record.advanceDays,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayAdvanceInterest != null" >
+        repay_advance_interest = #{record.repayAdvanceInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAdvanceInterestYes != null" >
+        repay_advance_interest_yes = #{record.repayAdvanceInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lateDays != null" >
+        late_days = #{record.lateDays,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayLateInterest != null" >
+        repay_late_interest = #{record.repayLateInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayLateInterestYes != null" >
+        repay_late_interest_yes = #{record.repayLateInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.delayDays != null" >
+        delay_days = #{record.delayDays,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayDelayInterest != null" >
+        repay_delay_interest = #{record.repayDelayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayDelayInterestYes != null" >
+        repay_delay_interest_yes = #{record.repayDelayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveAdvanceInterest != null" >
+        receive_advance_interest = #{record.receiveAdvanceInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveLateInterest != null" >
+        receive_late_interest = #{record.receiveLateInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveDelayInterest != null" >
+        receive_delay_interest = #{record.receiveDelayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveAdvanceInterestYes != null" >
+        receive_advance_interest_yes = #{record.receiveAdvanceInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveLateInterestYes != null" >
+        receive_late_interest_yes = #{record.receiveLateInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.receiveDelayInterestYes != null" >
+        receive_delay_interest_yes = #{record.receiveDelayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.addip != null" >
+        addip = #{record.addip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendmail != null" >
+        sendmail = #{record.sendmail,jdbcType=TINYINT},
+      </if>
+      <if test="record.web != null" >
+        web = #{record.web,jdbcType=TINYINT},
+      </if>
+      <if test="record.creditAmount != null" >
+        credit_amount = #{record.creditAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.creditInterestAmount != null" >
+        credit_interest_amount = #{record.creditInterestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.creditTime != null" >
+        credit_time = #{record.creditTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayOrderId != null" >
+        repay_order_id = #{record.repayOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repayOrderDate != null" >
+        repay_order_date = #{record.repayOrderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserName != null" >
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_loan_detail
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      borrow_user_id = #{record.borrowUserId,jdbcType=INTEGER},
+      borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      plan_order_id = #{record.planOrderId,jdbcType=VARCHAR},
+      invest_id = #{record.investId,jdbcType=INTEGER},
+      invest_order_id = #{record.investOrderId,jdbcType=VARCHAR},
+      loan_account = #{record.loanAccount,jdbcType=DECIMAL},
+      loan_interest = #{record.loanInterest,jdbcType=DECIMAL},
+      loan_capital = #{record.loanCapital,jdbcType=DECIMAL},
+      receive_account_yes = #{record.receiveAccountYes,jdbcType=DECIMAL},
+      receive_capital_yes = #{record.receiveCapitalYes,jdbcType=DECIMAL},
+      receive_interest_yes = #{record.receiveInterestYes,jdbcType=DECIMAL},
+      repay_period = #{record.repayPeriod,jdbcType=INTEGER},
+      repay_time = #{record.repayTime,jdbcType=VARCHAR},
+      repay_action_time = #{record.repayActionTime,jdbcType=VARCHAR},
+      repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      repay_interest_yes = #{record.repayInterestYes,jdbcType=DECIMAL},
+      repay_capital_yes = #{record.repayCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      repay_capital_wait = #{record.repayCapitalWait,jdbcType=DECIMAL},
+      repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
+      repay_status = #{record.repayStatus,jdbcType=INTEGER},
+      manage_fee = #{record.manageFee,jdbcType=DECIMAL},
+      loan_type = #{record.loanType,jdbcType=VARCHAR},
+      advance_status = #{record.advanceStatus,jdbcType=INTEGER},
+      advance_days = #{record.advanceDays,jdbcType=INTEGER},
+      repay_advance_interest = #{record.repayAdvanceInterest,jdbcType=DECIMAL},
+      repay_advance_interest_yes = #{record.repayAdvanceInterestYes,jdbcType=DECIMAL},
+      late_days = #{record.lateDays,jdbcType=INTEGER},
+      repay_late_interest = #{record.repayLateInterest,jdbcType=DECIMAL},
+      repay_late_interest_yes = #{record.repayLateInterestYes,jdbcType=DECIMAL},
+      delay_days = #{record.delayDays,jdbcType=INTEGER},
+      repay_delay_interest = #{record.repayDelayInterest,jdbcType=DECIMAL},
+      repay_delay_interest_yes = #{record.repayDelayInterestYes,jdbcType=DECIMAL},
+      receive_advance_interest = #{record.receiveAdvanceInterest,jdbcType=DECIMAL},
+      receive_late_interest = #{record.receiveLateInterest,jdbcType=DECIMAL},
+      receive_delay_interest = #{record.receiveDelayInterest,jdbcType=DECIMAL},
+      receive_advance_interest_yes = #{record.receiveAdvanceInterestYes,jdbcType=DECIMAL},
+      receive_late_interest_yes = #{record.receiveLateInterestYes,jdbcType=DECIMAL},
+      receive_delay_interest_yes = #{record.receiveDelayInterestYes,jdbcType=DECIMAL},
+      addip = #{record.addip,jdbcType=VARCHAR},
+      sendmail = #{record.sendmail,jdbcType=TINYINT},
+      web = #{record.web,jdbcType=TINYINT},
+      credit_amount = #{record.creditAmount,jdbcType=DECIMAL},
+      credit_interest_amount = #{record.creditInterestAmount,jdbcType=DECIMAL},
+      credit_time = #{record.creditTime,jdbcType=INTEGER},
+      repay_order_id = #{record.repayOrderId,jdbcType=VARCHAR},
+      repay_order_date = #{record.repayOrderDate,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanDetail" >
+    update ht_debt_loan_detail
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUserId != null" >
+        borrow_user_id = #{borrowUserId,jdbcType=INTEGER},
+      </if>
+      <if test="borrowUserName != null" >
+        borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planOrderId != null" >
+        plan_order_id = #{planOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="investId != null" >
+        invest_id = #{investId,jdbcType=INTEGER},
+      </if>
+      <if test="investOrderId != null" >
+        invest_order_id = #{investOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="loanAccount != null" >
+        loan_account = #{loanAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanInterest != null" >
+        loan_interest = #{loanInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="loanCapital != null" >
+        loan_capital = #{loanCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveAccountYes != null" >
+        receive_account_yes = #{receiveAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveCapitalYes != null" >
+        receive_capital_yes = #{receiveCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveInterestYes != null" >
+        receive_interest_yes = #{receiveInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayPeriod != null" >
+        repay_period = #{repayPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="repayTime != null" >
+        repay_time = #{repayTime,jdbcType=VARCHAR},
+      </if>
+      <if test="repayActionTime != null" >
+        repay_action_time = #{repayActionTime,jdbcType=VARCHAR},
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestYes != null" >
+        repay_interest_yes = #{repayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalYes != null" >
+        repay_capital_yes = #{repayCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalWait != null" >
+        repay_capital_wait = #{repayCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestWait != null" >
+        repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayStatus != null" >
+        repay_status = #{repayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="manageFee != null" >
+        manage_fee = #{manageFee,jdbcType=DECIMAL},
+      </if>
+      <if test="loanType != null" >
+        loan_type = #{loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="advanceStatus != null" >
+        advance_status = #{advanceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="advanceDays != null" >
+        advance_days = #{advanceDays,jdbcType=INTEGER},
+      </if>
+      <if test="repayAdvanceInterest != null" >
+        repay_advance_interest = #{repayAdvanceInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAdvanceInterestYes != null" >
+        repay_advance_interest_yes = #{repayAdvanceInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="lateDays != null" >
+        late_days = #{lateDays,jdbcType=INTEGER},
+      </if>
+      <if test="repayLateInterest != null" >
+        repay_late_interest = #{repayLateInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayLateInterestYes != null" >
+        repay_late_interest_yes = #{repayLateInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="delayDays != null" >
+        delay_days = #{delayDays,jdbcType=INTEGER},
+      </if>
+      <if test="repayDelayInterest != null" >
+        repay_delay_interest = #{repayDelayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayDelayInterestYes != null" >
+        repay_delay_interest_yes = #{repayDelayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveAdvanceInterest != null" >
+        receive_advance_interest = #{receiveAdvanceInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveLateInterest != null" >
+        receive_late_interest = #{receiveLateInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveDelayInterest != null" >
+        receive_delay_interest = #{receiveDelayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveAdvanceInterestYes != null" >
+        receive_advance_interest_yes = #{receiveAdvanceInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveLateInterestYes != null" >
+        receive_late_interest_yes = #{receiveLateInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveDelayInterestYes != null" >
+        receive_delay_interest_yes = #{receiveDelayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="addip != null" >
+        addip = #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="sendmail != null" >
+        sendmail = #{sendmail,jdbcType=TINYINT},
+      </if>
+      <if test="web != null" >
+        web = #{web,jdbcType=TINYINT},
+      </if>
+      <if test="creditAmount != null" >
+        credit_amount = #{creditAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="creditInterestAmount != null" >
+        credit_interest_amount = #{creditInterestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="creditTime != null" >
+        credit_time = #{creditTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayOrderId != null" >
+        repay_order_id = #{repayOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="repayOrderDate != null" >
+        repay_order_date = #{repayOrderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanDetail" >
+    update ht_debt_loan_detail
+    set user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      borrow_user_id = #{borrowUserId,jdbcType=INTEGER},
+      borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      plan_nid = #{planNid,jdbcType=VARCHAR},
+      plan_order_id = #{planOrderId,jdbcType=VARCHAR},
+      invest_id = #{investId,jdbcType=INTEGER},
+      invest_order_id = #{investOrderId,jdbcType=VARCHAR},
+      loan_account = #{loanAccount,jdbcType=DECIMAL},
+      loan_interest = #{loanInterest,jdbcType=DECIMAL},
+      loan_capital = #{loanCapital,jdbcType=DECIMAL},
+      receive_account_yes = #{receiveAccountYes,jdbcType=DECIMAL},
+      receive_capital_yes = #{receiveCapitalYes,jdbcType=DECIMAL},
+      receive_interest_yes = #{receiveInterestYes,jdbcType=DECIMAL},
+      repay_period = #{repayPeriod,jdbcType=INTEGER},
+      repay_time = #{repayTime,jdbcType=VARCHAR},
+      repay_action_time = #{repayActionTime,jdbcType=VARCHAR},
+      repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      repay_interest_yes = #{repayInterestYes,jdbcType=DECIMAL},
+      repay_capital_yes = #{repayCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      repay_capital_wait = #{repayCapitalWait,jdbcType=DECIMAL},
+      repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
+      repay_status = #{repayStatus,jdbcType=INTEGER},
+      manage_fee = #{manageFee,jdbcType=DECIMAL},
+      loan_type = #{loanType,jdbcType=VARCHAR},
+      advance_status = #{advanceStatus,jdbcType=INTEGER},
+      advance_days = #{advanceDays,jdbcType=INTEGER},
+      repay_advance_interest = #{repayAdvanceInterest,jdbcType=DECIMAL},
+      repay_advance_interest_yes = #{repayAdvanceInterestYes,jdbcType=DECIMAL},
+      late_days = #{lateDays,jdbcType=INTEGER},
+      repay_late_interest = #{repayLateInterest,jdbcType=DECIMAL},
+      repay_late_interest_yes = #{repayLateInterestYes,jdbcType=DECIMAL},
+      delay_days = #{delayDays,jdbcType=INTEGER},
+      repay_delay_interest = #{repayDelayInterest,jdbcType=DECIMAL},
+      repay_delay_interest_yes = #{repayDelayInterestYes,jdbcType=DECIMAL},
+      receive_advance_interest = #{receiveAdvanceInterest,jdbcType=DECIMAL},
+      receive_late_interest = #{receiveLateInterest,jdbcType=DECIMAL},
+      receive_delay_interest = #{receiveDelayInterest,jdbcType=DECIMAL},
+      receive_advance_interest_yes = #{receiveAdvanceInterestYes,jdbcType=DECIMAL},
+      receive_late_interest_yes = #{receiveLateInterestYes,jdbcType=DECIMAL},
+      receive_delay_interest_yes = #{receiveDelayInterestYes,jdbcType=DECIMAL},
+      addip = #{addip,jdbcType=VARCHAR},
+      sendmail = #{sendmail,jdbcType=TINYINT},
+      web = #{web,jdbcType=TINYINT},
+      credit_amount = #{creditAmount,jdbcType=DECIMAL},
+      credit_interest_amount = #{creditInterestAmount,jdbcType=DECIMAL},
+      credit_time = #{creditTime,jdbcType=INTEGER},
+      repay_order_id = #{repayOrderId,jdbcType=VARCHAR},
+      repay_order_date = #{repayOrderDate,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
