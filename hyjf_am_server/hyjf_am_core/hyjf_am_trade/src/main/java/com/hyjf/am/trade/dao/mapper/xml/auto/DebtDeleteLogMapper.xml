@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtDeleteLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtDeleteLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="borrow_account_yes" property="borrowAccountYes" jdbcType="VARCHAR" />
+    <result column="borrow_account_wait" property="borrowAccountWait" jdbcType="VARCHAR" />
+    <result column="borrow_account_scale" property="borrowAccountScale" jdbcType="VARCHAR" />
+    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    <result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="TINYINT" />
+    <result column="project_type_name" property="projectTypeName" jdbcType="VARCHAR" />
+    <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+    <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="addtime" property="addtime" jdbcType="VARCHAR" />
+    <result column="borrow_full_time" property="borrowFullTime" jdbcType="VARCHAR" />
+    <result column="recover_last_time" property="recoverLastTime" jdbcType="VARCHAR" />
+    <result column="bail_num" property="bailNum" jdbcType="DECIMAL" />
+    <result column="operater_uid" property="operaterUid" jdbcType="INTEGER" />
+    <result column="operater_user" property="operaterUser" jdbcType="VARCHAR" />
+    <result column="operater_time" property="operaterTime" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, borrow_nid, borrow_name, username, account, borrow_account_yes, borrow_account_wait, 
+    borrow_account_scale, borrow_style, borrow_style_name, project_type, project_type_name, 
+    borrow_period, borrow_apr, `status`, addtime, borrow_full_time, recover_last_time, 
+    bail_num, operater_uid, operater_user, operater_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_delete_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_delete_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_delete_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLogExample" >
+    delete from ht_debt_delete_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_delete_log (borrow_nid, borrow_name, username, 
+      account, borrow_account_yes, borrow_account_wait, 
+      borrow_account_scale, borrow_style, borrow_style_name, 
+      project_type, project_type_name, borrow_period, 
+      borrow_apr, `status`, addtime, 
+      borrow_full_time, recover_last_time, bail_num, 
+      operater_uid, operater_user, operater_time
+      )
+    values (#{borrowNid,jdbcType=VARCHAR}, #{borrowName,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR}, #{borrowAccountYes,jdbcType=VARCHAR}, #{borrowAccountWait,jdbcType=VARCHAR}, 
+      #{borrowAccountScale,jdbcType=VARCHAR}, #{borrowStyle,jdbcType=VARCHAR}, #{borrowStyleName,jdbcType=VARCHAR}, 
+      #{projectType,jdbcType=TINYINT}, #{projectTypeName,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=VARCHAR}, 
+      #{borrowApr,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR}, 
+      #{borrowFullTime,jdbcType=VARCHAR}, #{recoverLastTime,jdbcType=VARCHAR}, #{bailNum,jdbcType=DECIMAL}, 
+      #{operaterUid,jdbcType=INTEGER}, #{operaterUser,jdbcType=VARCHAR}, #{operaterTime,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_delete_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="borrowName != null" >
+        borrow_name,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="borrowAccountYes != null" >
+        borrow_account_yes,
+      </if>
+      <if test="borrowAccountWait != null" >
+        borrow_account_wait,
+      </if>
+      <if test="borrowAccountScale != null" >
+        borrow_account_scale,
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style,
+      </if>
+      <if test="borrowStyleName != null" >
+        borrow_style_name,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="projectTypeName != null" >
+        project_type_name,
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period,
+      </if>
+      <if test="borrowApr != null" >
+        borrow_apr,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="addtime != null" >
+        addtime,
+      </if>
+      <if test="borrowFullTime != null" >
+        borrow_full_time,
+      </if>
+      <if test="recoverLastTime != null" >
+        recover_last_time,
+      </if>
+      <if test="bailNum != null" >
+        bail_num,
+      </if>
+      <if test="operaterUid != null" >
+        operater_uid,
+      </if>
+      <if test="operaterUser != null" >
+        operater_user,
+      </if>
+      <if test="operaterTime != null" >
+        operater_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowName != null" >
+        #{borrowName,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccountYes != null" >
+        #{borrowAccountYes,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccountWait != null" >
+        #{borrowAccountWait,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccountScale != null" >
+        #{borrowAccountScale,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStyle != null" >
+        #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStyleName != null" >
+        #{borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="projectTypeName != null" >
+        #{projectTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        #{borrowPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowApr != null" >
+        #{borrowApr,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowFullTime != null" >
+        #{borrowFullTime,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverLastTime != null" >
+        #{recoverLastTime,jdbcType=VARCHAR},
+      </if>
+      <if test="bailNum != null" >
+        #{bailNum,jdbcType=DECIMAL},
+      </if>
+      <if test="operaterUid != null" >
+        #{operaterUid,jdbcType=INTEGER},
+      </if>
+      <if test="operaterUser != null" >
+        #{operaterUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operaterTime != null" >
+        #{operaterTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_delete_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_delete_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowName != null" >
+        borrow_name = #{record.borrowName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowAccountYes != null" >
+        borrow_account_yes = #{record.borrowAccountYes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowAccountWait != null" >
+        borrow_account_wait = #{record.borrowAccountWait,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowAccountScale != null" >
+        borrow_account_scale = #{record.borrowAccountScale,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowStyle != null" >
+        borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowStyleName != null" >
+        borrow_style_name = #{record.borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=TINYINT},
+      </if>
+      <if test="record.projectTypeName != null" >
+        project_type_name = #{record.projectTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPeriod != null" >
+        borrow_period = #{record.borrowPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowApr != null" >
+        borrow_apr = #{record.borrowApr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addtime != null" >
+        addtime = #{record.addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowFullTime != null" >
+        borrow_full_time = #{record.borrowFullTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recoverLastTime != null" >
+        recover_last_time = #{record.recoverLastTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bailNum != null" >
+        bail_num = #{record.bailNum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.operaterUid != null" >
+        operater_uid = #{record.operaterUid,jdbcType=INTEGER},
+      </if>
+      <if test="record.operaterUser != null" >
+        operater_user = #{record.operaterUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operaterTime != null" >
+        operater_time = #{record.operaterTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_delete_log
+    set id = #{record.id,jdbcType=INTEGER},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_name = #{record.borrowName,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      account = #{record.account,jdbcType=VARCHAR},
+      borrow_account_yes = #{record.borrowAccountYes,jdbcType=VARCHAR},
+      borrow_account_wait = #{record.borrowAccountWait,jdbcType=VARCHAR},
+      borrow_account_scale = #{record.borrowAccountScale,jdbcType=VARCHAR},
+      borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      borrow_style_name = #{record.borrowStyleName,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
+      project_type_name = #{record.projectTypeName,jdbcType=VARCHAR},
+      borrow_period = #{record.borrowPeriod,jdbcType=VARCHAR},
+      borrow_apr = #{record.borrowApr,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=VARCHAR},
+      addtime = #{record.addtime,jdbcType=VARCHAR},
+      borrow_full_time = #{record.borrowFullTime,jdbcType=VARCHAR},
+      recover_last_time = #{record.recoverLastTime,jdbcType=VARCHAR},
+      bail_num = #{record.bailNum,jdbcType=DECIMAL},
+      operater_uid = #{record.operaterUid,jdbcType=INTEGER},
+      operater_user = #{record.operaterUser,jdbcType=VARCHAR},
+      operater_time = #{record.operaterTime,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLog" >
+    update ht_debt_delete_log
+    <set >
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowName != null" >
+        borrow_name = #{borrowName,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccountYes != null" >
+        borrow_account_yes = #{borrowAccountYes,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccountWait != null" >
+        borrow_account_wait = #{borrowAccountWait,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccountScale != null" >
+        borrow_account_scale = #{borrowAccountScale,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStyleName != null" >
+        borrow_style_name = #{borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="projectTypeName != null" >
+        project_type_name = #{projectTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period = #{borrowPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowApr != null" >
+        borrow_apr = #{borrowApr,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        addtime = #{addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowFullTime != null" >
+        borrow_full_time = #{borrowFullTime,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverLastTime != null" >
+        recover_last_time = #{recoverLastTime,jdbcType=VARCHAR},
+      </if>
+      <if test="bailNum != null" >
+        bail_num = #{bailNum,jdbcType=DECIMAL},
+      </if>
+      <if test="operaterUid != null" >
+        operater_uid = #{operaterUid,jdbcType=INTEGER},
+      </if>
+      <if test="operaterUser != null" >
+        operater_user = #{operaterUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operaterTime != null" >
+        operater_time = #{operaterTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLog" >
+    update ht_debt_delete_log
+    set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_name = #{borrowName,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      borrow_account_yes = #{borrowAccountYes,jdbcType=VARCHAR},
+      borrow_account_wait = #{borrowAccountWait,jdbcType=VARCHAR},
+      borrow_account_scale = #{borrowAccountScale,jdbcType=VARCHAR},
+      borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      borrow_style_name = #{borrowStyleName,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
+      project_type_name = #{projectTypeName,jdbcType=VARCHAR},
+      borrow_period = #{borrowPeriod,jdbcType=VARCHAR},
+      borrow_apr = #{borrowApr,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=VARCHAR},
+      addtime = #{addtime,jdbcType=VARCHAR},
+      borrow_full_time = #{borrowFullTime,jdbcType=VARCHAR},
+      recover_last_time = #{recoverLastTime,jdbcType=VARCHAR},
+      bail_num = #{bailNum,jdbcType=DECIMAL},
+      operater_uid = #{operaterUid,jdbcType=INTEGER},
+      operater_user = #{operaterUser,jdbcType=VARCHAR},
+      operater_time = #{operaterTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

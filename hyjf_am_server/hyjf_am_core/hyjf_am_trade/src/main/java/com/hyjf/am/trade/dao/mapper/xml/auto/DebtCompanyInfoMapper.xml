@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtCompanyInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_pre_nid" property="borrowPreNid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="reg_captial" property="regCaptial" jdbcType="INTEGER" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="litigation" property="litigation" jdbcType="VARCHAR" />
+    <result column="cre_report" property="creReport" jdbcType="VARCHAR" />
+    <result column="credit" property="credit" jdbcType="INTEGER" />
+    <result column="staff" property="staff" jdbcType="INTEGER" />
+    <result column="com_reg_time" property="comRegTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfo" extends="BaseResultMap" >
+    <result column="other_info" property="otherInfo" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, borrow_nid, borrow_pre_nid, username, province, city, area, reg_captial, industry, 
+    litigation, cre_report, credit, staff, com_reg_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    other_info
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_debt_company_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_company_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_debt_company_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_company_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfoExample" >
+    delete from ht_debt_company_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_company_info (borrow_nid, borrow_pre_nid, username, 
+      province, city, area, 
+      reg_captial, industry, litigation, 
+      cre_report, credit, staff, 
+      com_reg_time, other_info)
+    values (#{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{regCaptial,jdbcType=INTEGER}, #{industry,jdbcType=VARCHAR}, #{litigation,jdbcType=VARCHAR}, 
+      #{creReport,jdbcType=VARCHAR}, #{credit,jdbcType=INTEGER}, #{staff,jdbcType=INTEGER}, 
+      #{comRegTime,jdbcType=VARCHAR}, #{otherInfo,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_company_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="borrowPreNid != null" >
+        borrow_pre_nid,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="regCaptial != null" >
+        reg_captial,
+      </if>
+      <if test="industry != null" >
+        industry,
+      </if>
+      <if test="litigation != null" >
+        litigation,
+      </if>
+      <if test="creReport != null" >
+        cre_report,
+      </if>
+      <if test="credit != null" >
+        credit,
+      </if>
+      <if test="staff != null" >
+        staff,
+      </if>
+      <if test="comRegTime != null" >
+        com_reg_time,
+      </if>
+      <if test="otherInfo != null" >
+        other_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNid != null" >
+        #{borrowPreNid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="regCaptial != null" >
+        #{regCaptial,jdbcType=INTEGER},
+      </if>
+      <if test="industry != null" >
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="litigation != null" >
+        #{litigation,jdbcType=VARCHAR},
+      </if>
+      <if test="creReport != null" >
+        #{creReport,jdbcType=VARCHAR},
+      </if>
+      <if test="credit != null" >
+        #{credit,jdbcType=INTEGER},
+      </if>
+      <if test="staff != null" >
+        #{staff,jdbcType=INTEGER},
+      </if>
+      <if test="comRegTime != null" >
+        #{comRegTime,jdbcType=VARCHAR},
+      </if>
+      <if test="otherInfo != null" >
+        #{otherInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfoExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_company_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_company_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPreNid != null" >
+        borrow_pre_nid = #{record.borrowPreNid,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.area != null" >
+        area = #{record.area,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regCaptial != null" >
+        reg_captial = #{record.regCaptial,jdbcType=INTEGER},
+      </if>
+      <if test="record.industry != null" >
+        industry = #{record.industry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.litigation != null" >
+        litigation = #{record.litigation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creReport != null" >
+        cre_report = #{record.creReport,jdbcType=VARCHAR},
+      </if>
+      <if test="record.credit != null" >
+        credit = #{record.credit,jdbcType=INTEGER},
+      </if>
+      <if test="record.staff != null" >
+        staff = #{record.staff,jdbcType=INTEGER},
+      </if>
+      <if test="record.comRegTime != null" >
+        com_reg_time = #{record.comRegTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherInfo != null" >
+        other_info = #{record.otherInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_debt_company_info
+    set id = #{record.id,jdbcType=INTEGER},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{record.borrowPreNid,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      reg_captial = #{record.regCaptial,jdbcType=INTEGER},
+      industry = #{record.industry,jdbcType=VARCHAR},
+      litigation = #{record.litigation,jdbcType=VARCHAR},
+      cre_report = #{record.creReport,jdbcType=VARCHAR},
+      credit = #{record.credit,jdbcType=INTEGER},
+      staff = #{record.staff,jdbcType=INTEGER},
+      com_reg_time = #{record.comRegTime,jdbcType=VARCHAR},
+      other_info = #{record.otherInfo,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_company_info
+    set id = #{record.id,jdbcType=INTEGER},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{record.borrowPreNid,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      reg_captial = #{record.regCaptial,jdbcType=INTEGER},
+      industry = #{record.industry,jdbcType=VARCHAR},
+      litigation = #{record.litigation,jdbcType=VARCHAR},
+      cre_report = #{record.creReport,jdbcType=VARCHAR},
+      credit = #{record.credit,jdbcType=INTEGER},
+      staff = #{record.staff,jdbcType=INTEGER},
+      com_reg_time = #{record.comRegTime,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfo" >
+    update ht_debt_company_info
+    <set >
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNid != null" >
+        borrow_pre_nid = #{borrowPreNid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="regCaptial != null" >
+        reg_captial = #{regCaptial,jdbcType=INTEGER},
+      </if>
+      <if test="industry != null" >
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="litigation != null" >
+        litigation = #{litigation,jdbcType=VARCHAR},
+      </if>
+      <if test="creReport != null" >
+        cre_report = #{creReport,jdbcType=VARCHAR},
+      </if>
+      <if test="credit != null" >
+        credit = #{credit,jdbcType=INTEGER},
+      </if>
+      <if test="staff != null" >
+        staff = #{staff,jdbcType=INTEGER},
+      </if>
+      <if test="comRegTime != null" >
+        com_reg_time = #{comRegTime,jdbcType=VARCHAR},
+      </if>
+      <if test="otherInfo != null" >
+        other_info = #{otherInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfo" >
+    update ht_debt_company_info
+    set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{borrowPreNid,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      reg_captial = #{regCaptial,jdbcType=INTEGER},
+      industry = #{industry,jdbcType=VARCHAR},
+      litigation = #{litigation,jdbcType=VARCHAR},
+      cre_report = #{creReport,jdbcType=VARCHAR},
+      credit = #{credit,jdbcType=INTEGER},
+      staff = #{staff,jdbcType=INTEGER},
+      com_reg_time = #{comRegTime,jdbcType=VARCHAR},
+      other_info = #{otherInfo,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCompanyInfo" >
+    update ht_debt_company_info
+    set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{borrowPreNid,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      reg_captial = #{regCaptial,jdbcType=INTEGER},
+      industry = #{industry,jdbcType=VARCHAR},
+      litigation = #{litigation,jdbcType=VARCHAR},
+      cre_report = #{creReport,jdbcType=VARCHAR},
+      credit = #{credit,jdbcType=INTEGER},
+      staff = #{staff,jdbcType=INTEGER},
+      com_reg_time = #{comRegTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

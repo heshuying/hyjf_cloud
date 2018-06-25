@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ChinapnrSendLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ordid" property="ordid" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="orddate" property="orddate" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="msg_type" property="msgType" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="client" property="client" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="tx_date" property="txDate" jdbcType="INTEGER" />
+    <result column="tx_time" property="txTime" jdbcType="INTEGER" />
+    <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogWithBLOBs" extends="BaseResultMap" >
+    <result column="msgdata" property="msgdata" jdbcType="LONGVARCHAR" />
+    <result column="chkvalue" property="chkvalue" jdbcType="LONGVARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, ordid, borrow_nid, orddate, user_id, msg_type, remark, client, create_time, tx_date, 
+    tx_time, seq_no, channel
+  </sql>
+  <sql id="Blob_Column_List" >
+    msgdata, chkvalue, content
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_chinapnr_send_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_chinapnr_send_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_chinapnr_send_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_chinapnr_send_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogExample" >
+    delete from ht_chinapnr_send_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_chinapnr_send_log (ordid, borrow_nid, orddate, 
+      user_id, msg_type, remark, 
+      client, create_time, tx_date, 
+      tx_time, seq_no, channel, 
+      msgdata, chkvalue, content
+      )
+    values (#{ordid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{orddate,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER}, #{msgType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{client,jdbcType=TINYINT}, #{createTime,jdbcType=INTEGER}, #{txDate,jdbcType=INTEGER}, 
+      #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
+      #{msgdata,jdbcType=LONGVARCHAR}, #{chkvalue,jdbcType=LONGVARCHAR}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_chinapnr_send_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ordid != null" >
+        ordid,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="orddate != null" >
+        orddate,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="msgType != null" >
+        msg_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="client != null" >
+        client,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="txDate != null" >
+        tx_date,
+      </if>
+      <if test="txTime != null" >
+        tx_time,
+      </if>
+      <if test="seqNo != null" >
+        seq_no,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="msgdata != null" >
+        msgdata,
+      </if>
+      <if test="chkvalue != null" >
+        chkvalue,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ordid != null" >
+        #{ordid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="orddate != null" >
+        #{orddate,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="msgType != null" >
+        #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="client != null" >
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="txDate != null" >
+        #{txDate,jdbcType=INTEGER},
+      </if>
+      <if test="txTime != null" >
+        #{txTime,jdbcType=INTEGER},
+      </if>
+      <if test="seqNo != null" >
+        #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="msgdata != null" >
+        #{msgdata,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="chkvalue != null" >
+        #{chkvalue,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_chinapnr_send_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_chinapnr_send_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.ordid != null" >
+        ordid = #{record.ordid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orddate != null" >
+        orddate = #{record.orddate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.msgType != null" >
+        msg_type = #{record.msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.client != null" >
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.txDate != null" >
+        tx_date = #{record.txDate,jdbcType=INTEGER},
+      </if>
+      <if test="record.txTime != null" >
+        tx_time = #{record.txTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.seqNo != null" >
+        seq_no = #{record.seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channel != null" >
+        channel = #{record.channel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgdata != null" >
+        msgdata = #{record.msgdata,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.chkvalue != null" >
+        chkvalue = #{record.chkvalue,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_chinapnr_send_log
+    set id = #{record.id,jdbcType=INTEGER},
+      ordid = #{record.ordid,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      orddate = #{record.orddate,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      msg_type = #{record.msgType,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      client = #{record.client,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      tx_date = #{record.txDate,jdbcType=INTEGER},
+      tx_time = #{record.txTime,jdbcType=INTEGER},
+      seq_no = #{record.seqNo,jdbcType=VARCHAR},
+      channel = #{record.channel,jdbcType=VARCHAR},
+      msgdata = #{record.msgdata,jdbcType=LONGVARCHAR},
+      chkvalue = #{record.chkvalue,jdbcType=LONGVARCHAR},
+      content = #{record.content,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_chinapnr_send_log
+    set id = #{record.id,jdbcType=INTEGER},
+      ordid = #{record.ordid,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      orddate = #{record.orddate,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      msg_type = #{record.msgType,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      client = #{record.client,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      tx_date = #{record.txDate,jdbcType=INTEGER},
+      tx_time = #{record.txTime,jdbcType=INTEGER},
+      seq_no = #{record.seqNo,jdbcType=VARCHAR},
+      channel = #{record.channel,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogWithBLOBs" >
+    update ht_chinapnr_send_log
+    <set >
+      <if test="ordid != null" >
+        ordid = #{ordid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="orddate != null" >
+        orddate = #{orddate,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="msgType != null" >
+        msg_type = #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="client != null" >
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="txDate != null" >
+        tx_date = #{txDate,jdbcType=INTEGER},
+      </if>
+      <if test="txTime != null" >
+        tx_time = #{txTime,jdbcType=INTEGER},
+      </if>
+      <if test="seqNo != null" >
+        seq_no = #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="msgdata != null" >
+        msgdata = #{msgdata,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="chkvalue != null" >
+        chkvalue = #{chkvalue,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogWithBLOBs" >
+    update ht_chinapnr_send_log
+    set ordid = #{ordid,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      orddate = #{orddate,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      msg_type = #{msgType,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      client = #{client,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=INTEGER},
+      tx_date = #{txDate,jdbcType=INTEGER},
+      tx_time = #{txTime,jdbcType=INTEGER},
+      seq_no = #{seqNo,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=VARCHAR},
+      msgdata = #{msgdata,jdbcType=LONGVARCHAR},
+      chkvalue = #{chkvalue,jdbcType=LONGVARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrSendLog" >
+    update ht_chinapnr_send_log
+    set ordid = #{ordid,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      orddate = #{orddate,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      msg_type = #{msgType,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      client = #{client,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=INTEGER},
+      tx_date = #{txDate,jdbcType=INTEGER},
+      tx_time = #{txTime,jdbcType=INTEGER},
+      seq_no = #{seqNo,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
