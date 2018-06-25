@@ -29,7 +29,7 @@ public enum MsgEnum implements MsgCode {
 	// ----------正常信息INFO------------
 	//通用正常信息
 	INFO_BUILING("ITY000001","系统处理中，请稍后"),
-
+	INFO_BANK_WITHDRAW_LOSE_LIST_HANDLE_SUCCESS("ITY000002","江西银行提现掉单处理成功"),
 	// ----------警告信息WARN------------
 	//通用警告信息
 	WARN_BUILING("WTY000001","接口访问量过大"),
@@ -52,6 +52,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_PARAM_TYPE("ETY000102","传入参数类型错误"),
 	ERR_JSON("ETY000103","传入JSON错误"),
 	ERR_PARAM_NUM("ETY000104", "请求参数不全"),
+	ERR_PARAM("ETY000105", "参数错误，请重试"),
 	ERR_SYSTEM("ETY000199","接口调用发生异常，请联系服务方"),
 	ERR_PAGE_MAX("ETY000202","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
@@ -69,6 +70,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_FMT_EMAIL("EFM000104", "邮箱格式不正确"),
 	ERR_FMT_IDCARDNO("EFM000105", "身份证号格式错误"),//孙帅帅新加-----已修改
 	ERR_FMT_PASSWORD("EFM000106", "密码必须由数字和字母组成，如abc123"),
+	ERR_FMT_MONEY("EFM000107", "金额格式不正确"),
+
 
 	// 用户相关错误信息ERR_USER_
 	ERR_USER_NOT_LOGIN("EUS000001", "用户未登录"),
@@ -76,8 +79,38 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_NOT_EXISTS("EUS000003", "不存在用户"),
 	ERR_USER_INVALID("EUS000004", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
 	ERR_USER_REGISTER("EUS000005","注册失败"),
+	ERR_USER_LOGIN_RETRY("EUS000006", "登录失败,请重新登陆"),
 
 	// 资金相关错误信息ERR_AMT_
+	// 资金-提现相关错误信息ERR_AMT_WITHDRAW_
+	ERR_AMT_WITHDRAW_AMOUNT("EAM000101","请输入提现金额"),
+	ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE("EAM000102","提现金额需大于1元"),
+	ERR_AMT_WITHDRAW_CARD("EAM000103","银行卡号不正确，请确认后再次提现"),
+	ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED("EAM000104","大额提现时,开户行号不能为空"),
+
+	// 资金-投资相关错误信息ERR_AMT_TENDER_
+	ERR_AMT_TENDER_IN_PROGRESS("EAM000201","用户正在投资中"),
+	ERR_AMT_TENDER_ONLY_LENDERS("EAM000202","仅限出借人进行投资"),
+	ERR_AMT_TENDER_NEED_AUTO_INVEST("EAM000203","该产品需开通自动投标功能"),
+	ERR_AMT_TENDER_NEED_AUTO_DEBT("EAM000204","该产品需开通自动债转功能"),
+	ERR_AMT_TENDER_NEED_PAYMENT_AUTH("EAM000205","该产品需开通服务费授权功能"),
+	ERR_AMT_TENDER_PLAN_CLOSE("EAM000206","此计划项目已经关闭"),
+	ERR_AMT_TENDER_PLAN_NOT_EXIST("EAM000207","计划项目不存在"),
+	ERR_AMT_TENDER_MONEY_BLANK("EAM000208","请输入加入金额"),
+	ERR_AMT_TENDER_MONEY_ZERO("EAM000209","投资金额不能为0元"),
+	ERR_AMT_TENDER_COUPON_USE_ALONE("EAM000210","该优惠券只能单独使用"),
+	ERR_AMT_TENDER_YOU_ARE_LATE("EAM000211","您来晚了，下次再来抢吧"),
+	ERR_AMT_TENDER_MONEY_REMAIN("EAM000212","剩余可加入金额为{}元"),
+	ERR_AMT_TENDER_MONEY_LESS_NEED_BUY_ALL("EAM000213","剩余可加入只剩{}元，须全部购买"),
+	ERR_AMT_TENDER_MIN_INVESTMENT("EAM000214","{}元起投"),
+	ERR_AMT_TENDER_MAX_INVESTMENT("EAM000215","项目最大加入额为{}元"),
+	ERR_AMT_TENDER_GREATER_THAN_OPEN_LINE("EAM000216","加入金额不能大于开放额度"),
+	ERR_AMT_TENDER_MONEY_NOT_ENOUGH("EAM000217","可用金额不足"),
+	ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE("EAM000218", "加入递增金额须为{}元的整数倍"),
+	ERR_AMT_TENDER_NEED_RISK_ASSESSMENT("EAM000219","根据监管要求，投资前必须进行风险测评"),
+	ERR_AMT_TENDER_INVESTMENT("EAM000220","抱歉，投资失败，请重试"),
+
+
 
 	// 银行相关错误信息ERR_BANK_
 	ERR_BANK_CALL("EBK000001", "调用银行接口失败"),
@@ -86,12 +119,17 @@ public enum MsgEnum implements MsgCode {
 	ERR_BANK_ACCOUNT_ALREADY_OPEN("EBK000004","用户已开户"),//孙帅帅新加-----已修改
 
 
+	//   优惠券相关
+	COUPON_TENDER_FAIL_ERROR("EV000001","优惠券投资失败"),//孙帅帅
+
+
+
 	// 银行卡相关错误信息ERR_CARD_
 	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
 	ERR_CARD_SAVE("ECD000002", "银行卡信息保存失败"),
 	ERR_CARD_NOT_EXIST("ECD000003", "没有要解绑的银行卡"),
 	ERR_CARD_DELETE("ECD000004", "银行卡删除失败"),
-
+	ERR_CARD_NOT_BIND("ECD000004","用户未绑卡"),
 
 	// 邮件相关错误信息ERR_EMAIL_
 	ERR_EMAIL_USED("EEM000001", "邮箱已被占用"),
@@ -132,6 +170,159 @@ public enum MsgEnum implements MsgCode {
 	ERR_ACTIVITY_NOT_EXIST("EAC000001","该活动不存在"),
 	ERR_ACTIVITY_NOT_START("EAC000002","该活动还未开始"),
 	ERR_ACTIVITY_END("EAC000003","该活动已结束"),
+
+
+	/*
+	BankWithdrawError类
+
+
+	USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
+	PARAM_ERROR("1", "参数错误，请重试"),
+	ACCOUNT_ERROR("1", "你的账户信息存在异常，请联系客服人员处理。"),
+	WITHDRAW_TRSANSAMT_ERROR("1", "请输入提现金额。"),
+	WITHDRAW_SERVICE_CHARGE_ERROR("1", "提现金额需大于1元！"),
+	WITHDRAW_CARD_NO_ERROR("1", "银行卡号不正确，请确认后再次提现。"),
+	WITHDRAW_PAYALLIANCECODE_ERROR("1", "大额提现时,开户行号不能为空!"),
+	NOT_CARD_NO_ERROR("1", "用户未绑卡！"),
+
+	NOT_REGIST_ERROR("1", "用户未开户！"),
+	NOT_SET_PWD_ERROR("1", "用户未设置交易密码"),
+	CANNOT_REPEAT_ERROR("1", "用户已授权,无需重复授权"),
+	CALL_BANK_ERROR("1", "调用银行接口失败"),
+	BANK_WITHDRAW_EXCEPTION_HANDLE_ERROR("1", "江西银行提现掉单处理出错！"),
+	BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS("0", "江西银行提现掉单处理成功！"),
+
+*/
+/*
+	SynBalanceError
+	PARAM_ERROR("1", "参数错误，请重试"),
+*/
+/*
+RechargeError类
+    NOT_OPENACCOUNT_ERROR("1", "用户未开户！"),
+    NOT_PASSWD_ERROR("1", "用户未设置交易密码！"),
+    BANKCARD_ERROR("1", "查询银行卡信息失败！"),
+    MONEY_NOT_NULL_ERROR("1", "充值金额不能为空！"),
+    FORMAT_ERROR("1", "充值金额格式错误！"),
+    MORE_DECIMAL_ERROR("1", "充值值金额不能大于两位小数！"),
+    CALL_BANK_ERROR("1", "调用银行接口失败");
+
+*/
+
+/*
+AutoStateError
+    PARAM_ERROR("1", "请求参数非法"),
+    CHECK_ERROR("1", "验签失败！"),
+    CHECK_USER_INFO_ERROR("1", "根据电子账户号查询用户信息失败"),
+    GET_USER_ERROR("1", "查询用户失败"),
+    NOT_PASSWD_ERROR("1", "未设置交易密码"),
+    AUTH_ERROR("1", "授权状态查询接口失败！");
+*/
+
+/*
+ContractSetError类
+	REQUEST_PARAM_ERROR("1", "请求参数错误"),
+	NAME_FORMAT_ERROR("1", "联系人姓名格式错误"),
+	PHONE_FORMAT_ERROR("1", "联系人手机号码格式错误"),
+	RELATION_NOTEXIST_ERROR("1", "无效的紧急联系人关系"),
+	CONTRACT_SAVE_ERROR("1", "紧急联系人保存错误"),
+	CONTRACT_RELATION_ERROR("1", "紧急联系人关系数据不存在错误");
+*/
+
+/*
+LoginError类
+    USER_LOGIN_ERROR("1", "登录失败,账号或密码错误"),
+    USER_INVALID_ERROR("1", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
+    CHECK_NULL_ERROR("1", "用户名或密码不能为空！"),
+    REFFER_INVALID_ERROR("1", "无效的推荐人！"),
+    ERROR_PARAM("1", "请求参数非法"),
+    PWD_ERROR_TOO_MANEY_ERROR("1", "登录失败,当日密码错误已打上限，请明日再试！");
+*/
+
+/*
+BindCardError类
+CARD_NO_ERROR("1", "银行卡号未填写"),
+    MOBILE_ERROR("1", "手机号未填写"),
+    SMSCODE_ERROR("1", "短信验证码未填写"),
+    AUTH_CODE_ERROR("1", "短信授权码为空"),
+	BANK_NOT_OPEN_ERROR("1", "用户未开户"),
+	BANK_CALL_ERROR("1", "请求银行接口失败"),
+	CARD_SAVE_ERROR("1", "银行卡信息保存失败"),
+	BANK_BALANCE_ERROR("1", "账户尚有余额，不能解绑银行卡"),
+	CARD_NOT_EXIST_ERROR("1", "没有要解绑的银行卡"),
+	CARD_DELETE_ERROR("1", "银行卡删除失败");
+*/
+
+/*
+BindEmailError类
+REQUEST_PARAM_ERROR("1", "请求参数错误"),
+	 	EMAIL_EMPTY_ERROR("1", "待绑定的邮箱不能为空"),
+	 	EMAIL_USED_ERROR("1", "邮箱已被占用"),
+		EMAIL_FORMAT_ERROR("1", "邮箱格式不正确"),
+		EMAIL_ACTIVE_SEND_ERROR("1", "发送激活邮件失败"),
+
+	    EMAIL_ACTIVE_ERROR_1("1", "激活邮件未验证"),
+	    EMAIL_ACTIVE_ERROR_2("1", "激活邮件已验证"),
+	    EMAIL_ACTIVE_ERROR_3("1", "激活邮件已过期"),
+	    EMAIL_ACTIVE_ERROR_4("1", "激活邮件不存在"),
+
+	    EMAIL_ACTIVE_ERROR("1", "激活失败");
+*/
+
+/*
+OpenAccountError类
+SUCCESS("0", ""),
+	USER_NOT_LOGIN_ERROR("1", "用户未登录"),
+	ERROR("1", "开户失败"),
+	SYSTEM_ERROR("1","系统异常"),
+	PARAM_ERROR("1", ""),
+	GET_USER_INFO_ERROR("1", "获取用户信息失败"),
+	MOBILE_NULL_ERROR("1", "手机号不能为空"),
+	TRUENAME_NULL_ERROR("1", "真实姓名不能为空"),
+
+	TRUENAME_BLANKL_ERROR("1", "真实姓名不能包含空格"),
+	TRUENAME_LENGTH_ERROR("1", "真实姓名不能超过十位"),
+	IDNO_NULL_ERROR("1", "身份证不能为空"),
+	IDNO_FORMAT_ERROR("1", "身份证号格式错误"),
+	IDNO_USED_ERROR("1", "身份证号已存在"),
+	MOBILE_FORMAT_ERROR("1", "手机号格式错误"),
+	MOBILE_USED_ERROR("1", "手机号码重复"),
+	MOBILE_ERROR("1", "手机号码输入错误"),
+	OPEN_ACCOUNTED_ERROR("1", "已开户"),
+*/
+/*
+AuthorizedError类
+    USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
+    PARAM_ERROR("1", "参数错误，请重试"),
+    NOT_REGIST_ERROR("1", "用户未开户！"),
+    NOT_SET_PWD_ERROR("1", "用户未设置交易密码"),
+    CANNOT_REPEAT_ERROR("1", "用户已授权,无需重复授权"),
+    CALL_BANK_ERROR("1", "调用银行接口失败");
+*/
+/*
+PassWordError类
+USER_LOGIN_ERROR("1", "登录失效，请重新登陆"),
+    USER_OPENBANK_ERROR("1", "用户未开户！"),
+    PASSWORK_ALREADY_ERROR("1", "已设置交易密码"),
+    BANK_CONNECT_ERROR("1", "调用银行接口失败！"),
+    PASSWORK_SET_ERROR("1", "交易密码设置失败"),
+    NEWPASSWORD_NOTNULL_ERROR("1", "新密码不能为空!"),
+    PASSWORD_SAME_ERROR("1", "两次密码不一致"),
+    PASSWORD_SAME1_ERROR("1", "新密码不能与原密码相同!"),
+    OLDPASSWD_INVALID_ERROR("1", "旧密码不正确"),
+    PASSWORD_LENGTH_ERROR("1", "密码长度6-16位"),
+    PASSWORD_NO_NUMBER_ERROR("1", "密码必须包含数字"),
+    PASSWORD_FORMAT_ERROR("1", "密码必须由数字和字母组成，如abc123"),
+    PASSWORD_CHANGE_ERROR("1", "修改密码失败,未作任何操作"),
+    LOGINPW_NOTNULL_ERROR("1", "原始登录密码不能为空");
+*/
+ /*
+ ApiError类
+ UNKNOWN_ERROR("syserror_0001", "系统异常，请稍后再试"),
+    API_CALL_ERROR("system_error_0002", "微服务调用异常，请稍后重试！");
+  */
+
+
 
 
 	// 时间日期相关错误信息ERR_DATE_
@@ -213,8 +404,6 @@ public enum MsgEnum implements MsgCode {
 
 
 
-	//   优惠券相关
-	COUPON_TENDER_FAIL_ERROR("EV000001","优惠券投资失败"),
 
 	ERR_SUCCESS("0", ""),
 	// 枚举终结
@@ -234,5 +423,8 @@ public enum MsgEnum implements MsgCode {
 	@Override
     public String getCode() {
 		return this.code;
+	}
+	public void replaceMsg(String msg) {
+		this.msg = msg.replace("{}",msg);
 	}
 }
