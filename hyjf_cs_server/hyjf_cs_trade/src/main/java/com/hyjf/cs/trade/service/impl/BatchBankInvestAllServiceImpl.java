@@ -153,7 +153,8 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							params.put("investProjectPeriod", investProjectPeriod);
 							//根据investFlag标志位来决定更新哪种投资
 							params.put("investFlag",request.getLogUser().getInvestflag());
-							params.put("isNew",0);
+							params.put("isFirst",0);
+							params.put("fromBusiness","invest");
 							//压入消息队列
 							try {
 								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
@@ -187,8 +188,8 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								params.put("investProjectPeriod", investProjectPeriod);
 								// 更新渠道统计用户累计投资
 								params.put("investFlag",request.getLogUser().getInvestflag());
-								params.put("isNew",1);
-
+								params.put("isFirst",1);
+								params.put("fromBusiness","invest");
 								try {
 									appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
 								} catch (MQException e) {
