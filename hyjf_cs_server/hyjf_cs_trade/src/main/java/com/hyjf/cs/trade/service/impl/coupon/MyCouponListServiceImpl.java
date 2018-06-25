@@ -69,7 +69,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
     }
 
     /**
-     * 查询邀请页面统计数据
+     * 加载邀请页面统计数据
      * @param userId
      * @return
      */
