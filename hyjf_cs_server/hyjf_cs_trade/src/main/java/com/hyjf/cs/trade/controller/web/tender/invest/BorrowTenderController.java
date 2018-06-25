@@ -4,6 +4,9 @@
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -44,7 +47,17 @@ public class BorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setToken(token);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        return borrowTenderService.borrowTender(tender);
+
+        WebResult<Map<String,Object>> result = null;
+        try{
+            result =  borrowTenderService.borrowTender(tender);
+        }catch (CheckException e){
+            throw e;
+        }finally {
+            // TODO: 2018/6/25  删除redis校验
+            //RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
+        }
+        return result;
     }
 
 }

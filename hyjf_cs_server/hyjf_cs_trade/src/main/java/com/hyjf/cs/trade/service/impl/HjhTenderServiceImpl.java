@@ -94,6 +94,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new ReturnMessageException(TenderError.NOT_FIND_PLAN_ERROR);
         }
         HjhPlanVO plan = amBorrowClient.getPlanByNid(request.getBorrowNid());
+        if (plan == null) {
+            throw new ReturnMessageException(MsgEnum.FIND_PLAN_ERROR);
+        }
         if (plan.getPlanInvestStatus() == 2) {
             throw new ReturnMessageException(TenderError.PLAN_CLOSE_ERROR);
         }

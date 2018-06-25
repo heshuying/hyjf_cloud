@@ -215,6 +215,8 @@ public enum MsgEnum implements MsgCode {
 
 	//   优惠券相关
 	COUPON_TENDER_FAIL_ERROR("EV000001","优惠券投资失败"),
+	FIND_BORROW_ERROR("EV000001","未查询到该项目"),
+	FIND_PLAN_ERROR("EV000001","未查询到该计划"),
 
 	ERR_SUCCESS("0", ""),
 	// 枚举终结
