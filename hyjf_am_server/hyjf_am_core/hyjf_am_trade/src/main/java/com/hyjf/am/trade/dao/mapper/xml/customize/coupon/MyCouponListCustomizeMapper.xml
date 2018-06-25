@@ -154,6 +154,15 @@
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
     </select>
+	<select id="countMyCouponList" resultMap="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			IFNULL(count (cu.id),0)
+		FROM
+		ht_coupon_user cu
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
+		<include refid="Where_Clause" />
+	</select>
 	<sql id="Where_Clause">
 		<where>
 			cu.del_flag = 0

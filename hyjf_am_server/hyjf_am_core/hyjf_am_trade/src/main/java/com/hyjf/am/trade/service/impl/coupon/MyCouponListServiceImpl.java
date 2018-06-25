@@ -43,4 +43,23 @@ public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon
 
         return myCouponListCustomizeMapper.selectMyCouponList(param);
     }
+
+    /**
+     * 统计总记录数
+     * @param userId
+     * @param usedFlag
+     * @return
+     */
+    @Override
+    public Integer countUserCouponList(String userId, String usedFlag){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("usedFlag", usedFlag);
+        param.put("userId", userId);
+
+        Integer result =  myCouponListCustomizeMapper.countMyCouponList(param);
+        if(result == null){
+            result = 0;
+        }
+        return result;
+    }
 }

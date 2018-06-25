@@ -29,7 +29,7 @@ public class MyCouponListController {
      * @auther: hesy
      * @date: 2018/6/23
      */
-    @RequestMapping(value = "/myCouponList", method = RequestMethod.POST)
+    @RequestMapping(value = "/myCouponList")
     public MyCouponListResponse myCouponList(@RequestBody @Valid MyCouponListRequest requestBean) {
         MyCouponListResponse responseBean = new MyCouponListResponse();
 
@@ -37,5 +37,16 @@ public class MyCouponListController {
         responseBean.setResultList(resultList);
 
         return responseBean;
+    }
+
+    /**
+     * 统计优惠券总数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/myCouponCount")
+    public Integer myCouponCount(@RequestBody @Valid MyCouponListRequest requestBean){
+        MyCouponListResponse responseBean = new MyCouponListResponse();
+        return myCouponListService.countUserCouponList(requestBean.getUserId(),requestBean.getUsedFlag());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -37,5 +38,15 @@ public class MyRewardController {
         responseBean.setResultList(resultList);
 
         return responseBean;
+    }
+
+    /**
+     * 统计奖励总金额
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/myRewardCount", method = RequestMethod.POST)
+    public BigDecimal myRewardCount(@RequestBody @Valid MyInviteListRequest requestBean) {
+        return myRewardService.sumMyRewardTotal(requestBean.getUserId());
     }
 }
