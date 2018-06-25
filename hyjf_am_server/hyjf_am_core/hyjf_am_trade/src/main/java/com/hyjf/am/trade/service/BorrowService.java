@@ -53,4 +53,11 @@ public interface BorrowService {
      * @return
      */
     List<Borrow> selectBorrowList();
+
+    /**
+     * 获取BorrowInfo
+     * @param borrowNid
+     * @return
+     */
+    BorrowInfo getBorrowInfoByNid(String borrowNid);
 }
