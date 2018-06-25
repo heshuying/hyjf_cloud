@@ -72,7 +72,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             boolean couponSuccess;
             couponSuccess = this.updateCouponTender(request, plan);
         }else{
-            throw new CheckException(MsgEnum.COUPON_TENDER_FAIL_ERROR);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT_WITH_COUPON);
         }
     }
 

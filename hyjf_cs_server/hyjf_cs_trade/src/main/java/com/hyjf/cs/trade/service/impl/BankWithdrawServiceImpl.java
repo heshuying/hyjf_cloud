@@ -17,6 +17,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
@@ -25,7 +26,6 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.mq.AppMessageProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
@@ -303,8 +303,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         WebResult<Object> result = new WebResult<Object>();
         JSONObject ret = new JSONObject();
         if(user==null){
-            result.setStatus(BankWithdrawError.USER_LOGIN_ERROR.getCode());
-            result.setStatusDesc(BankWithdrawError.USER_LOGIN_ERROR.getMsg());
+            result.setStatus(MsgEnum.ERR_USER_LOGIN_RETRY.getCode());
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN_RETRY.getMsg());
             return result;
         }
         Integer userId = user.getUserId();
@@ -312,16 +312,16 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 取得用户当前余额
         AccountVO account = this.bindCardClient.getAccount(userId);
         if (account == null) {
-            result.setStatus(BankWithdrawError.ACCOUNT_ERROR.getCode());
-            result.setStatusDesc(BankWithdrawError.ACCOUNT_ERROR.getMsg());
+            result.setStatus(MsgEnum.ERR_USER_UNUSUAL.getCode());
+            result.setStatusDesc(MsgEnum.ERR_USER_UNUSUAL.getMsg());
             return result;
         }
         // 查询页面上可以挂载的银行列表
         BankCardVO banks = bindCardClient.selectBankCardByUserId(userId);
         if (banks == null) {
             // 用户未绑卡
-            result.setStatus(BankWithdrawError.NOT_CARD_NO_ERROR.getCode());
-            result.setStatusDesc(BankWithdrawError.NOT_CARD_NO_ERROR.getMsg());
+            result.setStatus(MsgEnum.ERR_CARD_NOT_BIND.getCode());
+            result.setStatusDesc(MsgEnum.ERR_CARD_NOT_BIND.getMsg());
             return result;
         }
 
@@ -589,14 +589,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      */
     public UserVO checkUserWithdrawMessage(UserVO user, String transAmt, String cardNo, String payAllianceCode){
         if (user == null) {
-            throw new ReturnMessageException(BankWithdrawError.USER_LOGIN_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_RETRY);
         }
         // 检查数据是否完整
         if (Validator.isNull(transAmt) || Validator.isNull(transAmt)) {
-            throw new ReturnMessageException(BankWithdrawError.WITHDRAW_TRSANSAMT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
         }
         if (Validator.isNull(cardNo) || Validator.isNull(cardNo)) {
-            throw new ReturnMessageException(BankWithdrawError.PARAM_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
         // 检查参数(交易金额是否大于0)
@@ -606,28 +606,28 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             feetmp = "1";
         }
         if (account.compareTo(new BigDecimal(feetmp)) <= 0) {
-            throw new ReturnMessageException(BankWithdrawError.WITHDRAW_SERVICE_CHARGE_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE);
         }
         // 检查参数(银行卡ID是否数字)
         if (Validator.isNotNull(cardNo) && !StringUtils.isNumeric(cardNo)) {
-            throw new ReturnMessageException(BankWithdrawError.WITHDRAW_CARD_NO_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_CARD);
         }
         UserVO users= amUserClient.findUserById(user.getUserId());
         if (users.getBankOpenAccount()==0) {
-            throw new ReturnMessageException(BankWithdrawError.NOT_REGIST_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 判断用户是否设置过交易密码
         if (users.getIsSetPassword() == 0) {
-            throw new ReturnMessageException(BankWithdrawError.NOT_SET_PWD_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_NOT_SET);
         }
 
         if ((account.compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {
-            throw new ReturnMessageException(BankWithdrawError.WITHDRAW_PAYALLIANCECODE_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
         }
 
         BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard == null || Validator.isNull(bankCard.getCardNo())) {
-            throw new ReturnMessageException(BankWithdrawError.NOT_CARD_NO_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_CARD_NOT_BIND);
         }
 
         return users;

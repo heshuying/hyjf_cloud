@@ -27,14 +27,15 @@ import java.util.Map;
 
 @Api(value = "开户记录")
 @RestController
-@RequestMapping("/admin/bankOpenRecord")
+@RequestMapping("/hyjf-admin/bankOpenRecord")
 public class BankOpenRecordController {
     @Autowired
     public BankOpenRecordService bankOpenRecordService;
 
 
     @ApiOperation(value = "开户记录", notes = "开户记录页面初始化")
-    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+//    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/bankOpenRecordInit")
     @ResponseBody
     public JSONObject userManagerInit() {
         JSONObject jsonObject = new JSONObject();
@@ -50,7 +51,8 @@ public class BankOpenRecordController {
 
     //会员管理列表查询
     @ApiOperation(value = "开户记录", notes = "汇付银行开户记录查询")
-    @RequestMapping(value = "/bankOpenRecordAccount", method = {RequestMethod.GET, RequestMethod.POST})
+//    @RequestMapping(value = "/bankOpenRecordAccount", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
     public JSONObject bankOpenRecordAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
         JSONObject jsonObject = null;
@@ -65,7 +67,8 @@ public class BankOpenRecordController {
         return jsonObject;
     }
     @ApiOperation(value = "开户记录", notes = "江西银行开户记录查询")
-    @RequestMapping(value = "/bankOpenRecordBankAccount", method = {RequestMethod.GET, RequestMethod.POST})
+//    @RequestMapping(value = "/bankOpenRecordBankAccount", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
     public JSONObject bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
         JSONObject jsonObject = null;
@@ -103,11 +106,8 @@ public class BankOpenRecordController {
             if(mapParam.containsKey("openTimeEnd")){
                 accountRecordRequest.setOpenTimeEnd(mapParam.get("openTimeEnd").toString());
             }
-            if (mapParam.containsKey("limitStart")&& StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
-                accountRecordRequest.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
-            }
-            if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                accountRecordRequest.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
+            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
+                accountRecordRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
             }
         }
         return accountRecordRequest;
@@ -140,11 +140,8 @@ public class BankOpenRecordController {
             if(mapParam.containsKey("openTimeEnd")){
                 bankAccountRecordRequest.setOpenTimeEnd(mapParam.get("openTimeEnd").toString());
             }
-            if (mapParam.containsKey("limitStart")&& StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
-                bankAccountRecordRequest.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
-            }
-            if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                bankAccountRecordRequest.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
+            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
+                bankAccountRecordRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
             }
         }
         return bankAccountRecordRequest;

@@ -12,6 +12,7 @@ import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
 import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -22,18 +23,19 @@ public interface UserManagerService {
 
     /**
      * 根据筛选条件查找会员列表
-     *
-     * @param userRequest
+     * @param mapParam
+     * @param limitStart
+     * @param limitEnd
      * @return
      */
-    List<UserManagerCustomize> selectUserMemberList(UserManagerRequest userRequest);
+    List<UserManagerCustomize> selectUserMemberList(Map<String, Object> mapParam,int limitStart, int limitEnd);
 
     /**
      * 根据条件查询用户管理总数
      *
      * @return
      */
-    int countUserRecord(UserManagerRequest userRequest);
+    int countUserRecord(Map<String, Object> mapParam);
 
     /**
      * 根据用户id获取用户详情

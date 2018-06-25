@@ -1,17 +1,24 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
+import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
+import com.hyjf.cs.trade.mq.AppChannelStatisticsProducer;
 import com.hyjf.cs.trade.mq.FddProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.BankCreditTenderService;
@@ -26,7 +33,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 债转投资异常Service实现类
@@ -45,8 +54,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     private AmUserClient amUserClient;
     @Autowired
     private FddProducer fddProducer;
-
-
+    @Autowired
+    private AmMongoClient amMongoClient;
+    @Autowired
+    private AppChannelStatisticsProducer appChannelStatisticsProducer;
 
     /**
      * 处理债转投资异常
@@ -108,6 +119,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 
                                 UserVO webUser = null;
                                 UserInfoVO userInfo = null;
+                                List<BorrowCreditVO> borrowCreditList = null;
                                 if(CollectionUtils.isNotEmpty(creditTenderLogVOs) && creditTenderLogVOs.size() == 1) {
                                 	CreditTenderLogVO creditTenderLogVO = creditTenderLogVOs.get(0);
                                 	// 债转编号
@@ -115,7 +127,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                         			// 原始投资订单号
                         			String tenderOrderId = creditTenderLog.getCreditTenderNid();
                         			// 获取会转让标的列表
-                        			List<BorrowCreditVO> borrowCreditList = this.bankCreditTenderClient.getBorrowCreditList(creditNid,sellerUserId,tenderOrderId);
+                                    borrowCreditList = this.bankCreditTenderClient.getBorrowCreditList(creditNid,sellerUserId,tenderOrderId);
                         			if(CollectionUtils.isNotEmpty(borrowCreditList) && borrowCreditList.size()==1){
                                         BorrowCreditVO borrowCreditVO=borrowCreditList.get(0);
                                         webUser=this.amUserClient.findUserById(borrowCreditVO.getCreditUserId());
@@ -155,15 +167,77 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 
                                 UserVO investUser = this.amUserClient.findUserById(userId);
 
-                                boolean tenderFlag = this.bankCreditTenderClient.updateTenderCreditInfo(
-                                        logOrderId, userId, authCode,sellerBankAccount,
-                                        assignBankAccount,webUser,userInfo,spreadsUsers,
-                                        userInfoCustomizeRefCj,userInfoCustomize,spreadsUsersSeller,
-                                        userInfoCustomizeSeller,employeeCustomizeResponse,
-                                        investUser);
+                                CreditTenderRequest request = new CreditTenderRequest();
+                                request.setAssignNid(logOrderId);
+                                request.setUserId(userId);
+                                request.setAuthCode(authCode);
+                                request.setSellerBankAccount(sellerBankAccount);
+                                request.setAssignBankAccount(assignBankAccount);
+                                request.setWebUser(webUser);
+                                request.setUserInfo(userInfo);
+                                request.setSpreadsUsers(spreadsUsers);
+                                request.setUserInfoCustomizeRefCj(userInfoCustomizeRefCj);
+                                request.setUserInfoCustomize(userInfoCustomize);
+                                request.setSpreadsUsersSeller(spreadsUsersSeller);
+                                request.setUserInfoCustomizeSeller(userInfoCustomizeSeller);
+                                request.setEmployeeCustomizeResponse(employeeCustomizeResponse);
+                                request.setNowTime(GetDate.getNowTime10());
+                                request.setCreditTenderLogs(creditTenderLogVOs);
+                                request.setBorrowCreditList(borrowCreditList);
 
+
+                                boolean tenderFlag = this.bankCreditTenderClient.updateTenderCreditInfo(request);
 
                                 if (tenderFlag){
+
+                                    AppChannelStatisticsDetailVO channelDetail
+                                            = this.amMongoClient.getAppChannelStatisticsDetailByUserId(request.getUserId());
+                                    if (Validator.isNotNull(channelDetail)){
+                                        Map<String, Object> params = new HashMap<String, Object>();
+                                        // 认购本金
+                                        params.put("accountDecimal", creditTenderLog.getAssignCapital());
+                                        // 投资时间
+                                        params.put("investTime", request.getNowTime());
+                                        // 项目类型
+                                        params.put("projectType", "汇转让");
+                                        // 首次投标项目期限
+                                        String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
+                                        params.put("investProjectPeriod", investProjectPeriod);
+                                        params.put("investFlag",investUser.getInvestflag());
+                                        params.put("isFirst",0);
+                                        params.put("fromBusiness","credit");
+                                        //推送mq
+                                        this.appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
+                                    }else{
+                                        UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);
+                                        if (Validator.isNotNull(utmRegVO)){
+                                            Map<String, Object> params = new HashMap<String, Object>();
+                                            params.put("id", utmRegVO.getId());
+                                            params.put("accountDecimal", creditTenderLog.getAssignCapital());
+                                            // 投资时间
+                                            params.put("investTime", request.getNowTime());
+                                            // 项目类型
+                                            params.put("projectType", "汇转让");
+                                            // 首次投标项目期限
+                                            String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
+                                            // 首次投标项目期限
+                                            params.put("investProjectPeriod", investProjectPeriod);
+                                            //首次投标标志位
+                                            params.put("isFirst",1);
+                                            params.put("fromBusiness","credit");
+                                            if (investUser.getInvestflag() == 0){
+                                                this.appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
+                                            }
+                                        }
+                                    }
+
+                                    // 更新新手标志位
+                                    investUser.setInvestflag(1);
+                                    boolean userFlag=this.amUserClient.updateByPrimaryKeySelective(investUser);
+                                    if (!userFlag) {
+                                        logger.info("更新相应的用户新手标志位失败!" + "[用户userId：" + userId + "]");
+                                    }
+
                                     // 查询相应的承接记录，如果相应的承接记录存在，则承接成功
                                     CreditTenderVO creditTender = this.bankCreditTenderClient.selectByAssignNidAndUserId(logOrderId, userId);
                                     // 发送法大大PDF处理MQ start

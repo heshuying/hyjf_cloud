@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.RegistRecordService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.RegistRecordVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResponseErrorHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,13 +28,14 @@ import java.util.Map;
 
 @Api(value = "注册记录")
 @RestController
-@RequestMapping("/admin/registRecord")
+@RequestMapping("/hyjf-admin/registRecord")
 public class RegistRecordController {
     @Autowired
     public RegistRecordService registRecordService;
 
     @ApiOperation(value = "注册记录", notes = "注册记录页面初始化")
-    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+//    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/usersInit")
     @ResponseBody
     public JSONObject userManagerInit() {
         JSONObject jsonObject = new JSONObject();
@@ -44,16 +47,17 @@ public class RegistRecordController {
 
     //会员管理列表查询
     @ApiOperation(value = "注册记录", notes = "注册记录列表查询")
-    @RequestMapping(value = "/registRecordList", method = {RequestMethod.GET, RequestMethod.POST})
+    /*@RequestMapping(value = "/registRecordList", method = {RequestMethod.GET, RequestMethod.POST})*/
+    @PostMapping(value = "/registRecordList")
     @ResponseBody
     public JSONObject selectRegistRecordList(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = new JSONObject();
         RegistRcordRequest registerRcordeRequest = setRequese(map);
         List<RegistRecordVO> listRgistRecord = registRecordService.findRegistRecordList(registerRcordeRequest);
-        String status = "error";
+        String status = Response.FAIL;
         if (null != listRgistRecord && listRgistRecord.size() > 0) {
             jsonObject.put("record", listRgistRecord);
-            status = "success";
+            status = Response.SUCCESS;
         }
         jsonObject.put("status", status);
         return jsonObject;
@@ -80,11 +84,8 @@ public class RegistRecordController {
             if (mapParam.containsKey("regTimeEnd")) {
                 registerRcordeRequest.setRegTimeEnd(mapParam.get("regTimeEnd").toString());
             }
-            if (mapParam.containsKey("limitStart") && StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
-                registerRcordeRequest.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
-            }
-            if (mapParam.containsKey("limitEnd") && StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                registerRcordeRequest.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
+            if (mapParam.containsKey("limit") && StringUtils.isNotBlank(mapParam.get("limit").toString())) {
+                registerRcordeRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
             }
         }
         return registerRcordeRequest;
