@@ -4,7 +4,8 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,13 @@ public interface WebProjectListClient {
      * @return
      */
     public ProjectListResponse countProjectList(ProjectListRequest request);
+
+    /**
+     * 获取标的详情
+     * @author zhangyk
+     * @date 2018/6/22 19:24
+     */
+    public ProjectCustomeDetailVO searchProjectDetail(Map map);
 
     /**
      *  查询债权转让所有分页总数
@@ -65,7 +73,7 @@ public interface WebProjectListClient {
      * @author zhangyk
      * @date 2018/6/21 15:29
      */
-    public List<WebProjectListCustomizeVo> searchPlanList(ProjectListRequest request);
+    public List<WebProjectListCustomizeVO> searchPlanList(ProjectListRequest request);
 
     // --------------------------- web end  -----------------------------------
 
@@ -111,7 +119,7 @@ public interface WebProjectListClient {
      * @author zhangyk
      * @date 2018/6/21 19:17
      */
-    public List<WebProjectListCustomizeVo> searchAppPlanList(ProjectListRequest request);
+    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request);
     /* ************************  app end  **************************************/
 
 }
