@@ -31,7 +31,7 @@ import java.util.Map;
 
 @Api(value = "会员管理接口")
 @RestController
-@RequestMapping("/usersManager")
+@RequestMapping("/admin/usersManager")
 public class UserCenterController {
 
     public static final String PERMISSIONS = "userslist";
@@ -45,7 +45,7 @@ public class UserCenterController {
     public JSONObject userManagerInit() {
         JSONObject jsonObject = new JSONObject();
         // 用户角色
-       /* Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
+        Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
         // 用户属性
         Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
         // 开户状态
@@ -57,7 +57,7 @@ public class UserCenterController {
         // 用户类型
         Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
         // 借款人类型
-        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");*/
+        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");
         // 资金来源
         List<HjhInstConfigVO> listHjhInstConfig = userCenterService.selectInstConfigAll();
         /*jsonObject.put("userRoles", userRoles);

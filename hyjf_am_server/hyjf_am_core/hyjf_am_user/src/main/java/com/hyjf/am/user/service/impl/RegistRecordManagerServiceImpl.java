@@ -6,7 +6,7 @@ package com.hyjf.am.user.service.impl;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.user.dao.mapper.customize.RegistRecordCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.*;
-import com.hyjf.am.user.service.RegistRecordService;
+import com.hyjf.am.user.service.RegistRecordManagerService;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -24,12 +24,12 @@ import java.util.Map;
  *          后台管理系统 ：会员中心->会员管理 接口实现
  */
 @Service
-public class RegistRecordServiceImpl implements RegistRecordService {
+public class RegistRecordManagerServiceImpl implements RegistRecordManagerService {
 
     @Autowired
     public RegistRecordCustomizeMapper registRecordCustomizeMapper;
 
-    private static Logger logger = LoggerFactory.getLogger(RegistRecordServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(RegistRecordManagerServiceImpl.class);
 
 
     /**

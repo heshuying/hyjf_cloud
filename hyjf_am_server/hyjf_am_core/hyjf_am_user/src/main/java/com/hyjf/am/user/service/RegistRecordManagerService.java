@@ -13,7 +13,7 @@ import java.util.List;
  * @version UserManagerService, v0.1 2018/6/20 9:47
  *          后台管理系统：会员中心->注册记录
  */
-public interface RegistRecordService {
+public interface RegistRecordManagerService {
 
     /**
      * 根据筛选条件查找会员列表

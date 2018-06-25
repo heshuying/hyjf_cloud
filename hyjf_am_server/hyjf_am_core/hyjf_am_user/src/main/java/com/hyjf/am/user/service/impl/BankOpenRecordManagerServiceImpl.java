@@ -7,7 +7,7 @@ import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.user.dao.mapper.customize.BankOpenRecordCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
-import com.hyjf.am.user.service.BankOpenRecordService;
+import com.hyjf.am.user.service.BankOpenRecordManagerService;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @version RegistRecordServiceImpl, v0.1 2018/6/20 15:36
  */
 @Service
-public class BankOpenRecordServiceImpl implements BankOpenRecordService {
+public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerService {
     @Autowired
     public BankOpenRecordCustomizeMapper bankOpenRecordCustomizeMapper;
     /**

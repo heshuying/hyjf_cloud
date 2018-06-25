@@ -100,4 +100,11 @@ public interface AmUserClient {
     boolean updateFirstUtmReg(Map<String,Object> params);
 
 	List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
+
+	/**
+	 * 判断是否51老客户
+	 * @param userId
+	 * @return
+	 */
+    boolean checkIs51UserCanInvest(Integer userId);
 }
