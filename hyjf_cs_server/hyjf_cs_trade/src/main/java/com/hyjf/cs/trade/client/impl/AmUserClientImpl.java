@@ -9,6 +9,7 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.trade.client.AmUserClient;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,6 +155,13 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	@Override
+	public Integer selectMyInviteCount(MyInviteListRequest requestBean){
+		String url = urlBase + "invite/myInviteCount";
+		Integer response = restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+		return response;
 	}
 
 	/**

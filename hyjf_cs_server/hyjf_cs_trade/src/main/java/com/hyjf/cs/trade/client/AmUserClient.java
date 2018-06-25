@@ -57,7 +57,9 @@ public interface AmUserClient {
 	 */
 	UserInfoCrmVO queryUserCrmInfoByUserId(int userId);
 
-	/**
+    Integer selectMyInviteCount(MyInviteListRequest requestBean);
+
+    /**
 	 *	用户详细信息 add by jijun 20180622
 	 * @param userId
 	 * @return

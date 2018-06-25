@@ -45,8 +45,8 @@ public class MyRewardController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/myRewardCount", method = RequestMethod.POST)
-    public BigDecimal myRewardCount(@RequestBody @Valid MyInviteListRequest requestBean) {
+    @RequestMapping(value = "/myRewardTotal", method = RequestMethod.POST)
+    public BigDecimal myRewardTotal(@RequestBody @Valid MyInviteListRequest requestBean) {
         return myRewardService.sumMyRewardTotal(requestBean.getUserId());
     }
 }
