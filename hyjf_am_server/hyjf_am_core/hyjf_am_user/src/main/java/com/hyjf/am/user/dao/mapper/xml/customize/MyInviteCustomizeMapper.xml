@@ -29,5 +29,13 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
     </select>
-
+	<select id="countMyInviteList" resultMap="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			IFNULL(COUNT (u.user_id),0)
+		FROM
+			ht_spreads_user su
+		INNER JOIN ht_user u ON u.user_id = su.user_id
+		WHERE
+			su.spreads_user_id = #{userId}
+	</select>
 </mapper>

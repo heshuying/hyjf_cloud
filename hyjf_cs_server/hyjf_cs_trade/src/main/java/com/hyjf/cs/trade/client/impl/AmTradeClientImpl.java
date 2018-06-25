@@ -115,17 +115,41 @@ public class AmTradeClientImpl implements AmTradeClient {
 	}
 
 	/**
-	 * 我的邀请列表
+	 * 统计总的优惠券数
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public Integer selectMyCouponCount(MyCouponListRequest requestBean){
+		String url = urlBase + "coupon/myCouponCount";
+		Integer result = restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+		return result;
+	}
+
+	/**
+	 * 我的奖励列表
 	 * @param requestBean
 	 * @return
 	 */
 	@Override
 	public List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean){
-		String url = urlBase + "invite/myRewardList";
+		String url = urlBase + "reward/myRewardList";
 		MyRewardListResponse response = restTemplate.postForEntity(url,requestBean,MyRewardListResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	/**
+	 * 统计总的奖励金额
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean){
+		String url = urlBase + "reward/myRewardTotal";
+		BigDecimal result = restTemplate.postForEntity(url,requestBean,BigDecimal.class).getBody();
+		return result;
 	}
 }

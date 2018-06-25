@@ -3,11 +3,13 @@ package com.hyjf.cs.trade.service.impl.coupon;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 我的优惠券列表
@@ -18,6 +20,8 @@ import java.util.List;
 public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com.hyjf.cs.trade.service.coupon.MyCouponListService {
     @Autowired
     AmTradeClient amTradeClient;
+    @Autowired
+    AmUserClient amUserClient;
 
     /**
      * 我的优惠券列表（已使用）
@@ -56,6 +60,11 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
         requestBean.setUserId(userId);
         requestBean.setUsedFlag("4");
         return amTradeClient.selectMyCouponList(requestBean);
+    }
+
+    public Map<String,String> selectInvitePageData(String userId){
+
+        return null;
     }
 
 
