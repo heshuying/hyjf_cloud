@@ -47,7 +47,6 @@ public class PreRegistController{
 	 * @param modelAndView
 	 * @param form
 	 */
-	@RequestMapping("/updatepreregistlist")
 	private AdminPreRegistListResponse createPage(AdminPreRegistListRequest adminPreRegistListRequest) {
 
 		Map<String, Object> registUser = new HashMap<String, Object>();
@@ -89,7 +88,7 @@ public class PreRegistController{
 	 * @param form
 	 * @return
 	 */
-	@RequestMapping("/savepreregistlist")
+	@RequestMapping("/updatepreregistlist")
 	public AdminPreRegistListResponse updatePreRegistList(@RequestBody  AdminPreRegistListRequest adminPreRegistListRequest) {
 		AdminPreRegistListResponse arpr=new AdminPreRegistListResponse();
 		if (!StringUtils.isEmpty(adminPreRegistListRequest.getId())) {

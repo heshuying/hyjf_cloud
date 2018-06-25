@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.MspAbnormalcreditMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.MspAbnormalcredit" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+    <result column="creditStartDate" property="creditstartdate" jdbcType="VARCHAR" />
+    <result column="creditEndDate" property="creditenddate" jdbcType="VARCHAR" />
+    <result column="loanType" property="loantype" jdbcType="VARCHAR" />
+    <result column="loanMoney" property="loanmoney" jdbcType="VARCHAR" />
+    <result column="assureType" property="assuretype" jdbcType="VARCHAR" />
+    <result column="loanPeriods" property="loanperiods" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, apply_id, creditStartDate, creditEndDate, loanType, loanMoney, assureType, loanPeriods, 
+    num
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_abnormalcredit
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_msp_abnormalcredit
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ht_msp_abnormalcredit
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditExample" >
+    delete from ht_msp_abnormalcredit
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcredit" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_abnormalcredit (apply_id, creditStartDate, creditEndDate, 
+      loanType, loanMoney, assureType, 
+      loanPeriods, num)
+    values (#{applyId,jdbcType=VARCHAR}, #{creditstartdate,jdbcType=VARCHAR}, #{creditenddate,jdbcType=VARCHAR}, 
+      #{loantype,jdbcType=VARCHAR}, #{loanmoney,jdbcType=VARCHAR}, #{assuretype,jdbcType=VARCHAR}, 
+      #{loanperiods,jdbcType=VARCHAR}, #{num,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcredit" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_abnormalcredit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="creditstartdate != null" >
+        creditStartDate,
+      </if>
+      <if test="creditenddate != null" >
+        creditEndDate,
+      </if>
+      <if test="loantype != null" >
+        loanType,
+      </if>
+      <if test="loanmoney != null" >
+        loanMoney,
+      </if>
+      <if test="assuretype != null" >
+        assureType,
+      </if>
+      <if test="loanperiods != null" >
+        loanPeriods,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="creditstartdate != null" >
+        #{creditstartdate,jdbcType=VARCHAR},
+      </if>
+      <if test="creditenddate != null" >
+        #{creditenddate,jdbcType=VARCHAR},
+      </if>
+      <if test="loantype != null" >
+        #{loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="loanmoney != null" >
+        #{loanmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="assuretype != null" >
+        #{assuretype,jdbcType=VARCHAR},
+      </if>
+      <if test="loanperiods != null" >
+        #{loanperiods,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_abnormalcredit
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_abnormalcredit
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyId != null" >
+        apply_id = #{record.applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creditstartdate != null" >
+        creditStartDate = #{record.creditstartdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creditenddate != null" >
+        creditEndDate = #{record.creditenddate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loantype != null" >
+        loanType = #{record.loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanmoney != null" >
+        loanMoney = #{record.loanmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assuretype != null" >
+        assureType = #{record.assuretype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanperiods != null" >
+        loanPeriods = #{record.loanperiods,jdbcType=VARCHAR},
+      </if>
+      <if test="record.num != null" >
+        num = #{record.num,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_abnormalcredit
+    set id = #{record.id,jdbcType=VARCHAR},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      creditStartDate = #{record.creditstartdate,jdbcType=VARCHAR},
+      creditEndDate = #{record.creditenddate,jdbcType=VARCHAR},
+      loanType = #{record.loantype,jdbcType=VARCHAR},
+      loanMoney = #{record.loanmoney,jdbcType=VARCHAR},
+      assureType = #{record.assuretype,jdbcType=VARCHAR},
+      loanPeriods = #{record.loanperiods,jdbcType=VARCHAR},
+      num = #{record.num,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcredit" >
+    update ht_msp_abnormalcredit
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="creditstartdate != null" >
+        creditStartDate = #{creditstartdate,jdbcType=VARCHAR},
+      </if>
+      <if test="creditenddate != null" >
+        creditEndDate = #{creditenddate,jdbcType=VARCHAR},
+      </if>
+      <if test="loantype != null" >
+        loanType = #{loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="loanmoney != null" >
+        loanMoney = #{loanmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="assuretype != null" >
+        assureType = #{assuretype,jdbcType=VARCHAR},
+      </if>
+      <if test="loanperiods != null" >
+        loanPeriods = #{loanperiods,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcredit" >
+    update ht_msp_abnormalcredit
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      creditStartDate = #{creditstartdate,jdbcType=VARCHAR},
+      creditEndDate = #{creditenddate,jdbcType=VARCHAR},
+      loanType = #{loantype,jdbcType=VARCHAR},
+      loanMoney = #{loanmoney,jdbcType=VARCHAR},
+      assureType = #{assuretype,jdbcType=VARCHAR},
+      loanPeriods = #{loanperiods,jdbcType=VARCHAR},
+      num = #{num,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

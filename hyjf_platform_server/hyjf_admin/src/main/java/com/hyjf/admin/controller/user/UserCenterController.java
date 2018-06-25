@@ -31,7 +31,7 @@ import java.util.Map;
 
 @Api(value = "会员管理接口")
 @RestController
-@RequestMapping("/usersManager")
+@RequestMapping("/admin/usersManager")
 public class UserCenterController {
 
     public static final String PERMISSIONS = "userslist";
@@ -40,12 +40,12 @@ public class UserCenterController {
     private UserCenterService userCenterService;
 
     @ApiOperation(value = "会员管理", notes = "会员管理页面初始化")
-    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/usersInit")
     @ResponseBody
     public JSONObject userManagerInit() {
         JSONObject jsonObject = new JSONObject();
         // 用户角色
-       /* Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
+        Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
         // 用户属性
         Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
         // 开户状态
@@ -57,7 +57,7 @@ public class UserCenterController {
         // 用户类型
         Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
         // 借款人类型
-        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");*/
+        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");
         // 资金来源
         List<HjhInstConfigVO> listHjhInstConfig = userCenterService.selectInstConfigAll();
         /*jsonObject.put("userRoles", userRoles);
@@ -74,7 +74,7 @@ public class UserCenterController {
 
     //会员管理列表查询
     @ApiOperation(value = "会员管理", notes = "会员管理列表查询")
-    @RequestMapping(value = "/userslist", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/userslist")
     @ResponseBody
     public JSONObject getUserslist(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject();
@@ -130,7 +130,7 @@ public class UserCenterController {
 
 
     @ApiOperation(value = "会员管理", notes = "获取用户编辑初始信息")
-    @RequestMapping(value = "/initUserUpdate", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/initUserUpdate")
     @ResponseBody
     public JSONObject initUserUpdate(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
 
@@ -155,7 +155,7 @@ public class UserCenterController {
     }
 
     @ApiOperation(value = "会员管理", notes = "修改更新用户信息")
-    @RequestMapping(value = "/updateUser", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/updateUser")
     @ResponseBody
     public JSONObject updataUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
@@ -170,7 +170,7 @@ public class UserCenterController {
     }
 
     @ApiOperation(value = "会员管理", notes = "获取推荐人信息")
-    @RequestMapping(value = "/initmodifyre", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/initmodifyre")
     @ResponseBody
     public JSONObject initModifyre(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
@@ -183,12 +183,12 @@ public class UserCenterController {
         return jsonObject;
     }
 
-    @ApiOperation(value = "会员管理", notes = "修改用户推荐人")
-    @RequestMapping(value = "/initmodifyre", method = {RequestMethod.GET, RequestMethod.POST})
+/*    @ApiOperation(value = "会员管理", notes = "修改用户推荐人")
+    @RequestMapping(value = "/initmodifyre")
     @ResponseBody
     public JSONObject updateRe() {
         return null;
-    }
+    }*/
 
 
     /**
@@ -198,7 +198,7 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "checkReAction", method = RequestMethod.POST)
+    @RequestMapping(value = "checkReAction")
     public JSONObject checkReAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userId = map.get("id");
@@ -234,7 +234,7 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "checkAction", method = RequestMethod.POST)
+    @RequestMapping(value = "checkAction")
     public JSONObject checkAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userId = map.get("id");
@@ -428,7 +428,7 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "initCompanyInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "initCompanyInfo")
     public JSONObject insertCompanyInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userId = map.get("userId");
@@ -452,7 +452,7 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "serchCompanyInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "serchCompanyInfo")
     public JSONObject serchCompanyInfo(@RequestBody Map<String, String> map) {
         JSONObject ret = new JSONObject();
         String accountId = map.get("accountId");

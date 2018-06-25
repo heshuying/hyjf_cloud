@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtAccedeCommissionMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommission" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="plan_lock_period" property="planLockPeriod" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="is51" property="is51" jdbcType="TINYINT" />
+    <result column="region_id" property="regionId" jdbcType="INTEGER" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="branch_id" property="branchId" jdbcType="INTEGER" />
+    <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+    <result column="accede_user_id" property="accedeUserId" jdbcType="INTEGER" />
+    <result column="accede_user_name" property="accedeUserName" jdbcType="VARCHAR" />
+    <result column="accede_department_id" property="accedeDepartmentId" jdbcType="INTEGER" />
+    <result column="accede_account" property="accedeAccount" jdbcType="DECIMAL" />
+    <result column="accede_time" property="accedeTime" jdbcType="INTEGER" />
+    <result column="commission" property="commission" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="compute_time" property="computeTime" jdbcType="INTEGER" />
+    <result column="return_time" property="returnTime" jdbcType="INTEGER" />
+    <result column="return_user_id" property="returnUserId" jdbcType="INTEGER" />
+    <result column="return_user_name" property="returnUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, plan_nid, plan_lock_period, order_id, user_id, user_name, is51, region_id, region_name, 
+    branch_id, branch_name, department_id, department_name, accede_order_id, accede_user_id, 
+    accede_user_name, accede_department_id, accede_account, accede_time, commission, 
+    `status`, remark, compute_time, return_time, return_user_id, return_user_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommissionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_accede_commission
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_accede_commission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_accede_commission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommissionExample" >
+    delete from ht_debt_accede_commission
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommission" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_accede_commission (plan_nid, plan_lock_period, order_id, 
+      user_id, user_name, is51, 
+      region_id, region_name, branch_id, 
+      branch_name, department_id, department_name, 
+      accede_order_id, accede_user_id, accede_user_name, 
+      accede_department_id, accede_account, accede_time, 
+      commission, `status`, remark, 
+      compute_time, return_time, return_user_id, 
+      return_user_name)
+    values (#{planNid,jdbcType=VARCHAR}, #{planLockPeriod,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{is51,jdbcType=TINYINT}, 
+      #{regionId,jdbcType=INTEGER}, #{regionName,jdbcType=VARCHAR}, #{branchId,jdbcType=INTEGER}, 
+      #{branchName,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, #{departmentName,jdbcType=VARCHAR}, 
+      #{accedeOrderId,jdbcType=VARCHAR}, #{accedeUserId,jdbcType=INTEGER}, #{accedeUserName,jdbcType=VARCHAR}, 
+      #{accedeDepartmentId,jdbcType=INTEGER}, #{accedeAccount,jdbcType=DECIMAL}, #{accedeTime,jdbcType=INTEGER}, 
+      #{commission,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{computeTime,jdbcType=INTEGER}, #{returnTime,jdbcType=INTEGER}, #{returnUserId,jdbcType=INTEGER}, 
+      #{returnUserName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommission" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_accede_commission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="planLockPeriod != null" >
+        plan_lock_period,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="is51 != null" >
+        is51,
+      </if>
+      <if test="regionId != null" >
+        region_id,
+      </if>
+      <if test="regionName != null" >
+        region_name,
+      </if>
+      <if test="branchId != null" >
+        branch_id,
+      </if>
+      <if test="branchName != null" >
+        branch_name,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="departmentName != null" >
+        department_name,
+      </if>
+      <if test="accedeOrderId != null" >
+        accede_order_id,
+      </if>
+      <if test="accedeUserId != null" >
+        accede_user_id,
+      </if>
+      <if test="accedeUserName != null" >
+        accede_user_name,
+      </if>
+      <if test="accedeDepartmentId != null" >
+        accede_department_id,
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account,
+      </if>
+      <if test="accedeTime != null" >
+        accede_time,
+      </if>
+      <if test="commission != null" >
+        commission,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="computeTime != null" >
+        compute_time,
+      </if>
+      <if test="returnTime != null" >
+        return_time,
+      </if>
+      <if test="returnUserId != null" >
+        return_user_id,
+      </if>
+      <if test="returnUserName != null" >
+        return_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planLockPeriod != null" >
+        #{planLockPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="is51 != null" >
+        #{is51,jdbcType=TINYINT},
+      </if>
+      <if test="regionId != null" >
+        #{regionId,jdbcType=INTEGER},
+      </if>
+      <if test="regionName != null" >
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="branchId != null" >
+        #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null" >
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeOrderId != null" >
+        #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeUserId != null" >
+        #{accedeUserId,jdbcType=INTEGER},
+      </if>
+      <if test="accedeUserName != null" >
+        #{accedeUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeDepartmentId != null" >
+        #{accedeDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="accedeAccount != null" >
+        #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeTime != null" >
+        #{accedeTime,jdbcType=INTEGER},
+      </if>
+      <if test="commission != null" >
+        #{commission,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="computeTime != null" >
+        #{computeTime,jdbcType=INTEGER},
+      </if>
+      <if test="returnTime != null" >
+        #{returnTime,jdbcType=INTEGER},
+      </if>
+      <if test="returnUserId != null" >
+        #{returnUserId,jdbcType=INTEGER},
+      </if>
+      <if test="returnUserName != null" >
+        #{returnUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommissionExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_accede_commission
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_accede_commission
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planLockPeriod != null" >
+        plan_lock_period = #{record.planLockPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.is51 != null" >
+        is51 = #{record.is51,jdbcType=TINYINT},
+      </if>
+      <if test="record.regionId != null" >
+        region_id = #{record.regionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.regionName != null" >
+        region_name = #{record.regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.branchId != null" >
+        branch_id = #{record.branchId,jdbcType=INTEGER},
+      </if>
+      <if test="record.branchName != null" >
+        branch_name = #{record.branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departmentId != null" >
+        department_id = #{record.departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.departmentName != null" >
+        department_name = #{record.departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accedeOrderId != null" >
+        accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accedeUserId != null" >
+        accede_user_id = #{record.accedeUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.accedeUserName != null" >
+        accede_user_name = #{record.accedeUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accedeDepartmentId != null" >
+        accede_department_id = #{record.accedeDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.accedeAccount != null" >
+        accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accedeTime != null" >
+        accede_time = #{record.accedeTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.commission != null" >
+        commission = #{record.commission,jdbcType=DECIMAL},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.computeTime != null" >
+        compute_time = #{record.computeTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.returnTime != null" >
+        return_time = #{record.returnTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.returnUserId != null" >
+        return_user_id = #{record.returnUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.returnUserName != null" >
+        return_user_name = #{record.returnUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_accede_commission
+    set id = #{record.id,jdbcType=INTEGER},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      plan_lock_period = #{record.planLockPeriod,jdbcType=INTEGER},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      is51 = #{record.is51,jdbcType=TINYINT},
+      region_id = #{record.regionId,jdbcType=INTEGER},
+      region_name = #{record.regionName,jdbcType=VARCHAR},
+      branch_id = #{record.branchId,jdbcType=INTEGER},
+      branch_name = #{record.branchName,jdbcType=VARCHAR},
+      department_id = #{record.departmentId,jdbcType=INTEGER},
+      department_name = #{record.departmentName,jdbcType=VARCHAR},
+      accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      accede_user_id = #{record.accedeUserId,jdbcType=INTEGER},
+      accede_user_name = #{record.accedeUserName,jdbcType=VARCHAR},
+      accede_department_id = #{record.accedeDepartmentId,jdbcType=INTEGER},
+      accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      accede_time = #{record.accedeTime,jdbcType=INTEGER},
+      commission = #{record.commission,jdbcType=DECIMAL},
+      `status` = #{record.status,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      compute_time = #{record.computeTime,jdbcType=INTEGER},
+      return_time = #{record.returnTime,jdbcType=INTEGER},
+      return_user_id = #{record.returnUserId,jdbcType=INTEGER},
+      return_user_name = #{record.returnUserName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommission" >
+    update ht_debt_accede_commission
+    <set >
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planLockPeriod != null" >
+        plan_lock_period = #{planLockPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="is51 != null" >
+        is51 = #{is51,jdbcType=TINYINT},
+      </if>
+      <if test="regionId != null" >
+        region_id = #{regionId,jdbcType=INTEGER},
+      </if>
+      <if test="regionName != null" >
+        region_name = #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="branchId != null" >
+        branch_id = #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="branchName != null" >
+        branch_name = #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null" >
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeOrderId != null" >
+        accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeUserId != null" >
+        accede_user_id = #{accedeUserId,jdbcType=INTEGER},
+      </if>
+      <if test="accedeUserName != null" >
+        accede_user_name = #{accedeUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeDepartmentId != null" >
+        accede_department_id = #{accedeDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeTime != null" >
+        accede_time = #{accedeTime,jdbcType=INTEGER},
+      </if>
+      <if test="commission != null" >
+        commission = #{commission,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="computeTime != null" >
+        compute_time = #{computeTime,jdbcType=INTEGER},
+      </if>
+      <if test="returnTime != null" >
+        return_time = #{returnTime,jdbcType=INTEGER},
+      </if>
+      <if test="returnUserId != null" >
+        return_user_id = #{returnUserId,jdbcType=INTEGER},
+      </if>
+      <if test="returnUserName != null" >
+        return_user_name = #{returnUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccedeCommission" >
+    update ht_debt_accede_commission
+    set plan_nid = #{planNid,jdbcType=VARCHAR},
+      plan_lock_period = #{planLockPeriod,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      is51 = #{is51,jdbcType=TINYINT},
+      region_id = #{regionId,jdbcType=INTEGER},
+      region_name = #{regionName,jdbcType=VARCHAR},
+      branch_id = #{branchId,jdbcType=INTEGER},
+      branch_name = #{branchName,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      accede_user_id = #{accedeUserId,jdbcType=INTEGER},
+      accede_user_name = #{accedeUserName,jdbcType=VARCHAR},
+      accede_department_id = #{accedeDepartmentId,jdbcType=INTEGER},
+      accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      accede_time = #{accedeTime,jdbcType=INTEGER},
+      commission = #{commission,jdbcType=DECIMAL},
+      `status` = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      compute_time = #{computeTime,jdbcType=INTEGER},
+      return_time = #{returnTime,jdbcType=INTEGER},
+      return_user_id = #{returnUserId,jdbcType=INTEGER},
+      return_user_name = #{returnUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
