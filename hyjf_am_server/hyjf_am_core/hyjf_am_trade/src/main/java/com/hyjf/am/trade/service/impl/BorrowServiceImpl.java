@@ -9,10 +9,10 @@ import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -37,6 +37,9 @@ public class BorrowServiceImpl implements BorrowService {
     private BorrowManinfoMapper borrowManinfoMapper;
     @Autowired
     private BorrowStyleMapper borrowStyleMapper;
+
+    @Autowired
+    private BorrowInfoMapper borrowInfoMapper;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -125,6 +128,23 @@ public class BorrowServiceImpl implements BorrowService {
         List<Borrow> list = this.borrowMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list;
+        }
+        return null;
+    }
+
+    /**
+     *获取borrowInfo
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfo getBorrowInfoByNid(String borrowNid) {
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
         }
         return null;
     }

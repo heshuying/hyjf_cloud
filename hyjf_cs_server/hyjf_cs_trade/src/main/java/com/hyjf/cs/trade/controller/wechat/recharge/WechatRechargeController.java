@@ -2,12 +2,10 @@ package com.hyjf.cs.trade.controller.wechat.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.constants.RechargeError;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -21,8 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -72,7 +68,7 @@ public class WechatRechargeController extends BaseTradeController{
 			modelAndView = BankCallUtils.callApi(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ReturnMessageException(RechargeError.CALL_BANK_ERROR);
+			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
 		}
 		return modelAndView;
 	}

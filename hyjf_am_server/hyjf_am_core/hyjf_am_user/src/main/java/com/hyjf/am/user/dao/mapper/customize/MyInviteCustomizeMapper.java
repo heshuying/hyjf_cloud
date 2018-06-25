@@ -12,5 +12,5 @@ import java.util.Map;
  */
 public interface MyInviteCustomizeMapper {
     List<MyInviteListCustomizeVO> selectMyInviteList(Map<String, Object> paraMap);
-
+    Integer countMyInviteList(Map<String, Object> paraMap);
 }

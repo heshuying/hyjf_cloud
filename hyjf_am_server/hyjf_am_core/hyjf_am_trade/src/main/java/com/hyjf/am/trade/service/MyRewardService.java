@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -11,4 +12,6 @@ import java.util.List;
  */
 public interface MyRewardService {
     List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId, Integer limitStart, Integer limitEnd);
+
+    BigDecimal sumMyRewardTotal(String userId);
 }

@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
@@ -145,4 +146,12 @@ public interface UserService {
      * @return
      */
     void updateFirstUtmReg(Map<String,Object> bean);
+
+	boolean updateUserInvestFlag(JSONObject para);
+
+	/**
+	 * 插入vip user
+	 * @param para
+	 */
+	boolean insertVipUserTender(JSONObject para);
 }

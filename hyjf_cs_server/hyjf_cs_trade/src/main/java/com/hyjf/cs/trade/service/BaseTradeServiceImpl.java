@@ -5,11 +5,11 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.RechargeClient;
-import com.hyjf.cs.trade.constants.TenderError;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
@@ -91,7 +91,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     public void checkEvaluation(UserVO user) {
         Integer userEvaluationResultFlag = user.getIsEvaluationFlag();
         if (0 == userEvaluationResultFlag) {
-            throw new ReturnMessageException(TenderError.USER_EVALUATION_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
         } else {
            /* //是否完成风险测评
             if (user.getIsEvaluationFlag()==1) {
