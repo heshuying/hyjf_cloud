@@ -502,7 +502,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
 		}
 		if (users.getIsSetPassword() == 0) {
-			throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_NOT_SET);
+			throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
 		}
 		if (bankCard == null) {
 			throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_BANK_CARD_GET);

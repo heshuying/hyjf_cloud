@@ -64,8 +64,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
 	ERR_AUTHORIZE_REPEAT("ETY000501","用户已授权,无需重复授权"),
-	ERR_CHECK_USER_INFO("ETY000601", "根据电子账户号查询用户信息失败"),
-    ERR_BANK_WITHDRAW_LOSE_LIST_HANDLE("ETY000701","江西银行提现掉单处理出错"),
+    ERR_AUTHORIZE_STATE("ETY000601","授权状态查询接口失败"),
+    ERR_BANK_WITHDRAW_LOSE_LIST_HANDLE("ETY000801","江西银行提现掉单处理出错"),
 
 	// 格式错误信息ERR_FMT_
 	ERR_FMT_NAME("EFM000101", "联系人姓名格式错误"),
@@ -85,8 +85,11 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_REGISTER("EUS000005","注册失败"),
 	ERR_USER_LOGIN_RETRY("EUS000006", "登录失败,请重新登陆"),
     ERR_USER_UNUSUAL("EUS000007", "你的账户信息存在异常，请联系客服人员处理"),
+    ERR_USER_INFO_GET("EUS000008","查询用户失败"),
+    ERR_USER_INFO_CHECK("EUS000009", "根据电子账户号查询用户信息失败"),
+    ERR_USER_LOGIN_EXPIRE("EUS000010","登录失效，请重新登陆"),
 
-	// 资金相关错误信息ERR_AMT_
+    // 资金相关错误信息ERR_AMT_
 	// 资金-提现相关错误信息ERR_AMT_WITHDRAW_
 	ERR_AMT_WITHDRAW_AMOUNT("EAM000101","请输入提现金额"),
 	ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE("EAM000102","提现金额需大于1元"),
@@ -119,6 +122,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_RECHARGE_BANK_CARD_GET("EAM000301","查询银行卡信息失败"),
 	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
 	ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL("EAM000303","充值值金额不能大于两位小数"),
+
 
 
 
@@ -160,7 +164,18 @@ public enum MsgEnum implements MsgCode {
 	ERR_PASSWORD_ERROR_TOO_MANEY("EPW000001", "登录失败,当日密码错误已打上限，请明日再试！"),
 	ERR_PASSWORD_LENGTH("EPW000002", "密码长度6-16位"),
 	ERR_PASSWORD_NO_NUMBER("EPW000003", "密码必须包含数字"),
-	ERR_PASSWORD_NOT_SET("EPW000004", "未设置交易密码"),
+	ERR_PASSWORD_NEW_REQUIRED("EPW000004","新密码不能为空"),
+	ERR_PASSWORD_TWO_DIFFERENT_PASSWORD("EPW000005","两次密码不一致"),
+	ERR_PASSWORD_TWO_SAME_PASSWORD("EPW000006","新密码不能与原密码相同"),
+	ERR_PASSWORD_OLD_INCORRECT("EPW000007","旧密码不正确"),
+	ERR_PASSWORD_MODIFY("EPW000008","修改密码失败,未作任何操作"),
+	ERR_PASSWORD_OLD_REQUIRED("EPW000009","原始登录密码不能为空"),
+    //交易密码相关错误信息ERR_TRADE_PASSWORD_
+    ERR_TRADE_PASSWORD_NOT_SET("EPW000004", "未设置交易密码"),
+    ERR_TRADE_PASSWORD_ALREADY_SET("EPW000005","已设置交易密码"),
+    ERR_TRADE_PASSWORD_SET_FAIL("EPW000006", "交易密码设置失败"),
+
+
 
 
 	// 验证码相关错误信息ERR_SMSCODE_
@@ -181,20 +196,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_ACTIVITY_END("EAC000003","该活动已结束"),
 
 
-/*
-	SynBalanceError
-	PARAM_ERROR("1", "参数错误，请重试"),
-*/
 
-/*
-AutoStateError
-    PARAM_ERROR("1", "请求参数非法"),
-    CHECK_ERROR("1", "验签失败！"),
-    CHECK_USER_INFO_ERROR("1", "根据电子账户号查询用户信息失败"),
-    GET_USER_ERROR("1", "查询用户失败"),
-    NOT_PASSWD_ERROR("1", "未设置交易密码"),
-    AUTH_ERROR("1", "授权状态查询接口失败！");
-*/
 
 /*
 ContractSetError类
@@ -276,23 +278,7 @@ AuthorizedError类
     CANNOT_REPEAT_ERROR("1", "用户已授权,无需重复授权"),
     CALL_BANK_ERROR("1", "调用银行接口失败");
 */
-/*
-PassWordError类
-USER_LOGIN_ERROR("1", "登录失效，请重新登陆"),
-    USER_OPENBANK_ERROR("1", "用户未开户！"),
-    PASSWORK_ALREADY_ERROR("1", "已设置交易密码"),
-    BANK_CONNECT_ERROR("1", "调用银行接口失败！"),
-    PASSWORK_SET_ERROR("1", "交易密码设置失败"),
-    NEWPASSWORD_NOTNULL_ERROR("1", "新密码不能为空!"),
-    PASSWORD_SAME_ERROR("1", "两次密码不一致"),
-    PASSWORD_SAME1_ERROR("1", "新密码不能与原密码相同!"),
-    OLDPASSWD_INVALID_ERROR("1", "旧密码不正确"),
-    PASSWORD_LENGTH_ERROR("1", "密码长度6-16位"),
-    PASSWORD_NO_NUMBER_ERROR("1", "密码必须包含数字"),
-    PASSWORD_FORMAT_ERROR("1", "密码必须由数字和字母组成，如abc123"),
-    PASSWORD_CHANGE_ERROR("1", "修改密码失败,未作任何操作"),
-    LOGINPW_NOTNULL_ERROR("1", "原始登录密码不能为空");
-*/
+
  /*
  ApiError类
  UNKNOWN_ERROR("syserror_0001", "系统异常，请稍后再试"),

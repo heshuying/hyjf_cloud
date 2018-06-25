@@ -618,7 +618,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
         // 判断用户是否设置过交易密码
         if (users.getIsSetPassword() == 0) {
-            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_NOT_SET);
+            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
 
         if ((account.compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {

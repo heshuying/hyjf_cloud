@@ -6,12 +6,12 @@ package com.hyjf.cs.user.service.authquery.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.bean.AutoStateQueryRequest;
 import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.constants.AutoStateError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
@@ -48,42 +48,42 @@ public class AutoStateQueryServiceImpl extends BaseUserServiceImpl implements Au
         // 机构编号
         if (autoStateQuery.checkParmIsNull()) {
             logger.info("请求参数非法");
-            throw new ReturnMessageException(AutoStateError.PARAM_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
         // 验签  accountId
         if (!this.verifyRequestSign(autoStateQuery, BaseDefine.METHOD_BORROW_AUTH_STATE)) {
             logger.info("----验签失败----");
-            throw new ReturnMessageException(AutoStateError.CHECK_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_SIGN);
         }
         // 用户ID
         // 根据电子账户号查询用户ID
         BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(accountId);
         if (bankOpenAccount == null) {
             logger.info("查询用户开户信息失败,用户电子账户号:[" + accountId + "]");
-            throw new ReturnMessageException(AutoStateError.CHECK_USER_INFO_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_INFO_CHECK);
         }
         Integer userId = bankOpenAccount.getUserId();
         UserVO user = amUserClient.findUserById(userId);
         if (user == null) {
             logger.info("查询用户失败:[" + userId + "].");
-            throw new ReturnMessageException(AutoStateError.GET_USER_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_INFO_GET);
         }
         Integer passwordFlag = user.getIsSetPassword();
         // 未设置交易密码
         if (passwordFlag != 1) {
             logger.info("-------------------未设置交易密码！"+autoStateQuery.getAccountId()+"！--------------------status"+user.getIsSetPassword());
-            throw new ReturnMessageException(AutoStateError.NOT_PASSWD_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
         BankCallBean retBean=autoPlusService.getTermsAuthQuery(userId,channel);
         logger.info("调用江西银行授权状态查询接口:"+(retBean==null?"空":retBean.getPaymentAuth()));
         if(retBean==null){
             logger.info("银行返回为空,accountId:["+accountId+"]");
-            throw new ReturnMessageException(AutoStateError.AUTH_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_STATE);
         }
         String retCode = retBean.getRetCode();
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             logger.info("授权状态查询接口失败,accountId:["+accountId+"]返回码["+retCode+"]！");
-            throw new ReturnMessageException(AutoStateError.AUTH_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_STATE);
         }
         resultBean = getResultJosn(resultBean,retBean);
         logger.info("授权状态查询第三方返回参数："+ JSONObject.toJSONString(resultBean));

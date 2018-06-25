@@ -18,7 +18,6 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.BindCardError;
-import com.hyjf.cs.user.constants.PassWordError;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -93,7 +92,7 @@ public class WebPassWordController {
         UserVO user = passWordService.getUsersById(userId);
         // 返回失败
         if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-            throw new ReturnMessageException(PassWordError.PASSWORK_SET_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_SET_FAIL);
         }
         // 判断用户是否设置了交易密码
         boolean flag = user.getIsSetPassword() == 1 ? true : false;
