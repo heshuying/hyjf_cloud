@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -15,6 +16,7 @@ import com.hyjf.cs.user.service.pandect.PandectService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,9 +44,14 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
     @Autowired
     AmTradeClient amTradeClient;
 
+    @Autowired
+    AmDataCollectClient amDataCollectClient;
+
     @Override
     public Map<String, Object> pandect(UserVO user) {
         Map<String,Object> result = new HashMap<>();
+        WebViewUserVO webViewUserVO = new WebViewUserVO();
+        BeanUtils.copyProperties(user,webViewUserVO);
         Integer userId = user.getUserId();
         String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
@@ -59,7 +66,6 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         if (userLogin.getLastTime() != null) {
             result.put("lastlogintime", GetDate.formatTime(userLogin.getLastTime()));
         }
-        result.put("webViewUser", user);
         result.put("auth", "");
         // 企业用户
         if (user.getUserType() == 1) {
@@ -67,35 +73,34 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
             int isAccount = amUserClient.isCompAccount(userId);
             result.put("isAccount", isAccount);
             // 是否已绑定用户
-//            int isBindUser = isCompBindUser(userId);
-//            result.put("isBindUser", isBindUser);
-            result.put("isBindUser", 0);
+            int isBindUser = amDataCollectClient.isCompBindUser(userId);
+            result.put("isBindUser", isBindUser);
         }
         //用户名
         UserInfoVO usersinfo = getUserInfo(userId);
         result.put("usersinfo", usersinfo);
-        String username = "";
+        String userName = "";
         if(StringUtils.isNotEmpty(usersinfo.getTruename())){
-            username = usersinfo.getTruename().substring(0, 1);
-            if(usersinfo.getSex() == 2){ //女
-                username = username + "女士";
+            userName = usersinfo.getTruename().substring(0, 1);
+            if(usersinfo.getSex() == 2){
+                userName = userName + "女士";
             }else{
-                username = username + "先生";
+                userName = userName + "先生";
             }
         }else{
-            username = user.getUsername();
-            int len = username.length();
-            if(isChineseChar(username)){
+            userName = user.getUsername();
+            int len = userName.length();
+            if(isChineseChar(userName)){
                 if(len > 4){
-                    username = username.substring(0,4)+"...";
+                    userName = userName.substring(0,4)+"...";
                 }
             }else{
                 if(len > 8){
-                    username = username.substring(0,8)+"...";
+                    userName = userName.substring(0,8)+"...";
                 }
             }
         }
-        result.put("username", username);
+        result.put("username", userName);
         try {
             if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
                 //测评到期日
@@ -124,7 +129,9 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         if (chinapnr != null) {
             result.put("accountChinapnr", chinapnr);
+            webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
+        result.put("webViewUser", user);
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         if (bankAccount != null) {

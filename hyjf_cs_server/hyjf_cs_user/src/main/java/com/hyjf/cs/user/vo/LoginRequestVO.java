@@ -11,11 +11,11 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class LoginRequestVO {
 
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "用户名 web")
     private String username;
-    @ApiModelProperty(value = "密码")
+    @ApiModelProperty(value = "密码 web")
     private String password;
-    @ApiModelProperty(value = "平台")
+    @ApiModelProperty(value = "平台 web")
     private String platform;
     @ApiModelProperty(value = "版本号")
     private String version;

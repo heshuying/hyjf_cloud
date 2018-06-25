@@ -20,6 +20,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.AuthorizedError;
@@ -58,6 +59,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Autowired
     private AmConfigClient amConfigClient;
+
+    @Autowired
+    AmDataCollectClient amDataCollectClient;
 
     @Autowired
     SystemConfig systemConfig;
@@ -337,9 +341,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 检查是否设置交易密码
         Integer passwordFlag = user.getIsSetPassword();
         CheckUtil.check(passwordFlag == 1,MsgEnum.STATUS_TP000002);
-        // TODO: 2018/5/24 xiashuqing 根据订单号查询授权码
-        //this.autoPlusService.selectBankSmsSeq(userId, BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
-        String smsSeq = null;
+        // 根据订单号查询授权码
+        String smsSeq = amDataCollectClient.selectBankSmsSeq(user.getUserId(), BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
         CheckUtil.check(StringUtils.isNotBlank(smsSeq),MsgEnum.STATUS_CE000008);
         logger.info("-------------------授权码为！"+smsSeq+"电子账户号"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
         // 查询是否已经授权过
