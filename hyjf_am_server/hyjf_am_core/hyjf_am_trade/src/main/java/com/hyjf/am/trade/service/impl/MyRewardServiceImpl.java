@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,9 @@ public class MyRewardServiceImpl implements MyRewardService {
     @Resource
     MyRewardCustomizeMapper myRewardCustomizeMapper;
 
+    /**
+     * 我的奖励列表
+     */
     @Override
     public List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId, Integer limitStart, Integer limitEnd){
         Map<String,Object> param = new HashMap<String, Object>();
@@ -28,5 +32,20 @@ public class MyRewardServiceImpl implements MyRewardService {
         param.put("limitEnd", limitEnd);
 
         return myRewardCustomizeMapper.selectMyRewardList(param);
+    }
+
+    /**
+     * 统计总的奖励金额
+     */
+    @Override
+    public BigDecimal sumMyRewardTotal(String userId){
+        Map<String,Object> param = new HashMap<String, Object>();
+        param.put("userId", userId);
+
+        BigDecimal result = myRewardCustomizeMapper.sumMyRewardTotal(param);
+        if(result == null){
+            result = BigDecimal.ZERO;
+        }
+        return result;
     }
 }

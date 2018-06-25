@@ -12,4 +12,5 @@ import java.util.List;
 public interface MyInviteService {
     List<MyInviteListCustomizeVO> selectMyInviteList(String userId, Integer limitStart, Integer limitEnd);
 
+    Integer countMyInviteList(String userId);
 }

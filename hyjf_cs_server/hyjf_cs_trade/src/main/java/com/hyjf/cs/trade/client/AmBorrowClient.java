@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 import java.util.List;
@@ -36,4 +36,18 @@ public interface AmBorrowClient {
      * @return
      */
     List<BorrowVO> selectBorrowList();
+
+    /**
+     * 获取borrow对象
+     * @param borrowId
+     * @return
+     */
+    BorrowVO getBorrowByNid(String borrowId);
+
+    /**
+     * 获取userInfo对象
+     * @param borrowNid
+     * @return
+     */
+	public BorrowInfoVO getBorrowInfoByNid(String borrowNid);
 }

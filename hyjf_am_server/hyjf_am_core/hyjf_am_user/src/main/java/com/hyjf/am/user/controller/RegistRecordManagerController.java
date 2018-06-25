@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.RegistRecordManagerService;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -44,9 +47,11 @@ public class RegistRecordManagerController {
     @RequestMapping("/registRecordList")
     public RegistRecordResponse findRegistRecordList(@RequestBody @Valid RegistRcordRequest request) {
         logger.info("---findRegistRecordList by param---  " + JSONObject.toJSON(request));
+        Map<String, Object> mapParam = paramSet(request);
         RegistRecordResponse response = new RegistRecordResponse();
-        List<RegistRecordCustomize> registRecordCustomizeList = registRecordService.selectRegistList(request);
-        int registCount = registRecordService.countRecordTotal(request);
+        Integer registCount = registRecordService.countRecordTotal(mapParam);
+        Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
+        List<RegistRecordCustomize> registRecordCustomizeList = registRecordService.selectRegistList(mapParam,paginator.getOffset(), paginator.getLimit());
         if(registCount>0){
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<RegistRecordVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, RegistRecordVO.class);
@@ -68,9 +73,26 @@ public class RegistRecordManagerController {
     public UserManagerResponse countRecordTotal(@RequestBody @Valid RegistRcordRequest request) {
         logger.info("---countUserList by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
-        int usesrCount = registRecordService.countRecordTotal(request);
+        Map<String, Object> mapParam = paramSet(request);
+        int usesrCount = registRecordService.countRecordTotal(mapParam);
         response.setCount(usesrCount);
         return response;
+    }
+    /**
+     * 查询条件设置
+     *
+     * @param userRequest
+     * @return
+     */
+    private Map<String, Object> paramSet(RegistRcordRequest userRequest) {
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        mapParam.put("regTimeStart", userRequest.getRegTimeStart());
+        mapParam.put("regTimeEnd", userRequest.getRegTimeEnd());
+        mapParam.put("userName", userRequest.getUserName());
+        mapParam.put("mobile", userRequest.getMobile());
+        mapParam.put("recommendName", userRequest.getRecommendName());
+        mapParam.put("registPlat",userRequest.getRegistPlat());
+        return mapParam;
     }
 
  }

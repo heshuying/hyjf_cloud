@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -19,26 +20,26 @@ public interface BankOpenRecordManagerService {
      *
      * @return
      */
-    List<BankOpenAccountRecordCustomize> selectBankAccountList(BankAccountRecordRequest request);
+    List<BankOpenAccountRecordCustomize> selectBankAccountList(Map<String,String> mapParam,int limitStart, int limitEnd);
 
     /**
      * 查找江西银行开户记录
      *
      * @return
      */
-    List<BankOpenAccountRecordCustomize> selectAccountList(AccountRecordRequest request);
+    List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,String> mapParam,int limitStart, int limitEnd);
 
     /**
      * 查找江西银行开户记录数
      *
      * @return
      */
-    int countBankRecordTotal(BankAccountRecordRequest request);
+    int countBankRecordTotal(Map<String,String> mapParam);
 
     /**
      * 查找汇付银行的开户记录数
      *
      * @return
      */
-    int countRecordTotal(AccountRecordRequest request);
+    int countRecordTotal(Map<String,String> mapParam);
 }

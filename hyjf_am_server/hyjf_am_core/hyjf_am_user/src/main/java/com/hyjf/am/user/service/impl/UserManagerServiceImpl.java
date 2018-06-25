@@ -60,9 +60,14 @@ public class UserManagerServiceImpl implements UserManagerService {
      * @return
      */
     @Override
-    public List<UserManagerCustomize> selectUserMemberList(UserManagerRequest userRequest) {
-        //参数设置
-        Map<String, Object> mapParam = paramSet(userRequest);
+    public List<UserManagerCustomize> selectUserMemberList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", limitStart);
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", limitEnd);
+        }
         List<UserManagerCustomize> listUser = userManagerCustomizeMapper.selectUserMemberList(mapParam);
         if (CollectionUtils.isNotEmpty(listUser)) {
             //
@@ -85,65 +90,12 @@ public class UserManagerServiceImpl implements UserManagerService {
     }
 
     /**
-     * 没有limit外的检索条件
-     *
-     * @param user
-     * @return
-     */
-    private String getWhereFlag(Map<String, Object> user) {
-        String whereFlag = "0";
-        for (Map.Entry<String, Object> entry : user.entrySet()) {
-            // key!=whereFlag,limitStart,limitEnd时
-            if (!(entry.getKey().equals("whereFlag") || entry.getKey().equals("limitStart")
-                    || entry.getKey().equals("limitEnd"))) {
-                if (entry.getValue() != null) {
-                    // 有limit外的检索条件
-                    whereFlag = "1";
-                    break;
-                }
-            }
-        }
-        return whereFlag;
-    }
-
-    /**
-     * 查询条件设置
-     *
-     * @param userRequest
-     * @return
-     */
-    private Map<String, Object> paramSet(UserManagerRequest userRequest) {
-        Map<String, Object> mapParam = new HashMap<String, Object>();
-        mapParam.put("regTimeStart", userRequest.getRegTimeStart());
-        mapParam.put("regTimeEnd", userRequest.getRegTimeEnd());
-        mapParam.put("userName", userRequest.getUserName());
-        mapParam.put("realName", userRequest.getRealName());
-        mapParam.put("mobile", userRequest.getMobile());
-        mapParam.put("recommendName", userRequest.getRecommendName());
-        mapParam.put("userRole", userRequest.getUserRole());
-        mapParam.put("userType", userRequest.getUserType());
-        mapParam.put("userProperty", userRequest.getUserProperty());
-        mapParam.put("accountStatus", userRequest.getAccountStatus());
-        mapParam.put("userStatus", userRequest.getUserStatus());
-        mapParam.put("combotreeListSrch", userRequest.getCombotreeListSrch());
-        mapParam.put("customerId", userRequest.getCustomerId());
-        mapParam.put("instCodeSrch", userRequest.getInstCodeSrch());
-        mapParam.put("limitStart", userRequest.getLimitStart());
-        mapParam.put("limitEnd", userRequest.getLimitEnd());
-        mapParam.put("whereFlag", getWhereFlag(mapParam));
-        return mapParam;
-    }
-
-
-    /**
      * 根据条件获取用户列表总数
      *
-     * @param userRequest
      * @return
      */
     @Override
-    public int countUserRecord(UserManagerRequest userRequest) {
-        Map<String, Object> mapParam = paramSet(userRequest);
+    public int countUserRecord(Map<String, Object> mapParam) {
         Integer integerCount = userManagerCustomizeMapper.countUserRecord(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;

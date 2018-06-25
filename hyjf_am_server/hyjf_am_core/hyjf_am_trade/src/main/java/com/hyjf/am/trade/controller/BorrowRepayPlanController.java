@@ -10,10 +10,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,9 +31,11 @@ public class BorrowRepayPlanController {
      * 检索正在还款中的标的
      *
      * @Author liushouyi
+     * @param borrowNid
+     * @param repaySmsReminder
      * @return
      */
-    @RequestMapping("/selectBorrowPlanRepayList")
+    @GetMapping("/selectBorrowPlanRepayList/{borrowNid}/{repaySmsReminder}")
     public BorrowRepayPlanResponse selectBorrowPlanRepayList(@PathVariable String borrowNid, @PathVariable Integer repaySmsReminder) {
         BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanService.selectBorrowRepayPlanList(borrowNid ,repaySmsReminder);
@@ -47,6 +46,12 @@ public class BorrowRepayPlanController {
         return response;
     }
 
+    /**
+     * 更新还款中标的的状态
+     *
+     * @param borrowRepayPlanVO
+     * @return
+     */
     @RequestMapping("/updateBorrowRepay")
     public Integer updateBorrowPlanRepay(@RequestBody @Valid BorrowRepayPlanVO borrowRepayPlanVO) {
         return this.borrowRepayPlanService.updateBorrowRepayPlan(borrowRepayPlanVO);

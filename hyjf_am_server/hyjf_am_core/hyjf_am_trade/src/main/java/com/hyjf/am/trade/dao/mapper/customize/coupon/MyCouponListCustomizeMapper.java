@@ -11,4 +11,5 @@ import java.util.Map;
  */
 public interface MyCouponListCustomizeMapper {
     List<MyCouponListCustomizeVO> selectMyCouponList(Map<String,Object> paraMap);
+    Integer countMyCouponList(Map<String,Object> paraMap);
 }
