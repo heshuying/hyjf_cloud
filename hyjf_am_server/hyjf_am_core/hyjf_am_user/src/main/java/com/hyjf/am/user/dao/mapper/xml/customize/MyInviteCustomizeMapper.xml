@@ -29,7 +29,7 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
     </select>
-	<select id="countMyInviteList" resultMap="java.lang.Integer" parameterType="java.util.Map">
+	<select id="countMyInviteList" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
 			IFNULL(COUNT (u.user_id),0)
 		FROM

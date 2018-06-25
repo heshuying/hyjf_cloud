@@ -154,7 +154,7 @@
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
     </select>
-	<select id="countMyCouponList" resultMap="java.lang.Integer" parameterType="java.util.Map">
+	<select id="countMyCouponList" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
 			IFNULL(count (cu.id),0)
 		FROM

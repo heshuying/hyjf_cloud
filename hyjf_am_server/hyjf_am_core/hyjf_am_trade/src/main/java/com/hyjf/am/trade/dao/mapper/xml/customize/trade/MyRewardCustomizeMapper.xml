@@ -38,7 +38,7 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
-	<select id="sumMyRewardTotal" resultMap="java.math.BigDecimal" parameterType="java.util.Map">
+	<select id="sumMyRewardTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
 		SELECT
 			SUM(IFNULL(t.commission,0))
 		FROM

@@ -14,10 +14,18 @@ public class BankAccountRecordRequest {
 	private String realName;
 	private String openTimeStart;
 	private String openTimeEnd;
-	//分页
-	private int limitStart;
-	private int limitEnd;
+	public int limit;
+	private int paginatorPage = 1;
+	public int getPaginatorPage() {
+		if (paginatorPage == 0) {
+			paginatorPage = 1;
+		}
+		return paginatorPage;
+	}
 
+	public void setPaginatorPage(int paginatorPage) {
+		this.paginatorPage = paginatorPage;
+	}
 	public String getCustomerAccount() {
 		return customerAccount;
 	}
@@ -82,19 +90,12 @@ public class BankAccountRecordRequest {
 		this.openTimeEnd = openTimeEnd;
 	}
 
-	public int getLimitStart() {
-		return limitStart;
+	public int getLimit() {
+		return limit;
 	}
 
-	public void setLimitStart(int limitStart) {
-		this.limitStart = limitStart;
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 
-	public int getLimitEnd() {
-		return limitEnd;
-	}
-
-	public void setLimitEnd(int limitEnd) {
-		this.limitEnd = limitEnd;
-	}
 }

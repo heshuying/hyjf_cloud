@@ -17,6 +17,7 @@ import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
 import com.hyjf.am.user.service.UserManagerService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -30,7 +31,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -55,8 +58,10 @@ public class UserManagerController {
     public UserManagerResponse findUserslist(@RequestBody @Valid UserManagerRequest request) {
         logger.info("---findUserslist by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
-        List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(request);
-        int usesrCount = userManagerService.countUserRecord(request);
+        Map<String,Object> mapParam = paramSet(request);
+        int usesrCount = userManagerService.countUserRecord(mapParam);
+        Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
+        List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,paginator.getOffset(), paginator.getLimit());
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, UserManagerVO.class);
@@ -79,7 +84,8 @@ public class UserManagerController {
     public UserManagerResponse countUserList(@RequestBody @Valid UserManagerRequest request) {
         logger.info("---countUserList by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
-        int usesrCount = userManagerService.countUserRecord(request);
+        Map<String,Object> mapParam = paramSet(request);
+        int usesrCount = userManagerService.countUserRecord(mapParam);
         response.setCount(usesrCount);
         return response;
     }
@@ -415,5 +421,56 @@ public class UserManagerController {
         int ingFlg = userManagerService.updateUser(user);
         return ingFlg;
     }
+
+    /**
+     * 查询条件设置
+     *
+     * @param userRequest
+     * @return
+     */
+    private Map<String, Object> paramSet(UserManagerRequest userRequest) {
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        mapParam.put("regTimeStart", userRequest.getRegTimeStart());
+        mapParam.put("regTimeEnd", userRequest.getRegTimeEnd());
+        mapParam.put("userName", userRequest.getUserName());
+        mapParam.put("realName", userRequest.getRealName());
+        mapParam.put("mobile", userRequest.getMobile());
+        mapParam.put("recommendName", userRequest.getRecommendName());
+        mapParam.put("userRole", userRequest.getUserRole());
+        mapParam.put("userType", userRequest.getUserType());
+        mapParam.put("userProperty", userRequest.getUserProperty());
+        mapParam.put("accountStatus", userRequest.getAccountStatus());
+        mapParam.put("userStatus", userRequest.getUserStatus());
+        mapParam.put("combotreeListSrch", userRequest.getCombotreeListSrch());
+        mapParam.put("customerId", userRequest.getCustomerId());
+        mapParam.put("instCodeSrch", userRequest.getInstCodeSrch());
+       /* mapParam.put("limitStart", userRequest.getLimitStart());
+        mapParam.put("limitEnd", userRequest.getLimitEnd());*/
+        mapParam.put("whereFlag", getWhereFlag(mapParam));
+        return mapParam;
+    }
+
+    /**
+     * 没有limit外的检索条件
+     *
+     * @param user
+     * @return
+     */
+    private String getWhereFlag(Map<String, Object> user) {
+        String whereFlag = "0";
+        for (Map.Entry<String, Object> entry : user.entrySet()) {
+            // key!=whereFlag,limitStart,limitEnd时
+            if (!(entry.getKey().equals("whereFlag") || entry.getKey().equals("limitStart")
+                    || entry.getKey().equals("limitEnd"))) {
+                if (entry.getValue() != null) {
+                    // 有limit外的检索条件
+                    whereFlag = "1";
+                    break;
+                }
+            }
+        }
+        return whereFlag;
+    }
+
 
 }

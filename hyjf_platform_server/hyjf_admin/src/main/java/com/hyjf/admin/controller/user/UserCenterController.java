@@ -31,21 +31,22 @@ import java.util.Map;
 
 @Api(value = "会员管理接口")
 @RestController
-@RequestMapping("/admin/usersManager")
+@RequestMapping("/hyjf-admin/usersManager")
 public class UserCenterController {
 
-    public static final String PERMISSIONS = "userslist";
+    //public static final String PERMISSIONS = "userslist";
 
     @Autowired
     private UserCenterService userCenterService;
 
     @ApiOperation(value = "会员管理", notes = "会员管理页面初始化")
-    @RequestMapping(value = "/usersInit")
+//    @RequestMapping(value = "/usersInit")
+    @PostMapping(value = "/usersInit")
     @ResponseBody
     public JSONObject userManagerInit() {
         JSONObject jsonObject = new JSONObject();
         // 用户角色
-        Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
+      /*  Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
         // 用户属性
         Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
         // 开户状态
@@ -57,7 +58,7 @@ public class UserCenterController {
         // 用户类型
         Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
         // 借款人类型
-        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");
+        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");*/
         // 资金来源
         List<HjhInstConfigVO> listHjhInstConfig = userCenterService.selectInstConfigAll();
         /*jsonObject.put("userRoles", userRoles);
@@ -74,7 +75,8 @@ public class UserCenterController {
 
     //会员管理列表查询
     @ApiOperation(value = "会员管理", notes = "会员管理列表查询")
-    @RequestMapping(value = "/userslist")
+//    @RequestMapping(value = "/userslist")
+    @PostMapping(value = "/userslist")
     @ResponseBody
     public JSONObject getUserslist(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject();
@@ -86,7 +88,7 @@ public class UserCenterController {
 
     //会员详情
     @ApiOperation(value = "会员管理", notes = "会员详情")
-    @RequestMapping(value = "/getUserdetail", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/getUserdetail")
     @ResponseBody
     public JSONObject getUserdetail(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
@@ -130,7 +132,8 @@ public class UserCenterController {
 
 
     @ApiOperation(value = "会员管理", notes = "获取用户编辑初始信息")
-    @RequestMapping(value = "/initUserUpdate")
+//    @RequestMapping(value = "/initUserUpdate")
+    @PostMapping(value = "/initUserUpdate")
     @ResponseBody
     public JSONObject initUserUpdate(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
 
@@ -154,8 +157,9 @@ public class UserCenterController {
         return null;
     }
 
-    @ApiOperation(value = "会员管理", notes = "修改更新用户信息")
-    @RequestMapping(value = "/updateUser")
+    @ApiOperation(value = "修改更新用户信息", notes = "会员管理")
+//    @RequestMapping(value = "/updateUser")
+    @PostMapping(value = "/updateUser")
     @ResponseBody
     public JSONObject updataUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
@@ -170,7 +174,8 @@ public class UserCenterController {
     }
 
     @ApiOperation(value = "会员管理", notes = "获取推荐人信息")
-    @RequestMapping(value = "/initmodifyre")
+//    @RequestMapping(value = "/initmodifyre")
+    @PostMapping(value = "/initmodifyre")
     @ResponseBody
     public JSONObject initModifyre(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
@@ -198,7 +203,8 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "checkReAction")
+//    @RequestMapping(value = "checkReAction")
+    @PostMapping(value = "/checkReAction")
     public JSONObject checkReAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userId = map.get("id");
@@ -233,8 +239,9 @@ public class UserCenterController {
      * @param request
      * @return
      */
+//    @RequestMapping(value = "checkAction")
+    @PostMapping(value = "/checkAction")
     @ResponseBody
-    @RequestMapping(value = "checkAction")
     public JSONObject checkAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userId = map.get("id");
@@ -427,8 +434,10 @@ public class UserCenterController {
      * @param response
      * @return
      */
+
+//    @RequestMapping(value = "initCompanyInfo")
+    @PostMapping(value = "/initCompanyInfo")
     @ResponseBody
-    @RequestMapping(value = "initCompanyInfo")
     public JSONObject insertCompanyInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userId = map.get("userId");
@@ -452,7 +461,8 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "serchCompanyInfo")
+//    @RequestMapping(value = "serchCompanyInfo")
+    @PostMapping(value = "/serchCompanyInfo")
     public JSONObject serchCompanyInfo(@RequestBody Map<String, String> map) {
         JSONObject ret = new JSONObject();
         String accountId = map.get("accountId");
@@ -492,7 +502,8 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("saveCompanyInfo")
+//    @RequestMapping("saveCompanyInfo")
+    @PostMapping(value = "/saveCompanyInfo")
     public JSONObject saveCompanyInfo(@RequestBody Map<String, String> map) {
         JSONObject ret = new JSONObject();
         ret = userCenterService.saveCompanyInfo(map);
@@ -501,7 +512,7 @@ public class UserCenterController {
 
 
     private UserManagerRequest serParamRequest(Map<String, Object> mapParam) {
-        UserManagerRequest request = null;
+        UserManagerRequest request = new UserManagerRequest();
         if (null != mapParam && mapParam.size() > 0) {
             if (mapParam.containsKey("regTimeStart")) {
                 request.setRegTimeStart(mapParam.get("regTimeStart").toString());
@@ -545,12 +556,12 @@ public class UserCenterController {
             if (mapParam.containsKey("instCodeSrch")) {
                 request.setInstCodeSrch(mapParam.get("instCodeSrch").toString());
             }
-            if (mapParam.containsKey("limitStart")&& StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
-                request.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
+            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
+                request.setLimit((Integer)mapParam.get("limit"));
             }
-            if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                request.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
-            }
+            /*if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
+                request.setLimitEnd((Integer)mapParam.get("limitEnd"));
+            }*/
         }
         return request;
     }

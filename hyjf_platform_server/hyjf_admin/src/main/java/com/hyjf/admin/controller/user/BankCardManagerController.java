@@ -31,13 +31,14 @@ import java.util.Map;
 
 @Api(value = "銀行卡管理")
 @RestController
-@RequestMapping("/admin/bankcardManager")
+@RequestMapping("/hyjf-admin/bankcardManager")
 public class BankCardManagerController {
     @Autowired
     public BankCardManagerService bankCardManagerService;
 
     @ApiOperation(value = "銀行卡管理", notes = "銀行卡管理页面初始化")
-    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})
+    /*@RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})*/
+    @PostMapping(value = "/bankCardInit")
     @ResponseBody
     public JSONObject userManagerInit() {
         JSONObject jsonObject = new JSONObject();
@@ -54,7 +55,8 @@ public class BankCardManagerController {
     }
     //汇付银行开户銀行卡記錄查询
     @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄查询")
-    @RequestMapping(value = "/bankOpenRecordAccount", method = {RequestMethod.GET, RequestMethod.POST})
+    /*@RequestMapping(value = "/bankOpenRecordAccount", method = {RequestMethod.GET, RequestMethod.POST})*/
+    @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
     public JSONObject bankOpenRecordAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
         JSONObject jsonObject = null;
@@ -69,7 +71,8 @@ public class BankCardManagerController {
         return jsonObject;
     }
     @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄查询")
-    @RequestMapping(value = "/bankOpenRecordBankAccount", method = {RequestMethod.GET, RequestMethod.POST})
+/*    @RequestMapping(value = "/bankOpenRecordBankAccount", method = {RequestMethod.GET, RequestMethod.POST})*/
+    @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
     public JSONObject bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
         JSONObject jsonObject = null;
@@ -116,11 +119,8 @@ public class BankCardManagerController {
             if(mapParam.containsKey("mobile")){
                 requestBank.setMobile(mapParam.get("mobile").toString());
             }
-            if (mapParam.containsKey("limitStart")&& StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
-                requestBank.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
-            }
-            if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                requestBank.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
+            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
+                requestBank.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
             }
         }
         return requestBank;
