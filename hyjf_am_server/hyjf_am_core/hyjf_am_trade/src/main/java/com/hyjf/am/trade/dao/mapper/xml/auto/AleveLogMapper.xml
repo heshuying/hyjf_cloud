@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.AleveLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.AleveLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bank" property="bank" jdbcType="INTEGER" />
+    <result column="cardnbr" property="cardnbr" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="cur_num" property="curNum" jdbcType="INTEGER" />
+    <result column="crflag" property="crflag" jdbcType="VARCHAR" />
+    <result column="valdate" property="valdate" jdbcType="VARCHAR" />
+    <result column="inpdate" property="inpdate" jdbcType="VARCHAR" />
+    <result column="reldate" property="reldate" jdbcType="VARCHAR" />
+    <result column="inptime" property="inptime" jdbcType="INTEGER" />
+    <result column="tranno" property="tranno" jdbcType="VARCHAR" />
+    <result column="ori_tranno" property="oriTranno" jdbcType="INTEGER" />
+    <result column="transtype" property="transtype" jdbcType="INTEGER" />
+    <result column="desline" property="desline" jdbcType="VARCHAR" />
+    <result column="curr_bal" property="currBal" jdbcType="DECIMAL" />
+    <result column="forcardnbr" property="forcardnbr" jdbcType="VARCHAR" />
+    <result column="revind" property="revind" jdbcType="INTEGER" />
+    <result column="accchg" property="accchg" jdbcType="VARCHAR" />
+    <result column="seqno" property="seqno" jdbcType="INTEGER" />
+    <result column="ori_num" property="oriNum" jdbcType="INTEGER" />
+    <result column="resv" property="resv" jdbcType="VARCHAR" />
+    <result column="create_day" property="createDay" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, bank, cardnbr, amount, cur_num, crflag, valdate, inpdate, reldate, inptime, tranno, 
+    ori_tranno, transtype, desline, curr_bal, forcardnbr, revind, accchg, seqno, ori_num, 
+    resv, create_day, create_user_id, create_time, update_user_id, update_time, del_flag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_aleve_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_aleve_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_aleve_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLogExample" >
+    delete from ht_aleve_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_aleve_log (bank, cardnbr, amount, 
+      cur_num, crflag, valdate, 
+      inpdate, reldate, inptime, 
+      tranno, ori_tranno, transtype, 
+      desline, curr_bal, forcardnbr, 
+      revind, accchg, seqno, 
+      ori_num, resv, create_day, 
+      create_user_id, create_time, update_user_id, 
+      update_time, del_flag)
+    values (#{bank,jdbcType=INTEGER}, #{cardnbr,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, 
+      #{curNum,jdbcType=INTEGER}, #{crflag,jdbcType=VARCHAR}, #{valdate,jdbcType=VARCHAR}, 
+      #{inpdate,jdbcType=VARCHAR}, #{reldate,jdbcType=VARCHAR}, #{inptime,jdbcType=INTEGER}, 
+      #{tranno,jdbcType=VARCHAR}, #{oriTranno,jdbcType=INTEGER}, #{transtype,jdbcType=INTEGER}, 
+      #{desline,jdbcType=VARCHAR}, #{currBal,jdbcType=DECIMAL}, #{forcardnbr,jdbcType=VARCHAR}, 
+      #{revind,jdbcType=INTEGER}, #{accchg,jdbcType=VARCHAR}, #{seqno,jdbcType=INTEGER}, 
+      #{oriNum,jdbcType=INTEGER}, #{resv,jdbcType=VARCHAR}, #{createDay,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_aleve_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bank != null" >
+        bank,
+      </if>
+      <if test="cardnbr != null" >
+        cardnbr,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="curNum != null" >
+        cur_num,
+      </if>
+      <if test="crflag != null" >
+        crflag,
+      </if>
+      <if test="valdate != null" >
+        valdate,
+      </if>
+      <if test="inpdate != null" >
+        inpdate,
+      </if>
+      <if test="reldate != null" >
+        reldate,
+      </if>
+      <if test="inptime != null" >
+        inptime,
+      </if>
+      <if test="tranno != null" >
+        tranno,
+      </if>
+      <if test="oriTranno != null" >
+        ori_tranno,
+      </if>
+      <if test="transtype != null" >
+        transtype,
+      </if>
+      <if test="desline != null" >
+        desline,
+      </if>
+      <if test="currBal != null" >
+        curr_bal,
+      </if>
+      <if test="forcardnbr != null" >
+        forcardnbr,
+      </if>
+      <if test="revind != null" >
+        revind,
+      </if>
+      <if test="accchg != null" >
+        accchg,
+      </if>
+      <if test="seqno != null" >
+        seqno,
+      </if>
+      <if test="oriNum != null" >
+        ori_num,
+      </if>
+      <if test="resv != null" >
+        resv,
+      </if>
+      <if test="createDay != null" >
+        create_day,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bank != null" >
+        #{bank,jdbcType=INTEGER},
+      </if>
+      <if test="cardnbr != null" >
+        #{cardnbr,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="curNum != null" >
+        #{curNum,jdbcType=INTEGER},
+      </if>
+      <if test="crflag != null" >
+        #{crflag,jdbcType=VARCHAR},
+      </if>
+      <if test="valdate != null" >
+        #{valdate,jdbcType=VARCHAR},
+      </if>
+      <if test="inpdate != null" >
+        #{inpdate,jdbcType=VARCHAR},
+      </if>
+      <if test="reldate != null" >
+        #{reldate,jdbcType=VARCHAR},
+      </if>
+      <if test="inptime != null" >
+        #{inptime,jdbcType=INTEGER},
+      </if>
+      <if test="tranno != null" >
+        #{tranno,jdbcType=VARCHAR},
+      </if>
+      <if test="oriTranno != null" >
+        #{oriTranno,jdbcType=INTEGER},
+      </if>
+      <if test="transtype != null" >
+        #{transtype,jdbcType=INTEGER},
+      </if>
+      <if test="desline != null" >
+        #{desline,jdbcType=VARCHAR},
+      </if>
+      <if test="currBal != null" >
+        #{currBal,jdbcType=DECIMAL},
+      </if>
+      <if test="forcardnbr != null" >
+        #{forcardnbr,jdbcType=VARCHAR},
+      </if>
+      <if test="revind != null" >
+        #{revind,jdbcType=INTEGER},
+      </if>
+      <if test="accchg != null" >
+        #{accchg,jdbcType=VARCHAR},
+      </if>
+      <if test="seqno != null" >
+        #{seqno,jdbcType=INTEGER},
+      </if>
+      <if test="oriNum != null" >
+        #{oriNum,jdbcType=INTEGER},
+      </if>
+      <if test="resv != null" >
+        #{resv,jdbcType=VARCHAR},
+      </if>
+      <if test="createDay != null" >
+        #{createDay,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_aleve_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_aleve_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.bank != null" >
+        bank = #{record.bank,jdbcType=INTEGER},
+      </if>
+      <if test="record.cardnbr != null" >
+        cardnbr = #{record.cardnbr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.curNum != null" >
+        cur_num = #{record.curNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.crflag != null" >
+        crflag = #{record.crflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.valdate != null" >
+        valdate = #{record.valdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inpdate != null" >
+        inpdate = #{record.inpdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reldate != null" >
+        reldate = #{record.reldate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inptime != null" >
+        inptime = #{record.inptime,jdbcType=INTEGER},
+      </if>
+      <if test="record.tranno != null" >
+        tranno = #{record.tranno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oriTranno != null" >
+        ori_tranno = #{record.oriTranno,jdbcType=INTEGER},
+      </if>
+      <if test="record.transtype != null" >
+        transtype = #{record.transtype,jdbcType=INTEGER},
+      </if>
+      <if test="record.desline != null" >
+        desline = #{record.desline,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currBal != null" >
+        curr_bal = #{record.currBal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.forcardnbr != null" >
+        forcardnbr = #{record.forcardnbr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.revind != null" >
+        revind = #{record.revind,jdbcType=INTEGER},
+      </if>
+      <if test="record.accchg != null" >
+        accchg = #{record.accchg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.seqno != null" >
+        seqno = #{record.seqno,jdbcType=INTEGER},
+      </if>
+      <if test="record.oriNum != null" >
+        ori_num = #{record.oriNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.resv != null" >
+        resv = #{record.resv,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDay != null" >
+        create_day = #{record.createDay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_aleve_log
+    set id = #{record.id,jdbcType=INTEGER},
+      bank = #{record.bank,jdbcType=INTEGER},
+      cardnbr = #{record.cardnbr,jdbcType=VARCHAR},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      cur_num = #{record.curNum,jdbcType=INTEGER},
+      crflag = #{record.crflag,jdbcType=VARCHAR},
+      valdate = #{record.valdate,jdbcType=VARCHAR},
+      inpdate = #{record.inpdate,jdbcType=VARCHAR},
+      reldate = #{record.reldate,jdbcType=VARCHAR},
+      inptime = #{record.inptime,jdbcType=INTEGER},
+      tranno = #{record.tranno,jdbcType=VARCHAR},
+      ori_tranno = #{record.oriTranno,jdbcType=INTEGER},
+      transtype = #{record.transtype,jdbcType=INTEGER},
+      desline = #{record.desline,jdbcType=VARCHAR},
+      curr_bal = #{record.currBal,jdbcType=DECIMAL},
+      forcardnbr = #{record.forcardnbr,jdbcType=VARCHAR},
+      revind = #{record.revind,jdbcType=INTEGER},
+      accchg = #{record.accchg,jdbcType=VARCHAR},
+      seqno = #{record.seqno,jdbcType=INTEGER},
+      ori_num = #{record.oriNum,jdbcType=INTEGER},
+      resv = #{record.resv,jdbcType=VARCHAR},
+      create_day = #{record.createDay,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLog" >
+    update ht_aleve_log
+    <set >
+      <if test="bank != null" >
+        bank = #{bank,jdbcType=INTEGER},
+      </if>
+      <if test="cardnbr != null" >
+        cardnbr = #{cardnbr,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="curNum != null" >
+        cur_num = #{curNum,jdbcType=INTEGER},
+      </if>
+      <if test="crflag != null" >
+        crflag = #{crflag,jdbcType=VARCHAR},
+      </if>
+      <if test="valdate != null" >
+        valdate = #{valdate,jdbcType=VARCHAR},
+      </if>
+      <if test="inpdate != null" >
+        inpdate = #{inpdate,jdbcType=VARCHAR},
+      </if>
+      <if test="reldate != null" >
+        reldate = #{reldate,jdbcType=VARCHAR},
+      </if>
+      <if test="inptime != null" >
+        inptime = #{inptime,jdbcType=INTEGER},
+      </if>
+      <if test="tranno != null" >
+        tranno = #{tranno,jdbcType=VARCHAR},
+      </if>
+      <if test="oriTranno != null" >
+        ori_tranno = #{oriTranno,jdbcType=INTEGER},
+      </if>
+      <if test="transtype != null" >
+        transtype = #{transtype,jdbcType=INTEGER},
+      </if>
+      <if test="desline != null" >
+        desline = #{desline,jdbcType=VARCHAR},
+      </if>
+      <if test="currBal != null" >
+        curr_bal = #{currBal,jdbcType=DECIMAL},
+      </if>
+      <if test="forcardnbr != null" >
+        forcardnbr = #{forcardnbr,jdbcType=VARCHAR},
+      </if>
+      <if test="revind != null" >
+        revind = #{revind,jdbcType=INTEGER},
+      </if>
+      <if test="accchg != null" >
+        accchg = #{accchg,jdbcType=VARCHAR},
+      </if>
+      <if test="seqno != null" >
+        seqno = #{seqno,jdbcType=INTEGER},
+      </if>
+      <if test="oriNum != null" >
+        ori_num = #{oriNum,jdbcType=INTEGER},
+      </if>
+      <if test="resv != null" >
+        resv = #{resv,jdbcType=VARCHAR},
+      </if>
+      <if test="createDay != null" >
+        create_day = #{createDay,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLog" >
+    update ht_aleve_log
+    set bank = #{bank,jdbcType=INTEGER},
+      cardnbr = #{cardnbr,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      cur_num = #{curNum,jdbcType=INTEGER},
+      crflag = #{crflag,jdbcType=VARCHAR},
+      valdate = #{valdate,jdbcType=VARCHAR},
+      inpdate = #{inpdate,jdbcType=VARCHAR},
+      reldate = #{reldate,jdbcType=VARCHAR},
+      inptime = #{inptime,jdbcType=INTEGER},
+      tranno = #{tranno,jdbcType=VARCHAR},
+      ori_tranno = #{oriTranno,jdbcType=INTEGER},
+      transtype = #{transtype,jdbcType=INTEGER},
+      desline = #{desline,jdbcType=VARCHAR},
+      curr_bal = #{currBal,jdbcType=DECIMAL},
+      forcardnbr = #{forcardnbr,jdbcType=VARCHAR},
+      revind = #{revind,jdbcType=INTEGER},
+      accchg = #{accchg,jdbcType=VARCHAR},
+      seqno = #{seqno,jdbcType=INTEGER},
+      ori_num = #{oriNum,jdbcType=INTEGER},
+      resv = #{resv,jdbcType=VARCHAR},
+      create_day = #{createDay,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

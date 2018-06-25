@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.WkcdBorrowMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.WkcdBorrow" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="wkcd_id" property="wkcdId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="truename" property="truename" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="borrow_amount" property="borrowAmount" jdbcType="DECIMAL" />
+    <result column="car_no" property="carNo" jdbcType="CHAR" />
+    <result column="car_type" property="carType" jdbcType="VARCHAR" />
+    <result column="car_shop" property="carShop" jdbcType="VARCHAR" />
+    <result column="wkcd_repay_type" property="wkcdRepayType" jdbcType="VARCHAR" />
+    <result column="wkcd_borrow_period" property="wkcdBorrowPeriod" jdbcType="INTEGER" />
+    <result column="wkcd_status" property="wkcdStatus" jdbcType="VARCHAR" />
+    <result column="ht_status" property="htStatus" jdbcType="INTEGER" />
+    <result column="check_desc" property="checkDesc" jdbcType="VARCHAR" />
+    <result column="check_user" property="checkUser" jdbcType="INTEGER" />
+    <result column="check_time" property="checkTime" jdbcType="INTEGER" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="apr" property="apr" jdbcType="DECIMAL" />
+    <result column="sync" property="sync" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, wkcd_id, user_id, user_name, truename, mobile, borrow_amount, car_no, car_type, 
+    car_shop, wkcd_repay_type, wkcd_borrow_period, wkcd_status, ht_status, check_desc, 
+    check_user, check_time, borrow_nid, apr, sync, create_user, create_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.WkcdBorrowExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_wkcd_borrow
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_wkcd_borrow
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_wkcd_borrow
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.WkcdBorrowExample" >
+    delete from ht_wkcd_borrow
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.WkcdBorrow" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_wkcd_borrow (wkcd_id, user_id, user_name, 
+      truename, mobile, borrow_amount, 
+      car_no, car_type, car_shop, 
+      wkcd_repay_type, wkcd_borrow_period, wkcd_status, 
+      ht_status, check_desc, check_user, 
+      check_time, borrow_nid, apr, 
+      sync, create_user, create_time
+      )
+    values (#{wkcdId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{truename,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{borrowAmount,jdbcType=DECIMAL}, 
+      #{carNo,jdbcType=CHAR}, #{carType,jdbcType=VARCHAR}, #{carShop,jdbcType=VARCHAR}, 
+      #{wkcdRepayType,jdbcType=VARCHAR}, #{wkcdBorrowPeriod,jdbcType=INTEGER}, #{wkcdStatus,jdbcType=VARCHAR}, 
+      #{htStatus,jdbcType=INTEGER}, #{checkDesc,jdbcType=VARCHAR}, #{checkUser,jdbcType=INTEGER}, 
+      #{checkTime,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, #{apr,jdbcType=DECIMAL}, 
+      #{sync,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.WkcdBorrow" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_wkcd_borrow
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wkcdId != null" >
+        wkcd_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="truename != null" >
+        truename,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="borrowAmount != null" >
+        borrow_amount,
+      </if>
+      <if test="carNo != null" >
+        car_no,
+      </if>
+      <if test="carType != null" >
+        car_type,
+      </if>
+      <if test="carShop != null" >
+        car_shop,
+      </if>
+      <if test="wkcdRepayType != null" >
+        wkcd_repay_type,
+      </if>
+      <if test="wkcdBorrowPeriod != null" >
+        wkcd_borrow_period,
+      </if>
+      <if test="wkcdStatus != null" >
+        wkcd_status,
+      </if>
+      <if test="htStatus != null" >
+        ht_status,
+      </if>
+      <if test="checkDesc != null" >
+        check_desc,
+      </if>
+      <if test="checkUser != null" >
+        check_user,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="apr != null" >
+        apr,
+      </if>
+      <if test="sync != null" >
+        sync,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wkcdId != null" >
+        #{wkcdId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="truename != null" >
+        #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="borrowAmount != null" >
+        #{borrowAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="carNo != null" >
+        #{carNo,jdbcType=CHAR},
+      </if>
+      <if test="carType != null" >
+        #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="carShop != null" >
+        #{carShop,jdbcType=VARCHAR},
+      </if>
+      <if test="wkcdRepayType != null" >
+        #{wkcdRepayType,jdbcType=VARCHAR},
+      </if>
+      <if test="wkcdBorrowPeriod != null" >
+        #{wkcdBorrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="wkcdStatus != null" >
+        #{wkcdStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="htStatus != null" >
+        #{htStatus,jdbcType=INTEGER},
+      </if>
+      <if test="checkDesc != null" >
+        #{checkDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="checkUser != null" >
+        #{checkUser,jdbcType=INTEGER},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="apr != null" >
+        #{apr,jdbcType=DECIMAL},
+      </if>
+      <if test="sync != null" >
+        #{sync,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.WkcdBorrowExample" resultType="java.lang.Integer" >
+    select count(*) from ht_wkcd_borrow
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_wkcd_borrow
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.wkcdId != null" >
+        wkcd_id = #{record.wkcdId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.truename != null" >
+        truename = #{record.truename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=CHAR},
+      </if>
+      <if test="record.borrowAmount != null" >
+        borrow_amount = #{record.borrowAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.carNo != null" >
+        car_no = #{record.carNo,jdbcType=CHAR},
+      </if>
+      <if test="record.carType != null" >
+        car_type = #{record.carType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.carShop != null" >
+        car_shop = #{record.carShop,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wkcdRepayType != null" >
+        wkcd_repay_type = #{record.wkcdRepayType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wkcdBorrowPeriod != null" >
+        wkcd_borrow_period = #{record.wkcdBorrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.wkcdStatus != null" >
+        wkcd_status = #{record.wkcdStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.htStatus != null" >
+        ht_status = #{record.htStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.checkDesc != null" >
+        check_desc = #{record.checkDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkUser != null" >
+        check_user = #{record.checkUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.checkTime != null" >
+        check_time = #{record.checkTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apr != null" >
+        apr = #{record.apr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sync != null" >
+        sync = #{record.sync,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_wkcd_borrow
+    set id = #{record.id,jdbcType=INTEGER},
+      wkcd_id = #{record.wkcdId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      truename = #{record.truename,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=CHAR},
+      borrow_amount = #{record.borrowAmount,jdbcType=DECIMAL},
+      car_no = #{record.carNo,jdbcType=CHAR},
+      car_type = #{record.carType,jdbcType=VARCHAR},
+      car_shop = #{record.carShop,jdbcType=VARCHAR},
+      wkcd_repay_type = #{record.wkcdRepayType,jdbcType=VARCHAR},
+      wkcd_borrow_period = #{record.wkcdBorrowPeriod,jdbcType=INTEGER},
+      wkcd_status = #{record.wkcdStatus,jdbcType=VARCHAR},
+      ht_status = #{record.htStatus,jdbcType=INTEGER},
+      check_desc = #{record.checkDesc,jdbcType=VARCHAR},
+      check_user = #{record.checkUser,jdbcType=INTEGER},
+      check_time = #{record.checkTime,jdbcType=INTEGER},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      apr = #{record.apr,jdbcType=DECIMAL},
+      sync = #{record.sync,jdbcType=TINYINT},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.WkcdBorrow" >
+    update ht_wkcd_borrow
+    <set >
+      <if test="wkcdId != null" >
+        wkcd_id = #{wkcdId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="truename != null" >
+        truename = #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="borrowAmount != null" >
+        borrow_amount = #{borrowAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="carNo != null" >
+        car_no = #{carNo,jdbcType=CHAR},
+      </if>
+      <if test="carType != null" >
+        car_type = #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="carShop != null" >
+        car_shop = #{carShop,jdbcType=VARCHAR},
+      </if>
+      <if test="wkcdRepayType != null" >
+        wkcd_repay_type = #{wkcdRepayType,jdbcType=VARCHAR},
+      </if>
+      <if test="wkcdBorrowPeriod != null" >
+        wkcd_borrow_period = #{wkcdBorrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="wkcdStatus != null" >
+        wkcd_status = #{wkcdStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="htStatus != null" >
+        ht_status = #{htStatus,jdbcType=INTEGER},
+      </if>
+      <if test="checkDesc != null" >
+        check_desc = #{checkDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="checkUser != null" >
+        check_user = #{checkUser,jdbcType=INTEGER},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="apr != null" >
+        apr = #{apr,jdbcType=DECIMAL},
+      </if>
+      <if test="sync != null" >
+        sync = #{sync,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.WkcdBorrow" >
+    update ht_wkcd_borrow
+    set wkcd_id = #{wkcdId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      truename = #{truename,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=CHAR},
+      borrow_amount = #{borrowAmount,jdbcType=DECIMAL},
+      car_no = #{carNo,jdbcType=CHAR},
+      car_type = #{carType,jdbcType=VARCHAR},
+      car_shop = #{carShop,jdbcType=VARCHAR},
+      wkcd_repay_type = #{wkcdRepayType,jdbcType=VARCHAR},
+      wkcd_borrow_period = #{wkcdBorrowPeriod,jdbcType=INTEGER},
+      wkcd_status = #{wkcdStatus,jdbcType=VARCHAR},
+      ht_status = #{htStatus,jdbcType=INTEGER},
+      check_desc = #{checkDesc,jdbcType=VARCHAR},
+      check_user = #{checkUser,jdbcType=INTEGER},
+      check_time = #{checkTime,jdbcType=INTEGER},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      apr = #{apr,jdbcType=DECIMAL},
+      sync = #{sync,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

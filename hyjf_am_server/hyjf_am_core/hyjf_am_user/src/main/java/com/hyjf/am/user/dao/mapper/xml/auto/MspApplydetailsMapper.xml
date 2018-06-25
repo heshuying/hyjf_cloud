@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.MspApplydetailsMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.MspApplydetails" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+    <result column="applyDate" property="applydate" jdbcType="VARCHAR" />
+    <result column="memberType" property="membertype" jdbcType="VARCHAR" />
+    <result column="creditAddress" property="creditaddress" jdbcType="VARCHAR" />
+    <result column="loanType" property="loantype" jdbcType="VARCHAR" />
+    <result column="loanMoney" property="loanmoney" jdbcType="VARCHAR" />
+    <result column="applyResult" property="applyresult" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, apply_id, applyDate, memberType, creditAddress, loanType, loanMoney, applyResult, 
+    remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspApplydetailsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_applydetails
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_msp_applydetails
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_msp_applydetails
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspApplydetailsExample" >
+    delete from ht_msp_applydetails
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspApplydetails" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_applydetails (apply_id, applyDate, memberType, 
+      creditAddress, loanType, loanMoney, 
+      applyResult, remark)
+    values (#{applyId,jdbcType=VARCHAR}, #{applydate,jdbcType=VARCHAR}, #{membertype,jdbcType=VARCHAR}, 
+      #{creditaddress,jdbcType=VARCHAR}, #{loantype,jdbcType=VARCHAR}, #{loanmoney,jdbcType=VARCHAR}, 
+      #{applyresult,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspApplydetails" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_applydetails
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="applydate != null" >
+        applyDate,
+      </if>
+      <if test="membertype != null" >
+        memberType,
+      </if>
+      <if test="creditaddress != null" >
+        creditAddress,
+      </if>
+      <if test="loantype != null" >
+        loanType,
+      </if>
+      <if test="loanmoney != null" >
+        loanMoney,
+      </if>
+      <if test="applyresult != null" >
+        applyResult,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="applydate != null" >
+        #{applydate,jdbcType=VARCHAR},
+      </if>
+      <if test="membertype != null" >
+        #{membertype,jdbcType=VARCHAR},
+      </if>
+      <if test="creditaddress != null" >
+        #{creditaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="loantype != null" >
+        #{loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="loanmoney != null" >
+        #{loanmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="applyresult != null" >
+        #{applyresult,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspApplydetailsExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_applydetails
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_applydetails
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.applyId != null" >
+        apply_id = #{record.applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applydate != null" >
+        applyDate = #{record.applydate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.membertype != null" >
+        memberType = #{record.membertype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creditaddress != null" >
+        creditAddress = #{record.creditaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loantype != null" >
+        loanType = #{record.loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanmoney != null" >
+        loanMoney = #{record.loanmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyresult != null" >
+        applyResult = #{record.applyresult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_applydetails
+    set id = #{record.id,jdbcType=INTEGER},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      applyDate = #{record.applydate,jdbcType=VARCHAR},
+      memberType = #{record.membertype,jdbcType=VARCHAR},
+      creditAddress = #{record.creditaddress,jdbcType=VARCHAR},
+      loanType = #{record.loantype,jdbcType=VARCHAR},
+      loanMoney = #{record.loanmoney,jdbcType=VARCHAR},
+      applyResult = #{record.applyresult,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.MspApplydetails" >
+    update ht_msp_applydetails
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="applydate != null" >
+        applyDate = #{applydate,jdbcType=VARCHAR},
+      </if>
+      <if test="membertype != null" >
+        memberType = #{membertype,jdbcType=VARCHAR},
+      </if>
+      <if test="creditaddress != null" >
+        creditAddress = #{creditaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="loantype != null" >
+        loanType = #{loantype,jdbcType=VARCHAR},
+      </if>
+      <if test="loanmoney != null" >
+        loanMoney = #{loanmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="applyresult != null" >
+        applyResult = #{applyresult,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.MspApplydetails" >
+    update ht_msp_applydetails
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      applyDate = #{applydate,jdbcType=VARCHAR},
+      memberType = #{membertype,jdbcType=VARCHAR},
+      creditAddress = #{creditaddress,jdbcType=VARCHAR},
+      loanType = #{loantype,jdbcType=VARCHAR},
+      loanMoney = #{loanmoney,jdbcType=VARCHAR},
+      applyResult = #{applyresult,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

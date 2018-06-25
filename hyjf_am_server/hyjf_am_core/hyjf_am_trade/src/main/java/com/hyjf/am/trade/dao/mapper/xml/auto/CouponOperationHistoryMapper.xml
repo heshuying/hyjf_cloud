@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.CouponOperationHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.CouponOperationHistory" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+    <result column="operation_code" property="operationCode" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="add_user" property="addUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" extends="BaseResultMap" >
+    <result column="operation_content_from" property="operationContentFrom" jdbcType="LONGVARCHAR" />
+    <result column="operation_content_to" property="operationContentTo" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    uuid, coupon_code, operation_code, add_time, add_user
+  </sql>
+  <sql id="Blob_Column_List" >
+    operation_content_from, operation_content_to
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_coupon_operation_history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_coupon_operation_history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_coupon_operation_history
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ht_coupon_operation_history
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryExample" >
+    delete from ht_coupon_operation_history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" >
+    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_coupon_operation_history (coupon_code, operation_code, add_time, 
+      add_user, operation_content_from, operation_content_to
+      )
+    values (#{couponCode,jdbcType=VARCHAR}, #{operationCode,jdbcType=INTEGER}, #{addTime,jdbcType=INTEGER}, 
+      #{addUser,jdbcType=VARCHAR}, #{operationContentFrom,jdbcType=LONGVARCHAR}, #{operationContentTo,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" >
+    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_coupon_operation_history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="couponCode != null" >
+        coupon_code,
+      </if>
+      <if test="operationCode != null" >
+        operation_code,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="addUser != null" >
+        add_user,
+      </if>
+      <if test="operationContentFrom != null" >
+        operation_content_from,
+      </if>
+      <if test="operationContentTo != null" >
+        operation_content_to,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="couponCode != null" >
+        #{couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operationCode != null" >
+        #{operationCode,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="addUser != null" >
+        #{addUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operationContentFrom != null" >
+        #{operationContentFrom,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationContentTo != null" >
+        #{operationContentTo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryExample" resultType="java.lang.Integer" >
+    select count(*) from ht_coupon_operation_history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_coupon_operation_history
+    <set >
+      <if test="record.uuid != null" >
+        uuid = #{record.uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.couponCode != null" >
+        coupon_code = #{record.couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operationCode != null" >
+        operation_code = #{record.operationCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.addUser != null" >
+        add_user = #{record.addUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operationContentFrom != null" >
+        operation_content_from = #{record.operationContentFrom,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.operationContentTo != null" >
+        operation_content_to = #{record.operationContentTo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_coupon_operation_history
+    set uuid = #{record.uuid,jdbcType=VARCHAR},
+      coupon_code = #{record.couponCode,jdbcType=VARCHAR},
+      operation_code = #{record.operationCode,jdbcType=INTEGER},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      add_user = #{record.addUser,jdbcType=VARCHAR},
+      operation_content_from = #{record.operationContentFrom,jdbcType=LONGVARCHAR},
+      operation_content_to = #{record.operationContentTo,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_coupon_operation_history
+    set uuid = #{record.uuid,jdbcType=VARCHAR},
+      coupon_code = #{record.couponCode,jdbcType=VARCHAR},
+      operation_code = #{record.operationCode,jdbcType=INTEGER},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      add_user = #{record.addUser,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" >
+    update ht_coupon_operation_history
+    <set >
+      <if test="couponCode != null" >
+        coupon_code = #{couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operationCode != null" >
+        operation_code = #{operationCode,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="addUser != null" >
+        add_user = #{addUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operationContentFrom != null" >
+        operation_content_from = #{operationContentFrom,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationContentTo != null" >
+        operation_content_to = #{operationContentTo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" >
+    update ht_coupon_operation_history
+    set coupon_code = #{couponCode,jdbcType=VARCHAR},
+      operation_code = #{operationCode,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=INTEGER},
+      add_user = #{addUser,jdbcType=VARCHAR},
+      operation_content_from = #{operationContentFrom,jdbcType=LONGVARCHAR},
+      operation_content_to = #{operationContentTo,jdbcType=LONGVARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistory" >
+    update ht_coupon_operation_history
+    set coupon_code = #{couponCode,jdbcType=VARCHAR},
+      operation_code = #{operationCode,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=INTEGER},
+      add_user = #{addUser,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>
