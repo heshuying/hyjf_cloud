@@ -3,51 +3,14 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BankCreditEndMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CreditTenderLogMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
-import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.CreditRepay;
-import com.hyjf.am.trade.dao.model.auto.CreditTender;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderLogExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.AccountWebListProducer;
 import com.hyjf.am.trade.mq.AppMessageProducer;
 import com.hyjf.am.trade.mq.Producer;
@@ -56,13 +19,9 @@ import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.EmployeeCustomizeVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -72,7 +31,17 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
-import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 银行债转异常处理
@@ -299,7 +268,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	 * @param borrowCredit
 	 * @throws MQException 
 	 */
-	private void sendCreditFullMessage(BorrowCredit borrowCredit,UserVO webUser,UserInfoVO usersInfo) throws MQException {
+	private void sendCreditFullMessage(BorrowCreditVO borrowCredit,UserVO webUser,UserInfoVO usersInfo) throws MQException {
 		// 满标
 		if (webUser != null) {
 			Map<String, String> param = new HashMap<String, String>();
@@ -323,7 +292,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
 			
 			AppMsMessage appMsMessage = new AppMsMessage(null, param, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
-			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(appMsMessage)));
 		}
 	}
 
@@ -352,22 +321,20 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		SpreadsUserVO spreadsUsersSeller=request.getSpreadsUsersSeller();
 		UserInfoCustomizeVO userInfoCustomizeRefCr = request.getUserInfoCustomizeRefCr();
 		UserInfoCustomizeVO userInfoCustomizeSeller = request.getUserInfoCustomizeSeller();
-		UserVO investUser = request.getInvestUser();
+        int nowTime=request.getNowTime();
 
-		// 当前时间
-		int nowTime = GetDate.getNowTime10();
-		// 检测响应状态
-		// 获取CreditTenderLog信息
-		CreditTenderLogExample tenderLogExample = new CreditTenderLogExample();
-		CreditTenderLogExample.Criteria tenderLogCra = tenderLogExample.createCriteria();
-		tenderLogCra.andAssignNidEqualTo(assignOrderId).andUserIdEqualTo(userId);
-		List<CreditTenderLog> creditTenderLogs = this.creditTenderLogMapper.selectByExample(tenderLogExample);
+		List<CreditTenderLogVO> creditTenderLogs = request.getCreditTenderLogs();
 		if (creditTenderLogs != null && creditTenderLogs.size() == 1) {
+
+			CreditTenderLogExample tenderLogExample = new CreditTenderLogExample();
+			CreditTenderLogExample.Criteria tenderLogCra = tenderLogExample.createCriteria();
+			tenderLogCra.andAssignNidEqualTo(assignOrderId).andUserIdEqualTo(userId);
 			boolean tenderLogFlag = this.creditTenderLogMapper.deleteByExample(tenderLogExample) > 0 ? true : false;
+
 			if (!tenderLogFlag) {
 				throw new Exception("删除相应的承接log表失败，承接订单号：" + assignOrderId + ",用户userId:" + userId);
 			}
-			CreditTenderLog creditTenderLog = creditTenderLogs.get(0);
+			CreditTenderLogVO creditTenderLog = creditTenderLogs.get(0);
 			// 债权结束标志位
 			Integer debtEndFlag = 0;
 			// 出让人userId
@@ -400,10 +367,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			// 管理费
 			BigDecimal perManageSum = BigDecimal.ZERO;
 			// 获取BorrowCredit信息
-			BorrowCreditExample borrowCreditExample = new BorrowCreditExample();
-			BorrowCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
-			borrowCreditCra.andCreditNidEqualTo(Integer.parseInt(creditNid)).andCreditUserIdEqualTo(sellerUserId).andTenderNidEqualTo(tenderOrderId);
-			List<BorrowCredit> borrowCreditList = this.borrowCreditMapper.selectByExample(borrowCreditExample);
+			List<BorrowCreditVO> borrowCreditList = request.getBorrowCreditList();
 			// 5.更新borrow_credit
 			if (borrowCreditList != null && borrowCreditList.size() == 1) {
 				// 获取BorrowRecover信息
@@ -412,7 +376,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				borrowRecoverCra.andBorrowNidEqualTo(creditTenderLog.getBidNid()).andNidEqualTo(creditTenderLog.getCreditTenderNid());
 				List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
 
-				BorrowCredit borrowCredit = borrowCreditList.get(0);
+				BorrowCreditVO borrowCredit = borrowCreditList.get(0);
 				borrowCredit.setCreditIncome(borrowCredit.getCreditIncome().add(creditTenderLog.getAssignPay()));// 总收入,本金+垫付利息
 				borrowCredit.setCreditCapitalAssigned(borrowCredit.getCreditCapitalAssigned().add(creditTenderLog.getAssignCapital()));// 已认购本金
 				borrowCredit.setCreditInterestAdvanceAssigned(borrowCredit.getCreditInterestAdvanceAssigned().add(creditTenderLog.getAssignInterestAdvance()));// 已垫付利息
@@ -441,7 +405,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 					this.sendCreditFullMessage(borrowCredit,request.getWebUser(),request.getUserInfo());
 					borrowCredit.setCreditStatus(2);
 				}
-				boolean borrowCreditFlag = borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit) > 0 ? true : false;
+				boolean borrowCreditFlag = borrowCreditMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(borrowCredit, BorrowCredit.class)) > 0 ? true : false;
 				if (!borrowCreditFlag) {
 					throw new Exception("更新相应的borrowCredit表失败，承接订单号：" + assignOrderId + ",用户userId:" + userId);
 				}
@@ -845,75 +809,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 					if (!borrowRecoverFlag) {
 						throw new Exception("更新相应的放款信息表borrowrecover失败!" + "[投资订单号：" + tenderOrderId + "]");
 					}
-					// 更新渠道统计用户累计投资
-					// 投资人信息
-					if (Validator.isNull(investUser)) {
-						throw new Exception("查询相应的承接用户user失败!" + "[用户userId：" + userId + "]");
-					}
 
-					//todo 待帅帅写完渠道统计用户累计投资查询和修改方法之后再做实现
-
-					// 更新渠道统计用户累计投资
-					/*AppChannelStatisticsDetailExample channelExample = new AppChannelStatisticsDetailExample();
-					AppChannelStatisticsDetailExample.Criteria crt = channelExample.createCriteria();
-					crt.andUserIdEqualTo(userId);
-					List<AppChannelStatisticsDetail> appChannelStatisticsDetails =
-							this.appChannelStatisticsDetailMapper.selectByExample(channelExample);
-
-					if (appChannelStatisticsDetails != null && appChannelStatisticsDetails.size() == 1) {
-						AppChannelStatisticsDetail channelDetail = appChannelStatisticsDetails.get(0);
-						Map<String, Object> params = new HashMap<String, Object>();
-						params.put("id", channelDetail.getId());
-						// 认购本金
-						params.put("accountDecimal", creditTenderLog.getAssignCapital());
-						// 投资时间
-						params.put("investTime", nowTime);
-						// 项目类型
-						params.put("projectType", "汇转让");
-						// 首次投标项目期限
-						String investProjectPeriod = borrowCredit.getCreditTerm() + "天";
-						params.put("investProjectPeriod", investProjectPeriod);
-						// 更新渠道统计用户累计投资
-						if (investUser.getInvestflag() == 1) {
-							// 更新相应的累计投资金额
-							this.appChannelStatisticsDetailCustomizeMapper.updateAppChannelStatisticsDetail(params);
-						} else if (investUser.getInvestflag() == 0) {
-							// 更新首投投资
-							this.appChannelStatisticsDetailCustomizeMapper.updateFirstAppChannelStatisticsDetail(params);
-						}
-						logger.info("用户:" + userId + "*******************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + creditTenderLog.getAssignNid());
-					} else {
-						// 更新huiyingdai_utm_reg的首投信息
-						UtmRegExample utmRegExample = new UtmRegExample();
-						UtmRegExample.Criteria utmRegCra = utmRegExample.createCriteria();
-						utmRegCra.andUserIdEqualTo(userId);
-						List<UtmReg> utmRegList = this.utmRegMapper.selectByExample(utmRegExample);
-						if (utmRegList != null && utmRegList.size() > 0) {
-							UtmReg utmReg = utmRegList.get(0);
-							Map<String, Object> params = new HashMap<String, Object>();
-							params.put("id", utmReg.getId());
-							params.put("accountDecimal", creditTenderLog.getAssignCapital());
-							// 投资时间
-							params.put("investTime", nowTime);
-							// 项目类型
-							params.put("projectType", "汇转让");
-							// 首次投标项目期限
-							String investProjectPeriod = borrowCredit.getCreditTerm() + "天";
-							// 首次投标项目期限
-							params.put("investProjectPeriod", investProjectPeriod);
-							// 更新渠道统计用户累计投资
-							if (investUser.getInvestflag() == 0) {
-								// 更新huiyingdai_utm_reg的首投信息
-								this.appChannelStatisticsDetaupdateFirstUtmRegilCustomizeMapper.(params);
-							}
-						}
-					}
-					// 更新新手标志位
-					investUser.setInvestflag(1);
-					boolean userFlag = this.usersMapper.updateByPrimaryKeySelective(investUser) > 0 ? true : false;
-					if (!userFlag) {
-						throw new Exception("更新相应的用户新手标志位失败!" + "[用户userId：" + userId + "]");
-					}*/
 					//向承接人推送承接成功消息
 					this.sendCreditSuccessMessage(creditTender,request.getWebUser(),request.getUserInfo());
 					return true;
