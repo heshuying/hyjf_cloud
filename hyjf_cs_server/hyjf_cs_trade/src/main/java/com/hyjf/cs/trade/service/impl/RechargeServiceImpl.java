@@ -15,6 +15,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
@@ -26,7 +27,6 @@ import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.constants.BankWithdrawError;
-import com.hyjf.cs.trade.constants.RechargeError;
 import com.hyjf.cs.trade.mq.AppMessageProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
@@ -500,25 +500,25 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ModelAndView modelAndView = new ModelAndView();
 		UserVO users=this.getUsers(userId);
 		if (users.getBankOpenAccount()==0) {
-			throw new ReturnMessageException(RechargeError.NOT_OPENACCOUNT_ERROR);
+			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
 		}
 		if (users.getIsSetPassword() == 0) {
-			throw new ReturnMessageException(RechargeError.NOT_PASSWD_ERROR);
+			throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_NOT_SET);
 		}
 		if (bankCard == null) {
-			throw new ReturnMessageException(RechargeError.BANKCARD_ERROR);
+			throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_BANK_CARD_GET);
 		}
 
 		if (StringUtils.isEmpty(money)) {
-			throw new ReturnMessageException(RechargeError.MONEY_NOT_NULL_ERROR);
+			throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_MONEY_REQUIRED);
 		}
 		if (!money.matches("-?[0-9]+.*[0-9]*")) {
-			throw new ReturnMessageException(RechargeError.FORMAT_ERROR);
+			throw new ReturnMessageException(MsgEnum.ERR_FMT_MONEY);
 		}
 		if(money.indexOf(".")>=0){
 			String l = money.substring(money.indexOf(".")+1,money.length());
 			if(l.length()>2){
-				throw new ReturnMessageException(RechargeError.MORE_DECIMAL_ERROR);
+				throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL);
 			}
 		}
 	}

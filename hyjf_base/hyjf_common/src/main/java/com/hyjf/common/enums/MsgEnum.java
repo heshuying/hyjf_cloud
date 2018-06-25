@@ -36,6 +36,9 @@ public enum MsgEnum implements MsgCode {
 
 	// 已确定删除的错误信息
 
+
+
+
 	// ----------错误信息ERR-------------
 	// 通用错误信息
 	ERR_OBJECT_REQUIRED("ETY000001","{0}不能为空"),
@@ -109,6 +112,11 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE("EAM000218", "加入递增金额须为{}元的整数倍"),
 	ERR_AMT_TENDER_NEED_RISK_ASSESSMENT("EAM000219","根据监管要求，投资前必须进行风险测评"),
 	ERR_AMT_TENDER_INVESTMENT("EAM000220","抱歉，投资失败，请重试"),
+	ERR_AMT_TENDER_INVESTMENT_WITH_COUPON("EAM000221","优惠券投资失败"),//孙帅帅
+	// 资金-充值相关错误信息ERR_AMT_RECHARGE_
+	ERR_AMT_RECHARGE_BANK_CARD_GET("EAM000301","查询银行卡信息失败"),
+	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
+	ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL("EAM000303","充值值金额不能大于两位小数"),
 
 
 
@@ -118,9 +126,6 @@ public enum MsgEnum implements MsgCode {
 	ERR_BANK_ACCOUNT_NOT_OPEN("EBK000003", "用户未开户"),
 	ERR_BANK_ACCOUNT_ALREADY_OPEN("EBK000004","用户已开户"),//孙帅帅新加-----已修改
 
-
-	//   优惠券相关
-	COUPON_TENDER_FAIL_ERROR("EV000001","优惠券投资失败"),//孙帅帅
 
 
 
@@ -196,17 +201,6 @@ public enum MsgEnum implements MsgCode {
 /*
 	SynBalanceError
 	PARAM_ERROR("1", "参数错误，请重试"),
-*/
-/*
-RechargeError类
-    NOT_OPENACCOUNT_ERROR("1", "用户未开户！"),
-    NOT_PASSWD_ERROR("1", "用户未设置交易密码！"),
-    BANKCARD_ERROR("1", "查询银行卡信息失败！"),
-    MONEY_NOT_NULL_ERROR("1", "充值金额不能为空！"),
-    FORMAT_ERROR("1", "充值金额格式错误！"),
-    MORE_DECIMAL_ERROR("1", "充值值金额不能大于两位小数！"),
-    CALL_BANK_ERROR("1", "调用银行接口失败");
-
 */
 
 /*
