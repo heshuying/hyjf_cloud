@@ -2,10 +2,12 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CreditListResponse;
+import com.hyjf.am.response.trade.ProjectDetailResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.cs.trade.client.WebProjectListClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,16 @@ public class WebProjectListClientImpl implements WebProjectListClient {
         logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
         return response;
     }
+
+    @Override
+    public ProjectCustomeDetailVO searchProjectDetail(Map map) {
+        ProjectDetailResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectDetail",map,ProjectDetailResponse.class).getBody();
+        logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
+        if (Response.isSuccess(response))
+            return response.getResult();
+        return null;
+    }
+
 
     @Override
     public CreditListResponse countCreditList(CreditListRequest request) {
@@ -89,7 +101,7 @@ public class WebProjectListClientImpl implements WebProjectListClient {
      * @date 2018/6/21 15:29
      */
     @Override
-    public List<WebProjectListCustomizeVo> searchPlanList(ProjectListRequest request) {
+    public List<WebProjectListCustomizeVO> searchPlanList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchPlanList --> response = {}",response);
         if (Response.isSuccess(response)){
@@ -172,7 +184,7 @@ public class WebProjectListClientImpl implements WebProjectListClient {
      * @date 2018/6/22 9:59
      */
     @Override
-    public List<WebProjectListCustomizeVo> searchAppPlanList(ProjectListRequest request) {
+    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppPlanList --> response = {}",response);
         if (Response.isSuccess(response)){

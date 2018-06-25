@@ -3,7 +3,9 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 
 /**
  * @author yaoy
@@ -11,4 +13,12 @@ import com.hyjf.am.vo.trade.CouponConfigVO;
  */
 public interface CouponConfigClient {
    CouponConfigVO selectCouponConfig(String couponCode);
+
+
+   BestCouponListVO selectBestCoupon(MyCouponListRequest request);
+
+
+   Integer countAvaliableCoupon(MyCouponListRequest request);
+
+
 }

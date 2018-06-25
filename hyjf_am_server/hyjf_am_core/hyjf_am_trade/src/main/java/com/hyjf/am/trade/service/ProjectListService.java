@@ -11,8 +11,9 @@ import javax.validation.Valid;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 
 
 /**
@@ -36,6 +37,13 @@ public interface ProjectListService {
      * @return
      */
     int countProjectList(@Valid ProjectListRequest request);
+
+    /**
+     * Web端获取标的详情
+     * @author zhangyk
+     * @date 2018/6/23 13:55
+     */
+    ProjectCustomeDetailVO getProjectDetail(@Valid Map map);
 
     /**
      * Web端获取债转列表count
@@ -70,7 +78,7 @@ public interface ProjectListService {
      * @author zhangyk
      * @date 2018/6/21 15:51
      */
-    List<WebProjectListCustomizeVo> searchWebPlanList(ProjectListRequest request);
+    List<WebProjectListCustomizeVO> searchWebPlanList(ProjectListRequest request);
 
     // --------------------------web end --------------------------------------------------
     //---------------------------app start ------------------------------------------------

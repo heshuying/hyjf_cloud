@@ -1,24 +1,19 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
-import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.trade.AppProjectListCsVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeCsVO;
-import com.hyjf.am.vo.trade.WebProjectListCsVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.client.WebProjectListClient;
 import com.hyjf.cs.trade.service.AppProjectListService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.WebProjectListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +137,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             throw new RuntimeException("app查询计划原子层count异常");
         }
         page.setTotal(count);
-        List<WebProjectListCustomizeVo> list = webProjectListClient.searchAppPlanList(request);
+        List<WebProjectListCustomizeVO> list = webProjectListClient.searchAppPlanList(request);
         if (CollectionUtils.isEmpty(list)){
             logger.error("app查询计划原子层list异常");
             throw new RuntimeException("app查询计划原子层list异常");
