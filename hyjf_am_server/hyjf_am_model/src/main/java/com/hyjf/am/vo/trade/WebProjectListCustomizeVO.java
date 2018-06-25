@@ -8,9 +8,9 @@ import com.hyjf.am.vo.BaseVO;
 /**
  * Web端项目列表
  * @author liuyang
- * @version WebProjectListCustomizeVo, v0.1 2018/6/13 11:27
+ * @version WebProjectListCustomizeVO, v0.1 2018/6/13 11:27
  */
-public class WebProjectListCustomizeVo extends BaseVO {
+public class WebProjectListCustomizeVO extends BaseVO {
     // 项目id
     private String borrowNid;
     // 项目标题
@@ -61,7 +61,7 @@ public class WebProjectListCustomizeVo extends BaseVO {
     /**
      * 构造方法
      */
-    public WebProjectListCustomizeVo() {
+    public WebProjectListCustomizeVO() {
         super();
     }
 

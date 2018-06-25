@@ -33,4 +33,19 @@ public class MyInviteServiceImpl implements MyInviteService {
         return myInviteCustomizeMapper.selectMyInviteList(param);
     }
 
+    /**
+     * 统计总的邀请记录数
+     */
+    @Override
+    public Integer countMyInviteList(String userId){
+        Map<String,Object> param = new HashMap<String, Object>();
+        param.put("userId", userId);
+
+        Integer result = myInviteCustomizeMapper.countMyInviteList(param);
+        if(result == null){
+            result = 0;
+        }
+        return result;
+    }
+
 }

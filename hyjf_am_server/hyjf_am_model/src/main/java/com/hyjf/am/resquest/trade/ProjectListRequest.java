@@ -25,8 +25,6 @@ public class ProjectListRequest extends BaseVO {
      */
     private String isHome;
 
-    private String borrowNid;
-
     public String getProjectType() {
         return projectType;
     }
@@ -65,13 +63,5 @@ public class ProjectListRequest extends BaseVO {
 
     public void setIsHome(String isHome) {
         this.isHome = isHome;
-    }
-
-    public String getBorrowNid() {
-        return borrowNid;
-    }
-
-    public void setBorrowNid(String borrowNid) {
-        this.borrowNid = borrowNid;
     }
 }

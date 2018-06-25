@@ -1,5 +1,6 @@
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
  * @author pangchengchao
  * @version BankWithdrawBeanRequest, v0.1 2018/6/13 15:00
  */
-public class BankWithdrawBeanRequest {
+public class BankWithdrawBeanRequest extends Request {
 
     private AccountWithdrawVO accountWithdrawVO;
     private AccountVO accountVO;

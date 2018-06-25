@@ -13,10 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -49,6 +46,18 @@ public class WebProjectListController extends BaseTradeController {
         return result;
     }
 
+
+    /**
+     * web端新手标和散标标的详情
+     * @author zhangyk
+     * @date 2018/6/22 16:06
+     */
+    @ApiOperation(value = "web端新手标和散标标的详情", notes = "web端新手标和散标标的详情")
+    @PostMapping(value = "/borrowDetail", produces = "application/json; charset=utf-8")
+    public Object webBorrowDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
+        WebResult result =  webProjectListService.getBorrowDetail(map,userId);
+        return result;
+    }
 
     /**
      * 散标专区债权转让列表数据
@@ -87,17 +96,7 @@ public class WebProjectListController extends BaseTradeController {
     }
 
 
-    /**
-     * web端新手标和散标标的详情
-     * @author zhangyk
-     * @date 2018/6/22 16:06
-     */
-    @ApiOperation(value = "web端新手标和散标标的详情", notes = "web端新手标和散标标的详情")
-    @PostMapping(value = "/borrowDetail", produces = "application/json; charset=utf-8")
-    public Object webBorrowDetail(@RequestBody Map map){
-        WebResult result =  webProjectListService.getBorrowDetail(map);
-        return result;
-    }
+
 
 
 

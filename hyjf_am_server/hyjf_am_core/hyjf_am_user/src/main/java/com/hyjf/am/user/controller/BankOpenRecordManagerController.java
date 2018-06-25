@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
 import com.hyjf.am.user.service.BankOpenRecordManagerService;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -46,9 +49,10 @@ public class BankOpenRecordManagerController {
     public BankAccountRecordResponse findBankAccountRecordList(@RequestBody @Valid BankAccountRecordRequest request) {
         logger.info("---findBankAccountRecordList by param---  " + JSONObject.toJSON(request));
         BankAccountRecordResponse response = new BankAccountRecordResponse();
-        BankOpenAccountRecordVO bankOpenAccountRecordVO = null;
-        List<BankOpenAccountRecordCustomize> bankOpenAccountRecordCustomizeList = bankOpenRecordService.selectBankAccountList(request);
-        int countBankRecordTotal = bankOpenRecordService.countBankRecordTotal(request);
+        Map<String,String> mapParam = setBankAccountRecordRequest(request);
+        int countBankRecordTotal = bankOpenRecordService.countBankRecordTotal(mapParam);
+        Paginator paginator = new Paginator(request.getPaginatorPage(), countBankRecordTotal,request.getLimit());
+        List<BankOpenAccountRecordCustomize> bankOpenAccountRecordCustomizeList = bankOpenRecordService.selectBankAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
         if (countBankRecordTotal > 0) {
             if (!CollectionUtils.isEmpty(bankOpenAccountRecordCustomizeList)) {
                 List<BankOpenAccountRecordVO> userBankRecord = CommonUtils.convertBeanList(bankOpenAccountRecordCustomizeList, BankOpenAccountRecordVO.class);
@@ -70,8 +74,10 @@ public class BankOpenRecordManagerController {
     public BankAccountRecordResponse findAccountRecordList(@RequestBody @Valid AccountRecordRequest request) {
         logger.info("---findAccountRecordList by param---  " + JSONObject.toJSON(request));
         BankAccountRecordResponse response = new BankAccountRecordResponse();
-        List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(request);
-        int countRecordTotal = bankOpenRecordService.countRecordTotal(request);
+        Map<String,String> mapParam = setAccountRecordRequest(request);
+        int countRecordTotal = bankOpenRecordService.countRecordTotal(mapParam);
+        Paginator paginator = new Paginator(request.getPaginatorPage(), countRecordTotal,request.getLimit());
+        List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
         if (countRecordTotal > 0) {
             if (!CollectionUtils.isEmpty(accountList)) {
                 List<BankOpenAccountRecordVO> bankOpenAccountRecordList = CommonUtils.convertBeanList(accountList, BankOpenAccountRecordVO.class);
@@ -82,6 +88,40 @@ public class BankOpenRecordManagerController {
         }
         return response;
     }
+    /**
+     * 设置汇付参数
+     * @param request
+     * @return
+     */
+    private Map<String,String> setAccountRecordRequest(AccountRecordRequest request){
+        Map<String,String> mapRaram = new HashMap<String,String>();
+        mapRaram.put("openAccountPlat",request.getOpenAccountPlat());
+        mapRaram.put("userName",request.getUserName());
+        mapRaram.put("userProperty",request.getUserProperty());
+        mapRaram.put("idCard",request.getIdCard());
+        mapRaram.put("realName",request.getRealName());
+        mapRaram.put("openTimeStart",request.getOpenTimeStart());
+        mapRaram.put("openTimeEnd",request.getOpenTimeEnd());
+        return mapRaram;
 
+    }
+
+    /**
+     * 设置江西参数
+     * @param request
+     * @return
+     */
+    private Map<String,String>  setBankAccountRecordRequest(BankAccountRecordRequest request){
+        Map<String,String> mapRaram = new HashMap<String,String>();
+        mapRaram.put("openAccountPlat",request.getOpenAccountPlat());
+        mapRaram.put("userName",request.getUserName());
+        mapRaram.put("customerAccount",request.getCustomerAccount());
+        mapRaram.put("mobile",request.getMobile());
+        mapRaram.put("idCard",request.getIdCard());
+        mapRaram.put("realName",request.getRealName());
+        mapRaram.put("openTimeStart",request.getOpenTimeStart());
+        mapRaram.put("openTimeEnd",request.getOpenTimeEnd());
+        return mapRaram;
+    }
 
 }

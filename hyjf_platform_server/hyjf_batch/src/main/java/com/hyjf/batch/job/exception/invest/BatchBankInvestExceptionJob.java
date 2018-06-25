@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 债转投资异常处理定时
  * @author jun
- * @since 20180619	
+ * @since 20180623
  */
 public class BatchBankInvestExceptionJob extends BaseJob implements Job{
 	

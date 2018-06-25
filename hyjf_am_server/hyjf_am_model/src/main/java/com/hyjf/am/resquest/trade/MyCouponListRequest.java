@@ -2,6 +2,8 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.math.BigDecimal;
+
 /**
  * 我的优惠券列表
  * @author hesy
@@ -16,6 +18,10 @@ public class MyCouponListRequest extends BaseVO {
     private Integer limitStart;
 
     private Integer limitEnd;
+
+    private String platform;
+    private String money;
+    private String borrowNid;
 
     public String getUserId() {
         return userId;
@@ -47,5 +53,29 @@ public class MyCouponListRequest extends BaseVO {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }

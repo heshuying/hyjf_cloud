@@ -39,11 +39,16 @@ public class UserManagerRequest extends BaseVO {
     public String customerId;
     // 用户来源
     public String instCodeSrch;
-    //分页开始
-    private Integer limitStart;
-    //分页结束
-    private Integer limitEnd;
 
+    public int limit;
+
+    private int paginatorPage = 1;
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
     //
     public String getRegTimeStart() {
         return regTimeStart;
@@ -156,20 +161,15 @@ public class UserManagerRequest extends BaseVO {
     public void setInstCodeSrch(String instCodeSrch) {
         this.instCodeSrch = instCodeSrch;
     }
-
-    public Integer getLimitStart() {
-        return limitStart;
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
     }
 
-    public void setLimitStart(Integer limitStart) {
-        this.limitStart = limitStart;
+    public int getLimit() {
+        return limit;
     }
 
-    public Integer getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(Integer limitEnd) {
-        this.limitEnd = limitEnd;
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 }

@@ -18,7 +18,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.PassWordError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
@@ -69,11 +68,11 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
 
         if (StringUtils.isBlank(oldPW)) {
             logger.error("修改用户登录密码-原始登录密码不能为空");
-            throw new ReturnMessageException(PassWordError.LOGINPW_NOTNULL_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_OLD_REQUIRED);
         }
         if (StringUtils.isBlank(newPW) || StringUtils.isBlank(newPW2)) {
             logger.error("修改用户登录密码-新密码不能为空");
-            throw new ReturnMessageException(PassWordError.NEWPASSWORD_NOTNULL_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_NEW_REQUIRED);
         }
 
         oldPW = RSAJSPUtil.rsaToPassword(oldPW);
@@ -82,7 +81,7 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
 
         if (!newPW.equals(newPW2)) {
             logger.error("修改用户登录密码-两次密码不一致");
-            throw new ReturnMessageException(PassWordError.PASSWORD_SAME_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
         }
 
         UserVO user = amUserClient.findUserById(userId);
@@ -92,18 +91,18 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
 
         if(!oldPW.equals(user.getPassword())){
             logger.error("修改用户登录密码-旧密码不正确");
-            throw new ReturnMessageException(PassWordError.OLDPASSWD_INVALID_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
         }
 
         if (newPW.length() < 6 || newPW.length() > 16) {
             logger.error("修改用户登录密码-密码长度6-16位");
-            throw new ReturnMessageException(PassWordError.PASSWORD_LENGTH_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_LENGTH);
 
         }
 
         if (oldPW.equals(newPW)) {
             logger.error("修改用户登录密码-新密码不能与原密码相同!");
-            throw new ReturnMessageException(PassWordError.PASSWORD_SAME1_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_TWO_SAME_PASSWORD);
         }
 
         boolean hasNumber = false;
@@ -115,7 +114,7 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
         }
         if (!hasNumber) {
             logger.error("修改用户登录密码-密码必须包含数字!");
-            throw new ReturnMessageException(PassWordError.PASSWORD_NO_NUMBER_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_NO_NUMBER);
         }
 
         String regEx = "^[a-zA-Z0-9]+$";
@@ -123,7 +122,7 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
         Matcher m = p.matcher(newPW);
         if (!m.matches()) {
             logger.error("修改用户登录密码-密码必须由数字和字母组成，如abc123");
-            throw new ReturnMessageException(PassWordError.PASSWORD_FORMAT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_FMT_PASSWORD);
         }
 
         UserVO iuser = new UserVO();
@@ -135,7 +134,7 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
             result.setStatusDesc("修改密码成功");
         } else {
             logger.error("修改用户登录密码-修改密码失败,未作任何操作");
-            throw new ReturnMessageException(PassWordError.PASSWORD_CHANGE_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PASSWORD_MODIFY);
         }
         return result;
     }
@@ -154,7 +153,7 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
         int accountFlag = user.getBankOpenAccount();
         // 未开户
         if (accountFlag!=1) {
-            throw new ReturnMessageException(PassWordError.USER_OPENBANK_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
@@ -205,7 +204,7 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
         try {
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
-            throw new ReturnMessageException(PassWordError.BANK_CONNECT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
         return map;
     }
@@ -255,7 +254,7 @@ public class PassWordServiceImpl  extends BaseUserServiceImpl implements PassWor
         try {
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
-            throw new ReturnMessageException(PassWordError.BANK_CONNECT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
         return map;
     }

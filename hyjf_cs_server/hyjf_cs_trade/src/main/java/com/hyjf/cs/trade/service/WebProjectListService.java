@@ -28,7 +28,7 @@ public interface WebProjectListService extends BaseTradeService{
      * @author zhangyk
      * @date 2018/6/22 16:40
      */
-    public WebResult getBorrowDetail(Map map);
+    public WebResult getBorrowDetail(Map map,String userId);
 
 
     /**

@@ -16,10 +16,20 @@ public class BankCardManagerRequest {
 	private String cardType;
 	private String addTimeStart;
 	private String addTimeEnd;
-	private int limitStart;
-	private int limitEnd;
 	private String mobile;
 	private String realName;
+
+	public int limit;
+	private int paginatorPage = 1;
+	public int getPaginatorPage() {
+		if (paginatorPage == 0) {
+			paginatorPage = 1;
+		}
+		return paginatorPage;
+	}
+	public void setPaginatorPage(int paginatorPage) {
+		this.paginatorPage = paginatorPage;
+	}
 
 	public String getUserName() {
 		return userName;
@@ -77,21 +87,6 @@ public class BankCardManagerRequest {
 		this.addTimeEnd = addTimeEnd;
 	}
 
-	public int getLimitStart() {
-		return limitStart;
-	}
-
-	public void setLimitStart(int limitStart) {
-		this.limitStart = limitStart;
-	}
-
-	public int getLimitEnd() {
-		return limitEnd;
-	}
-
-	public void setLimitEnd(int limitEnd) {
-		this.limitEnd = limitEnd;
-	}
 
 	public String getMobile() {
 		return mobile;
@@ -107,5 +102,13 @@ public class BankCardManagerRequest {
 
 	public void setRealName(String realName) {
 		this.realName = realName;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 }
