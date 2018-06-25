@@ -63,9 +63,6 @@ public enum MsgEnum implements MsgCode {
 
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
-	ERR_AUTHORIZE_REPEAT("ETY000501","用户已授权,无需重复授权"),
-    ERR_AUTHORIZE_STATE("ETY000502","授权状态查询接口失败"),
-    ERR_AUTHORIZE_CODE_BLANK("ETY000503","短信授权码为空"),
     ERR_BANK_WITHDRAW_LOSE_LIST_HANDLE("ETY000801","江西银行提现掉单处理出错"),
 
 	// 格式错误信息ERR_FMT_
@@ -129,7 +126,10 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
 	ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL("EAM000303","充值值金额不能大于两位小数"),
 
-
+	//授权相关错误信息ERR_AUTHORIZE_
+	ERR_AUTHORIZE_REPEAT("EAU000001","用户已授权,无需重复授权"),
+	ERR_AUTHORIZE_STATE("EAU000002","授权状态查询接口失败"),
+	ERR_AUTHORIZE_CODE_BLANK("EAU000003","短信授权码为空"),
 
 	// 银行相关错误信息ERR_BANK_
 	ERR_BANK_CALL("EBK000001", "调用银行接口失败"),
