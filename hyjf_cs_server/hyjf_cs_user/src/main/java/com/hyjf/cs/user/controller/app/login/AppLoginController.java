@@ -15,7 +15,6 @@ import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -73,7 +72,7 @@ public class AppLoginController extends BaseUserController {
         } else {
             logger.error("app端登录失败...");
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
         }
         return result;
     }

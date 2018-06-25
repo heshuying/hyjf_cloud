@@ -5,10 +5,10 @@ package com.hyjf.cs.user.controller.app.autoplus;
 
 import com.hyjf.am.vo.user.AuthorizedVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -51,7 +51,7 @@ public class APPAutoPlusController extends BaseUserController {
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
         if (token == null) {
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         UserVO user = this.autoPlusService.getUsers(token);
         //检查用户信息
@@ -88,7 +88,7 @@ public class APPAutoPlusController extends BaseUserController {
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
         if (token == null) {
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         UserVO user = this.autoPlusService.getUsers(token);
         //检查用户信息

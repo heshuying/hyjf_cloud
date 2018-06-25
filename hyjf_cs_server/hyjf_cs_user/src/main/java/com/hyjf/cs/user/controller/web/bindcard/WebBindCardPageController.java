@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.constants.BindCardError;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -128,13 +128,13 @@ public class WebBindCardPageController {
             bankBean = bindCardService.callBankUnBindCard(bindCardVO, user.getUserId());
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求解绑卡接口发生异常", e);
         }
 
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求解绑卡接口失败");
         }
 
@@ -143,7 +143,7 @@ public class WebBindCardPageController {
             bindCardService.updateAfterUnBindCard(bankBean);
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_CARD_SAVE.getMsg());
             logger.error("解绑卡后处理异常", e);
         }
 

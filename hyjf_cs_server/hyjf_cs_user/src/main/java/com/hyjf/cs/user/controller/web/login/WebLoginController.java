@@ -4,13 +4,13 @@
 package com.hyjf.cs.user.controller.web.login;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -63,7 +63,7 @@ public class WebLoginController extends BaseUserController {
         } else {
             logger.error("web端登录失败...");
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
         }
         return result;
     }

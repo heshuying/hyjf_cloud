@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.wechat.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
@@ -9,7 +10,6 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WechatResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
-import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -62,7 +62,7 @@ public class WeChatBankOpenController extends BaseUserController {
         } else {
             logger.error("openAccount userInfo failed...");
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(OpenAccountError.SYSTEM_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
         }
         return result;
     }
@@ -73,7 +73,7 @@ public class WeChatBankOpenController extends BaseUserController {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         ModelAndView reuslt = new ModelAndView();
         if (token == null) {
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         // 获取登录信息
         UserVO user = bankOpenService.getUsers(token);
@@ -99,7 +99,7 @@ public class WeChatBankOpenController extends BaseUserController {
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), CustomConstants.CLIENT_WECHAT, openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
-            throw new ReturnMessageException(OpenAccountError.SYSTEM_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
         logger.info("开户end");
         return reuslt;

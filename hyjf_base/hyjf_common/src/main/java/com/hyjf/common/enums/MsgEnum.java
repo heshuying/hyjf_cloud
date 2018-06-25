@@ -64,7 +64,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
 	ERR_AUTHORIZE_REPEAT("ETY000501","用户已授权,无需重复授权"),
-    ERR_AUTHORIZE_STATE("ETY000601","授权状态查询接口失败"),
+    ERR_AUTHORIZE_STATE("ETY000502","授权状态查询接口失败"),
+    ERR_AUTHORIZE_CODE_BLANK("ETY000503","短信授权码为空"),
     ERR_BANK_WITHDRAW_LOSE_LIST_HANDLE("ETY000801","江西银行提现掉单处理出错"),
 
 	// 格式错误信息ERR_FMT_
@@ -88,6 +89,8 @@ public enum MsgEnum implements MsgCode {
     ERR_USER_INFO_GET("EUS000008","查询用户失败"),
     ERR_USER_INFO_CHECK("EUS000009", "根据电子账户号查询用户信息失败"),
     ERR_USER_LOGIN_EXPIRE("EUS000010","登录失效，请重新登陆"),
+    ERR_USER_USERNAME_AND_PASSWORD_REQUIRED("EUS000011","用户名或密码不能为空"),
+    ERR_USER_RECOMMEND_INVALID("EUS000012","无效的推荐人"),
 
     // 资金相关错误信息ERR_AMT_
 	// 资金-提现相关错误信息ERR_AMT_WITHDRAW_
@@ -95,6 +98,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE("EAM000102","提现金额需大于1元"),
 	ERR_AMT_WITHDRAW_CARD("EAM000103","银行卡号不正确，请确认后再次提现"),
 	ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED("EAM000104","大额提现时,开户行号不能为空"),
+
 
 	// 资金-投资相关错误信息ERR_AMT_TENDER_
 	ERR_AMT_TENDER_IN_PROGRESS("EAM000201","用户正在投资中"),
@@ -118,6 +122,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TENDER_NEED_RISK_ASSESSMENT("EAM000219","根据监管要求，投资前必须进行风险测评"),
 	ERR_AMT_TENDER_INVESTMENT("EAM000220","抱歉，投资失败，请重试"),
 	ERR_AMT_TENDER_INVESTMENT_WITH_COUPON("EAM000221","优惠券投资失败"),//孙帅帅
+
+
 	// 资金-充值相关错误信息ERR_AMT_RECHARGE_
 	ERR_AMT_RECHARGE_BANK_CARD_GET("EAM000301","查询银行卡信息失败"),
 	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
@@ -125,24 +131,28 @@ public enum MsgEnum implements MsgCode {
 
 
 
-
-
-
 	// 银行相关错误信息ERR_BANK_
 	ERR_BANK_CALL("EBK000001", "调用银行接口失败"),
+    // 开户相关ERR_BANK_ACCOUNT_
 	ERR_BANK_ACCOUNT_OPEN("EBK000002", "开户失败"),
 	ERR_BANK_ACCOUNT_NOT_OPEN("EBK000003", "用户未开户"),
 	ERR_BANK_ACCOUNT_ALREADY_OPEN("EBK000004","用户已开户"),//孙帅帅新加-----已修改
-
-
-
+    ERR_BANK_ACCOUNT_REALNAME_REQUIRED("EBK000005","真实姓名不能为空"),
+    ERR_BANK_ACCOUNT_REALNAME_CONTAIN_SPACE("EBK000006","真实姓名不能包含空格"),
+    ERR_BANK_ACCOUNT_REALNAME_MORE_THAN_TEN("EBK000007","真实姓名不能超过十位"),
+    ERR_BANK_ACCOUNT_IDCARDNO_REQUIRED("EBK000008","身份证不能为空"),
+    ERR_BANK_ACCOUNT_IDCARDNO_EXIST("EBK000009","身份证号已存在"),
 
 	// 银行卡相关错误信息ERR_CARD_
 	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
 	ERR_CARD_SAVE("ECD000002", "银行卡信息保存失败"),
 	ERR_CARD_NOT_EXIST("ECD000003", "没有要解绑的银行卡"),
 	ERR_CARD_DELETE("ECD000004", "银行卡删除失败"),
-	ERR_CARD_NOT_BIND("ECD000004","用户未绑卡"),
+	ERR_CARD_NOT_BIND("ECD000005","用户未绑卡"),
+    ERR_CARD_BLANK("ECD000006","银行卡号未填写"),
+
+
+
 
 	// 邮件相关错误信息ERR_EMAIL_
 	ERR_EMAIL_USED("EEM000001", "邮箱已被占用"),
@@ -153,15 +163,23 @@ public enum MsgEnum implements MsgCode {
 	ERR_EMAIL_ACTIVE_OVERDUE("EEM000005", "激活邮件已过期"),
 	ERR_EMAIL_ACTIVE_NOT_EXIST("EEM000006", "激活邮件不存在"),
 	ERR_EMAIL_ACTIVE("EEM000007", "激活失败"),
+    ERR_EMAIL_REQUIRED("EEM000008","待绑定的邮箱不能为空"),
+
+
+
 
 	// 手机号相关错误信息ERR_MOBILE
 	ERR_MOBILE_NEED_SAME("EMB000001", "获取验证码手机号与注册手机号不一致!"),
 	ERR_MOBILE_NEED_DIFFERENT("EMB000002", "修改手机号与原手机号不能相同!"),//different
 	ERR_MOBILE_IS_NOT_REAL("EMB000003", "请填写您的真实手机号码"),
 	ERR_MOBILE_EXISTS("EMB000004", "手机号已存在"),
+    ERR_MOBILE_BLANK("EMB000005", "手机号未填写"),
+    ERR_MOBILE_INCORRECT("EMB000006","手机号码错误"),
+    ERR_MOBILE_REPEAT("EMB000006","手机号码重复"),
+
 
 	//密码相关错误信息ERR_PASSWORD_
-	ERR_PASSWORD_ERROR_TOO_MANEY("EPW000001", "登录失败,当日密码错误已打上限，请明日再试！"),
+	ERR_PASSWORD_ERROR_TOO_MANEY("EPW000001", "登录失败,当日密码错误已达上限，请明日再试！"),
 	ERR_PASSWORD_LENGTH("EPW000002", "密码长度6-16位"),
 	ERR_PASSWORD_NO_NUMBER("EPW000003", "密码必须包含数字"),
 	ERR_PASSWORD_NEW_REQUIRED("EPW000004","新密码不能为空"),
@@ -176,18 +194,16 @@ public enum MsgEnum implements MsgCode {
     ERR_TRADE_PASSWORD_SET_FAIL("EPW000006", "交易密码设置失败"),
 
 
-
-
 	// 验证码相关错误信息ERR_SMSCODE_
 	ERR_SMSCODE_SEND_TOO_FAST("ESC000002", "请求验证码操作过快"),
 	ERR_SMSCODE_SEND_TOO_MANNY("ESC000003", "该设备短信请求次数超限，请明日再试"),
-
-
+    ERR_SMSCODE_BLANK("ESC000004", "短信验证码未填写"),
 
 
 	// 紧急联系人错误信息ERR_CONTACT_
+    ERR_CONTACT_RELATIONSHIP_INVALID("ECT000001","无效的紧急联系人关系"),
 	ERR_CONTACT_SAVE("ECT000002", "紧急联系人保存错误"),
-
+    ERR_CONTACT_RELATIONSHIP_NOT_EXIST("ECT000003","紧急联系人关系数据不存在"),
 
 
 	//活动错误信息ERR_ACTIVITY_
@@ -196,95 +212,10 @@ public enum MsgEnum implements MsgCode {
 	ERR_ACTIVITY_END("EAC000003","该活动已结束"),
 
 
-
-
-/*
-ContractSetError类
-	REQUEST_PARAM_ERROR("1", "请求参数错误"),
-	NAME_FORMAT_ERROR("1", "联系人姓名格式错误"),
-	PHONE_FORMAT_ERROR("1", "联系人手机号码格式错误"),
-	RELATION_NOTEXIST_ERROR("1", "无效的紧急联系人关系"),
-	CONTRACT_SAVE_ERROR("1", "紧急联系人保存错误"),
-	CONTRACT_RELATION_ERROR("1", "紧急联系人关系数据不存在错误");
-*/
-
-/*
-LoginError类
-    USER_LOGIN_ERROR("1", "登录失败,账号或密码错误"),
-    USER_INVALID_ERROR("1", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
-    CHECK_NULL_ERROR("1", "用户名或密码不能为空！"),
-    REFFER_INVALID_ERROR("1", "无效的推荐人！"),
-    ERROR_PARAM("1", "请求参数非法"),
-    PWD_ERROR_TOO_MANEY_ERROR("1", "登录失败,当日密码错误已打上限，请明日再试！");
-*/
-
-/*
-BindCardError类
-CARD_NO_ERROR("1", "银行卡号未填写"),
-    MOBILE_ERROR("1", "手机号未填写"),
-    SMSCODE_ERROR("1", "短信验证码未填写"),
-    AUTH_CODE_ERROR("1", "短信授权码为空"),
-	BANK_NOT_OPEN_ERROR("1", "用户未开户"),
-	BANK_CALL_ERROR("1", "请求银行接口失败"),
-	CARD_SAVE_ERROR("1", "银行卡信息保存失败"),
-	BANK_BALANCE_ERROR("1", "账户尚有余额，不能解绑银行卡"),
-	CARD_NOT_EXIST_ERROR("1", "没有要解绑的银行卡"),
-	CARD_DELETE_ERROR("1", "银行卡删除失败");
-*/
-
-/*
-BindEmailError类
-REQUEST_PARAM_ERROR("1", "请求参数错误"),
-	 	EMAIL_EMPTY_ERROR("1", "待绑定的邮箱不能为空"),
-	 	EMAIL_USED_ERROR("1", "邮箱已被占用"),
-		EMAIL_FORMAT_ERROR("1", "邮箱格式不正确"),
-		EMAIL_ACTIVE_SEND_ERROR("1", "发送激活邮件失败"),
-
-	    EMAIL_ACTIVE_ERROR_1("1", "激活邮件未验证"),
-	    EMAIL_ACTIVE_ERROR_2("1", "激活邮件已验证"),
-	    EMAIL_ACTIVE_ERROR_3("1", "激活邮件已过期"),
-	    EMAIL_ACTIVE_ERROR_4("1", "激活邮件不存在"),
-
-	    EMAIL_ACTIVE_ERROR("1", "激活失败");
-*/
-
-/*
-OpenAccountError类
-SUCCESS("0", ""),
-	USER_NOT_LOGIN_ERROR("1", "用户未登录"),
-	ERROR("1", "开户失败"),
-	SYSTEM_ERROR("1","系统异常"),
-	PARAM_ERROR("1", ""),
-	GET_USER_INFO_ERROR("1", "获取用户信息失败"),
-	MOBILE_NULL_ERROR("1", "手机号不能为空"),
-	TRUENAME_NULL_ERROR("1", "真实姓名不能为空"),
-
-	TRUENAME_BLANKL_ERROR("1", "真实姓名不能包含空格"),
-	TRUENAME_LENGTH_ERROR("1", "真实姓名不能超过十位"),
-	IDNO_NULL_ERROR("1", "身份证不能为空"),
-	IDNO_FORMAT_ERROR("1", "身份证号格式错误"),
-	IDNO_USED_ERROR("1", "身份证号已存在"),
-	MOBILE_FORMAT_ERROR("1", "手机号格式错误"),
-	MOBILE_USED_ERROR("1", "手机号码重复"),
-	MOBILE_ERROR("1", "手机号码输入错误"),
-	OPEN_ACCOUNTED_ERROR("1", "已开户"),
-*/
-/*
-AuthorizedError类
-    USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
-    PARAM_ERROR("1", "参数错误，请重试"),
-    NOT_REGIST_ERROR("1", "用户未开户！"),
-    NOT_SET_PWD_ERROR("1", "用户未设置交易密码"),
-    CANNOT_REPEAT_ERROR("1", "用户已授权,无需重复授权"),
-    CALL_BANK_ERROR("1", "调用银行接口失败");
-*/
-
- /*
- ApiError类
- UNKNOWN_ERROR("syserror_0001", "系统异常，请稍后再试"),
-    API_CALL_ERROR("system_error_0002", "微服务调用异常，请稍后重试！");
-  */
-
+    // 系统错误信息ERR_SYSTEM_
+    ERR_SYSTEM_UNKNOWN("ESY000001","系统异常，请稍后再试"),
+    ERR_SYSTEM_API_CALL("ESY000002","微服务调用异常，请稍后重试"),
+    ERR_SYSTEM_UNUSUAL("ESY000003","系统异常"),
 
 
 

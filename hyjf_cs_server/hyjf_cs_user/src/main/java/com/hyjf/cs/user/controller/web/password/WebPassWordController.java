@@ -17,7 +17,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.BindCardError;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -232,12 +231,12 @@ public class WebPassWordController {
             bankBean = passWordService.callSendCode(user.getUserId(),user.getMobile(),srvTxCode, ClientConstants.CHANNEL_PC,null);
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求验证码接口发生异常", e);
         }
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求验证码接口失败");
         }else {
             result.setData(bankBean.getSrvAuthCode());
