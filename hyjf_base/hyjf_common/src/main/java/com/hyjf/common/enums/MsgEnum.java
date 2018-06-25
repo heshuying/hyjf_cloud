@@ -65,6 +65,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_INSTCODE("ETY000401","机构编号错误"),
 	ERR_AUTHORIZE_REPEAT("ETY000501","用户已授权,无需重复授权"),
 	ERR_CHECK_USER_INFO("ETY000601", "根据电子账户号查询用户信息失败"),
+    ERR_BANK_WITHDRAW_LOSE_LIST_HANDLE("ETY000701","江西银行提现掉单处理出错"),
 
 	// 格式错误信息ERR_FMT_
 	ERR_FMT_NAME("EFM000101", "联系人姓名格式错误"),
@@ -83,6 +84,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_INVALID("EUS000004", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
 	ERR_USER_REGISTER("EUS000005","注册失败"),
 	ERR_USER_LOGIN_RETRY("EUS000006", "登录失败,请重新登陆"),
+    ERR_USER_UNUSUAL("EUS000007", "你的账户信息存在异常，请联系客服人员处理"),
 
 	// 资金相关错误信息ERR_AMT_
 	// 资金-提现相关错误信息ERR_AMT_WITHDRAW_
@@ -117,6 +119,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_RECHARGE_BANK_CARD_GET("EAM000301","查询银行卡信息失败"),
 	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
 	ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL("EAM000303","充值值金额不能大于两位小数"),
+
+
 
 
 
@@ -177,27 +181,6 @@ public enum MsgEnum implements MsgCode {
 	ERR_ACTIVITY_END("EAC000003","该活动已结束"),
 
 
-	/*
-	BankWithdrawError类
-
-
-	USER_LOGIN_ERROR("1", "登录失败,请重新登陆"),
-	PARAM_ERROR("1", "参数错误，请重试"),
-	ACCOUNT_ERROR("1", "你的账户信息存在异常，请联系客服人员处理。"),
-	WITHDRAW_TRSANSAMT_ERROR("1", "请输入提现金额。"),
-	WITHDRAW_SERVICE_CHARGE_ERROR("1", "提现金额需大于1元！"),
-	WITHDRAW_CARD_NO_ERROR("1", "银行卡号不正确，请确认后再次提现。"),
-	WITHDRAW_PAYALLIANCECODE_ERROR("1", "大额提现时,开户行号不能为空!"),
-	NOT_CARD_NO_ERROR("1", "用户未绑卡！"),
-
-	NOT_REGIST_ERROR("1", "用户未开户！"),
-	NOT_SET_PWD_ERROR("1", "用户未设置交易密码"),
-	CANNOT_REPEAT_ERROR("1", "用户已授权,无需重复授权"),
-	CALL_BANK_ERROR("1", "调用银行接口失败"),
-	BANK_WITHDRAW_EXCEPTION_HANDLE_ERROR("1", "江西银行提现掉单处理出错！"),
-	BANK_WITHDRAW_EXCEPTION_HANDLE_SUCCESS("0", "江西银行提现掉单处理成功！"),
-
-*/
 /*
 	SynBalanceError
 	PARAM_ERROR("1", "参数错误，请重试"),

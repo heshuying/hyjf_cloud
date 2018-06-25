@@ -26,7 +26,6 @@ import com.hyjf.cs.trade.client.BankInterfaceClient;
 import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.mq.AppMessageProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;
@@ -389,8 +388,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		WebResult<Object> result = new WebResult<Object>();
 		JSONObject ret = new JSONObject();
 		if(user==null){
-			result.setStatus(BankWithdrawError.USER_LOGIN_ERROR.getCode());
-			result.setStatusDesc(BankWithdrawError.USER_LOGIN_ERROR.getMsg());
+			result.setStatus(MsgEnum.ERR_USER_LOGIN_RETRY.getCode());
+			result.setStatusDesc(MsgEnum.ERR_USER_LOGIN_RETRY.getMsg());
 			return result;
 		}
 		Integer userId = user.getUserId();
