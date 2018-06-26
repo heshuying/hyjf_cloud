@@ -11,4 +11,13 @@ import com.hyjf.am.vo.user.EvalationVO;
  * @version EvalationResponse, v0.1 2018/6/17 23:21
  */
 public class EvalationResponse extends Response<EvalationVO> {
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }
