@@ -46,6 +46,7 @@ public class WebBindCardPageController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "绑卡接口页面", notes = "绑卡接口页面")
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
@@ -76,6 +77,7 @@ public class WebBindCardPageController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @RequestMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
     public BankCallResult bindCardBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody  BankCallBean bean, HttpServletRequest request) {
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
