@@ -118,8 +118,6 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 		// 调用开户接口
 		this.version = BankCallConstant.VERSION_10;
 		this.txCode = txCode;
-		this.instCode = instCode;
-		this.bankCode = bankCode;
 		this.txDate = txDate;
 		// 交易时间
 		this.txTime = txTime;

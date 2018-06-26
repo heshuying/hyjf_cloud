@@ -17,8 +17,10 @@ public class SystemConfig {
     @Value("${hyjf.web.user.host}")
     public String webUserHost;
 
+    @Value("${hyjf.front.host}")
+    public String frontHost;
 
-    
+
     public String getWebHost() {
         return webHost;
     }
@@ -49,5 +51,13 @@ public class SystemConfig {
 
     public void setWebUserHost(String webUserHost) {
         this.webUserHost = webUserHost;
+    }
+
+    public String getFrontHost() {
+        return frontHost;
+    }
+
+    public void setFrontHost(String frontHost) {
+        this.frontHost = frontHost;
     }
 }

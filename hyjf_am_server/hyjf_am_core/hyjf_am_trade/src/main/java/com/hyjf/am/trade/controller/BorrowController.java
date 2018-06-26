@@ -9,6 +9,7 @@ import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
@@ -187,5 +188,18 @@ public class BorrowController {
 		return response;
 	}
 
-
+	/**
+	 * 投资之前插入tmp表
+	 * @param tenderRequest
+	 * @return
+	 */
+	@PostMapping("/insertBeforeTender")
+	public int insertBeforeTender(@RequestBody TenderRequest tenderRequest) {
+		try{
+			borrowService.insertBeforeTender(tenderRequest);
+			return 1;
+		}catch (Exception e){
+			return 0;
+		}
+	}
 }
