@@ -1,4 +1,4 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.user.dao.model.customize;
 
 import java.io.Serializable;
 

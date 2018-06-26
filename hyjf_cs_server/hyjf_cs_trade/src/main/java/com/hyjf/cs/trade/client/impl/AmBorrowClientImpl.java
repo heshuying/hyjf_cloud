@@ -3,7 +3,9 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -106,5 +108,20 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 投资之前插入tmp表
+	 *
+	 * @param request
+	 */
+	@Override
+	public boolean updateBeforeChinaPnR(TenderRequest request) {
+		Integer result = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, Integer.class).getBody();
+		if (result != null) {
+			return result == 0 ? false : true;
+		}
+		return false;
 	}
 }

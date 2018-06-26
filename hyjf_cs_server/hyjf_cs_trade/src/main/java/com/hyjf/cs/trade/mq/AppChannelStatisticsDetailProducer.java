@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @since 20180625
  */
 @Component
-public class AppChannelStatisticsProducer extends Producer {
+public class AppChannelStatisticsDetailProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();

@@ -37,7 +37,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     
     /** 忘记密码地址*/
 //    @Value("${hyjf.web.bank.forgetpassword}")
-    private static String FORGET_PASSWORD_URL = "";
+    public static String FORGET_PASSWORD_URL = "";
 //    public static final String FORGET_PASSWORD_URL = PropUtils.getSystem("hyjf.web.bank.forgetpassword");
     
     /** 忘记密码地址*/
