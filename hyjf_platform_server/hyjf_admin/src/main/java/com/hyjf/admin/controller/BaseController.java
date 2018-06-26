@@ -25,7 +25,7 @@ public class BaseController {
 	//取得session中用户信息
 	public AdminSystemVO getUser(HttpServletRequest request) {
 		AdminSystemVO ar=null;
-		ar=((AdminSystemResponse) request.getSession().getAttribute(user)).getResult();
+		ar=(AdminSystemVO) request.getSession().getAttribute(user);
 		return ar;
 	}
 	//存入session中用户信息

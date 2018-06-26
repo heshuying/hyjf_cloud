@@ -9,12 +9,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.common.cache.RedisUtils;
 
 /**
  * @author DongZeShan
@@ -22,29 +25,45 @@ import com.hyjf.am.response.config.AdminSystemResponse;
  */
 
 public class AdminInterceptor implements HandlerInterceptor {
+	private static final Logger logger = LoggerFactory.getLogger(AdminInterceptor.class);
+
 	// 判断用户是否登陆
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		if (!"/login/login".equals(request.getRequestURI())) {
-			try {
-				((AdminSystemResponse) request.getSession().getAttribute("user")).getResult();
-			} catch (NullPointerException e) {
-				response.setCharacterEncoding("UTF-8");
-				response.setContentType("application/json; charset=utf-8");
-				try {
-					JSONObject res = new JSONObject();
-					res.put("success", "99");
-					res.put("msg", "未登录");
-					PrintWriter out = response.getWriter();
-					out.append(res.toString());
-					return false;
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					response.sendError(500);
-					return false;
-				}
+		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
+		String username = "";
+		try {
+			username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
+			String val = RedisUtils.get("admin@" + username);
+			if (val != null && !val.equals(request.getHeader("Cookies"))) {
+//				request.getSession().removeAttribute("user");
+//				JSONObject res = new JSONObject();
+//				res.put("success", "99");
+//				res.put("msg", "未登录,登陆超时,其他地方已登陆");
+//				PrintWriter out = response.getWriter();
+//				out.append(res.toString());
+//				return false;
+			} else {
+				RedisUtils.set("admin@" + username, val, 3600);
 			}
+
+		} catch (NullPointerException e) {
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json; charset=utf-8");
+			try {
+				JSONObject res = new JSONObject();
+				res.put("success", "99");
+				res.put("msg", "未登录");
+				PrintWriter out = response.getWriter();
+				out.append(res.toString());
+				return false;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				response.sendError(500);
+				return false;
+			}
+
 		}
 
 		if (handler instanceof HandlerMethod) {
@@ -54,7 +73,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 			if (authorityAnnotation == null) {
 				return true;
 			}
-			//获取该角色 权限列表
+			// 获取该角色 权限列表
 			List<String> perm = (List<String>) request.getSession().getAttribute("permission");
 			for (String string : perm) {
 				if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {
