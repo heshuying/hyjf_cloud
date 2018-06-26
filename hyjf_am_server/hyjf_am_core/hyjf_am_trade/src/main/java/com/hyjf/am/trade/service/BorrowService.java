@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 
@@ -60,6 +61,13 @@ public interface BorrowService {
      * @return
      */
     BorrowInfo getBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 投资之前插入tmp表
+     * @param tenderRequest
+     * @return
+     */
+    int insertBeforeTender(TenderRequest tenderRequest);
 
     /**
      * 獲取預期的還款標的

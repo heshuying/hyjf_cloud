@@ -57,6 +57,8 @@ public class TenderRequest extends BaseVO {
     private String mainTenderNid;
     // 优惠券收益
     private BigDecimal couponInterest;
+    // 订单号
+    private String orderId;
 
     public String getCreditNid() {
         return creditNid;
@@ -200,5 +202,13 @@ public class TenderRequest extends BaseVO {
 
     public void setCouponInterest(BigDecimal couponInterest) {
         this.couponInterest = couponInterest;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

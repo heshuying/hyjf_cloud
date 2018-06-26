@@ -4,8 +4,12 @@
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BorrowTenderService;
 import com.hyjf.cs.trade.service.HjhTenderService;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @Description web端加入计划
@@ -36,14 +41,23 @@ public class BorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
-    public Object borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setToken(token);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        borrowTenderService.borrowTender(tender);
-        return null;
+
+        WebResult<Map<String,Object>> result = null;
+        try{
+            result =  borrowTenderService.borrowTender(tender);
+        }catch (CheckException e){
+            throw e;
+        }finally {
+            // TODO: 2018/6/25  删除redis校验
+            //RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
+        }
+        return result;
     }
 
 }

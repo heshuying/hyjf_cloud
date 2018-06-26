@@ -6,31 +6,42 @@ package com.hyjf.am.trade.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.model.auto.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import java.util.Date;
+import java.util.List;
+
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.model.auto.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowManinfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import com.hyjf.common.util.GetDate;
 
 /**
@@ -56,6 +67,13 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Autowired
     private BorrowInfoMapper borrowInfoMapper;
+
+    @Autowired
+    private BorrowTenderTmpMapper borrowTenderTmpMapper;
+
+    @Autowired
+    private BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
+
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -149,7 +167,7 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     /**
-     *获取borrowInfo
+     * 获取borrowInfo
      * @param borrowNid
      * @return
      */
@@ -178,5 +196,66 @@ public class BorrowServiceImpl implements BorrowService {
     	}
     	return null;
 	}
+
+    /**
+     * 投资之前插入tmp表
+     *
+     * @param tenderRequest
+     * @return
+     */
+    @Override
+    public int insertBeforeTender(TenderRequest tenderRequest) {
+        Integer userId = tenderRequest.getUser().getUserId();
+        BorrowTenderTmp temp = new BorrowTenderTmp();
+        temp.setUserId(userId);
+        temp.setBorrowNid(tenderRequest.getBorrowNid());
+        temp.setNid(tenderRequest.getOrderId());
+        temp.setAccount(new BigDecimal(tenderRequest.getAccount()));
+        temp.setAddip(tenderRequest.getIp());
+       /* temp.setChangeStatus(0);
+        temp.setChangeUserid(0);
+        temp.setChangePeriod(0);
+        temp.setTenderStatus(0);
+        temp.setTenderNid(borrowNid);
+        temp.setTenderAwardAccount(new BigDecimal(0));*/
+        temp.setRecoverFullStatus(0);
+        temp.setRecoverFee(new BigDecimal(0));
+        /*temp.setRecoverType("");*/
+        temp.setRecoverAdvanceFee(new BigDecimal(0));
+        temp.setRecoverLateFee(new BigDecimal(0));
+        /*temp.setTenderAwardFee(new BigDecimal(0));
+        temp.setContents("");
+        temp.setAutoStatus(0);
+        temp.setWebStatus(0);
+        temp.setPeriodStatus(0);
+        temp.setWeb(0);*/
+        temp.setIsBankTender(1);
+        Integer couponGrantId = tenderRequest.getCouponGrantId();
+        if (couponGrantId==null) {
+            couponGrantId = 0;
+        }
+        temp.setCouponGrantId(couponGrantId);// 为投资完全掉单优惠券投资时修复做记录
+        boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
+        if (!tenderTmpFlag) {
+            throw new RuntimeException("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
+        }
+        BorrowTenderTmpinfo info = new BorrowTenderTmpinfo();
+        info.setOrdid(tenderRequest.getOrderId());
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("borrow_nid", tenderRequest.getBorrowNid());
+        map.put("user_id", userId + "");
+        map.put("account", tenderRequest.getAccount() + "");
+        map.put("status", "0");
+        map.put("nid", tenderRequest.getOrderId());
+        map.put("addtime", (new Date().getTime() / 1000) + "");
+        map.put("addip", tenderRequest.getIp());
+        String array = JSON.toJSONString(map);
+        info.setTmpArray(array);
+        Boolean tenderTmpInfoFlag = borrowTenderTmpinfoMapper.insertSelective(info) > 0 ? true : false;
+        if (!tenderTmpInfoFlag) {
+            throw new RuntimeException("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
+        }
+        return 1;
+    }
 
 }
