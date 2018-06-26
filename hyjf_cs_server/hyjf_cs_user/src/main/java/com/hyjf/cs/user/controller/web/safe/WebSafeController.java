@@ -64,7 +64,7 @@ public class WebSafeController extends BaseUserController {
      * @Return: String
      */
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
-    @PostMapping(value = "accountSet")
+    @PostMapping(value = "/accountSet")
     public WebResult<Object> accountSet(@RequestHeader(value = "token",required = false) String token) {
         WebResult<Object> apiResult = new WebResult<>();
         WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);

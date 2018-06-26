@@ -34,7 +34,7 @@ public class AutoRecordClientImpl implements AutoRecordClient {
 
     @Override
     public boolean updateBorrowRegist(BorrowRegistRequest request) {
-        Integer result = restTemplate.postForEntity("http://AM-TRADE/am-trade/trade/updateBorrowRegist", request, int.class).getBody();
+        Integer result = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/updateBorrowRegist", request, int.class).getBody();
         return result>0?true:false;
     }
 
