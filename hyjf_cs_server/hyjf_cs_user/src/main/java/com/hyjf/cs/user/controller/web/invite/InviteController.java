@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Api(value = "Web端邀记录")
 @RestController
-@RequestMapping("/web/invite")
+@RequestMapping("/web/user/invite")
 public class InviteController {
     private static final Logger logger = LoggerFactory.getLogger(InviteController.class);
 

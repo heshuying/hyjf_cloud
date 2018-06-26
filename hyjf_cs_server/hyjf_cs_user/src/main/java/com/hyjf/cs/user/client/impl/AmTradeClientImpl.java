@@ -54,7 +54,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<RecentPaymentListCustomizeVO> selectRecentPaymentList(Integer userId) {
         RecentPaymentListCustomizeResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/trade/selectRecentPaymentList/" + userId, RecentPaymentListCustomizeResponse.class)
+                .getForEntity("http://AM-TRADE/am-trade/borrow/selectRecentPaymentList/" + userId, RecentPaymentListCustomizeResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResultList();
