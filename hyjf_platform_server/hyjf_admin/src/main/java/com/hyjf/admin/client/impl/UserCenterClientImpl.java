@@ -74,7 +74,10 @@ public class UserCenterClientImpl implements UserCenterClient {
         UserManagerResponse response = restTemplate
                 .postForEntity("http://AM-USER/am-user/userManager/countUserList", request, UserManagerResponse.class)
                 .getBody();
-        return response.getCount();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getCount();
+        }
+        return 0;
     }
 
     /**
@@ -86,7 +89,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public UserManagerDetailVO selectUserDetailById(String userId) {
         UserManagerDetailResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectUserDetail/{userId}" + userId, UserManagerDetailResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectUserDetail/" + userId, UserManagerDetailResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -103,7 +106,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public UserEvalationResultVO getUserEvalationResult(String userId) {
         UserEvalationResultResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/user/selectUserEvalationResultByUserId/{userId}" + userId, UserEvalationResultResponse.class).
+                getForEntity("http://AM-USER/am-user/user/selectUserEvalationResultByUserId/" + userId, UserEvalationResultResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -120,7 +123,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public UserBankOpenAccountVO selectBankOpenAccountByUserId(String userId) {
         UserBankOpenAccountResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByUserId/{userId}" + userId, UserBankOpenAccountResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByUserId/" + userId, UserBankOpenAccountResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -137,7 +140,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public CorpOpenAccountRecordVO selectCorpOpenAccountRecordByUserId(String userId) {
         CorpOpenAccountRecordResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectCorpOpenAccountRecordByUserId/{userId}" + userId, CorpOpenAccountRecordResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectCorpOpenAccountRecordByUserId/" + userId, CorpOpenAccountRecordResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -154,7 +157,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public BindUserVo selectBindeUserByUserId(String userId) {
         BindUserResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectBindUserByUserId/{userId}" + userId, BindUserResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectBindUserByUserId/" + userId, BindUserResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -171,7 +174,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
         CertificateAuthorityResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager//selectCertificateAuthorityByUserId/{userId}" + userId, CertificateAuthorityResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager//selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -188,7 +191,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public UserManagerUpdateVO selectUserUpdateInfoByUserId(String userId) {
         UserManagerUpdateResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectUserUpdateInfoByUserId/{userId}" + userId, UserManagerUpdateResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectUserUpdateInfoByUserId/" + userId, UserManagerUpdateResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -233,7 +236,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public int countUserByMobile(int userId, String mobile) {
         int checkFlg = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/checkMobileByUserId/{userId}/{mobile}" + userId + mobile, Integer.class).
+                getForEntity("http://AM-USER/am-user/userManager/checkMobileByUserId/" + userId + mobile, Integer.class).
                 getBody();
         return checkFlg;
     }
@@ -262,7 +265,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public UserVO selectUserByUserId(int userId) {
         UserResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/{userId}" + userId, UserResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/" + userId, UserResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -279,7 +282,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public List<BankCardVO> selectBankCardByUserId(int userId) {
         BankCardResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/{userId}" + userId, BankCardResponse.class).
+                getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/" + userId, BankCardResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -296,7 +299,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
         BankOpenAccountResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByAccountId/{accountId}" + accountId, BankOpenAccountResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -395,7 +398,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public BankOpenAccountVO queryBankOpenAccountByUserId(int userId) {
         BankOpenAccountResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/queryBankOpenAccountByUserId/{userId}" + userId, BankOpenAccountResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/queryBankOpenAccountByUserId/" + userId, BankOpenAccountResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();

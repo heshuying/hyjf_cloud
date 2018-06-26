@@ -51,5 +51,9 @@ public interface AmTradeClient {
 
     List<MyCouponListCustomizeVO> selectMyCouponList(MyCouponListRequest requestBean);
 
+    Integer selectMyCouponCount(MyCouponListRequest requestBean);
+
     List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean);
+
+    BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean);
 }

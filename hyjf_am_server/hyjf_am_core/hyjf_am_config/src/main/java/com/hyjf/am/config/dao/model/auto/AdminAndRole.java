@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AdminAndRole implements Serializable {
+    private Integer id;
+
     private Integer userId;
 
     private Integer roleId;
@@ -17,6 +19,14 @@ public class AdminAndRole implements Serializable {
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getUserId() {
         return userId;

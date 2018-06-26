@@ -1,14 +1,12 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.BankCallBeanVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
 
 import java.util.List;
 
 /**
- * 江西银行提现掉单异常处理Client
- * create by jijun 20180614
+ * 投资异常掉单跑批任务
+ * create by jijun 20180623
  */
 public interface BatchBankInvestClient {
 

@@ -9,7 +9,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +79,20 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("limitEnd", limitEnd);
         return webProjectListCustomizeMapper.countProjectList(params);
     }
+
+
+    /**
+     * Web端获取标的详情
+     * @author zhangyk
+     * @date 2018/6/23 13:56
+     */
+    @Override
+    public ProjectCustomeDetailVO getProjectDetail(@Valid Map map) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid",map.get("borrowNid"));
+        return  webProjectListCustomizeMapper.getProjectDetail(map);
+    }
+
 
     /**
      * @desc  债转列表count
@@ -162,7 +177,7 @@ public class ProjectListServiceImpl implements ProjectListService {
      * @date 2018/6/21 15:53
      */
     @Override
-    public List<WebProjectListCustomizeVo> searchWebPlanList(ProjectListRequest request) {
+    public List<WebProjectListCustomizeVO> searchWebPlanList(ProjectListRequest request) {
         return null;
     }
 

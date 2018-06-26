@@ -13,7 +13,12 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +27,9 @@ import java.util.Map;
  * @author zhangqingqing
  * @version PandectController, v0.1 2018/6/21 14:31
  */
-@Api(value = "web端授权状态查询")
+@Api(value = "web端账户总览")
 @CrossOrigin(origins = "*")
-@RestController
+@Controller
 @RequestMapping("/web/user")
 public class PandectController {
     private static final Logger logger = LoggerFactory.getLogger(PandectController.class);
@@ -40,13 +45,14 @@ public class PandectController {
      */
     @ApiOperation(value = "账户总览", notes = "账户总览")
     @PostMapping(value = "/pandect")
-    public WebResult pandect(@RequestHeader(value = "token") String token) {
+    public String pandect(@RequestHeader(value = "token") String token,Model model) {
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> map = new HashMap<>();
         UserVO user = pandectService.getUsers(token);
         CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         map = pandectService.pandect(user);
         result.setData(map);
-        return result;
+        model.addAttribute("datas",result);
+        return "pandect";
     }
 }

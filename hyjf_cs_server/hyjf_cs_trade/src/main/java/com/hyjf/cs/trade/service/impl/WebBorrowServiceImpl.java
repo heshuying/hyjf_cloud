@@ -20,7 +20,6 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.mq.AppMessageProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.mq.SmsProducer;

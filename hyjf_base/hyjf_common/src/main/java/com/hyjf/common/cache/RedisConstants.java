@@ -59,4 +59,9 @@ public class RedisConstants {
      * 汇计划可投余额前缀
      */
     public static final String HJH_PLAN = "HJHBAL_";
+
+    /**
+     * 汇计划进入锁定期处理中队列
+     */
+    public static final String HJH_LOCK_REPEAT = "hjh_lockisrepeat";
 }

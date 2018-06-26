@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-
 import java.util.Map;
 
 /**
@@ -156,6 +156,32 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public Integer selectMyInviteCount(MyInviteListRequest requestBean){
+		String url = urlBase + "invite/myInviteCount";
+		Integer response = restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+		return response;
+	}
+
+	/**
+	 * 判断是否51老客户
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public boolean checkIs51UserCanInvest(Integer userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity(urlBase + "userInfo/findById/" + userId, UserInfoResponse.class).getBody();
+		if (response != null) {
+			Integer is51 = response.getResult().getIs51();
+			if (is51 != null && is51 == 1) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * 查看用户详情
 	 * @param userId
@@ -243,5 +269,23 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return false;
     }
+
+    /**
+     * 更新用户投资信息
+     */
+	@Override
+	public boolean updateUserInvestFlag(JSONObject para) {
+		String url = "http://AM-USER/am-user/user/updateUserInvestFlag";
+		return restTemplate.postForEntity(url,para,Boolean.class).getBody();
+	}
+
+	/**
+	 * 查如vipUser
+	 */
+	@Override
+	public boolean insertVipUserTender(JSONObject para) {
+		String url = "http://AM-USER/am-user/user/insertVipUserTender";	
+		return restTemplate.postForEntity(url, para, Boolean.class).getBody();
+	}
 
 }

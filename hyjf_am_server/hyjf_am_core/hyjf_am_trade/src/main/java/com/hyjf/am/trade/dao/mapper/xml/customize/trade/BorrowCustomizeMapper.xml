@@ -10,4 +10,36 @@
           UNION ALL
         SELECT COUNT(*) a FROM ht_hjh_accede  WHERE user_id =  #{userId})b
     </select>
+
+    <update id="updateOfBorrow" parameterType="map" >
+	    UPDATE huiyingdai_borrow b
+		SET b.borrow_account_yes = b.borrow_account_yes + #{borrowAccountYes,jdbcType=DECIMAL},
+		b.borrow_account_wait = b.borrow_account_wait - #{borrowAccountYes,jdbcType=DECIMAL},
+		b.borrow_service = CAST(
+		(
+			CAST(
+				CASE
+				WHEN b.borrow_service IS NULL THEN
+					'0'
+				ELSE
+					b.borrow_service
+				END AS DECIMAL(65,2)
+			) + #{borrowService,jdbcType=DECIMAL}
+		) AS CHAR),
+		b.borrow_account_scale =TRUNCATE((b.borrow_account_yes/b.account)*100,2),
+		b.tender_times = b.tender_times + 1
+		WHERE
+			b.id = #{borrowId,jdbcType=INTEGER}
+  	</update>
+
+    <update id="updateOfFullBorrow" parameterType="map" >
+	    UPDATE huiyingdai_borrow b
+		SET b.borrow_full_status = 1,
+		b.`status` = 3,
+		b.borrow_full_time = unix_timestamp(now())
+		WHERE
+			b.id = #{borrowId,jdbcType=INTEGER}
+  	</update>
+
+
 </mapper>

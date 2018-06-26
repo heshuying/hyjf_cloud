@@ -5,11 +5,11 @@ package com.hyjf.cs.user.controller.app.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.DES;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -69,7 +69,7 @@ public class AppRegistController extends BaseUserController {
         } else {
             logger.error("app端注册失败...");
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(LoginError.USER_LOGIN_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
         }
         return result;
     }

@@ -15,6 +15,7 @@ import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
@@ -105,6 +106,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UtmRegCustomizeMapper utmRegCustomizeMapper;
+
+    @Autowired
+	VipUserTenderMapper vipUserTenderMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -1083,4 +1087,71 @@ public class UserServiceImpl implements UserService {
     public void updateFirstUtmReg(Map<String, Object> bean) {
         utmRegCustomizeMapper.updateFirstUtmReg(bean);
     }
+
+	/**
+	 * 更新用户投资标记
+	 * @param para
+	 */
+	@Override
+	public boolean updateUserInvestFlag(JSONObject para) {
+		boolean result = true;
+		User users= (User) para.get("user");
+		Integer userId= (Integer) para.get("userId");
+		int projectType= (int) para.get("projectType");
+
+		if (users.getInvestflag() == 0) {
+			users.setInvestflag(1);
+			UserExample userExample = new UserExample();
+			userExample.createCriteria().andUserIdEqualTo(userId).andInvestflagEqualTo(0);
+			boolean userFlag = this.usersMapper.updateByExampleSelective(users, userExample) > 0 ? true : false;
+			if (!userFlag) {
+				logger.info("更新新手标识失败，用户userId：" + userId);
+				result = false;
+			}
+		}else{
+			if (projectType == 4) {
+				// 回滚事务
+				logger.info("用户已不是新手投资，用户userId：" + userId);
+				result = false;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 *  插入vip user
+	 * @param para
+	 */
+	@Override
+	public boolean insertVipUserTender(JSONObject para) {
+		UserInfoVO userInfo= (UserInfoVO) para.get("userInfo");
+		int nowTime= (int) para.get("nowTime");
+		Integer userId = (Integer) para.get("userId");
+		String orderId = (String) para.get("orderId");
+
+		boolean result = false;
+		if (Validator.isNotNull(userInfo) && Validator.isNotNull(userInfo.getVipId())){
+			VipUserTender vt = new VipUserTender();
+			// 投资用户编号
+			vt.setUserId(userId);
+			// 投资用户vip编号
+			vt.setVipId(userInfo.getVipId());
+			// 投资编号
+			vt.setTenderNid(orderId);
+			vt.setSumVipValue(userInfo.getVipValue());
+			vt.setAddTime(nowTime);
+			vt.setAddUser(String.valueOf(userId));
+			vt.setUpdateTime(nowTime);
+			vt.setUpdateUser(String.valueOf(userId));
+			vt.setDelFlg(0);
+			int ret=this.vipUserTenderMapper.insertSelective(vt);
+			if (ret>0){
+				result = true;
+			}else{
+				result = false;
+			}
+		}
+
+		return result;
+	}
 }
