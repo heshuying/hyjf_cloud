@@ -14,6 +14,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,8 @@ public class WebBindCardPageController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "绑卡接口页面", notes = "绑卡接口页面")
+    @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
@@ -76,6 +79,7 @@ public class WebBindCardPageController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @RequestMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
     public BankCallResult bindCardBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody  BankCallBean bean, HttpServletRequest request) {
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
