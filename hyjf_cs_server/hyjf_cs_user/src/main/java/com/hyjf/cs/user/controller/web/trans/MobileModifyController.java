@@ -28,7 +28,6 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.constants.BindCardError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
@@ -188,12 +187,12 @@ public class MobileModifyController extends BaseUserController {
             bankBean = mobileModifyService.callSendCode(user.getUserId(),param.get("mobile"), BankCallMethodConstant.TXCODE_MOBILE_MODIFY_PLUS, ClientConstants.CHANNEL_PC,null);
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求验证码接口发生异常", e);
         }
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求验证码接口失败");
         }else {
             result.setData(bankBean.getSrvAuthCode());

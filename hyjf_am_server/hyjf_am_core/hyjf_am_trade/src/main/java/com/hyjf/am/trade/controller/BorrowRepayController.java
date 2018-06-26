@@ -10,10 +10,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,7 +33,7 @@ public class BorrowRepayController {
      * @Author liushouyi
      * @return
      */
-    @RequestMapping("/selectBorrowRepayList")
+    @GetMapping("/selectBorrowRepayList/{borrowNid}/{repaySmsReminder}")
     public BorrowRepayResponse selectBorrowRepayList(@PathVariable String borrowNid,@PathVariable Integer repaySmsReminder) {
         BorrowRepayResponse response = new BorrowRepayResponse();
         List<BorrowRepay> borrowRepays = borrowRepayService.selectBorrowRepayList(borrowNid ,repaySmsReminder);

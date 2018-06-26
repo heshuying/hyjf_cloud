@@ -3,6 +3,7 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -12,4 +13,5 @@ import java.util.Map;
  */
 public interface MyRewardCustomizeMapper {
     List<MyRewardRecordCustomizeVO> selectMyRewardList(Map<String,Object> paraMap);
+    BigDecimal sumMyRewardTotal(Map<String,Object> paraMap);
 }

@@ -3,19 +3,35 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.resquest.trade.BorrowRegistRequest;
-import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.List;
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
+import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowManinfoMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
+import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author fuqiang
@@ -37,6 +53,9 @@ public class BorrowServiceImpl implements BorrowService {
     private BorrowManinfoMapper borrowManinfoMapper;
     @Autowired
     private BorrowStyleMapper borrowStyleMapper;
+
+    @Autowired
+    private BorrowInfoMapper borrowInfoMapper;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -128,5 +147,36 @@ public class BorrowServiceImpl implements BorrowService {
         }
         return null;
     }
+
+    /**
+     *获取borrowInfo
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfo getBorrowInfoByNid(String borrowNid) {
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 检索逾期的还款标的
+     */
+	@Override
+	public List<Borrow> selectOverdueBorrowList() {
+		BorrowExample example = new BorrowExample();
+    	example.createCriteria().andRepayLastTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getTodayBeforeOrAfter(-1))).andStatusEqualTo(4).andPlanNidIsNull();
+    	List<Borrow> borrows = borrowMapper.selectByExample(example);
+    	if(CollectionUtils.isNotEmpty(borrows)){
+    		return borrows;
+    	}
+    	return null;
+	}
 
 }

@@ -31,8 +31,14 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      * @return
      */
     @Override
-    public List<BankOpenAccountRecordCustomize> selectBankAccountList(BankAccountRecordRequest request ){
-        Map<String,String> mapParam = new HashMap<String,String>();
+    public List<BankOpenAccountRecordCustomize> selectBankAccountList(Map<String,String> mapParam,int limitStart, int limitEnd){
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", String.valueOf(limitStart));
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", String.valueOf(limitEnd));
+        }
         List<BankOpenAccountRecordCustomize> listBankAccountRecord = bankOpenRecordCustomizeMapper.selectBankAccountList(mapParam);
         if (CollectionUtils.isNotEmpty(listBankAccountRecord)) {
             Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
@@ -50,8 +56,14 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      *
      * @return
      */
-    public List<BankOpenAccountRecordCustomize> selectAccountList(AccountRecordRequest request){
-        Map<String,String> mapParam = new HashMap<String,String>();
+    public List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,String> mapParam,int limitStart, int limitEnd){
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", String.valueOf(limitStart));
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", String.valueOf(limitEnd));
+        }
         List<BankOpenAccountRecordCustomize> listBankAccountRecord = bankOpenRecordCustomizeMapper.selectAccountList(mapParam);
         if (CollectionUtils.isNotEmpty(listBankAccountRecord)) {
             Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
@@ -70,8 +82,8 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      * @return
      */
     @Override
-    public int countBankRecordTotal(BankAccountRecordRequest request){
-        Map<String,String> mapParam =setBankAccountRecordRequest(request);
+    public int countBankRecordTotal(Map<String,String> mapParam){
+//        Map<String,String> mapParam =setBankAccountRecordRequest(request);
         Integer intCount = bankOpenRecordCustomizeMapper.countBankRecordTotal(mapParam);
         return  intCount.intValue();
     }
@@ -81,49 +93,11 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      * @return
      */
     @Override
-    public int countRecordTotal(AccountRecordRequest request){
-        Map<String,String> mapParam = setAccountRecordRequest(request);
+    public int countRecordTotal(Map<String,String> mapParam){
+//        Map<String,String> mapParam = setAccountRecordRequest(request);
         Integer integerCount = bankOpenRecordCustomizeMapper.countRecordTotal(mapParam);
         return integerCount.intValue();
     }
 
-    /**
-     * 设置汇付参数
-     * @param request
-     * @return
-     */
-    private Map<String,String>  setAccountRecordRequest(AccountRecordRequest request){
-        Map<String,String> mapRaram = new HashMap<String,String>();
-        mapRaram.put("openAccountPlat",request.getOpenAccountPlat());
-        mapRaram.put("userName",request.getUserName());
-        mapRaram.put("userProperty",request.getUserProperty());
-        mapRaram.put("idCard",request.getIdCard());
-        mapRaram.put("realName",request.getRealName());
-        mapRaram.put("openTimeStart",request.getOpenTimeStart());
-        mapRaram.put("openTimeEnd",request.getOpenTimeEnd());
-        mapRaram.put("limitEnd",String.valueOf(request.getLimitEnd()));
-        mapRaram.put("limitStart",String.valueOf(request.getLimitStart()));
-        return mapRaram;
 
-    }
-
-    /**
-     * 设置江西参数
-     * @param request
-     * @return
-     */
-    private Map<String,String>  setBankAccountRecordRequest(BankAccountRecordRequest request){
-        Map<String,String> mapRaram = new HashMap<String,String>();
-        mapRaram.put("openAccountPlat",request.getOpenAccountPlat());
-        mapRaram.put("userName",request.getUserName());
-        mapRaram.put("customerAccount",request.getCustomerAccount());
-        mapRaram.put("mobile",request.getMobile());
-        mapRaram.put("idCard",request.getIdCard());
-        mapRaram.put("realName",request.getRealName());
-        mapRaram.put("openTimeStart",request.getOpenTimeStart());
-        mapRaram.put("openTimeEnd",request.getOpenTimeEnd());
-        mapRaram.put("limitEnd",String.valueOf(request.getLimitEnd()));
-        mapRaram.put("limitStart",String.valueOf(request.getLimitStart()));
-        return mapRaram;
-    }
 }

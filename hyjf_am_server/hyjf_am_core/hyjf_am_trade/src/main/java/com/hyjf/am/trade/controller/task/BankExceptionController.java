@@ -4,17 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.BatchBorrowTenderCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.BankCreditTenderService;
-import com.hyjf.am.trade.service.BankInvestExceptionService;
-import com.hyjf.am.trade.service.BankRechargeService;
-import com.hyjf.am.trade.service.BankWithdrawService;
+import com.hyjf.am.trade.service.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,7 +38,11 @@ public class BankExceptionController {
     @Autowired
     private BankCreditTenderService bankCreditTenderService;
     @Autowired
-    private BankInvestExceptionService bankInvestExceptionService;
+    private BankInvestService bankInvestExceptionService;
+	@Autowired
+	private BankInvestAllService bankInvestAllExceptionService;
+    @Autowired
+	private BankTenderCancelService bankTenderCancelService;
 
     @RequestMapping("/recharge")
     public void recharge(){
@@ -223,5 +226,62 @@ public class BankExceptionController {
         bankInvestExceptionService.insertAuthCode(list);
 
     }
+
+	/**
+     * 投資全部掉單批處理
+     */
+    @GetMapping("/getBorrowTenderTmpList")
+    public BorrowTenderTmpResponse getBorrowTenderTmpList(){
+        BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
+        List<BorrowTenderTmp> BorrowTenderTmpList=bankInvestAllExceptionService.getBorrowTenderTmpList();
+        if (CollectionUtils.isNotEmpty(BorrowTenderTmpList)){
+            response.setResultList(CommonUtils.convertBeanList(BorrowTenderTmpList,BorrowTenderTmpVO.class));
+        }
+        return response;
+    }
+
+
+    /**
+     * 开始进行掉单修复
+     * @param request
+     * @return
+     */
+    @PostMapping("/updateTenderStart")
+    public boolean updateTenderStart(@RequestBody BorrowTenderTmpRequest request) {
+        boolean ret = true;
+        try {
+            bankInvestAllExceptionService.updateTenderStart(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+
+    @GetMapping("/getBorrowTenderTmpsForTenderCancel")
+    public BorrowTenderTmpResponse getBorrowTenderTmpsForTenderCancel(){
+        BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
+        List<BorrowTenderTmp> tmpList = this.bankTenderCancelService.getBorrowTenderTmpsForTenderCancel();
+        if (CollectionUtils.isNotEmpty(tmpList)){
+            response.setResultList(CommonUtils.convertBeanList(tmpList,BorrowTenderTmpVO.class));
+        }
+        return response;
+    }
+
+
+    @PostMapping("/updateBidCancelRecord")
+    public boolean updateBidCancelRecord(@RequestBody JSONObject para){
+        return this.bankTenderCancelService.updateBidCancelRecord(para);
+    }
+
+
+
+    @PostMapping("/updateTenderCancelExceptionData")
+    public int updateTenderCancelExceptionData(@RequestBody BorrowTenderTmpVO info){
+        return this.bankTenderCancelService.updateTenderCancelExceptionData(CommonUtils.convertBean(info,BorrowTenderTmp.class));
+    }
+
 
 }

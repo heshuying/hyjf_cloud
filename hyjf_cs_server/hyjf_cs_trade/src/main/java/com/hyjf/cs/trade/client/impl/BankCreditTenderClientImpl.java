@@ -138,32 +138,7 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
 
 
     @Override
-    public boolean updateTenderCreditInfo(String assignOrderId, Integer userId, String authCode,
-                                          BankOpenAccountVO sellerBankAccount, BankOpenAccountVO
-                                          assignBankAccount, UserVO webUser, UserInfoVO userInfo,
-                                          SpreadsUserVO spreadsUsers, UserInfoCustomizeVO userInfoCustomizeRefCj,
-                                          UserInfoCustomizeVO userInfoCustomize,SpreadsUserVO spreadsUsersSeller,
-                                          UserInfoCustomizeVO userInfoCustomizeSeller,
-                                          EmployeeCustomizeResponse employeeCustomizeResponse,
-                                          UserVO investUser
-                                            ) {
-        CreditTenderRequest request = new CreditTenderRequest();
-        request.setAssignNid(assignOrderId);
-        request.setUserId(userId);
-        request.setAuthCode(authCode);
-        request.setSellerBankAccount(sellerBankAccount);
-        request.setAssignBankAccount(assignBankAccount);
-        request.setWebUser(webUser);
-        request.setUserInfo(userInfo);
-        request.setSpreadsUsers(spreadsUsers);
-        request.setUserInfoCustomizeRefCj(userInfoCustomizeRefCj);
-        request.setUserInfoCustomize(userInfoCustomize);
-        request.setSpreadsUsersSeller(spreadsUsersSeller);
-        request.setUserInfoCustomizeSeller(userInfoCustomizeSeller);
-        request.setEmployeeCustomizeResponse(employeeCustomizeResponse);
-        request.setInvestUser(investUser);
-
-        
+    public boolean updateTenderCreditInfo(CreditTenderRequest request) {
         String url = "http://AM-TRADE/am-trade/creditTender/updateTenderCreditInfo";
         return restTemplate.postForEntity(url,request,Boolean.class).getBody();
     }

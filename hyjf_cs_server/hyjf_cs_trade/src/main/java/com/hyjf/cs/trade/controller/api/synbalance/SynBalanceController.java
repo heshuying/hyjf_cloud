@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiOperation;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "web端用户提现接口")
+@Api(value = "api端同步余额信息接口")
 @Controller
 @RequestMapping("/api/synbalance")
 public class SynBalanceController extends BaseTradeController {

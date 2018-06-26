@@ -15,7 +15,6 @@ import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.LoginError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.vo.LoginRequestVO;
@@ -80,7 +79,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         if (password.equals(passwordDb)) {
             // 是否禁用
             if (userVO.getStatus() == 1) {
-                throw new ReturnMessageException(LoginError.USER_INVALID_ERROR);
+                throw new ReturnMessageException(MsgEnum.ERR_USER_INVALID);
             }
             // 更新登录信息
             amUserClient.updateLoginUser(userId, ip);

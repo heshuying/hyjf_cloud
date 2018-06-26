@@ -40,18 +40,20 @@ public class MyCouponListController {
      */
     @ApiOperation(value = "获取我的优惠券列表", notes = "我的优惠券列表")
     @PostMapping(value = "/myCouponList", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,List<MyCouponListCustomizeVO>>> selectMyCouponList(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
-        WebResult<Map<String,List<MyCouponListCustomizeVO>>> result = new WebResult<Map<String,List<MyCouponListCustomizeVO>>>();
+    public WebResult<Map<String,Object>> selectMyCouponList(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
+        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         WebViewUserVO userVO = myCouponListService.getUsersByToken(token);
 
         try {
             List<MyCouponListCustomizeVO> listUnUsed = myCouponListService.selectMyCouponListUnUsed(String.valueOf(userVO.getUserId()));
             List<MyCouponListCustomizeVO> listUsed = myCouponListService.selectMyCouponListUsed(String.valueOf(userVO.getUserId()));
             List<MyCouponListCustomizeVO> listInValid = myCouponListService.selectMyCouponListInValid(String.valueOf(userVO.getUserId()));
-            Map<String,List<MyCouponListCustomizeVO>> resultMap = new HashMap<String,List<MyCouponListCustomizeVO>>();
+            Map<String,String> pageData = myCouponListService.selectInvitePageData(String.valueOf(userVO.getUserId()));
+            Map<String,Object> resultMap = new HashMap<String,Object>();
             resultMap.put("wsyList", listUnUsed);
             resultMap.put("ysyList", listUsed);
             resultMap.put("ysxList", listInValid);
+            resultMap.putAll(pageData);
             result.setData(resultMap);
         } catch (Exception e) {
             result.setStatus(WebResult.ERROR);

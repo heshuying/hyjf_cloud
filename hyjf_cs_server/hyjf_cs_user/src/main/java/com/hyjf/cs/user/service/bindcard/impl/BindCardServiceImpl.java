@@ -20,7 +20,6 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.BindCardError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
@@ -70,15 +69,15 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamSendcode(Integer userId, String mobile, String cardNo) {
         // 手机号校验
         if(StringUtils.isBlank(mobile)) {
-        	throw new ReturnMessageException(BindCardError.MOBILE_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_MOBILE_BLANK);
         }
         // 银行卡号校验
         if(StringUtils.isEmpty(cardNo)) {
-        	throw new ReturnMessageException(BindCardError.CARD_NO_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
         }
         // 开户校验
         if (!this.checkIsOpen(userId)) {
-        	throw new ReturnMessageException(BindCardError.BANK_NOT_OPEN_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
 	}
 	
@@ -93,24 +92,24 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamBindCard(BindCardVO bindCardVO, Integer userId) {
 		// 短信授权码校验
         if (StringUtils.isBlank(bindCardVO.getLastSrvAuthCode())) {
-        	throw new ReturnMessageException(BindCardError.AUTH_CODE_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_CODE_BLANK);
         }
         // 手机号校验
         if(StringUtils.isBlank(bindCardVO.getMobile())) {
-        	throw new ReturnMessageException(BindCardError.MOBILE_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_MOBILE_BLANK);
         }
         // 银行卡号校验
         if(StringUtils.isEmpty(bindCardVO.getCardNo())) {
-        	throw new ReturnMessageException(BindCardError.CARD_NO_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
         }
         // 短信验证码校验
         if(StringUtils.isBlank(bindCardVO.getSmsCode())) {
-        	throw new ReturnMessageException(BindCardError.SMSCODE_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_SMSCODE_BLANK);
         }
 
         // 开户校验
         if (!this.checkIsOpen(userId)) {
-        	throw new ReturnMessageException(BindCardError.BANK_NOT_OPEN_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
 	}
 
@@ -297,7 +296,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 				for (BankCardRequest bank : bankCardList) {
 					boolean isInsertFlag = amUserClient.insertUserCard(bank) > 0 ? true : false;
 					if (!isInsertFlag) {
-						throw new ReturnMessageException(BindCardError.CARD_SAVE_ERROR);
+						throw new ReturnMessageException(MsgEnum.ERR_CARD_SAVE);
 					}
 				}
 			}
@@ -323,7 +322,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
 		boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 		if (!isUpdateFlag) {
-			throw new ReturnMessageException(BindCardError.CARD_SAVE_ERROR);
+			throw new ReturnMessageException(MsgEnum.ERR_CARD_SAVE);
 		}
 		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), logAcq.getCardNo());
         if (retCard != null) {
@@ -448,13 +447,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamUnBindCard(BindCardVO bindCardVO, Integer userId) {
         // 银行卡号校验
         if(StringUtils.isEmpty(bindCardVO.getCardNo())) {
-        	throw new ReturnMessageException(BindCardError.CARD_NO_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
         }
 
         // 开户校验
         BankOpenAccountVO openAccount = amUserClient.selectById(userId);
         if (openAccount == null || StringUtils.isBlank(openAccount.getAccount())) {
-        	throw new ReturnMessageException(BindCardError.BANK_NOT_OPEN_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         
         // 账户余额校验
@@ -462,13 +461,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         BigDecimal bankBalance = this.queryBankBlance(userId, openAccount.getAccount());
         if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
 				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
-        	throw new ReturnMessageException(BindCardError.BANK_BALANCE_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_CARD_UNBIND_HAVE_BALANCE);
 		}
         
         // 待解绑卡校验
         BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), bindCardVO.getCardNo());
         if (bankCard == null || StringUtils.isEmpty(bankCard.getCardNo())) {
-        	throw new ReturnMessageException(BindCardError.CARD_NOT_EXIST_ERROR);
+        	throw new ReturnMessageException(MsgEnum.ERR_CARD_NOT_EXIST);
 		}
         
 	}
@@ -497,7 +496,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
 			boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 			if (!isUpdateFlag) {
-				throw new ReturnMessageException(BindCardError.CARD_DELETE_ERROR);
+				throw new ReturnMessageException(MsgEnum.ERR_CARD_DELETE);
 			}
 		}
 		

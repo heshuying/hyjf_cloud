@@ -56,7 +56,10 @@
 			<artifactId>jolokia-core</artifactId>
 		</dependency>
 		<!-- spring boot admin end -->
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
 
 		<!-- zipkin start -->
 		<dependency>

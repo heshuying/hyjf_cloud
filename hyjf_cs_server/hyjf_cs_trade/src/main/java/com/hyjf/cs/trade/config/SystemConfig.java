@@ -14,6 +14,9 @@ public class SystemConfig {
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetPassword;
 
+    @Value("${hyjf.web.user.host}")
+    public String webUserHost;
+
 
     
     public String getWebHost() {
@@ -38,5 +41,13 @@ public class SystemConfig {
 
     public void setForgetPassword(String forgetPassword) {
         this.forgetPassword = forgetPassword;
+    }
+
+    public String getWebUserHost() {
+        return webUserHost;
+    }
+
+    public void setWebUserHost(String webUserHost) {
+        this.webUserHost = webUserHost;
     }
 }

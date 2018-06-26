@@ -4,16 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.constants.BindCardError;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,8 @@ public class WebBindCardPageController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "绑卡接口页面", notes = "绑卡接口页面")
+    @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
@@ -76,6 +79,7 @@ public class WebBindCardPageController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @RequestMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
     public BankCallResult bindCardBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody  BankCallBean bean, HttpServletRequest request) {
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
@@ -128,13 +132,13 @@ public class WebBindCardPageController {
             bankBean = bindCardService.callBankUnBindCard(bindCardVO, user.getUserId());
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求解绑卡接口发生异常", e);
         }
 
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求解绑卡接口失败");
         }
 
@@ -143,7 +147,7 @@ public class WebBindCardPageController {
             bindCardService.updateAfterUnBindCard(bankBean);
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.CARD_SAVE_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_CARD_SAVE.getMsg());
             logger.error("解绑卡后处理异常", e);
         }
 

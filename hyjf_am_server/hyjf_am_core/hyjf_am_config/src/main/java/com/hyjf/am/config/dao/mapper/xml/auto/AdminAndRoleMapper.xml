@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.config.dao.mapper.auto.AdminAndRoleMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.AdminAndRole" >
-    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="role_id" property="roleId" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, role_id, create_user_id, update_user_id, create_time, update_time
+    id, user_id, role_id, create_user_id, update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.AdminAndRoleExample" >
     select
@@ -91,11 +92,11 @@
     select 
     <include refid="Base_Column_List" />
     from ht_admin_and_role
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_admin_and_role
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.AdminAndRoleExample" >
     delete from ht_admin_and_role
@@ -104,20 +105,25 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.AdminAndRole" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_admin_and_role (role_id, create_user_id, update_user_id, 
-      create_time, update_time)
-    values (#{roleId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_admin_and_role (user_id, role_id, create_user_id, 
+      update_user_id, create_time, update_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.AdminAndRole" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_admin_and_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
       <if test="roleId != null" >
         role_id,
       </if>
@@ -135,6 +141,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
       <if test="roleId != null" >
         #{roleId,jdbcType=INTEGER},
       </if>
@@ -161,6 +170,9 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update ht_admin_and_role
     <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
@@ -186,7 +198,8 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update ht_admin_and_role
-    set user_id = #{record.userId,jdbcType=INTEGER},
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
       role_id = #{record.roleId,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -199,6 +212,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.AdminAndRole" >
     update ht_admin_and_role
     <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
       <if test="roleId != null" >
         role_id = #{roleId,jdbcType=INTEGER},
       </if>
@@ -215,15 +231,16 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.AdminAndRole" >
     update ht_admin_and_role
-    set role_id = #{roleId,jdbcType=INTEGER},
+    set user_id = #{userId,jdbcType=INTEGER},
+      role_id = #{roleId,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

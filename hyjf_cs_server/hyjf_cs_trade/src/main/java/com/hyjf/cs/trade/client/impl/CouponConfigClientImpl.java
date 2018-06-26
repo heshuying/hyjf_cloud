@@ -3,8 +3,12 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CouponConfigResponse;
+import com.hyjf.am.response.trade.MyBestCouponListResponse;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.cs.trade.client.CouponConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,4 +32,24 @@ public class CouponConfigClientImpl implements CouponConfigClient {
         }
         return null;
     }
+
+    @Override
+    public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
+        MyBestCouponListResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", MyBestCouponListResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer countAvaliableCoupon(MyCouponListRequest request) {
+        MyBestCouponListResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon", MyBestCouponListResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCouponCount();
+        }
+        return null;
+    }
+
+
 }

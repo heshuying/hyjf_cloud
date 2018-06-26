@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 债转投资异常处理定时
  * @author jun
- * @since 20180619	
+ * @since 20180623
  */
 public class BatchBankInvestExceptionJob extends BaseJob implements Job{
 	
@@ -19,7 +19,7 @@ public class BatchBankInvestExceptionJob extends BaseJob implements Job{
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BatchBankInvestExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE//investexception/handle", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/investexception/handle", String.class);
         logger.info("BatchBankInvestExceptionJob execute end...");
     }
 }

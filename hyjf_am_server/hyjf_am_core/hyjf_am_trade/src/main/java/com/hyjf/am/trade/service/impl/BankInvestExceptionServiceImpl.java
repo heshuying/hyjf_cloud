@@ -8,7 +8,7 @@ import com.hyjf.am.trade.dao.mapper.auto.BatchBorrowTenderExceptionCustomizeMapp
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
 import com.hyjf.am.trade.dao.model.auto.BatchBorrowTenderCustomize;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.service.BankInvestExceptionService;
+import com.hyjf.am.trade.service.BankInvestService;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -30,7 +30,7 @@ import java.util.List;
  * @since 20180623
  */
 @Service
-public class BankInvestExceptionServiceImpl implements BankInvestExceptionService {
+public class BankInvestExceptionServiceImpl implements BankInvestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BankInvestExceptionServiceImpl.class);
 

@@ -1,12 +1,12 @@
 package com.hyjf.cs.trade.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
-
 import java.util.Map;
 
 /**
@@ -57,7 +57,9 @@ public interface AmUserClient {
 	 */
 	UserInfoCrmVO queryUserCrmInfoByUserId(int userId);
 
-	/**
+    Integer selectMyInviteCount(MyInviteListRequest requestBean);
+
+    /**
 	 *	用户详细信息 add by jijun 20180622
 	 * @param userId
 	 * @return
@@ -107,4 +109,16 @@ public interface AmUserClient {
 	 * @return
 	 */
     boolean checkIs51UserCanInvest(Integer userId);
+
+    /**
+     * 更新用户投资信息
+     * @param para
+     */
+    boolean updateUserInvestFlag(JSONObject para);
+
+    /**
+     * 插入VIPuser
+     * @param para
+     */
+	boolean insertVipUserTender(JSONObject para);
 }

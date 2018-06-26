@@ -35,13 +35,18 @@ public class RegistRecordManagerServiceImpl implements RegistRecordManagerServic
     /**
      * 根据筛选条件查找注册信息
      *
-     * @param userRequest 筛选条件
+     * @param mapParam 筛选条件
      * @return
      */
     @Override
-    public List<RegistRecordCustomize> selectRegistList(RegistRcordRequest userRequest) {
-        //参数设置
-        Map<String, Object> mapParam = paramSet(userRequest);
+    public List<RegistRecordCustomize> selectRegistList(Map<String, Object> mapParam,int limitStart, int limitEnd) {
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", limitStart);
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", limitEnd);
+        }
         List<RegistRecordCustomize> listRegistRecord = registRecordCustomizeMapper.selectRegistList(mapParam);
         if (CollectionUtils.isNotEmpty(listRegistRecord)) {
             //
@@ -55,35 +60,15 @@ public class RegistRecordManagerServiceImpl implements RegistRecordManagerServic
         return listRegistRecord;
     }
 
-    /**
-     * 查询条件设置
-     *
-     * @param userRequest
-     * @return
-     */
-    private Map<String, Object> paramSet(RegistRcordRequest userRequest) {
-        Map<String, Object> mapParam = new HashMap<String, Object>();
-        mapParam.put("regTimeStart", userRequest.getRegTimeStart());
-        mapParam.put("regTimeEnd", userRequest.getRegTimeEnd());
-        mapParam.put("userName", userRequest.getUserName());
-        mapParam.put("mobile", userRequest.getMobile());
-        mapParam.put("recommendName", userRequest.getRecommendName());
-        mapParam.put("registPlat",userRequest.getRegistPlat());
-        mapParam.put("limitEnd",String.valueOf(userRequest.getLimitEnd()));
-        mapParam.put("limitStart",String.valueOf(userRequest.getLimitStart()));
-        return mapParam;
-    }
-
 
     /**
      * 根据条件获取列表总数
      *
-     * @param userRequest
+     * @param mapParam
      * @return
      */
     @Override
-    public int countRecordTotal(RegistRcordRequest userRequest) {
-        Map<String, Object> mapParam = paramSet(userRequest);
+    public int countRecordTotal(Map<String, Object> mapParam ) {
         Integer integerCount = registRecordCustomizeMapper.countRecordTotal(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;

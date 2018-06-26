@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tender_sum" property="tenderSum" jdbcType="DECIMAL" />
+    <result column="interest_sum" property="interestSum" jdbcType="DECIMAL" />
+    <result column="seven_day_tender_sum" property="sevenDayTenderSum" jdbcType="DECIMAL" />
+    <result column="seven_day_interest_sum" property="sevenDayInterestSum" jdbcType="DECIMAL" />
+    <result column="borrow_zero_one" property="borrowZeroOne" jdbcType="INTEGER" />
+    <result column="borrow_one_three" property="borrowOneThree" jdbcType="INTEGER" />
+    <result column="borrow_three_six" property="borrowThreeSix" jdbcType="INTEGER" />
+    <result column="borrow_six_twelve" property="borrowSixTwelve" jdbcType="INTEGER" />
+    <result column="borrow_twelve_up" property="borrowTwelveUp" jdbcType="INTEGER" />
+    <result column="invest_one_down" property="investOneDown" jdbcType="INTEGER" />
+    <result column="invest_one_five" property="investOneFive" jdbcType="INTEGER" />
+    <result column="invest_five_ten" property="investFiveTen" jdbcType="INTEGER" />
+    <result column="invest_ten_fifth" property="investTenFifth" jdbcType="INTEGER" />
+    <result column="invest_fifth_up" property="investFifthUp" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <update id="updateCalculateInvestByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest" >
+    update hyjf_calculate_invest_interest
+    <set >
+      <if test="tenderSum != null" >
+        tender_sum = tender_sum + #{tenderSum,jdbcType=DECIMAL},
+      </if>
+      <if test="interestSum != null" >
+        interest_sum = interest_sum + #{interestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="sevenDayTenderSum != null" >
+        seven_day_tender_sum = #{sevenDayTenderSum,jdbcType=DECIMAL},
+      </if>
+      <if test="sevenDayInterestSum != null" >
+        seven_day_interest_sum = #{sevenDayInterestSum,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowZeroOne != null" >
+        borrow_zero_one = #{borrowZeroOne,jdbcType=INTEGER},
+      </if>
+      <if test="borrowOneThree != null" >
+        borrow_one_three = #{borrowOneThree,jdbcType=INTEGER},
+      </if>
+      <if test="borrowThreeSix != null" >
+        borrow_three_six = #{borrowThreeSix,jdbcType=INTEGER},
+      </if>
+      <if test="borrowSixTwelve != null" >
+        borrow_six_twelve = #{borrowSixTwelve,jdbcType=INTEGER},
+      </if>
+      <if test="borrowTwelveUp != null" >
+        borrow_twelve_up = #{borrowTwelveUp,jdbcType=INTEGER},
+      </if>
+      <if test="investOneDown != null" >
+        invest_one_down = #{investOneDown,jdbcType=INTEGER},
+      </if>
+      <if test="investOneFive != null" >
+        invest_one_five = #{investOneFive,jdbcType=INTEGER},
+      </if>
+      <if test="investFiveTen != null" >
+        invest_five_ten = #{investFiveTen,jdbcType=INTEGER},
+      </if>
+      <if test="investTenFifth != null" >
+        invest_ten_fifth = #{investTenFifth,jdbcType=INTEGER},
+      </if>
+      <if test="investFifthUp != null" >
+        invest_fifth_up = #{investFifthUp,jdbcType=INTEGER},
+      </if>
+      <if test="bailMoney != null" >
+        bail_money = #{bailMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateCalculateInvestSubByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest" >
+    update hyjf_calculate_invest_interest
+    <set >
+      <if test="tenderSum != null" >
+        tender_sum = tender_sum - #{tenderSum,jdbcType=DECIMAL},
+      </if>
+      <if test="interestSum != null" >
+        interest_sum = interest_sum - #{interestSum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="updateRecordTruncate" >
+	  UPDATE huiyingdai_users
+	SET recod_total = 0,
+	 recod_truncate_time = NOW()
+	WHERE
+		recod_time IS NOT NULL
+	AND recod_total >= 12 AND DATE_FORMAT(
+		DATE_ADD(recod_time, INTERVAL 60 DAY),
+		'%Y-%m-%d'
+	) <![CDATA[<=]]> DATE_FORMAT(NOW(), '%Y-%m-%d')
+  </update>
+  
+</mapper>

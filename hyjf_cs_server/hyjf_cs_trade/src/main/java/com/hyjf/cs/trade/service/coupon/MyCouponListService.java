@@ -4,6 +4,7 @@ import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hesy
@@ -16,4 +17,6 @@ public interface MyCouponListService extends BaseTradeService {
     List<MyCouponListCustomizeVO> selectMyCouponListUnUsed(String userId);
 
     List<MyCouponListCustomizeVO> selectMyCouponListInValid(String userId);
+
+    Map<String,String> selectInvitePageData(String userId);
 }

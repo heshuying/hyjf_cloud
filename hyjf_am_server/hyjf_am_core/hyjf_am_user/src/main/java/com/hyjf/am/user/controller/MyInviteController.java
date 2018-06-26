@@ -39,4 +39,15 @@ public class MyInviteController {
         return responseBean;
     }
 
+    /**
+     * 统计总的邀请数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/myInviteCount", method = RequestMethod.POST)
+    public Integer myInviteCount(@RequestBody @Valid MyInviteListRequest requestBean) {
+        MyInviteListResponse responseBean = new MyInviteListResponse();
+
+        return myInviteService.countMyInviteList(requestBean.getUserId());
+    }
 }

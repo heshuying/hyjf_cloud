@@ -53,4 +53,16 @@ public interface BorrowService {
      * @return
      */
     List<Borrow> selectBorrowList();
+
+    /**
+     * 获取BorrowInfo
+     * @param borrowNid
+     * @return
+     */
+    BorrowInfo getBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 獲取預期的還款標的
+     */
+	List<Borrow> selectOverdueBorrowList();
 }

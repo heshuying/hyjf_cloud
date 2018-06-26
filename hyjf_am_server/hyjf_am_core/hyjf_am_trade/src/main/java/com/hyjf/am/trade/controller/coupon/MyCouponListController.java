@@ -1,8 +1,10 @@
 package com.hyjf.am.trade.controller.coupon;
 
+import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.trade.service.coupon.MyCouponListService;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +31,7 @@ public class MyCouponListController {
      * @auther: hesy
      * @date: 2018/6/23
      */
-    @RequestMapping(value = "/myCouponList", method = RequestMethod.POST)
+    @RequestMapping(value = "/myCouponList")
     public MyCouponListResponse myCouponList(@RequestBody @Valid MyCouponListRequest requestBean) {
         MyCouponListResponse responseBean = new MyCouponListResponse();
 
@@ -37,5 +39,46 @@ public class MyCouponListController {
         responseBean.setResultList(resultList);
 
         return responseBean;
+    }
+
+
+    /**
+     * 查询最优优惠券
+     * @author zhangyk
+     * @date 2018/6/25 11:36
+     */
+    @RequestMapping(value = "/myBestCouponList", method = RequestMethod.POST)
+    public MyBestCouponListResponse myBestCouponList(@RequestBody @Valid MyCouponListRequest requestBean) {
+        MyBestCouponListResponse responseBean = new MyBestCouponListResponse();
+
+        BestCouponListVO result = myCouponListService.selectBestCouponList(requestBean);
+        responseBean.setResult(result);
+        return responseBean;
+    }
+
+
+
+    /**
+     * 查询可用优惠券
+     * @author zhangyk
+     * @date 2018/6/25 11:36
+     */
+    @RequestMapping(value = "/countAvaliableCoupon", method = RequestMethod.POST)
+    public MyBestCouponListResponse countAvaliableCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
+        MyBestCouponListResponse responseBean = new MyBestCouponListResponse();
+        Integer count = myCouponListService.countAvaliableCoupon(requestBean);
+        responseBean.setCouponCount(count);
+        return responseBean;
+    }
+
+    /**
+     * 统计优惠券总数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/myCouponCount")
+    public Integer myCouponCount(@RequestBody @Valid MyCouponListRequest requestBean){
+        MyCouponListResponse responseBean = new MyCouponListResponse();
+        return myCouponListService.countUserCouponList(requestBean.getUserId(),requestBean.getUsedFlag());
     }
 }

@@ -12,8 +12,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.BindCardError;
-import com.hyjf.cs.user.constants.OpenAccountError;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -50,13 +48,6 @@ public class WebAutoPlusController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
-
-    @RequestMapping(value = "/init")
-    public String init(Model model) {
-
-        return "init";
-    }
-
     @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
     @ApiImplicitParam(name = "param",value = "{type: string} type=1授权自动投标；type=2授权自动债转", dataType = "Map")
     @PostMapping(value = "/autoPlusSendCode", produces = "application/json; charset=utf-8")
@@ -74,12 +65,12 @@ public class WebAutoPlusController extends BaseUserController {
             bankBean = autoPlusService.callSendCode(user.getUserId(),user.getMobile(),srvTxCode, ClientConstants.CHANNEL_PC,null);
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求验证码接口发生异常", e);
         }
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(BindCardError.BANK_CALL_ERROR.getMsg());
+            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求验证码接口失败");
         }else {
             result.setData(bankBean.getSrvAuthCode());
@@ -103,7 +94,7 @@ public class WebAutoPlusController extends BaseUserController {
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
         if (token == null) {
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         UserVO user = this.autoPlusService.getUsers(token);
         //检查用户信息
@@ -129,7 +120,7 @@ public class WebAutoPlusController extends BaseUserController {
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
         if (token == null) {
-            throw new ReturnMessageException(OpenAccountError.USER_NOT_LOGIN_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         UserVO user = this.autoPlusService.getUsers(token);
         //检查用户信息

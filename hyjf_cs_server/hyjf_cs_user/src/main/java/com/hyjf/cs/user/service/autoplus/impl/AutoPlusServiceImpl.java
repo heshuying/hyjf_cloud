@@ -20,9 +20,9 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.AuthorizedError;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
@@ -60,6 +60,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     private AmConfigClient amConfigClient;
 
     @Autowired
+    AmDataCollectClient amDataCollectClient;
+
+    @Autowired
     SystemConfig systemConfig;
 
     /**
@@ -75,7 +78,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 判断是否授权过
         HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
         if(hjhUserAuth!=null&&hjhUserAuth.getAutoCreditStatus().intValue()==1){
-            throw new ReturnMessageException(AuthorizedError.CANNOT_REPEAT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
         // 组装发往江西银行参数
         BankCallBean bean = getCommonBankCallBean(user,type,client,channel,lastSrvAuthCode,smsCode);
@@ -250,17 +253,17 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     @Override
     public void checkUserMessage(UserVO users, String lastSrvAuthCode, String smsCode){
         if (users == null) {
-            throw new ReturnMessageException(AuthorizedError.USER_LOGIN_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_RETRY);
         }
         // 检查数据是否完整
         if (Validator.isNull(lastSrvAuthCode) || Validator.isNull(smsCode)) {
-            throw new ReturnMessageException(AuthorizedError.PARAM_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
         if (users.getBankOpenAccount()==0) {
-            throw new ReturnMessageException(AuthorizedError.NOT_REGIST_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 判断用户是否设置过交易密码
-        CheckUtil.check(users.getIsSetPassword() == 1, MsgEnum.ERR_PASSWORD_NOT_SET);
+        CheckUtil.check(users.getIsSetPassword() == 1, MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
     }
 
     @Override
@@ -337,9 +340,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 检查是否设置交易密码
         Integer passwordFlag = user.getIsSetPassword();
         CheckUtil.check(passwordFlag == 1,MsgEnum.STATUS_TP000002);
-        // TODO: 2018/5/24 xiashuqing 根据订单号查询授权码
-        //this.autoPlusService.selectBankSmsSeq(userId, BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
-        String smsSeq = null;
+        // 根据订单号查询授权码
+        String smsSeq = amDataCollectClient.selectBankSmsSeq(user.getUserId(), BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
         CheckUtil.check(StringUtils.isNotBlank(smsSeq),MsgEnum.STATUS_CE000008);
         logger.info("-------------------授权码为！"+smsSeq+"电子账户号"+payRequestBean.getAccountId()+"！--------------------status"+user.getIsSetPassword());
         // 查询是否已经授权过

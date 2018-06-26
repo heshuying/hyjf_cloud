@@ -14,6 +14,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.UserConstant;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
@@ -21,8 +22,6 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.BindEmailError;
-import com.hyjf.cs.user.constants.ContractSetError;
 import com.hyjf.cs.user.mq.MailProducer;
 import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
@@ -163,7 +162,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         if(StringUtils.isNotEmpty(user.getIconUrl())){
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
         }
-        resultMap.put("inviteLink", systemConfig.getWebHost()+"/web/user/regist/init?from="+user.getUserId());
+        resultMap.put("inviteLink", systemConfig.getWebHost()+"/user/regist?from="+user.getUserId());
         return resultMap;
     }
 
@@ -254,16 +253,16 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     public void checkForEmailSend(String email, Integer userId) {
         // 邮箱为空校验
         if (StringUtils.isBlank(email)) {
-            throw new ReturnMessageException(BindEmailError.EMAIL_EMPTY_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_EMAIL_REQUIRED);
         }
         // 邮箱格式校验
         if (!Validator.isEmailAddress(email)) {
-            throw new ReturnMessageException(BindEmailError.EMAIL_FORMAT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_FMT_EMAIL);
         }
         // 邮箱地址使用校验
         boolean isExist = amUserClient.checkEmailUsed(email);
         if(isExist) {
-            throw new ReturnMessageException(BindEmailError.EMAIL_USED_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_EMAIL_USED);
         }
 
     }
@@ -278,28 +277,28 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUserVO user) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
-            throw new ReturnMessageException(BindEmailError.REQUEST_PARAM_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
         // 校验激活是否用户本人
         if(!bindEmailVO.getKey().equals(String.valueOf(user.getUserId()))){
-            throw new ReturnMessageException(BindEmailError.REQUEST_PARAM_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
         // 激活邮件存在性校验
         BindEmailLogVO log = amUserClient.getBindEmailLog(Integer.parseInt(bindEmailVO.getKey()));
         if(log == null) {
-            throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR_4);
+            throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE_NOT_EXIST);
         }
 
         // 激活邮件过期校验
         if (new Date().after(log.getEmailActiveUrlDeadtime())) {
-            throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR_3);
+            throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE_OVERDUE);
         }
 
         // 激活校验
         if(!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(log.getEmailActiveCode())) {
-            throw new ReturnMessageException(BindEmailError.EMAIL_ACTIVE_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE);
         }
     }
 
@@ -326,15 +325,15 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     public void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUserVO user) {
         // 请求参数空值校验
         if (StringUtils.isBlank(relationId) || StringUtils.isBlank(rlName) || StringUtils.isBlank(rlPhone)) {
-            throw new ReturnMessageException(ContractSetError.REQUEST_PARAM_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
         // 姓名格式校验
         if (rlName.length() < 2 || rlName.length() > 4) {
-            throw new ReturnMessageException(ContractSetError.NAME_FORMAT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_FMT_NAME);
         }
         // 手机号码格式校验
         if (rlPhone.length() != 11 || !Validator.isMobile(rlPhone)) {
-            throw new ReturnMessageException(ContractSetError.PHONE_FORMAT_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_FMT_PHONE);
         }
     }
 
@@ -351,7 +350,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         int cnt = amUserClient.updateUserContract(requestBean);
 
         if (cnt <= 0) {
-            throw new ReturnMessageException(ContractSetError.CONTRACT_SAVE_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_CONTACT_SAVE);
         }
 
         return true;
@@ -368,7 +367,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     	// 获取紧急联系人关系信息
     	Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
     	if(relationMap == null || relationMap.isEmpty()) {
-    		throw new ReturnMessageException(ContractSetError.CONTRACT_RELATION_ERROR);
+    		throw new ReturnMessageException(MsgEnum.ERR_CONTACT_RELATIONSHIP_NOT_EXIST);
     	}
 
     	resultBean.setRelationMap(relationMap);

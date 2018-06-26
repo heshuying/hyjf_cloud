@@ -96,6 +96,132 @@
         <result column="plan_invest_status_name" property="statusName" jdbcType="VARCHAR" />
         <result column="coupon_config" property="couponEnable" jdbcType="VARCHAR" />
     </resultMap>
+
+    <!--标的详情-->
+    <resultMap id="ProjectDetailMap" type="com.hyjf.am.vo.trade.ProjectCustomeDetailVO">
+        <!-- 项目编号-->
+        <id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+        <!-- 项目大分类 projectType HZT 汇直投 HXF 汇消费  -->
+        <result column="project_type" property="projectType" jdbcType="VARCHAR" />
+        <!-- 项目大分类 projectType HZT 汇直投 HXF 汇消费  -->
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <!-- 项目大分类 projectType HZT 汇直投 HXF 汇消费  -->
+        <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+        <!-- 项目名称 -->
+        <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+        <!-- 项目标题 -->
+        <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+        <!-- 风控措施字段 -->
+        <result column="borrow_measures_mea" property="borrowMeasuresMea" jdbcType="VARCHAR" />
+        <!-- 融资用途 -->
+        <result column="finance_purpose" property="financePurpose" jdbcType="VARCHAR" />
+        <!-- 月薪收入 -->
+        <result column="monthly_income" property="monthlyIncome" jdbcType="VARCHAR" />
+        <!-- 还款来源 -->
+        <result column="payment" property="payment" jdbcType="VARCHAR" />
+        <!-- 第一还款来源 -->
+        <result column="first_payment" property="firstPayment" jdbcType="VARCHAR" />
+        <!-- 第二还款来源 -->
+        <result column="second_payment" property="secondPayment" jdbcType="VARCHAR" />
+        <!--  费用说明 -->
+        <result column="cost_introdution" property="costIntrodution" jdbcType="VARCHAR" />
+        <!-- 财务状况 -->
+        <result column="fiance_condition" property="fianceCondition" jdbcType="VARCHAR" />
+        <!-- 项目还款方式 -->
+        <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+        <!-- 新老标的区分 0为老标 1位新标 网站改版添加 -->
+        <result column="is_new" property="isNew" jdbcType="INTEGER" />
+        <!-- 授信额度 userCredit -->
+        <result column="user_credit" property="userCredit" jdbcType="VARCHAR" />
+        <!-- 合作机构 -->
+        <result column="measures_instit" property="measuresInstit" jdbcType="VARCHAR" />
+        <!-- 项目总额 account -->
+        <result column="borrow_account" property="borrowAccount" jdbcType="VARCHAR" />
+        <!-- 项目总额 account 万元-->
+        <result column="borrow_account_wan" property="borrowAccountWan" jdbcType="VARCHAR" />
+        <!-- 项目年化收益 -->
+        <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+        <!-- 项目期限 borrowPeriod -->
+        <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+        <!-- 项目期限 borrowPeriod -->
+        <result column="borrow_period_type" property="borrowPeriodType" jdbcType="VARCHAR" />
+        <!-- 可投金额 investAccount -->
+        <result column="invest_account" property="investAccount" jdbcType="VARCHAR" />
+        <!-- 项目区分 comOrPer 项目是个人项目还是企业项目 1企业 2个人  -->
+        <result column="com_or_per" property="comOrPer" jdbcType="VARCHAR" />
+        <!-- 预期收益 borrowInterest -->
+        <!-- <result column="borrow_interest" property="borrowInterest" jdbcType="VARCHAR" /> -->
+        <!-- 还款方式 -->
+        <result column="repay_style" property="repayStyle" jdbcType="VARCHAR" />
+        <!-- 项目进度 borrowSchedule -->
+        <result column="borrow_schedule" property="borrowSchedule" jdbcType="VARCHAR" />
+        <!-- 项目最小投资金额 -->
+        <result column="tender_account_min" property="tenderAccountMin" jdbcType="VARCHAR" />
+        <!-- 项目最小投资金额 万-->
+        <result column="tender_account_min_wan" property="tenderAccountMinWan" jdbcType="VARCHAR" />
+        <!-- 项目最大投资金额 -->
+        <result column="tender_account_max" property="tenderAccountMax" jdbcType="VARCHAR" />
+        <!-- 发标时间 sendTime -->
+        <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
+        <!-- 满标时间 fullTime -->
+        <result column="full_time" property="fullTime" jdbcType="VARCHAR" />
+        <!-- 项目结束时间  endTime-->
+        <result column="borrow_end_time" property="endTime" jdbcType="VARCHAR" />
+        <!-- 定时发标时间 onTime -->
+        <result column="on_time" property="onTime" jdbcType="VARCHAR" />
+        <!-- 定时发标时间戳 time -->
+        <result column="time" property="time" jdbcType="VARCHAR" />
+        <!-- 项目状态 status 10 定时发标 11投资中 12复审中 13 还款中 14 已还款 15 已流标 -->
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <!-- 倍增金额  increaseMoney-->
+        <result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
+        <!-- 加息券 interestCoupon -->
+        <result column="interest_coupon" property="interestCoupon" jdbcType="VARCHAR" />
+        <!-- 体验金 tasteMoney -->
+        <result column="taste_money" property="tasteMoney" jdbcType="VARCHAR" />
+        <!-- 预约状态 bookingStatus 预约状态 0初始 1预约中 2预约结束-->
+        <result column="booking_status" property="bookingStatus" jdbcType="VARCHAR" />
+        <result column="booking_begin_time" property="bookingBeginTime" jdbcType="INTEGER" />
+        <result column="booking_end_time" property="bookingEndTime" jdbcType="INTEGER" />
+        <result column="on_appoint_time" property="onAppointTime" jdbcType="VARCHAR" />
+        <!--预约标等待预约金额 borrowAccountWaitAppoint -->
+        <result column="borrow_account_wait_appoint" property="borrowAccountWaitAppoint" jdbcType="DECIMAL" />
+        <!-- 预约进度 borrowAccountScaleAppoint -->
+        <result column="borrow_account_scale_appoint" property="borrowAccountScaleAppoint" jdbcType="DECIMAL" />
+        <!-- 资产编号 -->
+        <result column="borrow_asset_number" property="borrowAssetNumber" jdbcType="VARCHAR" />
+        <!-- 项目来源 -->
+        <result column="borrow_project_source" property="borrowProjectSource" jdbcType="VARCHAR" />
+        <!-- 起息日期-->
+        <result column="borrow_interest_time" property="borrowInterestTime" jdbcType="VARCHAR" />
+        <!-- 到期日期 -->
+        <result column="borrow_due_time" property="borrowDueTime" jdbcType="VARCHAR" />
+        <!-- 保障方式-->
+        <result column="borrow_safeguard_way" property="borrowSafeguardWay" jdbcType="VARCHAR" />
+        <!-- 收益说明 -->
+        <result column="borrow_income_description" property="borrowIncomeDescription" jdbcType="VARCHAR" />
+        <!-- 发行人 -->
+        <result column="borrow_publisher" property="borrowPublisher" jdbcType="VARCHAR" />
+        <!-- 产品加息收益率 -->
+        <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
+        <!-- 协议期数  -->
+        <result column="contract_period" property="contractPeriod" jdbcType="VARCHAR" />
+        <!-- 协议期数  -->
+        <result column="recover_last_time" property="recoverLastTime" jdbcType="VARCHAR" />
+        <!-- 借款评级  -->
+        <result column="borrow_level" property="borrowLevel" jdbcType="VARCHAR" />
+        <!-- 项目信息（原项目描述）  -->
+        <result column="borrow_contents" property="borrowContents" jdbcType="VARCHAR" />
+        <!-- 是否展示(隐藏测试标用:0:显示,1:不显示)  -->
+        <result column="is_show" property="isShow" jdbcType="TINYINT" />
+        <!-- 机构编号  -->
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+        <!-- 资产类型  -->
+        <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+        <!-- 原始状态  -->
+        <result column="status_orginal" property="statusOrginal" />
+
+    </resultMap>
     <!--Web端获取项目列表-->
     <select id="searchProjectList" resultMap="ProjectListNewMap" parameterType="Map">
         SELECT
@@ -163,6 +289,177 @@
         INNER JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = hbi.project_type
         LEFT JOIN ht_borrow_style htbs ON htb.borrow_style = htbs.nid
         <include refid = "Where_Clause_New" />
+    </select>
+
+    <!--查询标的详情信息-->
+    <select id="getProjectDetail" resultMap="ProjectDetailMap" parameterType="Map">
+        SELECT
+        hydb.borrow_nid,
+        hydbpt.borrow_project_type AS project_type,
+        hydbpt.borrow_cd AS type,
+        hydbpt.borrow_name AS type_name,
+        hydb.`name` AS borrow_name,
+        IFNULL(hydb.project_name,hydb.borrow_nid) as project_name,
+        hydb.borrow_contents,
+        hydb.borrow_measures_mea,
+        hydb.is_new,
+        hydb.finance_purpose,
+        hydb.monthly_income,
+        hydb.payment,
+        hydb.first_payment,
+        hydb.second_payment,
+        hydb.cost_introdution,
+        hydb.fiance_condition,
+        hydb.borrow_style,
+        hydb.inst_code,
+        hydb.asset_type,
+        hydb.is_show,
+        CASE
+        WHEN hydb.company_or_personal = 2 THEN
+        (
+        SELECT
+        m.credit
+        FROM
+        huiyingdai_borrow_maninfo m
+        WHERE
+        m.borrow_nid = hydb.borrow_nid
+        )
+        ELSE
+        (
+        SELECT
+        u.credit
+        FROM
+        huiyingdai_borrow_users u
+        WHERE
+        u.borrow_nid = hydb.borrow_nid
+        )
+        END AS user_credit,
+        hydb.borrow_measures_instit AS measures_instit,
+        hydb.account AS borrow_account,
+        truncate(hydb.account/10000,2) AS borrow_account_wan,
+        hydb.borrow_apr,
+        hydb.borrow_period,
+        CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
+        hydb.borrow_account_wait AS invest_account,
+        hydb.company_or_personal AS com_or_per,
+        hydbs.`name` AS repay_style,
+        hydb.borrow_account_scale AS borrow_schedule,
+        hydb.booking_status,
+        hydb.booking_begin_time,
+        hydb.booking_end_time,
+        hydb.borrow_account_wait_appoint,
+        hydb.borrow_account_scale_appoint,
+        hydb.tender_account_min,
+        truncate(hydb.tender_account_min/10000,2) tender_account_min_wan,
+        hydb.tender_account_max,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status = 3
+        THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i' )
+        ELSE
+        FROM_UNIXTIME(
+        hydb.verify_time,
+        '%Y-%m-%d %H:%i'
+        )
+        END AS send_time,
+        FROM_UNIXTIME(
+        hydb.borrow_full_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS full_time,
+        FROM_UNIXTIME(
+        (hydb.verify_time + hydb.borrow_valid_time * 24 * 60 * 60),
+        '%Y-%m-%d %H:%i:%s'
+        ) AS borrow_end_time,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status = 3
+        THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i:%s' )
+        ELSE ''
+        END AS on_time,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.booking_status =0
+        THEN FROM_UNIXTIME( hydb.booking_begin_time, '%Y-%m-%d %H:%i:%s' )
+        ELSE ''
+        END AS on_appoint_time,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status = 3
+        THEN hydb.ontime
+        ELSE ''
+        END AS time,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
+        WHEN hydb.`status` = 2 AND hydb.borrow_full_status = 0
+        AND (
+        hydb.verify_time + (
+        hydb.borrow_valid_time * 24 * 60 * 60
+        ) > UNIX_TIMESTAMP(NOW())
+        ) THEN
+        '11'
+        WHEN hydb.`status` = 3
+        THEN
+        '12'
+        WHEN hydb.`status` = 4 THEN
+        '13'
+        WHEN hydb.`status` = 5 THEN
+        '14'
+        <!-- WHEN hydb.`status` = 2 THEN
+            '15' -->
+        ELSE
+        ''
+        END AS `status`,
+        hydb.`status` AS status_orginal,
+        hydb.borrow_increase_money increase_money,
+        hydb.borrow_interest_coupon interest_coupon,
+        hydb.borrow_taste_money taste_money,
+        hydb.borrow_asset_number,
+        hydb.borrow_project_source,
+        hydb.borrow_interest_time,
+        hydb.borrow_due_time,
+        hydb.borrow_safeguard_way,
+        hydb.borrow_income_description,
+        hydb.borrow_publisher,
+        hydb.borrow_extra_yield,
+        hydb.contract_period,
+        FROM_UNIXTIME(
+        hydb.recover_last_time,
+        '%Y年%m月%d日'
+        ) recover_last_time,
+        hydb.borrow_level
+        FROM
+        huiyingdai_borrow hydb
+        LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        LEFT JOIN huiyingdai_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
+        WHERE
+        (
+        hydbpt.borrow_project_type = 'HZT'
+        OR hydbpt.borrow_project_type = 'HXF'
+        )
+        AND (
+        (
+        (
+        hydb.`status` = 1
+        AND hydb.verify_status = 3
+        )
+        )
+        OR (
+        hydb.`status` = 2
+        AND hydb.borrow_full_status = 0
+        AND (
+        hydb.verify_time + (
+        hydb.borrow_valid_time * 24 * 60 * 60
+        ) > UNIX_TIMESTAMP(NOW())
+        )
+        )
+        OR (
+        hydb.`status` = 3
+        )
+        OR (
+        hydb.`status` = 4
+        )
+        OR (
+        hydb.`status` = 5
+        )
+        <!-- OR (hydb.`status` = 2) -->
+        )
+        AND hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
     </select>
 
     <!--债权转让查询data -->

@@ -5,6 +5,7 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public interface WebProjectListCustomizeMapper {
      */
     int countProjectList(Map<String, Object> params);
 
+
+    ProjectCustomeDetailVO getProjectDetail(Map<String, Object> params);
     /**
      * @desc 获取债转列表count
      * @author zhangyk

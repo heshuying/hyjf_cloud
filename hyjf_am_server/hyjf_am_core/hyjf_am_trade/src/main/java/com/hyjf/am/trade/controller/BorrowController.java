@@ -5,24 +5,22 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.BorrowConfigResponse;
 import com.hyjf.am.response.trade.BorrowFinmanNewChargeResponse;
+import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.trade.service.UserService;
-import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
-import com.hyjf.am.vo.trade.borrow.BorrowFinmanNewChargeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +36,7 @@ import java.util.Map;
 
 @Api(value = "借款信息")
 @RestController
-@RequestMapping("/am-trade/trade")
+@RequestMapping("/am-trade/borrow")
 public class BorrowController {
 
 	@Autowired
@@ -141,16 +139,15 @@ public class BorrowController {
 		return response;
 	}
 
-	/*@GetMapping("/getBorrowWithBLOBsByNid/{borrowNid}")
-	public BorrowWithBLOBsResponse getBorrowWithBLOBsByNid(@PathVariable String borrowNid){
-		BorrowWithBLOBsResponse response = new BorrowWithBLOBsResponse();
-		BorrowWithBLOBsVO borrowWithBLOBs=borrowService.getBorrowWithBLOBsByNid(borrowNid);
-		if (borrowWithBLOBs!=null){
-			response.setResult(borrowWithBLOBs);
+	@GetMapping("/selectOverdueBorrowList")
+	public BorrowResponse selectOverdueBorrowList(){
+		BorrowResponse response = new BorrowResponse();
+		List<Borrow> borrowList = borrowService.selectOverdueBorrowList();
+		if (CollectionUtils.isNotEmpty(borrowList)){
+			response.setResultList(CommonUtils.convertBeanList(borrowList, BorrowVO.class));
 		}
 		return response;
 	}
-*/
 
     /**
      * 检索正在还款中的标的
@@ -169,4 +166,27 @@ public class BorrowController {
 		}
 		return response;
 	}
+
+
+	@GetMapping("/getBorrowByNid/{borrowId}")
+	public BorrowResponse getBorrowByNid(@PathVariable String borrowId){
+		BorrowResponse response = new BorrowResponse();
+		Borrow borrow = borrowService.getBorrow(borrowId);
+		if (Validator.isNotNull(borrow)){
+			response.setResult(CommonUtils.convertBean(borrow,BorrowVO.class));
+		}
+		return response;
+	}
+
+	@GetMapping("/getBorrowInfoByNid/{borrowNid}")
+	public BorrowInfoResponse getBorrowInfoByNid(@PathVariable String borrowNid) {
+		BorrowInfoResponse response = new BorrowInfoResponse();
+		BorrowInfo borrowInfo =borrowService.getBorrowInfoByNid(borrowNid);
+		if (Validator.isNotNull(borrowInfo)){
+			response.setResult(CommonUtils.convertBean(borrowInfo,BorrowInfoVO.class));
+		}
+		return response;
+	}
+
+
 }

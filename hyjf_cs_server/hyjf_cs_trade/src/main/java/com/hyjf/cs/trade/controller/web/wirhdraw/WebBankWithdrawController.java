@@ -5,11 +5,11 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.WebViewUser;
-import com.hyjf.cs.trade.constants.BankWithdrawError;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.WebBorrowService;
@@ -86,7 +86,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         } catch (Exception e) {
             logger.info("web端提现失败");
             e.printStackTrace();
-            throw new ReturnMessageException(BankWithdrawError.CALL_BANK_ERROR);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
         return result;
     }

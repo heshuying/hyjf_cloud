@@ -4,7 +4,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  * @author liuyang
  * @version ProjectListResponse, v0.1 2018/6/13 11:26
  */
-public class ProjectListResponse extends Response<WebProjectListCustomizeVo> {
+public class ProjectListResponse extends Response<WebProjectListCustomizeVO> {
 
     // 数据查询条数 主要用于分页情况，原子层向组合层返回
     private  Integer  count;

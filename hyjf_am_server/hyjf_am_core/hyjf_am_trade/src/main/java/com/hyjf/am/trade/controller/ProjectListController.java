@@ -4,13 +4,15 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.CreditListResponse;
+import com.hyjf.am.response.trade.ProjectDetailResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVo;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -44,8 +46,8 @@ public class ProjectListController {
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchProjectList(request);
         if(!CollectionUtils.isEmpty(list)){
-            List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
-            projectListResponse.setResultList(webProjectListCustomizeVo);
+            List<WebProjectListCustomizeVO> webProjectListCustomizeVO = CommonUtils.convertBeanList(list,WebProjectListCustomizeVO.class);
+            projectListResponse.setResultList(webProjectListCustomizeVO);
         }
         return projectListResponse;
     }
@@ -61,6 +63,19 @@ public class ProjectListController {
         int count = projectListService.countProjectList(request);
         projectListResponse.setCount(count);
         return projectListResponse;
+    }
+
+    /**
+     * Web端散标和新手标的详情
+     * @author zhangyk
+     * @date 2018/6/23 14:23
+     */
+    @RequestMapping("/web/searchProjectDetail")
+    public ProjectDetailResponse getProjectDetail(@RequestBody @Valid Map map){
+        ProjectDetailResponse response = new ProjectDetailResponse();
+        ProjectCustomeDetailVO vo = projectListService.getProjectDetail(map);
+        response.setResult(vo);
+        return response;
     }
 
     /**
@@ -126,7 +141,7 @@ public class ProjectListController {
     @RequestMapping("/web/searchPlanList")
     public ProjectListResponse searchPlanList(@RequestBody @Valid  ProjectListRequest request){
         ProjectListResponse res = new ProjectListResponse();
-        List<WebProjectListCustomizeVo> list= projectListService.searchWebPlanList(request);
+        List<WebProjectListCustomizeVO> list= projectListService.searchWebPlanList(request);
         res.setResultList(list);
         return res;
     }
@@ -146,8 +161,8 @@ public class ProjectListController {
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchAppProjectList(request);
         if(!CollectionUtils.isEmpty(list)){
-            List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
-            projectListResponse.setResultList(webProjectListCustomizeVo);
+            List<WebProjectListCustomizeVO> webProjectListCustomizeVO = CommonUtils.convertBeanList(list,WebProjectListCustomizeVO.class);
+            projectListResponse.setResultList(webProjectListCustomizeVO);
         }
         return projectListResponse;
     }
@@ -175,8 +190,8 @@ public class ProjectListController {
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchAppCreditList(request);
         if(!CollectionUtils.isEmpty(list)){
-            List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
-            projectListResponse.setResultList(webProjectListCustomizeVo);
+            List<WebProjectListCustomizeVO> webProjectListCustomizeVO = CommonUtils.convertBeanList(list,WebProjectListCustomizeVO.class);
+            projectListResponse.setResultList(webProjectListCustomizeVO);
         }
         return projectListResponse;
     }
@@ -217,8 +232,8 @@ public class ProjectListController {
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchAppPlanList(request);
         if(!CollectionUtils.isEmpty(list)){
-            List<WebProjectListCustomizeVo> webProjectListCustomizeVo = CommonUtils.convertBeanList(list,WebProjectListCustomizeVo.class);
-            projectListResponse.setResultList(webProjectListCustomizeVo);
+            List<WebProjectListCustomizeVO> webProjectListCustomizeVO = CommonUtils.convertBeanList(list,WebProjectListCustomizeVO.class);
+            projectListResponse.setResultList(webProjectListCustomizeVO);
         }
         return projectListResponse;
     }
