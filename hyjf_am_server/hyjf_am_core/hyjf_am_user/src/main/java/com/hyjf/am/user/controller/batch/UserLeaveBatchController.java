@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/userBatch")
+@RequestMapping("/userBatch/leave")
 public class UserLeaveBatchController {
     private static final Logger logger = LoggerFactory.getLogger(UserLeaveBatchController.class);
 
     @Autowired
     private UserLeaveBatchService userLeaveBatchService;
 
-    @RequestMapping("/leave/update")
+    @RequestMapping("/update")
     public void leaveUpdate(){
         logger.info("员工离职修改客户属性...");
         userLeaveBatchService.updateUserLeaveInfo();

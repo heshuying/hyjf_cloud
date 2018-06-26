@@ -156,7 +156,7 @@
     </select>
 	<select id="countMyCouponList" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
-			IFNULL(count (cu.id),0)
+			IFNULL(count(cu.id),0)
 		FROM
 		ht_coupon_user cu
 		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code

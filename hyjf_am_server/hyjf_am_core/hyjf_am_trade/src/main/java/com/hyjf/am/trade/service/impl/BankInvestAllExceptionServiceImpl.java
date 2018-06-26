@@ -40,10 +40,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-import com.netflix.discovery.converters.Auto;
-import com.rabbitmq.http.client.domain.UserInfo;
-import org.apache.catalina.User;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.trade.service.BankInvestAllExceptionService;
+import com.hyjf.am.trade.service.BankInvestAllService;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -71,7 +67,7 @@ import java.util.Map;
  * @since 20180623
  */
 @Service
-public class BankInvestAllExceptionServiceImpl implements BankInvestAllExceptionService {
+public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BankInvestAllExceptionServiceImpl.class);
 

@@ -20,6 +20,8 @@ import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -138,16 +140,15 @@ public class BorrowController {
 		return response;
 	}
 
-	/*@GetMapping("/getBorrowWithBLOBsByNid/{borrowNid}")
-	public BorrowWithBLOBsResponse getBorrowWithBLOBsByNid(@PathVariable String borrowNid){
-		BorrowWithBLOBsResponse response = new BorrowWithBLOBsResponse();
-		BorrowWithBLOBsVO borrowWithBLOBs=borrowService.getBorrowWithBLOBsByNid(borrowNid);
-		if (borrowWithBLOBs!=null){
-			response.setResult(borrowWithBLOBs);
+	@GetMapping("/selectOverdueBorrowList")
+	public BorrowResponse selectOverdueBorrowList(){
+		BorrowResponse response = new BorrowResponse();
+		List<Borrow> borrowList = borrowService.selectOverdueBorrowList();
+		if (CollectionUtils.isNotEmpty(borrowList)){
+			response.setResultList(CommonUtils.convertBeanList(borrowList, BorrowVO.class));
 		}
 		return response;
 	}
-*/
 
     /**
      * 检索正在还款中的标的

@@ -75,6 +75,8 @@ public class CustomRouteLocator extends SimpleRouteLocator implements Refreshabl
 		if (!CollectionUtils.isEmpty(results)) {
 			for (GatewayApiConfigVO result : results) {
 				ZuulRoute zuulRoute = new ZuulRoute();
+				//去掉请求前缀
+				zuulRoute.setStripPrefix(false);
 				try {
 					BeanUtils.copyProperties(result, zuulRoute);
 				} catch (Exception e) {

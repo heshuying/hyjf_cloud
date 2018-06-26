@@ -68,4 +68,9 @@ public interface BorrowService {
      * @return
      */
     int insertBeforeTender(TenderRequest tenderRequest);
+
+    /**
+     * 獲取預期的還款標的
+     */
+	List<Borrow> selectOverdueBorrowList();
 }

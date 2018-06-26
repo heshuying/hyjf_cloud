@@ -66,7 +66,7 @@ public class AutoSendClientImpl implements AutoSendClient {
 
     @Override
     public BorrowFinmanNewChargeVO selectBorrowApr(BorrowFinmanNewChargeRequest request) {
-        BorrowFinmanNewChargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/trade/selectBorrowApr", request, BorrowFinmanNewChargeResponse.class).getBody();
+        BorrowFinmanNewChargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/selectBorrowApr", request, BorrowFinmanNewChargeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -84,7 +84,7 @@ public class AutoSendClientImpl implements AutoSendClient {
 
     @Override
     public BorrowConfigVO getBorrowConfig(String configCd) {
-        BorrowConfigResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/trade/getBorrowConfig/" + configCd, BorrowConfigResponse.class).getBody();
+        BorrowConfigResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/getBorrowConfig/" + configCd, BorrowConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -93,12 +93,12 @@ public class AutoSendClientImpl implements AutoSendClient {
 
     @Override
     public void insertSelective(BorrowVO borrow) {
-        restTemplate.postForEntity("http://AM-TRADE/am-trade/trade/insertBorrow", borrow, int.class).getBody();
+        restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/insertBorrow", borrow, int.class).getBody();
     }
 
     @Override
     public void insertBorrowManinfo(BorrowManinfoVO borrowManinfoVO) {
-        restTemplate.postForEntity("http://AM-TRADE/am-trade/trade/insertBorrowManinfo", borrowManinfoVO, int.class).getBody();
+        restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/insertBorrowManinfo", borrowManinfoVO, int.class).getBody();
     }
 
     @Override

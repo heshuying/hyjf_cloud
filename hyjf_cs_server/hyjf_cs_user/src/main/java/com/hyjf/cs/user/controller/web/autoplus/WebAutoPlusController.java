@@ -48,13 +48,6 @@ public class WebAutoPlusController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
-
-    @RequestMapping(value = "/init")
-    public String init(Model model) {
-
-        return "init";
-    }
-
     @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
     @ApiImplicitParam(name = "param",value = "{type: string} type=1授权自动投标；type=2授权自动债转", dataType = "Map")
     @PostMapping(value = "/autoPlusSendCode", produces = "application/json; charset=utf-8")

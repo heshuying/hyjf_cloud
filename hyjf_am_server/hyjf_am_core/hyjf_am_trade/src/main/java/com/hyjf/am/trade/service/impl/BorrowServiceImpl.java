@@ -3,12 +3,20 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.model.auto.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.util.GetDate;
@@ -23,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author fuqiang
@@ -162,6 +171,20 @@ public class BorrowServiceImpl implements BorrowService {
         }
         return null;
     }
+
+    /**
+     * 检索逾期的还款标的
+     */
+	@Override
+	public List<Borrow> selectOverdueBorrowList() {
+		BorrowExample example = new BorrowExample();
+    	example.createCriteria().andRepayLastTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getTodayBeforeOrAfter(-1))).andStatusEqualTo(4).andPlanNidIsNull();
+    	List<Borrow> borrows = borrowMapper.selectByExample(example);
+    	if(CollectionUtils.isNotEmpty(borrows)){
+    		return borrows;
+    	}
+    	return null;
+	}
 
     /**
      * 投资之前插入tmp表

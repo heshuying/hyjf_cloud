@@ -5,14 +5,14 @@ import com.hyjf.am.response.trade.AccountWithdrawResponse;
 import com.hyjf.am.response.trade.AssetManageResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
-import com.hyjf.am.trade.dao.model.customize.trade.CurrentHoldObligatoryRightListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.RepayMentListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.service.AssetManageService;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import netscape.javascript.JSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class AssetManageController {
     @Autowired
     private AssetManageService assetManageService;
     /**
-     * @Description 获取用户当前持有列表
+     * @Description 获取用户当前持有债权列表
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -61,7 +61,7 @@ public class AssetManageController {
     }
 
     /**
-     * @Description 获取用户当前持有列表数量
+     * @Description 获取用户当前持有债权列表数量
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -77,7 +77,7 @@ public class AssetManageController {
     }
 
     /**
-     * @Description 获取用户当前持有列表
+     * @Description 获取用户已回款债权列表
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -103,7 +103,7 @@ public class AssetManageController {
 
 
     /**
-     * @Description 获取用户已回款列表数量
+     * @Description 获取用户已回款债权列表数量
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -119,7 +119,7 @@ public class AssetManageController {
     }
 
     /**
-     * @Description 获取用户当前持有列表
+     * @Description 获取用户转让列表
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -158,4 +158,83 @@ public class AssetManageController {
         return response;
     }
 
+    /**
+     * @Description 获取用户当前持有计划列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectCurrentHoldPlanList")
+    public AssetManageResponse selectCurrentHoldPlanList(@RequestBody AssetManageBeanRequest request){
+        logger.info("request:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        List<CurrentHoldPlanListCustomize> list = assetManageService.selectCurrentHoldPlanList(request);
+        List<CurrentHoldPlanListCustomizeVO> voList=null;
+        if(!CollectionUtils.isEmpty(list)){
+            voList=new ArrayList<>(list.size());
+            for (CurrentHoldPlanListCustomize customize:list) {
+                CurrentHoldPlanListCustomizeVO vo=new CurrentHoldPlanListCustomizeVO();
+                BeanUtils.copyProperties(customize,vo);;
+                voList.add(vo);
+            }
+        }
+        response.setCurrentHoldPlanList(voList);
+        return response;
+    }
+
+    /**
+     * @Description 获取用户当前持有计划列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/countCurrentHoldPlanTotal")
+    public AssetManageResponse countCurrentHoldPlanTotal(@RequestBody AssetManageBeanRequest request){
+        logger.info("request:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        int  currentHoldPlanCount= this.assetManageService.countCurrentHoldPlanTotal(request);
+
+        response.setCurrentHoldPlanCount(currentHoldPlanCount);
+        return response;
+    }
+
+    /**
+     * @Description 获取用户已回款计划列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectRepayMentPlanList")
+    public AssetManageResponse selectRepayMentPlanList(@RequestBody AssetManageBeanRequest request){
+        logger.info("request:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        List<RepayMentPlanListCustomize> list = assetManageService.selectRepayMentPlanList(request);
+        List<RepayMentPlanListCustomizeVO> voList=null;
+        if(!CollectionUtils.isEmpty(list)){
+            voList=new ArrayList<>(list.size());
+            for (RepayMentPlanListCustomize customize:list) {
+                RepayMentPlanListCustomizeVO vo=new RepayMentPlanListCustomizeVO();
+                BeanUtils.copyProperties(customize,vo);;
+                voList.add(vo);
+            }
+        }
+        response.setRepayMentPlanList(voList);
+        return response;
+    }
+
+    /**
+     * @Description 获取用户已回款计划列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/countRepayMentPlanTotal")
+    public AssetManageResponse countRepayMentPlanTotal(@RequestBody AssetManageBeanRequest request){
+        logger.info("request:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        int  repayMentPlanCount= this.assetManageService.countRepayMentPlanTotal(request);
+
+        response.setRepayMentPlanCount(repayMentPlanCount);
+        return response;
+    }
 }
