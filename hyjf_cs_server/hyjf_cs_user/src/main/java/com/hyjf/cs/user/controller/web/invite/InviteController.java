@@ -24,7 +24,7 @@ import java.util.Map;
  * @author hesy
  * @version InviteController, v0.1 2018/6/23 17:14
  */
-@Api(value = "Web端邀请及奖励记录")
+@Api(value = "Web端邀记录")
 @RestController
 @RequestMapping("/web/invite")
 public class InviteController {
