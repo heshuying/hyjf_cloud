@@ -3,9 +3,7 @@ package com.hyjf.am.trade.service.impl;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.trade.CurrentHoldObligatoryRightListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.RepayMentListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.service.AssetManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +54,30 @@ public class AssetManageServiceImpl implements AssetManageService {
     public List<TenderCreditDetailCustomize> selectCreditRecordList(AssetManageBeanRequest request) {
         Map<String, Object> params=createParame(request);
         return assetManageCustomizeMapper.selectCreditRecordList(params);
+    }
+
+    @Override
+    public List<CurrentHoldPlanListCustomize> selectCurrentHoldPlanList(AssetManageBeanRequest request) {
+        Map<String, Object> params=createParame(request);
+        return assetManageCustomizeMapper.selectCurrentHoldPlanList(params);
+    }
+
+    @Override
+    public int countCurrentHoldPlanTotal(AssetManageBeanRequest request) {
+        Map<String, Object> params=createParame(request);
+        return assetManageCustomizeMapper.countCurrentHoldPlanTotal(params);
+    }
+
+    @Override
+    public List<RepayMentPlanListCustomize> selectRepayMentPlanList(AssetManageBeanRequest request) {
+        Map<String, Object> params=createParame(request);
+        return assetManageCustomizeMapper.selectRepayMentPlanList(params);
+    }
+
+    @Override
+    public int countRepayMentPlanTotal(AssetManageBeanRequest request) {
+        Map<String, Object> params=createParame(request);
+        return assetManageCustomizeMapper.countRepayMentPlanTotal(params);
     }
 
     private Map<String,Object> createParame(AssetManageBeanRequest request) {

@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
+import com.hyjf.cs.trade.bean.PlanAjaxBean;
 
 /**
  * @author pangchengchao
@@ -25,10 +26,25 @@ public interface AssetManageService extends BaseTradeService  {
      */
     ObligatoryRightAjaxBean createRepayMentListPage(AssetManageBeanRequest form);
     /**
-     * @Description 获取用户转让记录债权页面json数据
+     * @Description 获取用户已回款债权列表分页数据
      * @Author pangchengchao
      * @Version v0.1
      * @Date
      */
     ObligatoryRightAjaxBean getCreditRecordList(AssetManageBeanRequest form);
+
+    /**
+     * @Description 获取用户当前持有列表分页数据
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    PlanAjaxBean getCurrentHoldPlan(AssetManageBeanRequest form);
+    /**
+     * @Description 获取用户已回款计划页面json数据
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    PlanAjaxBean getRepayMentPlan(AssetManageBeanRequest form);
 }

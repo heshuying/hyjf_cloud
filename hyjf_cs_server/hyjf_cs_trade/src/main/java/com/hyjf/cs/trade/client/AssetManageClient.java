@@ -4,7 +4,9 @@ import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +29,12 @@ public interface AssetManageClient {
     List<RepayMentListCustomizeVO> selectRepaymentList(AssetManageBeanRequest request);
 
     List<TenderCreditDetailCustomizeVO> selectCreditRecordList(AssetManageBeanRequest request);
+
+    int countCurrentHoldPlanTotal(AssetManageBeanRequest request);
+
+    List<CurrentHoldPlanListCustomizeVO> selectCurrentHoldPlanList(AssetManageBeanRequest request);
+
+    Integer countRepayMentPlanTotal(AssetManageBeanRequest request);
+
+    List<RepayMentPlanListCustomizeVO> selectRepayMentPlanList(AssetManageBeanRequest request);
 }
