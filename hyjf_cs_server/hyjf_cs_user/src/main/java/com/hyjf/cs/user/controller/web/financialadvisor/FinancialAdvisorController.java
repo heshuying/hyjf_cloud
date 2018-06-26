@@ -43,7 +43,7 @@ public class FinancialAdvisorController extends BaseUserController {
      * @param
      * @return
      */
-    @ApiOperation(value = "风险测评接口", notes = "端风险测评接口")
+    @ApiOperation(value = "再测一次", notes = "再测一次")
     @PostMapping(value = "/questionnaireInit", produces = "application/json; charset=utf-8")
     public Map<String,Object> questionnaireInit() {
         Map<String,Object> result = new HashMap<>();
@@ -66,7 +66,7 @@ public class FinancialAdvisorController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "网站改版风险测评页面初始化", notes = "网站改版风险测评页面初始化")
-    @PostMapping(value="financialAdvisorInit" ,  produces = "application/json; charset=utf-8")
+    @PostMapping(value="/financialAdvisorInit" ,  produces = "application/json; charset=utf-8")
     public  WebResult<Map<String,Object>> financialAdvisorInit(@RequestHeader(value = "token", required = true) String token) {
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
@@ -118,7 +118,7 @@ public class FinancialAdvisorController extends BaseUserController {
      */
     @ApiOperation(value = "用户测评结果", notes = "用户测评结果")
     @ApiImplicitParam(name = "param",value = "{userAnswer:string}", dataType = "Map")
-    @PostMapping(value = "evaluationResult", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/evaluationResult", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> evaluationResult( @RequestHeader(value = "token") String token,@RequestBody Map<String,String> param) {
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
