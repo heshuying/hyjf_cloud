@@ -75,4 +75,8 @@ public class CommonConstant {
     public static final int APICRON_EXTRA_YIELD_REPAY_STATUS_RUNNING = 2;
     // 融通宝加息利息还款状态 9-错误
     public static final int APICRON_EXTRA_YIELD_REPAY_STATUS_ERROR = 9;
+
+    // hyjf inst_code机构编号
+    public static final String HYJF_INST_CODE = "10000000";
+
 }
