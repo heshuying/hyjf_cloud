@@ -20,6 +20,7 @@ import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
 import com.hyjf.common.security.util.MD5;
+import com.hyjf.common.util.CommonUtils;
 
 
 @RestController
@@ -38,9 +39,8 @@ public class AdminSystemController {
     	TreeResponse adminR=new TreeResponse();
         List<Tree> tree = adminSystemService.selectLeftMenuTree2(userId);
         if(null != tree){
-        	List<TreeVO> treevo= new ArrayList<TreeVO>();
-            BeanUtils.copyProperties(tree,treevo);
-            adminR.setResultList(treevo);
+        	List<TreeVO> tvo = CommonUtils.convertBeanList(tree,TreeVO.class);
+            adminR.setResultList(tvo);
         }
         return adminR;
     }
@@ -64,7 +64,7 @@ public class AdminSystemController {
 				asr.setMessage("该用户已禁用");
 				return asr;
 			}
-			BeanUtils.copyProperties(adminSystem,asr);
+			BeanUtils.copyProperties(adminSystem,asv);
 			asr.setResult(asv);
 			return asr;
 		}else {
@@ -96,8 +96,7 @@ public class AdminSystemController {
 		adminSystem = this.adminSystemService.getUserInfo(adminSystem);
 		AdminSystemResponse asr=new AdminSystemResponse();
 		List<AdminSystem> permissionsList = this.adminSystemService.getUserPermission(adminSystem);
-		List<AdminSystemVO> adminVo= new ArrayList<AdminSystemVO>();
-		BeanUtils.copyProperties(permissionsList,adminVo);
+		List<AdminSystemVO> adminVo= CommonUtils.convertBeanList(permissionsList,AdminSystemVO.class);
 		asr.setResultList(adminVo);
 		return asr;
 	}

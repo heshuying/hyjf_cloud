@@ -41,26 +41,12 @@ public class WebProjectListCustomize {
     private String onTime;
     //定时发标时间戳
     private String time;
-    //是否可用体验金 ||是否可用加息券
-    private String couponEnable;
-    // 预约状态 0初始 1预约中 2预约结束
-    private String bookingStatus;
-    // 预约开始时间
-    private String bookingBeginTime;
-    //预约截止时间
-    private String bookingEndTime;
     // 预约进度
     private String borrowAccountScaleAppoint;
-    // 产品加息收益率（风险缓释金）
-    private String borrowExtraYield;
-    //融通宝资产编号
-    private String borrowAssetNumber;
     //项目类别标识
     private String borrowClass;
     //20170520改版后为新标 1 其他为老标0
     private String isNew;
-
-
     /**
      * 构造方法
      */
@@ -156,60 +142,12 @@ public class WebProjectListCustomize {
         this.time = time;
     }
 
-    public String getCouponEnable() {
-        return couponEnable;
-    }
-
-    public void setCouponEnable(String couponEnable) {
-        this.couponEnable = couponEnable;
-    }
-
-    public String getBookingStatus() {
-        return bookingStatus;
-    }
-
-    public void setBookingStatus(String bookingStatus) {
-        this.bookingStatus = bookingStatus;
-    }
-
-    public String getBookingBeginTime() {
-        return bookingBeginTime;
-    }
-
-    public void setBookingBeginTime(String bookingBeginTime) {
-        this.bookingBeginTime = bookingBeginTime;
-    }
-
-    public String getBookingEndTime() {
-        return bookingEndTime;
-    }
-
-    public void setBookingEndTime(String bookingEndTime) {
-        this.bookingEndTime = bookingEndTime;
-    }
-
     public String getBorrowAccountScaleAppoint() {
         return borrowAccountScaleAppoint;
     }
 
     public void setBorrowAccountScaleAppoint(String borrowAccountScaleAppoint) {
         this.borrowAccountScaleAppoint = borrowAccountScaleAppoint;
-    }
-
-    public String getBorrowExtraYield() {
-        return borrowExtraYield;
-    }
-
-    public void setBorrowExtraYield(String borrowExtraYield) {
-        this.borrowExtraYield = borrowExtraYield;
-    }
-
-    public String getBorrowAssetNumber() {
-        return borrowAssetNumber;
-    }
-
-    public void setBorrowAssetNumber(String borrowAssetNumber) {
-        this.borrowAssetNumber = borrowAssetNumber;
     }
 
     public String getProjectName() {

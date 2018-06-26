@@ -2,8 +2,10 @@
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 package com.hyjf.admin.controller;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.Utils.ShiroConstants;
 import com.hyjf.admin.beans.PermissionsBean;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoginService;
@@ -27,6 +30,7 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
+import com.hyjf.common.cache.RedisUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,11 +41,12 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "admin登陆相关")
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/hyjf-admin/login")
 public class LoginController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	@Autowired
 	private LoginService loginService;
+	String key="key";
 	
     /**
      * @Author: dongzeshan
@@ -53,7 +58,7 @@ public class LoginController extends BaseController {
     @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
     @PostMapping(value = "/login")
 	@ResponseBody
-	@AuthorityAnnotation(key = "312", value = "123")
+	@AuthorityAnnotation(key = "321", value = ShiroConstants.PERMISSION_AUTH)
 	public JSONObject login(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> map) {
     	System.out.println(request.getRequestURI());
     	JSONObject info = new JSONObject();
@@ -63,13 +68,17 @@ public class LoginController extends BaseController {
 		adminSystemRequest.setUsername(username);
 		adminSystemRequest.setPassword(password);
 		AdminSystemResponse prs = loginService.getUserInfo(adminSystemRequest);
-		if(StringUtils.isNotBlank(prs.getMessage())) {
+		if(prs.getMessage().equals("00")) {
 			info.put("status", "99");
 			info.put("msg", prs.getMessage());
 			return info;
 		}
+		String uuid=UUID.randomUUID().toString();
+		RedisUtils.set("admin@"+username, uuid, 3600);
 		this.setUser(request, prs.getResult());
-		info.put("status", "0");
+		info.put("uuid", uuid);
+		info.put("user", prs.getResult());
+		info.put("status", "00");
 		info.put("msg", "登录成功");
 		return info;
 	}
@@ -84,11 +93,13 @@ public class LoginController extends BaseController {
     @PostMapping(value = "/getMenuTree")
 	@ResponseBody
 	public JSONObject getMenuTree(HttpServletRequest request, HttpServletResponse response) {
+    	System.out.println(this.getUser(request).getTruename());
+    	System.out.println(request.getHeader("Cookies"));
     	JSONObject info = new JSONObject();
     	//AdminSystemVO user = this.getUser(request);
-		List<TreeVO> prs = loginService.selectLeftMenuTree2("1");
+		List<TreeVO> prs = loginService.selectLeftMenuTree2(this.getUser(request).getId());
 		JSONArray jsonArray1 = (JSONArray) JSONArray.toJSON(prs);
-		info.put("status", "0");
+		info.put("status", "00");
 		info.put("msg", "成功");
 		info.put("tree",jsonArray1);
 		return info;
@@ -107,20 +118,34 @@ public class LoginController extends BaseController {
     	JSONObject info = new JSONObject();
 		 List<AdminSystemVO> prs = loginService.getUserPermission(this.getUser(request).getUsername());
 		 JSONArray jsonArray1 = new JSONArray();
-		 List<String> perm = null;
+		 List<String> perm = new ArrayList<String>();
+		 String key=null;
+		 StringBuilder val=new StringBuilder();
+		 JSONObject info2 = new JSONObject();
 		 for (AdminSystemVO adminSystemVO : prs) {
 				if (adminSystemVO != null) {
-					PermissionsBean pb=new PermissionsBean();
-					pb.setPermissionName(adminSystemVO.getMenuCtrl());
-					pb.setPermissionKey(adminSystemVO.getPermission());
-					jsonArray1.add(pb);
+					if(key==null) {
+						key=adminSystemVO.getMenuCtrl();
+						val.append(adminSystemVO.getPermission());
+					}
+					if(key.equals(adminSystemVO.getMenuCtrl())) {
+						val.append(",");
+						val.append(adminSystemVO.getPermission());
+					}
+					if(!key.equals(adminSystemVO.getMenuCtrl())) {
+						info2.put(key, val.toString().split(","));
+						key=adminSystemVO.getMenuCtrl();
+						val=new StringBuilder();
+						val.append(adminSystemVO.getPermission());
+					}
 					perm.add(adminSystemVO.getMenuCtrl()+":"+adminSystemVO.getPermission());
 				}
 		}
+		info2.put(key, val.toString().split(","));
 		request.getSession().setAttribute("permission", perm);
-		info.put("status", "0");
+		info.put("status", "00");
 		info.put("msg", "成功");
-		info.put("permissions",jsonArray1);
+		info.put("permissions",info2);
 		return info;
 	}
     
