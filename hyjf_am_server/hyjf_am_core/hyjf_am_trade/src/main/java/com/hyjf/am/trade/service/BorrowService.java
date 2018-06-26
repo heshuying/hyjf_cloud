@@ -60,4 +60,9 @@ public interface BorrowService {
      * @return
      */
     BorrowInfo getBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 獲取預期的還款標的
+     */
+	List<Borrow> selectOverdueBorrowList();
 }

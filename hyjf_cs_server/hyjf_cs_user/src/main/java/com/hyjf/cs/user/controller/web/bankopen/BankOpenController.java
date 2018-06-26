@@ -39,7 +39,7 @@ import java.util.Map;
 @Api(value = "web端用户开户接口")
 @CrossOrigin(origins = "*")
 @Controller
-@RequestMapping("/web/secure/open")
+@RequestMapping("/web/user/secure/open")
 public class BankOpenController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
 

@@ -11,9 +11,7 @@
 
 package com.hyjf.am.trade.dao.mapper.customize.web;
 
-import com.hyjf.am.trade.dao.model.customize.trade.CurrentHoldObligatoryRightListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.RepayMentListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
 
 import java.util.List;
@@ -72,4 +70,32 @@ public interface AssetManageCustomizeMapper {
      * @return
      */
     List<TenderCreditDetailCustomize> selectCreditRecordList(Map<String,Object> params);
+    /**
+     * @Description 获取用户当前持有计划列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date  
+     */
+    List<CurrentHoldPlanListCustomize> selectCurrentHoldPlanList(Map<String,Object> params);
+    /**
+     * @Description 获取用户当前持有计划列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    int countCurrentHoldPlanTotal(Map<String, Object> params);
+    /**
+     * @Description 获取用户已回款计划列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<RepayMentPlanListCustomize> selectRepayMentPlanList(Map<String,Object> params);
+    /**
+     * @Description 获取用户已回款计划列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    int countRepayMentPlanTotal(Map<String, Object> params);
 }

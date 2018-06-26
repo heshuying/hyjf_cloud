@@ -1,9 +1,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.CurrentHoldObligatoryRightListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.RepayMentListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.*;
 
 import java.util.List;
 
@@ -24,4 +22,12 @@ public interface AssetManageService {
     List<RepayMentListCustomize> selectRepaymentList(AssetManageBeanRequest request);
 
     List<TenderCreditDetailCustomize> selectCreditRecordList(AssetManageBeanRequest request);
+
+    List<CurrentHoldPlanListCustomize> selectCurrentHoldPlanList(AssetManageBeanRequest request);
+
+    int countCurrentHoldPlanTotal(AssetManageBeanRequest request);
+
+    List<RepayMentPlanListCustomize> selectRepayMentPlanList(AssetManageBeanRequest request);
+
+    int countRepayMentPlanTotal(AssetManageBeanRequest request);
 }
