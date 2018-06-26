@@ -292,7 +292,7 @@
     </select>
 
     <!--查询标的详情信息-->
-    <select id="getProjectDetail" resultMap="ProjectDetailMap" parameterMap="Map">
+    <select id="getProjectDetail" resultMap="ProjectDetailMap" parameterType="Map">
         SELECT
         hydb.borrow_nid,
         hydbpt.borrow_project_type AS project_type,
