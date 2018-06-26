@@ -6,6 +6,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.service.RewardService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author hesy
  * @version InviteController, v0.1 2018/6/23 17:14
  */
-@Api(value = "Web端邀请及奖励记录")
+@Api(value = "Web端奖励记录")
 @RestController
 @RequestMapping("/web/invite")
 public class RewardController {
@@ -41,6 +42,7 @@ public class RewardController {
      * @return
      */
     @ApiOperation(value = "我的奖励列表", notes = "我的奖励列表")
+    @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")
     @PostMapping(value = "/myRewardList", produces = "application/json; charset=utf-8")
     public WebResult<List<MyRewardRecordCustomizeVO>> selectMyRewardList(@RequestHeader(value = "token", required = true) String token, Map<String,String> param, HttpServletRequest request){
         WebResult<List<MyRewardRecordCustomizeVO>> result = new WebResult<List<MyRewardRecordCustomizeVO>>();

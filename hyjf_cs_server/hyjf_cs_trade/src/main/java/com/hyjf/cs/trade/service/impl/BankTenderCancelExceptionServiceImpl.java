@@ -1,7 +1,16 @@
 package com.hyjf.cs.trade.service.impl;
 
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -16,15 +25,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 投资撤销异常Service实现类
@@ -49,15 +49,20 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
 
     @Override
     public void handle() {
-       this.executeTenderCancel();
+        int updateCount = this.executeTenderCancel();
+        if(updateCount>0){
+           this.handle();
+        }
     }
 
     /**
      * 执行投资撤销
      */
-    private void executeTenderCancel() {
+    private int executeTenderCancel() {
         List<BorrowTenderTmpVO> tmpList = bankTenderCancelClient.getBorrowTenderTmpsForTenderCancel();
+        int result = 0;
         if (CollectionUtils.isNotEmpty(tmpList)){
+            result = tmpList.size();
             for (int i = 0; i < tmpList.size(); i++) {
                 BorrowTenderTmpVO info = tmpList.get(i);
                 BankOpenAccountVO bankAccount = this.getBankOpenAccount(info.getUserId());
@@ -90,6 +95,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
                 }
             }
         }
+        return result;
     }
 
 

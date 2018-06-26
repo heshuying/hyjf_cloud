@@ -6,6 +6,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.user.service.invite.InviteService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 @Api(value = "Web端邀记录")
 @RestController
-@RequestMapping("/web/invite")
+@RequestMapping("/web/user/invite")
 public class InviteController {
     private static final Logger logger = LoggerFactory.getLogger(InviteController.class);
 
@@ -39,6 +40,7 @@ public class InviteController {
      * @date: 2018/6/23
      */
     @ApiOperation(value = "我的邀请列表", notes = "我的邀请列表")
+    @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")
     @PostMapping(value = "/myInviteList", produces = "application/json; charset=utf-8")
     public WebResult<List<MyInviteListCustomizeVO>> selectMyInviteList(@RequestHeader(value = "token", required = true) String token, Map<String,String> param, HttpServletRequest request){
         WebResult<List<MyInviteListCustomizeVO>> result = new WebResult<List<MyInviteListCustomizeVO>>();

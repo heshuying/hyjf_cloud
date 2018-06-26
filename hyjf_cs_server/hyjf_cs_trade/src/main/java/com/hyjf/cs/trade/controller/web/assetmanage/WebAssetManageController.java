@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
+import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.AssetManageService;
 import io.swagger.annotations.Api;
@@ -53,6 +54,12 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * @Description 获取用户当前持有债权列表分页数据
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
     @ApiOperation(value = "获取用户当前持有债权列表分页数据", notes = "获取用户当前持有债权列表分页数据")
     @PostMapping(value = "/getCurrentHoldObligatoryRight", produces = "application/json;charset=utf-8")
     public ObligatoryRightAjaxBean getCurrentHoldObligatoryRight(@RequestHeader(value = "token", required = true) String token,
@@ -86,7 +93,7 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
     /**
-     * @Description 获取用户已回款债权页面json数据
+     * @Description 获取用户转让记录债权页面json数据
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -96,13 +103,59 @@ public class WebAssetManageController extends BaseTradeController {
     public ObligatoryRightAjaxBean getCreditRecordList(@RequestHeader(value = "token", required = true) String token,
                                                 @RequestBody @Valid AssetManageBeanRequest form,
                                                 HttpServletRequest request) {
-
-        logger.info("web获取用户已回款债权列表分页数据, token is :{}", JSONObject.toJSONString(token));
+        logger.info("web获取用户转让记录债权页面json数据, token is :{}", JSONObject.toJSONString(token));
         // 用户ID
         WebViewUserVO user=assetManageService.getUsersByToken(token);
         form.setUserId(user.getUserId().toString());
         ObligatoryRightAjaxBean result  =assetManageService.getCreditRecordList(form);
 
+        return result;
+    }
+    /**
+     * @Description 获取用户当前持有计划列表分页数据
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @ApiOperation(value = "获取用户当前持有计划列表分页数据", notes = "获取用户当前持有计划列表分页数据")
+    @PostMapping(value = "/getCurrentHoldPlan", produces = "application/json;charset=utf-8")
+    public PlanAjaxBean getCurrentHoldPlan(@RequestHeader(value = "token", required = true) String token,
+                                           @RequestBody @Valid AssetManageBeanRequest form,
+                                           HttpServletRequest request) {
+
+        logger.info("web获取用户当前持有计划列表分页数据, token is :{}", JSONObject.toJSONString(token));
+        // 用户ID
+        WebViewUserVO user=assetManageService.getUsersByToken(token);
+        PlanAjaxBean result = new PlanAjaxBean();
+        if(user == null){
+            return result;
+        }
+        form.setUserId(user.getUserId().toString());
+        result=assetManageService.getCurrentHoldPlan(form);
+        return result;
+    }
+
+    /**
+     * @Description 获取用户当前持有计划列表分页数据
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @ApiOperation(value = "获取用户已回款计划页面json数据", notes = "获取用户已回款计划页面json数据")
+    @PostMapping(value = "/getRepayMentPlan", produces = "application/json;charset=utf-8")
+    public PlanAjaxBean getRepayMentPlan(@RequestHeader(value = "token", required = true) String token,
+                                           @RequestBody @Valid AssetManageBeanRequest form,
+                                           HttpServletRequest request) {
+
+        logger.info("web获取用户已回款计划页面json数据, token is :{}", JSONObject.toJSONString(token));
+        // 用户ID
+        WebViewUserVO user=assetManageService.getUsersByToken(token);
+        PlanAjaxBean result = new PlanAjaxBean();
+        if(user == null){
+            return result;
+        }
+        form.setUserId(user.getUserId().toString());
+        result=assetManageService.getRepayMentPlan(form);
         return result;
     }
 
