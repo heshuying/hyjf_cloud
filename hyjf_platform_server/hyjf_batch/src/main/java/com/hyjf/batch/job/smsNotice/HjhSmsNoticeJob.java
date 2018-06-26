@@ -17,8 +17,8 @@ public class HjhSmsNoticeJob extends BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("HjhSmsNoticeTask: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("HjhSmsNoticeJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/hjhSmsNotice/overdueSmsNotice", String.class);
-        logger.info("HjhSmsNoticeTask: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("HjhSmsNoticeJob: {} execute...", context.getJobDetail().getKey().getName());
     }
 }
