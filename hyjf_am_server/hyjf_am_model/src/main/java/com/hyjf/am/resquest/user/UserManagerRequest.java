@@ -42,12 +42,15 @@ public class UserManagerRequest extends BaseVO {
 
     public int limit;
 
-    private int paginatorPage = 1;
+        private int paginatorPage = 1;
     public int getPaginatorPage() {
         if (paginatorPage == 0) {
             paginatorPage = 1;
         }
         return paginatorPage;
+    }
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
     }
     //
     public String getRegTimeStart() {
@@ -161,9 +164,7 @@ public class UserManagerRequest extends BaseVO {
     public void setInstCodeSrch(String instCodeSrch) {
         this.instCodeSrch = instCodeSrch;
     }
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
+
 
     public int getLimit() {
         return limit;

@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/userBatch")
+@RequestMapping("/userBatch/entry")
 public class UserEntryBatchController {
     private static final Logger logger = LoggerFactory.getLogger(UserEntryBatchController.class);
 
     @Autowired
     private UserEntryBatchService userEntryBatchService;
 
-    @RequestMapping("/entry/update")
+    @RequestMapping("/update")
     public void entryUpdate(){
         logger.info("员工入职修改客户属性...");
         userEntryBatchService.updateUserEntryInfo();

@@ -46,6 +46,31 @@ public class WebProjectListController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 获取新手专区列表
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "获取新手专区列表", notes = "新手专区列表")
+    @PostMapping(value = "/newBorrowProjectList", produces = "application/json; charset=utf-8")
+    public Object newBorrowProjectList(@RequestBody @Valid ProjectListRequest request){
+        // controller 不做业务处理
+        WebResult result =  webProjectListService.searchProjectList(request);
+        return result;
+    }
+
+    /**
+     * 获取散标投资列表
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "获取散标投资列表", notes = "散标投资列表")
+    @PostMapping(value = "/borrowProjectList", produces = "application/json; charset=utf-8")
+    public Object borrowProjectList(@RequestBody @Valid ProjectListRequest request){
+        // controller 不做业务处理
+        WebResult result =  webProjectListService.searchProjectList(request);
+        return result;
+    }
 
     /**
      * web端新手标和散标标的详情
