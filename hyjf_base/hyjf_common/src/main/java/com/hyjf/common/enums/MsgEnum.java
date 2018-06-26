@@ -49,7 +49,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_OBJECT_VALUE("ETY000006","传入参数{0}的值非法"),
 	ERR_OBJECT_GET("ETY000007","获取{0}失败"),//提取通用
 	ERR_OBJECT_INVALID("ETY000008","无效的{0}"),//提取通用
-	ERR_OBJECT_UNMATCH("ETY000104","{0}不符合接口要求，请重新传入"),
+	ERR_OBJECT_UNMATCH("ETY000009","{0}不符合接口要求，请重新传入"),
 
 	ERR_SIGN("ETY000101","签名验证失败"),
 	ERR_PARAM_TYPE("ETY000102","传入参数类型错误"),
@@ -57,13 +57,13 @@ public enum MsgEnum implements MsgCode {
 	ERR_PARAM_NUM("ETY000104", "请求参数不全"),
 	ERR_PARAM("ETY000105", "参数错误，请重试"),
 	ERR_SYSTEM("ETY000199","接口调用发生异常，请联系服务方"),
-	ERR_PAGE_MAX("ETY000202","单次检索记录数不能超过{0}条"),
+	ERR_PAGE_MAX("ETY000201","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
 
 
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
-    ERR_BANK_WITHDRAW_LOSE_LIST_HANDLE("ETY000801","江西银行提现掉单处理出错"),
+    ERR_BANK_WITHDRAW_LOSE_LIST_HANDLE("ETY000501","江西银行提现掉单处理出错"),
 
 	// 格式错误信息ERR_FMT_
 	ERR_FMT_NAME("EFM000101", "联系人姓名格式错误"),
@@ -175,7 +175,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_MOBILE_EXISTS("EMB000004", "手机号已存在"),
     ERR_MOBILE_BLANK("EMB000005", "手机号未填写"),
     ERR_MOBILE_INCORRECT("EMB000006","手机号码错误"),
-    ERR_MOBILE_REPEAT("EMB000006","手机号码重复"),
+    ERR_MOBILE_REPEAT("EMB000007","手机号码重复"),
 
 
 	//密码相关错误信息ERR_PASSWORD_
@@ -189,9 +189,9 @@ public enum MsgEnum implements MsgCode {
 	ERR_PASSWORD_MODIFY("EPW000008","修改密码失败,未作任何操作"),
 	ERR_PASSWORD_OLD_REQUIRED("EPW000009","原始登录密码不能为空"),
     //交易密码相关错误信息ERR_TRADE_PASSWORD_
-    ERR_TRADE_PASSWORD_NOT_SET("EPW000004", "未设置交易密码"),
-    ERR_TRADE_PASSWORD_ALREADY_SET("EPW000005","已设置交易密码"),
-    ERR_TRADE_PASSWORD_SET_FAIL("EPW000006", "交易密码设置失败"),
+    ERR_TRADE_PASSWORD_NOT_SET("EPW000101", "未设置交易密码"),
+    ERR_TRADE_PASSWORD_ALREADY_SET("EPW000102","已设置交易密码"),
+    ERR_TRADE_PASSWORD_SET_FAIL("EPW000103", "交易密码设置失败"),
 
 
 	// 验证码相关错误信息ERR_SMSCODE_
@@ -213,7 +213,7 @@ public enum MsgEnum implements MsgCode {
 
 
     // 系统错误信息ERR_SYSTEM_
-    ERR_SYSTEM_UNKNOWN("ESY000001","系统异常，请稍后再试"),
+    ERR_SYSTEM_UNKNOWN("ESY000001","未知错误，请稍后再试"),
     ERR_SYSTEM_API_CALL("ESY000002","微服务调用异常，请稍后重试"),
     ERR_SYSTEM_UNUSUAL("ESY000003","系统异常"),
 
