@@ -4,16 +4,21 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
+import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.response.trade.MyRewardListResponse;
 import com.hyjf.am.response.user.MyInviteListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.trade.RepayDataRecoverRequest;
 import com.hyjf.am.resquest.trade.RtbIncreaseRepayRequest;
 import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,91 +34,143 @@ import com.hyjf.cs.trade.client.AmTradeClient;
  */
 @Service
 public class AmTradeClientImpl implements AmTradeClient {
-	private static Logger logger = LoggerFactory.getLogger(AmTradeClientImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(AmTradeClientImpl.class);
 
-	public static final String urlBase = "http://AM-TRADE/am-trade/";
+    public static final String urlBase = "http://AM-TRADE/am-trade/";
 
-	@Autowired
-	private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
-	/**
-	 * 根据借款编号,还款期数,还款方式取得融通宝待还款金额
-	 * 
-	 * @param borrowNid
-	 * @param borrowStyle
-	 * @param periodNow
-	 * @return
-	 */
-	@Override
-	public BigDecimal selectRtbRepayAmount(String borrowNid, String borrowStyle, Integer periodNow) {
-		String url = urlBase + "batch/rtb/getRepayAmount/" + borrowNid + "/" + borrowStyle + "/"
-				+ periodNow;
-		BigDecimal rtbRepayAmount = restTemplate.getForEntity(url, BigDecimal.class).getBody();
-		return rtbRepayAmount;
-	}
+    /**
+     * 根据借款编号,还款期数,还款方式取得融通宝待还款金额
+     *
+     * @param borrowNid
+     * @param borrowStyle
+     * @param periodNow
+     * @return
+     */
+    @Override
+    public BigDecimal selectRtbRepayAmount(String borrowNid, String borrowStyle, Integer periodNow) {
+        String url = urlBase + "batch/rtb/getRepayAmount/" + borrowNid + "/" + borrowStyle + "/"
+                + periodNow;
+        BigDecimal rtbRepayAmount = restTemplate.getForEntity(url, BigDecimal.class).getBody();
+        return rtbRepayAmount;
+    }
 
-	/**
-	 * 融通宝还款加息
-	 * 
-	 * @param borrowApicronVO
-	 */
-	@Override
-	public void rtbIncreaseReapy(BorrowApicronVO borrowApicronVO, String account, String companyAccount) {
-		String url = urlBase + "batch/rtb/increaseInterestRepay";
+    /**
+     * 融通宝还款加息
+     *
+     * @param borrowApicronVO
+     */
+    @Override
+    public void rtbIncreaseReapy(BorrowApicronVO borrowApicronVO, String account, String companyAccount) {
+        String url = urlBase + "batch/rtb/increaseInterestRepay";
 
-		RtbIncreaseRepayRequest repayRequest = new RtbIncreaseRepayRequest();
-		repayRequest.setBorrowApicronVO(borrowApicronVO);
-		repayRequest.setAccount(account);
-		repayRequest.setCompanyAccount(companyAccount);
+        RtbIncreaseRepayRequest repayRequest = new RtbIncreaseRepayRequest();
+        repayRequest.setBorrowApicronVO(borrowApicronVO);
+        repayRequest.setAccount(account);
+        repayRequest.setCompanyAccount(companyAccount);
 
-		restTemplate.postForEntity(url, repayRequest, Object.class);
-	}
+        restTemplate.postForEntity(url, repayRequest, Object.class);
+    }
 
-	/**
-	 * 统计加息券每日待收收益
-	 * @param
-	 * @return
-	 */
-	@Override
-	public List<CouponRecoverCustomizeVO> selectCouponInterestWaitToday(long timeStart, long timeEnd) {
-		String url = urlBase + "batch/selectCouponInterestWaitToday/"+timeStart+"/"+timeEnd;
+    /**
+     * 统计加息券每日待收收益
+     *
+     * @param
+     * @return
+     */
+    @Override
+    public List<CouponRecoverCustomizeVO> selectCouponInterestWaitToday(long timeStart, long timeEnd) {
+        String url = urlBase + "batch/selectCouponInterestWaitToday/" + timeStart + "/" + timeEnd;
+        CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url, CouponRecoverCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 统计加息券每日已收收益
+     *
+     * @param
+     * @return
+     */
+    @Override
+    public BigDecimal selectCouponInterestReceivedToday(long timeStart, long timeEnd) {
+        String url = urlBase + "batch/selectCouponInterestReceivedToday/" + timeStart + "/" + timeEnd;
+        BigDecimal interest = restTemplate.getForEntity(url, BigDecimal.class).getBody();
+        if (interest != null) {
+            return interest;
+        }
+        return null;
+    }
+
+    /**
+     * 我的优惠券列表
+     *
+     * @auther: hesy
+     * @date: 2018/6/23
+     */
+    @Override
+    public List<MyCouponListCustomizeVO> selectMyCouponList(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/myCouponList";
+        MyCouponListResponse response = restTemplate.postForEntity(url, requestBean, MyCouponListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 我的邀请列表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean) {
+        String url = urlBase + "invite/myRewardList";
+        MyRewardListResponse response = restTemplate.postForEntity(url, requestBean, MyRewardListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponTenderCustomizeVO> selectCouponRecoverAll(String borrowNid, int repayTimeConfig) {
+        String url = urlBase + "batch/selectCouponRecover/" + borrowNid + "/" + repayTimeConfig;
+        CouponTenderCustomizeResponse response = restTemplate.getForEntity(url,CouponTenderCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow) {
+        String url = urlBase + "batch/getCurrentCouponRecover/" + couponTenderNid + "/" +periodNow;
         CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
 
-	/**
-	 * 统计加息券每日已收收益
-	 * @param
-	 * @return
-	 */
-	@Override
-	public BigDecimal selectCouponInterestReceivedToday(long timeStart, long timeEnd) {
-		String url = urlBase + "batch/selectCouponInterestReceivedToday/"+timeStart+"/"+timeEnd;
-		BigDecimal interest = restTemplate.getForEntity(url,BigDecimal.class).getBody();
-		if (interest != null) {
-			return interest;
-		}
-		return null;
-	}
+    @Override
+    public void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, BorrowTenderCpnVO borrowTenderCpnVO, String userId, String couponUserCode, String ip, int count) {
+        String url = urlBase + "batch/repayDataRecover";
+        RepayDataRecoverRequest request = new RepayDataRecoverRequest();
+        request.setCouponRecoverCustomizeVO(currentRecover);
+        request.setBankOpenAccountVO(bankOpenAccountInfo);
+        request.setUserId(userId);
+        request.setCouponUserCode(couponUserCode);
+        request.setIp(ip);
+        request.setCount(count);
 
-	/**
-	 * 我的优惠券列表
-	 * @auther: hesy
-	 * @date: 2018/6/23
-	 */
-	@Override
-	public List<MyCouponListCustomizeVO> selectMyCouponList(MyCouponListRequest requestBean){
-		String url = urlBase + "coupon/myCouponList";
-		MyCouponListResponse response = restTemplate.postForEntity(url,requestBean,MyCouponListResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
+        restTemplate.postForEntity(url, request, Object.class);
+    }
 	/**
 	 * 统计总的优惠券数
 	 * @param requestBean

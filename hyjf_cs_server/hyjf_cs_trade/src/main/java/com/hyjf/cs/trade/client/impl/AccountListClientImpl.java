@@ -36,4 +36,14 @@ public class AccountListClientImpl implements AccountListClient {
         }
         return 0;
     }
+
+    @Override
+    public int countAccountListByNidCoupon(String orderId) {
+        String url = "http://AM-TRADE/am-trade/accountList/selectAccountListByNidCoupon/"+orderId;
+        AccountListResponse response = restTemplate.getForEntity(url,AccountListResponse.class).getBody();
+        if (response != null && response.getResult() != null) {
+            return 1;
+        }
+        return 0;
+    }
 }
