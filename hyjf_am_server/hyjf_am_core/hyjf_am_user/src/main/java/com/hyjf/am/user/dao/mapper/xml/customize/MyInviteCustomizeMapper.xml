@@ -31,7 +31,7 @@
     </select>
 	<select id="countMyInviteList" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
-			IFNULL(COUNT (u.user_id),0)
+			IFNULL(COUNT(u.user_id),0)
 		FROM
 			ht_spreads_user su
 		INNER JOIN ht_user u ON u.user_id = su.user_id
