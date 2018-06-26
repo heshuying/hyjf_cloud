@@ -14,11 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import java.util.Date;
+import java.util.List;
+
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.model.auto.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
