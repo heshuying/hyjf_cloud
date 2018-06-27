@@ -21,6 +21,6 @@ import java.io.Serializable;
  * @author liubin
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class WechatResult<T> extends BaseResult<T> implements Serializable {
+public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 }

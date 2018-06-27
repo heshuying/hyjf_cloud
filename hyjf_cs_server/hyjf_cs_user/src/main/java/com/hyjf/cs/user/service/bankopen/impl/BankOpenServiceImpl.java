@@ -10,12 +10,10 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
@@ -62,11 +60,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     @Autowired
     private AmConfigClient amConfigClient;
 
-    @Override
-    public boolean existUser(String mobile) {
-        UserVO userVO = amUserClient.findUserByMobile(mobile);
-        return userVO == null ? false : true;
-    }
 
     @Override
     public boolean checkIdNo(String idNo) {
