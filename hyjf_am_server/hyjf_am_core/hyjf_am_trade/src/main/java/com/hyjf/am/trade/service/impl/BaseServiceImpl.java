@@ -9,6 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
 import com.hyjf.am.trade.service.BaseService;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 
@@ -32,29 +33,26 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         BorrowExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
         List<Borrow> list = this.borrowMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
+        if (CollectionUtils.isNotEmpty(list)){
             return list.get(0);
         }
         return null;
     }
 
     /**
-     * 根据标的编号检索标的详情
-     *
+     * 根据标的编号检索标的借款详情
      * @param borrowNid
      * @return
      */
     @Override
-    public BorrowInfo getBorrowByBorrowNid(String borrowNid) {
+    public BorrowInfo getBorrowInfoByNid(String borrowNid) {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowInfo> list = this.borrowInfoMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
+        List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)){
             return list.get(0);
         }
         return null;
     }
-
-
 }
