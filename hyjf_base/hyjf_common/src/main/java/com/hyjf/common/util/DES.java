@@ -75,18 +75,6 @@ public class DES {
         }
     }
 
-    public static void main(String[] args) {
-        String value = encryptDES("hyjg-app-platform-001", "9KLH29Do");
-        StringBuffer sb = new StringBuffer(8);
-        Random random = new Random();
-        int sub;
-        for (int i = 0; i < 8; i++) {
-            sub = random.nextInt(32);
-            sb.append(value.charAt(sub));
-        }
-        System.err.println(sb.toString());
-    }
-
     /**
      * DES-ECB 模式加密
      *

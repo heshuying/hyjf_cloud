@@ -117,10 +117,5 @@ public class GetCode {
         }
         return result;
     }
-    
-    
-    public static void main(String[] args) { 
-        System.out.println(generateInstCode(6)); 
-    }
 
 }
