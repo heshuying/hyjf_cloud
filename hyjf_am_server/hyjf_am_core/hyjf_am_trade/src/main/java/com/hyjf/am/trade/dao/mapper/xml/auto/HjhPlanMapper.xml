@@ -23,6 +23,7 @@
     <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
     <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
     <result column="plan_repay_capital" property="planRepayCapital" jdbcType="DECIMAL" />
+    <result column="min_invest_counts" property="minInvestCounts" jdbcType="TINYINT" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
@@ -98,8 +99,8 @@
     id, plan_nid, plan_name, lock_period, is_month, expect_apr, min_investment, max_investment, 
     investment_increment, available_invest_account, repay_wait_all, plan_invest_status, 
     add_time, borrow_style, coupon_config, join_total, plan_wait_captical, plan_wait_interest, 
-    repay_total, plan_repay_interest, plan_repay_capital, del_flag, create_user, update_user, 
-    create_time, update_time
+    repay_total, plan_repay_interest, plan_repay_capital, min_invest_counts, del_flag, 
+    create_user, update_user, create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     plan_concept, plan_principle, safeguard_measures, margin_measures, normal_questions
@@ -168,22 +169,24 @@
       repay_wait_all, plan_invest_status, add_time, 
       borrow_style, coupon_config, join_total, 
       plan_wait_captical, plan_wait_interest, repay_total, 
-      plan_repay_interest, plan_repay_capital, del_flag, 
-      create_user, update_user, create_time, 
-      update_time, plan_concept, plan_principle, 
-      safeguard_measures, margin_measures, 
-      normal_questions)
+      plan_repay_interest, plan_repay_capital, min_invest_counts, 
+      del_flag, create_user, update_user, 
+      create_time, update_time, plan_concept, 
+      plan_principle, safeguard_measures, 
+      margin_measures, normal_questions
+      )
     values (#{planNid,jdbcType=VARCHAR}, #{planName,jdbcType=VARCHAR}, #{lockPeriod,jdbcType=TINYINT}, 
       #{isMonth,jdbcType=TINYINT}, #{expectApr,jdbcType=DECIMAL}, #{minInvestment,jdbcType=DECIMAL}, 
       #{maxInvestment,jdbcType=DECIMAL}, #{investmentIncrement,jdbcType=DECIMAL}, #{availableInvestAccount,jdbcType=DECIMAL}, 
       #{repayWaitAll,jdbcType=DECIMAL}, #{planInvestStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, 
       #{borrowStyle,jdbcType=VARCHAR}, #{couponConfig,jdbcType=VARCHAR}, #{joinTotal,jdbcType=DECIMAL}, 
       #{planWaitCaptical,jdbcType=DECIMAL}, #{planWaitInterest,jdbcType=DECIMAL}, #{repayTotal,jdbcType=DECIMAL}, 
-      #{planRepayInterest,jdbcType=DECIMAL}, #{planRepayCapital,jdbcType=DECIMAL}, #{delFlag,jdbcType=TINYINT}, 
-      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{planConcept,jdbcType=LONGVARCHAR}, #{planPrinciple,jdbcType=LONGVARCHAR}, 
-      #{safeguardMeasures,jdbcType=LONGVARCHAR}, #{marginMeasures,jdbcType=LONGVARCHAR}, 
-      #{normalQuestions,jdbcType=LONGVARCHAR})
+      #{planRepayInterest,jdbcType=DECIMAL}, #{planRepayCapital,jdbcType=DECIMAL}, #{minInvestCounts,jdbcType=TINYINT}, 
+      #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{planConcept,jdbcType=LONGVARCHAR}, 
+      #{planPrinciple,jdbcType=LONGVARCHAR}, #{safeguardMeasures,jdbcType=LONGVARCHAR}, 
+      #{marginMeasures,jdbcType=LONGVARCHAR}, #{normalQuestions,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -250,6 +253,9 @@
       </if>
       <if test="planRepayCapital != null" >
         plan_repay_capital,
+      </if>
+      <if test="minInvestCounts != null" >
+        min_invest_counts,
       </if>
       <if test="delFlag != null" >
         del_flag,
@@ -342,6 +348,9 @@
       </if>
       <if test="planRepayCapital != null" >
         #{planRepayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="minInvestCounts != null" >
+        #{minInvestCounts,jdbcType=TINYINT},
       </if>
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
@@ -447,6 +456,9 @@
       <if test="record.planRepayCapital != null" >
         plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
       </if>
+      <if test="record.minInvestCounts != null" >
+        min_invest_counts = #{record.minInvestCounts,jdbcType=TINYINT},
+      </if>
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
@@ -505,6 +517,7 @@
       repay_total = #{record.repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      min_invest_counts = #{record.minInvestCounts,jdbcType=TINYINT},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user = #{record.createUser,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
@@ -542,6 +555,7 @@
       repay_total = #{record.repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{record.planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{record.planRepayCapital,jdbcType=DECIMAL},
+      min_invest_counts = #{record.minInvestCounts,jdbcType=TINYINT},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user = #{record.createUser,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
@@ -614,6 +628,9 @@
       <if test="planRepayCapital != null" >
         plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
       </if>
+      <if test="minInvestCounts != null" >
+        min_invest_counts = #{minInvestCounts,jdbcType=TINYINT},
+      </if>
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
@@ -669,6 +686,7 @@
       repay_total = #{repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      min_invest_counts = #{minInvestCounts,jdbcType=TINYINT},
       del_flag = #{delFlag,jdbcType=TINYINT},
       create_user = #{createUser,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},
@@ -703,6 +721,7 @@
       repay_total = #{repayTotal,jdbcType=DECIMAL},
       plan_repay_interest = #{planRepayInterest,jdbcType=DECIMAL},
       plan_repay_capital = #{planRepayCapital,jdbcType=DECIMAL},
+      min_invest_counts = #{minInvestCounts,jdbcType=TINYINT},
       del_flag = #{delFlag,jdbcType=TINYINT},
       create_user = #{createUser,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},

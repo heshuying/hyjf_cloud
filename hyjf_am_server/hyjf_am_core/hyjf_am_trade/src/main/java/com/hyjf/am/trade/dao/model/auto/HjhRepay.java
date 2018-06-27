@@ -55,6 +55,10 @@ public class HjhRepay implements Serializable {
 
     private BigDecimal serviceFee;
 
+    private BigDecimal actualRevenue;
+
+    private BigDecimal actualPayTotal;
+
     private Integer delFlag;
 
     private Integer createUser;
@@ -265,6 +269,22 @@ public class HjhRepay implements Serializable {
 
     public void setServiceFee(BigDecimal serviceFee) {
         this.serviceFee = serviceFee;
+    }
+
+    public BigDecimal getActualRevenue() {
+        return actualRevenue;
+    }
+
+    public void setActualRevenue(BigDecimal actualRevenue) {
+        this.actualRevenue = actualRevenue;
+    }
+
+    public BigDecimal getActualPayTotal() {
+        return actualPayTotal;
+    }
+
+    public void setActualPayTotal(BigDecimal actualPayTotal) {
+        this.actualPayTotal = actualPayTotal;
     }
 
     public Integer getDelFlag() {

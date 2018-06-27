@@ -18,4 +18,10 @@ public interface HjhAccedeService {
      * @return
      */
     List<HjhAccede> selectWaitQuitHjhList();
+    /**
+     * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+     * @param userId
+     * @return
+     */
+	public boolean canCancelAuth(int userId);
 }

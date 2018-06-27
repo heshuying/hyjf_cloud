@@ -18,7 +18,6 @@
     <result column="already_invest" property="alreadyInvest" jdbcType="DECIMAL" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
     <result column="count_interest_time" property="countInterestTime" jdbcType="INTEGER" />
     <result column="send_status" property="sendStatus" jdbcType="TINYINT" />
     <result column="lock_period" property="lockPeriod" jdbcType="INTEGER" />
@@ -40,6 +39,16 @@
     <result column="should_pay_total" property="shouldPayTotal" jdbcType="DECIMAL" />
     <result column="should_pay_capital" property="shouldPayCapital" jdbcType="DECIMAL" />
     <result column="should_pay_interest" property="shouldPayInterest" jdbcType="DECIMAL" />
+    <result column="expect_apr" property="expectApr" jdbcType="DECIMAL" />
+    <result column="fair_value" property="fairValue" jdbcType="DECIMAL" />
+    <result column="liquidation_fair_value" property="liquidationFairValue" jdbcType="DECIMAL" />
+    <result column="actual_apr" property="actualApr" jdbcType="DECIMAL" />
+    <result column="invest_counts" property="investCounts" jdbcType="INTEGER" />
+    <result column="match_dates" property="matchDates" jdbcType="TINYINT" />
+    <result column="lqd_service_fee" property="lqdServiceFee" jdbcType="DECIMAL" />
+    <result column="lqd_service_apr" property="lqdServiceApr" jdbcType="DECIMAL" />
+    <result column="invest_service_apr" property="investServiceApr" jdbcType="DECIMAL" />
+    <result column="lqd_progress" property="lqdProgress" jdbcType="DECIMAL" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
@@ -108,11 +117,13 @@
     id, accede_order_id, plan_nid, user_id, user_name, user_attribute, invite_user_id, 
     invite_user_name, invite_user_attribute, invite_user_regionname, invite_user_branchname, 
     invite_user_departmentname, accede_account, already_invest, client, order_status, 
-    add_time, count_interest_time, send_status, lock_period, commission_status, commission_count_time, 
+    count_interest_time, send_status, lock_period, commission_status, commission_count_time, 
     available_invest_account, end_date, credit_complete_flag, frost_account, wait_total, 
     wait_captical, wait_interest, received_total, received_interest, received_capital, 
     quit_time, last_payment_time, acctual_payment_time, should_pay_total, should_pay_capital, 
-    should_pay_interest, create_user, update_user, del_flag, create_time, update_time
+    should_pay_interest, expect_apr, fair_value, liquidation_fair_value, actual_apr, 
+    invest_counts, match_dates, lqd_service_fee, lqd_service_apr, invest_service_apr, 
+    lqd_progress, create_user, update_user, del_flag, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccedeExample" >
     select
@@ -156,31 +167,37 @@
       invite_user_name, invite_user_attribute, invite_user_regionname, 
       invite_user_branchname, invite_user_departmentname, 
       accede_account, already_invest, client, 
-      order_status, add_time, count_interest_time, 
-      send_status, lock_period, commission_status, 
-      commission_count_time, available_invest_account, 
-      end_date, credit_complete_flag, frost_account, 
-      wait_total, wait_captical, wait_interest, 
-      received_total, received_interest, received_capital, 
-      quit_time, last_payment_time, acctual_payment_time, 
-      should_pay_total, should_pay_capital, should_pay_interest, 
-      create_user, update_user, del_flag, 
-      create_time, update_time)
+      order_status, count_interest_time, send_status, 
+      lock_period, commission_status, commission_count_time, 
+      available_invest_account, end_date, credit_complete_flag, 
+      frost_account, wait_total, wait_captical, 
+      wait_interest, received_total, received_interest, 
+      received_capital, quit_time, last_payment_time, 
+      acctual_payment_time, should_pay_total, should_pay_capital, 
+      should_pay_interest, expect_apr, fair_value, 
+      liquidation_fair_value, actual_apr, invest_counts, 
+      match_dates, lqd_service_fee, lqd_service_apr, 
+      invest_service_apr, lqd_progress, create_user, 
+      update_user, del_flag, create_time, 
+      update_time)
     values (#{accedeOrderId,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{userName,jdbcType=VARCHAR}, #{userAttribute,jdbcType=INTEGER}, #{inviteUserId,jdbcType=INTEGER}, 
       #{inviteUserName,jdbcType=VARCHAR}, #{inviteUserAttribute,jdbcType=INTEGER}, #{inviteUserRegionname,jdbcType=VARCHAR}, 
       #{inviteUserBranchname,jdbcType=VARCHAR}, #{inviteUserDepartmentname,jdbcType=VARCHAR}, 
       #{accedeAccount,jdbcType=DECIMAL}, #{alreadyInvest,jdbcType=DECIMAL}, #{client,jdbcType=TINYINT}, 
-      #{orderStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{countInterestTime,jdbcType=INTEGER}, 
-      #{sendStatus,jdbcType=TINYINT}, #{lockPeriod,jdbcType=INTEGER}, #{commissionStatus,jdbcType=TINYINT}, 
-      #{commissionCountTime,jdbcType=INTEGER}, #{availableInvestAccount,jdbcType=DECIMAL}, 
-      #{endDate,jdbcType=DATE}, #{creditCompleteFlag,jdbcType=TINYINT}, #{frostAccount,jdbcType=DECIMAL}, 
-      #{waitTotal,jdbcType=DECIMAL}, #{waitCaptical,jdbcType=DECIMAL}, #{waitInterest,jdbcType=DECIMAL}, 
-      #{receivedTotal,jdbcType=DECIMAL}, #{receivedInterest,jdbcType=DECIMAL}, #{receivedCapital,jdbcType=DECIMAL}, 
-      #{quitTime,jdbcType=INTEGER}, #{lastPaymentTime,jdbcType=INTEGER}, #{acctualPaymentTime,jdbcType=INTEGER}, 
-      #{shouldPayTotal,jdbcType=DECIMAL}, #{shouldPayCapital,jdbcType=DECIMAL}, #{shouldPayInterest,jdbcType=DECIMAL}, 
-      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{orderStatus,jdbcType=TINYINT}, #{countInterestTime,jdbcType=INTEGER}, #{sendStatus,jdbcType=TINYINT}, 
+      #{lockPeriod,jdbcType=INTEGER}, #{commissionStatus,jdbcType=TINYINT}, #{commissionCountTime,jdbcType=INTEGER}, 
+      #{availableInvestAccount,jdbcType=DECIMAL}, #{endDate,jdbcType=DATE}, #{creditCompleteFlag,jdbcType=TINYINT}, 
+      #{frostAccount,jdbcType=DECIMAL}, #{waitTotal,jdbcType=DECIMAL}, #{waitCaptical,jdbcType=DECIMAL}, 
+      #{waitInterest,jdbcType=DECIMAL}, #{receivedTotal,jdbcType=DECIMAL}, #{receivedInterest,jdbcType=DECIMAL}, 
+      #{receivedCapital,jdbcType=DECIMAL}, #{quitTime,jdbcType=INTEGER}, #{lastPaymentTime,jdbcType=INTEGER}, 
+      #{acctualPaymentTime,jdbcType=INTEGER}, #{shouldPayTotal,jdbcType=DECIMAL}, #{shouldPayCapital,jdbcType=DECIMAL}, 
+      #{shouldPayInterest,jdbcType=DECIMAL}, #{expectApr,jdbcType=DECIMAL}, #{fairValue,jdbcType=DECIMAL}, 
+      #{liquidationFairValue,jdbcType=DECIMAL}, #{actualApr,jdbcType=DECIMAL}, #{investCounts,jdbcType=INTEGER}, 
+      #{matchDates,jdbcType=TINYINT}, #{lqdServiceFee,jdbcType=DECIMAL}, #{lqdServiceApr,jdbcType=DECIMAL}, 
+      #{investServiceApr,jdbcType=DECIMAL}, #{lqdProgress,jdbcType=DECIMAL}, #{createUser,jdbcType=INTEGER}, 
+      #{updateUser,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -232,9 +249,6 @@
       </if>
       <if test="orderStatus != null" >
         order_status,
-      </if>
-      <if test="addTime != null" >
-        add_time,
       </if>
       <if test="countInterestTime != null" >
         count_interest_time,
@@ -299,6 +313,36 @@
       <if test="shouldPayInterest != null" >
         should_pay_interest,
       </if>
+      <if test="expectApr != null" >
+        expect_apr,
+      </if>
+      <if test="fairValue != null" >
+        fair_value,
+      </if>
+      <if test="liquidationFairValue != null" >
+        liquidation_fair_value,
+      </if>
+      <if test="actualApr != null" >
+        actual_apr,
+      </if>
+      <if test="investCounts != null" >
+        invest_counts,
+      </if>
+      <if test="matchDates != null" >
+        match_dates,
+      </if>
+      <if test="lqdServiceFee != null" >
+        lqd_service_fee,
+      </if>
+      <if test="lqdServiceApr != null" >
+        lqd_service_apr,
+      </if>
+      <if test="investServiceApr != null" >
+        invest_service_apr,
+      </if>
+      <if test="lqdProgress != null" >
+        lqd_progress,
+      </if>
       <if test="createUser != null" >
         create_user,
       </if>
@@ -360,9 +404,6 @@
       </if>
       <if test="orderStatus != null" >
         #{orderStatus,jdbcType=TINYINT},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
       </if>
       <if test="countInterestTime != null" >
         #{countInterestTime,jdbcType=INTEGER},
@@ -426,6 +467,36 @@
       </if>
       <if test="shouldPayInterest != null" >
         #{shouldPayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="expectApr != null" >
+        #{expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="fairValue != null" >
+        #{fairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidationFairValue != null" >
+        #{liquidationFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="actualApr != null" >
+        #{actualApr,jdbcType=DECIMAL},
+      </if>
+      <if test="investCounts != null" >
+        #{investCounts,jdbcType=INTEGER},
+      </if>
+      <if test="matchDates != null" >
+        #{matchDates,jdbcType=TINYINT},
+      </if>
+      <if test="lqdServiceFee != null" >
+        #{lqdServiceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="lqdServiceApr != null" >
+        #{lqdServiceApr,jdbcType=DECIMAL},
+      </if>
+      <if test="investServiceApr != null" >
+        #{investServiceApr,jdbcType=DECIMAL},
+      </if>
+      <if test="lqdProgress != null" >
+        #{lqdProgress,jdbcType=DECIMAL},
       </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
@@ -501,9 +572,6 @@
       <if test="record.orderStatus != null" >
         order_status = #{record.orderStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
-      </if>
       <if test="record.countInterestTime != null" >
         count_interest_time = #{record.countInterestTime,jdbcType=INTEGER},
       </if>
@@ -567,6 +635,36 @@
       <if test="record.shouldPayInterest != null" >
         should_pay_interest = #{record.shouldPayInterest,jdbcType=DECIMAL},
       </if>
+      <if test="record.expectApr != null" >
+        expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fairValue != null" >
+        fair_value = #{record.fairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.liquidationFairValue != null" >
+        liquidation_fair_value = #{record.liquidationFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.actualApr != null" >
+        actual_apr = #{record.actualApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investCounts != null" >
+        invest_counts = #{record.investCounts,jdbcType=INTEGER},
+      </if>
+      <if test="record.matchDates != null" >
+        match_dates = #{record.matchDates,jdbcType=TINYINT},
+      </if>
+      <if test="record.lqdServiceFee != null" >
+        lqd_service_fee = #{record.lqdServiceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lqdServiceApr != null" >
+        lqd_service_apr = #{record.lqdServiceApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investServiceApr != null" >
+        invest_service_apr = #{record.investServiceApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lqdProgress != null" >
+        lqd_progress = #{record.lqdProgress,jdbcType=DECIMAL},
+      </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
@@ -605,7 +703,6 @@
       already_invest = #{record.alreadyInvest,jdbcType=DECIMAL},
       client = #{record.client,jdbcType=TINYINT},
       order_status = #{record.orderStatus,jdbcType=TINYINT},
-      add_time = #{record.addTime,jdbcType=INTEGER},
       count_interest_time = #{record.countInterestTime,jdbcType=INTEGER},
       send_status = #{record.sendStatus,jdbcType=TINYINT},
       lock_period = #{record.lockPeriod,jdbcType=INTEGER},
@@ -627,6 +724,16 @@
       should_pay_total = #{record.shouldPayTotal,jdbcType=DECIMAL},
       should_pay_capital = #{record.shouldPayCapital,jdbcType=DECIMAL},
       should_pay_interest = #{record.shouldPayInterest,jdbcType=DECIMAL},
+      expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      fair_value = #{record.fairValue,jdbcType=DECIMAL},
+      liquidation_fair_value = #{record.liquidationFairValue,jdbcType=DECIMAL},
+      actual_apr = #{record.actualApr,jdbcType=DECIMAL},
+      invest_counts = #{record.investCounts,jdbcType=INTEGER},
+      match_dates = #{record.matchDates,jdbcType=TINYINT},
+      lqd_service_fee = #{record.lqdServiceFee,jdbcType=DECIMAL},
+      lqd_service_apr = #{record.lqdServiceApr,jdbcType=DECIMAL},
+      invest_service_apr = #{record.investServiceApr,jdbcType=DECIMAL},
+      lqd_progress = #{record.lqdProgress,jdbcType=DECIMAL},
       create_user = #{record.createUser,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
@@ -683,9 +790,6 @@
       </if>
       <if test="orderStatus != null" >
         order_status = #{orderStatus,jdbcType=TINYINT},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
       </if>
       <if test="countInterestTime != null" >
         count_interest_time = #{countInterestTime,jdbcType=INTEGER},
@@ -750,6 +854,36 @@
       <if test="shouldPayInterest != null" >
         should_pay_interest = #{shouldPayInterest,jdbcType=DECIMAL},
       </if>
+      <if test="expectApr != null" >
+        expect_apr = #{expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="fairValue != null" >
+        fair_value = #{fairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidationFairValue != null" >
+        liquidation_fair_value = #{liquidationFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="actualApr != null" >
+        actual_apr = #{actualApr,jdbcType=DECIMAL},
+      </if>
+      <if test="investCounts != null" >
+        invest_counts = #{investCounts,jdbcType=INTEGER},
+      </if>
+      <if test="matchDates != null" >
+        match_dates = #{matchDates,jdbcType=TINYINT},
+      </if>
+      <if test="lqdServiceFee != null" >
+        lqd_service_fee = #{lqdServiceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="lqdServiceApr != null" >
+        lqd_service_apr = #{lqdServiceApr,jdbcType=DECIMAL},
+      </if>
+      <if test="investServiceApr != null" >
+        invest_service_apr = #{investServiceApr,jdbcType=DECIMAL},
+      </if>
+      <if test="lqdProgress != null" >
+        lqd_progress = #{lqdProgress,jdbcType=DECIMAL},
+      </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
@@ -785,7 +919,6 @@
       already_invest = #{alreadyInvest,jdbcType=DECIMAL},
       client = #{client,jdbcType=TINYINT},
       order_status = #{orderStatus,jdbcType=TINYINT},
-      add_time = #{addTime,jdbcType=INTEGER},
       count_interest_time = #{countInterestTime,jdbcType=INTEGER},
       send_status = #{sendStatus,jdbcType=TINYINT},
       lock_period = #{lockPeriod,jdbcType=INTEGER},
@@ -807,6 +940,16 @@
       should_pay_total = #{shouldPayTotal,jdbcType=DECIMAL},
       should_pay_capital = #{shouldPayCapital,jdbcType=DECIMAL},
       should_pay_interest = #{shouldPayInterest,jdbcType=DECIMAL},
+      expect_apr = #{expectApr,jdbcType=DECIMAL},
+      fair_value = #{fairValue,jdbcType=DECIMAL},
+      liquidation_fair_value = #{liquidationFairValue,jdbcType=DECIMAL},
+      actual_apr = #{actualApr,jdbcType=DECIMAL},
+      invest_counts = #{investCounts,jdbcType=INTEGER},
+      match_dates = #{matchDates,jdbcType=TINYINT},
+      lqd_service_fee = #{lqdServiceFee,jdbcType=DECIMAL},
+      lqd_service_apr = #{lqdServiceApr,jdbcType=DECIMAL},
+      invest_service_apr = #{investServiceApr,jdbcType=DECIMAL},
+      lqd_progress = #{lqdProgress,jdbcType=DECIMAL},
       create_user = #{createUser,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},
       del_flag = #{delFlag,jdbcType=TINYINT},
