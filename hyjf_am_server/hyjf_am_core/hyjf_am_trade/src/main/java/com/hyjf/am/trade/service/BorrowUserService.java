@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.service;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowUsers;
+import com.hyjf.am.trade.dao.model.auto.BorrowUser;
 
 public interface BorrowUserService {
 
-    BorrowUsers getBorrowUserByNid(String borrowNid);
+    BorrowUser getBorrowUserByNid(String borrowNid);
 }

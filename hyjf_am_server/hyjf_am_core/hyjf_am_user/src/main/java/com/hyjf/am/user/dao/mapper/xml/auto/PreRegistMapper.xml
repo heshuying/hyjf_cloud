@@ -13,10 +13,10 @@
     <result column="platform_id" property="platformId" jdbcType="VARCHAR" />
     <result column="platform_name" property="platformName" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -78,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, mobile, referrer, utm_id, source_id, pre_regist_time, regist_flag, regist_time, 
-    platform_id, platform_name, remark, create_time, update_time, create_user, update_user
+    platform_id, platform_name, remark, create_user, update_user, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.PreRegistExample" >
     select
@@ -120,13 +120,13 @@
     insert into ht_pre_regist (mobile, referrer, utm_id, 
       source_id, pre_regist_time, regist_flag, 
       regist_time, platform_id, platform_name, 
-      remark, create_time, update_time, 
-      create_user, update_user)
+      remark, create_user, update_user, 
+      create_time, update_time)
     values (#{mobile,jdbcType=VARCHAR}, #{referrer,jdbcType=VARCHAR}, #{utmId,jdbcType=INTEGER}, 
       #{sourceId,jdbcType=INTEGER}, #{preRegistTime,jdbcType=INTEGER}, #{registFlag,jdbcType=TINYINT}, 
       #{registTime,jdbcType=INTEGER}, #{platformId,jdbcType=VARCHAR}, #{platformName,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER})
+      #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.PreRegist" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -164,17 +164,17 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="createUser != null" >
         create_user,
       </if>
       <if test="updateUser != null" >
         update_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -208,17 +208,17 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
       </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -264,17 +264,17 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
       </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -294,10 +294,10 @@
       platform_id = #{record.platformId,jdbcType=VARCHAR},
       platform_name = #{record.platformName,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      update_user = #{record.updateUser,jdbcType=INTEGER}
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -335,17 +335,17 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
       </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -362,10 +362,10 @@
       platform_id = #{platformId,jdbcType=VARCHAR},
       platform_name = #{platformName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=INTEGER},
-      update_user = #{updateUser,jdbcType=INTEGER}
+      update_user = #{updateUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -106,22 +106,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserLoginLog" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_user_login_log (login_times, login_ip, login_time, 
-      last_ip, last_time, create_time, 
-      update_time)
-    values (#{loginTimes,jdbcType=INTEGER}, #{loginIp,jdbcType=VARCHAR}, #{loginTime,jdbcType=TIMESTAMP}, 
-      #{lastIp,jdbcType=VARCHAR}, #{lastTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_user_login_log (user_id, login_times, login_ip, 
+      login_time, last_ip, last_time, 
+      create_time, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{loginTimes,jdbcType=INTEGER}, #{loginIp,jdbcType=VARCHAR}, 
+      #{loginTime,jdbcType=TIMESTAMP}, #{lastIp,jdbcType=VARCHAR}, #{lastTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserLoginLog" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_user_login_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
       <if test="loginTimes != null" >
         login_times,
       </if>
@@ -145,6 +142,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
       <if test="loginTimes != null" >
         #{loginTimes,jdbcType=INTEGER},
       </if>

@@ -13,12 +13,12 @@
     <result column="recommend_user" property="recommendUser" jdbcType="VARCHAR" />
     <result column="is51" property="is51" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="change_type" property="changeType" jdbcType="TINYINT" />
-    <result column="change_user_id" property="changeUserId" jdbcType="INTEGER" />
-    <result column="change_user" property="changeUser" jdbcType="VARCHAR" />
-    <result column="change_time" property="changeTime" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="borrower_type" property="borrowerType" jdbcType="TINYINT" />
+    <result column="update_type" property="updateType" jdbcType="BIT" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -80,7 +80,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, username, real_name, mobile, idcard, `role`, `attribute`, recommend_user, 
-    is51, `status`, change_type, change_user_id, change_user, change_time, remark, borrower_type
+    is51, `status`, remark, borrower_type, update_type, update_user_id, update_user, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserChangeLogExample" >
     select
@@ -122,15 +123,15 @@
     insert into ht_user_change_log (user_id, username, real_name, 
       mobile, idcard, `role`, 
       `attribute`, recommend_user, is51, 
-      `status`, change_type, change_user_id, 
-      change_user, change_time, remark, 
-      borrower_type)
+      `status`, remark, borrower_type, 
+      update_type, update_user_id, update_user, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{role,jdbcType=TINYINT}, 
       #{attribute,jdbcType=TINYINT}, #{recommendUser,jdbcType=VARCHAR}, #{is51,jdbcType=TINYINT}, 
-      #{status,jdbcType=TINYINT}, #{changeType,jdbcType=TINYINT}, #{changeUserId,jdbcType=INTEGER}, 
-      #{changeUser,jdbcType=VARCHAR}, #{changeTime,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{borrowerType,jdbcType=TINYINT})
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{borrowerType,jdbcType=TINYINT}, 
+      #{updateType,jdbcType=BIT}, #{updateUserId,jdbcType=INTEGER}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserChangeLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -168,23 +169,23 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="changeType != null" >
-        change_type,
-      </if>
-      <if test="changeUserId != null" >
-        change_user_id,
-      </if>
-      <if test="changeUser != null" >
-        change_user,
-      </if>
-      <if test="changeTime != null" >
-        change_time,
-      </if>
       <if test="remark != null" >
         remark,
       </if>
       <if test="borrowerType != null" >
         borrower_type,
+      </if>
+      <if test="updateType != null" >
+        update_type,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -218,23 +219,23 @@
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
-      <if test="changeType != null" >
-        #{changeType,jdbcType=TINYINT},
-      </if>
-      <if test="changeUserId != null" >
-        #{changeUserId,jdbcType=INTEGER},
-      </if>
-      <if test="changeUser != null" >
-        #{changeUser,jdbcType=VARCHAR},
-      </if>
-      <if test="changeTime != null" >
-        #{changeTime,jdbcType=INTEGER},
-      </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="borrowerType != null" >
         #{borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="updateType != null" >
+        #{updateType,jdbcType=BIT},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -280,23 +281,23 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
-      <if test="record.changeType != null" >
-        change_type = #{record.changeType,jdbcType=TINYINT},
-      </if>
-      <if test="record.changeUserId != null" >
-        change_user_id = #{record.changeUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.changeUser != null" >
-        change_user = #{record.changeUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.changeTime != null" >
-        change_time = #{record.changeTime,jdbcType=INTEGER},
-      </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.borrowerType != null" >
         borrower_type = #{record.borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="record.updateType != null" >
+        update_type = #{record.updateType,jdbcType=BIT},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -316,12 +317,12 @@
       recommend_user = #{record.recommendUser,jdbcType=VARCHAR},
       is51 = #{record.is51,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
-      change_type = #{record.changeType,jdbcType=TINYINT},
-      change_user_id = #{record.changeUserId,jdbcType=INTEGER},
-      change_user = #{record.changeUser,jdbcType=VARCHAR},
-      change_time = #{record.changeTime,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
-      borrower_type = #{record.borrowerType,jdbcType=TINYINT}
+      borrower_type = #{record.borrowerType,jdbcType=TINYINT},
+      update_type = #{record.updateType,jdbcType=BIT},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -359,23 +360,23 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
       </if>
-      <if test="changeType != null" >
-        change_type = #{changeType,jdbcType=TINYINT},
-      </if>
-      <if test="changeUserId != null" >
-        change_user_id = #{changeUserId,jdbcType=INTEGER},
-      </if>
-      <if test="changeUser != null" >
-        change_user = #{changeUser,jdbcType=VARCHAR},
-      </if>
-      <if test="changeTime != null" >
-        change_time = #{changeTime,jdbcType=INTEGER},
-      </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="borrowerType != null" >
         borrower_type = #{borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="updateType != null" >
+        update_type = #{updateType,jdbcType=BIT},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -392,12 +393,12 @@
       recommend_user = #{recommendUser,jdbcType=VARCHAR},
       is51 = #{is51,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
-      change_type = #{changeType,jdbcType=TINYINT},
-      change_user_id = #{changeUserId,jdbcType=INTEGER},
-      change_user = #{changeUser,jdbcType=VARCHAR},
-      change_time = #{changeTime,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
-      borrower_type = #{borrowerType,jdbcType=TINYINT}
+      borrower_type = #{borrowerType,jdbcType=TINYINT},
+      update_type = #{updateType,jdbcType=BIT},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

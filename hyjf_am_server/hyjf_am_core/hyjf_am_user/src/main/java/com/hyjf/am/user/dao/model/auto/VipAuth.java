@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class VipAuth implements Serializable {
     private Integer id;
@@ -13,15 +14,15 @@ public class VipAuth implements Serializable {
 
     private String remark;
 
-    private Integer addTime;
+    private Integer delFlag;
 
-    private String addUser;
+    private Integer createUserId;
 
-    private Integer updateTime;
+    private Integer updateUserId;
 
-    private String updateUser;
+    private Date createTime;
 
-    private Integer delFlg;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -65,43 +66,43 @@ public class VipAuth implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
-    public String getAddUser() {
-        return addUser;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setAddUser(String addUser) {
-        this.addUser = addUser == null ? null : addUser.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public Integer getUpdateTime() {
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
-    }
-
-    public Integer getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
     }
 }

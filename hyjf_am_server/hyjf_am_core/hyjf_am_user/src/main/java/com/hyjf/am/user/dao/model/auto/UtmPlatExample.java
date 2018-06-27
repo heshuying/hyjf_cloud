@@ -315,6 +315,66 @@ public class UtmPlatExample {
             return (Criteria) this;
         }
 
+        public Criteria andSourceTypeIsNull() {
+            addCriterion("source_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeIsNotNull() {
+            addCriterion("source_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeEqualTo(Integer value) {
+            addCriterion("source_type =", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeNotEqualTo(Integer value) {
+            addCriterion("source_type <>", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeGreaterThan(Integer value) {
+            addCriterion("source_type >", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("source_type >=", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeLessThan(Integer value) {
+            addCriterion("source_type <", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("source_type <=", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeIn(List<Integer> values) {
+            addCriterion("source_type in", values, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeNotIn(List<Integer> values) {
+            addCriterion("source_type not in", values, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeBetween(Integer value1, Integer value2) {
+            addCriterion("source_type between", value1, value2, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("source_type not between", value1, value2, "sourceType");
+            return (Criteria) this;
+        }
+
         public Criteria andDelFlagIsNull() {
             addCriterion("del_flag is null");
             return (Criteria) this;
@@ -872,66 +932,6 @@ public class UtmPlatExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeIsNull() {
-            addCriterion("source_type is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeIsNotNull() {
-            addCriterion("source_type is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeEqualTo(Integer value) {
-            addCriterion("source_type =", value, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeNotEqualTo(Integer value) {
-            addCriterion("source_type <>", value, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeGreaterThan(Integer value) {
-            addCriterion("source_type >", value, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("source_type >=", value, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeLessThan(Integer value) {
-            addCriterion("source_type <", value, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("source_type <=", value, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeIn(List<Integer> values) {
-            addCriterion("source_type in", values, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeNotIn(List<Integer> values) {
-            addCriterion("source_type not in", values, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeBetween(Integer value1, Integer value2) {
-            addCriterion("source_type between", value1, value2, "sourceType");
-            return (Criteria) this;
-        }
-
-        public Criteria andSourceTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("source_type not between", value1, value2, "sourceType");
             return (Criteria) this;
         }
     }

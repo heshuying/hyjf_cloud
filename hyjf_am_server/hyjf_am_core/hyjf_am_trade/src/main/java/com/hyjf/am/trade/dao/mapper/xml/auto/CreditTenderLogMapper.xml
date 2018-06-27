@@ -7,7 +7,6 @@
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="credit_user_id" property="creditUserId" jdbcType="INTEGER" />
     <result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="bid_nid" property="bidNid" jdbcType="VARCHAR" />
     <result column="borrow_user_id" property="borrowUserId" jdbcType="INTEGER" />
     <result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
@@ -30,15 +29,16 @@
     <result column="assign_repay_period" property="assignRepayPeriod" jdbcType="INTEGER" />
     <result column="assign_create_date" property="assignCreateDate" jdbcType="INTEGER" />
     <result column="credit_fee" property="creditFee" jdbcType="DECIMAL" />
-    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="log_order_id" property="logOrderId" jdbcType="VARCHAR" />
     <result column="tx_date" property="txDate" jdbcType="INTEGER" />
     <result column="tx_time" property="txTime" jdbcType="INTEGER" />
     <result column="seq_no" property="seqNo" jdbcType="INTEGER" />
     <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -99,13 +99,13 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    assign_id, user_id, user_name, credit_user_id, credit_user_name, `status`, bid_nid, 
-    borrow_user_id, borrow_user_name, credit_nid, credit_tender_nid, assign_nid, assign_capital, 
-    assign_account, assign_interest, assign_interest_advance, assign_price, assign_pay, 
-    assign_repay_account, assign_repay_capital, assign_repay_interest, assign_repay_end_time, 
-    assign_repay_last_time, assign_repay_next_time, assign_repay_yes_time, assign_repay_period, 
-    assign_create_date, credit_fee, add_time, addip, client, log_order_id, tx_date, tx_time, 
-    seq_no, bank_seq_no, account_id
+    assign_id, user_id, user_name, credit_user_id, credit_user_name, bid_nid, borrow_user_id, 
+    borrow_user_name, credit_nid, credit_tender_nid, assign_nid, assign_capital, assign_account, 
+    assign_interest, assign_interest_advance, assign_price, assign_pay, assign_repay_account, 
+    assign_repay_capital, assign_repay_interest, assign_repay_end_time, assign_repay_last_time, 
+    assign_repay_next_time, assign_repay_yes_time, assign_repay_period, assign_create_date, 
+    credit_fee, client, `status`, log_order_id, tx_date, tx_time, seq_no, bank_seq_no, 
+    account_id, add_ip, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CreditTenderLogExample" >
     select
@@ -145,33 +145,33 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_credit_tender_log (user_id, user_name, credit_user_id, 
-      credit_user_name, `status`, bid_nid, 
-      borrow_user_id, borrow_user_name, credit_nid, 
-      credit_tender_nid, assign_nid, assign_capital, 
-      assign_account, assign_interest, assign_interest_advance, 
+      credit_user_name, bid_nid, borrow_user_id, 
+      borrow_user_name, credit_nid, credit_tender_nid, 
+      assign_nid, assign_capital, assign_account, 
+      assign_interest, assign_interest_advance, 
       assign_price, assign_pay, assign_repay_account, 
       assign_repay_capital, assign_repay_interest, 
       assign_repay_end_time, assign_repay_last_time, 
       assign_repay_next_time, assign_repay_yes_time, 
       assign_repay_period, assign_create_date, credit_fee, 
-      add_time, addip, client, 
-      log_order_id, tx_date, tx_time, 
-      seq_no, bank_seq_no, account_id
-      )
+      client, `status`, log_order_id, 
+      tx_date, tx_time, seq_no, 
+      bank_seq_no, account_id, add_ip, 
+      create_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{creditUserId,jdbcType=INTEGER}, 
-      #{creditUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{bidNid,jdbcType=VARCHAR}, 
-      #{borrowUserId,jdbcType=INTEGER}, #{borrowUserName,jdbcType=VARCHAR}, #{creditNid,jdbcType=VARCHAR}, 
-      #{creditTenderNid,jdbcType=VARCHAR}, #{assignNid,jdbcType=VARCHAR}, #{assignCapital,jdbcType=DECIMAL}, 
-      #{assignAccount,jdbcType=DECIMAL}, #{assignInterest,jdbcType=DECIMAL}, #{assignInterestAdvance,jdbcType=DECIMAL}, 
+      #{creditUserName,jdbcType=VARCHAR}, #{bidNid,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
+      #{borrowUserName,jdbcType=VARCHAR}, #{creditNid,jdbcType=VARCHAR}, #{creditTenderNid,jdbcType=VARCHAR}, 
+      #{assignNid,jdbcType=VARCHAR}, #{assignCapital,jdbcType=DECIMAL}, #{assignAccount,jdbcType=DECIMAL}, 
+      #{assignInterest,jdbcType=DECIMAL}, #{assignInterestAdvance,jdbcType=DECIMAL}, 
       #{assignPrice,jdbcType=DECIMAL}, #{assignPay,jdbcType=DECIMAL}, #{assignRepayAccount,jdbcType=DECIMAL}, 
       #{assignRepayCapital,jdbcType=DECIMAL}, #{assignRepayInterest,jdbcType=DECIMAL}, 
       #{assignRepayEndTime,jdbcType=INTEGER}, #{assignRepayLastTime,jdbcType=INTEGER}, 
       #{assignRepayNextTime,jdbcType=INTEGER}, #{assignRepayYesTime,jdbcType=INTEGER}, 
       #{assignRepayPeriod,jdbcType=INTEGER}, #{assignCreateDate,jdbcType=INTEGER}, #{creditFee,jdbcType=DECIMAL}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{addip,jdbcType=VARCHAR}, #{client,jdbcType=INTEGER}, 
-      #{logOrderId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
-      #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}
-      )
+      #{client,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{logOrderId,jdbcType=VARCHAR}, 
+      #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=INTEGER}, 
+      #{bankSeqNo,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CreditTenderLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="assignId" order="AFTER" >
@@ -190,9 +190,6 @@
       </if>
       <if test="creditUserName != null" >
         credit_user_name,
-      </if>
-      <if test="status != null" >
-        `status`,
       </if>
       <if test="bidNid != null" >
         bid_nid,
@@ -260,14 +257,11 @@
       <if test="creditFee != null" >
         credit_fee,
       </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="addip != null" >
-        addip,
-      </if>
       <if test="client != null" >
         client,
+      </if>
+      <if test="status != null" >
+        `status`,
       </if>
       <if test="logOrderId != null" >
         log_order_id,
@@ -287,6 +281,12 @@
       <if test="accountId != null" >
         account_id,
       </if>
+      <if test="addIp != null" >
+        add_ip,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
@@ -300,9 +300,6 @@
       </if>
       <if test="creditUserName != null" >
         #{creditUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=TINYINT},
       </if>
       <if test="bidNid != null" >
         #{bidNid,jdbcType=VARCHAR},
@@ -370,14 +367,11 @@
       <if test="creditFee != null" >
         #{creditFee,jdbcType=DECIMAL},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
-      </if>
       <if test="client != null" >
         #{client,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="logOrderId != null" >
         #{logOrderId,jdbcType=VARCHAR},
@@ -396,6 +390,12 @@
       </if>
       <if test="accountId != null" >
         #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -422,9 +422,6 @@
       </if>
       <if test="record.creditUserName != null" >
         credit_user_name = #{record.creditUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.bidNid != null" >
         bid_nid = #{record.bidNid,jdbcType=VARCHAR},
@@ -492,14 +489,11 @@
       <if test="record.creditFee != null" >
         credit_fee = #{record.creditFee,jdbcType=DECIMAL},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
-      </if>
       <if test="record.client != null" >
         client = #{record.client,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.logOrderId != null" >
         log_order_id = #{record.logOrderId,jdbcType=VARCHAR},
@@ -519,6 +513,12 @@
       <if test="record.accountId != null" >
         account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -531,7 +531,6 @@
       user_name = #{record.userName,jdbcType=VARCHAR},
       credit_user_id = #{record.creditUserId,jdbcType=INTEGER},
       credit_user_name = #{record.creditUserName,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=TINYINT},
       bid_nid = #{record.bidNid,jdbcType=VARCHAR},
       borrow_user_id = #{record.borrowUserId,jdbcType=INTEGER},
       borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
@@ -554,15 +553,16 @@
       assign_repay_period = #{record.assignRepayPeriod,jdbcType=INTEGER},
       assign_create_date = #{record.assignCreateDate,jdbcType=INTEGER},
       credit_fee = #{record.creditFee,jdbcType=DECIMAL},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      addip = #{record.addip,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       log_order_id = #{record.logOrderId,jdbcType=VARCHAR},
       tx_date = #{record.txDate,jdbcType=INTEGER},
       tx_time = #{record.txTime,jdbcType=INTEGER},
       seq_no = #{record.seqNo,jdbcType=INTEGER},
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
-      account_id = #{record.accountId,jdbcType=VARCHAR}
+      account_id = #{record.accountId,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -581,9 +581,6 @@
       </if>
       <if test="creditUserName != null" >
         credit_user_name = #{creditUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="bidNid != null" >
         bid_nid = #{bidNid,jdbcType=VARCHAR},
@@ -651,14 +648,11 @@
       <if test="creditFee != null" >
         credit_fee = #{creditFee,jdbcType=DECIMAL},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
-      </if>
       <if test="client != null" >
         client = #{client,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="logOrderId != null" >
         log_order_id = #{logOrderId,jdbcType=VARCHAR},
@@ -678,6 +672,12 @@
       <if test="accountId != null" >
         account_id = #{accountId,jdbcType=VARCHAR},
       </if>
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where assign_id = #{assignId,jdbcType=INTEGER}
   </update>
@@ -687,7 +687,6 @@
       user_name = #{userName,jdbcType=VARCHAR},
       credit_user_id = #{creditUserId,jdbcType=INTEGER},
       credit_user_name = #{creditUserName,jdbcType=VARCHAR},
-      `status` = #{status,jdbcType=TINYINT},
       bid_nid = #{bidNid,jdbcType=VARCHAR},
       borrow_user_id = #{borrowUserId,jdbcType=INTEGER},
       borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
@@ -710,15 +709,16 @@
       assign_repay_period = #{assignRepayPeriod,jdbcType=INTEGER},
       assign_create_date = #{assignCreateDate,jdbcType=INTEGER},
       credit_fee = #{creditFee,jdbcType=DECIMAL},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-      addip = #{addip,jdbcType=VARCHAR},
       client = #{client,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       log_order_id = #{logOrderId,jdbcType=VARCHAR},
       tx_date = #{txDate,jdbcType=INTEGER},
       tx_time = #{txTime,jdbcType=INTEGER},
       seq_no = #{seqNo,jdbcType=INTEGER},
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
-      account_id = #{accountId,jdbcType=VARCHAR}
+      account_id = #{accountId,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where assign_id = #{assignId,jdbcType=INTEGER}
   </update>
 </mapper>

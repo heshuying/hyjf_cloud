@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.controller.task;
 
 
-import com.hyjf.am.response.trade.BatchCouponTimeoutCommonCustomizeResponse;
+import com.hyjf.am.response.trade.BatchCouponTimeoutCommonResponse;
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
@@ -55,8 +55,8 @@ public class CouponRepayInterestController {
     }
 
     @GetMapping("/selectCouponQuota/{threeBeginDate}/{threeEndDate}")
-    public BatchCouponTimeoutCommonCustomizeResponse selectCouponQuota(@PathVariable int threeBeginDate, @PathVariable int threeEndDate) {
-        BatchCouponTimeoutCommonCustomizeResponse response = new BatchCouponTimeoutCommonCustomizeResponse();
+    public BatchCouponTimeoutCommonResponse selectCouponQuota(@PathVariable int threeBeginDate, @PathVariable int threeEndDate) {
+        BatchCouponTimeoutCommonResponse response = new BatchCouponTimeoutCommonResponse();
         List<BatchCouponTimeoutCommonCustomize> batchCouponTimeoutCommonCustomizes = couponRepaySerivce.selectCouponQuota(threeBeginDate, threeEndDate);
         if (!CollectionUtils.isEmpty(batchCouponTimeoutCommonCustomizes)) {
             List<BatchCouponTimeoutCommonCustomizeVO> batchCouponTimeoutCommonCustomizeVOS = CommonUtils.convertBeanList(batchCouponTimeoutCommonCustomizes, BatchCouponTimeoutCommonCustomizeVO.class);

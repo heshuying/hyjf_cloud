@@ -67,4 +67,16 @@ public class BorrowApicronController {
 		int updateBorrowApicronFlag = borrowApicronService.updateBorrowApicronOfRepayStatus(id, status);
 		return updateBorrowApicronFlag;
 	}
+
+	@GetMapping("/selectBorrowApicronListByBorrowNid/{borrowNid}")
+	public BorrowApicronResponse selectBorrowApicronListByBorrowNid(String borrowNid) {
+		BorrowApicronResponse response = new BorrowApicronResponse();
+		List<BorrowApicron> borrowApicronList = borrowApicronService.selectBorrowApicronListByBorrowNid(borrowNid);
+		if (!CollectionUtils.isEmpty(borrowApicronList)) {
+			List<BorrowApicronVO> borrowApicronVoList = CommonUtils.convertBeanList(borrowApicronList,
+					BorrowApicronVO.class);
+			response.setResultList(borrowApicronVoList);
+		}
+		return response;
+	}
 }

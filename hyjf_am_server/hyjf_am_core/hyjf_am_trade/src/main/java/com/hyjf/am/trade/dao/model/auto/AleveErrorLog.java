@@ -14,15 +14,15 @@ public class AleveErrorLog implements Serializable {
 
     private String filestats;
 
-    private Integer createUserId;
+    private Integer delFlag;
 
-    private Date createTime;
+    private Integer createUserId;
 
     private Integer updateUserId;
 
-    private Date updateTime;
+    private Date createTime;
 
-    private Integer delFlag;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -66,20 +66,20 @@ public class AleveErrorLog implements Serializable {
         this.filestats = filestats == null ? null : filestats.trim();
     }
 
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
     public Integer getCreateUserId() {
         return createUserId;
     }
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public Integer getUpdateUserId() {
@@ -90,19 +90,19 @@ public class AleveErrorLog implements Serializable {
         this.updateUserId = updateUserId;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
     }
 }

@@ -27,6 +27,8 @@
     <result column="plan_wait_interest" property="planWaitInterest" jdbcType="DECIMAL" />
     <result column="wait_total" property="waitTotal" jdbcType="DECIMAL" />
     <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
+    <result column="actual_revenue" property="actualRevenue" jdbcType="DECIMAL" />
+    <result column="actual_pay_total" property="actualPayTotal" jdbcType="DECIMAL" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
@@ -96,7 +98,8 @@
     repay_interest, repay_capital, repay_status, repay_already, repay_wait, repay_should, 
     repay_actual, order_status, repay_actual_time, repay_should_time, plan_repay_capital, 
     plan_repay_interest, repay_total, plan_wait_captical, plan_wait_interest, wait_total, 
-    service_fee, del_flag, create_user, update_user, create_time, update_time
+    service_fee, actual_revenue, actual_pay_total, del_flag, create_user, update_user, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepayExample" >
     select
@@ -143,8 +146,9 @@
       repay_actual_time, repay_should_time, plan_repay_capital, 
       plan_repay_interest, repay_total, plan_wait_captical, 
       plan_wait_interest, wait_total, service_fee, 
-      del_flag, create_user, update_user, 
-      create_time, update_time)
+      actual_revenue, actual_pay_total, del_flag, 
+      create_user, update_user, create_time, 
+      update_time)
     values (#{accedeOrderId,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{lockPeriod,jdbcType=INTEGER}, 
       #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userAttribute,jdbcType=INTEGER}, 
       #{accedeAccount,jdbcType=DECIMAL}, #{repayInterest,jdbcType=DECIMAL}, #{repayCapital,jdbcType=DECIMAL}, 
@@ -153,8 +157,9 @@
       #{repayActualTime,jdbcType=INTEGER}, #{repayShouldTime,jdbcType=INTEGER}, #{planRepayCapital,jdbcType=DECIMAL}, 
       #{planRepayInterest,jdbcType=DECIMAL}, #{repayTotal,jdbcType=DECIMAL}, #{planWaitCaptical,jdbcType=DECIMAL}, 
       #{planWaitInterest,jdbcType=DECIMAL}, #{waitTotal,jdbcType=DECIMAL}, #{serviceFee,jdbcType=DECIMAL}, 
-      #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{actualRevenue,jdbcType=DECIMAL}, #{actualPayTotal,jdbcType=DECIMAL}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepay" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -233,6 +238,12 @@
       </if>
       <if test="serviceFee != null" >
         service_fee,
+      </if>
+      <if test="actualRevenue != null" >
+        actual_revenue,
+      </if>
+      <if test="actualPayTotal != null" >
+        actual_pay_total,
       </if>
       <if test="delFlag != null" >
         del_flag,
@@ -322,6 +333,12 @@
       </if>
       <if test="serviceFee != null" >
         #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="actualRevenue != null" >
+        #{actualRevenue,jdbcType=DECIMAL},
+      </if>
+      <if test="actualPayTotal != null" >
+        #{actualPayTotal,jdbcType=DECIMAL},
       </if>
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
@@ -424,6 +441,12 @@
       <if test="record.serviceFee != null" >
         service_fee = #{record.serviceFee,jdbcType=DECIMAL},
       </if>
+      <if test="record.actualRevenue != null" >
+        actual_revenue = #{record.actualRevenue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.actualPayTotal != null" >
+        actual_pay_total = #{record.actualPayTotal,jdbcType=DECIMAL},
+      </if>
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
@@ -471,6 +494,8 @@
       plan_wait_interest = #{record.planWaitInterest,jdbcType=DECIMAL},
       wait_total = #{record.waitTotal,jdbcType=DECIMAL},
       service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      actual_revenue = #{record.actualRevenue,jdbcType=DECIMAL},
+      actual_pay_total = #{record.actualPayTotal,jdbcType=DECIMAL},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user = #{record.createUser,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
@@ -555,6 +580,12 @@
       <if test="serviceFee != null" >
         service_fee = #{serviceFee,jdbcType=DECIMAL},
       </if>
+      <if test="actualRevenue != null" >
+        actual_revenue = #{actualRevenue,jdbcType=DECIMAL},
+      </if>
+      <if test="actualPayTotal != null" >
+        actual_pay_total = #{actualPayTotal,jdbcType=DECIMAL},
+      </if>
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
@@ -599,6 +630,8 @@
       plan_wait_interest = #{planWaitInterest,jdbcType=DECIMAL},
       wait_total = #{waitTotal,jdbcType=DECIMAL},
       service_fee = #{serviceFee,jdbcType=DECIMAL},
+      actual_revenue = #{actualRevenue,jdbcType=DECIMAL},
+      actual_pay_total = #{actualPayTotal,jdbcType=DECIMAL},
       del_flag = #{delFlag,jdbcType=TINYINT},
       create_user = #{createUser,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},

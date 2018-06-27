@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;

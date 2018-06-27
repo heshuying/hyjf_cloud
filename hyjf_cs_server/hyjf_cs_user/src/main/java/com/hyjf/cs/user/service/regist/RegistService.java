@@ -21,8 +21,6 @@ public interface RegistService extends BaseUserService {
 
     void apiCheckParam(RegisterRequest registerRequest);
 
-    boolean existUser(String mobile);
-
     /**
      * 注册
      * @param registerRequest

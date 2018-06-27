@@ -71,11 +71,13 @@ public class HjhDebtCreditTenderLog implements Serializable {
 
     private Integer assignRepayPeriod;
 
+    private BigDecimal assignServiceApr;
+
     private BigDecimal assignServiceFee;
 
     private Integer assignType;
 
-    private String addip;
+    private String addIp;
 
     private Integer client;
 
@@ -357,6 +359,14 @@ public class HjhDebtCreditTenderLog implements Serializable {
         this.assignRepayPeriod = assignRepayPeriod;
     }
 
+    public BigDecimal getAssignServiceApr() {
+        return assignServiceApr;
+    }
+
+    public void setAssignServiceApr(BigDecimal assignServiceApr) {
+        this.assignServiceApr = assignServiceApr;
+    }
+
     public BigDecimal getAssignServiceFee() {
         return assignServiceFee;
     }
@@ -373,12 +383,12 @@ public class HjhDebtCreditTenderLog implements Serializable {
         this.assignType = assignType;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getClient() {

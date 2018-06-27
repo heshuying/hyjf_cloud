@@ -4,9 +4,9 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.common.GetOrderIdUtils;
-import com.hyjf.am.trade.dao.mapper.auto.BatchBorrowTenderExceptionCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BatchBorrowTenderExceptionCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
-import com.hyjf.am.trade.dao.model.auto.BatchBorrowTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.service.BankInvestService;
 import com.hyjf.common.util.ClientConstants;

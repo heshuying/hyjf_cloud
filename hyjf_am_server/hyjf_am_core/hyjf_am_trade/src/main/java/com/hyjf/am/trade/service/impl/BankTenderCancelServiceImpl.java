@@ -42,9 +42,9 @@ public class BankTenderCancelServiceImpl implements BankTenderCancelService {
 
     @Override
     public List<BorrowTenderTmp> getBorrowTenderTmpsForTenderCancel() {
-        int dayStart10 = GetDate.getDayStart10(new Date());//当天开始时间
+        Date dayStart10 = GetDate.getDayStart10(new Date());//当天开始时间
         BorrowTenderTmpExample example = new BorrowTenderTmpExample();
-        example.createCriteria().andIsBankTenderEqualTo(1).andAddTimeLessThan(dayStart10).andStatusNotEqualTo(3);//除上次处理异常数据
+        example.createCriteria().andIsBankTenderEqualTo(1).andCreateTimeLessThan(dayStart10).andStatusNotEqualTo(3);//除上次处理异常数据
         example.setLimitStart(0);
         example.setLimitEnd(99);
         List<BorrowTenderTmp> tmpList = this.borrowTenderTmpMapper.selectByExample(example);

@@ -10,6 +10,8 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +40,20 @@ public class HjhAccedeController {
         if (hjhAccedeResponse != null) {
             response.setResult(CommonUtils.convertBean(hjhAccedeResponse,HjhAccedeVO.class));
         }
+        return response;
+    }
+    /**
+     * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+     * @return
+     */
+    @GetMapping("/canCancelAuth/{userId}")
+    public HjhAccedeResponse selectByAssignNidAndUserId(@PathVariable Integer userId) {
+    	HjhAccedeResponse response = new HjhAccedeResponse();
+    	if(hjhAccedeService.canCancelAuth(userId)) {
+    		response.setRtn(HjhAccedeResponse.SUCCESS);
+    	}else {
+    		response.setRtn(HjhAccedeResponse.FAIL);
+    	}
         return response;
     }
 

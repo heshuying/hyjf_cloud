@@ -118,18 +118,4 @@ public class BeforeInterestAfterPrincipalUtils {
 		}
 		return assignInterestAdvance;
 	}
-
-	public static void main(String[] args) {
-		BigDecimal invest = new BigDecimal(300); // 本金
-		BigDecimal creditCapital = new BigDecimal(2000); // 本金
-		int month = 6;
-		BigDecimal yearRate = new BigDecimal(0.11); // 年利率
-		BigDecimal interest = new BigDecimal(18.33); // 年利率
-		int term = 6;
-		BigDecimal interestq = getPerTermInterest(invest, yearRate, month, term);
-		System.out.println("每月利息：" + interestq);
-		BigDecimal interestCount = getAssignInterestAdvance(invest, creditCapital, yearRate, interest, new BigDecimal(27));
-		System.out.println("总利息：" + interestCount);
-
-	}
 }

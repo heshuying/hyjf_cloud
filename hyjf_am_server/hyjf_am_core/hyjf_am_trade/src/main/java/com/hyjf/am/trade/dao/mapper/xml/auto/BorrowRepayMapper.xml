@@ -3,15 +3,14 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowRepayMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowRepay" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
     <result column="nid" property="nid" jdbcType="VARCHAR" />
+    <result column="repay_user_id" property="repayUserId" jdbcType="INTEGER" />
     <result column="repay_type" property="repayType" jdbcType="VARCHAR" />
     <result column="repay_fee" property="repayFee" jdbcType="DECIMAL" />
     <result column="repay_action_time" property="repayActionTime" jdbcType="INTEGER" />
-    <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
     <result column="repay_period" property="repayPeriod" jdbcType="TINYINT" />
     <result column="repay_time" property="repayTime" jdbcType="INTEGER" />
     <result column="repay_yestime" property="repayYestime" jdbcType="INTEGER" />
@@ -25,7 +24,6 @@
     <result column="repay_capital_yes" property="repayCapitalYes" jdbcType="DECIMAL" />
     <result column="repay_capital_wait" property="repayCapitalWait" jdbcType="DECIMAL" />
     <result column="repay_interest_wait" property="repayInterestWait" jdbcType="DECIMAL" />
-    <result column="advance_status" property="advanceStatus" jdbcType="TINYINT" />
     <result column="charge_days" property="chargeDays" jdbcType="INTEGER" />
     <result column="charge_interest" property="chargeInterest" jdbcType="DECIMAL" />
     <result column="late_days" property="lateDays" jdbcType="INTEGER" />
@@ -33,13 +31,15 @@
     <result column="delay_days" property="delayDays" jdbcType="INTEGER" />
     <result column="delay_interest" property="delayInterest" jdbcType="DECIMAL" />
     <result column="delay_remark" property="delayRemark" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
     <result column="repay_money_source" property="repayMoneySource" jdbcType="TINYINT" />
-    <result column="repay_user_id" property="repayUserId" jdbcType="INTEGER" />
-    <result column="repay_username" property="repayUsername" jdbcType="VARCHAR" />
     <result column="repay_sms_reminder" property="repaySmsReminder" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="auto_repay" property="autoRepay" jdbcType="TINYINT" />
+    <result column="advance_status" property="advanceStatus" jdbcType="TINYINT" />
+    <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
+    <result column="repay_username" property="repayUsername" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -100,13 +100,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `status`, user_id, user_name, borrow_nid, nid, repay_type, repay_fee, repay_action_time, 
-    repay_status, repay_period, repay_time, repay_yestime, repay_account_all, repay_account, 
-    repay_interest, repay_capital, repay_account_yes, late_repay_days, repay_interest_yes, 
-    repay_capital_yes, repay_capital_wait, repay_interest_wait, advance_status, charge_days, 
-    charge_interest, late_days, late_interest, delay_days, delay_interest, delay_remark, 
-    add_time, addip, repay_money_source, repay_user_id, repay_username, repay_sms_reminder, 
-    auto_repay
+    id, user_id, user_name, borrow_nid, nid, repay_user_id, repay_type, repay_fee, repay_action_time, 
+    repay_period, repay_time, repay_yestime, repay_account_all, repay_account, repay_interest, 
+    repay_capital, repay_account_yes, late_repay_days, repay_interest_yes, repay_capital_yes, 
+    repay_capital_wait, repay_interest_wait, charge_days, charge_interest, late_days, 
+    late_interest, delay_days, delay_interest, delay_remark, repay_money_source, repay_sms_reminder, 
+    `status`, auto_repay, advance_status, repay_status, repay_username, add_ip, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepayExample" >
     select
@@ -145,32 +144,32 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_borrow_repay (`status`, user_id, user_name, 
-      borrow_nid, nid, repay_type, 
-      repay_fee, repay_action_time, repay_status, 
-      repay_period, repay_time, repay_yestime, 
-      repay_account_all, repay_account, repay_interest, 
-      repay_capital, repay_account_yes, late_repay_days, 
-      repay_interest_yes, repay_capital_yes, repay_capital_wait, 
-      repay_interest_wait, advance_status, charge_days, 
-      charge_interest, late_days, late_interest, 
-      delay_days, delay_interest, delay_remark, 
-      add_time, addip, repay_money_source, 
-      repay_user_id, repay_username, repay_sms_reminder, 
-      auto_repay)
-    values (#{status,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
-      #{borrowNid,jdbcType=VARCHAR}, #{nid,jdbcType=VARCHAR}, #{repayType,jdbcType=VARCHAR}, 
-      #{repayFee,jdbcType=DECIMAL}, #{repayActionTime,jdbcType=INTEGER}, #{repayStatus,jdbcType=TINYINT}, 
-      #{repayPeriod,jdbcType=TINYINT}, #{repayTime,jdbcType=INTEGER}, #{repayYestime,jdbcType=INTEGER}, 
-      #{repayAccountAll,jdbcType=DECIMAL}, #{repayAccount,jdbcType=DECIMAL}, #{repayInterest,jdbcType=DECIMAL}, 
-      #{repayCapital,jdbcType=DECIMAL}, #{repayAccountYes,jdbcType=DECIMAL}, #{lateRepayDays,jdbcType=INTEGER}, 
-      #{repayInterestYes,jdbcType=DECIMAL}, #{repayCapitalYes,jdbcType=DECIMAL}, #{repayCapitalWait,jdbcType=DECIMAL}, 
-      #{repayInterestWait,jdbcType=DECIMAL}, #{advanceStatus,jdbcType=TINYINT}, #{chargeDays,jdbcType=INTEGER}, 
-      #{chargeInterest,jdbcType=DECIMAL}, #{lateDays,jdbcType=INTEGER}, #{lateInterest,jdbcType=DECIMAL}, 
-      #{delayDays,jdbcType=INTEGER}, #{delayInterest,jdbcType=DECIMAL}, #{delayRemark,jdbcType=VARCHAR}, 
-      #{addTime,jdbcType=INTEGER}, #{addip,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=TINYINT}, 
-      #{repayUserId,jdbcType=INTEGER}, #{repayUsername,jdbcType=VARCHAR}, #{repaySmsReminder,jdbcType=TINYINT}, 
-      #{autoRepay,jdbcType=TINYINT})
+    insert into ht_borrow_repay (user_id, user_name, borrow_nid, 
+      nid, repay_user_id, repay_type, 
+      repay_fee, repay_action_time, repay_period, 
+      repay_time, repay_yestime, repay_account_all, 
+      repay_account, repay_interest, repay_capital, 
+      repay_account_yes, late_repay_days, repay_interest_yes, 
+      repay_capital_yes, repay_capital_wait, repay_interest_wait, 
+      charge_days, charge_interest, late_days, 
+      late_interest, delay_days, delay_interest, 
+      delay_remark, repay_money_source, repay_sms_reminder, 
+      `status`, auto_repay, advance_status, 
+      repay_status, repay_username, add_ip, 
+      create_time)
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
+      #{nid,jdbcType=VARCHAR}, #{repayUserId,jdbcType=INTEGER}, #{repayType,jdbcType=VARCHAR}, 
+      #{repayFee,jdbcType=DECIMAL}, #{repayActionTime,jdbcType=INTEGER}, #{repayPeriod,jdbcType=TINYINT}, 
+      #{repayTime,jdbcType=INTEGER}, #{repayYestime,jdbcType=INTEGER}, #{repayAccountAll,jdbcType=DECIMAL}, 
+      #{repayAccount,jdbcType=DECIMAL}, #{repayInterest,jdbcType=DECIMAL}, #{repayCapital,jdbcType=DECIMAL}, 
+      #{repayAccountYes,jdbcType=DECIMAL}, #{lateRepayDays,jdbcType=INTEGER}, #{repayInterestYes,jdbcType=DECIMAL}, 
+      #{repayCapitalYes,jdbcType=DECIMAL}, #{repayCapitalWait,jdbcType=DECIMAL}, #{repayInterestWait,jdbcType=DECIMAL}, 
+      #{chargeDays,jdbcType=INTEGER}, #{chargeInterest,jdbcType=DECIMAL}, #{lateDays,jdbcType=INTEGER}, 
+      #{lateInterest,jdbcType=DECIMAL}, #{delayDays,jdbcType=INTEGER}, #{delayInterest,jdbcType=DECIMAL}, 
+      #{delayRemark,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=TINYINT}, #{repaySmsReminder,jdbcType=TINYINT}, 
+      #{status,jdbcType=TINYINT}, #{autoRepay,jdbcType=TINYINT}, #{advanceStatus,jdbcType=TINYINT}, 
+      #{repayStatus,jdbcType=TINYINT}, #{repayUsername,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepay" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -178,9 +177,6 @@
     </selectKey>
     insert into ht_borrow_repay
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="status != null" >
-        `status`,
-      </if>
       <if test="userId != null" >
         user_id,
       </if>
@@ -193,6 +189,9 @@
       <if test="nid != null" >
         nid,
       </if>
+      <if test="repayUserId != null" >
+        repay_user_id,
+      </if>
       <if test="repayType != null" >
         repay_type,
       </if>
@@ -201,9 +200,6 @@
       </if>
       <if test="repayActionTime != null" >
         repay_action_time,
-      </if>
-      <if test="repayStatus != null" >
-        repay_status,
       </if>
       <if test="repayPeriod != null" >
         repay_period,
@@ -244,9 +240,6 @@
       <if test="repayInterestWait != null" >
         repay_interest_wait,
       </if>
-      <if test="advanceStatus != null" >
-        advance_status,
-      </if>
       <if test="chargeDays != null" >
         charge_days,
       </if>
@@ -268,32 +261,35 @@
       <if test="delayRemark != null" >
         delay_remark,
       </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="addip != null" >
-        addip,
-      </if>
       <if test="repayMoneySource != null" >
         repay_money_source,
-      </if>
-      <if test="repayUserId != null" >
-        repay_user_id,
-      </if>
-      <if test="repayUsername != null" >
-        repay_username,
       </if>
       <if test="repaySmsReminder != null" >
         repay_sms_reminder,
       </if>
+      <if test="status != null" >
+        `status`,
+      </if>
       <if test="autoRepay != null" >
         auto_repay,
       </if>
+      <if test="advanceStatus != null" >
+        advance_status,
+      </if>
+      <if test="repayStatus != null" >
+        repay_status,
+      </if>
+      <if test="repayUsername != null" >
+        repay_username,
+      </if>
+      <if test="addIp != null" >
+        add_ip,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="status != null" >
-        #{status,jdbcType=TINYINT},
-      </if>
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
@@ -306,6 +302,9 @@
       <if test="nid != null" >
         #{nid,jdbcType=VARCHAR},
       </if>
+      <if test="repayUserId != null" >
+        #{repayUserId,jdbcType=INTEGER},
+      </if>
       <if test="repayType != null" >
         #{repayType,jdbcType=VARCHAR},
       </if>
@@ -314,9 +313,6 @@
       </if>
       <if test="repayActionTime != null" >
         #{repayActionTime,jdbcType=INTEGER},
-      </if>
-      <if test="repayStatus != null" >
-        #{repayStatus,jdbcType=TINYINT},
       </if>
       <if test="repayPeriod != null" >
         #{repayPeriod,jdbcType=TINYINT},
@@ -357,9 +353,6 @@
       <if test="repayInterestWait != null" >
         #{repayInterestWait,jdbcType=DECIMAL},
       </if>
-      <if test="advanceStatus != null" >
-        #{advanceStatus,jdbcType=TINYINT},
-      </if>
       <if test="chargeDays != null" >
         #{chargeDays,jdbcType=INTEGER},
       </if>
@@ -381,26 +374,32 @@
       <if test="delayRemark != null" >
         #{delayRemark,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
-      </if>
       <if test="repayMoneySource != null" >
         #{repayMoneySource,jdbcType=TINYINT},
-      </if>
-      <if test="repayUserId != null" >
-        #{repayUserId,jdbcType=INTEGER},
-      </if>
-      <if test="repayUsername != null" >
-        #{repayUsername,jdbcType=VARCHAR},
       </if>
       <if test="repaySmsReminder != null" >
         #{repaySmsReminder,jdbcType=TINYINT},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
       <if test="autoRepay != null" >
         #{autoRepay,jdbcType=TINYINT},
+      </if>
+      <if test="advanceStatus != null" >
+        #{advanceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayStatus != null" >
+        #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayUsername != null" >
+        #{repayUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -416,9 +415,6 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=TINYINT},
-      </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
@@ -431,6 +427,9 @@
       <if test="record.nid != null" >
         nid = #{record.nid,jdbcType=VARCHAR},
       </if>
+      <if test="record.repayUserId != null" >
+        repay_user_id = #{record.repayUserId,jdbcType=INTEGER},
+      </if>
       <if test="record.repayType != null" >
         repay_type = #{record.repayType,jdbcType=VARCHAR},
       </if>
@@ -439,9 +438,6 @@
       </if>
       <if test="record.repayActionTime != null" >
         repay_action_time = #{record.repayActionTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.repayStatus != null" >
-        repay_status = #{record.repayStatus,jdbcType=TINYINT},
       </if>
       <if test="record.repayPeriod != null" >
         repay_period = #{record.repayPeriod,jdbcType=TINYINT},
@@ -482,9 +478,6 @@
       <if test="record.repayInterestWait != null" >
         repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
       </if>
-      <if test="record.advanceStatus != null" >
-        advance_status = #{record.advanceStatus,jdbcType=TINYINT},
-      </if>
       <if test="record.chargeDays != null" >
         charge_days = #{record.chargeDays,jdbcType=INTEGER},
       </if>
@@ -506,26 +499,32 @@
       <if test="record.delayRemark != null" >
         delay_remark = #{record.delayRemark,jdbcType=VARCHAR},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
-      </if>
       <if test="record.repayMoneySource != null" >
         repay_money_source = #{record.repayMoneySource,jdbcType=TINYINT},
-      </if>
-      <if test="record.repayUserId != null" >
-        repay_user_id = #{record.repayUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.repayUsername != null" >
-        repay_username = #{record.repayUsername,jdbcType=VARCHAR},
       </if>
       <if test="record.repaySmsReminder != null" >
         repay_sms_reminder = #{record.repaySmsReminder,jdbcType=TINYINT},
       </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
       <if test="record.autoRepay != null" >
         auto_repay = #{record.autoRepay,jdbcType=TINYINT},
+      </if>
+      <if test="record.advanceStatus != null" >
+        advance_status = #{record.advanceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayStatus != null" >
+        repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayUsername != null" >
+        repay_username = #{record.repayUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -535,15 +534,14 @@
   <update id="updateByExample" parameterType="map" >
     update ht_borrow_repay
     set id = #{record.id,jdbcType=INTEGER},
-      `status` = #{record.status,jdbcType=TINYINT},
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       nid = #{record.nid,jdbcType=VARCHAR},
+      repay_user_id = #{record.repayUserId,jdbcType=INTEGER},
       repay_type = #{record.repayType,jdbcType=VARCHAR},
       repay_fee = #{record.repayFee,jdbcType=DECIMAL},
       repay_action_time = #{record.repayActionTime,jdbcType=INTEGER},
-      repay_status = #{record.repayStatus,jdbcType=TINYINT},
       repay_period = #{record.repayPeriod,jdbcType=TINYINT},
       repay_time = #{record.repayTime,jdbcType=INTEGER},
       repay_yestime = #{record.repayYestime,jdbcType=INTEGER},
@@ -557,7 +555,6 @@
       repay_capital_yes = #{record.repayCapitalYes,jdbcType=DECIMAL},
       repay_capital_wait = #{record.repayCapitalWait,jdbcType=DECIMAL},
       repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
-      advance_status = #{record.advanceStatus,jdbcType=TINYINT},
       charge_days = #{record.chargeDays,jdbcType=INTEGER},
       charge_interest = #{record.chargeInterest,jdbcType=DECIMAL},
       late_days = #{record.lateDays,jdbcType=INTEGER},
@@ -565,13 +562,15 @@
       delay_days = #{record.delayDays,jdbcType=INTEGER},
       delay_interest = #{record.delayInterest,jdbcType=DECIMAL},
       delay_remark = #{record.delayRemark,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=INTEGER},
-      addip = #{record.addip,jdbcType=VARCHAR},
       repay_money_source = #{record.repayMoneySource,jdbcType=TINYINT},
-      repay_user_id = #{record.repayUserId,jdbcType=INTEGER},
-      repay_username = #{record.repayUsername,jdbcType=VARCHAR},
       repay_sms_reminder = #{record.repaySmsReminder,jdbcType=TINYINT},
-      auto_repay = #{record.autoRepay,jdbcType=TINYINT}
+      `status` = #{record.status,jdbcType=TINYINT},
+      auto_repay = #{record.autoRepay,jdbcType=TINYINT},
+      advance_status = #{record.advanceStatus,jdbcType=TINYINT},
+      repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      repay_username = #{record.repayUsername,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -579,9 +578,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepay" >
     update ht_borrow_repay
     <set >
-      <if test="status != null" >
-        `status` = #{status,jdbcType=TINYINT},
-      </if>
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
       </if>
@@ -594,6 +590,9 @@
       <if test="nid != null" >
         nid = #{nid,jdbcType=VARCHAR},
       </if>
+      <if test="repayUserId != null" >
+        repay_user_id = #{repayUserId,jdbcType=INTEGER},
+      </if>
       <if test="repayType != null" >
         repay_type = #{repayType,jdbcType=VARCHAR},
       </if>
@@ -602,9 +601,6 @@
       </if>
       <if test="repayActionTime != null" >
         repay_action_time = #{repayActionTime,jdbcType=INTEGER},
-      </if>
-      <if test="repayStatus != null" >
-        repay_status = #{repayStatus,jdbcType=TINYINT},
       </if>
       <if test="repayPeriod != null" >
         repay_period = #{repayPeriod,jdbcType=TINYINT},
@@ -645,9 +641,6 @@
       <if test="repayInterestWait != null" >
         repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
       </if>
-      <if test="advanceStatus != null" >
-        advance_status = #{advanceStatus,jdbcType=TINYINT},
-      </if>
       <if test="chargeDays != null" >
         charge_days = #{chargeDays,jdbcType=INTEGER},
       </if>
@@ -669,41 +662,46 @@
       <if test="delayRemark != null" >
         delay_remark = #{delayRemark,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
-      </if>
       <if test="repayMoneySource != null" >
         repay_money_source = #{repayMoneySource,jdbcType=TINYINT},
-      </if>
-      <if test="repayUserId != null" >
-        repay_user_id = #{repayUserId,jdbcType=INTEGER},
-      </if>
-      <if test="repayUsername != null" >
-        repay_username = #{repayUsername,jdbcType=VARCHAR},
       </if>
       <if test="repaySmsReminder != null" >
         repay_sms_reminder = #{repaySmsReminder,jdbcType=TINYINT},
       </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
       <if test="autoRepay != null" >
         auto_repay = #{autoRepay,jdbcType=TINYINT},
+      </if>
+      <if test="advanceStatus != null" >
+        advance_status = #{advanceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayStatus != null" >
+        repay_status = #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayUsername != null" >
+        repay_username = #{repayUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepay" >
     update ht_borrow_repay
-    set `status` = #{status,jdbcType=TINYINT},
-      user_id = #{userId,jdbcType=INTEGER},
+    set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       nid = #{nid,jdbcType=VARCHAR},
+      repay_user_id = #{repayUserId,jdbcType=INTEGER},
       repay_type = #{repayType,jdbcType=VARCHAR},
       repay_fee = #{repayFee,jdbcType=DECIMAL},
       repay_action_time = #{repayActionTime,jdbcType=INTEGER},
-      repay_status = #{repayStatus,jdbcType=TINYINT},
       repay_period = #{repayPeriod,jdbcType=TINYINT},
       repay_time = #{repayTime,jdbcType=INTEGER},
       repay_yestime = #{repayYestime,jdbcType=INTEGER},
@@ -717,7 +715,6 @@
       repay_capital_yes = #{repayCapitalYes,jdbcType=DECIMAL},
       repay_capital_wait = #{repayCapitalWait,jdbcType=DECIMAL},
       repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
-      advance_status = #{advanceStatus,jdbcType=TINYINT},
       charge_days = #{chargeDays,jdbcType=INTEGER},
       charge_interest = #{chargeInterest,jdbcType=DECIMAL},
       late_days = #{lateDays,jdbcType=INTEGER},
@@ -725,13 +722,15 @@
       delay_days = #{delayDays,jdbcType=INTEGER},
       delay_interest = #{delayInterest,jdbcType=DECIMAL},
       delay_remark = #{delayRemark,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=INTEGER},
-      addip = #{addip,jdbcType=VARCHAR},
       repay_money_source = #{repayMoneySource,jdbcType=TINYINT},
-      repay_user_id = #{repayUserId,jdbcType=INTEGER},
-      repay_username = #{repayUsername,jdbcType=VARCHAR},
       repay_sms_reminder = #{repaySmsReminder,jdbcType=TINYINT},
-      auto_repay = #{autoRepay,jdbcType=TINYINT}
+      `status` = #{status,jdbcType=TINYINT},
+      auto_repay = #{autoRepay,jdbcType=TINYINT},
+      advance_status = #{advanceStatus,jdbcType=TINYINT},
+      repay_status = #{repayStatus,jdbcType=TINYINT},
+      repay_username = #{repayUsername,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

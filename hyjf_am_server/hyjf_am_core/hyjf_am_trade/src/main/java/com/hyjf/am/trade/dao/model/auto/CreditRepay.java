@@ -57,10 +57,6 @@ public class CreditRepay implements Serializable {
 
     private Integer assignCreateDate;
 
-    private Date addTime;
-
-    private String addip;
-
     private Integer client;
 
     private Integer recoverPeriod;
@@ -88,6 +84,10 @@ public class CreditRepay implements Serializable {
     private BigDecimal lateInterest;
 
     private Integer debtStatus;
+
+    private String addIp;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -299,22 +299,6 @@ public class CreditRepay implements Serializable {
         this.assignCreateDate = assignCreateDate;
     }
 
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
-    }
-
     public Integer getClient() {
         return client;
     }
@@ -425,5 +409,21 @@ public class CreditRepay implements Serializable {
 
     public void setDebtStatus(Integer debtStatus) {
         this.debtStatus = debtStatus;
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

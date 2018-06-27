@@ -100,5 +100,4 @@ public class RedisConstants {
     
     // 汇计划自动债转中的标志 redis key
     public static final String HJH_DEBT_SWAPING = "DebtSwaping";
-
 }

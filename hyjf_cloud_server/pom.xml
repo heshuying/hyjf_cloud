@@ -16,7 +16,6 @@
 		<groupId>com.hyjf</groupId>
 		<artifactId>hyjf_cloud</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/>
 	</parent>
 	
 	<modules>

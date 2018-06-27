@@ -1426,6 +1426,66 @@ public class HjhPlanExample {
             return (Criteria) this;
         }
 
+        public Criteria andMinInvestCountsIsNull() {
+            addCriterion("min_invest_counts is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsIsNotNull() {
+            addCriterion("min_invest_counts is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsEqualTo(Byte value) {
+            addCriterion("min_invest_counts =", value, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsNotEqualTo(Byte value) {
+            addCriterion("min_invest_counts <>", value, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsGreaterThan(Byte value) {
+            addCriterion("min_invest_counts >", value, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsGreaterThanOrEqualTo(Byte value) {
+            addCriterion("min_invest_counts >=", value, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsLessThan(Byte value) {
+            addCriterion("min_invest_counts <", value, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsLessThanOrEqualTo(Byte value) {
+            addCriterion("min_invest_counts <=", value, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsIn(List<Byte> values) {
+            addCriterion("min_invest_counts in", values, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsNotIn(List<Byte> values) {
+            addCriterion("min_invest_counts not in", values, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsBetween(Byte value1, Byte value2) {
+            addCriterion("min_invest_counts between", value1, value2, "minInvestCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMinInvestCountsNotBetween(Byte value1, Byte value2) {
+            addCriterion("min_invest_counts not between", value1, value2, "minInvestCounts");
+            return (Criteria) this;
+        }
+
         public Criteria andDelFlagIsNull() {
             addCriterion("del_flag is null");
             return (Criteria) this;

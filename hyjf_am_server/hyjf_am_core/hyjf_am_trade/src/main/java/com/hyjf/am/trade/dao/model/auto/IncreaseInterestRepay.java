@@ -51,7 +51,7 @@ public class IncreaseInterestRepay implements Serializable {
 
     private BigDecimal repayInterestWait;
 
-    private String addip;
+    private String addIp;
 
     private Integer web;
 
@@ -253,12 +253,12 @@ public class IncreaseInterestRepay implements Serializable {
         this.repayInterestWait = repayInterestWait;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getWeb() {

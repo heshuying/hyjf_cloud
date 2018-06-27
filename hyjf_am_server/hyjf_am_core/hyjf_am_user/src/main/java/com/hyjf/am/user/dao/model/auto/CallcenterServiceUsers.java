@@ -12,7 +12,7 @@ public class CallcenterServiceUsers implements Serializable {
 
     private Date insdate;
 
-    private Date upddate;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -48,11 +48,11 @@ public class CallcenterServiceUsers implements Serializable {
         this.insdate = insdate;
     }
 
-    public Date getUpddate() {
-        return upddate;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpddate(Date upddate) {
-        this.upddate = upddate;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -180,7 +180,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
                                         accountList.setRemark("快捷充值");
                                         accountList.setCreateTime(nowTime);
                                         accountList.setOperator(String.valueOf(userId));
-                                        accountList.setIp(newAccountRechage.getAddip());
+                                        accountList.setIp(newAccountRechage.getAddIp());
                                         accountList.setWeb(0);
                                         accountList.setIsBank(1);// 是否是银行的交易记录
                                         accountList.setCheckStatus(1);// 对账状态0：未对账
@@ -285,9 +285,9 @@ public class BankRechargeServiceImpl implements BankRechargeService {
         cra.andIsBankEqualTo(1);// 充值平台:江西银行
         // 当前时间
         
-        cra.andAddTimeGreaterThanOrEqualTo(GetDate.getNowTime10() - 24*60*60);// 一天之前
+        cra.andCreateTimeGreaterThanOrEqualTo(GetDate.getTodayBeforeOrAfter(-1));// 一天之前
         // modify by liubin 江西银行充值掉单异常处理修正 start
-        cra.andAddTimeLessThanOrEqualTo(GetDate.getNowTime10() - 30*60);// 30分钟之前的充值订单TODO
+        cra.andCreateTimeLessThanOrEqualTo(GetDate.getSomeTimeBeforeOrAfterMin(new Date(), -30));// 30分钟之前的充值订单TODO
         // modify by liubin 江西银行充值掉单异常处理修正 end
         return this.accountRechargeMapper.selectByExample(example);
     }

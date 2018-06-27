@@ -1,9 +1,7 @@
 package com.hyjf.am.user.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
@@ -133,8 +131,6 @@ public interface UserService extends BaseService {
      */
     void updateFirstUtmReg(Map<String,Object> bean);
 
-	boolean updateUserInvestFlag(JSONObject para);
-
 	/**
 	 * 插入vip user
 	 * @param para
@@ -147,4 +143,18 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	Integer selectTenderCount(Integer userId);
+
+	/**
+	 *
+	 * @param request
+	 * @return
+	 */
+	List<CertificateAuthority> getCertificateAuthorityList(CertificateAuthorityRequest request);
+
+	/**
+	 * 借款主体CA认证记录表
+	 * @param request
+	 * @return
+	 */
+	List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
 }

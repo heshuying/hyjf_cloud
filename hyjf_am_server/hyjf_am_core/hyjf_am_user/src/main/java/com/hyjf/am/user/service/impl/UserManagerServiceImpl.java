@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -186,7 +184,7 @@ public class UserManagerServiceImpl implements UserManagerService {
         /******************************第三方平台编号****************************/
         Integer PLATFORM_ID_HJS = 2000000011;
         cra.andBindPlatformIdEqualTo(PLATFORM_ID_HJS);
-        cra.andDelFlgEqualTo(0);//未删除
+        cra.andDelFlagEqualTo(0);//未删除
         List<BindUser> listBindUser = bindUserMapper.selectByExample(example);
         if (null != listBindUser && listBindUser.size() > 0) {
             return listBindUser.get(0);
