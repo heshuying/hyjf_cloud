@@ -9,6 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.service.HjhAccedeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,5 +40,22 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
             return accedeList;
         }
         return null;
+    }
+    /**
+     * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+     * @param userId
+     * @return
+     */
+    @Override
+	public boolean canCancelAuth(int userId) {
+		HjhAccedeExample example = new HjhAccedeExample();
+		HjhAccedeExample.Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		criteria.andOrderStatusNotEqualTo(7);
+		List<HjhAccede> list = hjhAccedeMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(list)) {
+			return false;
+		}
+		return true;
     }
 }

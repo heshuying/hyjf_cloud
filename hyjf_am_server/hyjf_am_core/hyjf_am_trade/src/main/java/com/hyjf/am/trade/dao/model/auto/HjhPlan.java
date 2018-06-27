@@ -47,6 +47,8 @@ public class HjhPlan implements Serializable {
 
     private BigDecimal planRepayCapital;
 
+    private Byte minInvestCounts;
+
     private Integer delFlag;
 
     private Integer createUser;
@@ -225,6 +227,14 @@ public class HjhPlan implements Serializable {
 
     public void setPlanRepayCapital(BigDecimal planRepayCapital) {
         this.planRepayCapital = planRepayCapital;
+    }
+
+    public Byte getMinInvestCounts() {
+        return minInvestCounts;
+    }
+
+    public void setMinInvestCounts(Byte minInvestCounts) {
+        this.minInvestCounts = minInvestCounts;
     }
 
     public Integer getDelFlag() {
