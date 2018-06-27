@@ -4,15 +4,19 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
 import com.hyjf.am.trade.service.BorrowCreditService;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author PC-LIUSHOUYI
@@ -23,6 +27,10 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
 
     @Autowired
     BorrowCreditMapper borrowCreditMapper;
+
+    @Autowired
+    BorrowCreditCustomizeMapper borrowCreditCustomizeMapper;
+
 
     @Override
     public List<BorrowCredit> selectBorrowCreditList() {
@@ -39,4 +47,19 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         boolean result =  this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit) >0 ? true:false;
         return result?1:0;
     }
+
+    @Override
+    public BorrowCreditDetailVO getBorrowCreditDetail(String creditNid) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("creditNid", creditNid);
+        List<BorrowCreditDetailVO> creditDetailList = borrowCreditCustomizeMapper.getBorrowCreditDetail(params);
+        if (creditDetailList != null && creditDetailList.size() == 1) {
+            BorrowCreditDetailVO creditDetail = creditDetailList.get(0);
+            creditDetail.setCreditTimeInt(creditDetail.getCreditTimeInt() + 3 * 24 * 3600);
+            return creditDetail;
+        }
+        return null;
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowCarinfoMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowCarinfo;
 import com.hyjf.am.trade.dao.model.auto.BorrowCarinfoExample;
 import com.hyjf.am.trade.service.BorrowCarinfoService;
+import com.hyjf.am.vo.trade.WebCarinfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +23,8 @@ public class BorrowCarinfoServiceImpl implements BorrowCarinfoService {
         List<BorrowCarinfo> list = borrowCarinfoMapper.selectByExample(example);
         return list;
     }
+
+
+
+
 }

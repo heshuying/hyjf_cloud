@@ -51,4 +51,11 @@ public interface UserManagerCustomizeMapper {
      * @return
      */
     List<UserManagerUpdateCustomize> selectUserUpdateInfoByUserId(int userId);
+
+    /**
+     * 查询用户投资数量
+     * @param userId
+     * @return
+     */
+    Integer selectTenderCount(Integer userId);
 }

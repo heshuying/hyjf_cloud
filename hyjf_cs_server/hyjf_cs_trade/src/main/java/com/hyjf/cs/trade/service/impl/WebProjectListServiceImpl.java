@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -60,28 +61,37 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     private CouponConfigClient couponConfigClient;
 
     @Autowired
-    private AmBorrowTenderClient amBorrowTenderClient;
+    private BorrowTenderClient borrowTenderClient;
 
     @Autowired
-    private AmAccountClient amAccountClient;
+    private AccountClient accountClient;
 
     @Autowired
-    private AmBorrowUserClient amBorrowUserClient;
+    private BorrowUserClient borrowUserClient;
 
     @Autowired
-    private AmBorrowManinfoClient amBorrowManinfoClient;
+    private BorrowManinfoClient borrowManinfoClient;
 
     @Autowired
-    private AmBorrowHousesClient amBorrowHousesClient;
+    private BorrowHousesClient borrowHousesClient;
 
     @Autowired
-    private AmBorrowCarinfoClient amBorrowCarinfoClient;
+    private BorrowCarinfoClient borrowCarinfoClient;
 
     @Autowired
     private RepayPlanServiceImpl repayPlanService;
 
     @Autowired
     private AmBorrowRepayClient amBorrowRepayClient;
+
+    @Autowired
+    private AmBorrowCreditClient amBorrowCreditClient;
+
+    @Autowired
+    private BorrowClient borrowClient;
+
+    @Autowired
+    private AmProjectClient amProjectClient;
 
     /**
      * 获取Web端项目列表
@@ -254,7 +264,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 other.put("openFlag", "0");
             }
             // 用户是否投资项目
-            int count = amBorrowTenderClient.countUserInvest(userId, borrowNid); // TODO: 2018/6/25 //待实现
+            int count = borrowTenderClient.countUserInvest(userId, borrowNid);
             if (count > 0) {
                 other.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
             } else {
@@ -267,7 +277,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 other.put("setPwdFlag", "0");
             }
             //账户信息
-            AccountVO account = amAccountClient.getAccountByUserId(userId);  // TODO: 2018/6/25  待实现
+            AccountVO account = accountClient.getAccountByUserId(userId);
             String userBalance = account.getBankBalance().toString();
             other.put("userBalance", userBalance);
 
@@ -324,6 +334,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         borrow.setBorrowInterest(borrowInterest.toString());
 
+        // TODO: 2018/6/25 汇资产项目后期处理
         if (borrow.getType().equals("9")) {// 如果项目为汇资产项目
 //            // 添加相应的项目详情信息
 //            other.put("projectDeatil", borrow);
@@ -352,13 +363,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             other.put("borrowType", borrow.getComOrPer());
             //借款人企业信息
-            BorrowUserVO borrowUsers = amBorrowUserClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amBorrowManinfoClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = borrowManinfoClient.getBorrowManinfo(borrowNid);
             //房产抵押信息
-            List<BorrowHousesVO> borrowHousesList = amBorrowHousesClient.getBorrowHousesByNid(borrowNid);
+            List<BorrowHousesVO> borrowHousesList = borrowHousesClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
-            List<BorrowCarinfoVO> borrowCarinfoList = amBorrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
+            List<BorrowCarinfoVO> borrowCarinfoList = borrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
             //还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             other.put("repayPlanList", repayPlanList);
@@ -448,6 +459,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
 
     }
+
+
+
+
 
 
     /**
@@ -1088,6 +1103,230 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             webResult.setData(result);
         }
         webResult.setPage(page);
+        return webResult;
+    }
+
+    /**
+     * web端债转标的详情
+     * @author zhangyk
+     * @date 2018/6/26 9:57
+     */
+    @Override
+    public WebResult getCreditDetail(Map<String,Object> map, String userId) {
+        WebResult webResult = new WebResult();
+        String creditNid = (String) map.get("creditNid");
+        // 数据校验
+        CheckUtil.check(StringUtils.isNotBlank(creditNid),MsgEnum.STATUS_CE000001);
+
+        Map<String,Object> result = new HashMap<>();
+        // 获取债转的详细参数
+        BorrowCreditDetailVO creditDetail = amBorrowCreditClient.getCreditDetail(creditNid);
+        if (Validator.isNull(creditDetail)) {
+           throw new RuntimeException("债转详情不存在");
+        }
+        // 获取相应的标的详情
+        String borrowNid = creditDetail.getBorrowNid();
+        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        if (Validator.isNull(borrow)) {
+            throw new RuntimeException("标的详情不存在");
+        }
+        // 项目类型
+        int projectType = borrow.getProjectType();
+        // 企业标的用户标的区分
+        String comOrPer = StringUtils.isBlank(borrow.getCompanyOrPersonal()) ? "0" : borrow.getCompanyOrPersonal();
+        result.put("creditDetail", creditDetail);
+        ProjectCustomeDetailVO projectDetail = amProjectClient.selectProjectDetail(borrowNid);
+        result.put("projectDeatil", projectDetail);
+        if (borrow.getIsNew() == 0) {
+            // 如果项目为汇资产项目
+            if (projectType == 9) {  // TODO: 2018/6/26 汇资产暂不处理
+                // 4查询相应的汇资产的首页信息
+//                WebHzcProjectDetailCustomize borrowInfo = this.projectService.searchHzcProjectDetail(borrowNid);
+//                result.put("borrowInfo", borrowInfo);
+//                // 处置预案
+//                WebHzcDisposalPlanCustomize disposalPlan = this.projectService.searchDisposalPlan(borrowNid);
+//                result.put("disposalPlan", disposalPlan);
+            }
+            // 项目为非汇资产项目
+            else {
+                // 4查询非汇资产项目的项目信息
+                if (comOrPer.equals("1")) {
+                    // 查询相应的企业项目详情
+                    ProjectCompanyDetailVO borrowInfo = borrowUserClient.searchProjectCompanyDetail(borrowNid);
+                    result.put("borrowInfo", borrowInfo);
+                } else if (comOrPer.equals("2")) {
+                    // 查询相应的汇直投个人项目详情
+                    WebProjectPersonDetailVO borrowInfo = borrowUserClient.searchProjectPersonDetail(borrowNid);
+                    result.put("borrowInfo", borrowInfo);
+                }
+                // 风控信息
+                // TODO: 2018/6/26  待实现  WebRiskControlVO riskControl = this.projectService.selectRiskControl(borrowNid);
+//                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
+//                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
+//                // 添加风控信息
+//                result.put("riskControl", riskControl);
+                List<BorrowCarinfoVO> borrowCarinfoVOList = borrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
+                if (!CollectionUtils.isEmpty(borrowCarinfoVOList)){
+                    List<WebCarinfoVO> vehiclePledgeList = new ArrayList<>();
+                    WebCarinfoVO  temp ;
+                    for (BorrowCarinfoVO vo : borrowCarinfoVOList){
+                        temp = new WebCarinfoVO();
+                        temp.setVehicleBrand(vo.getBrand());
+                        temp.setEvaluationPrice(String.valueOf(vo.getToprice()));
+                        temp.setPlace(vo.getPlace());
+                        temp.setVehicleModel(vo.getModel());
+                        temp.setVehicleNumber(StringUtils.isBlank(vo.getNumber()) ? "" : vo.getNumber().substring(0,2) + "****");
+                        temp.setPrice(String.valueOf(vo.getPrice()));
+                        temp.setRegistration(vo.getRegistration());
+                        temp.setVin(StringUtils.isBlank(vo.getVin()) ? "" : vo.getVin().substring(0,2) + "*****");
+                        vehiclePledgeList.add(temp);
+                    }
+                    result.put("vehiclePledgeList", vehiclePledgeList);
+                }
+                // 添加相应的汽车抵押信息
+            }
+            // 获取图片信息
+            /*List<BorrowFileCustomBean> projectFileList = projectService.searchProjectFiles(borrowNid, CustomConstants.HOST);
+            result.put("borrowFiles", projectFileList);*/  // TODO: 2018/6/26 后期处理   zyk
+            // 还款计划
+            List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
+            result.put("repayPlanList", repayPlanList);
+        } else {
+            /**
+             * 借款类型 1、企业借款 2、借款人 3、汇资产
+             */
+            result.put("borrowType", comOrPer);
+            // 借款人企业信息
+            BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
+
+            //借款人信息
+            BorrowManinfoVO borrowManinfo = borrowManinfoClient.getBorrowManinfo(borrowNid);
+            //房产抵押信息
+            List<BorrowHousesVO> borrowHousesList = borrowHousesClient.getBorrowHousesByNid(borrowNid);
+            //车辆抵押信息
+            List<BorrowCarinfoVO> borrowCarinfoList = borrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
+            //还款计划
+            List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
+            result.put("repayPlanList", repayPlanList);
+            // 相关文件
+           /* List<BorrowFileCustomBean> files = this.projectService.searchProjectFiles(borrowNid, CustomConstants.HOST);
+            result.put("fileList", files);  // TODO: 2018/6/26  图片后期处理 */
+            // 还款信息
+            BorrowRepayVO borrowRepay = null;
+            List<BorrowRepayVO> list = amBorrowRepayClient.selectBorrowRepayList(borrowNid, null);
+            if (!CollectionUtils.isEmpty(list)) {
+                borrowRepay = list.get(0);
+            }
+
+            // 资产列表
+            JSONArray json = new JSONArray();
+            // 基础信息
+            String baseTableData = "";
+            // 资产信息
+            String assetsTableData = "";
+            // 项目介绍
+            String intrTableData = "";
+            // 信用状况
+            String credTableData = "";
+            // 审核信息
+            String reviewTableData = "";
+            //其他信息
+            String otherTableData = "";
+            // 借款类型
+            int borrowType = Integer.parseInt(comOrPer);
+            if (borrowType == 1 && borrowUsers != null) {
+                // 基础信息
+                baseTableData = JSONObject.toJSONString(packDetail(borrowUsers, 1, borrowType, projectDetail.getBorrowLevel()));
+                // 信用状况
+                credTableData = JSONObject.toJSONString(packDetail(borrowUsers, 4, borrowType, projectDetail.getBorrowLevel()));
+                // 审核信息
+                reviewTableData = JSONObject.toJSONString(packDetail(borrowUsers, 5, borrowType, projectDetail.getBorrowLevel()));
+                //其他信息
+                otherTableData =  JSONObject.toJSONString(packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel()));
+            } else {
+                if (borrowManinfo != null) {
+                    // 基础信息
+                    baseTableData = JSONObject.toJSONString(packDetail(borrowManinfo, 1, borrowType, projectDetail.getBorrowLevel()));
+                    // 信用状况
+                    credTableData = JSONObject.toJSONString(packDetail(borrowManinfo, 4, borrowType, projectDetail.getBorrowLevel()));
+                    // 审核信息
+                    reviewTableData = JSONObject.toJSONString(packDetail(borrowManinfo, 5, borrowType, projectDetail.getBorrowLevel()));
+                    //其他信息
+                    otherTableData =  JSONObject.toJSONString(packDetail(borrowManinfo, 6, borrowType, borrow.getBorrowLevel()));
+                }
+            }
+            // 资产信息
+            if (borrowHousesList != null && borrowHousesList.size() > 0) {
+                for (BorrowHousesVO borrowHouses : borrowHousesList) {
+                    json.add(packDetail(borrowHouses, 2, borrowType, projectDetail.getBorrowLevel()));
+                }
+            }
+            if (borrowCarinfoList != null && borrowCarinfoList.size() > 0) {
+                for (BorrowCarinfoVO borrowCarinfo : borrowCarinfoList) {
+                    json.add(packDetail(borrowCarinfo, 2, borrowType, projectDetail.getBorrowLevel()));
+                }
+            }
+            assetsTableData = json.toString();
+            // 项目介绍
+            intrTableData = JSONObject.toJSONString(packDetail(projectDetail, 3, borrowType, projectDetail.getBorrowLevel()));
+            // 基础信息
+            result.put("baseTableData", baseTableData);
+            // 资产信息
+            result.put("assetsTableData", assetsTableData);
+            // 项目介绍
+            result.put("intrTableData", intrTableData);
+            // 信用状况
+            result.put("credTableData", credTableData);
+            // 审核信息
+            result.put("reviewTableData", reviewTableData);
+            // 信批需求新增(放款后才显示)
+            if(borrow.getStatus()>=4 && borrowRepay != null){
+                //其他信息
+                result.put("otherTableData", otherTableData);
+                result.put("updateTime", getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime()));
+            }else{
+                //其他信息
+                result.put("otherTableData", JSONObject.toJSONString(new ArrayList<BorrowDetailBean>()));
+            }
+        }
+        // 剩余可承接金额
+        BigDecimal creditAssignCapital = new BigDecimal(creditDetail.getCreditAssignCapital());
+        if (creditAssignCapital.compareTo(new BigDecimal("100")) <= 0) {
+            result.put("isLast", "1");// 是否是最后一笔
+        } else {
+            result.put("isLast", "0");
+        }
+        // 登陆用户
+        UserVO userVO = amUserClient.findUserById(Integer.valueOf(userId));
+        try {
+            if (userVO != null) {
+                result.put("loginFlag", "1");// 判断是否登录
+                result.put("openFlag", userVO.getBankOpenAccount());// 判断是否开户
+                result.put("setPwdFlag",userVO.getIsSetPassword()); // 是否设置交易密码
+                result.put("isUserValid", userVO.getStatus());
+                //update by jijun 2018/04/09 合规接口改造一期
+                result.put("paymentAuthStatus", ""); // 缴费授权
+
+                // 获取用户信息
+                AccountVO account = accountClient.getAccountByUserId(Integer.valueOf(userId));
+                // 可用余额
+                result.put("balance", account.getBankBalance().toString());
+                // 风险测评改造 mod by liuyang 20180111 start
+                // 风险测评标识
+                // JSONObject jsonObject = CommonSoaUtils.getUserEvalationResultByUserId(userId + "");
+                result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
+                // 风险测评改造 mod by liuyang 20180111 end
+            } else {
+                result.put("loginFlag", "0");// 判断是否登录
+                result.put("openFlag", "0");
+                result.put("loginFlag", "0");
+                result.put("setPwdFlag", "0");
+                result.put("isUserValid", "0");
+                result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
+            }
+        } catch (Exception e) {
+        }
+        webResult.setData(result);
         return webResult;
     }
 

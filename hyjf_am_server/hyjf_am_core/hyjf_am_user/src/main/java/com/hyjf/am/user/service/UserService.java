@@ -140,4 +140,11 @@ public interface UserService extends BaseService {
 	 * @param para
 	 */
 	boolean insertVipUserTender(JSONObject para);
+
+	/**
+	 * 查询用户投资次数
+	 * @param userId
+	 * @return
+	 */
+	Integer selectTenderCount(Integer userId);
 }

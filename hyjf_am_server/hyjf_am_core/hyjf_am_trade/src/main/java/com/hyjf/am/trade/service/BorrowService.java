@@ -4,8 +4,12 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 
 import java.util.List;
 
@@ -61,7 +65,35 @@ public interface BorrowService extends BaseService{
     BorrowInfo getBorrowInfoByNid(String borrowNid);
 
     /**
+     * 投资之前插入tmp表
+     * @param tenderRequest
+     * @return
+     */
+    int insertBeforeTender(TenderRequest tenderRequest);
+
+    /**
      * 獲取預期的還款標的
      */
 	List<Borrow> selectOverdueBorrowList();
+
+    /**
+     * 获取项目详情
+     * @author zhangyk
+     * @date 2018/6/26 14:02
+     */
+    ProjectCustomeDetailVO getProjectDetail(String borrowNid);
+
+    /**
+     * 获取标的公司信息
+     * @author zhangyk
+     * @date 2018/6/26 15:30
+     */
+    ProjectCompanyDetailVO getProjectCompany(String borrowNid);
+
+    /**
+     * 获取个人项目详情
+     * @author zhangyk
+     * @date 2018/6/26 16:10
+     */
+    WebProjectPersonDetailVO getProjectPerson(String borrowNid);
 }

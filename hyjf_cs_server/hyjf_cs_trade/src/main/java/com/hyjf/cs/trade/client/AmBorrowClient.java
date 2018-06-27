@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -50,4 +51,10 @@ public interface AmBorrowClient {
      * @return
      */
 	public BorrowInfoVO getBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 投资之前插入tmp表
+     * @param request
+     */
+    boolean updateBeforeChinaPnR(TenderRequest request);
 }

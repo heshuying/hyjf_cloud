@@ -84,6 +84,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
+        if(request.getPlatform()==null){
+            // 投资平台不能为空
+            throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
+        }
         // 查询选择的优惠券
         CouponUserVO cuc = null;
         if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
@@ -94,6 +98,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
         HjhPlanVO plan = amBorrowClient.getPlanByNid(request.getBorrowNid());
+        if (plan == null) {
+            throw new ReturnMessageException(MsgEnum.FIND_PLAN_ERROR);
+        }
         if (plan.getPlanInvestStatus() == 2) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_CLOSE);
         }
@@ -354,14 +361,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // TODO: 2018/6/22  crm投资推送
            /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
                     RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
-            // 更新用户不是新手了
-            UserVO user = amUserClient.findUserById(userId);
+            // 不用更新用户是不是新手  通过查询获得
+            /*UserVO user = amUserClient.findUserById(userId);
             if (user != null) {
                 if (user.getInvestflag() == 0) {
                     user.setInvestflag(1);
                     boolean updateUserFlag = amUserClient.updateByPrimaryKeySelective(user);
                 }
-            }
+            }*/
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
         }
@@ -504,7 +511,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         int compareResult = accountBigDecimal.compareTo(BigDecimal.ZERO);
         if (compareResult < 0) {
             // 加入金额不能为负数
-            throw new ReturnMessageException(MsgEnum.ERR_FMT_MONEY);
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
         }
         if ((compareResult == 0 && cuc == null)
                 || (compareResult == 0 && cuc != null && cuc.getCouponType() == 2)) {
@@ -612,6 +619,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 判断用户是否禁用
         if (user.getStatus() == 1) {// 0启用，1禁用
             throw new ReturnMessageException(MsgEnum.ERR_USER_INVALID);
+        }
+        // 用户未开户
+        if (user.getBankOpenAccount() == 0) {
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        }
+        // 交易密码状态检查
+        if (user.getIsSetPassword() == 0) {
+            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
         // 检查用户授权状态
         HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthVO(user.getUserId());

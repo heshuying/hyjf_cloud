@@ -4,8 +4,10 @@
 package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
+import com.hyjf.am.config.service.MessagePushTagServcie;
 import com.hyjf.am.config.service.MessagePushTemplateServcie;
 import com.hyjf.am.response.config.MessagePushTemplateResponse;
+import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -33,6 +35,9 @@ public class MessagePushTemplateController {
 
 	@Autowired
 	private MessagePushTemplateServcie templateServcie;
+
+	@Autowired
+	private MessagePushTagServcie messagePushTagServcie;
 
 	/**
 	 * 根据tplCode查询消息推送模板
@@ -66,4 +71,28 @@ public class MessagePushTemplateController {
 		}
 		return response;
 	}
+
+	/**
+	 * 根据条件查询消息推送模板
+	 *
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/findMsgPushTemplate")
+	public MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request) {
+		logger.info("根据条件查询消息推送模板开始...");
+		MessagePushTemplateResponse response = new MessagePushTemplateResponse();
+		List<MessagePushTemplate> list = templateServcie.findMsgPushTemplate(request);
+
+		if (!CollectionUtils.isEmpty(list)) {
+			response.setResultList(CommonUtils.convertBeanList(list, MessagePushTemplateVO.class));
+		}
+		return response;
+	}
+
+	@RequestMapping("/insertMsgPushTemplate")
+	public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
+		templateServcie.insertMsgPushTemplate(request);
+	}
+	
 }

@@ -49,6 +49,8 @@ public class CreditListRequest extends BaseVO {
 
     private Integer limitEnd;
 
+    private  String creditNid;
+
     public Integer getLimitStart() {
         return limitStart;
     }
@@ -127,5 +129,13 @@ public class CreditListRequest extends BaseVO {
 
     public void setInProgressSort(String inProgressSort) {
         this.inProgressSort = inProgressSort;
+    }
+
+    public String getCreditNid() {
+        return creditNid;
+    }
+
+    public void setCreditNid(String creditNid) {
+        this.creditNid = creditNid;
     }
 }

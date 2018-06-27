@@ -9,6 +9,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -25,6 +26,9 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
 
     @Autowired
     RechargeClient rechargeClient;
+
+    @Autowired
+    AmUserClient amUserClient;
 
     /**
      * @param token
@@ -109,4 +113,23 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             }*/
         }
     }
+
+    /**
+     * 检查用户是否是新手 true 是  false 不是
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean checkIsNewUserCanInvest(Integer userId) {
+        // 新的判断是否为新用户方法
+        int total = amUserClient.countNewUserTotal(userId);
+        if (total == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }

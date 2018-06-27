@@ -1,7 +1,10 @@
 package com.hyjf.cs.message.mongo;
 
 import com.hyjf.cs.message.bean.SmsLog;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -12,5 +15,23 @@ public class SmsLogDao extends BaseMongoDao<SmsLog> {
 	@Override
 	protected Class<SmsLog> getEntityClass() {
 		return SmsLog.class;
+	}
+
+	/**
+	 * 查询所有短信发送记录
+	 * 
+	 * @return
+	 */
+	public List<SmsLog> findAll() {
+		return mongoTemplate.findAll(SmsLog.class);
+	}
+
+	/**
+	 * 根据条件查询所有短信发送记录
+	 *
+	 * @return
+	 */
+	public List<SmsLog> find(Query query) {
+		return mongoTemplate.find(query, SmsLog.class);
 	}
 }

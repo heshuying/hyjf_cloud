@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
@@ -61,6 +62,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Autowired
 	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
+
+    @Autowired
+    UtmRegCustomizeMapper utmRegCustomizeMapper;
+
+    @Autowired
+	VipUserTenderMapper vipUserTenderMapper;
+
+	@Autowired
+	UserManagerCustomizeMapper userManagerCustomizeMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -1077,5 +1087,16 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 
 		return result;
+	}
+
+	/**
+	 * 查询用户投资次数
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public Integer selectTenderCount(Integer userId) {
+		return userManagerCustomizeMapper.selectTenderCount(userId);
 	}
 }

@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.common.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * 组合层共用ServiceImpl基类
  * @author liubin

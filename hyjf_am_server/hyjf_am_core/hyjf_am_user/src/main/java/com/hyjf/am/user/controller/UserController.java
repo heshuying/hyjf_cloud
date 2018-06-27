@@ -531,4 +531,14 @@ public class UserController {
 		return userService.insertVipUserTender(para);
 	}
 
+	/**
+	 * 查询用户投次数
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/countNewUserTotal/{userId}")
+	public Integer countNewUserTotal(@PathVariable Integer userId) {
+		logger.info("countNewUserTotal...userId is :{}", userId);
+		return userService.selectTenderCount(userId);
+	}
 }
