@@ -1,30 +1,30 @@
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.BorrowUsersMapper;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowUsers;
-import com.hyjf.am.trade.dao.model.auto.BorrowUsersExample;
-import com.hyjf.am.trade.service.BorrowUserService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowUserMapper;
+import com.hyjf.am.trade.dao.model.auto.BorrowUser;
+import com.hyjf.am.trade.dao.model.auto.BorrowUserExample;
+import com.hyjf.am.trade.service.BorrowUserService;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class BorrowUserServiceImpl implements BorrowUserService {
 
+	@Autowired
+	private BorrowUserMapper borrowUserMapper;
 
-    @Autowired
-    private BorrowUsersMapper borrowUsersMapper;
-
-
-    @Override
-    public BorrowUsers getBorrowUserByNid(String borrowNid) {
-        BorrowUsersExample example = new BorrowUsersExample();
-        BorrowUsersExample.Criteria cri = example.createCriteria();
-        cri.andBorrowNidEqualTo(borrowNid);
-        List<BorrowUsers> list = borrowUsersMapper.selectByExample(example);
-        return list.get(0);
-    }
+	@Override
+	public BorrowUser getBorrowUserByNid(String borrowNid) {
+		BorrowUserExample example = new BorrowUserExample();
+		BorrowUserExample.Criteria cri = example.createCriteria();
+		cri.andBorrowNidEqualTo(borrowNid);
+		List<BorrowUser> list = borrowUserMapper.selectByExample(example);
+		if (CollectionUtils.isEmpty(list))
+			return null;
+		return list.get(0);
+	}
 }

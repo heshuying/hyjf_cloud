@@ -669,7 +669,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 						creditRepay.setAssignRepayYesTime(0);// 最终实际还款时间
 						creditRepay.setAssignRepayPeriod(1);// 还款期数
 						creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());// 认购日期
-						creditRepay.setAddTime(GetDate.getDate(nowTime));// 添加时间
+						creditRepay.setCreateTime(GetDate.getDate(nowTime));// 添加时间
 						creditRepay.setAddip(creditTender.getAddip());// ip
 						creditRepay.setClient(0);// 客户端
 						creditRepay.setRecoverPeriod(1);// 原标还款期数
@@ -765,7 +765,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 										creditRepay.setAssignRepayYesTime(0);// 最终实际还款时间
 										creditRepay.setAssignRepayPeriod(i);// 还款期数
 										creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());// 认购日期
-										creditRepay.setAddTime(GetDate.getDate(nowTime));// 添加时间
+										creditRepay.setCreateTime(GetDate.getDate(nowTime));// 添加时间
 										creditRepay.setAddip(creditTender.getAddip());// ip
 										creditRepay.setClient(0);// 客户端
 										creditRepay.setManageFee(BigDecimal.ZERO);// 管理费

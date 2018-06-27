@@ -520,12 +520,6 @@ public class UserController {
         return 1;
     }
 
-    @PostMapping("/updateUserInvestFlag")
-	public boolean updateUserInvestFlag(@RequestBody JSONObject para){
-		return userService.updateUserInvestFlag(para);
-	}
-
-
 	@PostMapping("/insertVipUserTender")
 	public boolean insertVipUserTender(@RequestBody JSONObject para){
 		return userService.insertVipUserTender(para);

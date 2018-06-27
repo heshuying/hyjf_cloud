@@ -58,7 +58,6 @@ public class UserConsumer extends Consumer {
 				User user = userService.findUserByUserId(userId);
 				if (user == null)
 					throw new RuntimeException("找不到用户，userId is : " + userId);
-				user.setInvestflag(1);
 				userService.updateUserById(user);
 			} catch (Exception e) {
 				logger.error("更新user投资标志失败....", e);

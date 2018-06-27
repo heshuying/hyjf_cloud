@@ -369,7 +369,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		user.setMobile(mobile);
 		user.setRechargeSms(0);
 		user.setWithdrawSms(0);
-		user.setInvestflag(0);
 		user.setInvestSms(0);
 		user.setRecieveSms(0);
 		user.setUserType(0);
@@ -1027,36 +1026,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public void updateFirstUtmReg(Map<String, Object> bean) {
         utmRegCustomizeMapper.updateFirstUtmReg(bean);
     }
-
-	/**
-	 * 更新用户投资标记
-	 * @param para
-	 */
-	@Override
-	public boolean updateUserInvestFlag(JSONObject para) {
-		boolean result = true;
-		User users= (User) para.get("user");
-		Integer userId= (Integer) para.get("userId");
-		int projectType= (int) para.get("projectType");
-
-		if (users.getInvestflag() == 0) {
-			users.setInvestflag(1);
-			UserExample userExample = new UserExample();
-			userExample.createCriteria().andUserIdEqualTo(userId).andInvestflagEqualTo(0);
-			boolean userFlag = this.userMapper.updateByExampleSelective(users, userExample) > 0 ? true : false;
-			if (!userFlag) {
-				logger.info("更新新手标识失败，用户userId：" + userId);
-				result = false;
-			}
-		}else{
-			if (projectType == 4) {
-				// 回滚事务
-				logger.info("用户已不是新手投资，用户userId：" + userId);
-				result = false;
-			}
-		}
-		return result;
-	}
 
 	/**
 	 *  插入vip user
