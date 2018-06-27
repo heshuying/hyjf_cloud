@@ -108,33 +108,33 @@
 			<!--AND cr.recover_status = 0-->
 	<!--</select>-->
 	<!---->
-	<!--<resultMap id="couponRecoverAll" type="com.hyjf.mybatis.model.customize.coupon.CouponTenderCustomize">-->
-		<!--<result column="order_id" property="orderId" jdbcType="VARCHAR" />-->
-		<!--<result column="user_id" property="userId" jdbcType="INTEGER" />-->
-		<!--<result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />-->
-		<!--<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />-->
-		<!--<result column="borrow_nid" property="borrowNid" />-->
-	<!--</resultMap>-->
-		<!---->
-	<!--<select id="selectCouponRecoverAll" resultMap="couponRecoverAll" parameterType="java.util.Map">-->
-			<!--SELECT-->
-				<!--ct.order_id,-->
-				<!--bt.user_id,-->
-				<!--ct.coupon_grant_id,-->
-				<!--cu.coupon_user_code,-->
-				<!--bt.borrow_nid-->
-			<!--FROM-->
-				<!--ht_borrow_tender_cpn bt-->
-			<!--INNER JOIN ht_coupon_tender ct ON bt.nid = ct.order_id-->
-			<!--INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id-->
-			<!--INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code-->
-			<!--WHERE-->
-				<!--bt.borrow_nid = #{borrowNid}-->
-				<!--<if test="repayTimeConfig != null">-->
-				<!--AND cc.repay_time_config = #{repayTimeConfig}-->
-				<!--</if>-->
-			<!--AND ct.del_flg = 0-->
-	<!--</select>-->
+	<resultMap id="couponRecoverAll" type="com.hyjf.am.trade.dao.model.customize.trade.CouponTenderCustomize">
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" />
+	</resultMap>
+
+	<select id="selectCouponRecoverAll" resultMap="couponRecoverAll" parameterType="java.util.Map">
+			SELECT
+				ct.order_id,
+				bt.user_id,
+				ct.coupon_grant_id,
+				cu.coupon_user_code,
+				bt.borrow_nid
+			FROM
+				ht_borrow_tender_cpn bt
+			INNER JOIN ht_coupon_tender ct ON bt.nid = ct.order_id
+			INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+			INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+			WHERE
+				bt.borrow_nid = #{borrowNid}
+				<if test="repayTimeConfig != null">
+				AND cc.repay_time_config = #{repayTimeConfig}
+				</if>
+			AND ct.del_flg = 0
+	</select>
 	<!---->
 	<!--<select id="selectCouponRecoverHjh" resultMap="couponRecoverAll" parameterType="java.util.Map">-->
 			<!--SELECT-->

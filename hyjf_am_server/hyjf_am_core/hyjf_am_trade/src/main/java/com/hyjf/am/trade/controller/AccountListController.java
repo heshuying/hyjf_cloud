@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.AccountListResponse;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -57,6 +58,18 @@ public class AccountListController {
         if (accountList != null) {
             AccountListVO accountListVO = new AccountListVO();
             BeanUtils.copyProperties(accountList, accountListVO);
+            response.setResult(accountListVO);
+        }
+        return response;
+    }
+
+    @GetMapping("/selectAccountListByNidCoupon/{orderId}")
+    public AccountListResponse selectAccountListByNidCoupon(@PathVariable String orderId) {
+        AccountListResponse response = new AccountListResponse();
+        AccountList accountList = accountListService.countAccountListByOrderId(orderId);
+        if (accountList != null) {
+            AccountListVO accountListVO = new AccountListVO();
+            BeanUtils.copyProperties(accountList,accountListVO);
             response.setResult(accountListVO);
         }
         return response;
