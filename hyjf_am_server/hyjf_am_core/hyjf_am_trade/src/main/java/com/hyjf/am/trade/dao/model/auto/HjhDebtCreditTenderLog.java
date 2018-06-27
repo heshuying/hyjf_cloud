@@ -71,6 +71,8 @@ public class HjhDebtCreditTenderLog implements Serializable {
 
     private Integer assignRepayPeriod;
 
+    private BigDecimal assignServiceApr;
+
     private BigDecimal assignServiceFee;
 
     private Integer assignType;
@@ -355,6 +357,14 @@ public class HjhDebtCreditTenderLog implements Serializable {
 
     public void setAssignRepayPeriod(Integer assignRepayPeriod) {
         this.assignRepayPeriod = assignRepayPeriod;
+    }
+
+    public BigDecimal getAssignServiceApr() {
+        return assignServiceApr;
+    }
+
+    public void setAssignServiceApr(BigDecimal assignServiceApr) {
+        this.assignServiceApr = assignServiceApr;
     }
 
     public BigDecimal getAssignServiceFee() {
