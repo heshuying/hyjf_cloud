@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.AssetManageResponse;
+import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
+import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
@@ -67,7 +69,11 @@ public class AssetManageClientImpl implements AssetManageClient {
 
     @Override
     public List<TenderAgreementVO> selectTenderAgreementByNid(String nid) {
-        // TODO 待实现
+        String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByNid/"+nid;
+        TenderAgreementResponse response = restTemplate.getForEntity(url,TenderAgreementResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
         return null;
     }
 

@@ -69,7 +69,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             request.setLimitEnd( page.getLimit());
             // 获取用户当前持有债权列表
             List<CurrentHoldObligatoryRightListCustomizeVO> recordList = assetManageClient.selectCurrentHoldObligatoryRightList(request);
-            // TODO  法大大协议信息
+            //法大大协议信息
             if(recordList!=null && recordList.size()>0){
                 for (CurrentHoldObligatoryRightListCustomizeVO currentHoldObligatoryRightListCustomize : recordList) {
                     String nid = currentHoldObligatoryRightListCustomize.getNid();
