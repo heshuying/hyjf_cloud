@@ -1,5 +1,4 @@
-spring:
-  # Redis
+spring:  # Redis
   redis:
     #数据库索引
     database: 0
@@ -25,4 +24,15 @@ spring:
 # 没有密码？？ namesrvAddr: ${rocketMQ.namesrvAddr}
 rocketMQ:
   namesrvAddr: 123.56.216.212:5555
-
+  
+# Redis
+redis:
+  ip: 123.56.216.212
+  port: 6666
+  pool:
+    maxActive:  1024
+    maxIdle: 200
+    maxWait: 10000
+    testOnBorrow: true
+    testOnReturn: true
+    password: RH06863b3e6
