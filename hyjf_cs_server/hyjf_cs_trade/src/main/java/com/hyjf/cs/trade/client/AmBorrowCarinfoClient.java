@@ -1,10 +1,10 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
+import com.hyjf.am.vo.trade.WebCarinfoVO;
 
 import java.util.List;
 
 public interface AmBorrowCarinfoClient {
 
-    List<BorrowCarinfoVO> getBorrowCarinfoByNid(String borrowNid);
+    List<WebCarinfoVO> getBorrwCarinfo(String borrowNid);
 }

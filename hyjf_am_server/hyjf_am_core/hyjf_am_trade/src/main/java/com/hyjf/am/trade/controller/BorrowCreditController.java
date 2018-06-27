@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
 import com.hyjf.am.response.trade.BorrowCreditResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.service.BorrowCreditService;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +57,16 @@ public class BorrowCreditController {
     public Integer updateCreditCredit(@RequestBody @Valid BorrowCreditVO borrowCreditVO) {
         return this.borrowCreditService.updateBorrowCredit(borrowCreditVO);
     }
+
+
+
+    @RequestMapping("/borrowCreditDetail/{creditNid}")
+    public BorrowCreditDetailResponse updateCreditCredit(@RequestBody @Valid String creditNid) {
+        BorrowCreditDetailResponse response = new BorrowCreditDetailResponse();
+        BorrowCreditDetailVO detailVO = borrowCreditService.getBorrowCreditDetail(creditNid);
+        response.setResult(detailVO);
+        return response;
+    }
+
 
 }

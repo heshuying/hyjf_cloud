@@ -3,10 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.BorrowConfigResponse;
-import com.hyjf.am.response.trade.BorrowFinmanNewChargeResponse;
-import com.hyjf.am.response.trade.BorrowInfoResponse;
-import com.hyjf.am.response.trade.BorrowResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -15,6 +12,9 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.trade.service.UserService;
+import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
@@ -186,6 +186,47 @@ public class BorrowController {
 		if (Validator.isNotNull(borrowInfo)){
 			response.setResult(CommonUtils.convertBean(borrowInfo,BorrowInfoVO.class));
 		}
+		return response;
+	}
+
+
+	/**
+	 * 项目详情
+	 * @author zhangyk
+	 * @date 2018/6/26 14:10
+	 */
+	@GetMapping("/getProjectDetail/{borrowNid}")
+	public ProjectDetailResponse getProjectDetail(@PathVariable String borrowNid){
+		ProjectDetailResponse response = new ProjectDetailResponse();
+		ProjectCustomeDetailVO vo = borrowService.getProjectDetail(borrowNid);
+		response.setResult(vo);
+		return response;
+	}
+
+
+	/**
+	 * 公司信息
+	 * @author zhangyk
+	 * @date 2018/6/26 15:26
+	 */
+	@GetMapping("/getProjectCompany/{borrowNid}")
+	public ProjectCompanyResponse getProjectCompany(@PathVariable String borrowNid){
+		ProjectCompanyResponse response = new ProjectCompanyResponse();
+		ProjectCompanyDetailVO vo = borrowService.getProjectCompany(borrowNid);
+		response.setResult(vo);
+		return response;
+	}
+
+	/**
+	 * 个人项目信息
+	 * @author zhangyk
+	 * @date 2018/6/26 15:26
+	 */
+	@GetMapping("/getProjectPserson/{borrowNid}")
+	public ProjectPersonDetailResponse getProjectPserson(@PathVariable String borrowNid){
+		ProjectPersonDetailResponse response = new ProjectPersonDetailResponse();
+		WebProjectPersonDetailVO vo = borrowService.getProjectPerson(borrowNid);
+		response.setResult(vo);
 		return response;
 	}
 

@@ -3,13 +3,13 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowManinfoResponse;
 import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
-import com.hyjf.cs.trade.client.AmBorrowManinfoClient;
+import com.hyjf.cs.trade.client.BorrowManinfoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class AmBorrowManinfoClientImpl implements AmBorrowManinfoClient {
+public class BorrowManinfoClientImpl implements BorrowManinfoClient {
 
 
     @Autowired
