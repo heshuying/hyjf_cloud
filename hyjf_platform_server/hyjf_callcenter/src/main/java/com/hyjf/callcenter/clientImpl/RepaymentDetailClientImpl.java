@@ -3,19 +3,20 @@
  */
 package com.hyjf.callcenter.clientImpl;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.callcenter.CallCenterHtjRepaymentResponse;
 import com.hyjf.am.response.callcenter.CallCenterHztRepaymentResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
 import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
 import com.hyjf.callcenter.client.RepaymentDetailClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 /**
  * @author wangjun
@@ -24,7 +25,8 @@ import java.util.List;
 @Service
 public class RepaymentDetailClientImpl implements RepaymentDetailClient {
     private static final Logger logger = LoggerFactory.getLogger(RepaymentDetailClientImpl.class);
-    private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
     @Override
     public List<CallCenterHztRepaymentDetailVO> getHztRepaymentDetailList(CallCenterBaseRequest callCenterBaseRequest) {
         CallCenterHztRepaymentResponse callCenterHztRepaymentResponse = restTemplate

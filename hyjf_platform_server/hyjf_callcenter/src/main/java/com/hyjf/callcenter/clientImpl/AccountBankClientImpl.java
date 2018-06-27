@@ -3,18 +3,18 @@
  */
 package com.hyjf.callcenter.clientImpl;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.client.AccountBankClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author wangjun
@@ -23,7 +23,8 @@ import java.util.List;
 @Service
 public class AccountBankClientImpl implements AccountBankClient {
     private static final Logger logger = LoggerFactory.getLogger(AccountBankClientImpl.class);
-    private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
     @Override
     public List<BankCardVO> getTiedCardOfAccountBank(UserVO user) {
         BankCardResponse bankCardResponse = restTemplate
