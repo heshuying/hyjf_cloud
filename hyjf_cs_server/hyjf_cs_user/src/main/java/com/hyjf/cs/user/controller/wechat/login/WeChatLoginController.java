@@ -11,7 +11,7 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.WechatResult;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -47,13 +47,13 @@ public class WeChatLoginController extends BaseUserController {
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public WechatResult<WebViewUserVO> login(HttpServletRequest request, @RequestBody LoginRequestVO user) {
+    public WeChatResult<WebViewUserVO> login(HttpServletRequest request, @RequestBody LoginRequestVO user) {
         logger.info("login start, loginUserName is :{}", user.getUsername());
         // 现只支持两个参数  1微信  2风车理财
         if (!"1".equals(user.getEnv()) && !"2".equals(user.getEnv())) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
-        WechatResult<WebViewUserVO> result = new WechatResult<WebViewUserVO>();
+        WeChatResult<WebViewUserVO> result = new WeChatResult<WebViewUserVO>();
         // weChat 只支持手机号登录
         if (!CommonUtils.isMobile(user.getUsername())) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
@@ -79,8 +79,8 @@ public class WeChatLoginController extends BaseUserController {
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")
-    public WechatResult<String> loginout(@RequestHeader(value = "token") String token){
-        WechatResult<String> result = new WechatResult<>();
+    public WeChatResult<String> loginout(@RequestHeader(value = "token") String token){
+        WeChatResult<String> result = new WeChatResult<>();
         // 退出到首页
         result.setData("index");
         try {

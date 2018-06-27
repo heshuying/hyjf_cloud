@@ -35,14 +35,13 @@
     <result column="credit_repay_last_time" property="creditRepayLastTime" jdbcType="INTEGER" />
     <result column="credit_repay_next_time" property="creditRepayNextTime" jdbcType="INTEGER" />
     <result column="credit_repay_yes_time" property="creditRepayYesTime" jdbcType="INTEGER" />
-    <result column="create_date" property="createDate" jdbcType="INTEGER" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
     <result column="end_time" property="endTime" jdbcType="INTEGER" />
     <result column="assign_time" property="assignTime" jdbcType="INTEGER" />
     <result column="assign_num" property="assignNum" jdbcType="INTEGER" />
     <result column="recover_period" property="recoverPeriod" jdbcType="INTEGER" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -109,8 +108,8 @@
     credit_discount, credit_income, credit_fee, credit_price, credit_capital_assigned, 
     credit_interest_assigned, credit_interest_advance_assigned, credit_repay_account, 
     credit_repay_capital, credit_repay_interest, credit_repay_end_time, credit_repay_last_time, 
-    credit_repay_next_time, credit_repay_yes_time, create_date, add_time, end_time, assign_time, 
-    assign_num, recover_period, client, repay_status
+    credit_repay_next_time, credit_repay_yes_time, end_time, assign_time, assign_num, 
+    recover_period, client, repay_status, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowCreditExample" >
     select
@@ -161,9 +160,9 @@
       credit_repay_capital, credit_repay_interest, 
       credit_repay_end_time, credit_repay_last_time, 
       credit_repay_next_time, credit_repay_yes_time, 
-      create_date, add_time, end_time, 
-      assign_time, assign_num, recover_period, 
-      client, repay_status)
+      end_time, assign_time, assign_num, 
+      recover_period, client, repay_status, 
+      create_time)
     values (#{creditNid,jdbcType=INTEGER}, #{creditUserId,jdbcType=INTEGER}, #{creditUserName,jdbcType=VARCHAR}, 
       #{bidNid,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, #{borrowUserName,jdbcType=VARCHAR}, 
       #{bidApr,jdbcType=DECIMAL}, #{bidName,jdbcType=VARCHAR}, #{tenderNid,jdbcType=VARCHAR}, 
@@ -176,9 +175,9 @@
       #{creditRepayCapital,jdbcType=DECIMAL}, #{creditRepayInterest,jdbcType=DECIMAL}, 
       #{creditRepayEndTime,jdbcType=INTEGER}, #{creditRepayLastTime,jdbcType=INTEGER}, 
       #{creditRepayNextTime,jdbcType=INTEGER}, #{creditRepayYesTime,jdbcType=INTEGER}, 
-      #{createDate,jdbcType=INTEGER}, #{addTime,jdbcType=INTEGER}, #{endTime,jdbcType=INTEGER}, 
-      #{assignTime,jdbcType=INTEGER}, #{assignNum,jdbcType=INTEGER}, #{recoverPeriod,jdbcType=INTEGER}, 
-      #{client,jdbcType=TINYINT}, #{repayStatus,jdbcType=TINYINT})
+      #{endTime,jdbcType=INTEGER}, #{assignTime,jdbcType=INTEGER}, #{assignNum,jdbcType=INTEGER}, 
+      #{recoverPeriod,jdbcType=INTEGER}, #{client,jdbcType=TINYINT}, #{repayStatus,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowCredit" >
     <selectKey resultType="java.lang.Integer" keyProperty="creditId" order="AFTER" >
@@ -282,12 +281,6 @@
       <if test="creditRepayYesTime != null" >
         credit_repay_yes_time,
       </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
       <if test="endTime != null" >
         end_time,
       </if>
@@ -305,6 +298,9 @@
       </if>
       <if test="repayStatus != null" >
         repay_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -404,12 +400,6 @@
       <if test="creditRepayYesTime != null" >
         #{creditRepayYesTime,jdbcType=INTEGER},
       </if>
-      <if test="createDate != null" >
-        #{createDate,jdbcType=INTEGER},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
-      </if>
       <if test="endTime != null" >
         #{endTime,jdbcType=INTEGER},
       </if>
@@ -427,6 +417,9 @@
       </if>
       <if test="repayStatus != null" >
         #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -538,12 +531,6 @@
       <if test="record.creditRepayYesTime != null" >
         credit_repay_yes_time = #{record.creditRepayYesTime,jdbcType=INTEGER},
       </if>
-      <if test="record.createDate != null" >
-        create_date = #{record.createDate,jdbcType=INTEGER},
-      </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
-      </if>
       <if test="record.endTime != null" >
         end_time = #{record.endTime,jdbcType=INTEGER},
       </if>
@@ -561,6 +548,9 @@
       </if>
       <if test="record.repayStatus != null" >
         repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -602,14 +592,13 @@
       credit_repay_last_time = #{record.creditRepayLastTime,jdbcType=INTEGER},
       credit_repay_next_time = #{record.creditRepayNextTime,jdbcType=INTEGER},
       credit_repay_yes_time = #{record.creditRepayYesTime,jdbcType=INTEGER},
-      create_date = #{record.createDate,jdbcType=INTEGER},
-      add_time = #{record.addTime,jdbcType=INTEGER},
       end_time = #{record.endTime,jdbcType=INTEGER},
       assign_time = #{record.assignTime,jdbcType=INTEGER},
       assign_num = #{record.assignNum,jdbcType=INTEGER},
       recover_period = #{record.recoverPeriod,jdbcType=INTEGER},
       client = #{record.client,jdbcType=TINYINT},
-      repay_status = #{record.repayStatus,jdbcType=TINYINT}
+      repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -713,12 +702,6 @@
       <if test="creditRepayYesTime != null" >
         credit_repay_yes_time = #{creditRepayYesTime,jdbcType=INTEGER},
       </if>
-      <if test="createDate != null" >
-        create_date = #{createDate,jdbcType=INTEGER},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
-      </if>
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=INTEGER},
       </if>
@@ -736,6 +719,9 @@
       </if>
       <if test="repayStatus != null" >
         repay_status = #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where credit_id = #{creditId,jdbcType=INTEGER}
@@ -774,14 +760,13 @@
       credit_repay_last_time = #{creditRepayLastTime,jdbcType=INTEGER},
       credit_repay_next_time = #{creditRepayNextTime,jdbcType=INTEGER},
       credit_repay_yes_time = #{creditRepayYesTime,jdbcType=INTEGER},
-      create_date = #{createDate,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=INTEGER},
       end_time = #{endTime,jdbcType=INTEGER},
       assign_time = #{assignTime,jdbcType=INTEGER},
       assign_num = #{assignNum,jdbcType=INTEGER},
       recover_period = #{recoverPeriod,jdbcType=INTEGER},
       client = #{client,jdbcType=TINYINT},
-      repay_status = #{repayStatus,jdbcType=TINYINT}
+      repay_status = #{repayStatus,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where credit_id = #{creditId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -18,9 +18,11 @@
     <result column="await" property="await" jdbcType="DECIMAL" />
     <result column="repay" property="repay" jdbcType="DECIMAL" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="is_update" property="isUpdate" jdbcType="BIT" />
+    <result column="base_update" property="baseUpdate" jdbcType="BIT" />
+    <result column="interest" property="interest" jdbcType="DECIMAL" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
     <result column="is_bank" property="isBank" jdbcType="TINYINT" />
@@ -45,6 +47,7 @@
     <result column="check_date" property="checkDate" jdbcType="INTEGER" />
     <result column="check_balance" property="checkBalance" jdbcType="DECIMAL" />
     <result column="account_date" property="accountDate" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -106,11 +109,12 @@
   </sql>
   <sql id="Base_Column_List" >
     id, nid, accede_order_id, is_show, user_id, amount, `type`, trade, trade_code, total, 
-    balance, frost, plan_frost, await, repay, remark, create_time, `operator`, ip, web, 
-    plan_balance, is_bank, account_id, tx_date, tx_time, seq_no, bank_seq_no, check_status, 
-    trade_status, bank_total, bank_balance, bank_frost, bank_wait_repay, bank_wait_capital, 
-    bank_wait_interest, bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, 
-    bank_await_interest, check_date, check_balance, account_date
+    balance, frost, plan_frost, await, repay, remark, `operator`, ip, is_update, base_update, 
+    interest, web, plan_balance, is_bank, account_id, tx_date, tx_time, seq_no, bank_seq_no, 
+    check_status, trade_status, bank_total, bank_balance, bank_frost, bank_wait_repay, 
+    bank_wait_capital, bank_wait_interest, bank_interest_sum, bank_invest_sum, bank_await, 
+    bank_await_capital, bank_await_interest, check_date, check_balance, account_date, 
+    create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountListExample" >
     select
@@ -154,30 +158,32 @@
       trade, trade_code, total, 
       balance, frost, plan_frost, 
       await, repay, remark, 
-      create_time, `operator`, ip, 
-      web, plan_balance, is_bank, 
-      account_id, tx_date, tx_time, 
-      seq_no, bank_seq_no, check_status, 
-      trade_status, bank_total, bank_balance, 
-      bank_frost, bank_wait_repay, bank_wait_capital, 
-      bank_wait_interest, bank_interest_sum, bank_invest_sum, 
-      bank_await, bank_await_capital, bank_await_interest, 
-      check_date, check_balance, account_date
+      `operator`, ip, is_update, 
+      base_update, interest, web, 
+      plan_balance, is_bank, account_id, 
+      tx_date, tx_time, seq_no, 
+      bank_seq_no, check_status, trade_status, 
+      bank_total, bank_balance, bank_frost, 
+      bank_wait_repay, bank_wait_capital, bank_wait_interest, 
+      bank_interest_sum, bank_invest_sum, bank_await, 
+      bank_await_capital, bank_await_interest, check_date, 
+      check_balance, account_date, create_time
       )
     values (#{nid,jdbcType=VARCHAR}, #{accedeOrderId,jdbcType=VARCHAR}, #{isShow,jdbcType=TINYINT}, 
       #{userId,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, #{type,jdbcType=TINYINT}, 
       #{trade,jdbcType=VARCHAR}, #{tradeCode,jdbcType=VARCHAR}, #{total,jdbcType=DECIMAL}, 
       #{balance,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, 
       #{await,jdbcType=DECIMAL}, #{repay,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
-      #{web,jdbcType=TINYINT}, #{planBalance,jdbcType=DECIMAL}, #{isBank,jdbcType=TINYINT}, 
-      #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
-      #{seqNo,jdbcType=VARCHAR}, #{bankSeqNo,jdbcType=VARCHAR}, #{checkStatus,jdbcType=TINYINT}, 
-      #{tradeStatus,jdbcType=TINYINT}, #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, 
-      #{bankFrost,jdbcType=DECIMAL}, #{bankWaitRepay,jdbcType=DECIMAL}, #{bankWaitCapital,jdbcType=DECIMAL}, 
-      #{bankWaitInterest,jdbcType=DECIMAL}, #{bankInterestSum,jdbcType=DECIMAL}, #{bankInvestSum,jdbcType=DECIMAL}, 
-      #{bankAwait,jdbcType=DECIMAL}, #{bankAwaitCapital,jdbcType=DECIMAL}, #{bankAwaitInterest,jdbcType=DECIMAL}, 
-      #{checkDate,jdbcType=INTEGER}, #{checkBalance,jdbcType=DECIMAL}, #{accountDate,jdbcType=INTEGER}
+      #{operator,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{isUpdate,jdbcType=BIT}, 
+      #{baseUpdate,jdbcType=BIT}, #{interest,jdbcType=DECIMAL}, #{web,jdbcType=TINYINT}, 
+      #{planBalance,jdbcType=DECIMAL}, #{isBank,jdbcType=TINYINT}, #{accountId,jdbcType=VARCHAR}, 
+      #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=VARCHAR}, 
+      #{bankSeqNo,jdbcType=VARCHAR}, #{checkStatus,jdbcType=TINYINT}, #{tradeStatus,jdbcType=TINYINT}, 
+      #{bankTotal,jdbcType=DECIMAL}, #{bankBalance,jdbcType=DECIMAL}, #{bankFrost,jdbcType=DECIMAL}, 
+      #{bankWaitRepay,jdbcType=DECIMAL}, #{bankWaitCapital,jdbcType=DECIMAL}, #{bankWaitInterest,jdbcType=DECIMAL}, 
+      #{bankInterestSum,jdbcType=DECIMAL}, #{bankInvestSum,jdbcType=DECIMAL}, #{bankAwait,jdbcType=DECIMAL}, 
+      #{bankAwaitCapital,jdbcType=DECIMAL}, #{bankAwaitInterest,jdbcType=DECIMAL}, #{checkDate,jdbcType=INTEGER}, 
+      #{checkBalance,jdbcType=DECIMAL}, #{accountDate,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountList" >
@@ -231,14 +237,20 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="operator != null" >
         `operator`,
       </if>
       <if test="ip != null" >
         ip,
+      </if>
+      <if test="isUpdate != null" >
+        is_update,
+      </if>
+      <if test="baseUpdate != null" >
+        base_update,
+      </if>
+      <if test="interest != null" >
+        interest,
       </if>
       <if test="web != null" >
         web,
@@ -312,6 +324,9 @@
       <if test="accountDate != null" >
         account_date,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="nid != null" >
@@ -359,14 +374,20 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
       </if>
       <if test="ip != null" >
         #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="isUpdate != null" >
+        #{isUpdate,jdbcType=BIT},
+      </if>
+      <if test="baseUpdate != null" >
+        #{baseUpdate,jdbcType=BIT},
+      </if>
+      <if test="interest != null" >
+        #{interest,jdbcType=DECIMAL},
       </if>
       <if test="web != null" >
         #{web,jdbcType=TINYINT},
@@ -440,6 +461,9 @@
       <if test="accountDate != null" >
         #{accountDate,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountListExample" resultType="java.lang.Integer" >
@@ -499,14 +523,20 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.operator != null" >
         `operator` = #{record.operator,jdbcType=VARCHAR},
       </if>
       <if test="record.ip != null" >
         ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isUpdate != null" >
+        is_update = #{record.isUpdate,jdbcType=BIT},
+      </if>
+      <if test="record.baseUpdate != null" >
+        base_update = #{record.baseUpdate,jdbcType=BIT},
+      </if>
+      <if test="record.interest != null" >
+        interest = #{record.interest,jdbcType=DECIMAL},
       </if>
       <if test="record.web != null" >
         web = #{record.web,jdbcType=TINYINT},
@@ -580,6 +610,9 @@
       <if test="record.accountDate != null" >
         account_date = #{record.accountDate,jdbcType=INTEGER},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -603,9 +636,11 @@
       await = #{record.await,jdbcType=DECIMAL},
       repay = #{record.repay,jdbcType=DECIMAL},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       `operator` = #{record.operator,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
+      is_update = #{record.isUpdate,jdbcType=BIT},
+      base_update = #{record.baseUpdate,jdbcType=BIT},
+      interest = #{record.interest,jdbcType=DECIMAL},
       web = #{record.web,jdbcType=TINYINT},
       plan_balance = #{record.planBalance,jdbcType=DECIMAL},
       is_bank = #{record.isBank,jdbcType=TINYINT},
@@ -629,7 +664,8 @@
       bank_await_interest = #{record.bankAwaitInterest,jdbcType=DECIMAL},
       check_date = #{record.checkDate,jdbcType=INTEGER},
       check_balance = #{record.checkBalance,jdbcType=DECIMAL},
-      account_date = #{record.accountDate,jdbcType=INTEGER}
+      account_date = #{record.accountDate,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -682,14 +718,20 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="operator != null" >
         `operator` = #{operator,jdbcType=VARCHAR},
       </if>
       <if test="ip != null" >
         ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="isUpdate != null" >
+        is_update = #{isUpdate,jdbcType=BIT},
+      </if>
+      <if test="baseUpdate != null" >
+        base_update = #{baseUpdate,jdbcType=BIT},
+      </if>
+      <if test="interest != null" >
+        interest = #{interest,jdbcType=DECIMAL},
       </if>
       <if test="web != null" >
         web = #{web,jdbcType=TINYINT},
@@ -763,6 +805,9 @@
       <if test="accountDate != null" >
         account_date = #{accountDate,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -783,9 +828,11 @@
       await = #{await,jdbcType=DECIMAL},
       repay = #{repay,jdbcType=DECIMAL},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       `operator` = #{operator,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
+      is_update = #{isUpdate,jdbcType=BIT},
+      base_update = #{baseUpdate,jdbcType=BIT},
+      interest = #{interest,jdbcType=DECIMAL},
       web = #{web,jdbcType=TINYINT},
       plan_balance = #{planBalance,jdbcType=DECIMAL},
       is_bank = #{isBank,jdbcType=TINYINT},
@@ -809,7 +856,8 @@
       bank_await_interest = #{bankAwaitInterest,jdbcType=DECIMAL},
       check_date = #{checkDate,jdbcType=INTEGER},
       check_balance = #{checkBalance,jdbcType=DECIMAL},
-      account_date = #{accountDate,jdbcType=INTEGER}
+      account_date = #{accountDate,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

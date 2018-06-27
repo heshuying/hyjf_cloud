@@ -14,6 +14,12 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 public interface BaseUserService extends BaseService{
 
 	/**
+	 * 判断用户是否存在
+	 * @param mobile
+	 * @return
+	 */
+	 boolean existUser(String mobile);
+	/**
 	 * @Description 根据token查询user
 	 * @Author sunss
 	 * @Version v0.1

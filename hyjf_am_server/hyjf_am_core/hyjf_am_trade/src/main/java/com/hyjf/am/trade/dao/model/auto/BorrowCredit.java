@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BorrowCredit implements Serializable {
     private Integer creditId;
@@ -70,10 +71,6 @@ public class BorrowCredit implements Serializable {
 
     private Integer creditRepayYesTime;
 
-    private Integer createDate;
-
-    private Integer addTime;
-
     private Integer endTime;
 
     private Integer assignTime;
@@ -85,6 +82,8 @@ public class BorrowCredit implements Serializable {
     private Integer client;
 
     private Integer repayStatus;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -352,22 +351,6 @@ public class BorrowCredit implements Serializable {
         this.creditRepayYesTime = creditRepayYesTime;
     }
 
-    public Integer getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Integer createDate) {
-        this.createDate = createDate;
-    }
-
-    public Integer getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
-    }
-
     public Integer getEndTime() {
         return endTime;
     }
@@ -414,5 +397,13 @@ public class BorrowCredit implements Serializable {
 
     public void setRepayStatus(Integer repayStatus) {
         this.repayStatus = repayStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

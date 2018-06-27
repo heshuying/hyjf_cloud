@@ -93,8 +93,8 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		CreditTenderLogExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(0);
 		// 添加时间 <当前时间-5分钟
-		cra.andAddTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime10(),-5));
-		cra.andAddTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));//两天之前
+		cra.andCreateTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime10(),-5));
+		cra.andCreateTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));//两天之前
 		return creditTenderLogMapper.selectByExample(example);
 	}
 
@@ -414,7 +414,6 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				creditTender.setAssignCreateDate(creditTenderLog.getAssignCreateDate());// 认购日期
 				creditTender.setAssignPay(creditTenderLog.getAssignPay());// 支付金额
 				creditTender.setCreditFee(creditTenderLog.getCreditFee());// 服务费
-				creditTender.setAddTime(GetDate.getDate(nowTime));// 添加时间
 				creditTender.setAssignCapital(creditTenderLog.getAssignCapital());// 投资本金
 				creditTender.setUserId(userId);// 用户名称
 				creditTender.setCreditUserId(sellerUserId);// 出让人id
@@ -435,7 +434,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				creditTender.setAssignRepayNextTime(creditTenderLog.getAssignRepayNextTime());// 下次还款时间
 				creditTender.setAssignRepayYesTime(creditTenderLog.getAssignRepayYesTime());// 最终实际还款时间
 				creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());// 还款期数
-				creditTender.setAddip(creditTenderLog.getAddip());// ip
+				creditTender.setAddIp(creditTenderLog.getAddip());// ip
 				creditTender.setClient(0);// 客户端
 				creditTender.setAuthCode(authCode);// 银行存管新增授权码
 				creditTender.setRecoverPeriod(borrowCredit.getRecoverPeriod());// 已还款期数
@@ -529,7 +528,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				assignAccountList.setRemark("购买债权");
 				assignAccountList.setCreateTime(GetDate.getDate(nowTime));
 				assignAccountList.setOperator(String.valueOf(userId));
-				assignAccountList.setIp(creditTender.getAddip());
+				assignAccountList.setIp(creditTender.getAddIp());
 				assignAccountList.setWeb(0);
 				assignAccountList.setIsBank(1);
 				assignAccountList.setCheckStatus(0);
@@ -669,8 +668,8 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 						creditRepay.setAssignRepayYesTime(0);// 最终实际还款时间
 						creditRepay.setAssignRepayPeriod(1);// 还款期数
 						creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());// 认购日期
-						creditRepay.setAddTime(GetDate.getDate(nowTime));// 添加时间
-						creditRepay.setAddip(creditTender.getAddip());// ip
+						creditRepay.setCreateTime(GetDate.getDate(nowTime));// 添加时间
+						creditRepay.setAddIp(creditTender.getAddIp());// ip
 						creditRepay.setClient(0);// 客户端
 						creditRepay.setRecoverPeriod(1);// 原标还款期数
 						creditRepay.setAdvanceStatus(0);
@@ -765,8 +764,8 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 										creditRepay.setAssignRepayYesTime(0);// 最终实际还款时间
 										creditRepay.setAssignRepayPeriod(i);// 还款期数
 										creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());// 认购日期
-										creditRepay.setAddTime(GetDate.getDate(nowTime));// 添加时间
-										creditRepay.setAddip(creditTender.getAddip());// ip
+										creditRepay.setCreateTime(GetDate.getDate(nowTime));// 添加时间
+										creditRepay.setAddIp(creditTender.getAddIp());// ip
 										creditRepay.setClient(0);// 客户端
 										creditRepay.setManageFee(BigDecimal.ZERO);// 管理费
 										creditRepay.setUniqueNid(creditTender.getAssignNid() + "_" + String.valueOf(i));// 唯一nid

@@ -4,11 +4,11 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UserBindEmailLog" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="user_Email" property="userEmail" jdbcType="VARCHAR" />
-    <result column="user_Email_Status" property="userEmailStatus" jdbcType="INTEGER" />
-    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="email_Active_Code" property="emailActiveCode" jdbcType="VARCHAR" />
-    <result column="email_Active_Url_DeadTime" property="emailActiveUrlDeadtime" jdbcType="TIMESTAMP" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="user_email_status" property="userEmailStatus" jdbcType="INTEGER" />
+    <result column="email_active_code" property="emailActiveCode" jdbcType="VARCHAR" />
+    <result column="email_active_url_deadtime" property="emailActiveUrlDeadtime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,7 +69,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, user_Email, user_Email_Status, createTime, email_Active_Code, email_Active_Url_DeadTime
+    id, user_id, user_email, user_email_status, email_active_code, email_active_url_deadtime, 
+    create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserBindEmailLogExample" >
     select
@@ -108,12 +109,12 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_user_bind_email_log (user_id, user_Email, user_Email_Status, 
-      createTime, email_Active_Code, email_Active_Url_DeadTime
-      )
+    insert into ht_user_bind_email_log (user_id, user_email, user_email_status, 
+      email_active_code, email_active_url_deadtime, 
+      create_time)
     values (#{userId,jdbcType=INTEGER}, #{userEmail,jdbcType=VARCHAR}, #{userEmailStatus,jdbcType=INTEGER}, 
-      #{createtime,jdbcType=TIMESTAMP}, #{emailActiveCode,jdbcType=VARCHAR}, #{emailActiveUrlDeadtime,jdbcType=TIMESTAMP}
-      )
+      #{emailActiveCode,jdbcType=VARCHAR}, #{emailActiveUrlDeadtime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserBindEmailLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -125,19 +126,19 @@
         user_id,
       </if>
       <if test="userEmail != null" >
-        user_Email,
+        user_email,
       </if>
       <if test="userEmailStatus != null" >
-        user_Email_Status,
-      </if>
-      <if test="createtime != null" >
-        createTime,
+        user_email_status,
       </if>
       <if test="emailActiveCode != null" >
-        email_Active_Code,
+        email_active_code,
       </if>
       <if test="emailActiveUrlDeadtime != null" >
-        email_Active_Url_DeadTime,
+        email_active_url_deadtime,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -150,14 +151,14 @@
       <if test="userEmailStatus != null" >
         #{userEmailStatus,jdbcType=INTEGER},
       </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
       <if test="emailActiveCode != null" >
         #{emailActiveCode,jdbcType=VARCHAR},
       </if>
       <if test="emailActiveUrlDeadtime != null" >
         #{emailActiveUrlDeadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -177,19 +178,19 @@
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
       <if test="record.userEmail != null" >
-        user_Email = #{record.userEmail,jdbcType=VARCHAR},
+        user_email = #{record.userEmail,jdbcType=VARCHAR},
       </if>
       <if test="record.userEmailStatus != null" >
-        user_Email_Status = #{record.userEmailStatus,jdbcType=INTEGER},
-      </if>
-      <if test="record.createtime != null" >
-        createTime = #{record.createtime,jdbcType=TIMESTAMP},
+        user_email_status = #{record.userEmailStatus,jdbcType=INTEGER},
       </if>
       <if test="record.emailActiveCode != null" >
-        email_Active_Code = #{record.emailActiveCode,jdbcType=VARCHAR},
+        email_active_code = #{record.emailActiveCode,jdbcType=VARCHAR},
       </if>
       <if test="record.emailActiveUrlDeadtime != null" >
-        email_Active_Url_DeadTime = #{record.emailActiveUrlDeadtime,jdbcType=TIMESTAMP},
+        email_active_url_deadtime = #{record.emailActiveUrlDeadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -200,11 +201,11 @@
     update ht_user_bind_email_log
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
-      user_Email = #{record.userEmail,jdbcType=VARCHAR},
-      user_Email_Status = #{record.userEmailStatus,jdbcType=INTEGER},
-      createTime = #{record.createtime,jdbcType=TIMESTAMP},
-      email_Active_Code = #{record.emailActiveCode,jdbcType=VARCHAR},
-      email_Active_Url_DeadTime = #{record.emailActiveUrlDeadtime,jdbcType=TIMESTAMP}
+      user_email = #{record.userEmail,jdbcType=VARCHAR},
+      user_email_status = #{record.userEmailStatus,jdbcType=INTEGER},
+      email_active_code = #{record.emailActiveCode,jdbcType=VARCHAR},
+      email_active_url_deadtime = #{record.emailActiveUrlDeadtime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -216,19 +217,19 @@
         user_id = #{userId,jdbcType=INTEGER},
       </if>
       <if test="userEmail != null" >
-        user_Email = #{userEmail,jdbcType=VARCHAR},
+        user_email = #{userEmail,jdbcType=VARCHAR},
       </if>
       <if test="userEmailStatus != null" >
-        user_Email_Status = #{userEmailStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createtime != null" >
-        createTime = #{createtime,jdbcType=TIMESTAMP},
+        user_email_status = #{userEmailStatus,jdbcType=INTEGER},
       </if>
       <if test="emailActiveCode != null" >
-        email_Active_Code = #{emailActiveCode,jdbcType=VARCHAR},
+        email_active_code = #{emailActiveCode,jdbcType=VARCHAR},
       </if>
       <if test="emailActiveUrlDeadtime != null" >
-        email_Active_Url_DeadTime = #{emailActiveUrlDeadtime,jdbcType=TIMESTAMP},
+        email_active_url_deadtime = #{emailActiveUrlDeadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -236,11 +237,11 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.UserBindEmailLog" >
     update ht_user_bind_email_log
     set user_id = #{userId,jdbcType=INTEGER},
-      user_Email = #{userEmail,jdbcType=VARCHAR},
-      user_Email_Status = #{userEmailStatus,jdbcType=INTEGER},
-      createTime = #{createtime,jdbcType=TIMESTAMP},
-      email_Active_Code = #{emailActiveCode,jdbcType=VARCHAR},
-      email_Active_Url_DeadTime = #{emailActiveUrlDeadtime,jdbcType=TIMESTAMP}
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_email_status = #{userEmailStatus,jdbcType=INTEGER},
+      email_active_code = #{emailActiveCode,jdbcType=VARCHAR},
+      email_active_url_deadtime = #{emailActiveUrlDeadtime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

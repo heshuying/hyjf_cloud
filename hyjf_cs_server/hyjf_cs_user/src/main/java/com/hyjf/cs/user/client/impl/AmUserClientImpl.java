@@ -735,4 +735,14 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER//am-user/batch/updateAccountMobileSynch";
 		return restTemplate.postForEntity(url,accountMobileSynchRequest,boolean.class).getBody();
 	}
+
+	@Override
+	public List<OrganizationStructureVO> searchGroupInfo() {
+		String url = "http://AM-USER//am-user/group/queryGroupInfo";
+		GroupInfoResponse response = restTemplate.getForEntity(url,GroupInfoResponse.class).getBody();
+		if(response != null){
+			return response.getResultList();
+		}
+		return null;
+	}
 }

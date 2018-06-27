@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
     public  List<HjhInstConfig> selectInstConfigAll(){
         HjhInstConfigExample example = new HjhInstConfigExample();
         HjhInstConfigExample.Criteria cra = example.createCriteria();
+        cra.andDelFlagEqualTo(0);
         List<HjhInstConfig> hjhInstConfigList = this.hjhInstConfigMapper.selectByExample(example);
         return  hjhInstConfigList;
     }

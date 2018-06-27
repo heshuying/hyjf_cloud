@@ -5,16 +5,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserLoginLogMapper;
+import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
+import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
@@ -57,7 +59,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册
-	 *
+	 * 
 	 * @param userRequest
 	 * @return
 	 * @throws MQException
@@ -72,9 +74,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		String platform = userRequest.getPlatform();
 		String password = userRequest.getPassword();
 		String utmId = userRequest.getUtmId();
-		int instType = userRequest.getInstCode();
-		Integer refferUserId = null;
-		String refferUserName = null;
+
 		Integer attribute = null;
 		// 获取推荐人表
 		User refferUser = getRefferUsers(mobile, reffer);
@@ -83,8 +83,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			if (refferUserInfo != null) {
 				// 如果该用户的上级不为空
 				if (Validator.isNotNull(refferUserInfo.getAttribute())) {
-					refferUserId = refferUser.getUserId();
-					refferUserName = refferUser.getUsername();
 					if (Arrays.asList(2, 3).contains(refferUserInfo.getAttribute())) {
 						// 有推荐人且推荐人为员工(Attribute=2或3)时才设置为有主单
 						attribute = 1;
@@ -94,11 +92,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 
 		// 1. 写入用户信息表
-		User users = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
-		int userId = users.getUserId();
+		User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+		logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
+		int userId = user.getUserId();
 
 		// 2. 写入用户详情表
-		this.insertUsersInfo(userId,instType, loginIp, attribute);
+		this.insertUserInfo(userId, loginIp, attribute);
 
 		// 3. 写入用户账户表
 		this.insertAccount(userId);
@@ -119,9 +118,37 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		// 7. 注册成功默认登录
 		this.updateLoginUser(userId, loginIp);
 
-		return users;
+		return user;
 	}
 
+	@Override
+	public User findUserByUserId(int userId) {
+		UserExample usersExample = new UserExample();
+		usersExample.createCriteria().andUserIdEqualTo(userId);
+		List<User> usersList = userMapper.selectByExample(usersExample);
+		if (!CollectionUtils.isEmpty(usersList)) {
+			return usersList.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据userId查询userInfo
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfo findUsersInfo(int userId) {
+		UserInfoExample example = new UserInfoExample();
+		UserInfoExample.Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		List<UserInfo> list = userInfoMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.get(0);
+		}
+		return null;
+	}
 
 	/** 获取唯一username */
 	@Override
@@ -274,7 +301,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册查询推荐人信息
-	 *
+	 * 
 	 * @param mobile
 	 * @param reffer
 	 * @return
@@ -324,7 +351,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册写用户表
-	 *
+	 * 
 	 * @param mobile
 	 * @param password
 	 * @param loginIp
@@ -333,22 +360,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param refferUsername
 	 * @return
 	 */
-	private User insertUsers(String mobile, String password, String loginIp, String platform, Integer refferUserId,
-			String refferUsername) {
+	private User insertUser(String mobile, String password, String loginIp, String platform, String instCode) {
 		User user = new User();
 		String userName = generateUniqueUsername(mobile);
-		user.setInstCode("10000000");
+		user.setInstCode(StringUtils.isBlank(instCode) ? CommonConstant.HYJF_INST_CODE : instCode);
 		user.setIsInstFlag(0);
 		user.setUsername(userName);
 		user.setMobile(mobile);
 		user.setRechargeSms(0);
 		user.setWithdrawSms(0);
-		user.setInvestflag(0);
 		user.setInvestSms(0);
 		user.setRecieveSms(0);
 		user.setUserType(0);
 		user.setIsSetPassword(0);
-		int time = GetDate.getNowTime10();
 		String codeSalt = GetCode.getRandomCode(6);
 		user.setPassword(MD5Utils.MD5(password + codeSalt));
 		user.setRegIp(loginIp);
@@ -369,12 +393,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册写用户信息表
-	 *
+	 * 
 	 * @param userId
 	 * @param loginIp
 	 * @param attribute
 	 */
-	private void insertUsersInfo(int userId,int instType, String loginIp, Integer attribute) {
+	private void insertUserInfo(int userId, String loginIp, Integer attribute) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);
 		// 默认为无主单
@@ -383,7 +407,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			getAddress(loginIp, userInfo);
 		}
 		userInfo.setUserId(userId);
-		userInfo.setRoleId(instType);
+		// 默认投资人角色
+		userInfo.setRoleId(1);
 		userInfo.setMobileIsapprove(1);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
@@ -402,7 +427,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存账户表
-	 *
+	 * 
 	 * @param userId
 	 * @throws MQException
 	 */
@@ -454,7 +479,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存推荐人
-	 *
+	 * 
 	 * @param userId
 	 *            注册用户
 	 * @param referer
@@ -476,7 +501,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存推广信息
-	 *
+	 * 
 	 * @param userId
 	 * @param utmId
 	 */
@@ -506,7 +531,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存日志
-	 *
+	 * 
 	 * @param userId
 	 * @param loginIp
 	 */
@@ -598,7 +623,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @return int
 	 */
 	@Override
-	public int updateUserById(User record){
+	public int updateUserById(User record) {
 		return userMapper.updateByPrimaryKeySelective(record);
 	}
 
@@ -764,7 +789,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return accountChinapnr;
 	}
-
+	
 	/**
 	 * 保存紧急联系人信息
 	 * @auther: hesy
@@ -815,7 +840,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return false;
 		}
 	}
-
+	
 	/**
 	 * 插入绑定邮箱日志
 	 * @auther: hesy
@@ -834,7 +859,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			}
 		}
 		// 插入新的邮件
-		log.setCreatetime(new Date());
+		log.setCreateTime(new Date());
 		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		userBindEmailLogMapper.insertSelective(log);
@@ -856,7 +881,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return null;
 		}
 	}
-
+	
 	/**
 	 * 绑定邮箱更新
 	 * @auther: hesy
@@ -870,7 +895,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		User u = usersList.get(0);
 		u.setEmail(email);
 		userMapper.updateByPrimaryKeySelective(u);
-
+		
 		UserBindEmailLog log = this.getUserBindEmail(userId);
 		if(log != null) {
 			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
@@ -1001,36 +1026,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public void updateFirstUtmReg(Map<String, Object> bean) {
         utmRegCustomizeMapper.updateFirstUtmReg(bean);
     }
-
-	/**
-	 * 更新用户投资标记
-	 * @param para
-	 */
-	@Override
-	public boolean updateUserInvestFlag(JSONObject para) {
-		boolean result = true;
-		User users= (User) para.get("user");
-		Integer userId= (Integer) para.get("userId");
-		int projectType= (int) para.get("projectType");
-
-		if (users.getInvestflag() == 0) {
-			users.setInvestflag(1);
-			UserExample userExample = new UserExample();
-			userExample.createCriteria().andUserIdEqualTo(userId).andInvestflagEqualTo(0);
-			boolean userFlag = this.userMapper.updateByExampleSelective(users, userExample) > 0 ? true : false;
-			if (!userFlag) {
-				logger.info("更新新手标识失败，用户userId：" + userId);
-				result = false;
-			}
-		}else{
-			if (projectType == 4) {
-				// 回滚事务
-				logger.info("用户已不是新手投资，用户userId：" + userId);
-				result = false;
-			}
-		}
-		return result;
-	}
 
 	/**
 	 *  插入vip user

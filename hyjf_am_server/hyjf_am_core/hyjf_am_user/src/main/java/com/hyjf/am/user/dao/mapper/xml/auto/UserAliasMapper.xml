@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.auto.UserAliasMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UserAlias" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="sign" property="sign" jdbcType="VARCHAR" />
     <result column="alias" property="alias" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="VARCHAR" />
@@ -68,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, sign, `alias`, client, package_code
+    user_id, sign, `alias`, client, package_code
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserAliasExample" >
     select
@@ -91,11 +90,11 @@
     select 
     <include refid="Base_Column_List" />
     from ht_user_alias
-    where id = #{id,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_user_alias
-    where id = #{id,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserAliasExample" >
     delete from ht_user_alias
@@ -104,18 +103,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserAlias" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_user_alias (user_id, sign, `alias`, 
       client, package_code)
     values (#{userId,jdbcType=INTEGER}, #{sign,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, 
       #{client,jdbcType=VARCHAR}, #{packageCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserAlias" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_user_alias
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
@@ -161,9 +154,6 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update ht_user_alias
     <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
@@ -186,8 +176,7 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update ht_user_alias
-    set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
+    set user_id = #{record.userId,jdbcType=INTEGER},
       sign = #{record.sign,jdbcType=VARCHAR},
       `alias` = #{record.alias,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=VARCHAR},
@@ -199,9 +188,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.UserAlias" >
     update ht_user_alias
     <set >
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
       <if test="sign != null" >
         sign = #{sign,jdbcType=VARCHAR},
       </if>
@@ -215,15 +201,14 @@
         package_code = #{packageCode,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.UserAlias" >
     update ht_user_alias
-    set user_id = #{userId,jdbcType=INTEGER},
-      sign = #{sign,jdbcType=VARCHAR},
+    set sign = #{sign,jdbcType=VARCHAR},
       `alias` = #{alias,jdbcType=VARCHAR},
       client = #{client,jdbcType=VARCHAR},
       package_code = #{packageCode,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
   </update>
 </mapper>

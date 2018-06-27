@@ -6,7 +6,6 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="accountId" property="accountid" jdbcType="VARCHAR" />
     <result column="account" property="account" jdbcType="VARCHAR" />
     <result column="new_account" property="newAccount" jdbcType="VARCHAR" />
@@ -15,6 +14,8 @@
     <result column="searchtime" property="searchtime" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="flag" property="flag" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -75,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, username, `name`, create_time, accountId, account, new_account, mobile, 
-    new_mobile, searchtime, `status`, flag
+    id, user_id, username, `name`, accountId, account, new_account, mobile, new_mobile, 
+    searchtime, `status`, flag, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AccountMobileSynchExample" >
     select
@@ -116,15 +117,15 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_account_mobile_synch (user_id, username, `name`, 
-      create_time, accountId, account, 
-      new_account, mobile, new_mobile, 
-      searchtime, `status`, flag
-      )
+      accountId, account, new_account, 
+      mobile, new_mobile, searchtime, 
+      `status`, flag, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{accountid,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
-      #{newAccount,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{newMobile,jdbcType=CHAR}, 
-      #{searchtime,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}
-      )
+      #{accountid,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{newAccount,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=CHAR}, #{newMobile,jdbcType=CHAR}, #{searchtime,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountMobileSynch" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -140,9 +141,6 @@
       </if>
       <if test="name != null" >
         `name`,
-      </if>
-      <if test="createTime != null" >
-        create_time,
       </if>
       <if test="accountid != null" >
         accountId,
@@ -168,6 +166,12 @@
       <if test="flag != null" >
         flag,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
@@ -178,9 +182,6 @@
       </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="accountid != null" >
         #{accountid,jdbcType=VARCHAR},
@@ -206,6 +207,12 @@
       <if test="flag != null" >
         #{flag,jdbcType=TINYINT},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.AccountMobileSynchExample" resultType="java.lang.Integer" >
@@ -228,9 +235,6 @@
       </if>
       <if test="record.name != null" >
         `name` = #{record.name,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.accountid != null" >
         accountId = #{record.accountid,jdbcType=VARCHAR},
@@ -256,6 +260,12 @@
       <if test="record.flag != null" >
         flag = #{record.flag,jdbcType=TINYINT},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -267,7 +277,6 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
       `name` = #{record.name,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       accountId = #{record.accountid,jdbcType=VARCHAR},
       account = #{record.account,jdbcType=VARCHAR},
       new_account = #{record.newAccount,jdbcType=VARCHAR},
@@ -275,7 +284,9 @@
       new_mobile = #{record.newMobile,jdbcType=CHAR},
       searchtime = #{record.searchtime,jdbcType=INTEGER},
       `status` = #{record.status,jdbcType=TINYINT},
-      flag = #{record.flag,jdbcType=TINYINT}
+      flag = #{record.flag,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -291,9 +302,6 @@
       </if>
       <if test="name != null" >
         `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="accountid != null" >
         accountId = #{accountid,jdbcType=VARCHAR},
@@ -319,6 +327,12 @@
       <if test="flag != null" >
         flag = #{flag,jdbcType=TINYINT},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -327,7 +341,6 @@
     set user_id = #{userId,jdbcType=INTEGER},
       username = #{username,jdbcType=VARCHAR},
       `name` = #{name,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       accountId = #{accountid,jdbcType=VARCHAR},
       account = #{account,jdbcType=VARCHAR},
       new_account = #{newAccount,jdbcType=VARCHAR},
@@ -335,7 +348,9 @@
       new_mobile = #{newMobile,jdbcType=CHAR},
       searchtime = #{searchtime,jdbcType=INTEGER},
       `status` = #{status,jdbcType=TINYINT},
-      flag = #{flag,jdbcType=TINYINT}
+      flag = #{flag,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

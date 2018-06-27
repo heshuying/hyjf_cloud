@@ -375,63 +375,63 @@ public class CallcenterServiceUsersExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpddateIsNull() {
-            addCriterion("upddate is null");
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("update_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateIsNotNull() {
-            addCriterion("upddate is not null");
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("update_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateEqualTo(Date value) {
-            addCriterion("upddate =", value, "upddate");
+        public Criteria andUpdateTimeEqualTo(Date value) {
+            addCriterion("update_time =", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateNotEqualTo(Date value) {
-            addCriterion("upddate <>", value, "upddate");
+        public Criteria andUpdateTimeNotEqualTo(Date value) {
+            addCriterion("update_time <>", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateGreaterThan(Date value) {
-            addCriterion("upddate >", value, "upddate");
+        public Criteria andUpdateTimeGreaterThan(Date value) {
+            addCriterion("update_time >", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateGreaterThanOrEqualTo(Date value) {
-            addCriterion("upddate >=", value, "upddate");
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("update_time >=", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateLessThan(Date value) {
-            addCriterion("upddate <", value, "upddate");
+        public Criteria andUpdateTimeLessThan(Date value) {
+            addCriterion("update_time <", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateLessThanOrEqualTo(Date value) {
-            addCriterion("upddate <=", value, "upddate");
+        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("update_time <=", value, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateIn(List<Date> values) {
-            addCriterion("upddate in", values, "upddate");
+        public Criteria andUpdateTimeIn(List<Date> values) {
+            addCriterion("update_time in", values, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateNotIn(List<Date> values) {
-            addCriterion("upddate not in", values, "upddate");
+        public Criteria andUpdateTimeNotIn(List<Date> values) {
+            addCriterion("update_time not in", values, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateBetween(Date value1, Date value2) {
-            addCriterion("upddate between", value1, value2, "upddate");
+        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("update_time between", value1, value2, "updateTime");
             return (Criteria) this;
         }
 
-        public Criteria andUpddateNotBetween(Date value1, Date value2) {
-            addCriterion("upddate not between", value1, value2, "upddate");
+        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
     }

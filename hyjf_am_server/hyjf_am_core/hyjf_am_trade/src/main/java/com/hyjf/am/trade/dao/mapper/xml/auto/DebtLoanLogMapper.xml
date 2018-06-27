@@ -11,11 +11,11 @@
     <result column="fee" property="fee" jdbcType="DECIMAL" />
     <result column="balance" property="balance" jdbcType="DECIMAL" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="addtime" property="addtime" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -77,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, nid, borrow_nid, user_id, `status`, money, fee, balance, remark, create_time, 
-    update_time, `operator`, addtime, addip
+    update_time, `operator`, addtime, add_ip
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanLogExample" >
     select
@@ -120,12 +120,12 @@
       `status`, money, fee, 
       balance, remark, create_time, 
       update_time, `operator`, addtime, 
-      addip)
+      add_ip)
     values (#{nid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
-      #{balance,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR}, 
-      #{addip,jdbcType=VARCHAR})
+      #{balance,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR}, 
+      #{addIp,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoanLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -169,8 +169,8 @@
       <if test="addtime != null" >
         addtime,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -199,10 +199,10 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
@@ -210,8 +210,8 @@
       <if test="addtime != null" >
         #{addtime,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -252,10 +252,10 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.operator != null" >
         `operator` = #{record.operator,jdbcType=VARCHAR},
@@ -263,8 +263,8 @@
       <if test="record.addtime != null" >
         addtime = #{record.addtime,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -282,11 +282,11 @@
       fee = #{record.fee,jdbcType=DECIMAL},
       balance = #{record.balance,jdbcType=DECIMAL},
       remark = #{record.remark,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `operator` = #{record.operator,jdbcType=VARCHAR},
       addtime = #{record.addtime,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR}
+      add_ip = #{record.addIp,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -319,10 +319,10 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operator != null" >
         `operator` = #{operator,jdbcType=VARCHAR},
@@ -330,8 +330,8 @@
       <if test="addtime != null" >
         addtime = #{addtime,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -346,11 +346,11 @@
       fee = #{fee,jdbcType=DECIMAL},
       balance = #{balance,jdbcType=DECIMAL},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       `operator` = #{operator,jdbcType=VARCHAR},
       addtime = #{addtime,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR}
+      add_ip = #{addIp,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

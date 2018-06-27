@@ -107,7 +107,7 @@ public abstract class Producer {
 		}
 	}
 
-	protected static class ProducerFieldsWrapper {
+	public static class ProducerFieldsWrapper {
 		private String group;
 		private String instanceName;
 

@@ -246,322 +246,322 @@ public class UserBindEmailLogExample {
         }
 
         public Criteria andUserEmailIsNull() {
-            addCriterion("user_Email is null");
+            addCriterion("user_email is null");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailIsNotNull() {
-            addCriterion("user_Email is not null");
+            addCriterion("user_email is not null");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailEqualTo(String value) {
-            addCriterion("user_Email =", value, "userEmail");
+            addCriterion("user_email =", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailNotEqualTo(String value) {
-            addCriterion("user_Email <>", value, "userEmail");
+            addCriterion("user_email <>", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailGreaterThan(String value) {
-            addCriterion("user_Email >", value, "userEmail");
+            addCriterion("user_email >", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailGreaterThanOrEqualTo(String value) {
-            addCriterion("user_Email >=", value, "userEmail");
+            addCriterion("user_email >=", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailLessThan(String value) {
-            addCriterion("user_Email <", value, "userEmail");
+            addCriterion("user_email <", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailLessThanOrEqualTo(String value) {
-            addCriterion("user_Email <=", value, "userEmail");
+            addCriterion("user_email <=", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailLike(String value) {
-            addCriterion("user_Email like", value, "userEmail");
+            addCriterion("user_email like", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailNotLike(String value) {
-            addCriterion("user_Email not like", value, "userEmail");
+            addCriterion("user_email not like", value, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailIn(List<String> values) {
-            addCriterion("user_Email in", values, "userEmail");
+            addCriterion("user_email in", values, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailNotIn(List<String> values) {
-            addCriterion("user_Email not in", values, "userEmail");
+            addCriterion("user_email not in", values, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailBetween(String value1, String value2) {
-            addCriterion("user_Email between", value1, value2, "userEmail");
+            addCriterion("user_email between", value1, value2, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailNotBetween(String value1, String value2) {
-            addCriterion("user_Email not between", value1, value2, "userEmail");
+            addCriterion("user_email not between", value1, value2, "userEmail");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusIsNull() {
-            addCriterion("user_Email_Status is null");
+            addCriterion("user_email_status is null");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusIsNotNull() {
-            addCriterion("user_Email_Status is not null");
+            addCriterion("user_email_status is not null");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusEqualTo(Integer value) {
-            addCriterion("user_Email_Status =", value, "userEmailStatus");
+            addCriterion("user_email_status =", value, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusNotEqualTo(Integer value) {
-            addCriterion("user_Email_Status <>", value, "userEmailStatus");
+            addCriterion("user_email_status <>", value, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusGreaterThan(Integer value) {
-            addCriterion("user_Email_Status >", value, "userEmailStatus");
+            addCriterion("user_email_status >", value, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("user_Email_Status >=", value, "userEmailStatus");
+            addCriterion("user_email_status >=", value, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusLessThan(Integer value) {
-            addCriterion("user_Email_Status <", value, "userEmailStatus");
+            addCriterion("user_email_status <", value, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("user_Email_Status <=", value, "userEmailStatus");
+            addCriterion("user_email_status <=", value, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusIn(List<Integer> values) {
-            addCriterion("user_Email_Status in", values, "userEmailStatus");
+            addCriterion("user_email_status in", values, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusNotIn(List<Integer> values) {
-            addCriterion("user_Email_Status not in", values, "userEmailStatus");
+            addCriterion("user_email_status not in", values, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusBetween(Integer value1, Integer value2) {
-            addCriterion("user_Email_Status between", value1, value2, "userEmailStatus");
+            addCriterion("user_email_status between", value1, value2, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andUserEmailStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("user_Email_Status not between", value1, value2, "userEmailStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeIsNull() {
-            addCriterion("createTime is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeIsNotNull() {
-            addCriterion("createTime is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeEqualTo(Date value) {
-            addCriterion("createTime =", value, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeNotEqualTo(Date value) {
-            addCriterion("createTime <>", value, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeGreaterThan(Date value) {
-            addCriterion("createTime >", value, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("createTime >=", value, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeLessThan(Date value) {
-            addCriterion("createTime <", value, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeLessThanOrEqualTo(Date value) {
-            addCriterion("createTime <=", value, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeIn(List<Date> values) {
-            addCriterion("createTime in", values, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeNotIn(List<Date> values) {
-            addCriterion("createTime not in", values, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeBetween(Date value1, Date value2) {
-            addCriterion("createTime between", value1, value2, "createtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatetimeNotBetween(Date value1, Date value2) {
-            addCriterion("createTime not between", value1, value2, "createtime");
+            addCriterion("user_email_status not between", value1, value2, "userEmailStatus");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeIsNull() {
-            addCriterion("email_Active_Code is null");
+            addCriterion("email_active_code is null");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeIsNotNull() {
-            addCriterion("email_Active_Code is not null");
+            addCriterion("email_active_code is not null");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeEqualTo(String value) {
-            addCriterion("email_Active_Code =", value, "emailActiveCode");
+            addCriterion("email_active_code =", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeNotEqualTo(String value) {
-            addCriterion("email_Active_Code <>", value, "emailActiveCode");
+            addCriterion("email_active_code <>", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeGreaterThan(String value) {
-            addCriterion("email_Active_Code >", value, "emailActiveCode");
+            addCriterion("email_active_code >", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("email_Active_Code >=", value, "emailActiveCode");
+            addCriterion("email_active_code >=", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeLessThan(String value) {
-            addCriterion("email_Active_Code <", value, "emailActiveCode");
+            addCriterion("email_active_code <", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeLessThanOrEqualTo(String value) {
-            addCriterion("email_Active_Code <=", value, "emailActiveCode");
+            addCriterion("email_active_code <=", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeLike(String value) {
-            addCriterion("email_Active_Code like", value, "emailActiveCode");
+            addCriterion("email_active_code like", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeNotLike(String value) {
-            addCriterion("email_Active_Code not like", value, "emailActiveCode");
+            addCriterion("email_active_code not like", value, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeIn(List<String> values) {
-            addCriterion("email_Active_Code in", values, "emailActiveCode");
+            addCriterion("email_active_code in", values, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeNotIn(List<String> values) {
-            addCriterion("email_Active_Code not in", values, "emailActiveCode");
+            addCriterion("email_active_code not in", values, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeBetween(String value1, String value2) {
-            addCriterion("email_Active_Code between", value1, value2, "emailActiveCode");
+            addCriterion("email_active_code between", value1, value2, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveCodeNotBetween(String value1, String value2) {
-            addCriterion("email_Active_Code not between", value1, value2, "emailActiveCode");
+            addCriterion("email_active_code not between", value1, value2, "emailActiveCode");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeIsNull() {
-            addCriterion("email_Active_Url_DeadTime is null");
+            addCriterion("email_active_url_deadtime is null");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeIsNotNull() {
-            addCriterion("email_Active_Url_DeadTime is not null");
+            addCriterion("email_active_url_deadtime is not null");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeEqualTo(Date value) {
-            addCriterion("email_Active_Url_DeadTime =", value, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime =", value, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeNotEqualTo(Date value) {
-            addCriterion("email_Active_Url_DeadTime <>", value, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime <>", value, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeGreaterThan(Date value) {
-            addCriterion("email_Active_Url_DeadTime >", value, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime >", value, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("email_Active_Url_DeadTime >=", value, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime >=", value, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeLessThan(Date value) {
-            addCriterion("email_Active_Url_DeadTime <", value, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime <", value, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeLessThanOrEqualTo(Date value) {
-            addCriterion("email_Active_Url_DeadTime <=", value, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime <=", value, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeIn(List<Date> values) {
-            addCriterion("email_Active_Url_DeadTime in", values, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime in", values, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeNotIn(List<Date> values) {
-            addCriterion("email_Active_Url_DeadTime not in", values, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime not in", values, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeBetween(Date value1, Date value2) {
-            addCriterion("email_Active_Url_DeadTime between", value1, value2, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime between", value1, value2, "emailActiveUrlDeadtime");
             return (Criteria) this;
         }
 
         public Criteria andEmailActiveUrlDeadtimeNotBetween(Date value1, Date value2) {
-            addCriterion("email_Active_Url_DeadTime not between", value1, value2, "emailActiveUrlDeadtime");
+            addCriterion("email_active_url_deadtime not between", value1, value2, "emailActiveUrlDeadtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("create_time =", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("create_time <>", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("create_time >", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_time >=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("create_time <", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("create_time <=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("create_time in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("create_time not in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
     }

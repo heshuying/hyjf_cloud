@@ -18,5 +18,4 @@ public interface SmsCodeService extends BaseUserService {
      */
     void sendSmsCode(String validCodeType, String mobile, String token, String ip) throws MQException;
 
-    boolean existUser(String mobile);
 }

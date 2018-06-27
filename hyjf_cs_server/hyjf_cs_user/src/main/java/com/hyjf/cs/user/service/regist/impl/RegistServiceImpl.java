@@ -99,7 +99,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         BeanUtils.copyProperties(registerRequest, registerUserRequest);
         registerUserRequest.setLoginIp(ip);
-        registerUserRequest.setInstCode(1);
+        registerUserRequest.setInstCode(CommonConstant.HYJF_INST_CODE);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
@@ -121,10 +121,10 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         BeanUtils.copyProperties(registerRequest, registerVO);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
-        HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
+        //HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
         // 机构编号
-        CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
-        registerUserRequest.setInstCode(instConfig.getInstType());
+        //CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
+        registerUserRequest.setInstCode(registerRequest.getInstCode());
         // 验签
         CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER),MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在

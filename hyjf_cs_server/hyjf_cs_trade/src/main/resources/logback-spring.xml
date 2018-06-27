@@ -11,7 +11,7 @@
         <logger name="org.springboot.sample" level="INFO"/>
         <logger name="com.hyjf" level="INFO"/>
     </springProfile>
-
+    <logger name="springfox.documentation.swagger.web" level="ERROR"/>
 
     <!-- 生产环境. -->
     <springProfile name="prod">

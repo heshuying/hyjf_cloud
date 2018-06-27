@@ -155,9 +155,9 @@ public class BorrowInfo implements Serializable {
 
     private String createUserName;
 
-    private Integer addTime;
+    private String addIp;
 
-    private String addip;
+    private Date createTime;
 
     private Date updateTime;
 
@@ -763,20 +763,20 @@ public class BorrowInfo implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
-    public String getAddip() {
-        return addip;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {

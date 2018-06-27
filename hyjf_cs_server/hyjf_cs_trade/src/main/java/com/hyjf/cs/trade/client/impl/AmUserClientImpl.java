@@ -270,15 +270,6 @@ public class AmUserClientImpl implements AmUserClient {
         return false;
     }
 
-    /**
-     * 更新用户投资信息
-     */
-	@Override
-	public boolean updateUserInvestFlag(JSONObject para) {
-		String url = "http://AM-USER/am-user/user/updateUserInvestFlag";
-		return restTemplate.postForEntity(url,para,Boolean.class).getBody();
-	}
-
 	/**
 	 * 查如vipUser
 	 */

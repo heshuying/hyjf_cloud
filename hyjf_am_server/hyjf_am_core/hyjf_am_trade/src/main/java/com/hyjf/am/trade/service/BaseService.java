@@ -24,5 +24,5 @@ public interface BaseService {
      * @param borrowNid
      * @return
      */
-    BorrowInfo getBorrowByBorrowNid(String borrowNid);
+    BorrowInfo getBorrowInfoByNid(String borrowNid);
 }

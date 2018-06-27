@@ -12,13 +12,13 @@ public class BindUser implements Serializable {
 
     private Integer bindPlatformId;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private Integer createUserId;
 
-    private Date createTime;
-
     private Integer updateUserId;
+
+    private Date createTime;
 
     private Date updateTime;
 
@@ -56,12 +56,12 @@ public class BindUser implements Serializable {
         this.bindPlatformId = bindPlatformId;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public Integer getCreateUserId() {
@@ -72,20 +72,20 @@ public class BindUser implements Serializable {
         this.createUserId = createUserId;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
 
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {

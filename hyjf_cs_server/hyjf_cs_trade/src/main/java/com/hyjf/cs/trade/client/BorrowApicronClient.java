@@ -16,4 +16,11 @@ public interface BorrowApicronClient {
      * @return
      */
     List<BorrowApicronVO> getBorrowApicronList(int extraYieldRepayStatus, int apiType);
+
+    /**
+     * 计划退出查询判断标的是否还款
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid);
 }

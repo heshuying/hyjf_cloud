@@ -198,17 +198,6 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 						}
 					}
 
-
-
-					//更新用户投资标记
-					if(Validator.isNotNull(request.getLogUser())) {
-						JSONObject para = new JSONObject();
-						para.put("userId", bean.getLogUserId());
-						para.put("user", request.getLogUser());
-						this.amUserClient.updateUserInvestFlag(para);
-
-					}
-					
 					if(Validator.isNotNull(request.getLogUserInfo())) {
 						JSONObject para = new JSONObject();
 						para.put("userInfo", request.getLogUserInfo());

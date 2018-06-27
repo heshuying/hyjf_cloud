@@ -23,7 +23,7 @@ import java.util.Map;
 @Api(value = "验证码")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/smsCode")
+@RequestMapping("/web/user/smsCode")
 public class WebSmsCodeController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WebSmsCodeController.class);
 

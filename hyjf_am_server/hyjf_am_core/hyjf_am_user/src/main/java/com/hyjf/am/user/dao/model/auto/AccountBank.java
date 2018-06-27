@@ -26,13 +26,13 @@ public class AccountBank implements Serializable {
 
     private String respdesc;
 
-    private Date createTime;
-
     private String createIp;
 
-    private Date updateTime;
-
     private String updateIp;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -124,14 +124,6 @@ public class AccountBank implements Serializable {
         this.respdesc = respdesc == null ? null : respdesc.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public String getCreateIp() {
         return createIp;
     }
@@ -140,19 +132,27 @@ public class AccountBank implements Serializable {
         this.createIp = createIp == null ? null : createIp.trim();
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getUpdateIp() {
         return updateIp;
     }
 
     public void setUpdateIp(String updateIp) {
         this.updateIp = updateIp == null ? null : updateIp.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
