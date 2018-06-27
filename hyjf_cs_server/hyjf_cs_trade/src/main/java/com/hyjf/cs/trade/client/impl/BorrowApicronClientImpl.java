@@ -37,4 +37,23 @@ public class BorrowApicronClientImpl implements BorrowApicronClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 计划退出查询判断标的是否还款
+	 * BorrowNidEqualTo(borrowNid)
+	 * ApiTypeEqualTo(1)
+	 * StatusNotEqualTo(6);
+	 * @param borrowNid
+	 * @return
+	 */
+	@Override
+	public List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid) {
+		BorrowApicronResponse response = restTemplate.getForEntity(
+				"http://AM-TRADE/am-trade/borrowApicron/selectBorrowApicronListByBorrowNid/" + borrowNid,
+				BorrowApicronResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

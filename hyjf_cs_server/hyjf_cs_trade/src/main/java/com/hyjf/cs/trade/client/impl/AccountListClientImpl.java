@@ -36,4 +36,18 @@ public class AccountListClientImpl implements AccountListClient {
         }
         return 0;
     }
+
+    @Override
+    public Integer insertAccountListSelective(AccountListVO accountListVO) {
+        Integer result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/accountList/insertAccountListSelective/", accountListVO,
+                Integer.class).getBody();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+
+    }
+
+
 }

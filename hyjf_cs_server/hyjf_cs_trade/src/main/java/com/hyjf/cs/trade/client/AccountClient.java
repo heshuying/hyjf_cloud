@@ -10,4 +10,12 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 public interface AccountClient {
 
     AccountVO getAccountByUserId(Integer userId);
+
+    /**
+     * 计划退出更新状态用
+     * @Author liushouyi
+     * @param account
+     * @return
+     */
+    Integer updateOfPlanRepayAccount(AccountVO account);
 }

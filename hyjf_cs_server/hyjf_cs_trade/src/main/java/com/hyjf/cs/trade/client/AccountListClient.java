@@ -10,4 +10,6 @@ public interface AccountListClient {
     AccountListVO selectAccountListByOrdId(String ordId, String type);
 
     int countAccountListByOrdId(String ordId, String type);
+
+    Integer insertAccountListSelective(AccountListVO accountListVO);
 }
