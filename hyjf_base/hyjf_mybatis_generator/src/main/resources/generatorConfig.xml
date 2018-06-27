@@ -1690,5 +1690,11 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <!-- 分布式事务本地消息表 -->
+        <table tableName="ht_producer_transaction_message" domainObjectName="ProducerTransactionMessage">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="message_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>

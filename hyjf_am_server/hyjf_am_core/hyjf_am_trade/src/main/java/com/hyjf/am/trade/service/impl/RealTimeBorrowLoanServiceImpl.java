@@ -994,7 +994,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 //			borrowRecover.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
 //			borrowRecover.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
 //			borrowRecover.setCreateTime(nowTime);
-			borrowRecover.setAddip(borrowTender.getAddip());
+			borrowRecover.setAddIp(borrowTender.getAddIp());
 			borrowRecover.setAuthCode(authCode);
 			borrowRecover.setRecoverServiceFee(serviceFee);
 			boolean borrowRecoverFlag = borrowRecoverMapper.insertSelective(borrowRecover) > 0 ? true : false;
@@ -1082,7 +1082,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 				borrowRepay.setDelayInterest(BigDecimal.ZERO); // 逾期利息
 				borrowRepay.setDelayRemark(""); // 备注
 //				borrowRepay.setAddtime(String.valueOf(nowTime)); // 发标时间
-				borrowRepay.setAddip(borrow.getAddip()); // 发标ip
+				borrowRepay.setAddIp(borrow.getAddIp()); // 发标ip
 //				borrowRepay.setCreateTime(nowTime); // 创建时间
 				borrowRepay.setChargeDays(0);
 				borrowRepay.setChargeInterest(BigDecimal.ZERO);
@@ -1147,7 +1147,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 						recoverPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
 						recoverPlan.setDelayRate(BigDecimal.ZERO); // 延期费率
 //						recoverPlan.setCreateTime(nowTime); // 创建时间
-						recoverPlan.setAddip(borrowTender.getAddip());
+						recoverPlan.setAddIp(borrowTender.getAddIp());
 						recoverPlan.setSendmail(0);
 						boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.insertSelective(recoverPlan) > 0 ? true : false;
 						if (!borrowRecoverPlanFlag) {
@@ -1197,7 +1197,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 							repayPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
 							repayPlan.setDelayRemark(""); // 延期备注
 //							repayPlan.setAddtime(String.valueOf(nowTime)); // 借款成功时间
-							repayPlan.setAddip(borrowTender.getAddip());
+							repayPlan.setAddIp(borrowTender.getAddIp());
 //							repayPlan.setCreateTime(nowTime); // 创建时间
 							repayPlan.setChargeDays(0);
 							repayPlan.setChargeInterest(BigDecimal.ZERO);
@@ -1659,7 +1659,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 //		accountList.setCreateTime(nowTime); // 创建时间
 //		accountList.setBaseUpdate(nowTime); // 更新时间
 		accountList.setOperator(CustomConstants.OPERATOR_AUTO_LOANS); // 操作者
-		accountList.setIp(borrow.getAddip()); // 操作IP
+		accountList.setIp(borrow.getAddIp()); // 操作IP
 		accountList.setRemark(borrowNid);
 //		accountList.setIsUpdate(0);
 //		accountList.setBaseUpdate(0);
