@@ -1,9 +1,12 @@
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.trade.service.BorrowTenderService;
@@ -30,5 +33,14 @@ public class BorrowTenderController {
     }
 
 
+    @PostMapping("/selectBorrowTender")
+    public BorrowTenderResponse selectBorrowTender(@RequestBody BorrowTenderRequest request){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        BorrowTender borrowTender =borrowTenderService.selectBorrowTender(request);
+        if (Validator.isNotNull(borrowTender)){
+            response.setResult(CommonUtils.convertBean(borrowTender,BorrowTenderVO.class));
+        }
+        return response;
+    }
 
 }
