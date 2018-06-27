@@ -110,7 +110,12 @@ public interface MQConstant {
 	 * 法大大
 	 */
 	String FDD_GROUP = "FDD_GROUP";
-	String FDD_CONTRACT_TOPIC = "FDD_CONTRACT_TOPIC";
+	String FDD_TOPIC = "FDD_TOPIC";
 
-
+	//法大大生成合同处理
+	String FDD_GENERATE_CONTRACT_TAG = "FDD_GENERATE_CONTRACT_TAG";
+	//法大大自动签署处理
+	String FDD_AUTO_SIGN_TAG = "FDD_AUTO_SIGN_TAG";
+	//法大大下载脱敏处理
+	String FDD_DOWNPDF_AND_DESSENSITIZATION_TAG = "FDD_DOWNPDF_AND_DESSENSITIZATION_TAG";
 }

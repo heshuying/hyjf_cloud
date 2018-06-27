@@ -25,9 +25,12 @@ public class CouponExpiredPushController {
     private CouponExpiredPushService couponExpiredPushService;
 
     @RequestMapping("/expiredPush")
-    public void sendCouponExpiredMsg() throws MQException {
+    public void sendCouponExpiredMsg() {
         logger.info("优惠券过期检查发送push消息开始");
-        couponExpiredPushService.sendExpiredMsgAct();
-        logger.info("优惠券过期检查发送push消息结束");
+        try {
+            couponExpiredPushService.sendExpiredMsgAct();
+        } catch (MQException e) {
+            logger.info("优惠券过期检查发送push消息失败");
+        }
     }
 }

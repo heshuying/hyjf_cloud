@@ -315,7 +315,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
         bean.setTransType(3);
         bean.setTenderType(1);
         try {
-            fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_CONTRACT_TOPIC, JSON.toJSONBytes(bean)));
+            fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG,JSON.toJSONBytes(bean)));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("法大大发送消息失败...", e);

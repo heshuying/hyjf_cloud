@@ -2,7 +2,7 @@ package com.hyjf.cs.user.controller.wechat.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.common.bean.result.WechatResult;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -39,14 +39,14 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 */
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string}", dataType = "Map")
-	public WechatResult sendSmsCode(@RequestBody Map<String,String> param,
-									  @RequestHeader(value = "token", required = false) String token,
-									  HttpServletRequest request)
+	public WeChatResult sendSmsCode(@RequestBody Map<String,String> param,
+                                    @RequestHeader(value = "token", required = false) String token,
+                                    HttpServletRequest request)
 			throws MQException {
 		logger.info("weChat端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
 		String validCodeType = param.get("validCodeType");
 		String mobile = param.get("mobile");
-		WechatResult resultBean = new WechatResult();
+		WeChatResult resultBean = new WeChatResult();
 		sendSmsCode.sendSmsCode(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}

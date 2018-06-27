@@ -53,7 +53,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
     private static final Logger logger = LoggerFactory.getLogger(BatchHjhBorrowRepayServiceImpl.class);
 
     /** 用户ID */
-    private static final String VAL_USERID = "userId";
+    private static final String VAL_USER_ID = "userId";
     /**汇计划名称*/
     private static final String VAL_HJH_TITLE = "val_hjh_title";
     /**预期收益*/
@@ -777,13 +777,13 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         BigDecimal amount = hjhAccede.getWaitTotal();
         Map<String, String> msg = new HashMap<String, String>();
         msg.put(VAL_AMOUNT, amount.toString());// 待收金额
-        msg.put(VAL_USERID, String.valueOf(userId));
-        if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-            UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USERID)));
+        msg.put(VAL_USER_ID, String.valueOf(userId));
+        if (Validator.isNotNull(msg.get(VAL_USER_ID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
+            UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USER_ID)));
             if (users == null) {
                 return;
             } else {
-                UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USERID)));
+                UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USER_ID)));
                 if (StringUtils.isEmpty(userInfo.getTruename())) {
                     msg.put(VAL_NAME, users.getUsername());
                 } else if (userInfo.getTruename().length() > 1) {
@@ -799,7 +799,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                         msg.put(VAL_SEX, "先生");
                     }
                 }
-                AppMsMessage appMsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
+                AppMsMessage appMsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
                 try {
                     appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
                             JSON.toJSONBytes(appMsMessage)));
@@ -827,17 +827,17 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         String planName = hjhPlan.getPlanName();
         Map<String, String> msg = new HashMap<String, String>();
         msg.put(VAL_AMOUNT, amount.toString());// 待收金额
-        msg.put(VAL_USERID, String.valueOf(userId));
+        msg.put(VAL_USER_ID, String.valueOf(userId));
         msg.put(VAL_HJH_TITLE, planName);
         msg.put(VAL_INTEREST, waitInterest.toString());
         msg.put(VAL_DATE, endDateStr);
 
-        if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-            UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USERID)));
+        if (Validator.isNotNull(msg.get(VAL_USER_ID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
+            UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USER_ID)));
             if (users == null) {
                 return;
             } else {
-                UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USERID)));
+                UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USER_ID)));
                 if (StringUtils.isEmpty(userInfo.getTruename())) {
                     msg.put(VAL_NAME, users.getUsername());
                 } else if (userInfo.getTruename().length() > 1) {
@@ -853,7 +853,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                         msg.put(VAL_SEX, "先生");
                     }
                 }
-                AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
+                AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
                 try {
                     appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
                             JSON.toJSONBytes(smsMessage)));
@@ -882,15 +882,15 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         BigDecimal waitTotal = hjhAccede.getAccedeAccount();
         Map<String, String> msg = new HashMap<String, String>();
         msg.put(VAL_AMOUNT, waitTotal.toString());
-        msg.put(VAL_USERID, String.valueOf(userId));
+        msg.put(VAL_USER_ID, String.valueOf(userId));
         msg.put(VAL_HJH_TITLE, planName);
         msg.put(VAL_INTEREST, waitInterest.toString());
         msg.put(VAL_DATE, endDateStr);
-        UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USERID)));
+        UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USER_ID)));
         if (users == null || Validator.isNull(users.getMobile()) || (users.getInvestSms() != null && users.getInvestSms() == 1)) {
             return;
         }
-        UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USERID)));
+        UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USER_ID)));
         if (StringUtils.isEmpty(userInfo.getTruename())) {
             msg.put(VAL_NAME, users.getUsername());
         } else if (userInfo.getTruename().length() > 1) {
@@ -907,9 +907,9 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 msg.put(VAL_SEX, "先生");
             }
         }
-        logger.info("userid=" + msg.get(VAL_USERID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
+        logger.info("userid=" + msg.get(VAL_USER_ID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
         SmsMessage smsMessage = null;
-        smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
+        smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
             smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
@@ -979,15 +979,15 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         String planName = hjhPlan.getPlanName();
         Map<String, String> msg = new HashMap<String, String>();
         msg.put(VAL_AMOUNT, amount.toString());// 待收金额
-        msg.put(VAL_USERID, String.valueOf(userId));
+        msg.put(VAL_USER_ID, String.valueOf(userId));
         msg.put(VAL_HJH_TITLE, planName);
 
-        if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-            UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USERID)));
+        if (Validator.isNotNull(msg.get(VAL_USER_ID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
+            UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USER_ID)));
             if (users == null) {
                 return;
             } else {
-                UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USERID)));
+                UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USER_ID)));
                 if (StringUtils.isEmpty(userInfo.getTruename())) {
                     msg.put(VAL_NAME, users.getUsername());
                 } else if (userInfo.getTruename().length() > 1) {
@@ -1003,7 +1003,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                         msg.put(VAL_SEX, "先生");
                     }
                 }
-                AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
+                AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
                 try {
                     appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
                             JSON.toJSONBytes(smsMessage)));
@@ -1030,9 +1030,9 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         Map<String, String> msg = new HashMap<String, String>();
         msg.put(VAL_NAME, userName);
         msg.put(VAL_AMOUNT, repayTotal.toString());
-        msg.put(VAL_USERID, String.valueOf(userId));
+        msg.put(VAL_USER_ID, String.valueOf(userId));
         msg.put(VAL_HJH_TITLE, planName);
-        UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USERID)));
+        UserInfoVO userInfo = userClient.findUsersInfoById(Integer.valueOf(msg.get(VAL_USER_ID)));
         Integer sex = userInfo.getSex();
         if (Validator.isNotNull(sex)) {
             if (sex.intValue() == 2) {
@@ -1042,13 +1042,13 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 msg.put(VAL_SEX, "先生");
             }
         }
-        UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USERID)));
+        UserVO users = userClient.findUserById(Integer.valueOf(msg.get(VAL_USER_ID)));
         if (users == null || Validator.isNull(users.getMobile()) || (users.getInvestSms() != null && users.getInvestSms() == 1)) {
             return;
         }
-        logger.info("userid=" + msg.get(VAL_USERID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
+        logger.info("userId=" + msg.get(VAL_USER_ID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
         SmsMessage smsMessage = null;
-        smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
+        smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
             smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,

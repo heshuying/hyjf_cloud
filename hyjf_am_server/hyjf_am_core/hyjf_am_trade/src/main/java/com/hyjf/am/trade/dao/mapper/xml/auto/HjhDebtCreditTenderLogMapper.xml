@@ -35,6 +35,7 @@
     <result column="assign_repay_next_time" property="assignRepayNextTime" jdbcType="INTEGER" />
     <result column="assign_repay_yes_time" property="assignRepayYesTime" jdbcType="INTEGER" />
     <result column="assign_repay_period" property="assignRepayPeriod" jdbcType="INTEGER" />
+    <result column="assign_service_apr" property="assignServiceApr" jdbcType="DECIMAL" />
     <result column="assign_service_fee" property="assignServiceFee" jdbcType="DECIMAL" />
     <result column="assign_type" property="assignType" jdbcType="TINYINT" />
     <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
@@ -111,9 +112,9 @@
     assign_account, assign_interest, assign_repay_delay_interest, assign_repay_late_interest, 
     assign_interest_advance, assign_price, assign_pay, assign_repay_account, assign_repay_capital, 
     assign_repay_interest, assign_repay_end_time, assign_repay_last_time, assign_repay_next_time, 
-    assign_repay_yes_time, assign_repay_period, assign_service_fee, assign_type, add_ip, 
-    client, create_user_id, create_user_name, update_user_id, update_user_name, create_time, 
-    update_time
+    assign_repay_yes_time, assign_repay_period, assign_service_apr, assign_service_fee, 
+    assign_type, add_ip, client, create_user_id, create_user_name, update_user_id, update_user_name, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderLogExample" >
     select
@@ -164,10 +165,11 @@
       assign_repay_capital, assign_repay_interest, 
       assign_repay_end_time, assign_repay_last_time, 
       assign_repay_next_time, assign_repay_yes_time, 
-      assign_repay_period, assign_service_fee, assign_type, 
-      add_ip, client, create_user_id, 
-      create_user_name, update_user_id, update_user_name, 
-      create_time, update_time)
+      assign_repay_period, assign_service_apr, assign_service_fee, 
+      assign_type, add_ip, client, 
+      create_user_id, create_user_name, update_user_id, 
+      update_user_name, create_time, update_time
+      )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{creditUserId,jdbcType=INTEGER}, 
       #{creditUserName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, 
       #{repayPeriod,jdbcType=INTEGER}, #{sellOrderId,jdbcType=VARCHAR}, #{creditNid,jdbcType=VARCHAR}, 
@@ -180,10 +182,11 @@
       #{assignRepayCapital,jdbcType=DECIMAL}, #{assignRepayInterest,jdbcType=DECIMAL}, 
       #{assignRepayEndTime,jdbcType=INTEGER}, #{assignRepayLastTime,jdbcType=INTEGER}, 
       #{assignRepayNextTime,jdbcType=INTEGER}, #{assignRepayYesTime,jdbcType=INTEGER}, 
-      #{assignRepayPeriod,jdbcType=INTEGER}, #{assignServiceFee,jdbcType=DECIMAL}, #{assignType,jdbcType=TINYINT}, 
-      #{addIp,jdbcType=VARCHAR}, #{client,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
-      #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{assignRepayPeriod,jdbcType=INTEGER}, #{assignServiceApr,jdbcType=DECIMAL}, #{assignServiceFee,jdbcType=DECIMAL}, 
+      #{assignType,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, #{client,jdbcType=INTEGER}, 
+      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -286,6 +289,9 @@
       </if>
       <if test="assignRepayPeriod != null" >
         assign_repay_period,
+      </if>
+      <if test="assignServiceApr != null" >
+        assign_service_apr,
       </if>
       <if test="assignServiceFee != null" >
         assign_service_fee,
@@ -414,6 +420,9 @@
       </if>
       <if test="assignRepayPeriod != null" >
         #{assignRepayPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="assignServiceApr != null" >
+        #{assignServiceApr,jdbcType=DECIMAL},
       </if>
       <if test="assignServiceFee != null" >
         #{assignServiceFee,jdbcType=DECIMAL},
@@ -555,6 +564,9 @@
       <if test="record.assignRepayPeriod != null" >
         assign_repay_period = #{record.assignRepayPeriod,jdbcType=INTEGER},
       </if>
+      <if test="record.assignServiceApr != null" >
+        assign_service_apr = #{record.assignServiceApr,jdbcType=DECIMAL},
+      </if>
       <if test="record.assignServiceFee != null" >
         assign_service_fee = #{record.assignServiceFee,jdbcType=DECIMAL},
       </if>
@@ -625,6 +637,7 @@
       assign_repay_next_time = #{record.assignRepayNextTime,jdbcType=INTEGER},
       assign_repay_yes_time = #{record.assignRepayYesTime,jdbcType=INTEGER},
       assign_repay_period = #{record.assignRepayPeriod,jdbcType=INTEGER},
+      assign_service_apr = #{record.assignServiceApr,jdbcType=DECIMAL},
       assign_service_fee = #{record.assignServiceFee,jdbcType=DECIMAL},
       assign_type = #{record.assignType,jdbcType=TINYINT},
       add_ip = #{record.addIp,jdbcType=VARCHAR},
@@ -738,6 +751,9 @@
       <if test="assignRepayPeriod != null" >
         assign_repay_period = #{assignRepayPeriod,jdbcType=INTEGER},
       </if>
+      <if test="assignServiceApr != null" >
+        assign_service_apr = #{assignServiceApr,jdbcType=DECIMAL},
+      </if>
       <if test="assignServiceFee != null" >
         assign_service_fee = #{assignServiceFee,jdbcType=DECIMAL},
       </if>
@@ -805,6 +821,7 @@
       assign_repay_next_time = #{assignRepayNextTime,jdbcType=INTEGER},
       assign_repay_yes_time = #{assignRepayYesTime,jdbcType=INTEGER},
       assign_repay_period = #{assignRepayPeriod,jdbcType=INTEGER},
+      assign_service_apr = #{assignServiceApr,jdbcType=DECIMAL},
       assign_service_fee = #{assignServiceFee,jdbcType=DECIMAL},
       assign_type = #{assignType,jdbcType=TINYINT},
       add_ip = #{addIp,jdbcType=VARCHAR},

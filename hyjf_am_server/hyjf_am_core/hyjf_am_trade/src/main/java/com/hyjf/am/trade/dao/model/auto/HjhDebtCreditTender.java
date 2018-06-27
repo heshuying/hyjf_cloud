@@ -81,6 +81,8 @@ public class HjhDebtCreditTender implements Serializable {
 
     private Integer status;
 
+    private BigDecimal assignServiceApr;
+
     private BigDecimal assignServiceFee;
 
     private Integer client;
@@ -403,6 +405,14 @@ public class HjhDebtCreditTender implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public BigDecimal getAssignServiceApr() {
+        return assignServiceApr;
+    }
+
+    public void setAssignServiceApr(BigDecimal assignServiceApr) {
+        this.assignServiceApr = assignServiceApr;
     }
 
     public BigDecimal getAssignServiceFee() {

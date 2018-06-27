@@ -21,4 +21,6 @@ public interface BorrowApicronService {
     List<BorrowApicron> getBorrowApicronListWithRepayStatus(Integer status, Integer apiType);
 
     int updateBorrowApicronOfRepayStatus(Integer id, Integer status);
+
+    List<BorrowApicron> selectBorrowApicronListByBorrowNid(String borrowNid);
 }
