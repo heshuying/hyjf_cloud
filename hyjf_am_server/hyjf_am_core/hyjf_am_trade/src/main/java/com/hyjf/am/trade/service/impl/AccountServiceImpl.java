@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import org.springframework.beans.BeanUtils;
 
 /**
  * @author xiasq
@@ -21,6 +24,8 @@ public class AccountServiceImpl implements AccountService {
 	private AccountMapper accountMapper;
 	@Autowired
 	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
+	@Autowired
+	private BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
 
 	@Override
 	public void insert(Account account) {
@@ -48,6 +53,14 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public int updateOfRTBLoansTender(Account account) {
 		return adminAccountCustomizeMapper.updateOfRTBLoansTender(account);
+	}
+
+	@Override
+	public Integer updateOfPlanRepayAccount(AccountVO accountVO) {
+		Account account = new Account();
+		BeanUtils.copyProperties(accountVO,account);
+		boolean result =  this.batchHjhBorrowRepayCustomizeMapper.updateOfPlanRepayAccount(account) >0 ? true:false;
+		return result?1:0;
 	}
 
 }
