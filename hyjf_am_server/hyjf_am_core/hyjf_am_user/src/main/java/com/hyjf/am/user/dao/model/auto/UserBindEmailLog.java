@@ -12,11 +12,11 @@ public class UserBindEmailLog implements Serializable {
 
     private Integer userEmailStatus;
 
-    private Date createtime;
-
     private String emailActiveCode;
 
     private Date emailActiveUrlDeadtime;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -52,14 +52,6 @@ public class UserBindEmailLog implements Serializable {
         this.userEmailStatus = userEmailStatus;
     }
 
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
-    }
-
     public String getEmailActiveCode() {
         return emailActiveCode;
     }
@@ -74,5 +66,13 @@ public class UserBindEmailLog implements Serializable {
 
     public void setEmailActiveUrlDeadtime(Date emailActiveUrlDeadtime) {
         this.emailActiveUrlDeadtime = emailActiveUrlDeadtime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

@@ -3,8 +3,6 @@ package com.hyjf.am.user.dao.model.auto;
 import java.io.Serializable;
 
 public class UserAlias implements Serializable {
-    private Integer id;
-
     private Integer userId;
 
     private String sign;
@@ -16,14 +14,6 @@ public class UserAlias implements Serializable {
     private String packageCode;
 
     private static final long serialVersionUID = 1L;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getUserId() {
         return userId;

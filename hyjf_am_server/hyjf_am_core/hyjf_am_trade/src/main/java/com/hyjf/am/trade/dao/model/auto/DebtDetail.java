@@ -102,7 +102,7 @@ public class DebtDetail implements Serializable {
 
     private String remark;
 
-    private String addip;
+    private String addIp;
 
     private Integer createTime;
 
@@ -510,12 +510,12 @@ public class DebtDetail implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getCreateTime() {

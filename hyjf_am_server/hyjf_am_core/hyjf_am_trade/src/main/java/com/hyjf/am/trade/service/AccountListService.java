@@ -11,4 +11,8 @@ public interface AccountListService {
 	int addAccountList(AccountList convertBean);
 
     AccountList countAccountListByOrdId(String ordId, String type);
+
+    AccountList countAccountListByOrderId(String orderId);
+
+    int insertAccountList(AccountList accountList);
 }

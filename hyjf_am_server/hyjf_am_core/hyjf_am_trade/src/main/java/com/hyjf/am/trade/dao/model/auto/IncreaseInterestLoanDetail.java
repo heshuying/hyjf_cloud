@@ -47,7 +47,7 @@ public class IncreaseInterestLoanDetail implements Serializable {
 
     private Integer repayStatus;
 
-    private String addip;
+    private String addIp;
 
     private Integer web;
 
@@ -237,12 +237,12 @@ public class IncreaseInterestLoanDetail implements Serializable {
         this.repayStatus = repayStatus;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getWeb() {

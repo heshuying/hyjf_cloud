@@ -363,7 +363,7 @@ public class IncreaseInterestInvestServiceImpl implements IncreaseInterestInvest
 					accountList.setRepay(investUserAccount.getRepay());
 					accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作者
 					accountList.setRemark(borrowNid);
-					accountList.setIp(borrow.getAddip()); // 操作IP
+					accountList.setIp(borrow.getAddIp()); // 操作IP
 					accountList.setWeb(0); // PC
 					accountList.setIsBank(1);
 					accountList.setCheckStatus(0);

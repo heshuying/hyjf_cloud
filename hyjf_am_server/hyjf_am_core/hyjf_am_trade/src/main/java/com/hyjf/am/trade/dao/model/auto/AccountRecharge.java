@@ -41,19 +41,19 @@ public class AccountRecharge implements Serializable {
 
     private String remark;
 
-    private Date updateTime;
-
     private String operator;
 
-    private Integer addTime;
-
-    private String addip;
+    private String addIp;
 
     private Integer client;
 
     private String cardid;
 
     private String message;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -201,14 +201,6 @@ public class AccountRecharge implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getOperator() {
         return operator;
     }
@@ -217,20 +209,12 @@ public class AccountRecharge implements Serializable {
         this.operator = operator == null ? null : operator.trim();
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getClient() {
@@ -255,5 +239,21 @@ public class AccountRecharge implements Serializable {
 
     public void setMessage(String message) {
         this.message = message == null ? null : message.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

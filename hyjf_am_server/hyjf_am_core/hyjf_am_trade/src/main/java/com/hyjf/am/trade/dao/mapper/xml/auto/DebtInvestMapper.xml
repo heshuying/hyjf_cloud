@@ -41,11 +41,11 @@
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
     <result column="recover_advance_fee" property="recoverAdvanceFee" jdbcType="DECIMAL" />
@@ -125,7 +125,7 @@
     repay_capital_wait, repay_interest_wait, invest_type, repay_times, invite_user_id, 
     invite_user_name, invite_user_attribute, invite_region_id, invite_region_name, invite_branch_id, 
     invite_branch_name, invite_department_id, invite_department_name, loan_order_id, 
-    loan_order_date, `status`, web, client, remark, addip, create_time, create_user_id, 
+    loan_order_date, `status`, web, client, remark, add_ip, create_time, create_user_id, 
     create_user_name, update_time, update_user_id, update_user_name, recover_advance_fee, 
     recover_late_fee, tender_award_fee, contents, recover_full_status, recover_fee, recover_type, 
     change_status, change_period, change_userid, tender_award_account
@@ -180,7 +180,7 @@
       invite_department_id, invite_department_name, 
       loan_order_id, loan_order_date, `status`, 
       web, client, remark, 
-      addip, create_time, create_user_id, 
+      add_ip, create_time, create_user_id, 
       create_user_name, update_time, update_user_id, 
       update_user_name, recover_advance_fee, recover_late_fee, 
       tender_award_fee, contents, recover_full_status, 
@@ -200,8 +200,8 @@
       #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
       #{loanOrderId,jdbcType=VARCHAR}, #{loanOrderDate,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
       #{web,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
-      #{addip,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
-      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
+      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
       #{updateUserName,jdbcType=VARCHAR}, #{recoverAdvanceFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
       #{tenderAwardFee,jdbcType=DECIMAL}, #{contents,jdbcType=VARCHAR}, #{recoverFullStatus,jdbcType=INTEGER}, 
       #{recoverFee,jdbcType=DECIMAL}, #{recoverType,jdbcType=VARCHAR}, #{changeStatus,jdbcType=INTEGER}, 
@@ -328,8 +328,8 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -498,11 +498,11 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -511,7 +511,7 @@
         #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
@@ -680,11 +680,11 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -693,7 +693,7 @@
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -780,11 +780,11 @@
       web = #{record.web,jdbcType=TINYINT},
       client = #{record.client,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       recover_advance_fee = #{record.recoverAdvanceFee,jdbcType=DECIMAL},
@@ -919,11 +919,11 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -932,7 +932,7 @@
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
@@ -1016,11 +1016,11 @@
       web = #{web,jdbcType=TINYINT},
       client = #{client,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
+      add_ip = #{addIp,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
       recover_advance_fee = #{recoverAdvanceFee,jdbcType=DECIMAL},

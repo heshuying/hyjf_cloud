@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.BatchCouponTimeoutCommonCustomizeResponse;
+import com.hyjf.am.response.trade.BatchCouponTimeoutCommonResponse;
 import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
 import com.hyjf.cs.trade.client.CouponExpiredSmsClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class CouponExpiredSmsClientImpl implements CouponExpiredSmsClient {
     @Override
     public List<BatchCouponTimeoutCommonCustomizeVO> selectCouponQuota(int threeBeginDate, int threeEndDate) {
         String url = "http://AM-TRADE/am-trade/batch/selectCouponQuota/" + threeBeginDate + "/" + threeEndDate;
-        BatchCouponTimeoutCommonCustomizeResponse response = restTemplate.getForEntity(url, BatchCouponTimeoutCommonCustomizeResponse.class).getBody();
+        BatchCouponTimeoutCommonResponse response = restTemplate.getForEntity(url, BatchCouponTimeoutCommonResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

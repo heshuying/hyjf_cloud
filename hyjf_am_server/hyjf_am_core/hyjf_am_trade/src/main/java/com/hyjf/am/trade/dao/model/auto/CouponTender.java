@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class CouponTender implements Serializable {
     private Integer id;
@@ -11,15 +12,15 @@ public class CouponTender implements Serializable {
 
     private Integer attribute;
 
-    private String addUser;
+    private Integer createUserId;
 
-    private String updateUser;
+    private Integer updateUserId;
 
     private Integer delFlag;
 
-    private Integer addTime;
+    private Date createTime;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -55,20 +56,20 @@ public class CouponTender implements Serializable {
         this.attribute = attribute;
     }
 
-    public String getAddUser() {
-        return addUser;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setAddUser(String addUser) {
-        this.addUser = addUser == null ? null : addUser.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public String getUpdateUser() {
-        return updateUser;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Integer getDelFlag() {
@@ -79,19 +80,19 @@ public class CouponTender implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 }

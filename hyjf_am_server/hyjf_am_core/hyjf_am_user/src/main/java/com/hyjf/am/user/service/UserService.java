@@ -133,8 +133,6 @@ public interface UserService extends BaseService {
      */
     void updateFirstUtmReg(Map<String,Object> bean);
 
-	boolean updateUserInvestFlag(JSONObject para);
-
 	/**
 	 * 插入vip user
 	 * @param para

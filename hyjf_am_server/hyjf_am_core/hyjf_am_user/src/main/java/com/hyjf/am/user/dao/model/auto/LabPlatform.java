@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class LabPlatform implements Serializable {
     private Integer id;
@@ -19,7 +20,9 @@ public class LabPlatform implements Serializable {
 
     private Integer status;
 
-    private Integer addtime;
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -87,11 +90,19 @@ public class LabPlatform implements Serializable {
         this.status = status;
     }
 
-    public Integer getAddtime() {
-        return addtime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddtime(Integer addtime) {
-        this.addtime = addtime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class BorrowTenderTmpinfo implements Serializable {
     private Integer id;
@@ -9,7 +10,7 @@ public class BorrowTenderTmpinfo implements Serializable {
 
     private String tmpArray;
 
-    private Integer addTime;
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -37,11 +38,11 @@ public class BorrowTenderTmpinfo implements Serializable {
         this.tmpArray = tmpArray == null ? null : tmpArray.trim();
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

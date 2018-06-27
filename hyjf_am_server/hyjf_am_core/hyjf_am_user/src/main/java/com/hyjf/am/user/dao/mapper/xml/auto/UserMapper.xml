@@ -22,7 +22,6 @@
     <result column="is_inst_flag" property="isInstFlag" jdbcType="TINYINT" />
     <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
     <result column="account_esb" property="accountEsb" jdbcType="TINYINT" />
-    <result column="investFlag" property="investflag" jdbcType="TINYINT" />
     <result column="user_type" property="userType" jdbcType="TINYINT" />
     <result column="payment_auth_status" property="paymentAuthStatus" jdbcType="TINYINT" />
     <result column="is_set_password" property="isSetPassword" jdbcType="TINYINT" />
@@ -98,8 +97,8 @@
   <sql id="Base_Column_List" >
     user_id, username, mobile, email, `password`, salt, `status`, open_account, recharge_sms, 
     withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, reg_esb, eprovince, 
-    send_sms, is_inst_flag, inst_code, account_esb, investFlag, user_type, payment_auth_status, 
-    is_set_password, bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
+    send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, is_set_password, 
+    bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
     is_ca_flag, is_smtp, reg_ip, reg_time, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserExample" >
@@ -145,9 +144,9 @@
       icon_url, if_receive_notice, invest_sms, 
       recieve_sms, reg_esb, eprovince, 
       send_sms, is_inst_flag, inst_code, 
-      account_esb, investFlag, user_type, 
-      payment_auth_status, is_set_password, bank_open_account, 
-      bank_account_esb, is_evaluation_flag, evaluation_expired_time, 
+      account_esb, user_type, payment_auth_status, 
+      is_set_password, bank_open_account, bank_account_esb, 
+      is_evaluation_flag, evaluation_expired_time, 
       is_ca_flag, is_smtp, reg_ip, 
       reg_time, create_time, update_time
       )
@@ -157,9 +156,9 @@
       #{iconUrl,jdbcType=VARCHAR}, #{ifReceiveNotice,jdbcType=TINYINT}, #{investSms,jdbcType=TINYINT}, 
       #{recieveSms,jdbcType=TINYINT}, #{regEsb,jdbcType=TINYINT}, #{eprovince,jdbcType=VARCHAR}, 
       #{sendSms,jdbcType=TINYINT}, #{isInstFlag,jdbcType=TINYINT}, #{instCode,jdbcType=VARCHAR}, 
-      #{accountEsb,jdbcType=TINYINT}, #{investflag,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
-      #{paymentAuthStatus,jdbcType=TINYINT}, #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, 
-      #{bankAccountEsb,jdbcType=TINYINT}, #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
+      #{accountEsb,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, #{paymentAuthStatus,jdbcType=TINYINT}, 
+      #{isSetPassword,jdbcType=TINYINT}, #{bankOpenAccount,jdbcType=TINYINT}, #{bankAccountEsb,jdbcType=TINYINT}, 
+      #{isEvaluationFlag,jdbcType=TINYINT}, #{evaluationExpiredTime,jdbcType=TIMESTAMP}, 
       #{isCaFlag,jdbcType=TINYINT}, #{isSmtp,jdbcType=TINYINT}, #{regIp,jdbcType=VARCHAR}, 
       #{regTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
@@ -226,9 +225,6 @@
       </if>
       <if test="accountEsb != null" >
         account_esb,
-      </if>
-      <if test="investflag != null" >
-        investFlag,
       </if>
       <if test="userType != null" >
         user_type,
@@ -327,9 +323,6 @@
       </if>
       <if test="accountEsb != null" >
         #{accountEsb,jdbcType=TINYINT},
-      </if>
-      <if test="investflag != null" >
-        #{investflag,jdbcType=TINYINT},
       </if>
       <if test="userType != null" >
         #{userType,jdbcType=TINYINT},
@@ -441,9 +434,6 @@
       <if test="record.accountEsb != null" >
         account_esb = #{record.accountEsb,jdbcType=TINYINT},
       </if>
-      <if test="record.investflag != null" >
-        investFlag = #{record.investflag,jdbcType=TINYINT},
-      </if>
       <if test="record.userType != null" >
         user_type = #{record.userType,jdbcType=TINYINT},
       </if>
@@ -510,7 +500,6 @@
       is_inst_flag = #{record.isInstFlag,jdbcType=TINYINT},
       inst_code = #{record.instCode,jdbcType=VARCHAR},
       account_esb = #{record.accountEsb,jdbcType=TINYINT},
-      investFlag = #{record.investflag,jdbcType=TINYINT},
       user_type = #{record.userType,jdbcType=TINYINT},
       payment_auth_status = #{record.paymentAuthStatus,jdbcType=TINYINT},
       is_set_password = #{record.isSetPassword,jdbcType=TINYINT},
@@ -588,9 +577,6 @@
       <if test="accountEsb != null" >
         account_esb = #{accountEsb,jdbcType=TINYINT},
       </if>
-      <if test="investflag != null" >
-        investFlag = #{investflag,jdbcType=TINYINT},
-      </if>
       <if test="userType != null" >
         user_type = #{userType,jdbcType=TINYINT},
       </if>
@@ -654,7 +640,6 @@
       is_inst_flag = #{isInstFlag,jdbcType=TINYINT},
       inst_code = #{instCode,jdbcType=VARCHAR},
       account_esb = #{accountEsb,jdbcType=TINYINT},
-      investFlag = #{investflag,jdbcType=TINYINT},
       user_type = #{userType,jdbcType=TINYINT},
       payment_auth_status = #{paymentAuthStatus,jdbcType=TINYINT},
       is_set_password = #{isSetPassword,jdbcType=TINYINT},
