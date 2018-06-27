@@ -51,5 +51,14 @@ public class AutoMapper {
 
     @Autowired
     protected VipUserTenderMapper vipUserTenderMapper;
+
+    @Autowired
+    protected CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
+
+    @Autowired
+    protected UserLoginLogMapper userLoginLogMapper;
+
+    @Autowired
+    protected PreRegistMapper preRegistMapper;
 }
 

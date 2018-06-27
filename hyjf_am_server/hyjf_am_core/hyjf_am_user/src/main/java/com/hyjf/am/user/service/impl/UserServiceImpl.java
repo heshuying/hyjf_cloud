@@ -5,13 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
-import com.hyjf.am.user.dao.mapper.auto.*;
-import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserLoginLogMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
-import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
@@ -52,32 +50,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private UserLoginLogMapper userLoginLogMapper;
-	@Autowired
-	private PreRegistMapper preRegistMapper;
-	@Autowired
 	private AccountProducer accountProducer;
-	@Autowired
-	UserInfoService userInfoService;
-
-	@Autowired
-	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
-
-    @Autowired
-    UtmRegCustomizeMapper utmRegCustomizeMapper;
-
-    @Autowired
-	VipUserTenderMapper vipUserTenderMapper;
-
-	@Autowired
-	UserManagerCustomizeMapper userManagerCustomizeMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
 
 	/**
 	 * 注册
-	 * 
+	 *
 	 * @param userRequest
 	 * @return
 	 * @throws MQException
@@ -294,7 +274,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册查询推荐人信息
-	 * 
+	 *
 	 * @param mobile
 	 * @param reffer
 	 * @return
@@ -344,7 +324,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册写用户表
-	 * 
+	 *
 	 * @param mobile
 	 * @param password
 	 * @param loginIp
@@ -389,7 +369,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册写用户信息表
-	 * 
+	 *
 	 * @param userId
 	 * @param loginIp
 	 * @param attribute
@@ -422,7 +402,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存账户表
-	 * 
+	 *
 	 * @param userId
 	 * @throws MQException
 	 */
@@ -474,7 +454,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存推荐人
-	 * 
+	 *
 	 * @param userId
 	 *            注册用户
 	 * @param referer
@@ -496,7 +476,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存推广信息
-	 * 
+	 *
 	 * @param userId
 	 * @param utmId
 	 */
@@ -526,7 +506,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	/**
 	 * 注册保存日志
-	 * 
+	 *
 	 * @param userId
 	 * @param loginIp
 	 */
@@ -784,7 +764,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return accountChinapnr;
 	}
-	
+
 	/**
 	 * 保存紧急联系人信息
 	 * @auther: hesy
@@ -835,7 +815,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 插入绑定邮箱日志
 	 * @auther: hesy
@@ -876,7 +856,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 绑定邮箱更新
 	 * @auther: hesy
@@ -890,7 +870,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		User u = usersList.get(0);
 		u.setEmail(email);
 		userMapper.updateByPrimaryKeySelective(u);
-		
+
 		UserBindEmailLog log = this.getUserBindEmail(userId);
 		if(log != null) {
 			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);

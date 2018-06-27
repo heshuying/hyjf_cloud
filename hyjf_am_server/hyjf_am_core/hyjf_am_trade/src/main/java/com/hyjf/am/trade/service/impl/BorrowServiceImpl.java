@@ -73,32 +73,7 @@ import com.hyjf.common.util.GetDate;
 @Service
 public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService {
 
-    @Autowired
-    private BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
 
-    @Autowired
-    private BorrowConfigMapper borrowConfigMapper;
-
-    @Autowired
-    private BorrowMapper borrowMapper;
-
-    @Autowired
-    private BorrowManinfoMapper borrowManinfoMapper;
-    @Autowired
-    private BorrowStyleMapper borrowStyleMapper;
-
-    @Autowired
-    private BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    private BorrowTenderTmpMapper borrowTenderTmpMapper;
-
-    @Autowired
-    private BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
-
-
-    @Autowired
-    private BorrowCustomizeMapper borrowCustomizeMapper;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -285,6 +260,4 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     public WebProjectPersonDetailVO getProjectPerson(String borrowNid) {
         return borrowCustomizeMapper.getProjectPsersonDetail(borrowNid);
     }
-
-
 }
