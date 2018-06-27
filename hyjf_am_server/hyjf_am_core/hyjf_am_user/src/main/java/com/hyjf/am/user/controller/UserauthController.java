@@ -21,10 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
+import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
+import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthListCustomize;
+import com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize;
 import com.hyjf.am.user.service.UserauthService;
 import com.hyjf.am.vo.user.AdminUserAuthListVO;
+import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
 import com.hyjf.common.paginator.Paginator;
 
 /**
@@ -129,5 +133,30 @@ public class UserauthController {
 		result.setRtn(AdminUserAuthListResponse.SUCCESS);
 		return result;
 	}
+	// 查询授权明细
+	@PostMapping("/userauthloglist")
+	public AdminUserAuthLogListResponse userauthloglist(
+			@RequestBody @Valid AdminUserAuthLogListRequest form) {
+		AdminUserAuthLogListResponse ap=new AdminUserAuthLogListResponse();
+		 Map<String, Object> authUser = new HashMap<String, Object>();
+	        authUser.put("userName", form.getUserName());
+	        authUser.put("authType", form.getAuthType());
+	        authUser.put("orderId", form.getOrderId());
+	        authUser.put("addTimeStart", form.getAddTimeStart());
+	        authUser.put("addTimeEnd", form.getAddTimeEnd());
+	        authUser.put("orderStatus", form.getOrderStatus());
+	        int recordTotal = this.userauthService.countRecordTotalLog(authUser);
+	        if (recordTotal > 0) {
+	            Paginator paginator = new Paginator(form.getPaginatorPage(), recordTotal);
+	            List<AdminUserAuthLogListCustomize> recordList = this.userauthService.getRecordListLog(authUser, paginator.getOffset(), paginator.getLimit());
+	            List<AdminUserAuthLogListVO> avo = null;
+				BeanUtils.copyProperties(recordList, avo);
+	            ap.setResultList(avo);
+	            ap.setRecordTotal(recordTotal);
+	            ap.setRtn(Response.SUCCESS);
+	            return ap;
+	        }
+	        return null;
 
+	}
 }
