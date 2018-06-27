@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/am-trade/borrow")
+@RequestMapping("/am-trade/borrowTender")
 public class BorrowTenderController {
 
     @Autowired
@@ -24,11 +24,14 @@ public class BorrowTenderController {
      * @author zhangyk
      * @date 2018/6/26 9:31
      */
-    @GetMapping("/borrowtender/{borrowNid}/{userId}")
+    @GetMapping("/countUserInvest/{borrowNid}/{userId}")
     public BorrowTenderResponse countUserInvest(String borrowNid, Integer userId) {
         BorrowTenderResponse response = new BorrowTenderResponse();
         Integer count  = borrowTenderService.getCountBorrowTenderService(userId, borrowNid);
         response.setTenderCount(count);
         return response;
     }
+
+
+
 }
