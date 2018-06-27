@@ -112,5 +112,9 @@ public interface MQConstant {
 	String FDD_GROUP = "FDD_GROUP";
 	String FDD_CONTRACT_TOPIC = "FDD_CONTRACT_TOPIC";
 
-
+	/**
+	 * 汇计划退出
+	 */
+	String HJH_QUIT = "HJH_QUIT";
+	String HJH_QUIT_TOPIC = "HJH_QUIT_TOPIC";
 }
