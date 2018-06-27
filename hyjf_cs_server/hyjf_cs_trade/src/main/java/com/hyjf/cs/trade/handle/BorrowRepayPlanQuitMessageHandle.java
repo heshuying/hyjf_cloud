@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.handle;
 
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.trade.service.BatchHjhBorrowRepayService;
@@ -24,11 +23,8 @@ public class BorrowRepayPlanQuitMessageHandle{
 
     private static final Logger logger = LoggerFactory.getLogger(BorrowRepayPlanQuitMessageHandle.class);
 
-    public void sendMessage(HjhAccedeVO hjhAccede) {
+    public void sendMessage(String accedeOrderId,Integer orderStatus,Integer creditCompleteFlag) {
 
-        String accedeOrderId = hjhAccede.getAccedeOrderId();
-        Integer orderStatus = hjhAccede.getOrderStatus();
-        Integer creditCompleteFlag = hjhAccede.getCreditCompleteFlag();
         if (orderStatus == 2) {
             logger.info("--------------计划订单号："+ accedeOrderId +"，开始进入锁定期！------");
         }else if(orderStatus == 5 && creditCompleteFlag == 1){//计划退出中并且清算标示完成

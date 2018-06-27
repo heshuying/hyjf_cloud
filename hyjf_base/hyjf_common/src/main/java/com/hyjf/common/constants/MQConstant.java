@@ -118,4 +118,9 @@ public interface MQConstant {
 	String FDD_AUTO_SIGN_TAG = "FDD_AUTO_SIGN_TAG";
 	//法大大下载脱敏处理
 	String FDD_DOWNPDF_AND_DESSENSITIZATION_TAG = "FDD_DOWNPDF_AND_DESSENSITIZATION_TAG";
+	/**
+	 * 汇计划退出
+	 */
+	String HJH_QUIT = "HJH_QUIT";
+	String HJH_QUIT_TOPIC = "HJH_QUIT_TOPIC";
 }
