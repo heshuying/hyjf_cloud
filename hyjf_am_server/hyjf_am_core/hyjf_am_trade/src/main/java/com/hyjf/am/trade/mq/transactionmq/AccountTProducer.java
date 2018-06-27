@@ -36,14 +36,14 @@ public class AccountTProducer extends TransactionProducer {
 
 			Integer userId = JSON.parseObject(msg.getBody(), Integer.class);
 			if (userId == null) {
-				logger.error("失败， 参数解析错误...");
+				logger.error("事务消息发送失败， 参数解析错误...");
 				return LocalTransactionState.ROLLBACK_MESSAGE;
 			}
 			// 执行本地事务
 			try {
 				transactionService.updateAmount(userId);
 			} catch (Exception e) {
-				logger.error("失败....", e);
+				logger.error("事务消息发送失败....", e);
 				return LocalTransactionState.ROLLBACK_MESSAGE;
 			}
 			logger.info("事务消息提交成功...");
