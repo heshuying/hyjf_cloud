@@ -21,7 +21,6 @@ public interface BorrowService extends BaseService{
 
     BorrowStyle getborrowStyleByNid(String borrowStyle);
 
-
     /**
      * 根据项目类型，期限，获取借款利率
      * @param request
@@ -56,13 +55,6 @@ public interface BorrowService extends BaseService{
      * @return
      */
     List<Borrow> selectBorrowList();
-
-    /**
-     * 获取BorrowInfo
-     * @param borrowNid
-     * @return
-     */
-    BorrowInfo getBorrowInfoByNid(String borrowNid);
 
     /**
      * 投资之前插入tmp表
