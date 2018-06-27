@@ -187,13 +187,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								params.put("investProjectPeriod", investProjectPeriod);
 								// 更新渠道统计用户累计投资
 								params.put("investFlag",request.getLogUser().getInvestflag());
-								try {
-									appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-											MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_NEW_TAG,JSON.toJSONBytes(params)));
-								} catch (MQException e) {
-									e.printStackTrace();
-									logger.error(" 更新渠道统计用户累计投资推送消息队列失败！！！");
-								}
+								this.amUserClient.updateFirstUtmReg(params);
 								logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
 							}
 						}
