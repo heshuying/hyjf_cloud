@@ -27,6 +27,7 @@ import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BorrowTenderService;
 import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -150,6 +151,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogIp(request.getIp());// 客户IP
         callBean.setLogUserId(String.valueOf(userId));// 投资用户
         callBean.setLogUserName(request.getUser().getUsername());// 投资用户名
+        callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
         String retUrl = systemConfig.getFrontHost() + "/user/openError"+"?logOrdId="+orderId;
         String successUrl = systemConfig.getFrontHost() +"/user/openSuccess";
@@ -330,8 +332,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 新手标
         if (borrowProjectType.getInvestUserType().equals("1")) {
+            boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资
-            if (user.getInvestflag()==0) {
+            if (!isNew) {
                 throw new ReturnMessageException(MsgEnum.ERR_TRADE_NEW_USER);
             }
         }
@@ -396,5 +399,38 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             borrowProjectType = projectTypes.get(0);
         }
         return borrowProjectType;
+    }
+
+    /**
+     * 散标投资异步处理
+     *
+     * @param bean
+     * @return
+     */
+    @Override
+    public BankCallResult borrowTenderBgReturn(BankCallBean bean) {
+        int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());// 用户Userid
+        String respCode = bean.getRetCode();// 投资结果返回码
+        Integer platForm = bean.getLogClient();
+        BankCallResult result = new BankCallResult();
+        result.setStatus(true); // true 的话PAY工程就不调用了  false的话PAY还会调用
+        if (StringUtils.isBlank(respCode)) {
+            result.setStatus(false);
+            result.setMessage("银行返回码为空");
+            return result;
+        }
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
+            // 返回码提示余额不足，不结冻
+            if (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(respCode)) {
+                logger.info("PC用户:" + userId + "**投资接口调用失败，余额不足，错误码: " + respCode);
+                result.setMessage("投资失败，可用余额不足！请联系客服.");
+                return result;
+            } else {
+                result.setMessage(bean.getRetMsg());
+                return result;
+            }
+        }
+
+        return null;
     }
 }

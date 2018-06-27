@@ -4,7 +4,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 
 import java.util.List;
 
-public interface AmBorrowHousesClient {
+public interface BorrowHousesClient {
 
     List<BorrowHousesVO> getBorrowHousesByNid(String borrowNid);
 

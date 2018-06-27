@@ -210,6 +210,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                                 new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                                         MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_OLD_TAG,JSON.toJSONBytes(params)));
                                     }else{
+
                                         UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);
                                         if (Validator.isNotNull(utmRegVO)){
                                             Map<String, Object> params = new HashMap<String, Object>();
@@ -227,9 +228,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                             params.put("investProjectPeriod", investProjectPeriod);
                                             //首次投标标志位
                                             if (investUser.getInvestflag() == 0){
-                                                this.appChannelStatisticsDetailProducer.messageSend(
-                                                        new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                                                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_NEW_TAG,JSON.toJSONBytes(params)));
+                                            	this.amUserClient.updateFirstUtmReg(params);
                                             }
                                         }
                                     }

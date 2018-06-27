@@ -38,6 +38,13 @@ public interface WebProjectListService extends BaseTradeService{
      */
     public WebResult searchCreditList(CreditListRequest request);
 
+    /**
+     * web端债转详情
+     * @author zhangyk
+     * @date 2018/6/26 9:56
+     */
+    public WebResult getCreditDetail(Map<String,Object> map,String userId);
+
 
     /**
      * 计划专区上部统计数据

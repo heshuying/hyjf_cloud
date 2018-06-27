@@ -1,12 +1,9 @@
 package com.hyjf.am.statistics.mq;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.statistics.bean.AppChannelStatisticsDetail;
 import com.hyjf.am.statistics.mongo.AppChannelStatisticsDetailDao;
-import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -19,15 +16,14 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.common.constants.MQConstant;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -87,7 +83,8 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 					if (entity != null) {
 						appChannelStatisticsDetailDao.save(entity);
 					}
-				}else if(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_OLD_TAG.equals(msg.getTags())) {
+				}else if(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_OLD_TAG.equals(msg.getTags())
+						&& MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_OLD_TAG.equals(msg.getTags())) {
 					JSONObject entity = JSONObject.parseObject(msg.getBody(),JSONObject.class);
 					if (Validator.isNotNull(entity)){
 						Integer investFlag= (Integer) entity.get("investFlag");
@@ -119,16 +116,6 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 							appChannelStatisticsDetailDao.update(query,update);
 						}
 					}
-				}else if(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_NEW_TAG.equals(msg.getTags())) {
-					//更新首投信息
-
-
-				}else if(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_OLD_TAG.equals(msg.getTags())) {
-
-
-				}else if(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_NEW_TAG.equals(msg.getTags())) {
-
-
 				}
 			}
 

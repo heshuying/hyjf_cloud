@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 
 import java.util.List;
 
@@ -24,5 +25,12 @@ public interface BorrowCreditService {
      * @return
      */
     Integer updateBorrowCredit(BorrowCreditVO borrowCreditVO);
+
+    /**
+     * 查询债转详情
+     * @author zhangyk
+     * @date 2018/6/26 11:54
+     */
+    BorrowCreditDetailVO getBorrowCreditDetail(String creditNid);
 
 }
