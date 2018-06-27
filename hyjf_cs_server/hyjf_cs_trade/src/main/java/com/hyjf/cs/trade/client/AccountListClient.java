@@ -11,5 +11,7 @@ public interface AccountListClient {
 
     int countAccountListByOrdId(String ordId, String type);
 
+    int countAccountListByNidCoupon(String orderId);
+
     Integer insertAccountListSelective(AccountListVO accountListVO);
 }

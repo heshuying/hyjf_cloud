@@ -17,4 +17,8 @@ public interface AccountListService {
     Integer insertAccountListSelective(AccountListVO accountListVO);
 
     Integer updateOfPlanRepayAccount( AccountVO accountVO);
+
+    AccountList countAccountListByOrderId(String orderId);
+
+    int insertAccountList(AccountList accountList);
 }

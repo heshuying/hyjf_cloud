@@ -4,7 +4,9 @@ import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+//@Component
 public class ApiSignUtil {
 	
 	/** 汇盈金服公钥文件地址(请求) **/
@@ -45,7 +47,7 @@ public class ApiSignUtil {
 	 * @throws Exception
 	 */
 	public static String encryptByRSA(String... encPramas) {
-		
+		System.out.println(HYJF_REQ_PUB_KEY_PATH + "::::::::" + HYJF_REQ_PRI_KEY_PATH + "::::::::" + HYJF_REQ_KEY_PASS + "::::::::" + HYJF_RES_PUB_KEY_PATH + "::::::::" + HYJF_RES_PRI_KEY_PATH + ":::::::::" + HYJF_RES_KEY_PASS);
 		// 生成待签名字符串
 		StringBuffer buff = new StringBuffer();
 		for (String param : encPramas) {
@@ -146,6 +148,30 @@ public class ApiSignUtil {
 		}
 		return b;
 	}
-	
-	
+
+
+/*	@Value("${hyjf.req.pub.key}")
+	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
+		HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
+	}
+	@Value("${hyjf.req.pri.key}")
+	public void setHyjfReqPriKeyPath(String hyjfReqPriKeyPath) {
+		HYJF_REQ_PRI_KEY_PATH = hyjfReqPriKeyPath;
+	}
+	@Value("${hyjf.req.password}")
+	public void setHyjfReqKeyPass(String hyjfReqKeyPass) {
+		HYJF_REQ_KEY_PASS = hyjfReqKeyPass;
+	}
+	@Value("${hyjf.res.pub.key}")
+	public void setHyjfResPubKeyPath(String hyjfResPubKeyPath) {
+		HYJF_RES_PUB_KEY_PATH = hyjfResPubKeyPath;
+	}
+	@Value("${hyjf.res.pri.key}")
+	public void setHyjfResPriKeyPath(String hyjfResPriKeyPath) {
+		HYJF_RES_PRI_KEY_PATH = hyjfResPriKeyPath;
+	}
+	@Value("${hyjf.res.password}")
+	public void setHyjfResKeyPass(String hyjfResKeyPass) {
+		HYJF_RES_KEY_PASS = hyjfResKeyPass;
+	}*/
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.service.AccountListService;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -59,6 +60,26 @@ public class AccountListServiceImpl implements AccountListService {
 		BeanUtils.copyProperties(accountVO,account);
 		boolean result =  this.batchHjhBorrowRepayCustomizeMapper.updateOfPlanRepayAccount(account) >0 ? true:false;
 		return result?1:0;
+	}
+
+	@Override
+	public AccountList countAccountListByOrderId(String orderId) {
+		AccountListExample accountListExample = new AccountListExample();
+		accountListExample.createCriteria().andNidEqualTo(orderId).andTradeEqualTo("increase_interest_profit");
+		List<AccountList> accountlist = this.accountListMapper.selectByExample(accountListExample);
+		if (!CollectionUtils.isEmpty(accountlist)) {
+			return accountlist.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public int insertAccountList(AccountList accountList) {
+		int count = accountListMapper.insertSelective(accountList);
+		if (count >= 0) {
+			return count;
+		}
+		return 0;
 	}
 
 

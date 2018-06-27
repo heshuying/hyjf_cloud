@@ -161,4 +161,5 @@ public interface AmUserClient {
 	 * @return
 	 */
 	boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest);
+	List<OrganizationStructureVO> searchGroupInfo();
 }
