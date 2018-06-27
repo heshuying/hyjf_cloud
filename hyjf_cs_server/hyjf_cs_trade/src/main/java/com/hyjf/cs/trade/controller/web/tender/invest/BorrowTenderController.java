@@ -13,6 +13,8 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BorrowTenderService;
 import com.hyjf.cs.trade.service.HjhTenderService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -25,7 +27,7 @@ import javax.validation.Valid;
 import java.util.Map;
 
 /**
- * @Description web端加入计划
+ * @Description Web端散标投资
  * @Author sss
  * @Version v0.1
  * @Date 2018/6/19 9:32
@@ -57,6 +59,15 @@ public class BorrowTenderController extends BaseTradeController {
             // TODO: 2018/6/25  删除redis校验
             //RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }
+        return result;
+    }
+
+    @ApiOperation(value = "web端散标投资异步处理", notes = "web端散标投资异步处理")
+    @RequestMapping("/bgReturn")
+    @ResponseBody
+    public BankCallResult borrowTenderBgReturn(BankCallBean bean) {
+        logger.info("web端散标投资异步处理start,userId:{}", bean.getLogUserId());
+        BankCallResult result = borrowTenderService.borrowTenderBgReturn(bean);
         return result;
     }
 

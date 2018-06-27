@@ -361,14 +361,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // TODO: 2018/6/22  crm投资推送
            /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
                     RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
-            // 更新用户不是新手了
-            UserVO user = amUserClient.findUserById(userId);
+            // 不用更新用户是不是新手  通过查询获得
+            /*UserVO user = amUserClient.findUserById(userId);
             if (user != null) {
                 if (user.getInvestflag() == 0) {
                     user.setInvestflag(1);
                     boolean updateUserFlag = amUserClient.updateByPrimaryKeySelective(user);
                 }
-            }
+            }*/
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
         }
