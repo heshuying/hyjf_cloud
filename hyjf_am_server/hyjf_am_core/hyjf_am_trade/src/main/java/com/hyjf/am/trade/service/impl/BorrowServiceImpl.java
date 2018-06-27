@@ -27,7 +27,29 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowManinfoMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetDate;
@@ -74,6 +96,9 @@ public class BorrowServiceImpl implements BorrowService {
     @Autowired
     private BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
 
+
+    @Autowired
+    private BorrowCustomizeMapper borrowCustomizeMapper;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -257,5 +282,21 @@ public class BorrowServiceImpl implements BorrowService {
         }
         return 1;
     }
+
+    @Override
+    public ProjectCustomeDetailVO getProjectDetail(String borrowNid) {
+        return borrowCustomizeMapper.getProjectDetail(borrowNid);
+    }
+
+    @Override
+    public ProjectCompanyDetailVO getProjectCompany(String borrowNid) {
+        return borrowCustomizeMapper.getProjectCompanyDetail(borrowNid);
+    }
+
+    @Override
+    public WebProjectPersonDetailVO getProjectPerson(String borrowNid) {
+        return borrowCustomizeMapper.getProjectPsersonDetail(borrowNid);
+    }
+
 
 }

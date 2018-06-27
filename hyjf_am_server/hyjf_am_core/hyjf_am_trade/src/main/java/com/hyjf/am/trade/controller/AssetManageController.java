@@ -13,6 +13,8 @@ import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeV
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.util.CommonUtils;
 import netscape.javascript.JSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/am-trade/assetmanage")
 public class AssetManageController {
-    private static Logger logger = LoggerFactory.getLogger(AccountWithdrawController.class);
+    private static Logger logger = LoggerFactory.getLogger(AssetManageController.class);
     @Autowired
     private AssetManageService assetManageService;
     /**
@@ -47,16 +49,10 @@ public class AssetManageController {
         logger.info("request:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<CurrentHoldObligatoryRightListCustomize> list = assetManageService.selectCurrentHoldObligatoryRightList(request);
-        List<CurrentHoldObligatoryRightListCustomizeVO> voList=null;
         if(!CollectionUtils.isEmpty(list)){
-            voList=new ArrayList<>(list.size());
-            for (CurrentHoldObligatoryRightListCustomize customize:list) {
-                CurrentHoldObligatoryRightListCustomizeVO vo=new CurrentHoldObligatoryRightListCustomizeVO();
-                BeanUtils.copyProperties(customize,vo);;
-                voList.add(vo);
-            }
+            List<CurrentHoldObligatoryRightListCustomizeVO> voList = CommonUtils.convertBeanList(list, CurrentHoldObligatoryRightListCustomizeVO.class);
+            response.setCurrentHoldObligatoryRightList(voList);
         }
-        response.setCurrentHoldObligatoryRightList(voList);
         return response;
     }
 
@@ -87,16 +83,11 @@ public class AssetManageController {
         logger.info("request:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<RepayMentListCustomize> list = assetManageService.selectRepaymentList(request);
-        List<RepayMentListCustomizeVO> voList=null;
         if(!CollectionUtils.isEmpty(list)){
-            voList=new ArrayList<>(list.size());
-            for (RepayMentListCustomize customize:list) {
-                RepayMentListCustomizeVO vo=new RepayMentListCustomizeVO();
-                BeanUtils.copyProperties(customize,vo);;
-                voList.add(vo);
-            }
+            List<RepayMentListCustomizeVO> voList = CommonUtils.convertBeanList(list, RepayMentListCustomizeVO.class);
+            response.setRepayMentList(voList);
         }
-        response.setRepayMentList(voList);
+
         return response;
     }
 
@@ -129,16 +120,11 @@ public class AssetManageController {
         logger.info("request:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<TenderCreditDetailCustomize> list = assetManageService.selectCreditRecordList(request);
-        List<TenderCreditDetailCustomizeVO> voList=null;
         if(!CollectionUtils.isEmpty(list)){
-            voList=new ArrayList<>(list.size());
-            for (TenderCreditDetailCustomize customize:list) {
-                TenderCreditDetailCustomizeVO vo=new TenderCreditDetailCustomizeVO();
-                BeanUtils.copyProperties(customize,vo);;
-                voList.add(vo);
-            }
+            List<TenderCreditDetailCustomizeVO> voList = CommonUtils.convertBeanList(list, TenderCreditDetailCustomizeVO.class);
+            response.setCreditRecordList(voList);
         }
-        response.setCreditRecordList(voList);
+
         return response;
     }
 
@@ -153,7 +139,6 @@ public class AssetManageController {
         logger.info("request:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         int tenderCreditDetailCount = this.assetManageService.countCreditRecordTotal(request);
-
         response.setTenderCreditDetailCount(tenderCreditDetailCount);
         return response;
     }
@@ -169,16 +154,11 @@ public class AssetManageController {
         logger.info("request:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<CurrentHoldPlanListCustomize> list = assetManageService.selectCurrentHoldPlanList(request);
-        List<CurrentHoldPlanListCustomizeVO> voList=null;
         if(!CollectionUtils.isEmpty(list)){
-            voList=new ArrayList<>(list.size());
-            for (CurrentHoldPlanListCustomize customize:list) {
-                CurrentHoldPlanListCustomizeVO vo=new CurrentHoldPlanListCustomizeVO();
-                BeanUtils.copyProperties(customize,vo);;
-                voList.add(vo);
-            }
+            List<CurrentHoldPlanListCustomizeVO> voList = CommonUtils.convertBeanList(list, CurrentHoldPlanListCustomizeVO.class);
+            response.setCurrentHoldPlanList(voList);
         }
-        response.setCurrentHoldPlanList(voList);
+
         return response;
     }
 
@@ -209,16 +189,11 @@ public class AssetManageController {
         logger.info("request:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<RepayMentPlanListCustomize> list = assetManageService.selectRepayMentPlanList(request);
-        List<RepayMentPlanListCustomizeVO> voList=null;
         if(!CollectionUtils.isEmpty(list)){
-            voList=new ArrayList<>(list.size());
-            for (RepayMentPlanListCustomize customize:list) {
-                RepayMentPlanListCustomizeVO vo=new RepayMentPlanListCustomizeVO();
-                BeanUtils.copyProperties(customize,vo);;
-                voList.add(vo);
-            }
+            List<RepayMentPlanListCustomizeVO> voList = CommonUtils.convertBeanList(list, RepayMentPlanListCustomizeVO.class);
+            response.setRepayMentPlanList(voList);
         }
-        response.setRepayMentPlanList(voList);
+
         return response;
     }
 

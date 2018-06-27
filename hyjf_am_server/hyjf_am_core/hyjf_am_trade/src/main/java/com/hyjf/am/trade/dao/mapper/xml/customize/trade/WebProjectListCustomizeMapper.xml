@@ -606,7 +606,7 @@
 	</sql>
 
     <!--web端查询计划专区上部统计数据-->
-    <select id="searchPlanData" resultType="map" >
+    <select id="searchPlanData" resultType="int" >
 				SELECT
 			count(hha.id) + (
 				SELECT

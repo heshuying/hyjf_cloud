@@ -1676,6 +1676,12 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        
+         <table tableName="ht_message_push_tag" domainObjectName="MessagePushTag">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_login" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
     </context>
 </generatorConfiguration>
