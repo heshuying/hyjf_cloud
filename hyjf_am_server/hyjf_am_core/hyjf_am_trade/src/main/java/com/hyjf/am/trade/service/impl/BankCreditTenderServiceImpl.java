@@ -93,8 +93,8 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		CreditTenderLogExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(0);
 		// 添加时间 <当前时间-5分钟
-		cra.andAddTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime10(),-5));
-		cra.andAddTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));//两天之前
+		cra.andCreateTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime10(),-5));
+		cra.andCreateTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));//两天之前
 		return creditTenderLogMapper.selectByExample(example);
 	}
 
@@ -414,7 +414,6 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				creditTender.setAssignCreateDate(creditTenderLog.getAssignCreateDate());// 认购日期
 				creditTender.setAssignPay(creditTenderLog.getAssignPay());// 支付金额
 				creditTender.setCreditFee(creditTenderLog.getCreditFee());// 服务费
-				creditTender.setAddTime(GetDate.getDate(nowTime));// 添加时间
 				creditTender.setAssignCapital(creditTenderLog.getAssignCapital());// 投资本金
 				creditTender.setUserId(userId);// 用户名称
 				creditTender.setCreditUserId(sellerUserId);// 出让人id

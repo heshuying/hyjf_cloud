@@ -236,11 +236,11 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         if (planList != null && planList.size() > 0) {
             HjhPlanVO hjhPlan = planList.get(0);
             if ("endday".equals(hjhPlan.getBorrowStyle())) {//锁定期为日
-                lockTime = GetDate.getDayStart10(GetDate.countDate(new Date() ,5,hjhPlan.getLockPeriod()-1));
-                lastPaymentTime = GetDate.getDayStart10(GetDate.countDate(new Date() ,5,hjhPlan.getLockPeriod()+2));
+                lockTime = GetDate.getDayStart11(GetDate.countDate(new Date() ,5,hjhPlan.getLockPeriod()-1));
+                lastPaymentTime = GetDate.getDayStart11(GetDate.countDate(new Date() ,5,hjhPlan.getLockPeriod()+2));
             }else{
-                lockTime = GetDate.getDayStart10(GetDate.countDate(new Date() ,2,hjhPlan.getLockPeriod()));
-                lastPaymentTime = GetDate.getDayStart10(GetDate.countDate(GetDate.countDate(new Date() ,2,hjhPlan.getLockPeriod()), 5, +3));
+                lockTime = GetDate.getDayStart11(GetDate.countDate(new Date() ,2,hjhPlan.getLockPeriod()));
+                lastPaymentTime = GetDate.getDayStart11(GetDate.countDate(GetDate.countDate(new Date() ,2,hjhPlan.getLockPeriod()), 5, +3));
             }
         }
         hjhAccede.setQuitTime(lockTime);

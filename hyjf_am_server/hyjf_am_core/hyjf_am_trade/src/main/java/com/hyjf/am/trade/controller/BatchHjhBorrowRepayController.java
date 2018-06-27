@@ -10,6 +10,7 @@ import com.hyjf.am.trade.service.BatchHjhBorrowRepayService;
 import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
