@@ -83,13 +83,13 @@ public class CreditTender implements Serializable {
 
     private String inviteUserCreditDepartmentname;
 
-    private Date addTime;
-
-    private String addip;
-
     private Integer client;
 
     private Integer recoverPeriod;
+
+    private String addip;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -405,22 +405,6 @@ public class CreditTender implements Serializable {
         this.inviteUserCreditDepartmentname = inviteUserCreditDepartmentname == null ? null : inviteUserCreditDepartmentname.trim();
     }
 
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
-    }
-
     public Integer getClient() {
         return client;
     }
@@ -435,5 +419,21 @@ public class CreditTender implements Serializable {
 
     public void setRecoverPeriod(Integer recoverPeriod) {
         this.recoverPeriod = recoverPeriod;
+    }
+
+    public String getAddip() {
+        return addip;
+    }
+
+    public void setAddip(String addip) {
+        this.addip = addip == null ? null : addip.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

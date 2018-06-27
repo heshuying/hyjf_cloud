@@ -15,8 +15,6 @@ public class CreditTenderLog implements Serializable {
 
     private String creditUserName;
 
-    private Integer status;
-
     private String bidNid;
 
     private Integer borrowUserId;
@@ -61,11 +59,9 @@ public class CreditTenderLog implements Serializable {
 
     private BigDecimal creditFee;
 
-    private Date addTime;
-
-    private String addip;
-
     private Integer client;
+
+    private Integer status;
 
     private String logOrderId;
 
@@ -78,6 +74,10 @@ public class CreditTenderLog implements Serializable {
     private String bankSeqNo;
 
     private String accountId;
+
+    private String addip;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -119,14 +119,6 @@ public class CreditTenderLog implements Serializable {
 
     public void setCreditUserName(String creditUserName) {
         this.creditUserName = creditUserName == null ? null : creditUserName.trim();
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public String getBidNid() {
@@ -305,28 +297,20 @@ public class CreditTenderLog implements Serializable {
         this.creditFee = creditFee;
     }
 
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
-    }
-
     public Integer getClient() {
         return client;
     }
 
     public void setClient(Integer client) {
         this.client = client;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getLogOrderId() {
@@ -375,5 +359,21 @@ public class CreditTenderLog implements Serializable {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId == null ? null : accountId.trim();
+    }
+
+    public String getAddip() {
+        return addip;
+    }
+
+    public void setAddip(String addip) {
+        this.addip = addip == null ? null : addip.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
