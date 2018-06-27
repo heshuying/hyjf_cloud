@@ -18,7 +18,7 @@ import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
-import com.hyjf.cs.trade.mq.AppChannelStatisticsProducer;
+import com.hyjf.cs.trade.mq.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.FddProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.BankCreditTenderService;
@@ -57,7 +57,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     @Autowired
     private AmMongoClient amMongoClient;
     @Autowired
-    private AppChannelStatisticsProducer appChannelStatisticsProducer;
+    private AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
 
     /**
      * 处理债转投资异常
@@ -194,6 +194,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                             = this.amMongoClient.getAppChannelStatisticsDetailByUserId(request.getUserId());
                                     if (Validator.isNotNull(channelDetail)){
                                         Map<String, Object> params = new HashMap<String, Object>();
+                                        params.put("userId", request.getUserId());
                                         // 认购本金
                                         params.put("accountDecimal", creditTenderLog.getAssignCapital());
                                         // 投资时间
@@ -204,15 +205,17 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
                                         params.put("investProjectPeriod", investProjectPeriod);
                                         params.put("investFlag",investUser.getInvestflag());
-                                        params.put("isFirst",0);
-                                        params.put("fromBusiness","credit");
                                         //推送mq
-                                        this.appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
+                                        this.appChannelStatisticsDetailProducer.messageSend(
+                                                new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                                                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_OLD_TAG,JSON.toJSONBytes(params)));
                                     }else{
                                         UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);
                                         if (Validator.isNotNull(utmRegVO)){
                                             Map<String, Object> params = new HashMap<String, Object>();
+                                            
                                             params.put("id", utmRegVO.getId());
+                                            
                                             params.put("accountDecimal", creditTenderLog.getAssignCapital());
                                             // 投资时间
                                             params.put("investTime", request.getNowTime());
@@ -223,10 +226,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                             // 首次投标项目期限
                                             params.put("investProjectPeriod", investProjectPeriod);
                                             //首次投标标志位
-                                            params.put("isFirst",1);
-                                            params.put("fromBusiness","credit");
                                             if (investUser.getInvestflag() == 0){
-                                                this.appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
+                                                this.appChannelStatisticsDetailProducer.messageSend(
+                                                        new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                                                                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_NEW_TAG,JSON.toJSONBytes(params)));
                                             }
                                         }
                                     }
