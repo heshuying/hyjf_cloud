@@ -42,6 +42,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/am-trade/batch/rtb")
+@Deprecated // 融通宝没有业务了  项目均已经到期
 public class RtbRepayController {
 	private static final Logger logger = LoggerFactory.getLogger(RtbRepayController.class);
 

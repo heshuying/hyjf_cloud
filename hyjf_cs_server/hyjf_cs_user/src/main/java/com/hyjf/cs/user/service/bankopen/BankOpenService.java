@@ -19,8 +19,6 @@ import java.util.Map;
 
 public interface BankOpenService extends BaseUserService {
 
-	boolean existUser(String mobile);
-
 	boolean checkIdNo(String idNo);
 
 	int updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name,

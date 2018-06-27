@@ -751,34 +751,4 @@ public abstract class UploadFileUtils {
 		String webRoot = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 		return webRoot;
 	}
-
-	public static void main(String[] args) throws Exception {
-		String path = "F:/Example Exercise/ExtJS/MultiUpload/WebRoot/upload";
-		// System.out.println(mkDir(path));
-		System.out.println(getDoPath(path));
-		System.out.println(getBracketFileName("a.txt", getDoPath(path)));
-		System.out.println(getNumberName("a.jpg"));
-		System.out.println(getNumberName("a.jpg"));
-		System.out.println(getNewFileName("a", "bbb", "txt"));
-		System.out.println(getRandomName("a.htm"));
-		System.out.println(getSuffix("a.jpg"));
-		System.out.println(getType("a.jpg"));
-		// List<File> list = getFiles(path);
-		// List<File> list = getFiles(path, "xml");
-		// List<File> list = getFiles(path, typeImages);
-		// List<File> list = getFiles(path, typeOthers);
-		// List<File> list = getFiles(path, typeImages, false);
-		/*
-		 * List<File> list = getFiles(path, "GIF", true); for (File f : list) {
-		 * System.out.println("Name:" + f.getName());
-		 * System.out.println(f.getAbsolutePath() + "#" + f.getPath()); }
-		 */
-		System.out.println(removeFile("a.txt", path));
-		System.out.println("#############################################");
-		System.out.println("###" + validTypeByName("a", new String[] { "*" }));
-		System.out.println("###" + validTypeByName("a.JPG", typeImages));
-		System.out.println("###" + validTypeByName("a.JPG", typeImages, false));
-		System.out.println(validTypeByPostfix("cals", new String[] { "*", "b" }));
-		System.out.println(validTypeByPostfix("b", new String[] { "cal", "B" }, false));
-	}
 }

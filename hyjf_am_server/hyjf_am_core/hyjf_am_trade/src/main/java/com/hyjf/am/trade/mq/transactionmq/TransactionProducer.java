@@ -62,28 +62,25 @@ public abstract class TransactionProducer {
 	 * @return
 	 * @throws MQClientException
 	 */
-	protected boolean send(Message message, LocalTransactionExecuter localTransactionExecuter)
+	protected TransactionSendResult send(Message message, LocalTransactionExecuter localTransactionExecuter)
 			throws MQClientException {
 		logger.info("mq address--->{}, 开始发送事务消息, message is :{}", namesrvAddr, message);
-		SendResult sendResult = producer.sendMessageInTransaction(message, localTransactionExecuter, null);
+		TransactionSendResult transactionSendResult = producer.sendMessageInTransaction(message,
+				localTransactionExecuter, null);
 
-		logger.info("事务消息发送结果: {}", sendResult);
-		if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
-			return true;
-		} else {
-			return false;
-		}
+		logger.info("事务消息发送结果: {}", JSONObject.toJSONString(transactionSendResult));
+		return transactionSendResult;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param messageContent
 	 * @param localTransactionExecuter
 	 *            本地事务执行
 	 * @return
 	 * @throws MQException
 	 */
-	protected boolean messageSend(MassageContent messageContent, LocalTransactionExecuter localTransactionExecuter)
+	protected TransactionSendResult messageSend(MassageContent messageContent, LocalTransactionExecuter localTransactionExecuter)
 			throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,

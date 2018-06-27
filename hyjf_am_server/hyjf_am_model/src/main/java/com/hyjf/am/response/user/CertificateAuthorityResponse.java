@@ -5,7 +5,6 @@ package com.hyjf.am.response.user;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
-import com.hyjf.am.vo.user.UserBankOpenAccountVO;
 
 /**
  * @author nxl

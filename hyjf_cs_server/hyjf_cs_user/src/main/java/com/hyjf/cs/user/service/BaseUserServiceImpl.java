@@ -36,6 +36,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	@Autowired
 	SystemConfig systemConfig;
 
+	@Override
+	public boolean existUser(String mobile) {
+		UserVO userVO = amUserClient.findUserByMobile(mobile);
+		return userVO == null ? false : true;
+	}
 	/**
 	 * @param token
 	 * @Description 根据token查询user

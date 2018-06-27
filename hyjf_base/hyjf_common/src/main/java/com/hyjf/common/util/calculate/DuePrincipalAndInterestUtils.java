@@ -283,21 +283,4 @@ public class DuePrincipalAndInterestUtils {
 		return result;
 	}
 
-	public static void main(String[] args) {
-		BigDecimal invest = new BigDecimal(6000); // 本金
-		int month = 4;
-		BigDecimal yearRate = new BigDecimal(0.1231); // 年利率
-		int totalDay = 0;
-		BigDecimal monthI = getMonthInterest(invest, yearRate, month);
-		System.out.println("到期还本还息（按月计息） 还款利息:" + monthI);
-		BigDecimal monthPI = getMonthPrincipalInterest(invest, yearRate, month);
-		System.out.println("到期还本还息（按月计息） 还款本息:" + monthPI);
-		System.out.println("-------------------------------------");
-		BigDecimal dayI = getDayInterest(invest, yearRate, totalDay);
-		System.out.println("到期还本还息（按日计息） 还款利息:" + dayI);
-		BigDecimal dayPI = getDayPrincipalInterest(invest, yearRate, totalDay);
-		System.out.println("到期还本还息（按日计息） 还款本息:" + dayPI);
-
-	}
-
 }
