@@ -80,7 +80,9 @@ public interface AmTradeClient {
      * @param userId
      * @param count
      */
-    void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, BorrowTenderCpnVO borrowTenderCpnVO, String userId, String couponUserCode, String ip, int count);
+    void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, String userId, String couponUserCode, String ip, int count);
 
     BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean);
+
+    void updateRepayDataRecover(CouponRecoverCustomizeVO currentRecover,BorrowTenderCpnVO borrowTenderCpn, String borrowNid, String couponUserCode,String userId,String borrowStyle,int periodNow);
 }

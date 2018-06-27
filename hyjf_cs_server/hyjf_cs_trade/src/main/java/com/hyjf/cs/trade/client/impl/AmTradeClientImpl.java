@@ -122,22 +122,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-    /**
-     * 我的邀请列表
-     *
-     * @param requestBean
-     * @return
-     */
-    @Override
-    public List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean) {
-        String url = urlBase + "invite/myRewardList";
-        MyRewardListResponse response = restTemplate.postForEntity(url, requestBean, MyRewardListResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
     @Override
     public List<CouponTenderCustomizeVO> selectCouponRecoverAll(String borrowNid, int repayTimeConfig) {
         String url = urlBase + "batch/selectCouponRecover/" + borrowNid + "/" + repayTimeConfig;
@@ -158,8 +142,17 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 收支明细不存在时掉单处理
+     * @param currentRecover
+     * @param bankOpenAccountInfo
+     * @param userId
+     * @param couponUserCode
+     * @param ip
+     * @param count
+     */
     @Override
-    public void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, BorrowTenderCpnVO borrowTenderCpnVO, String userId, String couponUserCode, String ip, int count) {
+    public void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, String userId, String couponUserCode, String ip, int count) {
         String url = urlBase + "batch/repayDataRecover";
         RepayDataRecoverRequest request = new RepayDataRecoverRequest();
         request.setCouponRecoverCustomizeVO(currentRecover);
@@ -209,4 +202,25 @@ public class AmTradeClientImpl implements AmTradeClient {
 		BigDecimal result = restTemplate.postForEntity(url,requestBean,BigDecimal.class).getBody();
 		return result;
 	}
+
+    /**
+     * 收支明细存在时掉单处理
+     * @param borrowTenderCpn
+     * @param borrowNid
+     * @param couponUserCode
+     */
+    @Override
+    public void updateRepayDataRecover(CouponRecoverCustomizeVO currentRecover,BorrowTenderCpnVO borrowTenderCpn, String borrowNid, String couponUserCode,String userId,String borrowStyle,int periodNow) {
+        String url = urlBase + "batch/updateRepayDataRecover";
+        RepayDataRecoverRequest request = new RepayDataRecoverRequest();
+        request.setCouponRecoverCustomizeVO(currentRecover);
+        request.setBorrowTenderCpnVO(borrowTenderCpn);
+        request.setCouponUserCode(couponUserCode);
+        request.setBorrowNid(borrowNid);
+        request.setUserId(userId);
+        request.setBorrowStyle(borrowStyle);
+        request.setPeriodNow(periodNow);
+
+        restTemplate.postForEntity(url,request,Object.class);
+    }
 }
