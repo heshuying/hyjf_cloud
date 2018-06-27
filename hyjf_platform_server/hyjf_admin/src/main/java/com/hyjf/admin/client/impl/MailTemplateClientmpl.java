@@ -18,7 +18,7 @@ import java.util.List;
  * @version MailTemplateServiceImpl, v0.1 2018/6/25 14:48
  */
 @Service
-public class MailTemplateServiceImpl implements MailTemplateClient {
+public class MailTemplateClientmpl implements MailTemplateClient {
 
     @Autowired
     private RestTemplate restTemplate;
