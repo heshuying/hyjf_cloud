@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.AssetPushService;

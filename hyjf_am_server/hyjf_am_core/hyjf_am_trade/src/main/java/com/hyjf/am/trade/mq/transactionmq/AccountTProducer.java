@@ -1,28 +1,26 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
-import com.hyjf.am.trade.dao.model.auto.Account;
 import org.apache.rocketmq.client.producer.LocalTransactionState;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.controller.demo.TransactionService;
 import com.hyjf.common.exception.MQException;
-
-import java.math.BigDecimal;
 
 /**
  * @author xiasq
- * @version UsereProducer, v0.1 2018/6/26 14:59
+ * @version AccountTProducer, v0.1 2018/6/26 14:59
  */
 @Component
-public class UserTProducer extends TransactionProducer {
-	private Logger logger = LoggerFactory.getLogger(UserTProducer.class);
+public class AccountTProducer extends TransactionProducer {
+	private Logger logger = LoggerFactory.getLogger(AccountTProducer.class);
 
 	@Autowired
-	AccountService accountService;
+	TransactionService transactionService;
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {
@@ -34,28 +32,27 @@ public class UserTProducer extends TransactionProducer {
 
 	@Override
 	public boolean messageSend(MassageContent messageContent) throws MQException {
-		return super.messageSend(messageContent, (msg, arg) -> {
+		TransactionSendResult result = super.messageSend(messageContent, (msg, arg) -> {
 
 			Integer userId = JSON.parseObject(msg.getBody(), Integer.class);
 			if (userId == null) {
-				logger.error("更新user投资标志失败， 参数解析错误...");
+				logger.error("事务消息发送失败， 参数解析错误...");
 				return LocalTransactionState.ROLLBACK_MESSAGE;
 			}
-
-			// 本地事务
+			// 执行本地事务
 			try {
-				Account account = accountService.getAccount(userId);
-				if (account == null)
-					throw new RuntimeException("找不到用户账户信息，userId is : " + userId);
-				account.setBankBalance(new BigDecimal(1000000));
-				accountService.updateOfRTBLoansTender(account);
+				transactionService.updateAmount(userId);
 			} catch (Exception e) {
-				logger.error("更新user投资标志失败....", e);
+				logger.error("事务消息发送失败....", e);
 				return LocalTransactionState.ROLLBACK_MESSAGE;
 			}
-			logger.info("事务消息提交...");
+			logger.info("事务消息提交成功...");
 			return LocalTransactionState.COMMIT_MESSAGE;
 		});
+
+		if (result.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE)
+			return true;
+		return false;
 	}
 
 }

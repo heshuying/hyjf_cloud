@@ -41,4 +41,13 @@ public class MessageConstant {
 
     public static final String MAILSENDFORMAILINGTOSELF = "mail_send_for_mailing_toSelf";
 
+    // 给指定邮件地址发邮件
+    public static final String MAILSENDFORMAILINGADDRESSMSG = "maillSendForMailingAddressMsg";
+
+    // 根据用户ID和模版号给某用户发短信
+    public static final String SMSSENDFORUSER = "smsSendForUser";
+
+    // 通知配置,根据模版给指定管理员手机号发送消息（满标，标到期等）
+    public static final String SMSSENDFORMANAGER = "smsSendForManager";
+
 }

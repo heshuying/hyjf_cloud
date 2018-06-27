@@ -52,12 +52,7 @@ public class HtmlUtil {
 	        htmlStr = delHTMLTag(htmlStr);  
 	        htmlStr = htmlStr.replaceAll("&nbsp;", "");  
 	        return htmlStr;  
-	    }  
-	      
-	    public static void main(String[] args) {  
-	        String str = "<div style='text-align:center;'> 整治“四风”   清弊除垢<br/><span style='font-size:14px;'> </span><span style='font-size:18px;'>公司召开党的群众路线教育实践活动动员大会。</span><br/></div>";  
-	        System.out.println(getTextFromHtml(str));  
-	    }  
+	    }
 }
 
 	

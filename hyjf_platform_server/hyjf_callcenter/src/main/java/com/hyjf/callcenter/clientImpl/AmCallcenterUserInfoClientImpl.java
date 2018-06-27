@@ -1,18 +1,16 @@
 package com.hyjf.callcenter.clientImpl;
 
 import java.util.List;
-import java.util.Map;
 
-import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.am.response.callcenter.CallCenterUserBaseResponse;
+import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.vo.callcenter.CallCenterUserBaseVO;
-import com.hyjf.callcenter.beans.customizebean.CallcenterUserBaseCustomize;
 import com.hyjf.callcenter.client.AmCallcenterUserInfoClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
 
 /**
  * @author libin
@@ -20,7 +18,8 @@ import com.hyjf.ribbon.EurekaInvokeClient;
  */
 @Service
 public class AmCallcenterUserInfoClientImpl implements AmCallcenterUserInfoClient {
-    private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public List<CallCenterUserBaseVO> selectNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {

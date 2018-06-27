@@ -2,6 +2,7 @@ package com.hyjf.callcenter.clientImpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,7 +10,6 @@ import com.hyjf.am.response.callcenter.CallCenterBankAccountManageResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterBankAccountManageRequest;
 import com.hyjf.am.vo.callcenter.CallCenterBankAccountManageVO;
 import com.hyjf.callcenter.client.SrchBalanceInfoClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
 
 
 /**
@@ -18,7 +18,8 @@ import com.hyjf.ribbon.EurekaInvokeClient;
  */
 @Service
 public class SrchBalanceInfoClientImpl implements SrchBalanceInfoClient {
-	private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
+	@Autowired
+	private RestTemplate restTemplate;
 	@Override
 	public List<CallCenterBankAccountManageVO> queryAccountInfos(
 			CallCenterBankAccountManageRequest callCenterBankAccountManageRequest) {

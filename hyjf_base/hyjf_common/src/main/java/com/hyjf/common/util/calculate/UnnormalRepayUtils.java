@@ -245,40 +245,6 @@ public class UnnormalRepayUtils {
 		delayInterest = delayInterest.setScale(2, BigDecimal.ROUND_DOWN);
 		return delayInterest;
 	}
-	
-	
-	public static void main(String[] args) {
-		
-		BigDecimal a = new BigDecimal(0);
-		BigDecimal b = new BigDecimal(0);
-		if (a.equals(b)) {
-			System.out.println("true");
-		}else{
-			System.out.println("false");
-		}
-		BigDecimal ddd = aheadEndMonthRepayChargeInterest(new BigDecimal("1000"),29);
-
-		System.out.println(ddd);
-		/*
-		BigDecimal termShouldPrincipalInterest = new BigDecimal(172.54);
-		BigDecimal termShouldPrincipal = new BigDecimal(170.84);
-		BigDecimal yearRate = new BigDecimal(0.12);
-		int aheadDays = 10;
-		int delayDays = 3;
-		//int overdueDays = 8;
-
-		BigDecimal result1 = aheadRepayPrincipalInterest(termShouldPrincipalInterest, termShouldPrincipal, yearRate,
-				aheadDays);
-		System.out.println("提前还款本息：" + result1);
-
-		BigDecimal result2 = delayRepayPrincipalInterest(termShouldPrincipalInterest, termShouldPrincipal, yearRate,
-				delayDays);
-		System.out.println("延期还款本息：" + result2);
-
-		BigDecimal result3 = overdueRepayPrincipalInterest(termShouldPrincipalInterest, termShouldPrincipal, yearRate,
-				overdueDays);
-		System.out.println("逾期还款本息：" + result3);
-	*/}
 
 	/**
 	 * 计算计划相关的逾期利率

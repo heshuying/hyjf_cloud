@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class CouponRecover implements Serializable {
     private Integer id;
@@ -44,13 +45,13 @@ public class CouponRecover implements Serializable {
 
     private Integer expTime;
 
-    private Integer addTime;
+    private Date createTime;
 
-    private String addUser;
+    private Integer createUserId;
 
     private Integer updateTime;
 
-    private String updateUser;
+    private Integer updateUserId;
 
     private Integer delFlag;
 
@@ -216,20 +217,20 @@ public class CouponRecover implements Serializable {
         this.expTime = expTime;
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public String getAddUser() {
-        return addUser;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setAddUser(String addUser) {
-        this.addUser = addUser == null ? null : addUser.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
     public Integer getUpdateTime() {
@@ -240,12 +241,12 @@ public class CouponRecover implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getUpdateUser() {
-        return updateUser;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Integer getDelFlag() {

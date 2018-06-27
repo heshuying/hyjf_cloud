@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BatchHjhBorrowRepayService;
 import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
@@ -41,6 +42,9 @@ public class BatchHjhBorrowRepayServiceImpl implements BatchHjhBorrowRepayServic
     @Autowired
     CalculateInvestInterestMapper calculateInvestInterestMapper;
 
+    @Autowired
+    BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
+
     @Override
     public List<BorrowTender> selectBorrowTenderListByAccedeOrderId(String accedeOrderId) {
         BorrowTenderExample example = new BorrowTenderExample();
@@ -59,8 +63,7 @@ public class BatchHjhBorrowRepayServiceImpl implements BatchHjhBorrowRepayServic
     public Integer updateHjhBorrowRepayInterest(HjhAccedeVO hjhAccedeVO) {
         HjhAccede hjhAccede = new HjhAccede();
         BeanUtils.copyProperties(hjhAccedeVO,hjhAccede);
-        // TODO SQL写在记事板
-        boolean result =  true;//this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) >0 ? true:false;
+        boolean result =  this.batchHjhBorrowRepayCustomizeMapper.updateHjhBorrowRepayInterest(hjhAccede) >0 ? true:false;
         return result?1:0;
     }
 
@@ -112,8 +115,7 @@ public class BatchHjhBorrowRepayServiceImpl implements BatchHjhBorrowRepayServic
     public Integer updateBankTotalForLockPlan(AccountVO accountVO) {
         Account account = new Account();
         BeanUtils.copyProperties(accountVO,account);
-        // TODO SQL写在记事板
-        boolean result =  true;//this.borrowRepayMapper.updateByPrimaryKeySelective(account) >0 ? true:false;
+        boolean result =  this.batchHjhBorrowRepayCustomizeMapper.updateBankTotalForLockPlan(account) >0 ? true:false;
         return result?1:0;
     }
 
@@ -139,8 +141,7 @@ public class BatchHjhBorrowRepayServiceImpl implements BatchHjhBorrowRepayServic
     public Integer updateCalculateInvestByPrimaryKey(CalculateInvestInterestVO calculateInvestInterestVO) {
         CalculateInvestInterest calculateInvestInterest = new CalculateInvestInterest();
         BeanUtils.copyProperties(calculateInvestInterestVO,calculateInvestInterest);
-        // TODO SQL写在记事板
-        boolean result =  true;//calculateInvestInterestMapper.updateByPrimaryKey(hjhRepay) >0 ? true:false;
+        boolean result =  this.batchHjhBorrowRepayCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateInvestInterest) >0 ? true:false;
         return result?1:0;
     }
 

@@ -224,21 +224,7 @@ public class HJHServiceFeeUtils {
 		}
 		return assignCapital;
 	}
-	
-	public static void main(String[] args) {
-		BigDecimal interestEndDay = getAssignInterestEndDay(new BigDecimal(4.99), new BigDecimal(1000), new BigDecimal(100));
-		BigDecimal interestAdvanceEndDay = getAssignInterestAdvanceEndDay(new BigDecimal(4.99), new BigDecimal(1000), new BigDecimal(100), new BigDecimal(10), new BigDecimal(15));
-		BigDecimal interestDelayEndDay = getAssignRepayInterestDelayEndDay(new BigDecimal(4.99), new BigDecimal(1000), new BigDecimal(100), new BigDecimal(15), new BigDecimal(5));
-		BigDecimal interestLateEndDay = getAssignRepayInterestLateEndDay(new BigDecimal(4.99), new BigDecimal(1000), new BigDecimal(100), new BigDecimal(15), new BigDecimal(16));
-		BigDecimal aprActual = getAprActual(new BigDecimal(4.99), new BigDecimal(3.32), new BigDecimal(1000), new BigDecimal(5));
-		
-		System.out.println("按天计息承接后待收收益：" + interestEndDay);
-		System.out.println("按天计息垫付利息：" + interestAdvanceEndDay);
-		System.out.println("按天计息延期利息：" + interestDelayEndDay);
-		System.out.println("按天计息逾期利息：" + interestLateEndDay);
-		System.out.println("按天计息实际收益率：" + aprActual);
-	}
-	
+
 	/**
 	 * 计算本期待收本金
 	 * @param assignPay	投资金额（实际支付）

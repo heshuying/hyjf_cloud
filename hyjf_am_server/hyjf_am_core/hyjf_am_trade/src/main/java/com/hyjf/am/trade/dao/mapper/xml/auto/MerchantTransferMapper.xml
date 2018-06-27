@@ -12,8 +12,8 @@
     <result column="in_account_name" property="inAccountName" jdbcType="VARCHAR" />
     <result column="transfer_amount" property="transferAmount" jdbcType="DECIMAL" />
     <result column="transfer_time" property="transferTime" jdbcType="TIMESTAMP" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="transfer_type" property="transferType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="transfer_type" property="transferType" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="message" property="message" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
@@ -134,7 +134,7 @@
     values (#{orderId,jdbcType=VARCHAR}, #{outAccountId,jdbcType=INTEGER}, #{outAccountCode,jdbcType=VARCHAR}, 
       #{outAccountName,jdbcType=VARCHAR}, #{inAccountId,jdbcType=INTEGER}, #{inAccountCode,jdbcType=VARCHAR}, 
       #{inAccountName,jdbcType=VARCHAR}, #{transferAmount,jdbcType=DECIMAL}, #{transferTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER}, #{transferType,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{transferType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
       #{message,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP})
@@ -232,10 +232,10 @@
         #{transferTime,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="transferType != null" >
-        #{transferType,jdbcType=INTEGER},
+        #{transferType,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -303,10 +303,10 @@
         transfer_time = #{record.transferTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.transferType != null" >
-        transfer_type = #{record.transferType,jdbcType=INTEGER},
+        transfer_type = #{record.transferType,jdbcType=TINYINT},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -349,8 +349,8 @@
       in_account_name = #{record.inAccountName,jdbcType=VARCHAR},
       transfer_amount = #{record.transferAmount,jdbcType=DECIMAL},
       transfer_time = #{record.transferTime,jdbcType=TIMESTAMP},
-      `status` = #{record.status,jdbcType=INTEGER},
-      transfer_type = #{record.transferType,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      transfer_type = #{record.transferType,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       message = #{record.message,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -394,10 +394,10 @@
         transfer_time = #{transferTime,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="transferType != null" >
-        transfer_type = #{transferType,jdbcType=INTEGER},
+        transfer_type = #{transferType,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -437,8 +437,8 @@
       in_account_name = #{inAccountName,jdbcType=VARCHAR},
       transfer_amount = #{transferAmount,jdbcType=DECIMAL},
       transfer_time = #{transferTime,jdbcType=TIMESTAMP},
-      `status` = #{status,jdbcType=INTEGER},
-      transfer_type = #{transferType,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      transfer_type = #{transferType,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       message = #{message,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},

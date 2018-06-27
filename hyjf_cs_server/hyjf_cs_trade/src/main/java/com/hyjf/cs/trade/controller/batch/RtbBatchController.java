@@ -17,6 +17,7 @@ import com.hyjf.cs.trade.service.RtbBatchService;
  */
 @RestController
 @RequestMapping("/batch/rtb")
+@Deprecated // 融通宝没有业务了  项目均已经到期
 public class RtbBatchController {
 	private static final Logger logger = LoggerFactory.getLogger(RtbBatchController.class);
 

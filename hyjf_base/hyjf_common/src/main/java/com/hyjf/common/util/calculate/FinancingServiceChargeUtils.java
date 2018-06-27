@@ -80,24 +80,4 @@ public class FinancingServiceChargeUtils {
 		count = count.setScale(2, BigDecimal.ROUND_DOWN);
 		return count;
 	}
-	
-	public static void main(String[] args) {
-		BigDecimal invest = new BigDecimal(333); 
-		int month = 6;
-		int day = 15;
-		BigDecimal monthRate = new BigDecimal(0.005); 
-		BigDecimal dayRate = new BigDecimal(0.0006); 
-		
-		BigDecimal MonthsPrincipalServiceCharge =getMonthsPrincipalServiceCharge(invest, monthRate);
-		System.out.println("到期还本还息/先息后本/等额本息/等额本金  融资服务费:"+MonthsPrincipalServiceCharge);
-		BigDecimal dayPrincipalServiceCharge =getDaysPrincipalServiceCharge(invest, dayRate, day);
-		System.out.println("按天计息，到期还本息  融资服务费:"+dayPrincipalServiceCharge);
-		List<BigDecimal> investList = new ArrayList<BigDecimal>();
-		investList.add(new BigDecimal(100));
-		investList.add(new BigDecimal(111));
-		investList.add(new BigDecimal(122));
-		BigDecimal count = getPrincipalServiceChargeCount(investList, monthRate, month);
-		System.out.println("到期还本还息/先息后本/等额本息/等额本金 	融资服务费总和："+count);
-	}
-
 }

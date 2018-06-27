@@ -12,14 +12,14 @@
     <result column="msg_type" property="msgType" jdbcType="VARCHAR" />
     <result column="resp_type" property="respType" jdbcType="VARCHAR" />
     <result column="trxid" property="trxid" jdbcType="VARCHAR" />
-    <result column="addtime" property="addtime" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
     <result column="tx_date" property="txDate" jdbcType="INTEGER" />
     <result column="tx_time" property="txTime" jdbcType="INTEGER" />
     <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
     <result column="channel" property="channel" jdbcType="VARCHAR" />
-    <result column="client" property="client" jdbcType="INTEGER" />
+    <result column="client" property="client" jdbcType="TINYINT" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.ChinapnrLog" extends="BaseResultMap" >
     <result column="msgdata" property="msgdata" jdbcType="LONGVARCHAR" />
@@ -84,7 +84,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, isbg, user_id, ordid, borrow_nid, resp_code, resp_desc, msg_type, resp_type, 
-    trxid, addtime, remark, ip, tx_date, tx_time, seq_no, channel, client
+    trxid, create_time, remark, ip, tx_date, tx_time, seq_no, channel, client
   </sql>
   <sql id="Blob_Column_List" >
     msgdata
@@ -150,16 +150,16 @@
     insert into ht_chinapnr_log (isbg, user_id, ordid, 
       borrow_nid, resp_code, resp_desc, 
       msg_type, resp_type, trxid, 
-      addtime, remark, ip, 
+      create_time, remark, ip, 
       tx_date, tx_time, seq_no, 
       channel, client, msgdata
       )
     values (#{isbg,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, #{ordid,jdbcType=VARCHAR}, 
       #{borrowNid,jdbcType=VARCHAR}, #{respCode,jdbcType=VARCHAR}, #{respDesc,jdbcType=VARCHAR}, 
       #{msgType,jdbcType=VARCHAR}, #{respType,jdbcType=VARCHAR}, #{trxid,jdbcType=VARCHAR}, 
-      #{addtime,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
       #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=VARCHAR}, 
-      #{channel,jdbcType=VARCHAR}, #{client,jdbcType=INTEGER}, #{msgdata,jdbcType=LONGVARCHAR}
+      #{channel,jdbcType=VARCHAR}, #{client,jdbcType=TINYINT}, #{msgdata,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ChinapnrLog" >
@@ -195,8 +195,8 @@
       <if test="trxid != null" >
         trxid,
       </if>
-      <if test="addtime != null" >
-        addtime,
+      <if test="createTime != null" >
+        create_time,
       </if>
       <if test="remark != null" >
         remark,
@@ -251,8 +251,8 @@
       <if test="trxid != null" >
         #{trxid,jdbcType=VARCHAR},
       </if>
-      <if test="addtime != null" >
-        #{addtime,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -273,7 +273,7 @@
         #{channel,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
-        #{client,jdbcType=INTEGER},
+        #{client,jdbcType=TINYINT},
       </if>
       <if test="msgdata != null" >
         #{msgdata,jdbcType=LONGVARCHAR},
@@ -319,8 +319,8 @@
       <if test="record.trxid != null" >
         trxid = #{record.trxid,jdbcType=VARCHAR},
       </if>
-      <if test="record.addtime != null" >
-        addtime = #{record.addtime,jdbcType=VARCHAR},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -341,7 +341,7 @@
         channel = #{record.channel,jdbcType=VARCHAR},
       </if>
       <if test="record.client != null" >
-        client = #{record.client,jdbcType=INTEGER},
+        client = #{record.client,jdbcType=TINYINT},
       </if>
       <if test="record.msgdata != null" >
         msgdata = #{record.msgdata,jdbcType=LONGVARCHAR},
@@ -363,14 +363,14 @@
       msg_type = #{record.msgType,jdbcType=VARCHAR},
       resp_type = #{record.respType,jdbcType=VARCHAR},
       trxid = #{record.trxid,jdbcType=VARCHAR},
-      addtime = #{record.addtime,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
       tx_date = #{record.txDate,jdbcType=INTEGER},
       tx_time = #{record.txTime,jdbcType=INTEGER},
       seq_no = #{record.seqNo,jdbcType=VARCHAR},
       channel = #{record.channel,jdbcType=VARCHAR},
-      client = #{record.client,jdbcType=INTEGER},
+      client = #{record.client,jdbcType=TINYINT},
       msgdata = #{record.msgdata,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -388,14 +388,14 @@
       msg_type = #{record.msgType,jdbcType=VARCHAR},
       resp_type = #{record.respType,jdbcType=VARCHAR},
       trxid = #{record.trxid,jdbcType=VARCHAR},
-      addtime = #{record.addtime,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
       tx_date = #{record.txDate,jdbcType=INTEGER},
       tx_time = #{record.txTime,jdbcType=INTEGER},
       seq_no = #{record.seqNo,jdbcType=VARCHAR},
       channel = #{record.channel,jdbcType=VARCHAR},
-      client = #{record.client,jdbcType=INTEGER}
+      client = #{record.client,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -430,8 +430,8 @@
       <if test="trxid != null" >
         trxid = #{trxid,jdbcType=VARCHAR},
       </if>
-      <if test="addtime != null" >
-        addtime = #{addtime,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -452,7 +452,7 @@
         channel = #{channel,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
-        client = #{client,jdbcType=INTEGER},
+        client = #{client,jdbcType=TINYINT},
       </if>
       <if test="msgdata != null" >
         msgdata = #{msgdata,jdbcType=LONGVARCHAR},
@@ -471,14 +471,14 @@
       msg_type = #{msgType,jdbcType=VARCHAR},
       resp_type = #{respType,jdbcType=VARCHAR},
       trxid = #{trxid,jdbcType=VARCHAR},
-      addtime = #{addtime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
       tx_date = #{txDate,jdbcType=INTEGER},
       tx_time = #{txTime,jdbcType=INTEGER},
       seq_no = #{seqNo,jdbcType=VARCHAR},
       channel = #{channel,jdbcType=VARCHAR},
-      client = #{client,jdbcType=INTEGER},
+      client = #{client,jdbcType=TINYINT},
       msgdata = #{msgdata,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -493,14 +493,14 @@
       msg_type = #{msgType,jdbcType=VARCHAR},
       resp_type = #{respType,jdbcType=VARCHAR},
       trxid = #{trxid,jdbcType=VARCHAR},
-      addtime = #{addtime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
       tx_date = #{txDate,jdbcType=INTEGER},
       tx_time = #{txTime,jdbcType=INTEGER},
       seq_no = #{seqNo,jdbcType=VARCHAR},
       channel = #{channel,jdbcType=VARCHAR},
-      client = #{client,jdbcType=INTEGER}
+      client = #{client,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
