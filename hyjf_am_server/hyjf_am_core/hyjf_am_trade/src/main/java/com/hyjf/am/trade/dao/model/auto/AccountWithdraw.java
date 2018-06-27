@@ -25,7 +25,7 @@ public class AccountWithdraw implements Serializable {
 
     private String fee;
 
-    private String addip;
+    private String addIp;
 
     private String remark;
 
@@ -133,12 +133,12 @@ public class AccountWithdraw implements Serializable {
         this.fee = fee == null ? null : fee.trim();
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public String getRemark() {

@@ -12,7 +12,7 @@
     <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="credited" property="credited" jdbcType="DECIMAL" />
     <result column="fee" property="fee" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="reason" property="reason" jdbcType="VARCHAR" />
@@ -85,7 +85,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, nid, `status`, account, bank, bank_id, total, credited, fee, addip, 
+    id, user_id, nid, `status`, account, bank, bank_id, total, credited, fee, add_ip, 
     remark, client, reason, bank_flag, account_id, tx_date, tx_time, seq_no, bank_seq_no, 
     withdraw_type, create_time, update_time
   </sql>
@@ -129,7 +129,7 @@
     insert into ht_account_withdraw (user_id, nid, `status`, 
       account, bank, bank_id, 
       total, credited, fee, 
-      addip, remark, client, 
+      add_ip, remark, client, 
       reason, bank_flag, account_id, 
       tx_date, tx_time, seq_no, 
       bank_seq_no, withdraw_type, create_time, 
@@ -137,7 +137,7 @@
     values (#{userId,jdbcType=INTEGER}, #{nid,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
       #{account,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, #{bankId,jdbcType=INTEGER}, 
       #{total,jdbcType=DECIMAL}, #{credited,jdbcType=DECIMAL}, #{fee,jdbcType=VARCHAR}, 
-      #{addip,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{client,jdbcType=TINYINT}, 
+      #{addIp,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{client,jdbcType=TINYINT}, 
       #{reason,jdbcType=VARCHAR}, #{bankFlag,jdbcType=TINYINT}, #{accountId,jdbcType=VARCHAR}, 
       #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=INTEGER}, 
       #{bankSeqNo,jdbcType=VARCHAR}, #{withdrawType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
@@ -176,8 +176,8 @@
       <if test="fee != null" >
         fee,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="remark != null" >
         remark,
@@ -244,8 +244,8 @@
       <if test="fee != null" >
         #{fee,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -324,8 +324,8 @@
       <if test="record.fee != null" >
         fee = #{record.fee,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -380,7 +380,7 @@
       total = #{record.total,jdbcType=DECIMAL},
       credited = #{record.credited,jdbcType=DECIMAL},
       fee = #{record.fee,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
       reason = #{record.reason,jdbcType=VARCHAR},
@@ -427,8 +427,8 @@
       <if test="fee != null" >
         fee = #{fee,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -480,7 +480,7 @@
       total = #{total,jdbcType=DECIMAL},
       credited = #{credited,jdbcType=DECIMAL},
       fee = #{fee,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       client = #{client,jdbcType=TINYINT},
       reason = #{reason,jdbcType=VARCHAR},

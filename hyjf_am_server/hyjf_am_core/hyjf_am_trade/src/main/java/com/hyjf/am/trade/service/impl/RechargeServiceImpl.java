@@ -86,7 +86,7 @@ public class RechargeServiceImpl implements RechargeService {
 		record.setType(1);
 		record.setRemark("快捷充值");
 		record.setOperator(bankRequest.getLogUserId());
-		record.setAddip(bankRequest.getUserIP());
+		record.setAddIp(bankRequest.getUserIP());
 		// 0pc
 		record.setClient(bankRequest.getLogClient());
 		// 资金托管平台 0:汇付,1:江西银行

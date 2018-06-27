@@ -73,7 +73,7 @@ public class BorrowTenderCpn implements Serializable {
 
     private Integer apiStatus;
 
-    private String addip;
+    private String addIp;
 
     private Integer periodStatus;
 
@@ -395,12 +395,12 @@ public class BorrowTenderCpn implements Serializable {
         this.apiStatus = apiStatus;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getPeriodStatus() {

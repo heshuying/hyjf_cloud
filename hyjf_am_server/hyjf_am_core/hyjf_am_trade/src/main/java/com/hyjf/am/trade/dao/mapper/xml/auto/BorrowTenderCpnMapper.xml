@@ -36,7 +36,7 @@
     <result column="auto_status" property="autoStatus" jdbcType="TINYINT" />
     <result column="web_status" property="webStatus" jdbcType="TINYINT" />
     <result column="api_status" property="apiStatus" jdbcType="TINYINT" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="period_status" property="periodStatus" jdbcType="TINYINT" />
     <result column="isok" property="isok" jdbcType="TINYINT" />
     <result column="is_report" property="isReport" jdbcType="TINYINT" />
@@ -126,7 +126,7 @@
     recover_account_interest_yes, recover_account_capital_yes, recover_account_wait, 
     recover_account_interest_wait, recover_account_capital_wait, recover_times, recover_advance_fee, 
     recover_late_fee, tender_award_fee, loan_amount, loan_fee, contents, auto_status, 
-    web_status, api_status, addip, period_status, isok, is_report, flag, activity_flag, 
+    web_status, api_status, add_ip, period_status, isok, is_report, flag, activity_flag, 
     client, web, invite_user_name, invite_branch_id, invite_branch_name, invite_department_id, 
     invite_department_name, tender_user_attribute, invite_user_attribute, order_date, 
     loan_ordid, invite_user_id, invite_region_id, invite_region_name, tender_user_name, 
@@ -181,7 +181,7 @@
       recover_times, recover_advance_fee, recover_late_fee, 
       tender_award_fee, loan_amount, loan_fee, 
       contents, auto_status, web_status, 
-      api_status, addip, period_status, 
+      api_status, add_ip, period_status, 
       isok, is_report, flag, 
       activity_flag, client, web, 
       invite_user_name, invite_branch_id, invite_branch_name, 
@@ -203,7 +203,7 @@
       #{recoverTimes,jdbcType=INTEGER}, #{recoverAdvanceFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
       #{tenderAwardFee,jdbcType=DECIMAL}, #{loanAmount,jdbcType=DECIMAL}, #{loanFee,jdbcType=DECIMAL}, 
       #{contents,jdbcType=VARCHAR}, #{autoStatus,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, 
-      #{apiStatus,jdbcType=TINYINT}, #{addip,jdbcType=VARCHAR}, #{periodStatus,jdbcType=TINYINT}, 
+      #{apiStatus,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, #{periodStatus,jdbcType=TINYINT}, 
       #{isok,jdbcType=TINYINT}, #{isReport,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}, 
       #{activityFlag,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{web,jdbcType=TINYINT}, 
       #{inviteUserName,jdbcType=VARCHAR}, #{inviteBranchId,jdbcType=INTEGER}, #{inviteBranchName,jdbcType=VARCHAR}, 
@@ -319,8 +319,8 @@
       <if test="apiStatus != null" >
         api_status,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="periodStatus != null" >
         period_status,
@@ -492,8 +492,8 @@
       <if test="apiStatus != null" >
         #{apiStatus,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="periodStatus != null" >
         #{periodStatus,jdbcType=TINYINT},
@@ -677,8 +677,8 @@
       <if test="record.apiStatus != null" >
         api_status = #{record.apiStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.periodStatus != null" >
         period_status = #{record.periodStatus,jdbcType=TINYINT},
@@ -790,7 +790,7 @@
       auto_status = #{record.autoStatus,jdbcType=TINYINT},
       web_status = #{record.webStatus,jdbcType=TINYINT},
       api_status = #{record.apiStatus,jdbcType=TINYINT},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       period_status = #{record.periodStatus,jdbcType=TINYINT},
       isok = #{record.isok,jdbcType=TINYINT},
       is_report = #{record.isReport,jdbcType=TINYINT},
@@ -920,8 +920,8 @@
       <if test="apiStatus != null" >
         api_status = #{apiStatus,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="periodStatus != null" >
         period_status = #{periodStatus,jdbcType=TINYINT},
@@ -1030,7 +1030,7 @@
       auto_status = #{autoStatus,jdbcType=TINYINT},
       web_status = #{webStatus,jdbcType=TINYINT},
       api_status = #{apiStatus,jdbcType=TINYINT},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       period_status = #{periodStatus,jdbcType=TINYINT},
       isok = #{isok,jdbcType=TINYINT},
       is_report = #{isReport,jdbcType=TINYINT},

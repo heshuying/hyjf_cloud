@@ -43,7 +43,7 @@ public class AccountRecharge implements Serializable {
 
     private String operator;
 
-    private String addip;
+    private String addIp;
 
     private Integer client;
 
@@ -209,12 +209,12 @@ public class AccountRecharge implements Serializable {
         this.operator = operator == null ? null : operator.trim();
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getClient() {

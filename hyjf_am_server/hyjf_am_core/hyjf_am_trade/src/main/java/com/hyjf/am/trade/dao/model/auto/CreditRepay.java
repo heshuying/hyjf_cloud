@@ -85,7 +85,7 @@ public class CreditRepay implements Serializable {
 
     private Integer debtStatus;
 
-    private String addip;
+    private String addIp;
 
     private Date createTime;
 
@@ -411,12 +411,12 @@ public class CreditRepay implements Serializable {
         this.debtStatus = debtStatus;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Date getCreateTime() {

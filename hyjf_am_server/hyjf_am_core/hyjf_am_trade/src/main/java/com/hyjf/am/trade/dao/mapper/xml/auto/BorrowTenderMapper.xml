@@ -28,7 +28,7 @@
     <result column="recover_late_fee" property="recoverLateFee" jdbcType="DECIMAL" />
     <result column="loan_amount" property="loanAmount" jdbcType="DECIMAL" />
     <result column="loan_fee" property="loanFee" jdbcType="DECIMAL" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="invite_user_name" property="inviteUserName" jdbcType="VARCHAR" />
     <result column="invite_user_id" property="inviteUserId" jdbcType="INTEGER" />
@@ -111,7 +111,7 @@
     accede_order_id, auth_code, account, recover_full_status, recover_fee, recover_account_all, 
     recover_account_interest, recover_account_yes, recover_account_interest_yes, recover_account_capital_yes, 
     recover_account_wait, recover_account_interest_wait, recover_account_capital_wait, 
-    recover_times, recover_advance_fee, recover_late_fee, loan_amount, loan_fee, addip, 
+    recover_times, recover_advance_fee, recover_late_fee, loan_amount, loan_fee, add_ip, 
     client, invite_user_name, invite_user_id, invite_region_id, invite_region_name, invite_branch_id, 
     invite_branch_name, invite_department_id, invite_department_name, tender_user_attribute, 
     invite_user_attribute, order_date, loan_order_date, loan_ordid, remark, invest_type, 
@@ -163,7 +163,7 @@
       recover_account_capital_yes, recover_account_wait, 
       recover_account_interest_wait, recover_account_capital_wait, 
       recover_times, recover_advance_fee, recover_late_fee, 
-      loan_amount, loan_fee, addip, 
+      loan_amount, loan_fee, add_ip, 
       client, invite_user_name, invite_user_id, 
       invite_region_id, invite_region_name, invite_branch_id, 
       invite_branch_name, invite_department_id, invite_department_name, 
@@ -180,7 +180,7 @@
       #{recoverAccountCapitalYes,jdbcType=DECIMAL}, #{recoverAccountWait,jdbcType=DECIMAL}, 
       #{recoverAccountInterestWait,jdbcType=DECIMAL}, #{recoverAccountCapitalWait,jdbcType=DECIMAL}, 
       #{recoverTimes,jdbcType=INTEGER}, #{recoverAdvanceFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
-      #{loanAmount,jdbcType=DECIMAL}, #{loanFee,jdbcType=DECIMAL}, #{addip,jdbcType=VARCHAR}, 
+      #{loanAmount,jdbcType=DECIMAL}, #{loanFee,jdbcType=DECIMAL}, #{addIp,jdbcType=VARCHAR}, 
       #{client,jdbcType=TINYINT}, #{inviteUserName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
       #{inviteRegionId,jdbcType=INTEGER}, #{inviteRegionName,jdbcType=VARCHAR}, #{inviteBranchId,jdbcType=INTEGER}, 
       #{inviteBranchName,jdbcType=VARCHAR}, #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
@@ -270,8 +270,8 @@
       <if test="loanFee != null" >
         loan_fee,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="client != null" >
         client,
@@ -404,8 +404,8 @@
       <if test="loanFee != null" >
         #{loanFee,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
         #{client,jdbcType=TINYINT},
@@ -550,8 +550,8 @@
       <if test="record.loanFee != null" >
         loan_fee = #{record.loanFee,jdbcType=DECIMAL},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.client != null" >
         client = #{record.client,jdbcType=TINYINT},
@@ -640,7 +640,7 @@
       recover_late_fee = #{record.recoverLateFee,jdbcType=DECIMAL},
       loan_amount = #{record.loanAmount,jdbcType=DECIMAL},
       loan_fee = #{record.loanFee,jdbcType=DECIMAL},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
       invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
       invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
@@ -741,8 +741,8 @@
       <if test="loanFee != null" >
         loan_fee = #{loanFee,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
         client = #{client,jdbcType=TINYINT},
@@ -828,7 +828,7 @@
       recover_late_fee = #{recoverLateFee,jdbcType=DECIMAL},
       loan_amount = #{loanAmount,jdbcType=DECIMAL},
       loan_fee = #{loanFee,jdbcType=DECIMAL},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       client = #{client,jdbcType=TINYINT},
       invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
       invite_user_id = #{inviteUserId,jdbcType=INTEGER},

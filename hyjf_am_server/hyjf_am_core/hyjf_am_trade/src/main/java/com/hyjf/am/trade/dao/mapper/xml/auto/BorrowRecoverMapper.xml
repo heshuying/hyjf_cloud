@@ -45,7 +45,7 @@
     <result column="delay_days" property="delayDays" jdbcType="INTEGER" />
     <result column="delay_interest" property="delayInterest" jdbcType="DECIMAL" />
     <result column="delay_rate" property="delayRate" jdbcType="DECIMAL" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="sendmail" property="sendmail" jdbcType="TINYINT" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="credit_amount" property="creditAmount" jdbcType="DECIMAL" />
@@ -133,7 +133,7 @@
     recover_type, recover_service_fee, recover_fee_yes, repay_charge_interest, repay_delay_interest, 
     credit_manage_fee, repay_late_interest, debt_status, credit_status, recover_fee, 
     recover_late_fee, advance_status, charge_days, charge_interest, late_days, late_interest, 
-    delay_days, delay_interest, delay_rate, addip, sendmail, web, credit_amount, credit_interest_amount, 
+    delay_days, delay_interest, delay_rate, add_ip, sendmail, web, credit_amount, credit_interest_amount, 
     credit_time, repay_ordid, repay_orddate, invite_user_name, invite_user_id, invite_region_id, 
     invite_region_name, invite_branch_id, invite_branch_name, invite_department_id, invite_department_name, 
     tender_user_attribute, invite_user_attribute, loan_batch_no, repay_batch_no, create_time
@@ -189,7 +189,7 @@
       credit_status, recover_fee, recover_late_fee, 
       advance_status, charge_days, charge_interest, 
       late_days, late_interest, delay_days, 
-      delay_interest, delay_rate, addip, 
+      delay_interest, delay_rate, add_ip, 
       sendmail, web, credit_amount, 
       credit_interest_amount, credit_time, repay_ordid, 
       repay_orddate, invite_user_name, invite_user_id, 
@@ -212,7 +212,7 @@
       #{creditStatus,jdbcType=TINYINT}, #{recoverFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
       #{advanceStatus,jdbcType=INTEGER}, #{chargeDays,jdbcType=INTEGER}, #{chargeInterest,jdbcType=DECIMAL}, 
       #{lateDays,jdbcType=INTEGER}, #{lateInterest,jdbcType=DECIMAL}, #{delayDays,jdbcType=INTEGER}, 
-      #{delayInterest,jdbcType=DECIMAL}, #{delayRate,jdbcType=DECIMAL}, #{addip,jdbcType=VARCHAR}, 
+      #{delayInterest,jdbcType=DECIMAL}, #{delayRate,jdbcType=DECIMAL}, #{addIp,jdbcType=VARCHAR}, 
       #{sendmail,jdbcType=TINYINT}, #{web,jdbcType=TINYINT}, #{creditAmount,jdbcType=DECIMAL}, 
       #{creditInterestAmount,jdbcType=DECIMAL}, #{creditTime,jdbcType=INTEGER}, #{repayOrdid,jdbcType=VARCHAR}, 
       #{repayOrddate,jdbcType=VARCHAR}, #{inviteUserName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
@@ -354,8 +354,8 @@
       <if test="delayRate != null" >
         delay_rate,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="sendmail != null" >
         sendmail,
@@ -545,8 +545,8 @@
       <if test="delayRate != null" >
         #{delayRate,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="sendmail != null" >
         #{sendmail,jdbcType=TINYINT},
@@ -748,8 +748,8 @@
       <if test="record.delayRate != null" >
         delay_rate = #{record.delayRate,jdbcType=DECIMAL},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.sendmail != null" >
         sendmail = #{record.sendmail,jdbcType=TINYINT},
@@ -861,7 +861,7 @@
       delay_days = #{record.delayDays,jdbcType=INTEGER},
       delay_interest = #{record.delayInterest,jdbcType=DECIMAL},
       delay_rate = #{record.delayRate,jdbcType=DECIMAL},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       sendmail = #{record.sendmail,jdbcType=TINYINT},
       web = #{record.web,jdbcType=TINYINT},
       credit_amount = #{record.creditAmount,jdbcType=DECIMAL},
@@ -1015,8 +1015,8 @@
       <if test="delayRate != null" >
         delay_rate = #{delayRate,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="sendmail != null" >
         sendmail = #{sendmail,jdbcType=TINYINT},
@@ -1125,7 +1125,7 @@
       delay_days = #{delayDays,jdbcType=INTEGER},
       delay_interest = #{delayInterest,jdbcType=DECIMAL},
       delay_rate = #{delayRate,jdbcType=DECIMAL},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       sendmail = #{sendmail,jdbcType=TINYINT},
       web = #{web,jdbcType=TINYINT},
       credit_amount = #{creditAmount,jdbcType=DECIMAL},

@@ -1596,73 +1596,73 @@ public class IncreaseInterestInvestExample {
             return (Criteria) this;
         }
 
-        public Criteria andAddipIsNull() {
-            addCriterion("addip is null");
+        public Criteria andAddIpIsNull() {
+            addCriterion("add_ip is null");
             return (Criteria) this;
         }
 
-        public Criteria andAddipIsNotNull() {
-            addCriterion("addip is not null");
+        public Criteria andAddIpIsNotNull() {
+            addCriterion("add_ip is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAddipEqualTo(String value) {
-            addCriterion("addip =", value, "addip");
+        public Criteria andAddIpEqualTo(String value) {
+            addCriterion("add_ip =", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipNotEqualTo(String value) {
-            addCriterion("addip <>", value, "addip");
+        public Criteria andAddIpNotEqualTo(String value) {
+            addCriterion("add_ip <>", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipGreaterThan(String value) {
-            addCriterion("addip >", value, "addip");
+        public Criteria andAddIpGreaterThan(String value) {
+            addCriterion("add_ip >", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipGreaterThanOrEqualTo(String value) {
-            addCriterion("addip >=", value, "addip");
+        public Criteria andAddIpGreaterThanOrEqualTo(String value) {
+            addCriterion("add_ip >=", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipLessThan(String value) {
-            addCriterion("addip <", value, "addip");
+        public Criteria andAddIpLessThan(String value) {
+            addCriterion("add_ip <", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipLessThanOrEqualTo(String value) {
-            addCriterion("addip <=", value, "addip");
+        public Criteria andAddIpLessThanOrEqualTo(String value) {
+            addCriterion("add_ip <=", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipLike(String value) {
-            addCriterion("addip like", value, "addip");
+        public Criteria andAddIpLike(String value) {
+            addCriterion("add_ip like", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipNotLike(String value) {
-            addCriterion("addip not like", value, "addip");
+        public Criteria andAddIpNotLike(String value) {
+            addCriterion("add_ip not like", value, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipIn(List<String> values) {
-            addCriterion("addip in", values, "addip");
+        public Criteria andAddIpIn(List<String> values) {
+            addCriterion("add_ip in", values, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipNotIn(List<String> values) {
-            addCriterion("addip not in", values, "addip");
+        public Criteria andAddIpNotIn(List<String> values) {
+            addCriterion("add_ip not in", values, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipBetween(String value1, String value2) {
-            addCriterion("addip between", value1, value2, "addip");
+        public Criteria andAddIpBetween(String value1, String value2) {
+            addCriterion("add_ip between", value1, value2, "addIp");
             return (Criteria) this;
         }
 
-        public Criteria andAddipNotBetween(String value1, String value2) {
-            addCriterion("addip not between", value1, value2, "addip");
+        public Criteria andAddIpNotBetween(String value1, String value2) {
+            addCriterion("add_ip not between", value1, value2, "addIp");
             return (Criteria) this;
         }
 

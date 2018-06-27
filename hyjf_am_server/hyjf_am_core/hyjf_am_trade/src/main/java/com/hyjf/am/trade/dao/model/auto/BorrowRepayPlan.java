@@ -77,7 +77,7 @@ public class BorrowRepayPlan implements Serializable {
 
     private Integer advanceStatus;
 
-    private String addip;
+    private String addIp;
 
     private Date createTime;
 
@@ -371,12 +371,12 @@ public class BorrowRepayPlan implements Serializable {
         this.advanceStatus = advanceStatus;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Date getCreateTime() {

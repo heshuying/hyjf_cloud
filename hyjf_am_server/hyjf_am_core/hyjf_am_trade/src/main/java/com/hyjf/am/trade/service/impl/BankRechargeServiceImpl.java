@@ -180,7 +180,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
                                         accountList.setRemark("快捷充值");
                                         accountList.setCreateTime(nowTime);
                                         accountList.setOperator(String.valueOf(userId));
-                                        accountList.setIp(newAccountRechage.getAddip());
+                                        accountList.setIp(newAccountRechage.getAddIp());
                                         accountList.setWeb(0);
                                         accountList.setIsBank(1);// 是否是银行的交易记录
                                         accountList.setCheckStatus(1);// 对账状态0：未对账

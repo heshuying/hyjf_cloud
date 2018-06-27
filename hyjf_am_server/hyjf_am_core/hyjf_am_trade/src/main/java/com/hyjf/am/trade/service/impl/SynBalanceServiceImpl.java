@@ -133,7 +133,7 @@ public class SynBalanceServiceImpl implements SynBalanceService {
             record.setType(0); // 类型.1网上充值.0线下充值
             record.setRemark("线下充值");// 备注
             record.setOperator(account.getUserId() + "");
-            record.setAddip(ip);
+            record.setAddIp(ip);
             record.setClient(0); // 0pc 1WX 2AND 3IOS 4other
             record.setIsBank(1);// 资金托管平台 0:汇付,1:江西银行
             record.setTxDate(Integer.parseInt(synBalanceBean.getInpDate()));

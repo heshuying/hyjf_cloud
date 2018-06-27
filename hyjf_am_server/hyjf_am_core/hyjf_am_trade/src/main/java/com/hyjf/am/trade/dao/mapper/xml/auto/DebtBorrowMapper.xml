@@ -19,7 +19,7 @@
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="view_type" property="viewType" jdbcType="VARCHAR" />
     <result column="addtime" property="addtime" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="amount_account" property="amountAccount" jdbcType="DECIMAL" />
     <result column="amount_type" property="amountType" jdbcType="VARCHAR" />
     <result column="cash_status" property="cashStatus" jdbcType="INTEGER" />
@@ -268,7 +268,7 @@
   <sql id="Base_Column_List" >
     id, user_id, applicant, repay_org_name, is_repay_org_flag, repay_org_user_id, `name`, 
     `status`, `order`, borrow_pic, hits, comment_count, litpic, flag, `type`, view_type, 
-    addtime, addip, amount_account, amount_type, cash_status, account, other_web_status, 
+    addtime, add_ip, amount_account, amount_type, cash_status, account, other_web_status, 
     borrow_type, borrow_password, borrow_flag, borrow_status, borrow_full_status, borrow_nid, 
     borrow_pre_nid, borrow_account_yes, borrow_account_wait, borrow_account_scale, borrow_use, 
     borrow_style, borrow_period, borrow_period_roam, borrow_day, borrow_apr, borrow_frost_account, 
@@ -372,7 +372,7 @@
       `status`, `order`, borrow_pic, 
       hits, comment_count, litpic, 
       flag, `type`, view_type, 
-      addtime, addip, amount_account, 
+      addtime, add_ip, amount_account, 
       amount_type, cash_status, account, 
       other_web_status, borrow_type, borrow_password, 
       borrow_flag, borrow_status, borrow_full_status, 
@@ -447,7 +447,7 @@
       #{status,jdbcType=INTEGER}, #{order,jdbcType=INTEGER}, #{borrowPic,jdbcType=VARCHAR}, 
       #{hits,jdbcType=INTEGER}, #{commentCount,jdbcType=INTEGER}, #{litpic,jdbcType=VARCHAR}, 
       #{flag,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{viewType,jdbcType=VARCHAR}, 
-      #{addtime,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, #{amountAccount,jdbcType=DECIMAL}, 
+      #{addtime,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, #{amountAccount,jdbcType=DECIMAL}, 
       #{amountType,jdbcType=VARCHAR}, #{cashStatus,jdbcType=INTEGER}, #{account,jdbcType=DECIMAL}, 
       #{otherWebStatus,jdbcType=INTEGER}, #{borrowType,jdbcType=VARCHAR}, #{borrowPassword,jdbcType=VARCHAR}, 
       #{borrowFlag,jdbcType=VARCHAR}, #{borrowStatus,jdbcType=INTEGER}, #{borrowFullStatus,jdbcType=INTEGER}, 
@@ -572,8 +572,8 @@
       <if test="addtime != null" >
         addtime,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="amountAccount != null" >
         amount_account,
@@ -1177,8 +1177,8 @@
       <if test="addtime != null" >
         #{addtime,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="amountAccount != null" >
         #{amountAccount,jdbcType=DECIMAL},
@@ -1794,8 +1794,8 @@
       <if test="record.addtime != null" >
         addtime = #{record.addtime,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.amountAccount != null" >
         amount_account = #{record.amountAccount,jdbcType=DECIMAL},
@@ -2373,7 +2373,7 @@
       `type` = #{record.type,jdbcType=VARCHAR},
       view_type = #{record.viewType,jdbcType=VARCHAR},
       addtime = #{record.addtime,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       amount_account = #{record.amountAccount,jdbcType=DECIMAL},
       amount_type = #{record.amountType,jdbcType=VARCHAR},
       cash_status = #{record.cashStatus,jdbcType=INTEGER},
@@ -2581,7 +2581,7 @@
       `type` = #{record.type,jdbcType=VARCHAR},
       view_type = #{record.viewType,jdbcType=VARCHAR},
       addtime = #{record.addtime,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       amount_account = #{record.amountAccount,jdbcType=DECIMAL},
       amount_type = #{record.amountType,jdbcType=VARCHAR},
       cash_status = #{record.cashStatus,jdbcType=INTEGER},
@@ -2803,8 +2803,8 @@
       <if test="addtime != null" >
         addtime = #{addtime,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="amountAccount != null" >
         amount_account = #{amountAccount,jdbcType=DECIMAL},
@@ -3379,7 +3379,7 @@
       `type` = #{type,jdbcType=VARCHAR},
       view_type = #{viewType,jdbcType=VARCHAR},
       addtime = #{addtime,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       amount_account = #{amountAccount,jdbcType=DECIMAL},
       amount_type = #{amountType,jdbcType=VARCHAR},
       cash_status = #{cashStatus,jdbcType=INTEGER},
@@ -3584,7 +3584,7 @@
       `type` = #{type,jdbcType=VARCHAR},
       view_type = #{viewType,jdbcType=VARCHAR},
       addtime = #{addtime,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       amount_account = #{amountAccount,jdbcType=DECIMAL},
       amount_type = #{amountType,jdbcType=VARCHAR},
       cash_status = #{cashStatus,jdbcType=INTEGER},

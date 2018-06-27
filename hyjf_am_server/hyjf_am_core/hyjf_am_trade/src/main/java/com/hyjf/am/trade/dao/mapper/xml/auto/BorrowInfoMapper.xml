@@ -77,7 +77,7 @@
     <result column="publish_inst_code" property="publishInstCode" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -166,7 +166,7 @@
     borrow_extra_yield, contract_period, borrow_level, asset_attributes, bank_raise_start_date, 
     bank_raise_end_date, bank_regist_days, bank_borrow_days, project_name, finance_purpose, 
     monthly_income, payment, first_payment, second_payment, cost_introdution, fiance_condition, 
-    is_new, publish_inst_code, remark, create_user_name, addip, create_time, update_time
+    is_new, publish_inst_code, remark, create_user_name, add_ip, create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     account_contents, borrow_contents, borrow_running_use, borrow_running_soruce, borrow_measures_instit, 
@@ -257,7 +257,7 @@
       finance_purpose, monthly_income, payment, 
       first_payment, second_payment, cost_introdution, 
       fiance_condition, is_new, publish_inst_code, 
-      remark, create_user_name, addip, 
+      remark, create_user_name, add_ip, 
       create_time, update_time, account_contents, 
       borrow_contents, borrow_running_use, 
       borrow_running_soruce, borrow_measures_instit, 
@@ -291,7 +291,7 @@
       #{financePurpose,jdbcType=VARCHAR}, #{monthlyIncome,jdbcType=VARCHAR}, #{payment,jdbcType=VARCHAR}, 
       #{firstPayment,jdbcType=VARCHAR}, #{secondPayment,jdbcType=VARCHAR}, #{costIntrodution,jdbcType=VARCHAR}, 
       #{fianceCondition,jdbcType=VARCHAR}, #{isNew,jdbcType=TINYINT}, #{publishInstCode,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{accountContents,jdbcType=LONGVARCHAR}, 
       #{borrowContents,jdbcType=LONGVARCHAR}, #{borrowRunningUse,jdbcType=LONGVARCHAR}, 
       #{borrowRunningSoruce,jdbcType=LONGVARCHAR}, #{borrowMeasuresInstit,jdbcType=LONGVARCHAR}, 
@@ -527,8 +527,8 @@
       <if test="createUserName != null" >
         create_user_name,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -790,8 +790,8 @@
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -1065,8 +1065,8 @@
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -1186,7 +1186,7 @@
       publish_inst_code = #{record.publishInstCode,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
@@ -1280,7 +1280,7 @@
       publish_inst_code = #{record.publishInstCode,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -1512,8 +1512,8 @@
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -1630,7 +1630,7 @@
       publish_inst_code = #{publishInstCode,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       account_contents = #{accountContents,jdbcType=LONGVARCHAR},
@@ -1721,7 +1721,7 @@
       publish_inst_code = #{publishInstCode,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

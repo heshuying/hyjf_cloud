@@ -23,7 +23,7 @@
     <result column="repay_interest_yes" property="repayInterestYes" jdbcType="DECIMAL" />
     <result column="repay_interest_wait" property="repayInterestWait" jdbcType="DECIMAL" />
     <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="repay_order_id" property="repayOrderId" jdbcType="VARCHAR" />
     <result column="repay_order_date" property="repayOrderDate" jdbcType="VARCHAR" />
@@ -96,7 +96,7 @@
     id, user_id, user_name, borrow_user_id, borrow_user_name, borrow_nid, borrow_apr, 
     borrow_extra_yield, borrow_period, borrow_style, borrow_style_name, invest_id, invest_order_id, 
     invest_account, loan_interest, repay_period, repay_time, repay_action_time, repay_interest_yes, 
-    repay_interest_wait, repay_status, addip, web, repay_order_id, repay_order_date, 
+    repay_interest_wait, repay_status, add_ip, web, repay_order_id, repay_order_date, 
     create_user_id, create_user_name, update_user_id, update_user_name, create_time, 
     update_time
   </sql>
@@ -143,7 +143,7 @@
       borrow_style_name, invest_id, invest_order_id, 
       invest_account, loan_interest, repay_period, 
       repay_time, repay_action_time, repay_interest_yes, 
-      repay_interest_wait, repay_status, addip, 
+      repay_interest_wait, repay_status, add_ip, 
       web, repay_order_id, repay_order_date, 
       create_user_id, create_user_name, update_user_id, 
       update_user_name, create_time, update_time
@@ -154,7 +154,7 @@
       #{borrowStyleName,jdbcType=VARCHAR}, #{investId,jdbcType=INTEGER}, #{investOrderId,jdbcType=VARCHAR}, 
       #{investAccount,jdbcType=DECIMAL}, #{loanInterest,jdbcType=DECIMAL}, #{repayPeriod,jdbcType=TINYINT}, 
       #{repayTime,jdbcType=INTEGER}, #{repayActionTime,jdbcType=INTEGER}, #{repayInterestYes,jdbcType=DECIMAL}, 
-      #{repayInterestWait,jdbcType=DECIMAL}, #{repayStatus,jdbcType=TINYINT}, #{addip,jdbcType=VARCHAR}, 
+      #{repayInterestWait,jdbcType=DECIMAL}, #{repayStatus,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, 
       #{web,jdbcType=TINYINT}, #{repayOrderId,jdbcType=VARCHAR}, #{repayOrderDate,jdbcType=VARCHAR}, 
       #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
       #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
@@ -226,8 +226,8 @@
       <if test="repayStatus != null" >
         repay_status,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="web != null" >
         web,
@@ -318,8 +318,8 @@
       <if test="repayStatus != null" >
         #{repayStatus,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="web != null" >
         #{web,jdbcType=TINYINT},
@@ -422,8 +422,8 @@
       <if test="record.repayStatus != null" >
         repay_status = #{record.repayStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.web != null" >
         web = #{record.web,jdbcType=TINYINT},
@@ -480,7 +480,7 @@
       repay_interest_yes = #{record.repayInterestYes,jdbcType=DECIMAL},
       repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       web = #{record.web,jdbcType=TINYINT},
       repay_order_id = #{record.repayOrderId,jdbcType=VARCHAR},
       repay_order_date = #{record.repayOrderDate,jdbcType=VARCHAR},
@@ -557,8 +557,8 @@
       <if test="repayStatus != null" >
         repay_status = #{repayStatus,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="web != null" >
         web = #{web,jdbcType=TINYINT},
@@ -612,7 +612,7 @@
       repay_interest_yes = #{repayInterestYes,jdbcType=DECIMAL},
       repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
       repay_status = #{repayStatus,jdbcType=TINYINT},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       web = #{web,jdbcType=TINYINT},
       repay_order_id = #{repayOrderId,jdbcType=VARCHAR},
       repay_order_date = #{repayOrderDate,jdbcType=VARCHAR},

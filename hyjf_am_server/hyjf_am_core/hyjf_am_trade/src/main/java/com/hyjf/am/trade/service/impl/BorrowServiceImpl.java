@@ -138,7 +138,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         temp.setBorrowNid(tenderRequest.getBorrowNid());
         temp.setNid(tenderRequest.getOrderId());
         temp.setAccount(new BigDecimal(tenderRequest.getAccount()));
-        temp.setAddip(tenderRequest.getIp());
+        temp.setAddIp(tenderRequest.getIp());
        /* temp.setChangeStatus(0);
         temp.setChangeUserid(0);
         temp.setChangePeriod(0);

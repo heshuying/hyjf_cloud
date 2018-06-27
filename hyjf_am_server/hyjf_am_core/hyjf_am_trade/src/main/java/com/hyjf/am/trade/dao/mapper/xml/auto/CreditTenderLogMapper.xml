@@ -37,7 +37,7 @@
     <result column="seq_no" property="seqNo" jdbcType="INTEGER" />
     <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -105,7 +105,7 @@
     assign_repay_capital, assign_repay_interest, assign_repay_end_time, assign_repay_last_time, 
     assign_repay_next_time, assign_repay_yes_time, assign_repay_period, assign_create_date, 
     credit_fee, client, `status`, log_order_id, tx_date, tx_time, seq_no, bank_seq_no, 
-    account_id, addip, create_time
+    account_id, add_ip, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CreditTenderLogExample" >
     select
@@ -156,7 +156,7 @@
       assign_repay_period, assign_create_date, credit_fee, 
       client, `status`, log_order_id, 
       tx_date, tx_time, seq_no, 
-      bank_seq_no, account_id, addip, 
+      bank_seq_no, account_id, add_ip, 
       create_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{creditUserId,jdbcType=INTEGER}, 
       #{creditUserName,jdbcType=VARCHAR}, #{bidNid,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
@@ -170,7 +170,7 @@
       #{assignRepayPeriod,jdbcType=INTEGER}, #{assignCreateDate,jdbcType=INTEGER}, #{creditFee,jdbcType=DECIMAL}, 
       #{client,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{logOrderId,jdbcType=VARCHAR}, 
       #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=INTEGER}, 
-      #{bankSeqNo,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, 
+      #{bankSeqNo,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CreditTenderLog" >
@@ -281,8 +281,8 @@
       <if test="accountId != null" >
         account_id,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -391,8 +391,8 @@
       <if test="accountId != null" >
         #{accountId,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -513,8 +513,8 @@
       <if test="record.accountId != null" >
         account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -561,7 +561,7 @@
       seq_no = #{record.seqNo,jdbcType=INTEGER},
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
       account_id = #{record.accountId,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -672,8 +672,8 @@
       <if test="accountId != null" >
         account_id = #{accountId,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -717,7 +717,7 @@
       seq_no = #{seqNo,jdbcType=INTEGER},
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
       account_id = #{accountId,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where assign_id = #{assignId,jdbcType=INTEGER}
   </update>

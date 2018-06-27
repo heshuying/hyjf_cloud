@@ -63,7 +63,7 @@
     <result column="late_interest_rate" property="lateInterestRate" jdbcType="VARCHAR" />
     <result column="late_free_days" property="lateFreeDays" jdbcType="TINYINT" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -137,7 +137,7 @@
     repay_account_capital, repay_account_yes, repay_account_interest_yes, repay_account_capital_yes, 
     repay_account_wait, repay_account_interest_wait, repay_account_capital_wait, borrow_manager, 
     service_fee_rate, manage_fee_rate, differential_rate, late_interest_rate, late_free_days, 
-    create_user_name, addip, create_time, updatetime
+    create_user_name, add_ip, create_time, updatetime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
     select
@@ -197,7 +197,7 @@
       repay_account_interest_wait, repay_account_capital_wait, 
       borrow_manager, service_fee_rate, manage_fee_rate, 
       differential_rate, late_interest_rate, late_free_days, 
-      create_user_name, addip, create_time, 
+      create_user_name, add_ip, create_time, 
       updatetime)
     values (#{borrowNid,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{account,jdbcType=DECIMAL}, 
       #{borrowStyle,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowApr,jdbcType=DECIMAL}, 
@@ -220,7 +220,7 @@
       #{repayAccountInterestWait,jdbcType=DECIMAL}, #{repayAccountCapitalWait,jdbcType=DECIMAL}, 
       #{borrowManager,jdbcType=VARCHAR}, #{serviceFeeRate,jdbcType=VARCHAR}, #{manageFeeRate,jdbcType=VARCHAR}, 
       #{differentialRate,jdbcType=VARCHAR}, #{lateInterestRate,jdbcType=VARCHAR}, #{lateFreeDays,jdbcType=TINYINT}, 
-      #{createUserName,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUserName,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updatetime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
@@ -409,8 +409,8 @@
       <if test="createUserName != null" >
         create_user_name,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -600,8 +600,8 @@
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -803,8 +803,8 @@
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -880,7 +880,7 @@
       late_interest_rate = #{record.lateInterestRate,jdbcType=VARCHAR},
       late_free_days = #{record.lateFreeDays,jdbcType=TINYINT},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       updatetime = #{record.updatetime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -1070,8 +1070,8 @@
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -1144,7 +1144,7 @@
       late_interest_rate = #{lateInterestRate,jdbcType=VARCHAR},
       late_free_days = #{lateFreeDays,jdbcType=TINYINT},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       updatetime = #{updatetime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

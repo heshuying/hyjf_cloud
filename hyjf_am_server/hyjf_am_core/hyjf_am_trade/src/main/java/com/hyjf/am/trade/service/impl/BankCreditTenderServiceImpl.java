@@ -434,7 +434,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				creditTender.setAssignRepayNextTime(creditTenderLog.getAssignRepayNextTime());// 下次还款时间
 				creditTender.setAssignRepayYesTime(creditTenderLog.getAssignRepayYesTime());// 最终实际还款时间
 				creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());// 还款期数
-				creditTender.setAddip(creditTenderLog.getAddip());// ip
+				creditTender.setAddIp(creditTenderLog.getAddip());// ip
 				creditTender.setClient(0);// 客户端
 				creditTender.setAuthCode(authCode);// 银行存管新增授权码
 				creditTender.setRecoverPeriod(borrowCredit.getRecoverPeriod());// 已还款期数
@@ -528,7 +528,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				assignAccountList.setRemark("购买债权");
 				assignAccountList.setCreateTime(GetDate.getDate(nowTime));
 				assignAccountList.setOperator(String.valueOf(userId));
-				assignAccountList.setIp(creditTender.getAddip());
+				assignAccountList.setIp(creditTender.getAddIp());
 				assignAccountList.setWeb(0);
 				assignAccountList.setIsBank(1);
 				assignAccountList.setCheckStatus(0);
@@ -669,7 +669,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 						creditRepay.setAssignRepayPeriod(1);// 还款期数
 						creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());// 认购日期
 						creditRepay.setCreateTime(GetDate.getDate(nowTime));// 添加时间
-						creditRepay.setAddip(creditTender.getAddip());// ip
+						creditRepay.setAddIp(creditTender.getAddIp());// ip
 						creditRepay.setClient(0);// 客户端
 						creditRepay.setRecoverPeriod(1);// 原标还款期数
 						creditRepay.setAdvanceStatus(0);
@@ -765,7 +765,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 										creditRepay.setAssignRepayPeriod(i);// 还款期数
 										creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());// 认购日期
 										creditRepay.setCreateTime(GetDate.getDate(nowTime));// 添加时间
-										creditRepay.setAddip(creditTender.getAddip());// ip
+										creditRepay.setAddIp(creditTender.getAddIp());// ip
 										creditRepay.setClient(0);// 客户端
 										creditRepay.setManageFee(BigDecimal.ZERO);// 管理费
 										creditRepay.setUniqueNid(creditTender.getAssignNid() + "_" + String.valueOf(i));// 唯一nid

@@ -91,7 +91,7 @@ public class BorrowRecover implements Serializable {
 
     private BigDecimal delayRate;
 
-    private String addip;
+    private String addIp;
 
     private Integer sendmail;
 
@@ -479,12 +479,12 @@ public class BorrowRecover implements Serializable {
         this.delayRate = delayRate;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getSendmail() {

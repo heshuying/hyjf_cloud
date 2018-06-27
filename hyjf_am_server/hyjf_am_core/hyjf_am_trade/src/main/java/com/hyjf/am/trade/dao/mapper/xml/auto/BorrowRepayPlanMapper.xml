@@ -38,7 +38,7 @@
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
     <result column="advance_status" property="advanceStatus" jdbcType="TINYINT" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -106,7 +106,7 @@
     repay_interest_yes, repay_capital_yes, repay_capital_wait, repay_interest_wait, charge_days, 
     charge_interest, late_days, late_interest, delay_days, delay_interest, delay_remark, 
     repay_money_source, repay_sms_reminder, auto_repay, `status`, repay_status, advance_status, 
-    addip, create_time
+    add_ip, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample" >
     select
@@ -156,7 +156,7 @@
       late_days, late_interest, delay_days, 
       delay_interest, delay_remark, repay_money_source, 
       repay_sms_reminder, auto_repay, `status`, 
-      repay_status, advance_status, addip, 
+      repay_status, advance_status, add_ip, 
       create_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
       #{repayUserId,jdbcType=INTEGER}, #{repayUsername,jdbcType=VARCHAR}, #{nid,jdbcType=VARCHAR}, 
@@ -169,7 +169,7 @@
       #{lateDays,jdbcType=INTEGER}, #{lateInterest,jdbcType=DECIMAL}, #{delayDays,jdbcType=INTEGER}, 
       #{delayInterest,jdbcType=DECIMAL}, #{delayRemark,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=INTEGER}, 
       #{repaySmsReminder,jdbcType=INTEGER}, #{autoRepay,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
-      #{repayStatus,jdbcType=TINYINT}, #{advanceStatus,jdbcType=TINYINT}, #{addip,jdbcType=VARCHAR}, 
+      #{repayStatus,jdbcType=TINYINT}, #{advanceStatus,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan" >
@@ -283,8 +283,8 @@
       <if test="advanceStatus != null" >
         advance_status,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -396,8 +396,8 @@
       <if test="advanceStatus != null" >
         #{advanceStatus,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -521,8 +521,8 @@
       <if test="record.advanceStatus != null" >
         advance_status = #{record.advanceStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -570,7 +570,7 @@
       `status` = #{record.status,jdbcType=TINYINT},
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
       advance_status = #{record.advanceStatus,jdbcType=TINYINT},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -684,8 +684,8 @@
       <if test="advanceStatus != null" >
         advance_status = #{advanceStatus,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -730,7 +730,7 @@
       `status` = #{status,jdbcType=TINYINT},
       repay_status = #{repayStatus,jdbcType=TINYINT},
       advance_status = #{advanceStatus,jdbcType=TINYINT},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
