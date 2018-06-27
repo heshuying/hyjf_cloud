@@ -7,7 +7,7 @@
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="TINYINT" />
     <result column="add_type" property="addType" jdbcType="TINYINT" />
-    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
@@ -119,7 +119,7 @@
       create_user_id, create_user_name, update_time, 
       update_user_id, update_user_name)
     values (#{debtPlanNid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, 
-      #{addType,jdbcType=TINYINT}, #{delFlag,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
+      #{addType,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=INTEGER}, 
       #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR})
   </insert>
@@ -177,7 +177,7 @@
         #{addType,jdbcType=TINYINT},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=INTEGER},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=INTEGER},
@@ -224,7 +224,7 @@
         add_type = #{record.addType,jdbcType=TINYINT},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=INTEGER},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=INTEGER},
@@ -256,7 +256,7 @@
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       `type` = #{record.type,jdbcType=TINYINT},
       add_type = #{record.addType,jdbcType=TINYINT},
-      del_flag = #{record.delFlag,jdbcType=INTEGER},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
@@ -283,7 +283,7 @@
         add_type = #{addType,jdbcType=TINYINT},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=INTEGER},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=INTEGER},
@@ -312,7 +312,7 @@
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       `type` = #{type,jdbcType=TINYINT},
       add_type = #{addType,jdbcType=TINYINT},
-      del_flag = #{delFlag,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},

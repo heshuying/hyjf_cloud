@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class CouponOperationHistory implements Serializable {
     private String uuid;
@@ -9,9 +10,9 @@ public class CouponOperationHistory implements Serializable {
 
     private Integer operationCode;
 
-    private Integer addTime;
+    private Date createTime;
 
-    private String addUser;
+    private Integer createUserId;
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +40,19 @@ public class CouponOperationHistory implements Serializable {
         this.operationCode = operationCode;
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public String getAddUser() {
-        return addUser;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setAddUser(String addUser) {
-        this.addUser = addUser == null ? null : addUser.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 }

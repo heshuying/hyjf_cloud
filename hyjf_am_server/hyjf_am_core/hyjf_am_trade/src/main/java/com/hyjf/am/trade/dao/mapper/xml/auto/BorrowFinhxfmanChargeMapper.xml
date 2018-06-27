@@ -8,7 +8,7 @@
     <result column="man_charge_per_end" property="manChargePerEnd" jdbcType="VARCHAR" />
     <result column="charge_time" property="chargeTime" jdbcType="INTEGER" />
     <result column="charge_time_type" property="chargeTimeType" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="INTEGER" />
@@ -117,7 +117,7 @@
       remark, create_time, update_time
       )
     values (#{manChargeType,jdbcType=VARCHAR}, #{manChargePer,jdbcType=VARCHAR}, #{manChargePerEnd,jdbcType=VARCHAR}, 
-      #{chargeTime,jdbcType=INTEGER}, #{chargeTimeType,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{chargeTime,jdbcType=INTEGER}, #{chargeTimeType,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}
       )
   </insert>
@@ -172,7 +172,7 @@
         #{chargeTimeType,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -213,7 +213,7 @@
         charge_time_type = #{record.chargeTimeType,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -237,7 +237,7 @@
       man_charge_per_end = #{record.manChargePerEnd,jdbcType=VARCHAR},
       charge_time = #{record.chargeTime,jdbcType=INTEGER},
       charge_time_type = #{record.chargeTimeType,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=INTEGER}
@@ -264,7 +264,7 @@
         charge_time_type = #{chargeTimeType,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -285,7 +285,7 @@
       man_charge_per_end = #{manChargePerEnd,jdbcType=VARCHAR},
       charge_time = #{chargeTime,jdbcType=INTEGER},
       charge_time_type = #{chargeTimeType,jdbcType=VARCHAR},
-      `status` = #{status,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=INTEGER}

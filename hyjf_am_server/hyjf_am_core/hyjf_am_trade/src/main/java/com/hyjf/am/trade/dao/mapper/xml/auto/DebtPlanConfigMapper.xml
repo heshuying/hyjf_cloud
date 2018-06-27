@@ -10,7 +10,7 @@
     <result column="debt_min_investment" property="debtMinInvestment" jdbcType="DECIMAL" />
     <result column="debt_investment_increment" property="debtInvestmentIncrement" jdbcType="DECIMAL" />
     <result column="debt_max_investment" property="debtMaxInvestment" jdbcType="DECIMAL" />
-    <result column="debt_quit_style" property="debtQuitStyle" jdbcType="INTEGER" />
+    <result column="debt_quit_style" property="debtQuitStyle" jdbcType="TINYINT" />
     <result column="debt_quit_period" property="debtQuitPeriod" jdbcType="INTEGER" />
     <result column="min_invest_number" property="minInvestNumber" jdbcType="INTEGER" />
     <result column="max_invest_number" property="maxInvestNumber" jdbcType="INTEGER" />
@@ -19,8 +19,8 @@
     <result column="invest_account_limit" property="investAccountLimit" jdbcType="DECIMAL" />
     <result column="min_surplus_invest_account" property="minSurplusInvestAccount" jdbcType="DECIMAL" />
     <result column="round_amount" property="roundAmount" jdbcType="DECIMAL" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
@@ -169,10 +169,10 @@
       coupon_config, remark)
     values (#{debtPlanType,jdbcType=INTEGER}, #{debtPlanTypeName,jdbcType=VARCHAR}, #{debtPlanPrefix,jdbcType=VARCHAR}, 
       #{debtLockPeriod,jdbcType=INTEGER}, #{debtMinInvestment,jdbcType=DECIMAL}, #{debtInvestmentIncrement,jdbcType=DECIMAL}, 
-      #{debtMaxInvestment,jdbcType=DECIMAL}, #{debtQuitStyle,jdbcType=INTEGER}, #{debtQuitPeriod,jdbcType=INTEGER}, 
+      #{debtMaxInvestment,jdbcType=DECIMAL}, #{debtQuitStyle,jdbcType=TINYINT}, #{debtQuitPeriod,jdbcType=INTEGER}, 
       #{minInvestNumber,jdbcType=INTEGER}, #{maxInvestNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
       #{unableCycleTimes,jdbcType=INTEGER}, #{investAccountLimit,jdbcType=DECIMAL}, #{minSurplusInvestAccount,jdbcType=DECIMAL}, 
-      #{roundAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{delFlag,jdbcType=INTEGER}, 
+      #{roundAmount,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, 
       #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
       #{couponConfig,jdbcType=VARCHAR}, #{remark,jdbcType=LONGVARCHAR})
@@ -285,7 +285,7 @@
         #{debtMaxInvestment,jdbcType=DECIMAL},
       </if>
       <if test="debtQuitStyle != null" >
-        #{debtQuitStyle,jdbcType=INTEGER},
+        #{debtQuitStyle,jdbcType=TINYINT},
       </if>
       <if test="debtQuitPeriod != null" >
         #{debtQuitPeriod,jdbcType=INTEGER},
@@ -312,10 +312,10 @@
         #{roundAmount,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=INTEGER},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=INTEGER},
@@ -377,7 +377,7 @@
         debt_max_investment = #{record.debtMaxInvestment,jdbcType=DECIMAL},
       </if>
       <if test="record.debtQuitStyle != null" >
-        debt_quit_style = #{record.debtQuitStyle,jdbcType=INTEGER},
+        debt_quit_style = #{record.debtQuitStyle,jdbcType=TINYINT},
       </if>
       <if test="record.debtQuitPeriod != null" >
         debt_quit_period = #{record.debtQuitPeriod,jdbcType=INTEGER},
@@ -404,10 +404,10 @@
         round_amount = #{record.roundAmount,jdbcType=DECIMAL},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=INTEGER},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=INTEGER},
@@ -448,7 +448,7 @@
       debt_min_investment = #{record.debtMinInvestment,jdbcType=DECIMAL},
       debt_investment_increment = #{record.debtInvestmentIncrement,jdbcType=DECIMAL},
       debt_max_investment = #{record.debtMaxInvestment,jdbcType=DECIMAL},
-      debt_quit_style = #{record.debtQuitStyle,jdbcType=INTEGER},
+      debt_quit_style = #{record.debtQuitStyle,jdbcType=TINYINT},
       debt_quit_period = #{record.debtQuitPeriod,jdbcType=INTEGER},
       min_invest_number = #{record.minInvestNumber,jdbcType=INTEGER},
       max_invest_number = #{record.maxInvestNumber,jdbcType=INTEGER},
@@ -457,8 +457,8 @@
       invest_account_limit = #{record.investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{record.minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{record.roundAmount,jdbcType=DECIMAL},
-      `status` = #{record.status,jdbcType=INTEGER},
-      del_flag = #{record.delFlag,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
@@ -481,7 +481,7 @@
       debt_min_investment = #{record.debtMinInvestment,jdbcType=DECIMAL},
       debt_investment_increment = #{record.debtInvestmentIncrement,jdbcType=DECIMAL},
       debt_max_investment = #{record.debtMaxInvestment,jdbcType=DECIMAL},
-      debt_quit_style = #{record.debtQuitStyle,jdbcType=INTEGER},
+      debt_quit_style = #{record.debtQuitStyle,jdbcType=TINYINT},
       debt_quit_period = #{record.debtQuitPeriod,jdbcType=INTEGER},
       min_invest_number = #{record.minInvestNumber,jdbcType=INTEGER},
       max_invest_number = #{record.maxInvestNumber,jdbcType=INTEGER},
@@ -490,8 +490,8 @@
       invest_account_limit = #{record.investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{record.minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{record.roundAmount,jdbcType=DECIMAL},
-      `status` = #{record.status,jdbcType=INTEGER},
-      del_flag = #{record.delFlag,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
@@ -528,7 +528,7 @@
         debt_max_investment = #{debtMaxInvestment,jdbcType=DECIMAL},
       </if>
       <if test="debtQuitStyle != null" >
-        debt_quit_style = #{debtQuitStyle,jdbcType=INTEGER},
+        debt_quit_style = #{debtQuitStyle,jdbcType=TINYINT},
       </if>
       <if test="debtQuitPeriod != null" >
         debt_quit_period = #{debtQuitPeriod,jdbcType=INTEGER},
@@ -555,10 +555,10 @@
         round_amount = #{roundAmount,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=INTEGER},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=INTEGER},
@@ -596,7 +596,7 @@
       debt_min_investment = #{debtMinInvestment,jdbcType=DECIMAL},
       debt_investment_increment = #{debtInvestmentIncrement,jdbcType=DECIMAL},
       debt_max_investment = #{debtMaxInvestment,jdbcType=DECIMAL},
-      debt_quit_style = #{debtQuitStyle,jdbcType=INTEGER},
+      debt_quit_style = #{debtQuitStyle,jdbcType=TINYINT},
       debt_quit_period = #{debtQuitPeriod,jdbcType=INTEGER},
       min_invest_number = #{minInvestNumber,jdbcType=INTEGER},
       max_invest_number = #{maxInvestNumber,jdbcType=INTEGER},
@@ -605,8 +605,8 @@
       invest_account_limit = #{investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{roundAmount,jdbcType=DECIMAL},
-      `status` = #{status,jdbcType=INTEGER},
-      del_flag = #{delFlag,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
@@ -626,7 +626,7 @@
       debt_min_investment = #{debtMinInvestment,jdbcType=DECIMAL},
       debt_investment_increment = #{debtInvestmentIncrement,jdbcType=DECIMAL},
       debt_max_investment = #{debtMaxInvestment,jdbcType=DECIMAL},
-      debt_quit_style = #{debtQuitStyle,jdbcType=INTEGER},
+      debt_quit_style = #{debtQuitStyle,jdbcType=TINYINT},
       debt_quit_period = #{debtQuitPeriod,jdbcType=INTEGER},
       min_invest_number = #{minInvestNumber,jdbcType=INTEGER},
       max_invest_number = #{maxInvestNumber,jdbcType=INTEGER},
@@ -635,8 +635,8 @@
       invest_account_limit = #{investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{roundAmount,jdbcType=DECIMAL},
-      `status` = #{status,jdbcType=INTEGER},
-      del_flag = #{delFlag,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},

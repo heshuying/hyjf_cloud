@@ -5,8 +5,8 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="tender_id" property="tenderId" jdbcType="VARCHAR" />
     <result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
-    <result column="recover_status" property="recoverStatus" jdbcType="INTEGER" />
-    <result column="received_flg" property="receivedFlg" jdbcType="INTEGER" />
+    <result column="recover_status" property="recoverStatus" jdbcType="TINYINT" />
+    <result column="received_flg" property="receivedFlg" jdbcType="TINYINT" />
     <result column="recover_period" property="recoverPeriod" jdbcType="INTEGER" />
     <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
     <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
@@ -18,15 +18,15 @@
     <result column="recover_account_yes" property="recoverAccountYes" jdbcType="DECIMAL" />
     <result column="recover_capital" property="recoverCapital" jdbcType="DECIMAL" />
     <result column="recover_capital_yes" property="recoverCapitalYes" jdbcType="DECIMAL" />
-    <result column="current_recover_flg" property="currentRecoverFlg" jdbcType="INTEGER" />
-    <result column="recover_type" property="recoverType" jdbcType="INTEGER" />
-    <result column="notice_flg" property="noticeFlg" jdbcType="INTEGER" />
+    <result column="current_recover_flg" property="currentRecoverFlg" jdbcType="TINYINT" />
+    <result column="recover_type" property="recoverType" jdbcType="TINYINT" />
+    <result column="notice_flg" property="noticeFlg" jdbcType="TINYINT" />
     <result column="exp_time" property="expTime" jdbcType="INTEGER" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
-    <result column="add_user" property="addUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -90,7 +90,7 @@
     id, tender_id, transfer_id, recover_status, received_flg, recover_period, transfer_time, 
     recover_time, recover_yestime, main_recover_yestime, recover_interest, recover_interest_yes, 
     recover_account, recover_account_yes, recover_capital, recover_capital_yes, current_recover_flg, 
-    recover_type, notice_flg, exp_time, add_time, add_user, update_time, update_user, 
+    recover_type, notice_flg, exp_time, create_time, create_user_id, update_time, update_user_id, 
     del_flag
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecoverExample" >
@@ -136,17 +136,17 @@
       recover_interest, recover_interest_yes, recover_account, 
       recover_account_yes, recover_capital, recover_capital_yes, 
       current_recover_flg, recover_type, notice_flg, 
-      exp_time, add_time, add_user, 
-      update_time, update_user, del_flag
+      exp_time, create_time, create_user_id, 
+      update_time, update_user_id, del_flag
       )
-    values (#{tenderId,jdbcType=VARCHAR}, #{transferId,jdbcType=VARCHAR}, #{recoverStatus,jdbcType=INTEGER}, 
-      #{receivedFlg,jdbcType=INTEGER}, #{recoverPeriod,jdbcType=INTEGER}, #{transferTime,jdbcType=INTEGER}, 
+    values (#{tenderId,jdbcType=VARCHAR}, #{transferId,jdbcType=VARCHAR}, #{recoverStatus,jdbcType=TINYINT}, 
+      #{receivedFlg,jdbcType=TINYINT}, #{recoverPeriod,jdbcType=INTEGER}, #{transferTime,jdbcType=INTEGER}, 
       #{recoverTime,jdbcType=INTEGER}, #{recoverYestime,jdbcType=INTEGER}, #{mainRecoverYestime,jdbcType=INTEGER}, 
       #{recoverInterest,jdbcType=DECIMAL}, #{recoverInterestYes,jdbcType=DECIMAL}, #{recoverAccount,jdbcType=DECIMAL}, 
       #{recoverAccountYes,jdbcType=DECIMAL}, #{recoverCapital,jdbcType=DECIMAL}, #{recoverCapitalYes,jdbcType=DECIMAL}, 
-      #{currentRecoverFlg,jdbcType=INTEGER}, #{recoverType,jdbcType=INTEGER}, #{noticeFlg,jdbcType=INTEGER}, 
-      #{expTime,jdbcType=INTEGER}, #{addTime,jdbcType=INTEGER}, #{addUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=INTEGER}
+      #{currentRecoverFlg,jdbcType=TINYINT}, #{recoverType,jdbcType=TINYINT}, #{noticeFlg,jdbcType=TINYINT}, 
+      #{expTime,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecover" >
@@ -212,17 +212,17 @@
       <if test="expTime != null" >
         exp_time,
       </if>
-      <if test="addTime != null" >
-        add_time,
+      <if test="createTime != null" >
+        create_time,
       </if>
-      <if test="addUser != null" >
-        add_user,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
       <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="updateUser != null" >
-        update_user,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="delFlag != null" >
         del_flag,
@@ -236,10 +236,10 @@
         #{transferId,jdbcType=VARCHAR},
       </if>
       <if test="recoverStatus != null" >
-        #{recoverStatus,jdbcType=INTEGER},
+        #{recoverStatus,jdbcType=TINYINT},
       </if>
       <if test="receivedFlg != null" >
-        #{receivedFlg,jdbcType=INTEGER},
+        #{receivedFlg,jdbcType=TINYINT},
       </if>
       <if test="recoverPeriod != null" >
         #{recoverPeriod,jdbcType=INTEGER},
@@ -275,31 +275,31 @@
         #{recoverCapitalYes,jdbcType=DECIMAL},
       </if>
       <if test="currentRecoverFlg != null" >
-        #{currentRecoverFlg,jdbcType=INTEGER},
+        #{currentRecoverFlg,jdbcType=TINYINT},
       </if>
       <if test="recoverType != null" >
-        #{recoverType,jdbcType=INTEGER},
+        #{recoverType,jdbcType=TINYINT},
       </if>
       <if test="noticeFlg != null" >
-        #{noticeFlg,jdbcType=INTEGER},
+        #{noticeFlg,jdbcType=TINYINT},
       </if>
       <if test="expTime != null" >
         #{expTime,jdbcType=INTEGER},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="addUser != null" >
-        #{addUser,jdbcType=VARCHAR},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=INTEGER},
+        #{delFlag,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -322,10 +322,10 @@
         transfer_id = #{record.transferId,jdbcType=VARCHAR},
       </if>
       <if test="record.recoverStatus != null" >
-        recover_status = #{record.recoverStatus,jdbcType=INTEGER},
+        recover_status = #{record.recoverStatus,jdbcType=TINYINT},
       </if>
       <if test="record.receivedFlg != null" >
-        received_flg = #{record.receivedFlg,jdbcType=INTEGER},
+        received_flg = #{record.receivedFlg,jdbcType=TINYINT},
       </if>
       <if test="record.recoverPeriod != null" >
         recover_period = #{record.recoverPeriod,jdbcType=INTEGER},
@@ -361,31 +361,31 @@
         recover_capital_yes = #{record.recoverCapitalYes,jdbcType=DECIMAL},
       </if>
       <if test="record.currentRecoverFlg != null" >
-        current_recover_flg = #{record.currentRecoverFlg,jdbcType=INTEGER},
+        current_recover_flg = #{record.currentRecoverFlg,jdbcType=TINYINT},
       </if>
       <if test="record.recoverType != null" >
-        recover_type = #{record.recoverType,jdbcType=INTEGER},
+        recover_type = #{record.recoverType,jdbcType=TINYINT},
       </if>
       <if test="record.noticeFlg != null" >
-        notice_flg = #{record.noticeFlg,jdbcType=INTEGER},
+        notice_flg = #{record.noticeFlg,jdbcType=TINYINT},
       </if>
       <if test="record.expTime != null" >
         exp_time = #{record.expTime,jdbcType=INTEGER},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.addUser != null" >
-        add_user = #{record.addUser,jdbcType=VARCHAR},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=INTEGER},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -397,8 +397,8 @@
     set id = #{record.id,jdbcType=INTEGER},
       tender_id = #{record.tenderId,jdbcType=VARCHAR},
       transfer_id = #{record.transferId,jdbcType=VARCHAR},
-      recover_status = #{record.recoverStatus,jdbcType=INTEGER},
-      received_flg = #{record.receivedFlg,jdbcType=INTEGER},
+      recover_status = #{record.recoverStatus,jdbcType=TINYINT},
+      received_flg = #{record.receivedFlg,jdbcType=TINYINT},
       recover_period = #{record.recoverPeriod,jdbcType=INTEGER},
       transfer_time = #{record.transferTime,jdbcType=INTEGER},
       recover_time = #{record.recoverTime,jdbcType=INTEGER},
@@ -410,15 +410,15 @@
       recover_account_yes = #{record.recoverAccountYes,jdbcType=DECIMAL},
       recover_capital = #{record.recoverCapital,jdbcType=DECIMAL},
       recover_capital_yes = #{record.recoverCapitalYes,jdbcType=DECIMAL},
-      current_recover_flg = #{record.currentRecoverFlg,jdbcType=INTEGER},
-      recover_type = #{record.recoverType,jdbcType=INTEGER},
-      notice_flg = #{record.noticeFlg,jdbcType=INTEGER},
+      current_recover_flg = #{record.currentRecoverFlg,jdbcType=TINYINT},
+      recover_type = #{record.recoverType,jdbcType=TINYINT},
+      notice_flg = #{record.noticeFlg,jdbcType=TINYINT},
       exp_time = #{record.expTime,jdbcType=INTEGER},
-      add_time = #{record.addTime,jdbcType=INTEGER},
-      add_user = #{record.addUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=INTEGER},
-      update_user = #{record.updateUser,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=INTEGER}
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      del_flag = #{record.delFlag,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -433,10 +433,10 @@
         transfer_id = #{transferId,jdbcType=VARCHAR},
       </if>
       <if test="recoverStatus != null" >
-        recover_status = #{recoverStatus,jdbcType=INTEGER},
+        recover_status = #{recoverStatus,jdbcType=TINYINT},
       </if>
       <if test="receivedFlg != null" >
-        received_flg = #{receivedFlg,jdbcType=INTEGER},
+        received_flg = #{receivedFlg,jdbcType=TINYINT},
       </if>
       <if test="recoverPeriod != null" >
         recover_period = #{recoverPeriod,jdbcType=INTEGER},
@@ -472,31 +472,31 @@
         recover_capital_yes = #{recoverCapitalYes,jdbcType=DECIMAL},
       </if>
       <if test="currentRecoverFlg != null" >
-        current_recover_flg = #{currentRecoverFlg,jdbcType=INTEGER},
+        current_recover_flg = #{currentRecoverFlg,jdbcType=TINYINT},
       </if>
       <if test="recoverType != null" >
-        recover_type = #{recoverType,jdbcType=INTEGER},
+        recover_type = #{recoverType,jdbcType=TINYINT},
       </if>
       <if test="noticeFlg != null" >
-        notice_flg = #{noticeFlg,jdbcType=INTEGER},
+        notice_flg = #{noticeFlg,jdbcType=TINYINT},
       </if>
       <if test="expTime != null" >
         exp_time = #{expTime,jdbcType=INTEGER},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="addUser != null" >
-        add_user = #{addUser,jdbcType=VARCHAR},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=VARCHAR},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=INTEGER},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -505,8 +505,8 @@
     update ht_coupon_recover
     set tender_id = #{tenderId,jdbcType=VARCHAR},
       transfer_id = #{transferId,jdbcType=VARCHAR},
-      recover_status = #{recoverStatus,jdbcType=INTEGER},
-      received_flg = #{receivedFlg,jdbcType=INTEGER},
+      recover_status = #{recoverStatus,jdbcType=TINYINT},
+      received_flg = #{receivedFlg,jdbcType=TINYINT},
       recover_period = #{recoverPeriod,jdbcType=INTEGER},
       transfer_time = #{transferTime,jdbcType=INTEGER},
       recover_time = #{recoverTime,jdbcType=INTEGER},
@@ -518,15 +518,15 @@
       recover_account_yes = #{recoverAccountYes,jdbcType=DECIMAL},
       recover_capital = #{recoverCapital,jdbcType=DECIMAL},
       recover_capital_yes = #{recoverCapitalYes,jdbcType=DECIMAL},
-      current_recover_flg = #{currentRecoverFlg,jdbcType=INTEGER},
-      recover_type = #{recoverType,jdbcType=INTEGER},
-      notice_flg = #{noticeFlg,jdbcType=INTEGER},
+      current_recover_flg = #{currentRecoverFlg,jdbcType=TINYINT},
+      recover_type = #{recoverType,jdbcType=TINYINT},
+      notice_flg = #{noticeFlg,jdbcType=TINYINT},
       exp_time = #{expTime,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=INTEGER},
-      add_user = #{addUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=INTEGER},
-      update_user = #{updateUser,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=INTEGER}
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -22,7 +22,7 @@
     <result column="accede_account" property="accedeAccount" jdbcType="DECIMAL" />
     <result column="accede_time" property="accedeTime" jdbcType="INTEGER" />
     <result column="commission" property="commission" jdbcType="DECIMAL" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="compute_time" property="computeTime" jdbcType="INTEGER" />
     <result column="return_time" property="returnTime" jdbcType="INTEGER" />
@@ -145,7 +145,7 @@
       #{branchName,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, #{departmentName,jdbcType=VARCHAR}, 
       #{accedeOrderId,jdbcType=VARCHAR}, #{accedeUserId,jdbcType=INTEGER}, #{accedeUserName,jdbcType=VARCHAR}, 
       #{accedeDepartmentId,jdbcType=INTEGER}, #{accedeAccount,jdbcType=DECIMAL}, #{accedeTime,jdbcType=INTEGER}, 
-      #{commission,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{commission,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
       #{computeTime,jdbcType=INTEGER}, #{returnTime,jdbcType=INTEGER}, #{returnUserId,jdbcType=INTEGER}, 
       #{returnUserName,jdbcType=VARCHAR})
   </insert>
@@ -290,7 +290,7 @@
         #{commission,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -379,7 +379,7 @@
         commission = #{record.commission,jdbcType=DECIMAL},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -423,7 +423,7 @@
       accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
       accede_time = #{record.accedeTime,jdbcType=INTEGER},
       commission = #{record.commission,jdbcType=DECIMAL},
-      `status` = #{record.status,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       compute_time = #{record.computeTime,jdbcType=INTEGER},
       return_time = #{record.returnTime,jdbcType=INTEGER},
@@ -494,7 +494,7 @@
         commission = #{commission,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -535,7 +535,7 @@
       accede_account = #{accedeAccount,jdbcType=DECIMAL},
       accede_time = #{accedeTime,jdbcType=INTEGER},
       commission = #{commission,jdbcType=DECIMAL},
-      `status` = #{status,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       compute_time = #{computeTime,jdbcType=INTEGER},
       return_time = #{returnTime,jdbcType=INTEGER},
