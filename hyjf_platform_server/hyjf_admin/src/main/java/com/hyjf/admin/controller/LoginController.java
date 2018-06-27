@@ -46,7 +46,7 @@ public class LoginController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	@Autowired
 	private LoginService loginService;
-	String key="key";
+	private static final String key="key";
 	
     /**
      * @Author: dongzeshan
@@ -58,7 +58,7 @@ public class LoginController extends BaseController {
     @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
     @PostMapping(value = "/login")
 	@ResponseBody
-	@AuthorityAnnotation(key = "321", value = ShiroConstants.PERMISSION_AUTH)
+	@AuthorityAnnotation(key = key, value = ShiroConstants.PERMISSION_AUTH)
 	public JSONObject login(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> map) {
     	System.out.println(request.getRequestURI());
     	JSONObject info = new JSONObject();
