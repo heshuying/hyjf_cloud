@@ -35,7 +35,7 @@ public class MspConfigure implements Serializable {
 
     private String overdueReason;
 
-    private Boolean delFlag;
+    private Integer delFlag;
 
     private Integer createUser;
 
@@ -167,11 +167,11 @@ public class MspConfigure implements Serializable {
         this.overdueReason = overdueReason == null ? null : overdueReason.trim();
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Boolean delFlag) {
+    public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
 

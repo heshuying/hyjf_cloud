@@ -3,7 +3,7 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BorrowUsersExample {
+public class BorrowUserExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -14,7 +14,7 @@ public class BorrowUsersExample {
 
     protected int limitEnd = -1;
 
-    public BorrowUsersExample() {
+    public BorrowUserExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

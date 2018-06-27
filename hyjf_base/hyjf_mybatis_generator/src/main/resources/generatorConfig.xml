@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -185,6 +185,7 @@
 
         <table tableName="ht_msp_configure" domainObjectName="MspConfigure">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_msp_degreeresult" domainObjectName="MspDegreeresult">
@@ -371,10 +372,12 @@
 
         <table tableName="ht_vip_auth" domainObjectName="VipAuth">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_vip_info" domainObjectName="VipInfo">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_vip_transfer_log" domainObjectName="VipTransferLog">
@@ -644,6 +647,9 @@
         <table tableName="ht_borrow_repay_plan" domainObjectName="BorrowRepayPlan">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="auto_repay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="advance_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_send_type" domainObjectName="BorrowSendType">
@@ -1651,12 +1657,12 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="bottom_button_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status_on" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="delete_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_whereabouts_page_picture" domainObjectName="WhereaboutsPagePicture">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="delete_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_activity_list" domainObjectName="ActivityList">

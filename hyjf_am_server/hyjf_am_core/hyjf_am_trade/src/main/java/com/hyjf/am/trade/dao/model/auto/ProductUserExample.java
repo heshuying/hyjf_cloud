@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductUsersExample {
+public class ProductUserExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class ProductUsersExample {
 
     protected int limitEnd = -1;
 
-    public ProductUsersExample() {
+    public ProductUserExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

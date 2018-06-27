@@ -26,7 +26,6 @@
     <result column="recover_late_fee" property="recoverLateFee" jdbcType="DECIMAL" />
     <result column="loan_amount" property="loanAmount" jdbcType="DECIMAL" />
     <result column="loan_fee" property="loanFee" jdbcType="DECIMAL" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
     <result column="addip" property="addip" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="invite_user_name" property="inviteUserName" jdbcType="VARCHAR" />
@@ -42,6 +41,7 @@
     <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
     <result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
     <result column="is_bank_tender" property="isBankTender" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -106,10 +106,10 @@
     account, recover_full_status, recover_fee, recover_account_all, recover_account_interest, 
     recover_account_yes, recover_account_interest_yes, recover_account_capital_yes, recover_account_wait, 
     recover_account_interest_wait, recover_account_capital_wait, recover_times, recover_advance_fee, 
-    recover_late_fee, loan_amount, loan_fee, add_time, addip, client, invite_user_name, 
-    invite_user_id, invite_region_id, invite_region_name, invite_branch_id, invite_branch_name, 
-    invite_department_id, invite_department_name, tender_user_attribute, invite_user_attribute, 
-    order_date, coupon_grant_id, is_bank_tender
+    recover_late_fee, loan_amount, loan_fee, addip, client, invite_user_name, invite_user_id, 
+    invite_region_id, invite_region_name, invite_branch_id, invite_branch_name, invite_department_id, 
+    invite_department_name, tender_user_attribute, invite_user_attribute, order_date, 
+    coupon_grant_id, is_bank_tender, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample" >
     select
@@ -156,13 +156,13 @@
       recover_account_capital_yes, recover_account_wait, 
       recover_account_interest_wait, recover_account_capital_wait, 
       recover_times, recover_advance_fee, recover_late_fee, 
-      loan_amount, loan_fee, add_time, 
-      addip, client, invite_user_name, 
-      invite_user_id, invite_region_id, invite_region_name, 
-      invite_branch_id, invite_branch_name, invite_department_id, 
-      invite_department_name, tender_user_attribute, 
-      invite_user_attribute, order_date, coupon_grant_id, 
-      is_bank_tender)
+      loan_amount, loan_fee, addip, 
+      client, invite_user_name, invite_user_id, 
+      invite_region_id, invite_region_name, invite_branch_id, 
+      invite_branch_name, invite_department_id, invite_department_name, 
+      tender_user_attribute, invite_user_attribute, 
+      order_date, coupon_grant_id, is_bank_tender, 
+      create_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{borrowNid,jdbcType=VARCHAR}, 
       #{nid,jdbcType=VARCHAR}, #{account,jdbcType=DECIMAL}, #{recoverFullStatus,jdbcType=TINYINT}, 
@@ -171,13 +171,13 @@
       #{recoverAccountCapitalYes,jdbcType=DECIMAL}, #{recoverAccountWait,jdbcType=DECIMAL}, 
       #{recoverAccountInterestWait,jdbcType=DECIMAL}, #{recoverAccountCapitalWait,jdbcType=DECIMAL}, 
       #{recoverTimes,jdbcType=INTEGER}, #{recoverAdvanceFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
-      #{loanAmount,jdbcType=DECIMAL}, #{loanFee,jdbcType=DECIMAL}, #{addTime,jdbcType=INTEGER}, 
-      #{addip,jdbcType=VARCHAR}, #{client,jdbcType=TINYINT}, #{inviteUserName,jdbcType=VARCHAR}, 
-      #{inviteUserId,jdbcType=INTEGER}, #{inviteRegionId,jdbcType=INTEGER}, #{inviteRegionName,jdbcType=VARCHAR}, 
-      #{inviteBranchId,jdbcType=INTEGER}, #{inviteBranchName,jdbcType=VARCHAR}, #{inviteDepartmentId,jdbcType=INTEGER}, 
-      #{inviteDepartmentName,jdbcType=VARCHAR}, #{tenderUserAttribute,jdbcType=INTEGER}, 
-      #{inviteUserAttribute,jdbcType=INTEGER}, #{orderDate,jdbcType=VARCHAR}, #{couponGrantId,jdbcType=INTEGER}, 
-      #{isBankTender,jdbcType=INTEGER})
+      #{loanAmount,jdbcType=DECIMAL}, #{loanFee,jdbcType=DECIMAL}, #{addip,jdbcType=VARCHAR}, 
+      #{client,jdbcType=TINYINT}, #{inviteUserName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
+      #{inviteRegionId,jdbcType=INTEGER}, #{inviteRegionName,jdbcType=VARCHAR}, #{inviteBranchId,jdbcType=INTEGER}, 
+      #{inviteBranchName,jdbcType=VARCHAR}, #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
+      #{tenderUserAttribute,jdbcType=INTEGER}, #{inviteUserAttribute,jdbcType=INTEGER}, 
+      #{orderDate,jdbcType=VARCHAR}, #{couponGrantId,jdbcType=INTEGER}, #{isBankTender,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -254,9 +254,6 @@
       <if test="loanFee != null" >
         loan_fee,
       </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
       <if test="addip != null" >
         addip,
       </if>
@@ -301,6 +298,9 @@
       </if>
       <if test="isBankTender != null" >
         is_bank_tender,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -373,9 +373,6 @@
       <if test="loanFee != null" >
         #{loanFee,jdbcType=DECIMAL},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
-      </if>
       <if test="addip != null" >
         #{addip,jdbcType=VARCHAR},
       </if>
@@ -420,6 +417,9 @@
       </if>
       <if test="isBankTender != null" >
         #{isBankTender,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -504,9 +504,6 @@
       <if test="record.loanFee != null" >
         loan_fee = #{record.loanFee,jdbcType=DECIMAL},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
-      </if>
       <if test="record.addip != null" >
         addip = #{record.addip,jdbcType=VARCHAR},
       </if>
@@ -552,6 +549,9 @@
       <if test="record.isBankTender != null" >
         is_bank_tender = #{record.isBankTender,jdbcType=INTEGER},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -583,7 +583,6 @@
       recover_late_fee = #{record.recoverLateFee,jdbcType=DECIMAL},
       loan_amount = #{record.loanAmount,jdbcType=DECIMAL},
       loan_fee = #{record.loanFee,jdbcType=DECIMAL},
-      add_time = #{record.addTime,jdbcType=INTEGER},
       addip = #{record.addip,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
       invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
@@ -598,7 +597,8 @@
       invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
       order_date = #{record.orderDate,jdbcType=VARCHAR},
       coupon_grant_id = #{record.couponGrantId,jdbcType=INTEGER},
-      is_bank_tender = #{record.isBankTender,jdbcType=INTEGER}
+      is_bank_tender = #{record.isBankTender,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -675,9 +675,6 @@
       <if test="loanFee != null" >
         loan_fee = #{loanFee,jdbcType=DECIMAL},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
-      </if>
       <if test="addip != null" >
         addip = #{addip,jdbcType=VARCHAR},
       </if>
@@ -723,6 +720,9 @@
       <if test="isBankTender != null" >
         is_bank_tender = #{isBankTender,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -751,7 +751,6 @@
       recover_late_fee = #{recoverLateFee,jdbcType=DECIMAL},
       loan_amount = #{loanAmount,jdbcType=DECIMAL},
       loan_fee = #{loanFee,jdbcType=DECIMAL},
-      add_time = #{addTime,jdbcType=INTEGER},
       addip = #{addip,jdbcType=VARCHAR},
       client = #{client,jdbcType=TINYINT},
       invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
@@ -766,7 +765,8 @@
       invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
       order_date = #{orderDate,jdbcType=VARCHAR},
       coupon_grant_id = #{couponGrantId,jdbcType=INTEGER},
-      is_bank_tender = #{isBankTender,jdbcType=INTEGER}
+      is_bank_tender = #{isBankTender,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

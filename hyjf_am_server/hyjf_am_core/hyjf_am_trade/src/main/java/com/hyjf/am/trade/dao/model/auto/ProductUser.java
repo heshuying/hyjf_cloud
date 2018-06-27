@@ -3,7 +3,7 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ProductUsers implements Serializable {
+public class ProductUser implements Serializable {
     private Integer id;
 
     private Integer userId;

@@ -1,19 +1,21 @@
-package com.hyjf.am.trade.dao.model.auto;
+package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
-public class BorrowTenderTmp implements Serializable {
+/**
+ * 
+ * @author cwyang
+ * 投资掉单异常处理实体类
+ *
+ */
+public class BatchBorrowTenderCustomize implements Serializable{
+
+	private String accountNo;
+	
     private Integer id;
 
     private Integer userId;
-
-    private String userName;
-
-    private Integer borrowUserId;
-
-    private String borrowUserName;
 
     private Integer status;
 
@@ -21,11 +23,29 @@ public class BorrowTenderTmp implements Serializable {
 
     private String nid;
 
+    private String authCode;
+
+    private BigDecimal accountTender;
+
     private BigDecimal account;
+
+    private Integer changeStatus;
+
+    private Integer changeUserid;
+
+    private Integer changePeriod;
+
+    private Integer tenderStatus;
+
+    private String tenderNid;
+
+    private BigDecimal tenderAwardAccount;
 
     private Integer recoverFullStatus;
 
     private BigDecimal recoverFee;
+
+    private String recoverType;
 
     private BigDecimal recoverAccountAll;
 
@@ -49,13 +69,37 @@ public class BorrowTenderTmp implements Serializable {
 
     private BigDecimal recoverLateFee;
 
+    private BigDecimal tenderAwardFee;
+
     private BigDecimal loanAmount;
 
     private BigDecimal loanFee;
 
+    private String contents;
+
+    private Integer autoStatus;
+
+    private Integer webStatus;
+
+    private Integer apiStatus;
+
+    private Integer addtime;
+
     private String addip;
 
+    private Integer periodStatus;
+
+    private Integer isok;
+
+    private Integer isReport;
+
+    private Integer flag;
+
+    private Integer activityFlag;
+
     private Integer client;
+
+    private Integer web;
 
     private String inviteUserName;
 
@@ -79,15 +123,28 @@ public class BorrowTenderTmp implements Serializable {
 
     private String orderDate;
 
-    private Integer couponGrantId;
+    private String loanOrderDate;
 
-    private Integer isBankTender;
+    private String loanOrdid;
 
-    private Date createTime;
+    private String tenderUserName;
+
+    private String remark;
+
+    private Integer investType;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    
+    public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -101,30 +158,6 @@ public class BorrowTenderTmp implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
-    }
-
-    public Integer getBorrowUserId() {
-        return borrowUserId;
-    }
-
-    public void setBorrowUserId(Integer borrowUserId) {
-        this.borrowUserId = borrowUserId;
-    }
-
-    public String getBorrowUserName() {
-        return borrowUserName;
-    }
-
-    public void setBorrowUserName(String borrowUserName) {
-        this.borrowUserName = borrowUserName == null ? null : borrowUserName.trim();
     }
 
     public Integer getStatus() {
@@ -151,12 +184,76 @@ public class BorrowTenderTmp implements Serializable {
         this.nid = nid == null ? null : nid.trim();
     }
 
+    public String getAuthCode() {
+        return authCode;
+    }
+
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode == null ? null : authCode.trim();
+    }
+
+    public BigDecimal getAccountTender() {
+        return accountTender;
+    }
+
+    public void setAccountTender(BigDecimal accountTender) {
+        this.accountTender = accountTender;
+    }
+
     public BigDecimal getAccount() {
         return account;
     }
 
     public void setAccount(BigDecimal account) {
         this.account = account;
+    }
+
+    public Integer getChangeStatus() {
+        return changeStatus;
+    }
+
+    public void setChangeStatus(Integer changeStatus) {
+        this.changeStatus = changeStatus;
+    }
+
+    public Integer getChangeUserid() {
+        return changeUserid;
+    }
+
+    public void setChangeUserid(Integer changeUserid) {
+        this.changeUserid = changeUserid;
+    }
+
+    public Integer getChangePeriod() {
+        return changePeriod;
+    }
+
+    public void setChangePeriod(Integer changePeriod) {
+        this.changePeriod = changePeriod;
+    }
+
+    public Integer getTenderStatus() {
+        return tenderStatus;
+    }
+
+    public void setTenderStatus(Integer tenderStatus) {
+        this.tenderStatus = tenderStatus;
+    }
+
+    public String getTenderNid() {
+        return tenderNid;
+    }
+
+    public void setTenderNid(String tenderNid) {
+        this.tenderNid = tenderNid == null ? null : tenderNid.trim();
+    }
+
+    public BigDecimal getTenderAwardAccount() {
+        return tenderAwardAccount;
+    }
+
+    public void setTenderAwardAccount(BigDecimal tenderAwardAccount) {
+        this.tenderAwardAccount = tenderAwardAccount;
     }
 
     public Integer getRecoverFullStatus() {
@@ -173,6 +270,14 @@ public class BorrowTenderTmp implements Serializable {
 
     public void setRecoverFee(BigDecimal recoverFee) {
         this.recoverFee = recoverFee;
+    }
+
+    public String getRecoverType() {
+        return recoverType;
+    }
+
+    public void setRecoverType(String recoverType) {
+        this.recoverType = recoverType == null ? null : recoverType.trim();
     }
 
     public BigDecimal getRecoverAccountAll() {
@@ -263,6 +368,14 @@ public class BorrowTenderTmp implements Serializable {
         this.recoverLateFee = recoverLateFee;
     }
 
+    public BigDecimal getTenderAwardFee() {
+        return tenderAwardFee;
+    }
+
+    public void setTenderAwardFee(BigDecimal tenderAwardFee) {
+        this.tenderAwardFee = tenderAwardFee;
+    }
+
     public BigDecimal getLoanAmount() {
         return loanAmount;
     }
@@ -279,6 +392,46 @@ public class BorrowTenderTmp implements Serializable {
         this.loanFee = loanFee;
     }
 
+    public String getContents() {
+        return contents;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents == null ? null : contents.trim();
+    }
+
+    public Integer getAutoStatus() {
+        return autoStatus;
+    }
+
+    public void setAutoStatus(Integer autoStatus) {
+        this.autoStatus = autoStatus;
+    }
+
+    public Integer getWebStatus() {
+        return webStatus;
+    }
+
+    public void setWebStatus(Integer webStatus) {
+        this.webStatus = webStatus;
+    }
+
+    public Integer getApiStatus() {
+        return apiStatus;
+    }
+
+    public void setApiStatus(Integer apiStatus) {
+        this.apiStatus = apiStatus;
+    }
+
+    public Integer getAddtime() {
+        return addtime;
+    }
+
+    public void setAddtime(Integer addtime) {
+        this.addtime = addtime;
+    }
+
     public String getAddip() {
         return addip;
     }
@@ -287,12 +440,60 @@ public class BorrowTenderTmp implements Serializable {
         this.addip = addip == null ? null : addip.trim();
     }
 
+    public Integer getPeriodStatus() {
+        return periodStatus;
+    }
+
+    public void setPeriodStatus(Integer periodStatus) {
+        this.periodStatus = periodStatus;
+    }
+
+    public Integer getIsok() {
+        return isok;
+    }
+
+    public void setIsok(Integer isok) {
+        this.isok = isok;
+    }
+
+    public Integer getIsReport() {
+        return isReport;
+    }
+
+    public void setIsReport(Integer isReport) {
+        this.isReport = isReport;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
+
+    public Integer getActivityFlag() {
+        return activityFlag;
+    }
+
+    public void setActivityFlag(Integer activityFlag) {
+        this.activityFlag = activityFlag;
+    }
+
     public Integer getClient() {
         return client;
     }
 
     public void setClient(Integer client) {
         this.client = client;
+    }
+
+    public Integer getWeb() {
+        return web;
+    }
+
+    public void setWeb(Integer web) {
+        this.web = web;
     }
 
     public String getInviteUserName() {
@@ -383,27 +584,45 @@ public class BorrowTenderTmp implements Serializable {
         this.orderDate = orderDate == null ? null : orderDate.trim();
     }
 
-    public Integer getCouponGrantId() {
-        return couponGrantId;
+    public String getLoanOrderDate() {
+        return loanOrderDate;
     }
 
-    public void setCouponGrantId(Integer couponGrantId) {
-        this.couponGrantId = couponGrantId;
+    public void setLoanOrderDate(String loanOrderDate) {
+        this.loanOrderDate = loanOrderDate == null ? null : loanOrderDate.trim();
     }
 
-    public Integer getIsBankTender() {
-        return isBankTender;
+    public String getLoanOrdid() {
+        return loanOrdid;
     }
 
-    public void setIsBankTender(Integer isBankTender) {
-        this.isBankTender = isBankTender;
+    public void setLoanOrdid(String loanOrdid) {
+        this.loanOrdid = loanOrdid == null ? null : loanOrdid.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getTenderUserName() {
+        return tenderUserName;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setTenderUserName(String tenderUserName) {
+        this.tenderUserName = tenderUserName == null ? null : tenderUserName.trim();
     }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Integer getInvestType() {
+        return investType;
+    }
+
+    public void setInvestType(Integer investType) {
+        this.investType = investType;
+    }
+
+
 }

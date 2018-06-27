@@ -3,7 +3,7 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class DebtUsersInfo implements Serializable {
+public class DebtUserInfo implements Serializable {
     private Integer id;
 
     private String name;

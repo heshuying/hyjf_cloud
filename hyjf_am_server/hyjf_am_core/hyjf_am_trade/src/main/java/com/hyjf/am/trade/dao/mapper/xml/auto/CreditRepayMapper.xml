@@ -28,8 +28,6 @@
     <result column="assign_repay_yes_time" property="assignRepayYesTime" jdbcType="INTEGER" />
     <result column="assign_repay_period" property="assignRepayPeriod" jdbcType="INTEGER" />
     <result column="assign_create_date" property="assignCreateDate" jdbcType="INTEGER" />
-    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="INTEGER" />
     <result column="recover_period" property="recoverPeriod" jdbcType="INTEGER" />
     <result column="manage_fee" property="manageFee" jdbcType="DECIMAL" />
@@ -44,6 +42,8 @@
     <result column="late_days" property="lateDays" jdbcType="INTEGER" />
     <result column="late_interest" property="lateInterest" jdbcType="DECIMAL" />
     <result column="debt_status" property="debtStatus" jdbcType="TINYINT" />
+    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -108,10 +108,10 @@
     credit_tender_nid, assign_nid, auth_code, assign_capital, assign_account, assign_interest, 
     assign_interest_advance, assign_price, assign_pay, assign_repay_account, assign_repay_capital, 
     assign_repay_interest, assign_repay_end_time, assign_repay_last_time, assign_repay_next_time, 
-    assign_repay_yes_time, assign_repay_period, assign_create_date, add_time, addip, 
-    client, recover_period, manage_fee, unique_nid, credit_repay_order_id, credit_repay_order_date, 
-    advance_status, charge_days, charge_interest, delay_days, delay_interest, late_days, 
-    late_interest, debt_status
+    assign_repay_yes_time, assign_repay_period, assign_create_date, client, recover_period, 
+    manage_fee, unique_nid, credit_repay_order_id, credit_repay_order_date, advance_status, 
+    charge_days, charge_interest, delay_days, delay_interest, late_days, late_interest, 
+    debt_status, addip, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CreditRepayExample" >
     select
@@ -159,13 +159,13 @@
       assign_repay_capital, assign_repay_interest, 
       assign_repay_end_time, assign_repay_last_time, 
       assign_repay_next_time, assign_repay_yes_time, 
-      assign_repay_period, assign_create_date, add_time, 
-      addip, client, recover_period, 
-      manage_fee, unique_nid, credit_repay_order_id, 
-      credit_repay_order_date, advance_status, charge_days, 
-      charge_interest, delay_days, delay_interest, 
-      late_days, late_interest, debt_status
-      )
+      assign_repay_period, assign_create_date, client, 
+      recover_period, manage_fee, unique_nid, 
+      credit_repay_order_id, credit_repay_order_date, 
+      advance_status, charge_days, charge_interest, 
+      delay_days, delay_interest, late_days, 
+      late_interest, debt_status, addip, 
+      create_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{creditUserId,jdbcType=INTEGER}, 
       #{creditUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{bidNid,jdbcType=VARCHAR}, 
       #{creditNid,jdbcType=VARCHAR}, #{creditTenderNid,jdbcType=VARCHAR}, #{assignNid,jdbcType=VARCHAR}, 
@@ -175,13 +175,13 @@
       #{assignRepayCapital,jdbcType=DECIMAL}, #{assignRepayInterest,jdbcType=DECIMAL}, 
       #{assignRepayEndTime,jdbcType=INTEGER}, #{assignRepayLastTime,jdbcType=INTEGER}, 
       #{assignRepayNextTime,jdbcType=INTEGER}, #{assignRepayYesTime,jdbcType=INTEGER}, 
-      #{assignRepayPeriod,jdbcType=INTEGER}, #{assignCreateDate,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, 
-      #{addip,jdbcType=VARCHAR}, #{client,jdbcType=INTEGER}, #{recoverPeriod,jdbcType=INTEGER}, 
-      #{manageFee,jdbcType=DECIMAL}, #{uniqueNid,jdbcType=VARCHAR}, #{creditRepayOrderId,jdbcType=VARCHAR}, 
-      #{creditRepayOrderDate,jdbcType=VARCHAR}, #{advanceStatus,jdbcType=TINYINT}, #{chargeDays,jdbcType=INTEGER}, 
-      #{chargeInterest,jdbcType=DECIMAL}, #{delayDays,jdbcType=INTEGER}, #{delayInterest,jdbcType=DECIMAL}, 
-      #{lateDays,jdbcType=INTEGER}, #{lateInterest,jdbcType=DECIMAL}, #{debtStatus,jdbcType=TINYINT}
-      )
+      #{assignRepayPeriod,jdbcType=INTEGER}, #{assignCreateDate,jdbcType=INTEGER}, #{client,jdbcType=INTEGER}, 
+      #{recoverPeriod,jdbcType=INTEGER}, #{manageFee,jdbcType=DECIMAL}, #{uniqueNid,jdbcType=VARCHAR}, 
+      #{creditRepayOrderId,jdbcType=VARCHAR}, #{creditRepayOrderDate,jdbcType=VARCHAR}, 
+      #{advanceStatus,jdbcType=TINYINT}, #{chargeDays,jdbcType=INTEGER}, #{chargeInterest,jdbcType=DECIMAL}, 
+      #{delayDays,jdbcType=INTEGER}, #{delayInterest,jdbcType=DECIMAL}, #{lateDays,jdbcType=INTEGER}, 
+      #{lateInterest,jdbcType=DECIMAL}, #{debtStatus,jdbcType=TINYINT}, #{addip,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CreditRepay" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -264,12 +264,6 @@
       <if test="assignCreateDate != null" >
         assign_create_date,
       </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="addip != null" >
-        addip,
-      </if>
       <if test="client != null" >
         client,
       </if>
@@ -311,6 +305,12 @@
       </if>
       <if test="debtStatus != null" >
         debt_status,
+      </if>
+      <if test="addip != null" >
+        addip,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -389,12 +389,6 @@
       <if test="assignCreateDate != null" >
         #{assignCreateDate,jdbcType=INTEGER},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
-      </if>
       <if test="client != null" >
         #{client,jdbcType=INTEGER},
       </if>
@@ -436,6 +430,12 @@
       </if>
       <if test="debtStatus != null" >
         #{debtStatus,jdbcType=TINYINT},
+      </if>
+      <if test="addip != null" >
+        #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -526,12 +526,6 @@
       <if test="record.assignCreateDate != null" >
         assign_create_date = #{record.assignCreateDate,jdbcType=INTEGER},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
-      </if>
       <if test="record.client != null" >
         client = #{record.client,jdbcType=INTEGER},
       </if>
@@ -574,6 +568,12 @@
       <if test="record.debtStatus != null" >
         debt_status = #{record.debtStatus,jdbcType=TINYINT},
       </if>
+      <if test="record.addip != null" >
+        addip = #{record.addip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -607,8 +607,6 @@
       assign_repay_yes_time = #{record.assignRepayYesTime,jdbcType=INTEGER},
       assign_repay_period = #{record.assignRepayPeriod,jdbcType=INTEGER},
       assign_create_date = #{record.assignCreateDate,jdbcType=INTEGER},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      addip = #{record.addip,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=INTEGER},
       recover_period = #{record.recoverPeriod,jdbcType=INTEGER},
       manage_fee = #{record.manageFee,jdbcType=DECIMAL},
@@ -622,7 +620,9 @@
       delay_interest = #{record.delayInterest,jdbcType=DECIMAL},
       late_days = #{record.lateDays,jdbcType=INTEGER},
       late_interest = #{record.lateInterest,jdbcType=DECIMAL},
-      debt_status = #{record.debtStatus,jdbcType=TINYINT}
+      debt_status = #{record.debtStatus,jdbcType=TINYINT},
+      addip = #{record.addip,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -705,12 +705,6 @@
       <if test="assignCreateDate != null" >
         assign_create_date = #{assignCreateDate,jdbcType=INTEGER},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
-      </if>
       <if test="client != null" >
         client = #{client,jdbcType=INTEGER},
       </if>
@@ -753,6 +747,12 @@
       <if test="debtStatus != null" >
         debt_status = #{debtStatus,jdbcType=TINYINT},
       </if>
+      <if test="addip != null" >
+        addip = #{addip,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -783,8 +783,6 @@
       assign_repay_yes_time = #{assignRepayYesTime,jdbcType=INTEGER},
       assign_repay_period = #{assignRepayPeriod,jdbcType=INTEGER},
       assign_create_date = #{assignCreateDate,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-      addip = #{addip,jdbcType=VARCHAR},
       client = #{client,jdbcType=INTEGER},
       recover_period = #{recoverPeriod,jdbcType=INTEGER},
       manage_fee = #{manageFee,jdbcType=DECIMAL},
@@ -798,7 +796,9 @@
       delay_interest = #{delayInterest,jdbcType=DECIMAL},
       late_days = #{lateDays,jdbcType=INTEGER},
       late_interest = #{lateInterest,jdbcType=DECIMAL},
-      debt_status = #{debtStatus,jdbcType=TINYINT}
+      debt_status = #{debtStatus,jdbcType=TINYINT},
+      addip = #{addip,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -2,7 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 
-public class BorrowUsers implements Serializable {
+public class BorrowUser implements Serializable {
     private Integer id;
 
     private String borrowNid;

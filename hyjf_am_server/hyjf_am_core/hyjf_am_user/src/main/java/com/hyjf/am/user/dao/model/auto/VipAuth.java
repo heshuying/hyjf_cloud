@@ -14,7 +14,7 @@ public class VipAuth implements Serializable {
 
     private String remark;
 
-    private Boolean delFlag;
+    private Integer delFlag;
 
     private Integer createUserId;
 
@@ -66,11 +66,11 @@ public class VipAuth implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Boolean delFlag) {
+    public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
 

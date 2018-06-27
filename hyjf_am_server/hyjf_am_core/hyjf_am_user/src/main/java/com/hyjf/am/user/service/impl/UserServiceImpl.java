@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
@@ -91,7 +92,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 
 		// 1. 写入用户信息表
-		User user = this.insertUsers(mobile, password, loginIp, platform, userRequest.getInstCode());
+		User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
 		logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
 		int userId = user.getUserId();
 
@@ -124,7 +125,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public User findUserByUserId(int userId) {
 		UserExample usersExample = new UserExample();
 		usersExample.createCriteria().andUserIdEqualTo(userId);
-		List<User> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = userMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -142,7 +143,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		UserInfoExample example = new UserInfoExample();
 		UserInfoExample.Criteria criteria = example.createCriteria();
 		criteria.andUserIdEqualTo(userId);
-		List<UserInfo> list = usersInfoMapper.selectByExample(example);
+		List<UserInfo> list = userInfoMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(list)) {
 			return list.get(0);
 		}
@@ -359,7 +360,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param refferUsername
 	 * @return
 	 */
-	private User insertUsers(String mobile, String password, String loginIp, String platform, String instCode) {
+	private User insertUser(String mobile, String password, String loginIp, String platform, String instCode) {
 		User user = new User();
 		String userName = generateUniqueUsername(mobile);
 		user.setInstCode(StringUtils.isBlank(instCode) ? CommonConstant.HYJF_INST_CODE : instCode);
@@ -398,7 +399,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param loginIp
 	 * @param attribute
 	 */
-	private void insertUsersInfo(int userId,int instType, String loginIp, Integer attribute) {
+	private void insertUserInfo(int userId, String loginIp, Integer attribute) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);
 		// 默认为无主单
@@ -624,7 +625,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 */
 	@Override
 	public int updateUserById(User record) {
-		return usersMapper.updateByPrimaryKeySelective(record);
+		return userMapper.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
@@ -833,7 +834,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public boolean checkEmailUsed(String email) {
 		UserExample example1 = new UserExample();
 		example1.createCriteria().andEmailEqualTo(email);
-		int size = usersMapper.countByExample(example1);
+		int size = userMapper.countByExample(example1);
 		if (size > 0) {
 			return true;
 		} else {
@@ -859,7 +860,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			}
 		}
 		// 插入新的邮件
-		log.setCreatetime(new Date());
+		log.setCreateTime(new Date());
 		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		userBindEmailLogMapper.insertSelective(log);
@@ -891,10 +892,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public void updateBindEmail(Integer userId, String email) {
 		UserExample example = new UserExample();
 		example.createCriteria().andUserIdEqualTo(userId);
-		List<User> usersList = usersMapper.selectByExample(example);
+		List<User> usersList = userMapper.selectByExample(example);
 		User u = usersList.get(0);
 		u.setEmail(email);
-		usersMapper.updateByPrimaryKeySelective(u);
+		userMapper.updateByPrimaryKeySelective(u);
 		
 		UserBindEmailLog log = this.getUserBindEmail(userId);
 		if(log != null) {
@@ -917,7 +918,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		UserExample.Criteria userCri = usersExample.createCriteria();
 		userCri.andUsernameEqualTo(repayOrgName);
 		userCri.andBankOpenAccountEqualTo(1);// 汇付已开户
-		List<User> ulist = this.usersMapper.selectByExample(usersExample);
+		List<User> ulist = this.userMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(ulist)) {
 			return ulist;
 		}
@@ -951,11 +952,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		int i=userEvalationResultMapper.insertSelective(userEvalationResult);
 		if(i>0){
 			// 更新用户信息
-			User user = usersMapper.selectByPrimaryKey(userId);
+			User user = userMapper.selectByPrimaryKey(userId);
 			if (user != null){
 				user.setIsEvaluationFlag(1);// 已测评
 				// 更新用户是否测评标志位
-				this.usersMapper.updateByPrimaryKey(user);
+				this.userMapper.updateByPrimaryKey(user);
 			}
 			for (int j = 0; j < answerList.size(); j++) {
 				UserEvalation userEvalation=new UserEvalation();
@@ -1042,7 +1043,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			users.setInvestflag(1);
 			UserExample userExample = new UserExample();
 			userExample.createCriteria().andUserIdEqualTo(userId).andInvestflagEqualTo(0);
-			boolean userFlag = this.usersMapper.updateByExampleSelective(users, userExample) > 0 ? true : false;
+			boolean userFlag = this.userMapper.updateByExampleSelective(users, userExample) > 0 ? true : false;
 			if (!userFlag) {
 				logger.info("更新新手标识失败，用户userId：" + userId);
 				result = false;

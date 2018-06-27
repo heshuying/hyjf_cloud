@@ -12,10 +12,8 @@
     <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="credited" property="credited" jdbcType="DECIMAL" />
     <result column="fee" property="fee" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
     <result column="addip" property="addip" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="reason" property="reason" jdbcType="VARCHAR" />
     <result column="bank_flag" property="bankFlag" jdbcType="TINYINT" />
@@ -25,6 +23,8 @@
     <result column="seq_no" property="seqNo" jdbcType="INTEGER" />
     <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
     <result column="withdraw_type" property="withdrawType" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -85,9 +85,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, nid, `status`, account, bank, bank_id, total, credited, fee, add_time, 
-    addip, remark, update_time, client, reason, bank_flag, account_id, tx_date, tx_time, 
-    seq_no, bank_seq_no, withdraw_type
+    id, user_id, nid, `status`, account, bank, bank_id, total, credited, fee, addip, 
+    remark, client, reason, bank_flag, account_id, tx_date, tx_time, seq_no, bank_seq_no, 
+    withdraw_type, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountWithdrawExample" >
     select
@@ -129,19 +129,19 @@
     insert into ht_account_withdraw (user_id, nid, `status`, 
       account, bank, bank_id, 
       total, credited, fee, 
-      add_time, addip, remark, 
-      update_time, client, reason, 
-      bank_flag, account_id, tx_date, 
-      tx_time, seq_no, bank_seq_no, 
-      withdraw_type)
+      addip, remark, client, 
+      reason, bank_flag, account_id, 
+      tx_date, tx_time, seq_no, 
+      bank_seq_no, withdraw_type, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{nid,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
       #{account,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, #{bankId,jdbcType=INTEGER}, 
       #{total,jdbcType=DECIMAL}, #{credited,jdbcType=DECIMAL}, #{fee,jdbcType=VARCHAR}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{addip,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{client,jdbcType=TINYINT}, #{reason,jdbcType=VARCHAR}, 
-      #{bankFlag,jdbcType=TINYINT}, #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, 
-      #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, 
-      #{withdrawType,jdbcType=TINYINT})
+      #{addip,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{client,jdbcType=TINYINT}, 
+      #{reason,jdbcType=VARCHAR}, #{bankFlag,jdbcType=TINYINT}, #{accountId,jdbcType=VARCHAR}, 
+      #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=INTEGER}, 
+      #{bankSeqNo,jdbcType=VARCHAR}, #{withdrawType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountWithdraw" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -176,17 +176,11 @@
       <if test="fee != null" >
         fee,
       </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
       <if test="addip != null" >
         addip,
       </if>
       <if test="remark != null" >
         remark,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
       </if>
       <if test="client != null" >
         client,
@@ -214,6 +208,12 @@
       </if>
       <if test="withdrawType != null" >
         withdraw_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -244,17 +244,11 @@
       <if test="fee != null" >
         #{fee,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="addip != null" >
         #{addip,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="client != null" >
         #{client,jdbcType=TINYINT},
@@ -282,6 +276,12 @@
       </if>
       <if test="withdrawType != null" >
         #{withdrawType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -324,17 +324,11 @@
       <if test="record.fee != null" >
         fee = #{record.fee,jdbcType=VARCHAR},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.addip != null" >
         addip = #{record.addip,jdbcType=VARCHAR},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.client != null" >
         client = #{record.client,jdbcType=TINYINT},
@@ -363,6 +357,12 @@
       <if test="record.withdrawType != null" >
         withdraw_type = #{record.withdrawType,jdbcType=TINYINT},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -380,10 +380,8 @@
       total = #{record.total,jdbcType=DECIMAL},
       credited = #{record.credited,jdbcType=DECIMAL},
       fee = #{record.fee,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
       addip = #{record.addip,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       client = #{record.client,jdbcType=TINYINT},
       reason = #{record.reason,jdbcType=VARCHAR},
       bank_flag = #{record.bankFlag,jdbcType=TINYINT},
@@ -392,7 +390,9 @@
       tx_time = #{record.txTime,jdbcType=INTEGER},
       seq_no = #{record.seqNo,jdbcType=INTEGER},
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
-      withdraw_type = #{record.withdrawType,jdbcType=TINYINT}
+      withdraw_type = #{record.withdrawType,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -427,17 +427,11 @@
       <if test="fee != null" >
         fee = #{fee,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="addip != null" >
         addip = #{addip,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="client != null" >
         client = #{client,jdbcType=TINYINT},
@@ -466,6 +460,12 @@
       <if test="withdrawType != null" >
         withdraw_type = #{withdrawType,jdbcType=TINYINT},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -480,10 +480,8 @@
       total = #{total,jdbcType=DECIMAL},
       credited = #{credited,jdbcType=DECIMAL},
       fee = #{fee,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
       addip = #{addip,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       client = #{client,jdbcType=TINYINT},
       reason = #{reason,jdbcType=VARCHAR},
       bank_flag = #{bankFlag,jdbcType=TINYINT},
@@ -492,7 +490,9 @@
       tx_time = #{txTime,jdbcType=INTEGER},
       seq_no = #{seqNo,jdbcType=INTEGER},
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
-      withdraw_type = #{withdrawType,jdbcType=TINYINT}
+      withdraw_type = #{withdrawType,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

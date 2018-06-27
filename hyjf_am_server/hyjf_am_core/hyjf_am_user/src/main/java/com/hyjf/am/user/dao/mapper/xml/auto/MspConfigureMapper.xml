@@ -17,7 +17,7 @@
     <result column="overdue_date" property="overdueDate" jdbcType="VARCHAR" />
     <result column="overdue_length" property="overdueLength" jdbcType="INTEGER" />
     <result column="overdue_reason" property="overdueReason" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -135,7 +135,7 @@
       #{approvalResult,jdbcType=VARCHAR}, #{loanMoney,jdbcType=DECIMAL}, #{loanTimeLimit,jdbcType=INTEGER}, 
       #{creditAddress,jdbcType=VARCHAR}, #{guaranteeType,jdbcType=VARCHAR}, #{unredeemedMoney,jdbcType=DECIMAL}, 
       #{repaymentStatus,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=DECIMAL}, #{overdueDate,jdbcType=VARCHAR}, 
-      #{overdueLength,jdbcType=INTEGER}, #{overdueReason,jdbcType=VARCHAR}, #{delFlag,jdbcType=BIT}, 
+      #{overdueLength,jdbcType=INTEGER}, #{overdueReason,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
       #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -247,7 +247,7 @@
         #{overdueReason,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=BIT},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
@@ -318,7 +318,7 @@
         overdue_reason = #{record.overdueReason,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=BIT},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
@@ -354,7 +354,7 @@
       overdue_date = #{record.overdueDate,jdbcType=VARCHAR},
       overdue_length = #{record.overdueLength,jdbcType=INTEGER},
       overdue_reason = #{record.overdueReason,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=BIT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user = #{record.createUser,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -409,7 +409,7 @@
         overdue_reason = #{overdueReason,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=BIT},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
@@ -442,7 +442,7 @@
       overdue_date = #{overdueDate,jdbcType=VARCHAR},
       overdue_length = #{overdueLength,jdbcType=INTEGER},
       overdue_reason = #{overdueReason,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=BIT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user = #{createUser,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

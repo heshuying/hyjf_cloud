@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BorrowRecoverPlan implements Serializable {
     private Integer id;
@@ -72,7 +73,7 @@ public class BorrowRecoverPlan implements Serializable {
 
     private BigDecimal delayRate;
 
-    private Integer addTime;
+    private Date createTime;
 
     private String addip;
 
@@ -402,12 +403,12 @@ public class BorrowRecoverPlan implements Serializable {
         this.delayRate = delayRate;
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public String getAddip() {

@@ -41,11 +41,7 @@ public class AccountRecharge implements Serializable {
 
     private String remark;
 
-    private Date updateTime;
-
     private String operator;
-
-    private Integer addTime;
 
     private String addip;
 
@@ -54,6 +50,10 @@ public class AccountRecharge implements Serializable {
     private String cardid;
 
     private String message;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -201,28 +201,12 @@ public class AccountRecharge implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getOperator() {
         return operator;
     }
 
     public void setOperator(String operator) {
         this.operator = operator == null ? null : operator.trim();
-    }
-
-    public Integer getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
     }
 
     public String getAddip() {
@@ -255,5 +239,21 @@ public class AccountRecharge implements Serializable {
 
     public void setMessage(String message) {
         this.message = message == null ? null : message.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

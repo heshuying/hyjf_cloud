@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BorrowRepayPlanExample {
@@ -182,66 +183,6 @@ public class BorrowRepayPlanExample {
 
         public Criteria andIdNotBetween(Integer value1, Integer value2) {
             addCriterion("id not between", value1, value2, "id");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusIsNull() {
-            addCriterion("`status` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusIsNotNull() {
-            addCriterion("`status` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusEqualTo(Integer value) {
-            addCriterion("`status` =", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusNotEqualTo(Integer value) {
-            addCriterion("`status` <>", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusGreaterThan(Integer value) {
-            addCriterion("`status` >", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`status` >=", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusLessThan(Integer value) {
-            addCriterion("`status` <", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("`status` <=", value, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusIn(List<Integer> values) {
-            addCriterion("`status` in", values, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusNotIn(List<Integer> values) {
-            addCriterion("`status` not in", values, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusBetween(Integer value1, Integer value2) {
-            addCriterion("`status` between", value1, value2, "status");
-            return (Criteria) this;
-        }
-
-        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("`status` not between", value1, value2, "status");
             return (Criteria) this;
         }
 
@@ -442,6 +383,136 @@ public class BorrowRepayPlanExample {
 
         public Criteria andBorrowNidNotBetween(String value1, String value2) {
             addCriterion("borrow_nid not between", value1, value2, "borrowNid");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdIsNull() {
+            addCriterion("repay_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdIsNotNull() {
+            addCriterion("repay_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdEqualTo(Integer value) {
+            addCriterion("repay_user_id =", value, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdNotEqualTo(Integer value) {
+            addCriterion("repay_user_id <>", value, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdGreaterThan(Integer value) {
+            addCriterion("repay_user_id >", value, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("repay_user_id >=", value, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdLessThan(Integer value) {
+            addCriterion("repay_user_id <", value, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("repay_user_id <=", value, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdIn(List<Integer> values) {
+            addCriterion("repay_user_id in", values, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdNotIn(List<Integer> values) {
+            addCriterion("repay_user_id not in", values, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("repay_user_id between", value1, value2, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("repay_user_id not between", value1, value2, "repayUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameIsNull() {
+            addCriterion("repay_username is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameIsNotNull() {
+            addCriterion("repay_username is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameEqualTo(String value) {
+            addCriterion("repay_username =", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameNotEqualTo(String value) {
+            addCriterion("repay_username <>", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameGreaterThan(String value) {
+            addCriterion("repay_username >", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameGreaterThanOrEqualTo(String value) {
+            addCriterion("repay_username >=", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameLessThan(String value) {
+            addCriterion("repay_username <", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameLessThanOrEqualTo(String value) {
+            addCriterion("repay_username <=", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameLike(String value) {
+            addCriterion("repay_username like", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameNotLike(String value) {
+            addCriterion("repay_username not like", value, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameIn(List<String> values) {
+            addCriterion("repay_username in", values, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameNotIn(List<String> values) {
+            addCriterion("repay_username not in", values, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameBetween(String value1, String value2) {
+            addCriterion("repay_username between", value1, value2, "repayUsername");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayUsernameNotBetween(String value1, String value2) {
+            addCriterion("repay_username not between", value1, value2, "repayUsername");
             return (Criteria) this;
         }
 
@@ -712,66 +783,6 @@ public class BorrowRepayPlanExample {
 
         public Criteria andRepayActionTimeNotBetween(String value1, String value2) {
             addCriterion("repay_action_time not between", value1, value2, "repayActionTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusIsNull() {
-            addCriterion("repay_status is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusIsNotNull() {
-            addCriterion("repay_status is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusEqualTo(Integer value) {
-            addCriterion("repay_status =", value, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusNotEqualTo(Integer value) {
-            addCriterion("repay_status <>", value, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusGreaterThan(Integer value) {
-            addCriterion("repay_status >", value, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("repay_status >=", value, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusLessThan(Integer value) {
-            addCriterion("repay_status <", value, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("repay_status <=", value, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusIn(List<Integer> values) {
-            addCriterion("repay_status in", values, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusNotIn(List<Integer> values) {
-            addCriterion("repay_status not in", values, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusBetween(Integer value1, Integer value2) {
-            addCriterion("repay_status between", value1, value2, "repayStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("repay_status not between", value1, value2, "repayStatus");
             return (Criteria) this;
         }
 
@@ -1555,66 +1566,6 @@ public class BorrowRepayPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceStatusIsNull() {
-            addCriterion("advance_status is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusIsNotNull() {
-            addCriterion("advance_status is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusEqualTo(Integer value) {
-            addCriterion("advance_status =", value, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusNotEqualTo(Integer value) {
-            addCriterion("advance_status <>", value, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusGreaterThan(Integer value) {
-            addCriterion("advance_status >", value, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("advance_status >=", value, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusLessThan(Integer value) {
-            addCriterion("advance_status <", value, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("advance_status <=", value, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusIn(List<Integer> values) {
-            addCriterion("advance_status in", values, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusNotIn(List<Integer> values) {
-            addCriterion("advance_status not in", values, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusBetween(Integer value1, Integer value2) {
-            addCriterion("advance_status between", value1, value2, "advanceStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andAdvanceStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("advance_status not between", value1, value2, "advanceStatus");
-            return (Criteria) this;
-        }
-
         public Criteria andChargeDaysIsNull() {
             addCriterion("charge_days is null");
             return (Criteria) this;
@@ -2045,136 +1996,6 @@ public class BorrowRepayPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andAddTimeIsNull() {
-            addCriterion("add_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeIsNotNull() {
-            addCriterion("add_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeEqualTo(Integer value) {
-            addCriterion("add_time =", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotEqualTo(Integer value) {
-            addCriterion("add_time <>", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeGreaterThan(Integer value) {
-            addCriterion("add_time >", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("add_time >=", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeLessThan(Integer value) {
-            addCriterion("add_time <", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeLessThanOrEqualTo(Integer value) {
-            addCriterion("add_time <=", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeIn(List<Integer> values) {
-            addCriterion("add_time in", values, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotIn(List<Integer> values) {
-            addCriterion("add_time not in", values, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeBetween(Integer value1, Integer value2) {
-            addCriterion("add_time between", value1, value2, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotBetween(Integer value1, Integer value2) {
-            addCriterion("add_time not between", value1, value2, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipIsNull() {
-            addCriterion("addip is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipIsNotNull() {
-            addCriterion("addip is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipEqualTo(String value) {
-            addCriterion("addip =", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipNotEqualTo(String value) {
-            addCriterion("addip <>", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipGreaterThan(String value) {
-            addCriterion("addip >", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipGreaterThanOrEqualTo(String value) {
-            addCriterion("addip >=", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipLessThan(String value) {
-            addCriterion("addip <", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipLessThanOrEqualTo(String value) {
-            addCriterion("addip <=", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipLike(String value) {
-            addCriterion("addip like", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipNotLike(String value) {
-            addCriterion("addip not like", value, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipIn(List<String> values) {
-            addCriterion("addip in", values, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipNotIn(List<String> values) {
-            addCriterion("addip not in", values, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipBetween(String value1, String value2) {
-            addCriterion("addip between", value1, value2, "addip");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddipNotBetween(String value1, String value2) {
-            addCriterion("addip not between", value1, value2, "addip");
-            return (Criteria) this;
-        }
-
         public Criteria andRepayMoneySourceIsNull() {
             addCriterion("repay_money_source is null");
             return (Criteria) this;
@@ -2232,136 +2053,6 @@ public class BorrowRepayPlanExample {
 
         public Criteria andRepayMoneySourceNotBetween(Integer value1, Integer value2) {
             addCriterion("repay_money_source not between", value1, value2, "repayMoneySource");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdIsNull() {
-            addCriterion("repay_user_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdIsNotNull() {
-            addCriterion("repay_user_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdEqualTo(Integer value) {
-            addCriterion("repay_user_id =", value, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdNotEqualTo(Integer value) {
-            addCriterion("repay_user_id <>", value, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdGreaterThan(Integer value) {
-            addCriterion("repay_user_id >", value, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("repay_user_id >=", value, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdLessThan(Integer value) {
-            addCriterion("repay_user_id <", value, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdLessThanOrEqualTo(Integer value) {
-            addCriterion("repay_user_id <=", value, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdIn(List<Integer> values) {
-            addCriterion("repay_user_id in", values, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdNotIn(List<Integer> values) {
-            addCriterion("repay_user_id not in", values, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdBetween(Integer value1, Integer value2) {
-            addCriterion("repay_user_id between", value1, value2, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUserIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("repay_user_id not between", value1, value2, "repayUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameIsNull() {
-            addCriterion("repay_username is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameIsNotNull() {
-            addCriterion("repay_username is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameEqualTo(String value) {
-            addCriterion("repay_username =", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameNotEqualTo(String value) {
-            addCriterion("repay_username <>", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameGreaterThan(String value) {
-            addCriterion("repay_username >", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameGreaterThanOrEqualTo(String value) {
-            addCriterion("repay_username >=", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameLessThan(String value) {
-            addCriterion("repay_username <", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameLessThanOrEqualTo(String value) {
-            addCriterion("repay_username <=", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameLike(String value) {
-            addCriterion("repay_username like", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameNotLike(String value) {
-            addCriterion("repay_username not like", value, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameIn(List<String> values) {
-            addCriterion("repay_username in", values, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameNotIn(List<String> values) {
-            addCriterion("repay_username not in", values, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameBetween(String value1, String value2) {
-            addCriterion("repay_username between", value1, value2, "repayUsername");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepayUsernameNotBetween(String value1, String value2) {
-            addCriterion("repay_username not between", value1, value2, "repayUsername");
             return (Criteria) this;
         }
 
@@ -2482,6 +2173,316 @@ public class BorrowRepayPlanExample {
 
         public Criteria andAutoRepayNotBetween(Integer value1, Integer value2) {
             addCriterion("auto_repay not between", value1, value2, "autoRepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNull() {
+            addCriterion("`status` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("`status` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Integer value) {
+            addCriterion("`status` =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Integer value) {
+            addCriterion("`status` <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Integer value) {
+            addCriterion("`status` >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("`status` >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Integer value) {
+            addCriterion("`status` <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("`status` <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Integer> values) {
+            addCriterion("`status` in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Integer> values) {
+            addCriterion("`status` not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
+            addCriterion("`status` between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("`status` not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusIsNull() {
+            addCriterion("repay_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusIsNotNull() {
+            addCriterion("repay_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusEqualTo(Integer value) {
+            addCriterion("repay_status =", value, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusNotEqualTo(Integer value) {
+            addCriterion("repay_status <>", value, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusGreaterThan(Integer value) {
+            addCriterion("repay_status >", value, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("repay_status >=", value, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusLessThan(Integer value) {
+            addCriterion("repay_status <", value, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("repay_status <=", value, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusIn(List<Integer> values) {
+            addCriterion("repay_status in", values, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusNotIn(List<Integer> values) {
+            addCriterion("repay_status not in", values, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusBetween(Integer value1, Integer value2) {
+            addCriterion("repay_status between", value1, value2, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("repay_status not between", value1, value2, "repayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusIsNull() {
+            addCriterion("advance_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusIsNotNull() {
+            addCriterion("advance_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusEqualTo(Integer value) {
+            addCriterion("advance_status =", value, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusNotEqualTo(Integer value) {
+            addCriterion("advance_status <>", value, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusGreaterThan(Integer value) {
+            addCriterion("advance_status >", value, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("advance_status >=", value, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusLessThan(Integer value) {
+            addCriterion("advance_status <", value, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("advance_status <=", value, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusIn(List<Integer> values) {
+            addCriterion("advance_status in", values, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusNotIn(List<Integer> values) {
+            addCriterion("advance_status not in", values, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusBetween(Integer value1, Integer value2) {
+            addCriterion("advance_status between", value1, value2, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvanceStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("advance_status not between", value1, value2, "advanceStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipIsNull() {
+            addCriterion("addip is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipIsNotNull() {
+            addCriterion("addip is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipEqualTo(String value) {
+            addCriterion("addip =", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipNotEqualTo(String value) {
+            addCriterion("addip <>", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipGreaterThan(String value) {
+            addCriterion("addip >", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipGreaterThanOrEqualTo(String value) {
+            addCriterion("addip >=", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipLessThan(String value) {
+            addCriterion("addip <", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipLessThanOrEqualTo(String value) {
+            addCriterion("addip <=", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipLike(String value) {
+            addCriterion("addip like", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipNotLike(String value) {
+            addCriterion("addip not like", value, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipIn(List<String> values) {
+            addCriterion("addip in", values, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipNotIn(List<String> values) {
+            addCriterion("addip not in", values, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipBetween(String value1, String value2) {
+            addCriterion("addip between", value1, value2, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddipNotBetween(String value1, String value2) {
+            addCriterion("addip not between", value1, value2, "addip");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("create_time =", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("create_time <>", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("create_time >", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_time >=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("create_time <", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("create_time <=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("create_time in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("create_time not in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
     }

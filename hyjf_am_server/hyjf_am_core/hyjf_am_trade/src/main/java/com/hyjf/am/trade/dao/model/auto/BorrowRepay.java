@@ -2,11 +2,10 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BorrowRepay implements Serializable {
     private Integer id;
-
-    private Integer status;
 
     private Integer userId;
 
@@ -16,13 +15,13 @@ public class BorrowRepay implements Serializable {
 
     private String nid;
 
+    private Integer repayUserId;
+
     private String repayType;
 
     private BigDecimal repayFee;
 
     private Integer repayActionTime;
-
-    private Integer repayStatus;
 
     private Integer repayPeriod;
 
@@ -50,8 +49,6 @@ public class BorrowRepay implements Serializable {
 
     private BigDecimal repayInterestWait;
 
-    private Integer advanceStatus;
-
     private Integer chargeDays;
 
     private BigDecimal chargeInterest;
@@ -66,19 +63,23 @@ public class BorrowRepay implements Serializable {
 
     private String delayRemark;
 
-    private Integer addTime;
-
-    private String addip;
-
     private Integer repayMoneySource;
-
-    private Integer repayUserId;
-
-    private String repayUsername;
 
     private Integer repaySmsReminder;
 
+    private Integer status;
+
     private Integer autoRepay;
+
+    private Integer advanceStatus;
+
+    private Integer repayStatus;
+
+    private String repayUsername;
+
+    private String addip;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -88,14 +89,6 @@ public class BorrowRepay implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public Integer getUserId() {
@@ -130,6 +123,14 @@ public class BorrowRepay implements Serializable {
         this.nid = nid == null ? null : nid.trim();
     }
 
+    public Integer getRepayUserId() {
+        return repayUserId;
+    }
+
+    public void setRepayUserId(Integer repayUserId) {
+        this.repayUserId = repayUserId;
+    }
+
     public String getRepayType() {
         return repayType;
     }
@@ -152,14 +153,6 @@ public class BorrowRepay implements Serializable {
 
     public void setRepayActionTime(Integer repayActionTime) {
         this.repayActionTime = repayActionTime;
-    }
-
-    public Integer getRepayStatus() {
-        return repayStatus;
-    }
-
-    public void setRepayStatus(Integer repayStatus) {
-        this.repayStatus = repayStatus;
     }
 
     public Integer getRepayPeriod() {
@@ -266,14 +259,6 @@ public class BorrowRepay implements Serializable {
         this.repayInterestWait = repayInterestWait;
     }
 
-    public Integer getAdvanceStatus() {
-        return advanceStatus;
-    }
-
-    public void setAdvanceStatus(Integer advanceStatus) {
-        this.advanceStatus = advanceStatus;
-    }
-
     public Integer getChargeDays() {
         return chargeDays;
     }
@@ -330,44 +315,12 @@ public class BorrowRepay implements Serializable {
         this.delayRemark = delayRemark == null ? null : delayRemark.trim();
     }
 
-    public Integer getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
-    }
-
     public Integer getRepayMoneySource() {
         return repayMoneySource;
     }
 
     public void setRepayMoneySource(Integer repayMoneySource) {
         this.repayMoneySource = repayMoneySource;
-    }
-
-    public Integer getRepayUserId() {
-        return repayUserId;
-    }
-
-    public void setRepayUserId(Integer repayUserId) {
-        this.repayUserId = repayUserId;
-    }
-
-    public String getRepayUsername() {
-        return repayUsername;
-    }
-
-    public void setRepayUsername(String repayUsername) {
-        this.repayUsername = repayUsername == null ? null : repayUsername.trim();
     }
 
     public Integer getRepaySmsReminder() {
@@ -378,11 +331,59 @@ public class BorrowRepay implements Serializable {
         this.repaySmsReminder = repaySmsReminder;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Integer getAutoRepay() {
         return autoRepay;
     }
 
     public void setAutoRepay(Integer autoRepay) {
         this.autoRepay = autoRepay;
+    }
+
+    public Integer getAdvanceStatus() {
+        return advanceStatus;
+    }
+
+    public void setAdvanceStatus(Integer advanceStatus) {
+        this.advanceStatus = advanceStatus;
+    }
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
+    }
+
+    public String getRepayUsername() {
+        return repayUsername;
+    }
+
+    public void setRepayUsername(String repayUsername) {
+        this.repayUsername = repayUsername == null ? null : repayUsername.trim();
+    }
+
+    public String getAddip() {
+        return addip;
+    }
+
+    public void setAddip(String addip) {
+        this.addip = addip == null ? null : addip.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

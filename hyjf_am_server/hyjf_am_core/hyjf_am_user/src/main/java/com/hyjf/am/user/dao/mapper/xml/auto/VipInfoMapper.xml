@@ -7,7 +7,7 @@
     <result column="vip_value" property="vipValue" jdbcType="INTEGER" />
     <result column="vip_level" property="vipLevel" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -117,7 +117,7 @@
       update_user_id, create_time, update_time
       )
     values (#{vipName,jdbcType=VARCHAR}, #{vipValue,jdbcType=INTEGER}, #{vipLevel,jdbcType=INTEGER}, 
-      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=BIT}, #{createUserId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -169,7 +169,7 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=BIT},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -210,7 +210,7 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=BIT},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -236,7 +236,7 @@
       vip_value = #{record.vipValue,jdbcType=INTEGER},
       vip_level = #{record.vipLevel,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=BIT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -261,7 +261,7 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=BIT},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -284,7 +284,7 @@
       vip_value = #{vipValue,jdbcType=INTEGER},
       vip_level = #{vipLevel,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=BIT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
