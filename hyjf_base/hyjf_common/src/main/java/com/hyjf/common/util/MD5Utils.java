@@ -40,9 +40,4 @@ public class MD5Utils {
 			return null;
 		}
 	}
-
-	public static void main(String[] args) throws IOException {
-		System.out.println(MD5Utils.MD5(MD5Utils.MD5("123456") + "iq3Gyf"));
-		
-	}
 }

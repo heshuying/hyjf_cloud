@@ -2,6 +2,7 @@ package com.hyjf.callcenter.clientImpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,7 +12,6 @@ import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
 import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
 import com.hyjf.callcenter.client.AccountHuifuClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
 
 /**
  * @author libin
@@ -19,7 +19,8 @@ import com.hyjf.ribbon.EurekaInvokeClient;
  */
 @Service
 public class AccountHuifuClientImpl implements AccountHuifuClient {
-	private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
+	@Autowired
+	private RestTemplate restTemplate;
 	@Override
 	public List<CallcenterAccountHuifuVO> selectBankCardList(
 			CallcenterAccountHuifuRequest callcenterAccountHuifuRequest) {

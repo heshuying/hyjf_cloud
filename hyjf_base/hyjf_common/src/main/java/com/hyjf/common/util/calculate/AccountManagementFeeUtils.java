@@ -256,28 +256,4 @@ public class AccountManagementFeeUtils {
         }
         return count;
 	}
-
-	public static void main(String[] args) {
-		BigDecimal invest = new BigDecimal(99);
-		int month = 2;
-		int day = 15;
-		int term = 1;
-		BigDecimal monthRate = new BigDecimal(0.15);
-
-		BigDecimal dueAccountManagementFeeByMonth = getDueAccountManagementFeeByMonth(invest,  new BigDecimal("0.003"), month, new BigDecimal("0.0017"),1499999999);
-		System.out.println("按月计息，到期还本还息 账户管理费:" + dueAccountManagementFeeByMonth);
-
-		BigDecimal dayCount = getDueAccountManagementFeeByDay(invest, new BigDecimal("0.001"), day, new BigDecimal("0.0002"),1463134474);
-		System.out.println("按天计息，到期还本还息 账户管理费:" + dayCount);
-
-		 BigDecimal monthCount = getMonthAccountManagementFee(invest, monthRate, month,  new BigDecimal("0.0002"), 1, invest, term,1463134474);
-		System.out.println("等额本息/等额本金 每月账户管理费:" + monthCount);
-
-		BigDecimal beforInterestCount = getBeforeInterestAfterPrincipalAccountManagementFee(invest, monthRate, month,
-				term, new BigDecimal("0.0002"), 1,1463134474);
-		System.out.println("先息后本， 每月账户管理费:" + beforInterestCount);
-	}
-	
-	
-	
 }

@@ -51,6 +51,7 @@ public class MobileSynchronizeServiceImpl implements MobileSynchronizeService {
      * @param accountMobileSynchRequest
      * @return
      */
+    @Override
     public boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest){
         if(accountMobileSynchRequest.getUpdateFlag() == 1){
             //根据用户ID删除银行卡

@@ -1353,10 +1353,6 @@ public class GetDate extends PropertyEditorSupport {
 		return gc.getTime();
 	}
 
-	public static void main(String[] args) throws ParseException {
-		System.out.println(GetDate.getDate("yyyy-MM-dd"));
-	}
-
 	/**
 	 * 获取毫秒值
 	 *

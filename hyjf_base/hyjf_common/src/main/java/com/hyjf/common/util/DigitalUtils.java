@@ -45,16 +45,4 @@ public class DigitalUtils {
 		if (str != null && !str.isEmpty()){result = Integer.valueOf(str);}
 		return result;
 	}
-
-	public static void main(String[] args) {
-		boolean integeFlag = isInteger("1000");
-		System.out.println(integeFlag);
-		
-		boolean numberFlag = isNumber("1000.33");
-		System.out.println(numberFlag);
-
-		String i = null;
-		toInteger(i);
-	}
-
 }

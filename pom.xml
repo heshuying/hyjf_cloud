@@ -173,13 +173,20 @@
         </repository>
     </repositories>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
 
-        </plugins>
-    </build>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>
+                http://219.147.28.242:18080/nexus-2.9.0/content/repositories/releases/
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>
+                http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/
+            </url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>

@@ -195,23 +195,4 @@ public class RSAHelper {
 		return null;
 	}
 
-	public static void main(String[] args) {
-		try {
-			String srcData = "5800300500002015092216161600000700000220150922161616O1013503211989100612341442977591026";
-			RSAKeyUtil ru = new RSAKeyUtil(new File("D:/file/fdep/fdepCust.p12"), "fdep");
-			System.out.println("内容: " + srcData);
-			RSAHelper signHelper = new RSAHelper(ru.getPrivateKey());
-			String signText = signHelper.sign(srcData);
-			System.out.println("签名: " + signText);
-			RSAKeyUtil ru2 = new RSAKeyUtil(new File("D:/file/fdep/fdepCust.crt"));
-			signText = "IzOoJsRnPuNvs2B+HbwTOaEsE96SLa9fd6/9/w4G5yavCFXYUI8X0saX6w+IFXHlCgRd0WMagIdBucufNIeayac7v/ogPB//+2aLrJaNwmAA4FK9YNjvC+p6UdAPXz2YaE+FoQIg0hZxTLUGKPibuIjVV/A95Egzdc8jeCOdPEo=";
-			signHelper = new RSAHelper(ru2.getPublicKey());
-			boolean v = signHelper.verify(srcData, signText);
-			System.out.println("验签: " + v);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }

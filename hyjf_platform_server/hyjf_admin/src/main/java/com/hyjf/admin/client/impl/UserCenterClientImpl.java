@@ -174,7 +174,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
         CertificateAuthorityResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager//selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();

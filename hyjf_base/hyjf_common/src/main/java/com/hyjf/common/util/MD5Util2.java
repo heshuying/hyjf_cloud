@@ -113,13 +113,5 @@ public class MD5Util2 {
         stringbuffer.append(c0);  
         stringbuffer.append(c1);  
     }  
-      
-    public static void main(String[] args) throws IOException {  
-        long begin = System.currentTimeMillis();  
-  
-        File file = new File("C:/12345.txt");  
-        String md5 = getFileMD5String(file);
-        long end = System.currentTimeMillis();  
-        System.out.println("md5:" + md5 + " time:" + ((end - begin) / 1000) + "s");
-    }  
+
 }  

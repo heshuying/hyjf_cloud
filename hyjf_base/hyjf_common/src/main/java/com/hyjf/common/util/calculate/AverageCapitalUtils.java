@@ -147,23 +147,4 @@ public class AverageCapitalUtils {
 		}
 		return count;
 	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		BigDecimal invest = new BigDecimal(10000); // 本金
-		int month = 12;
-		BigDecimal yearRate = new BigDecimal(0.15); // 年利率
-		Map<Integer, BigDecimal> getPerMonthPrincipalInterest = getPerMonthPrincipalInterest(invest, yearRate, month);
-		System.out.println("等额本金---每月本息：" + getPerMonthPrincipalInterest);
-		BigDecimal benjin = getPerMonthPrincipal(invest, month);
-		System.out.println("等额本金---每月本金:" + benjin);
-		Map<Integer, BigDecimal> mapInterest = getPerMonthInterest(invest, yearRate, month);
-		System.out.println("等额本金---每月利息:" + mapInterest);
-		BigDecimal count = getInterestCount(invest, yearRate, month);
-		System.out.println("等额本金---总利息：" + count);
-		BigDecimal piCount = getPrincipalInterestCount(invest, yearRate, month);
-		System.out.println("等额本金---总本息：" + piCount);
-	}
 }

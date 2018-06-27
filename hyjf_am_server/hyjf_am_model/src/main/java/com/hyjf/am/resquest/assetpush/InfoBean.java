@@ -1,4 +1,4 @@
-package com.hyjf.am.assetpush;
+package com.hyjf.am.resquest.assetpush;
 
 import java.io.Serializable;
 
