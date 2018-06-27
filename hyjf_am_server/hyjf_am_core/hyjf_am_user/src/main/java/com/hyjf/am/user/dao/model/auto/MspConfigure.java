@@ -2,6 +2,7 @@ package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class MspConfigure implements Serializable {
     private Integer id;
@@ -34,15 +35,15 @@ public class MspConfigure implements Serializable {
 
     private String overdueReason;
 
-    private Integer createUser;
+    private Boolean delFlag;
 
-    private Integer createTime;
+    private Integer createUser;
 
     private Integer updateUser;
 
-    private Integer updateTime;
+    private Date createTime;
 
-    private Integer delFlg;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -166,20 +167,20 @@ public class MspConfigure implements Serializable {
         this.overdueReason = overdueReason == null ? null : overdueReason.trim();
     }
 
+    public Boolean getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
+    }
+
     public Integer getCreateUser() {
         return createUser;
     }
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
     }
 
     public Integer getUpdateUser() {
@@ -190,19 +191,19 @@ public class MspConfigure implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getUpdateTime() {
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
     }
 }

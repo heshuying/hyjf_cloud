@@ -33,6 +33,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -50,64 +51,47 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private UserMapper usersMapper;
 	@Autowired
 	private UserLoginLogMapper userLoginLogMapper;
 	@Autowired
 	private PreRegistMapper preRegistMapper;
-
 	@Autowired
 	private UserInfoMapper usersInfoMapper;
-
 	@Autowired
 	private AccountProducer accountProducer;
-
 	@Autowired
 	private SpreadsUserMapper spreadsUsersMapper;
-
 	@Autowired
 	private UserLogMapper usersLogMapper;
-
 	@Autowired
 	UserInfoService userInfoService;
-
 	@Autowired
 	EvalationMapper evalationMapper;
-
 	@Autowired
 	HjhUserAuthMapper hjhUserAuthMapper;
-
 	@Autowired
 	HjhUserAuthLogMapper hjhUserAuthLogMapper;
-
 	@Autowired
 	UserEvalationResultMapper userEvalationResultMapper;
-
 	@Autowired
 	UserEvalationMapper userEvalationMapper;
-
 	@Autowired
 	AccountChinapnrMapper accountChinapnrMapper;
-
 	@Autowired
 	UserContactMapper UserContactMapper;
-
 	@Autowired
 	UserBindEmailLogMapper userBindEmailLogMapper;
-
 	@Autowired
 	UtmRegMapper utmRegMapper;
-
 	@Autowired
 	UtmPlatMapper utmPlatMapper;
-
 	@Autowired
 	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
-
 	@Autowired
 	UtmRegCustomizeMapper utmRegCustomizeMapper;
-
 	@Autowired
 	VipUserTenderMapper vipUserTenderMapper;
 
@@ -682,11 +666,13 @@ public class UserServiceImpl implements UserService {
 	 * @return int
 	 */
 	@Override
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int updateUserById(User record) {
 		return usersMapper.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
+	@Transactional
 	public void updateUserAuthInves(BankRequest bean) {
 		Integer userId = Integer.parseInt(bean.getLogUserId());
 		Date nowTime = GetDate.getNowTime();
@@ -817,6 +803,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteUserEvalationResultByUserId(Integer userId) {
 		UserEvalationResultExample userEvalationResultExample = new UserEvalationResultExample();
 		userEvalationResultExample.createCriteria().andUserIdEqualTo(userId);
@@ -858,6 +845,7 @@ public class UserServiceImpl implements UserService {
 	 * @date: 2018/6/20
 	 */
 	@Override
+	@Transactional
 	public int updateUserContact(UsersContractRequest record) {
 		if (record.getUserId() == null) {
 			return 0;
@@ -911,6 +899,7 @@ public class UserServiceImpl implements UserService {
 	 * @date: 2018/6/20
 	 */
 	@Override
+	@Transactional
 	public void insertEmailBindLog(UserBindEmailLog log) {
 		// 将之前的邮件失效
 		UserBindEmailLogExample example = new UserBindEmailLogExample();
@@ -924,7 +913,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		// 插入新的邮件
-		log.setCreatetime(new Date());
+		log.setCreateTime(new Date());
 		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		userBindEmailLogMapper.insertSelective(log);
@@ -955,6 +944,7 @@ public class UserServiceImpl implements UserService {
 	 * @date: 2018/6/20
 	 */
 	@Override
+	@Transactional
 	public void updateBindEmail(Integer userId, String email) {
 		UserExample example = new UserExample();
 		example.createCriteria().andUserIdEqualTo(userId);
@@ -1004,6 +994,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
 			EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult) {
 		UserEvalationResult userEvalationResult = new UserEvalationResult();

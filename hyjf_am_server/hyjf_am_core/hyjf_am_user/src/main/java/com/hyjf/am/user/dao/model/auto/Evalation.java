@@ -14,6 +14,8 @@ public class Evalation implements Serializable {
 
     private String summary;
 
+    private String remarks;
+
     private Integer status;
 
     private String createUser;
@@ -23,8 +25,6 @@ public class Evalation implements Serializable {
     private Date createTime;
 
     private Date updateTime;
-
-    private String remarks;
 
     private static final long serialVersionUID = 1L;
 
@@ -68,6 +68,14 @@ public class Evalation implements Serializable {
         this.summary = summary == null ? null : summary.trim();
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
+    }
+
     public Integer getStatus() {
         return status;
     }
@@ -106,13 +114,5 @@ public class Evalation implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks == null ? null : remarks.trim();
     }
 }

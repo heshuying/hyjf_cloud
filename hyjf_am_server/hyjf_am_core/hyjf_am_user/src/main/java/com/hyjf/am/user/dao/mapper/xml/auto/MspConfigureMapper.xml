@@ -17,11 +17,11 @@
     <result column="overdue_date" property="overdueDate" jdbcType="VARCHAR" />
     <result column="overdue_length" property="overdueLength" jdbcType="INTEGER" />
     <result column="overdue_reason" property="overdueReason" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="del_flg" property="delFlg" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -84,8 +84,8 @@
   <sql id="Base_Column_List" >
     id, configure_name, loan_type, service_type, approval_result, loan_money, loan_time_limit, 
     credit_address, guarantee_type, unredeemed_money, repayment_status, overdue_amount, 
-    overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
-    update_time, del_flg
+    overdue_date, overdue_length, overdue_reason, del_flag, create_user, update_user, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspConfigureExample" >
     select
@@ -128,16 +128,16 @@
       approval_result, loan_money, loan_time_limit, 
       credit_address, guarantee_type, unredeemed_money, 
       repayment_status, overdue_amount, overdue_date, 
-      overdue_length, overdue_reason, create_user, 
-      create_time, update_user, update_time, 
-      del_flg)
+      overdue_length, overdue_reason, del_flag, 
+      create_user, update_user, create_time, 
+      update_time)
     values (#{configureName,jdbcType=VARCHAR}, #{loanType,jdbcType=VARCHAR}, #{serviceType,jdbcType=VARCHAR}, 
       #{approvalResult,jdbcType=VARCHAR}, #{loanMoney,jdbcType=DECIMAL}, #{loanTimeLimit,jdbcType=INTEGER}, 
       #{creditAddress,jdbcType=VARCHAR}, #{guaranteeType,jdbcType=VARCHAR}, #{unredeemedMoney,jdbcType=DECIMAL}, 
       #{repaymentStatus,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=DECIMAL}, #{overdueDate,jdbcType=VARCHAR}, 
-      #{overdueLength,jdbcType=INTEGER}, #{overdueReason,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
-      #{delFlg,jdbcType=INTEGER})
+      #{overdueLength,jdbcType=INTEGER}, #{overdueReason,jdbcType=VARCHAR}, #{delFlag,jdbcType=BIT}, 
+      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspConfigure" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -187,20 +187,20 @@
       <if test="overdueReason != null" >
         overdue_reason,
       </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
       <if test="createUser != null" >
         create_user,
-      </if>
-      <if test="createTime != null" >
-        create_time,
       </if>
       <if test="updateUser != null" >
         update_user,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
       <if test="updateTime != null" >
         update_time,
-      </if>
-      <if test="delFlg != null" >
-        del_flg,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -246,20 +246,20 @@
       <if test="overdueReason != null" >
         #{overdueReason,jdbcType=VARCHAR},
       </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
       <if test="createUser != null" >
         #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
       </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        #{delFlg,jdbcType=INTEGER},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -317,20 +317,20 @@
       <if test="record.overdueReason != null" >
         overdue_reason = #{record.overdueReason,jdbcType=VARCHAR},
       </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=BIT},
+      </if>
       <if test="record.createUser != null" >
         create_user = #{record.createUser,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
       </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=INTEGER},
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -354,11 +354,11 @@
       overdue_date = #{record.overdueDate,jdbcType=VARCHAR},
       overdue_length = #{record.overdueLength,jdbcType=INTEGER},
       overdue_reason = #{record.overdueReason,jdbcType=VARCHAR},
+      del_flag = #{record.delFlag,jdbcType=BIT},
       create_user = #{record.createUser,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -408,20 +408,20 @@
       <if test="overdueReason != null" >
         overdue_reason = #{overdueReason,jdbcType=VARCHAR},
       </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
       <if test="createUser != null" >
         create_user = #{createUser,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
       </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=INTEGER},
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -442,11 +442,11 @@
       overdue_date = #{overdueDate,jdbcType=VARCHAR},
       overdue_length = #{overdueLength,jdbcType=INTEGER},
       overdue_reason = #{overdueReason,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=BIT},
       create_user = #{createUser,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -1,16 +1,12 @@
-package com.hyjf.am.user.mq;
+package com.hyjf.am.trade.mq.transactionmq;
 
 import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.*;
 import org.apache.rocketmq.common.message.Message;
-import org.apache.rocketmq.common.message.MessageExt;
-import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +44,7 @@ public abstract class TransactionProducer {
 		// 设置事务决断处理类
 		producer.setTransactionCheckListener(msg -> {
 			// 现在的版本取消了回查,这块不再执行，如果需要，自定义回查的代码，目前暂时不用
+			logger.info("message callback, do nothing...");
 			logger.info("server checking TrMsg %s%n", msg);
 			return LocalTransactionState.UNKNOW;
 		});
@@ -56,30 +53,21 @@ public abstract class TransactionProducer {
 
 	protected abstract ProducerFieldsWrapper getFieldsWrapper();
 
-	protected boolean send(Message message)
-			throws MQClientException, RemotingException, MQBrokerException, InterruptedException {
-		logger.info("mq address--->{}", namesrvAddr);
-		SendResult sendResult = producer.sendMessageInTransaction(message, new LocalTransactionExecuter() {
-			// 本地事务执行
-			private AtomicInteger transactionIndex = new AtomicInteger(1);
+	/**
+	 * 
+	 * @param message
+	 *            消息体
+	 * @param localTransactionExecuter
+	 *            本地事务执行
+	 * @return
+	 * @throws MQClientException
+	 */
+	protected boolean send(Message message, LocalTransactionExecuter localTransactionExecuter)
+			throws MQClientException {
+		logger.info("mq address--->{}, 开始发送事务消息, message is :{}", namesrvAddr, message);
+		SendResult sendResult = producer.sendMessageInTransaction(message, localTransactionExecuter, null);
 
-			@Override
-			public LocalTransactionState executeLocalTransactionBranch(final Message msg, final Object arg) {
-				int value = transactionIndex.getAndIncrement();
-
-				if (value == 0) {
-					throw new RuntimeException("Could not find db");
-				} else if ((value % 5) == 0) {
-					return LocalTransactionState.ROLLBACK_MESSAGE;
-				} else if ((value % 4) == 0) {
-					return LocalTransactionState.COMMIT_MESSAGE;
-				}
-
-				return LocalTransactionState.UNKNOW;
-			}
-		}, null);
-
-		logger.info("%s%n", sendResult);
+		logger.info("事务消息发送结果: {}", sendResult);
 		if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
 			return true;
 		} else {
@@ -87,12 +75,21 @@ public abstract class TransactionProducer {
 		}
 	}
 
-	protected boolean messageSend(MassageContent messageContent) throws MQException {
+	/**
+	 * 
+	 * @param messageContent
+	 * @param localTransactionExecuter
+	 *            本地事务执行
+	 * @return
+	 * @throws MQException
+	 */
+	protected boolean messageSend(MassageContent messageContent, LocalTransactionExecuter localTransactionExecuter)
+			throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);
-			return send(message);
-		} catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {
+			return send(message, localTransactionExecuter);
+		} catch (MQClientException e) {
 			throw new MQException("mq send error", e);
 		}
 	}
@@ -100,6 +97,8 @@ public abstract class TransactionProducer {
 	protected TransactionMQProducer getTransactionMQProducer() throws MQClientException {
 		return producer;
 	}
+
+	public abstract boolean messageSend(MassageContent messageContent) throws MQException;
 
 	public static class MassageContent implements Serializable {
 		private static final long serialVersionUID = -6846413929342308237L;

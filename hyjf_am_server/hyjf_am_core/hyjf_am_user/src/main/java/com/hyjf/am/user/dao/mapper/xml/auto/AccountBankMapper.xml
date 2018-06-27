@@ -13,10 +13,10 @@
     <result column="card_type" property="cardType" jdbcType="VARCHAR" />
     <result column="respcode" property="respcode" jdbcType="VARCHAR" />
     <result column="respdesc" property="respdesc" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_ip" property="updateIp" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -78,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List" >
     user_id, bank_status, account, bank, branch, province, city, area, card_type, respcode, 
-    respdesc, create_time, create_ip, update_time, update_ip
+    respdesc, create_ip, update_ip, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AccountBankExample" >
     select
@@ -120,13 +120,13 @@
     insert into ht_account_bank (bank_status, account, bank, 
       branch, province, city, area, 
       card_type, respcode, respdesc, 
-      create_time, create_ip, update_time, 
-      update_ip)
+      create_ip, update_ip, create_time, 
+      update_time)
     values (#{bankStatus,jdbcType=TINYINT}, #{account,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, 
       #{branch,jdbcType=VARCHAR}, #{province,jdbcType=CHAR}, #{city,jdbcType=CHAR}, #{area,jdbcType=INTEGER}, 
       #{cardType,jdbcType=VARCHAR}, #{respcode,jdbcType=VARCHAR}, #{respdesc,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createIp,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateIp,jdbcType=VARCHAR})
+      #{createIp,jdbcType=VARCHAR}, #{updateIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountBank" >
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
@@ -164,17 +164,17 @@
       <if test="respdesc != null" >
         respdesc,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createIp != null" >
         create_ip,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="updateIp != null" >
         update_ip,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -208,17 +208,17 @@
       <if test="respdesc != null" >
         #{respdesc,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createIp != null" >
         #{createIp,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateIp != null" >
         #{updateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -264,17 +264,17 @@
       <if test="record.respdesc != null" >
         respdesc = #{record.respdesc,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.createIp != null" >
         create_ip = #{record.createIp,jdbcType=VARCHAR},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.updateIp != null" >
         update_ip = #{record.updateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -294,10 +294,10 @@
       card_type = #{record.cardType,jdbcType=VARCHAR},
       respcode = #{record.respcode,jdbcType=VARCHAR},
       respdesc = #{record.respdesc,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_ip = #{record.createIp,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_ip = #{record.updateIp,jdbcType=VARCHAR}
+      update_ip = #{record.updateIp,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -335,17 +335,17 @@
       <if test="respdesc != null" >
         respdesc = #{respdesc,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createIp != null" >
         create_ip = #{createIp,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateIp != null" >
         update_ip = #{updateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
@@ -362,10 +362,10 @@
       card_type = #{cardType,jdbcType=VARCHAR},
       respcode = #{respcode,jdbcType=VARCHAR},
       respdesc = #{respdesc,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_ip = #{createIp,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_ip = #{updateIp,jdbcType=VARCHAR}
+      update_ip = #{updateIp,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
 </mapper>

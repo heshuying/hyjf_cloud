@@ -1,4 +1,4 @@
-package com.hyjf.am.user.dao.mapper.auto;
+package com.hyjf.am.user.dao.mapper.customize;
 
 
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
