@@ -9,4 +9,5 @@ package com.hyjf.cs.common.service;
  * @version BaseController, v0.1 2018/6/15 19:18
  */
 public interface BaseService {
+
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author pangchengchao
  * @version SynBalanceController, v0.1 2018/6/20 9:53
  */
-@Api(value = "江西银行提现掉单异常处理定时任务")
+@Api(value = "江西银行同步线下充值信息")
 @RestController
 @RequestMapping("/am-trade/synBalance")
 public class SynBalanceController {

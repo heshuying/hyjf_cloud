@@ -121,4 +121,11 @@ public interface AmUserClient {
      * @param para
      */
 	boolean insertVipUserTender(JSONObject para);
+
+	/**
+	 * 获取用户投资数量
+	 * @param userId
+	 * @return
+	 */
+    int countNewUserTotal(Integer userId);
 }

@@ -16,7 +16,6 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
@@ -26,14 +25,13 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -49,51 +47,11 @@ import java.util.Map;
  */
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private UserMapper usersMapper;
-	@Autowired
-	private UserLoginLogMapper userLoginLogMapper;
-	@Autowired
-	private PreRegistMapper preRegistMapper;
-	@Autowired
-	private UserInfoMapper usersInfoMapper;
-	@Autowired
 	private AccountProducer accountProducer;
-	@Autowired
-	private SpreadsUserMapper spreadsUsersMapper;
-	@Autowired
-	private UserLogMapper usersLogMapper;
-	@Autowired
-	UserInfoService userInfoService;
-	@Autowired
-	EvalationMapper evalationMapper;
-	@Autowired
-	HjhUserAuthMapper hjhUserAuthMapper;
-	@Autowired
-	HjhUserAuthLogMapper hjhUserAuthLogMapper;
-	@Autowired
-	UserEvalationResultMapper userEvalationResultMapper;
-	@Autowired
-	UserEvalationMapper userEvalationMapper;
-	@Autowired
-	AccountChinapnrMapper accountChinapnrMapper;
-	@Autowired
-	UserContactMapper UserContactMapper;
-	@Autowired
-	UserBindEmailLogMapper userBindEmailLogMapper;
-	@Autowired
-	UtmRegMapper utmRegMapper;
-	@Autowired
-	UtmPlatMapper utmPlatMapper;
-	@Autowired
-	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
-	@Autowired
-	UtmRegCustomizeMapper utmRegCustomizeMapper;
-	@Autowired
-	VipUserTenderMapper vipUserTenderMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -199,14 +157,14 @@ public class UserServiceImpl implements UserService {
 		UserExample ue = new UserExample();
 		UserExample.Criteria cr = ue.createCriteria();
 		cr.andUsernameEqualTo(username);
-		int cn1 = usersMapper.countByExample(ue);
+		int cn1 = userMapper.countByExample(ue);
 		if (cn1 > 0) {
 			// 第二规则
 			UserExample ue2 = new UserExample();
 			UserExample.Criteria cr2 = ue2.createCriteria();
 			username = "hyjf" + mobile;
 			cr2.andUsernameEqualTo(username);
-			int cn2 = usersMapper.countByExample(ue2);
+			int cn2 = userMapper.countByExample(ue2);
 			if (cn2 > 0) {
 				// 第三规则
 				int i = 0;
@@ -216,7 +174,7 @@ public class UserServiceImpl implements UserService {
 					UserExample.Criteria cr3 = ue3.createCriteria();
 					username = "hyjf" + mobile.substring(mobile.length() - 6, mobile.length()) + i;
 					cr3.andUsernameEqualTo(username);
-					int cn3 = usersMapper.countByExample(ue3);
+					int cn3 = userMapper.countByExample(ue3);
 					if (cn3 == 0) {
 						break;
 					}
@@ -230,7 +188,7 @@ public class UserServiceImpl implements UserService {
 	public User findUserByMobile(String mobile) {
 		UserExample usersExample = new UserExample();
 		usersExample.createCriteria().andMobileEqualTo(mobile);
-		List<User> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = userMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -241,14 +199,14 @@ public class UserServiceImpl implements UserService {
 	public User findUserByUsernameOrMobile(String condition) {
 		UserExample mobileExample = new UserExample();
 		mobileExample.createCriteria().andMobileEqualTo(condition);
-		List<User> usersList1 = usersMapper.selectByExample(mobileExample);
+		List<User> usersList1 = userMapper.selectByExample(mobileExample);
 		if (!CollectionUtils.isEmpty(usersList1)) {
 			return usersList1.get(0);
 		}
 
 		UserExample usernameExample = new UserExample();
 		usernameExample.createCriteria().andUsernameEqualTo(condition);
-		List<User> usersList2 = usersMapper.selectByExample(usernameExample);
+		List<User> usersList2 = userMapper.selectByExample(usernameExample);
 		if (!CollectionUtils.isEmpty(usersList2)) {
 			return usersList2.get(0);
 		}
@@ -264,7 +222,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			criteria.andUserIdEqualTo(Integer.valueOf(reffer));
 		}
-		List<User> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = userMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -293,7 +251,7 @@ public class UserServiceImpl implements UserService {
 			}
 			userLoginLog.setLoginIp(ip);
 			userLoginLog.setLoginTime(new Date());
-			// 登录次数
+            // 登录次数
 			userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);
 			userLoginLog.setUpdateTime(new Date());
 			userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
@@ -382,7 +340,7 @@ public class UserServiceImpl implements UserService {
 				criteria1.andUserIdEqualTo(recommend);
 			}
 
-			recommends = usersMapper.selectByExample(exampleUser);
+			recommends = userMapper.selectByExample(exampleUser);
 		}
 		if (!CollectionUtils.isEmpty(recommends)) {
 			return recommends.get(0);
@@ -429,7 +387,7 @@ public class UserServiceImpl implements UserService {
 			user.setRegEsb(Integer.parseInt(platform));
 			// 账户开通平台 0pc 1微信 2安卓 3IOS 4其他
 		}
-		usersMapper.insertSelective(user);
+		userMapper.insertSelective(user);
 		return user;
 	}
 
@@ -440,7 +398,7 @@ public class UserServiceImpl implements UserService {
 	 * @param loginIp
 	 * @param attribute
 	 */
-	private void insertUserInfo(int userId, String loginIp, Integer attribute) {
+	private void insertUsersInfo(int userId,int instType, String loginIp, Integer attribute) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);
 		// 默认为无主单
@@ -464,7 +422,7 @@ public class UserServiceImpl implements UserService {
 		userInfo.setIsContact(0);
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
-		usersInfoMapper.insertSelective(userInfo);
+		userInfoMapper.insertSelective(userInfo);
 	}
 
 	/**
@@ -538,7 +496,7 @@ public class UserServiceImpl implements UserService {
 		spreadUser.setOpernote("reg");
 		spreadUser.setOperation(userId + "");
 		logger.info("注册插入spreadUser：{}", JSON.toJSONString(spreadUser));
-		spreadsUsersMapper.insertSelective(spreadUser);
+		spreadsUserMapper.insertSelective(spreadUser);
 	}
 
 	/**
@@ -565,7 +523,7 @@ public class UserServiceImpl implements UserService {
 		cra.andSourceIdEqualTo(Integer.parseInt(utmId));
 		cra.andDelFlagEqualTo(0);
 		List<UtmPlat> list = this.utmPlatMapper.selectByExample(example);
-		if (list != null && list.size() > 0) {
+		if(list!=null&& list.size()>0){
 			return list.get(0);
 		}
 		return null;
@@ -604,10 +562,10 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+
 	/**
 	 *
 	 * 根据用户id查询用户签约授权信息
-	 * 
 	 * @param userId
 	 * @return
 	 */
@@ -619,7 +577,7 @@ public class UserServiceImpl implements UserService {
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		} else {
-			HjhUserAuth hjhUserAuth = new HjhUserAuth();
+			HjhUserAuth hjhUserAuth=new HjhUserAuth();
 			hjhUserAuth.setAutoInvesStatus(0);
 			hjhUserAuth.setAutoCreditStatus(0);
 			return hjhUserAuth;
@@ -627,58 +585,55 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void insertSelective(HjhUserAuthLog hjhUserAuthLog) {
+	public void insertSelective(HjhUserAuthLog hjhUserAuthLog){
 		hjhUserAuthLogMapper.insertSelective(hjhUserAuthLog);
 	}
 
 	@Override
-	public HjhUserAuthLog selectByExample(String orderId) {
-		HjhUserAuthLogExample example = new HjhUserAuthLogExample();
+	public HjhUserAuthLog selectByExample(String orderId){
+		HjhUserAuthLogExample example=new HjhUserAuthLogExample();
 		example.createCriteria().andOrderIdEqualTo(orderId);
-		List<HjhUserAuthLog> hjhUserAuthLogList = hjhUserAuthLogMapper.selectByExample(example);
-		if (hjhUserAuthLogList != null && hjhUserAuthLogList.size() > 0) {
+		List<HjhUserAuthLog>  hjhUserAuthLogList = hjhUserAuthLogMapper.selectByExample(example);
+		if(hjhUserAuthLogList!=null&&hjhUserAuthLogList.size()>0) {
 			return hjhUserAuthLogList.get(0);
-		} else {
+		}else {
 			return null;
 		}
 	}
 
 	@Override
-	public int updateByPrimaryKeySelective(HjhUserAuthLog record) {
+	public int updateByPrimaryKeySelective(HjhUserAuthLog record){
 
 		return hjhUserAuthLogMapper.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
-	public int insertSelective(HjhUserAuth record) {
+	public int insertSelective(HjhUserAuth record){
 		return hjhUserAuthMapper.insertSelective(record);
 	}
 
 	@Override
-	public int updateByPrimaryKeySelective(HjhUserAuth record) {
+	public int updateByPrimaryKeySelective(HjhUserAuth record){
 		return hjhUserAuthMapper.updateByPrimaryKeySelective(record);
 	}
 
 	/**
 	 * 修改用户表By主键
-	 * 
 	 * @param record
 	 * @return int
 	 */
 	@Override
-	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int updateUserById(User record) {
 		return usersMapper.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
-	@Transactional
-	public void updateUserAuthInves(BankRequest bean) {
+	public void updateUserAuthInves( BankRequest bean) {
 		Integer userId = Integer.parseInt(bean.getLogUserId());
-		Date nowTime = GetDate.getNowTime();
-		HjhUserAuthLog hjhUserAuthLog = this.selectByExample(bean.getOrderId());
-		// 更新用户签约授权日志表
-		if (hjhUserAuthLog != null) {
+		Date nowTime= GetDate.getNowTime();
+		HjhUserAuthLog hjhUserAuthLog=this.selectByExample(bean.getOrderId());
+		//更新用户签约授权日志表
+		if(hjhUserAuthLog!=null){
 			hjhUserAuthLog.setUpdateTime(nowTime);
 			hjhUserAuthLog.setUpdateUserId(userId);
 			hjhUserAuthLog.setOrderStatus(1);
@@ -686,10 +641,10 @@ public class UserServiceImpl implements UserService {
 			this.updateByPrimaryKeySelective(hjhUserAuthLog);
 		}
 		// 这里同步异步一起进来会导致重复插入的异常，加一个同步锁
-		HjhUserAuth hjhUserAuth = this.getHjhUserAuthByUserId(userId);
+		HjhUserAuth hjhUserAuth=this.getHjhUserAuthByUserId(userId);
 		// 更新用户签约授权状态信息表
 		if (hjhUserAuth == null) {
-			User user = this.findUserByUserId(userId);
+			User user= this.findUserByUserId(userId);
 			hjhUserAuth = new HjhUserAuth();
 			// 设置状态
 			setAuthType(hjhUserAuth, bean);
@@ -713,77 +668,75 @@ public class UserServiceImpl implements UserService {
 			this.updateByPrimaryKeySelective(hjhUserAuth);
 		}
 	}
-
 	/**
 	 * 设置状态
-	 * 
 	 * @param hjhUserAuth
 	 * @param bean
 	 */
 	private void setAuthType(HjhUserAuth hjhUserAuth, BankRequest bean) {
 		// 授权类型
 		String txcode = bean.getTxCode();
-		if (ClientConstants.TXCODE_AUTO_BID_AUTH_PLUS.equals(txcode)) {
+		if(ClientConstants.TXCODE_AUTO_BID_AUTH_PLUS.equals(txcode)){
 			hjhUserAuth.setAutoInvesStatus(1);
 			hjhUserAuth.setAutoOrderId(bean.getOrderId());
 			hjhUserAuth.setAutoBidTime(GetDate.getNowTime10());
 			hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
 			hjhUserAuth.setAutoBidEndTime(bean.getDeadline());
-		} else if (ClientConstants.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS.equals(txcode)) {
+		}else if(ClientConstants.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS.equals(txcode)){
 			hjhUserAuth.setAutoCreditStatus(1);
 			hjhUserAuth.setAutoCreditOrderId(bean.getOrderId());
 			hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
 			hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
-		} else if (ClientConstants.TXCODE_CREDIT_AUTH_QUERY.equals(txcode)) {
-			// 根据银行查询投资人签约状态
-			if (ClientConstants.QUERY_TYPE_1.equals(bean.getType())) {
+		}else if(ClientConstants.TXCODE_CREDIT_AUTH_QUERY.equals(txcode)){
+			//根据银行查询投资人签约状态
+			if(ClientConstants.QUERY_TYPE_1.equals(bean.getType())){
 				hjhUserAuth.setAutoInvesStatus(1);
 				hjhUserAuth.setAutoOrderId(bean.getOrderId());
 				hjhUserAuth.setAutoBidTime(GetDate.getNowTime10());
 				hjhUserAuth.setAutoBidEndTime(bean.getBidDeadline());
-			} else if (ClientConstants.QUERY_TYPE_2.equals(bean.getType())) {
+			}else if(ClientConstants.QUERY_TYPE_2.equals(bean.getType())){
 				hjhUserAuth.setAutoCreditStatus(1);
 				hjhUserAuth.setAutoCreditOrderId(bean.getOrderId());
 				hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
 			}
 		}
 		// 新增缴费授权和还款授权
-		else if (ClientConstants.TXCODE_PAYMENT_AUTH_PAGE.equals(txcode)) {
+		else if(ClientConstants.TXCODE_PAYMENT_AUTH_PAGE.equals(txcode)){
 			hjhUserAuth.setAutoPaymentStatus(1);
 			hjhUserAuth.setAutoPaymentEndTime(bean.getDeadline());
 			hjhUserAuth.setAutoPaymentTime(GetDate.getNowTime10());
-		} else if (ClientConstants.TXCODE_REPAY_AUTH_PAGE.equals(txcode)) {
+		}else if(ClientConstants.TXCODE_REPAY_AUTH_PAGE.equals(txcode)){
 			hjhUserAuth.setAutoRepayStatus(1);
 			hjhUserAuth.setAutoRepayEndTime(bean.getDeadline());
 			hjhUserAuth.setAutoRepayTime(GetDate.getNowTime10());
 		}
 
 		// 客户授权功能查询接口
-		else if (ClientConstants.TXCODE_TERMS_AUTH_QUERY.equals(txcode)) {
-			// 自动投标功能开通标志
+		else if(ClientConstants.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
+			//自动投标功能开通标志
 			String autoBidStatus = bean.getAutoBid();
-			// 自动债转功能开通标志
+			//自动债转功能开通标志
 			String autoTransfer = bean.getAutoTransfer();
-			// 缴费授权
+			//缴费授权
 			String paymentAuth = bean.getPaymentAuth();
-			// 还款授权
+			//还款授权
 			String repayAuth = bean.getRepayAuth();
-			if (org.apache.commons.lang3.StringUtils.isNotBlank(autoBidStatus)) {
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(autoBidStatus)){
 				hjhUserAuth.setAutoInvesStatus(Integer.parseInt(autoBidStatus));
 			}
-			if (org.apache.commons.lang3.StringUtils.isNotBlank(autoTransfer)) {
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(autoTransfer)){
 				hjhUserAuth.setAutoCreditStatus(Integer.parseInt(autoTransfer));
 			}
-			if (org.apache.commons.lang3.StringUtils.isNotBlank(paymentAuth)) {
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(paymentAuth)){
 				hjhUserAuth.setAutoPaymentStatus(Integer.parseInt(paymentAuth));
 				hjhUserAuth.setAutoPaymentEndTime(bean.getPaymentDeadline());
 			}
-			if (org.apache.commons.lang3.StringUtils.isNotBlank(repayAuth)) {
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(repayAuth)){
 				hjhUserAuth.setAutoRepayStatus(Integer.parseInt(repayAuth));
 				hjhUserAuth.setAutoRepayEndTime(bean.getRepayDeadline());
 			}
-			// 自动投标到期日
-			if (org.apache.commons.lang3.StringUtils.isNotBlank(bean.getAutoBidDeadline())) {
+			//自动投标到期日
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(bean.getAutoBidDeadline())) {
 				hjhUserAuth.setAutoBidEndTime(bean.getAutoBidDeadline());
 			}
 		}
@@ -803,22 +756,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public void deleteUserEvalationResultByUserId(Integer userId) {
-		UserEvalationResultExample userEvalationResultExample = new UserEvalationResultExample();
+		UserEvalationResultExample userEvalationResultExample=new UserEvalationResultExample();
 		userEvalationResultExample.createCriteria().andUserIdEqualTo(userId);
-		List<UserEvalationResult> userEvalationResults = userEvalationResultMapper
-				.selectByExample(userEvalationResultExample);
-		UserEvalationResult userEvalationResult = null;
-		if (userEvalationResults != null && userEvalationResults.size() != 0) {
-			userEvalationResult = userEvalationResults.get(0);
-		} else {
+		List<UserEvalationResult> userEvalationResults=userEvalationResultMapper.selectByExample(userEvalationResultExample);
+		UserEvalationResult userEvalationResult=null;
+		if(userEvalationResults!=null&&userEvalationResults.size()!=0){
+			userEvalationResult=userEvalationResults.get(0);
+		}else{
 			return;
 		}
-		UserEvalationExample userEvalationExample = new UserEvalationExample();
+		UserEvalationExample userEvalationExample=new UserEvalationExample();
 		userEvalationExample.createCriteria().andErIdEqualTo(userEvalationResult.getId());
 		userEvalationMapper.deleteByExample(userEvalationExample);
 		userEvalationResultMapper.deleteByPrimaryKey(userEvalationResult.getId());
+
 
 	}
 
@@ -837,17 +789,15 @@ public class UserServiceImpl implements UserService {
 		}
 		return accountChinapnr;
 	}
-
+	
 	/**
 	 * 保存紧急联系人信息
-	 * 
 	 * @auther: hesy
 	 * @date: 2018/6/20
 	 */
 	@Override
-	@Transactional
-	public int updateUserContact(UsersContractRequest record) {
-		if (record.getUserId() == null) {
+	public int updateUserContact(UsersContractRequest record){
+		if(record.getUserId() == null) {
 			return 0;
 		}
 		UserContact contact = new UserContact();
@@ -866,8 +816,8 @@ public class UserServiceImpl implements UserService {
 	 * @Return: UserContact
 	 */
 	@Override
-	public UserContact selectUserContact(Integer userId) {
-		if (userId == null) {
+	public UserContact selectUserContact(Integer userId){
+		if(userId == null) {
 			return null;
 		}
 		UserContact result = UserContactMapper.selectByPrimaryKey(userId);
@@ -876,7 +826,6 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 检查邮箱是否已使用
-	 * 
 	 * @auther: hesy
 	 * @date: 2018/6/20
 	 */
@@ -891,20 +840,17 @@ public class UserServiceImpl implements UserService {
 			return false;
 		}
 	}
-
+	
 	/**
 	 * 插入绑定邮箱日志
-	 * 
 	 * @auther: hesy
 	 * @date: 2018/6/20
 	 */
 	@Override
-	@Transactional
 	public void insertEmailBindLog(UserBindEmailLog log) {
 		// 将之前的邮件失效
 		UserBindEmailLogExample example = new UserBindEmailLogExample();
-		example.createCriteria().andUserIdEqualTo(log.getUserId())
-				.andUserEmailStatusEqualTo(UserConstant.EMAIL_ACTIVE_STATUS_1);
+		example.createCriteria().andUserIdEqualTo(log.getUserId()).andUserEmailStatusEqualTo(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		List<UserBindEmailLog> bingEmailLogList = userBindEmailLogMapper.selectByExample(example);
 		if (bingEmailLogList != null && bingEmailLogList.size() > 0) {
 			for (int i = 0; i < bingEmailLogList.size(); i++) {
@@ -913,7 +859,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		// 插入新的邮件
-		log.setCreateTime(new Date());
+		log.setCreatetime(new Date());
 		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		userBindEmailLogMapper.insertSelective(log);
@@ -921,7 +867,6 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 查询绑定邮箱日志
-	 * 
 	 * @auther: hesy
 	 * @date: 2018/6/20
 	 */
@@ -936,15 +881,13 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 	}
-
+	
 	/**
 	 * 绑定邮箱更新
-	 * 
 	 * @auther: hesy
 	 * @date: 2018/6/20
 	 */
 	@Override
-	@Transactional
 	public void updateBindEmail(Integer userId, String email) {
 		UserExample example = new UserExample();
 		example.createCriteria().andUserIdEqualTo(userId);
@@ -952,16 +895,16 @@ public class UserServiceImpl implements UserService {
 		User u = usersList.get(0);
 		u.setEmail(email);
 		usersMapper.updateByPrimaryKeySelective(u);
-
+		
 		UserBindEmailLog log = this.getUserBindEmail(userId);
-		if (log != null) {
+		if(log != null) {
 			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
 			userBindEmailLogMapper.updateByPrimaryKey(log);
 		}
 	}
 
 	@Override
-	public UserLoginLog selectByPrimaryKey(Integer userId) {
+	public UserLoginLog selectByPrimaryKey(Integer userId){
 		UserLoginLog userLoginLog = userLoginLogMapper.selectByPrimaryKey(userId);
 		return userLoginLog;
 
@@ -984,40 +927,38 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Evalation getEvalationByCountScore(short countScore) {
 		EvalationExample example = new EvalationExample();
-		example.createCriteria().andScoreUpLessThanOrEqualTo(countScore).andScoreDownGreaterThanOrEqualTo(countScore)
-				.andStatusEqualTo(0);
-		List<Evalation> list = evalationMapper.selectByExample(example);
-		if (list != null && list.size() > 0) {
+		example.createCriteria().andScoreUpLessThanOrEqualTo(countScore).andScoreDownGreaterThanOrEqualTo(countScore).andStatusEqualTo(0);
+		List<Evalation> list=evalationMapper.selectByExample(example);
+		if(list!=null&&list.size()>0){
 			return list.get(0);
 		}
 		return null;
 	}
 
 	@Override
-	@Transactional
 	public UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
-			EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult) {
-		UserEvalationResult userEvalationResult = new UserEvalationResult();
+														 EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult) {
+		UserEvalationResult userEvalationResult=new UserEvalationResult();
 		userEvalationResult.setUserId(userId);
 		userEvalationResult.setScoreCount(countScore);
 		userEvalationResult.setEvalType(evalation.getEvalType());
 		userEvalationResult.setSummary(evalation.getSummary());
 		userEvalationResult.setCreateTime(new Date());
-		if (oldUserEvalationResult != null) {
+		if(oldUserEvalationResult!=null){
 			userEvalationResult.setLasttime(oldUserEvalationResult.getCreateTime());
 		}
 
-		int i = userEvalationResultMapper.insertSelective(userEvalationResult);
-		if (i > 0) {
+		int i=userEvalationResultMapper.insertSelective(userEvalationResult);
+		if(i>0){
 			// 更新用户信息
 			User user = usersMapper.selectByPrimaryKey(userId);
-			if (user != null) {
+			if (user != null){
 				user.setIsEvaluationFlag(1);// 已测评
 				// 更新用户是否测评标志位
 				this.usersMapper.updateByPrimaryKey(user);
 			}
 			for (int j = 0; j < answerList.size(); j++) {
-				UserEvalation userEvalation = new UserEvalation();
+				UserEvalation userEvalation=new UserEvalation();
 				userEvalation.setErId(userEvalationResult.getId());
 				userEvalation.setQuestionId(new Integer(questionList.get(j)));
 				userEvalation.setAnswerId(new Integer(answerList.get(j)));
@@ -1030,7 +971,6 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * 获取评分标准列表
-	 * 
 	 * @return
 	 * @author Michael
 	 */
@@ -1058,46 +998,45 @@ public class UserServiceImpl implements UserService {
 		return corpOpenAccountRecordMapper.countByExample(example);
 	}
 
-	/**
-	 * 根据userId查询推广链接注册
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public UtmReg findUtmRegByUserId(Integer userId) {
-		UtmRegExample utmRegExample = new UtmRegExample();
-		UtmRegExample.Criteria utmRegCra = utmRegExample.createCriteria();
-		utmRegCra.andUserIdEqualTo(userId);
-		List<UtmReg> utmRegList = this.utmRegMapper.selectByExample(utmRegExample);
-		if (utmRegList != null && utmRegList.size() > 0) {
-			return utmRegList.get(0);
-		}
-		return null;
-	}
+    /**
+     * 根据userId查询推广链接注册
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UtmReg findUtmRegByUserId(Integer userId) {
+        UtmRegExample utmRegExample = new UtmRegExample();
+        UtmRegExample.Criteria utmRegCra = utmRegExample.createCriteria();
+        utmRegCra.andUserIdEqualTo(userId);
+        List<UtmReg> utmRegList = this.utmRegMapper.selectByExample(utmRegExample);
+        if (utmRegList != null && utmRegList.size() > 0) {
+            return utmRegList.get(0);
+        }
+        return null;
+    }
 
-	/**
-	 * 更新渠道用户首次投资信息
-	 *
-	 * @param bean
-	 * @return
-	 */
-	@Override
-	public void updateFirstUtmReg(Map<String, Object> bean) {
-		utmRegCustomizeMapper.updateFirstUtmReg(bean);
-	}
+    /**
+     * 更新渠道用户首次投资信息
+     *
+     * @param bean
+     * @return
+     */
+    @Override
+    public void updateFirstUtmReg(Map<String, Object> bean) {
+        utmRegCustomizeMapper.updateFirstUtmReg(bean);
+    }
 
 	/**
 	 * 更新用户投资标记
-	 * 
 	 * @param para
 	 */
 	@Override
 	public boolean updateUserInvestFlag(JSONObject para) {
 		boolean result = true;
-		User users = (User) para.get("user");
-		Integer userId = (Integer) para.get("userId");
-		int projectType = (int) para.get("projectType");
+		User users= (User) para.get("user");
+		Integer userId= (Integer) para.get("userId");
+		int projectType= (int) para.get("projectType");
 
 		if (users.getInvestflag() == 0) {
 			users.setInvestflag(1);
@@ -1108,7 +1047,7 @@ public class UserServiceImpl implements UserService {
 				logger.info("更新新手标识失败，用户userId：" + userId);
 				result = false;
 			}
-		} else {
+		}else{
 			if (projectType == 4) {
 				// 回滚事务
 				logger.info("用户已不是新手投资，用户userId：" + userId);
@@ -1119,19 +1058,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * 插入vip user
-	 * 
+	 *  插入vip user
 	 * @param para
 	 */
 	@Override
 	public boolean insertVipUserTender(JSONObject para) {
-		UserInfoVO userInfo = (UserInfoVO) para.get("userInfo");
-		int nowTime = (int) para.get("nowTime");
+		UserInfoVO userInfo= (UserInfoVO) para.get("userInfo");
+		int nowTime= (int) para.get("nowTime");
 		Integer userId = (Integer) para.get("userId");
 		String orderId = (String) para.get("orderId");
 
 		boolean result = false;
-		if (Validator.isNotNull(userInfo) && Validator.isNotNull(userInfo.getVipId())) {
+		if (Validator.isNotNull(userInfo) && Validator.isNotNull(userInfo.getVipId())){
 			VipUserTender vt = new VipUserTender();
 			// 投资用户编号
 			vt.setUserId(userId);
@@ -1145,14 +1083,25 @@ public class UserServiceImpl implements UserService {
 			vt.setUpdateTime(nowTime);
 			vt.setUpdateUser(String.valueOf(userId));
 			vt.setDelFlg(0);
-			int ret = this.vipUserTenderMapper.insertSelective(vt);
-			if (ret > 0) {
+			int ret=this.vipUserTenderMapper.insertSelective(vt);
+			if (ret>0){
 				result = true;
-			} else {
+			}else{
 				result = false;
 			}
 		}
 
 		return result;
+	}
+
+	/**
+	 * 查询用户投资次数
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public Integer selectTenderCount(Integer userId) {
+		return userManagerCustomizeMapper.selectTenderCount(userId);
 	}
 }

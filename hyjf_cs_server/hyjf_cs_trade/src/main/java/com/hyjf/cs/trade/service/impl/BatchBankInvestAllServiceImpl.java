@@ -17,7 +17,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.*;
-import com.hyjf.cs.trade.mq.AppChannelStatisticsProducer;
+import com.hyjf.cs.trade.mq.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.FddProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -57,7 +57,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 	private AmMongoClient amMongoClient;
 
 	@Autowired
-	private AppChannelStatisticsProducer appChannelStatisticsProducer;
+	private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
 
 
 	@Value("${hyjf.bank.instcode}")
@@ -153,11 +153,10 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							params.put("investProjectPeriod", investProjectPeriod);
 							//根据investFlag标志位来决定更新哪种投资
 							params.put("investFlag",request.getLogUser().getInvestflag());
-							params.put("isFirst",0);
-							params.put("fromBusiness","invest");
 							//压入消息队列
 							try {
-								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
+								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_OLD_TAG,JSON.toJSONBytes(params)));
 							} catch (MQException e) {
 								e.printStackTrace();
 								logger.error("渠道统计用户累计投资推送消息队列失败！！！");
@@ -188,14 +187,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								params.put("investProjectPeriod", investProjectPeriod);
 								// 更新渠道统计用户累计投资
 								params.put("investFlag",request.getLogUser().getInvestflag());
-								params.put("isFirst",1);
-								params.put("fromBusiness","invest");
-								try {
-									appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
-								} catch (MQException e) {
-									e.printStackTrace();
-									logger.error(" 更新渠道统计用户累计投资推送消息队列失败！！！");
-								}
+								this.amUserClient.updateFirstUtmReg(params);
 								logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
 							}
 						}

@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.BorrowCarinfoResponse;
-import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
+import com.hyjf.am.response.trade.WebCarinfoResponse;
+import com.hyjf.am.vo.trade.WebCarinfoVO;
 import com.hyjf.cs.trade.client.AmBorrowCarinfoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ public class AmBorrowCarinfoClientImpl implements AmBorrowCarinfoClient {
     private RestTemplate restTemplate;
 
     @Override
-    public List<BorrowCarinfoVO> getBorrowCarinfoByNid(String borrowNid) {
-        BorrowCarinfoResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/borrowcarinfo/" + borrowNid,BorrowCarinfoResponse.class).getBody();
+    public List<WebCarinfoVO> getBorrwCarinfo(String borrowNid) {
+        WebCarinfoResponse response = restTemplate.getForEntity("",WebCarinfoResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }

@@ -4,6 +4,9 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.SmsTemplate;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -17,4 +20,26 @@ public interface SmsTemplateService {
      * @return
      */
     SmsTemplate findSmsTemplateByCode(String tplCode);
+
+    /**
+     * 查询所有短信模板
+     *
+     * @return
+     */
+    List<SmsTemplate> findAll();
+
+    /**
+     * 根据条件查询所有短信模板
+     *
+     * @param request
+     * @return
+     */
+    List<SmsTemplate> findSmsTemplate(SmsTemplateRequest request);
+
+    /**
+     * 新增短信模板
+     *
+     * @param request
+     */
+    void insertSmsTemplate(SmsTemplateRequest request);
 }

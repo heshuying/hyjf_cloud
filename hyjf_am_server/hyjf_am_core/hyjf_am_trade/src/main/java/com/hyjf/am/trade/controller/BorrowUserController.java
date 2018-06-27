@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/am-trade/borrowuser")
+@RequestMapping("/am-trade/borrow")
 public class BorrowUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(BorrowUserController.class);

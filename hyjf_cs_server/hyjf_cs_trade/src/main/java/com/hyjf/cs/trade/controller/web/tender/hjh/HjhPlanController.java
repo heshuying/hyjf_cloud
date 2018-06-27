@@ -4,6 +4,9 @@
 package com.hyjf.cs.trade.controller.web.tender.hjh;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -42,7 +45,15 @@ public class HjhPlanController extends BaseTradeController {
         tender.setIp(ip);
         tender.setToken(token);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        return hjhTenderService.joinPlan(tender);
+        WebResult<Map<String,Object>> result = null;
+        try{
+            result = hjhTenderService.joinPlan(tender);
+        }catch (CheckException e){
+            throw e;
+        }finally {
+            RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
+        }
+        return result;
     }
 
 }
