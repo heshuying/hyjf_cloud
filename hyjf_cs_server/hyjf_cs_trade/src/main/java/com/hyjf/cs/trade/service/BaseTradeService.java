@@ -40,4 +40,10 @@ public interface BaseTradeService extends BaseService{
      */
     public void checkEvaluation(UserVO user);
 
+    /**
+     * 检查用户是否是新手 true 是  false 不是
+     * @param userId
+     * @return
+     */
+    public boolean checkIsNewUserCanInvest(Integer userId);
 }

@@ -37,11 +37,15 @@ public class AccountList implements Serializable {
 
     private String remark;
 
-    private Date createTime;
-
     private String operator;
 
     private String ip;
+
+    private Boolean isUpdate;
+
+    private Boolean baseUpdate;
+
+    private BigDecimal interest;
 
     private Integer web;
 
@@ -90,6 +94,8 @@ public class AccountList implements Serializable {
     private BigDecimal checkBalance;
 
     private Integer accountDate;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -221,14 +227,6 @@ public class AccountList implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public String getOperator() {
         return operator;
     }
@@ -243,6 +241,30 @@ public class AccountList implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip == null ? null : ip.trim();
+    }
+
+    public Boolean getIsUpdate() {
+        return isUpdate;
+    }
+
+    public void setIsUpdate(Boolean isUpdate) {
+        this.isUpdate = isUpdate;
+    }
+
+    public Boolean getBaseUpdate() {
+        return baseUpdate;
+    }
+
+    public void setBaseUpdate(Boolean baseUpdate) {
+        this.baseUpdate = baseUpdate;
+    }
+
+    public BigDecimal getInterest() {
+        return interest;
+    }
+
+    public void setInterest(BigDecimal interest) {
+        this.interest = interest;
     }
 
     public Integer getWeb() {
@@ -435,5 +457,13 @@ public class AccountList implements Serializable {
 
     public void setAccountDate(Integer accountDate) {
         this.accountDate = accountDate;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

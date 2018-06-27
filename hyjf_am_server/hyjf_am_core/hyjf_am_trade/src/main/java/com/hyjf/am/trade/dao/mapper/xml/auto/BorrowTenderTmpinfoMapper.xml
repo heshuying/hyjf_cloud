@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="ordid" property="ordid" jdbcType="VARCHAR" />
     <result column="tmp_array" property="tmpArray" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -66,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, ordid, tmp_array, add_time
+    id, ordid, tmp_array, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpinfoExample" >
     select
@@ -105,9 +105,9 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_borrow_tender_tmpinfo (ordid, tmp_array, add_time
+    insert into ht_borrow_tender_tmpinfo (ordid, tmp_array, create_time
       )
-    values (#{ordid,jdbcType=VARCHAR}, #{tmpArray,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}
+    values (#{ordid,jdbcType=VARCHAR}, #{tmpArray,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpinfo" >
@@ -122,8 +122,8 @@
       <if test="tmpArray != null" >
         tmp_array,
       </if>
-      <if test="addTime != null" >
-        add_time,
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -133,8 +133,8 @@
       <if test="tmpArray != null" >
         #{tmpArray,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -156,8 +156,8 @@
       <if test="record.tmpArray != null" >
         tmp_array = #{record.tmpArray,jdbcType=VARCHAR},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -169,7 +169,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       ordid = #{record.ordid,jdbcType=VARCHAR},
       tmp_array = #{record.tmpArray,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -183,8 +183,8 @@
       <if test="tmpArray != null" >
         tmp_array = #{tmpArray,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -193,7 +193,7 @@
     update ht_borrow_tender_tmpinfo
     set ordid = #{ordid,jdbcType=VARCHAR},
       tmp_array = #{tmpArray,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

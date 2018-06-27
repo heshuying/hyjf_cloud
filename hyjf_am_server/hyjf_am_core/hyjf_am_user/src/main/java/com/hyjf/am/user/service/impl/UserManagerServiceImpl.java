@@ -186,7 +186,7 @@ public class UserManagerServiceImpl implements UserManagerService {
         /******************************第三方平台编号****************************/
         Integer PLATFORM_ID_HJS = 2000000011;
         cra.andBindPlatformIdEqualTo(PLATFORM_ID_HJS);
-        cra.andDelFlgEqualTo(0);//未删除
+        cra.andDelFlagEqualTo(0);//未删除
         List<BindUser> listBindUser = bindUserMapper.selectByExample(example);
         if (null != listBindUser && listBindUser.size() > 0) {
             return listBindUser.get(0);

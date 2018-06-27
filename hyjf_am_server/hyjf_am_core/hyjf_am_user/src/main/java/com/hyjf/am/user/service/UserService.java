@@ -17,7 +17,7 @@ import java.util.Map;
  * @author xiasq
  * @version UserService, v0.1 2018/1/21 22:42
  */
-public interface UserService {
+public interface UserService extends BaseService {
 	/**
 	 * 注册
 	 * @param userRequest
@@ -25,20 +25,6 @@ public interface UserService {
 	 * @throws ServiceException
 	 */
 	User register(RegisterUserRequest userRequest) throws MQException;
-
-	/**
-	 * 获取用户
-	 * @param userId
-	 * @return
-	 */
-	User findUserByUserId(int userId);
-
-	/**
-	 * 获取用户
-	 * @param userId
-	 * @return
-	 */
-	UserInfo findUsersInfo(int userId);
 
 	/**
 	 * 生成唯一用户id
@@ -147,11 +133,16 @@ public interface UserService {
      */
     void updateFirstUtmReg(Map<String,Object> bean);
 
-	boolean updateUserInvestFlag(JSONObject para);
-
 	/**
 	 * 插入vip user
 	 * @param para
 	 */
 	boolean insertVipUserTender(JSONObject para);
+
+	/**
+	 * 查询用户投资次数
+	 * @param userId
+	 * @return
+	 */
+	Integer selectTenderCount(Integer userId);
 }

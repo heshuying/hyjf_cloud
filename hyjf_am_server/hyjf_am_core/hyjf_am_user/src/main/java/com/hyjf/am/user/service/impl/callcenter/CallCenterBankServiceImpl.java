@@ -89,7 +89,7 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 			List<CallcenterServiceUsers> list = callcenterServiceUsersMapper.selectByExample(example);
 			if (list.size() > 0) {
 				//更新
-				bean.setUpddate(nowDate);//更新时间
+				bean.setUpdateTime(nowDate);//更新时间
 				rowCound += this.callcenterServiceUsersMapper.updateByExampleSelective(bean, example);
 			}else{
 				//登陆

@@ -1,29 +1,10 @@
 package com.hyjf.cs.trade.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.BankCallBeanVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.*;
-import com.hyjf.cs.trade.mq.AppChannelStatisticsProducer;
-import com.hyjf.cs.trade.mq.FddProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import com.netflix.discovery.converters.Auto;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +12,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
+import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.trade.BankCallBeanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.EmployeeCustomizeVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.BatchBankInvestAllClient;
+import com.hyjf.cs.trade.mq.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BatchBankInvestAllService;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 
 /**
  * @author jijun
@@ -57,7 +62,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 	private AmMongoClient amMongoClient;
 
 	@Autowired
-	private AppChannelStatisticsProducer appChannelStatisticsProducer;
+	private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
 
 
 	@Value("${hyjf.bank.instcode}")
@@ -153,11 +158,10 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							params.put("investProjectPeriod", investProjectPeriod);
 							//根据investFlag标志位来决定更新哪种投资
 							params.put("investFlag",request.getLogUser().getInvestflag());
-							params.put("isFirst",0);
-							params.put("fromBusiness","invest");
 							//压入消息队列
 							try {
-								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
+								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_OLD_TAG,JSON.toJSONBytes(params)));
 							} catch (MQException e) {
 								e.printStackTrace();
 								logger.error("渠道统计用户累计投资推送消息队列失败！！！");
@@ -188,30 +192,12 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								params.put("investProjectPeriod", investProjectPeriod);
 								// 更新渠道统计用户累计投资
 								params.put("investFlag",request.getLogUser().getInvestflag());
-								params.put("isFirst",1);
-								params.put("fromBusiness","invest");
-								try {
-									appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,JSON.toJSONBytes(params)));
-								} catch (MQException e) {
-									e.printStackTrace();
-									logger.error(" 更新渠道统计用户累计投资推送消息队列失败！！！");
-								}
+								this.amUserClient.updateFirstUtmReg(params);
 								logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
 							}
 						}
 					}
 
-
-
-					//更新用户投资标记
-					if(Validator.isNotNull(request.getLogUser())) {
-						JSONObject para = new JSONObject();
-						para.put("userId", bean.getLogUserId());
-						para.put("user", request.getLogUser());
-						this.amUserClient.updateUserInvestFlag(para);
-
-					}
-					
 					if(Validator.isNotNull(request.getLogUserInfo())) {
 						JSONObject para = new JSONObject();
 						para.put("userInfo", request.getLogUserInfo());

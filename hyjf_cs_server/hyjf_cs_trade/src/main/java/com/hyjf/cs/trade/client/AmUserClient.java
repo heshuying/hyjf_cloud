@@ -111,14 +111,15 @@ public interface AmUserClient {
     boolean checkIs51UserCanInvest(Integer userId);
 
     /**
-     * 更新用户投资信息
-     * @param para
-     */
-    boolean updateUserInvestFlag(JSONObject para);
-
-    /**
      * 插入VIPuser
      * @param para
      */
 	boolean insertVipUserTender(JSONObject para);
+
+	/**
+	 * 获取用户投资数量
+	 * @param userId
+	 * @return
+	 */
+    int countNewUserTotal(Integer userId);
 }

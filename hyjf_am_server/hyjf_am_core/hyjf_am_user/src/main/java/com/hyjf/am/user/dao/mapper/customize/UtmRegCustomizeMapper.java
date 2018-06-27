@@ -3,10 +3,6 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 import java.util.Map;
 
 /**

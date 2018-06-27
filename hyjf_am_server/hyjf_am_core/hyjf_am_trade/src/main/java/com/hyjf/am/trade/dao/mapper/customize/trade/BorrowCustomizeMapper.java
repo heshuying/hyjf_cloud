@@ -1,5 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+
 import java.util.Map;
 
 /**
@@ -20,5 +24,14 @@ public interface BorrowCustomizeMapper {
      * @return
      */
     int updateOfFullBorrow(Map<String, Object> borrow);
+
+
+    ProjectCustomeDetailVO getProjectDetail(String borrowNid);
+
+
+    ProjectCompanyDetailVO getProjectCompanyDetail(String borrowNid);
+
+
+    WebProjectPersonDetailVO  getProjectPsersonDetail(String borrowNid);
 
 }

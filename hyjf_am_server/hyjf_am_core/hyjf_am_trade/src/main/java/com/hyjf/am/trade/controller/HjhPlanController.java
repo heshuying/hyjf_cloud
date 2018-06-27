@@ -46,7 +46,7 @@ public class HjhPlanController {
      * @param instCode
      * @return
      */
-    @RequestMapping("/selectHjhInstConfigByInstCode{instCode}")
+    @RequestMapping("/selectHjhInstConfigByInstCode/{instCode}")
     public HjhInstConfigResponse selectHjhInstConfigByInstCode(@PathVariable String instCode) {
         HjhInstConfigResponse response = new HjhInstConfigResponse();
         List<HjhInstConfig> hjhInstConfigList = hjhPlanService.selectHjhInstConfigByInstCode(instCode);

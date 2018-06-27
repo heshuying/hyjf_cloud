@@ -445,6 +445,76 @@ public class EvalationExample {
             return (Criteria) this;
         }
 
+        public Criteria andRemarksIsNull() {
+            addCriterion("remarks is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksIsNotNull() {
+            addCriterion("remarks is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksEqualTo(String value) {
+            addCriterion("remarks =", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksNotEqualTo(String value) {
+            addCriterion("remarks <>", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksGreaterThan(String value) {
+            addCriterion("remarks >", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksGreaterThanOrEqualTo(String value) {
+            addCriterion("remarks >=", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksLessThan(String value) {
+            addCriterion("remarks <", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksLessThanOrEqualTo(String value) {
+            addCriterion("remarks <=", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksLike(String value) {
+            addCriterion("remarks like", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksNotLike(String value) {
+            addCriterion("remarks not like", value, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksIn(List<String> values) {
+            addCriterion("remarks in", values, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksNotIn(List<String> values) {
+            addCriterion("remarks not in", values, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksBetween(String value1, String value2) {
+            addCriterion("remarks between", value1, value2, "remarks");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarksNotBetween(String value1, String value2) {
+            addCriterion("remarks not between", value1, value2, "remarks");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusIsNull() {
             addCriterion("`status` is null");
             return (Criteria) this;
@@ -762,76 +832,6 @@ public class EvalationExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksIsNull() {
-            addCriterion("remarks is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksIsNotNull() {
-            addCriterion("remarks is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksEqualTo(String value) {
-            addCriterion("remarks =", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksNotEqualTo(String value) {
-            addCriterion("remarks <>", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksGreaterThan(String value) {
-            addCriterion("remarks >", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksGreaterThanOrEqualTo(String value) {
-            addCriterion("remarks >=", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksLessThan(String value) {
-            addCriterion("remarks <", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksLessThanOrEqualTo(String value) {
-            addCriterion("remarks <=", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksLike(String value) {
-            addCriterion("remarks like", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksNotLike(String value) {
-            addCriterion("remarks not like", value, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksIn(List<String> values) {
-            addCriterion("remarks in", values, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksNotIn(List<String> values) {
-            addCriterion("remarks not in", values, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksBetween(String value1, String value2) {
-            addCriterion("remarks between", value1, value2, "remarks");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarksNotBetween(String value1, String value2) {
-            addCriterion("remarks not between", value1, value2, "remarks");
             return (Criteria) this;
         }
     }

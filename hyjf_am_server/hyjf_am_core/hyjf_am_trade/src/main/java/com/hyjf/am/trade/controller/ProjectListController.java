@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +42,7 @@ public class ProjectListController {
      * @param request
      * @return
      */
-    @RequestMapping("/web/searchProjectList")
+    @PostMapping("/web/searchProjectList")
     public ProjectListResponse searchProjectList(@RequestBody @Valid ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchProjectList(request);

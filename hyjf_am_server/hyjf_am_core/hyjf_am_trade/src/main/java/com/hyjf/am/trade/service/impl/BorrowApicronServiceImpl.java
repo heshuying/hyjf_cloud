@@ -7,7 +7,6 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowApicronMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
 import com.hyjf.am.trade.service.BorrowApicronService;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,5 +78,12 @@ public class BorrowApicronServiceImpl implements BorrowApicronService {
 		record.setId(id);
 		record.setExtraYieldRepayStatus(status);
 		return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public List<BorrowApicron> selectBorrowApicronListByBorrowNid(String borrowNid) {
+		BorrowApicronExample example = new BorrowApicronExample();
+		example.createCriteria().andBorrowNidEqualTo(borrowNid).andApiTypeEqualTo(1).andStatusNotEqualTo(6);
+		return this.borrowApicronMapper.selectByExample(example);
 	}
 }

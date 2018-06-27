@@ -167,7 +167,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      */
     @Override
     public Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean) {
-        ModelAndView mv = new ModelAndView();
         // 根据身份证号码获取性别
         String gender = "";
         int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));

@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -101,7 +101,7 @@
 
         <table tableName="ht_bind_user" domainObjectName="BindUser">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_appoint" domainObjectName="BorrowAppoint">
@@ -185,6 +185,7 @@
 
         <table tableName="ht_msp_configure" domainObjectName="MspConfigure">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_msp_degreeresult" domainObjectName="MspDegreeresult">
@@ -238,7 +239,7 @@
             <columnOverride column="education" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_smscode" domainObjectName="Smscode">
+        <table tableName="ht_smscode" domainObjectName="SmsCode">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -282,7 +283,10 @@
         </table>
 
         <table tableName="ht_user_alias" domainObjectName="UserAlias">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <table tableName="ht_user_portrait" domainObjectName="UserPortrait">
+            <columnOverride column="invest_age" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_user_bind_email_log" domainObjectName="UserBindEmailLog">
@@ -318,7 +322,6 @@
         </table>
 
         <table tableName="ht_user_info" domainObjectName="UserInfo">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="truename_isApprove" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -333,7 +336,6 @@
         </table>
 
         <table tableName="ht_user_login_log" domainObjectName="UserLoginLog">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_plat" domainObjectName="UserPlat">
@@ -370,10 +372,12 @@
 
         <table tableName="ht_vip_auth" domainObjectName="VipAuth">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_vip_info" domainObjectName="VipInfo">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_vip_transfer_log" domainObjectName="VipTransferLog">
@@ -643,6 +647,9 @@
         <table tableName="ht_borrow_repay_plan" domainObjectName="BorrowRepayPlan">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="auto_repay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="advance_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_send_type" domainObjectName="BorrowSendType">
@@ -704,7 +711,7 @@
             <columnOverride column="system_web_repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_borrow_users" domainObjectName="BorrowUsers">
+        <table tableName="ht_borrow_user" domainObjectName="BorrowUser">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="is_certificate" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_operation" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1009,7 +1016,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
-        <table tableName="ht_debt_users_info" domainObjectName="DebtUsersInfo">
+        <table tableName="ht_debt_user_info" domainObjectName="DebtUserInfo">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
@@ -1316,7 +1323,7 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_product_users" domainObjectName="ProductUsers">
+        <table tableName="ht_product_user" domainObjectName="ProductUser">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -1650,12 +1657,12 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="bottom_button_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status_on" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="delete_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_whereabouts_page_picture" domainObjectName="WhereaboutsPagePicture">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="delete_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_activity_list" domainObjectName="ActivityList">
@@ -1675,6 +1682,12 @@
             <generatedKey column="type_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        
+         <table tableName="ht_message_push_tag" domainObjectName="MessagePushTag">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_login" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
     </context>

@@ -270,15 +270,6 @@ public class AmUserClientImpl implements AmUserClient {
         return false;
     }
 
-    /**
-     * 更新用户投资信息
-     */
-	@Override
-	public boolean updateUserInvestFlag(JSONObject para) {
-		String url = "http://AM-USER/am-user/user/updateUserInvestFlag";
-		return restTemplate.postForEntity(url,para,Boolean.class).getBody();
-	}
-
 	/**
 	 * 查如vipUser
 	 */
@@ -286,6 +277,22 @@ public class AmUserClientImpl implements AmUserClient {
 	public boolean insertVipUserTender(JSONObject para) {
 		String url = "http://AM-USER/am-user/user/insertVipUserTender";	
 		return restTemplate.postForEntity(url, para, Boolean.class).getBody();
+	}
+
+	/**
+	 * 获取用户投资数量
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int countNewUserTotal(Integer userId) {
+		Integer result = restTemplate
+				.getForEntity(urlBase + "user/countNewUserTotal/" + userId,  Integer.class).getBody();
+		if (result != null) {
+			return result;
+		}
+		return 0;
 	}
 
 }

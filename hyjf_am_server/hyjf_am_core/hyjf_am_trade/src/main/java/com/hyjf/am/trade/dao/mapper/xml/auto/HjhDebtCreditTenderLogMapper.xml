@@ -37,7 +37,7 @@
     <result column="assign_repay_period" property="assignRepayPeriod" jdbcType="INTEGER" />
     <result column="assign_service_fee" property="assignServiceFee" jdbcType="DECIMAL" />
     <result column="assign_type" property="assignType" jdbcType="TINYINT" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
@@ -111,7 +111,7 @@
     assign_account, assign_interest, assign_repay_delay_interest, assign_repay_late_interest, 
     assign_interest_advance, assign_price, assign_pay, assign_repay_account, assign_repay_capital, 
     assign_repay_interest, assign_repay_end_time, assign_repay_last_time, assign_repay_next_time, 
-    assign_repay_yes_time, assign_repay_period, assign_service_fee, assign_type, addip, 
+    assign_repay_yes_time, assign_repay_period, assign_service_fee, assign_type, add_ip, 
     client, create_user_id, create_user_name, update_user_id, update_user_name, create_time, 
     update_time
   </sql>
@@ -165,7 +165,7 @@
       assign_repay_end_time, assign_repay_last_time, 
       assign_repay_next_time, assign_repay_yes_time, 
       assign_repay_period, assign_service_fee, assign_type, 
-      addip, client, create_user_id, 
+      add_ip, client, create_user_id, 
       create_user_name, update_user_id, update_user_name, 
       create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{creditUserId,jdbcType=INTEGER}, 
@@ -181,7 +181,7 @@
       #{assignRepayEndTime,jdbcType=INTEGER}, #{assignRepayLastTime,jdbcType=INTEGER}, 
       #{assignRepayNextTime,jdbcType=INTEGER}, #{assignRepayYesTime,jdbcType=INTEGER}, 
       #{assignRepayPeriod,jdbcType=INTEGER}, #{assignServiceFee,jdbcType=DECIMAL}, #{assignType,jdbcType=TINYINT}, 
-      #{addip,jdbcType=VARCHAR}, #{client,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+      #{addIp,jdbcType=VARCHAR}, #{client,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
       #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -293,8 +293,8 @@
       <if test="assignType != null" >
         assign_type,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="client != null" >
         client,
@@ -421,8 +421,8 @@
       <if test="assignType != null" >
         #{assignType,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
         #{client,jdbcType=INTEGER},
@@ -561,8 +561,8 @@
       <if test="record.assignType != null" >
         assign_type = #{record.assignType,jdbcType=TINYINT},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.client != null" >
         client = #{record.client,jdbcType=INTEGER},
@@ -627,7 +627,7 @@
       assign_repay_period = #{record.assignRepayPeriod,jdbcType=INTEGER},
       assign_service_fee = #{record.assignServiceFee,jdbcType=DECIMAL},
       assign_type = #{record.assignType,jdbcType=TINYINT},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
@@ -744,8 +744,8 @@
       <if test="assignType != null" >
         assign_type = #{assignType,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
         client = #{client,jdbcType=INTEGER},
@@ -807,7 +807,7 @@
       assign_repay_period = #{assignRepayPeriod,jdbcType=INTEGER},
       assign_service_fee = #{assignServiceFee,jdbcType=DECIMAL},
       assign_type = #{assignType,jdbcType=TINYINT},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       client = #{client,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},

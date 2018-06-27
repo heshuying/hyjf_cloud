@@ -20,13 +20,13 @@
     <result column="gate_type" property="gateType" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="cardid" property="cardid" jdbcType="VARCHAR" />
     <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -88,8 +88,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, nid, user_id, username, account_id, tx_date, tx_time, seq_no, bank_seq_no, is_bank, 
-    `status`, money, fee, balance, payment, gate_type, `type`, remark, update_time, `operator`, 
-    add_time, addip, client, cardid, message
+    `status`, money, fee, balance, payment, gate_type, `type`, remark, `operator`, add_ip, 
+    client, cardid, message, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample" >
     select
@@ -133,18 +133,18 @@
       seq_no, bank_seq_no, is_bank, 
       `status`, money, fee, 
       balance, payment, gate_type, 
-      `type`, remark, update_time, 
-      `operator`, add_time, addip, 
-      client, cardid, message
+      `type`, remark, `operator`, 
+      add_ip, client, cardid, 
+      message, create_time, update_time
       )
     values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
       #{accountId,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
       #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{isBank,jdbcType=TINYINT}, 
       #{status,jdbcType=TINYINT}, #{money,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
       #{balance,jdbcType=DECIMAL}, #{payment,jdbcType=VARCHAR}, #{gateType,jdbcType=VARCHAR}, 
-      #{type,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{operator,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, #{addip,jdbcType=VARCHAR}, 
-      #{client,jdbcType=TINYINT}, #{cardid,jdbcType=VARCHAR}, #{message,jdbcType=VARCHAR}
+      #{type,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{addIp,jdbcType=VARCHAR}, #{client,jdbcType=TINYINT}, #{cardid,jdbcType=VARCHAR}, 
+      #{message,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRecharge" >
@@ -204,17 +204,11 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="operator != null" >
         `operator`,
       </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="client != null" >
         client,
@@ -224,6 +218,12 @@
       </if>
       <if test="message != null" >
         message,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -278,17 +278,11 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
         #{client,jdbcType=TINYINT},
@@ -298,6 +292,12 @@
       </if>
       <if test="message != null" >
         #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -364,17 +364,11 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.operator != null" >
         `operator` = #{record.operator,jdbcType=VARCHAR},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.client != null" >
         client = #{record.client,jdbcType=TINYINT},
@@ -384,6 +378,12 @@
       </if>
       <if test="record.message != null" >
         message = #{record.message,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -410,13 +410,13 @@
       gate_type = #{record.gateType,jdbcType=VARCHAR},
       `type` = #{record.type,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `operator` = #{record.operator,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=INTEGER},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
       cardid = #{record.cardid,jdbcType=VARCHAR},
-      message = #{record.message,jdbcType=VARCHAR}
+      message = #{record.message,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -475,17 +475,11 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="operator != null" >
         `operator` = #{operator,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="client != null" >
         client = #{client,jdbcType=TINYINT},
@@ -495,6 +489,12 @@
       </if>
       <if test="message != null" >
         message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -518,13 +518,13 @@
       gate_type = #{gateType,jdbcType=VARCHAR},
       `type` = #{type,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       `operator` = #{operator,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=INTEGER},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       client = #{client,jdbcType=TINYINT},
       cardid = #{cardid,jdbcType=VARCHAR},
-      message = #{message,jdbcType=VARCHAR}
+      message = #{message,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

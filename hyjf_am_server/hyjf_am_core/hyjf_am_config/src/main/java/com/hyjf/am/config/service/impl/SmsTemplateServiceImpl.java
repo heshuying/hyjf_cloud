@@ -5,6 +5,8 @@ package com.hyjf.am.config.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +15,8 @@ import com.hyjf.am.config.dao.mapper.auto.SmsTemplateMapper;
 import com.hyjf.am.config.dao.model.auto.SmsTemplate;
 import com.hyjf.am.config.dao.model.auto.SmsTemplateExample;
 import com.hyjf.am.config.service.SmsTemplateService;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.am.vo.config.SmsTemplateVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 
@@ -41,5 +45,38 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			}
 		}
 		return smsTemplate;
+	}
+
+	@Override
+	public List<SmsTemplate> findAll() {
+		SmsTemplateExample example = new SmsTemplateExample();
+		SmsTemplateExample.Criteria criteria = example.createCriteria();
+		return smsTemplateMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<SmsTemplate> findSmsTemplate(SmsTemplateRequest request) {
+		SmsTemplateExample example = new SmsTemplateExample();
+		SmsTemplateExample.Criteria criteria = example.createCriteria();
+		if (request != null) {
+			if (request.getStatus() != null) {
+				criteria.andStatusEqualTo(request.getStatus());
+			}
+			if (StringUtils.isNotBlank(request.getTplName())) {
+				criteria.andTplNameEqualTo(request.getTplName());
+			}
+			return smsTemplateMapper.selectByExample(example);
+		} else {
+			return findAll();
+		}
+	}
+
+	@Override
+	public void insertSmsTemplate(SmsTemplateRequest request) {
+		if (request != null) {
+			SmsTemplate smsTemplate = new SmsTemplate();
+			BeanUtils.copyProperties(request, smsTemplate);
+			smsTemplateMapper.insert(smsTemplate);
+		}
 	}
 }

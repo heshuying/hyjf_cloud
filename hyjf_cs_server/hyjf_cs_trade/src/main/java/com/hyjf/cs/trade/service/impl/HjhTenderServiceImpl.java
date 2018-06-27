@@ -3,13 +3,32 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoCrmVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MsgCode;
@@ -21,28 +40,20 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
-import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CouponClient;
+import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.cs.trade.service.HjhTenderService;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Description 加入计划
@@ -84,6 +95,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
+        if(request.getPlatform()==null){
+            // 投资平台不能为空
+            throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
+        }
         // 查询选择的优惠券
         CouponUserVO cuc = null;
         if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
@@ -94,6 +109,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
         HjhPlanVO plan = amBorrowClient.getPlanByNid(request.getBorrowNid());
+        if (plan == null) {
+            throw new ReturnMessageException(MsgEnum.FIND_PLAN_ERROR);
+        }
         if (plan.getPlanInvestStatus() == 2) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_CLOSE);
         }
@@ -354,14 +372,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // TODO: 2018/6/22  crm投资推送
            /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
                     RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
-            // 更新用户不是新手了
-            UserVO user = amUserClient.findUserById(userId);
+            // 不用更新用户是不是新手  通过查询获得
+            /*UserVO user = amUserClient.findUserById(userId);
             if (user != null) {
                 if (user.getInvestflag() == 0) {
                     user.setInvestflag(1);
                     boolean updateUserFlag = amUserClient.updateByPrimaryKeySelective(user);
                 }
-            }
+            }*/
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
         }
@@ -504,7 +522,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         int compareResult = accountBigDecimal.compareTo(BigDecimal.ZERO);
         if (compareResult < 0) {
             // 加入金额不能为负数
-            throw new ReturnMessageException(MsgEnum.ERR_FMT_MONEY);
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
         }
         if ((compareResult == 0 && cuc == null)
                 || (compareResult == 0 && cuc != null && cuc.getCouponType() == 2)) {
@@ -612,6 +630,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 判断用户是否禁用
         if (user.getStatus() == 1) {// 0启用，1禁用
             throw new ReturnMessageException(MsgEnum.ERR_USER_INVALID);
+        }
+        // 用户未开户
+        if (user.getBankOpenAccount() == 0) {
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        }
+        // 交易密码状态检查
+        if (user.getIsSetPassword() == 0) {
+            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
         // 检查用户授权状态
         HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthVO(user.getUserId());

@@ -90,11 +90,26 @@ public class WebProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "散标专区债权转让列表", notes = "散标专区债权转让列表")
-    @PostMapping(value = "/CreditList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/creditList", produces = "application/json; charset=utf-8")
     public Object getCredittList(@RequestBody @Valid CreditListRequest request){
         WebResult result =  webProjectListService.searchCreditList(request);
         return result;
     }
+
+
+    /**
+     * 散标专区债权转让详情
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "散标专区债权转让详情", notes = "散标专区债权转让详情")
+    @PostMapping(value = "/creditDetail", produces = "application/json; charset=utf-8")
+    public Object creditDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
+        WebResult result =  webProjectListService.getCreditDetail(map,userId);
+        return result;
+    }
+
+
 
     /**
      * 计划专区计划列表上部统计数据

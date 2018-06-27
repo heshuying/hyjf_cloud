@@ -12,7 +12,7 @@ public class RegisterUserRequest {
 	private String utmId;
 	private String loginIp;
 	private String platform;
-	private int instCode;
+	private String instCode;
 
 	public String getMobile() {
 		return mobile;
@@ -70,11 +70,11 @@ public class RegisterUserRequest {
 		this.platform = platform;
 	}
 
-	public int getInstCode() {
+	public String getInstCode() {
 		return instCode;
 	}
 
-	public void setInstCode(int instCode) {
+	public void setInstCode(String instCode) {
 		this.instCode = instCode;
 	}
 }
