@@ -38,7 +38,7 @@ import com.hyjf.common.util.GetDate;
  * @version BorrowServiceImpl, v0.1 2018/6/13 18:53
  */
 @Service
-public class BorrowServiceImpl implements BorrowService {
+public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService {
 
     @Autowired
     private BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
@@ -71,18 +71,6 @@ public class BorrowServiceImpl implements BorrowService {
         List<BorrowFinmanNewCharge> list = this.borrowFinmanNewChargeMapper.selectByExample(example);
 
         if (!CollectionUtils.isEmpty(list)) {
-            return list.get(0);
-        }
-        return null;
-    }
-
-    @Override
-    public Borrow getBorrow(String borrowNid) {
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<Borrow> list = this.borrowMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
             return list.get(0);
         }
         return null;

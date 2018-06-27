@@ -13,8 +13,7 @@ import java.util.List;
  * @author fuqiang
  * @version BorrowService, v0.1 2018/6/13 18:52
  */
-public interface BorrowService {
-    Borrow getBorrow(String borrowNid);
+public interface BorrowService extends BaseService{
 
     BorrowStyle getborrowStyleByNid(String borrowStyle);
 

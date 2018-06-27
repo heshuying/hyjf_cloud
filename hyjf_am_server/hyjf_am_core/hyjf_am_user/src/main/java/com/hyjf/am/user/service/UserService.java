@@ -17,7 +17,7 @@ import java.util.Map;
  * @author xiasq
  * @version UserService, v0.1 2018/1/21 22:42
  */
-public interface UserService {
+public interface UserService extends BaseService {
 	/**
 	 * 注册
 	 * @param userRequest
@@ -25,20 +25,6 @@ public interface UserService {
 	 * @throws ServiceException
 	 */
 	User register(RegisterUserRequest userRequest) throws MQException;
-
-	/**
-	 * 获取用户
-	 * @param userId
-	 * @return
-	 */
-	User findUserByUserId(int userId);
-
-	/**
-	 * 获取用户
-	 * @param userId
-	 * @return
-	 */
-	UserInfo findUsersInfo(int userId);
 
 	/**
 	 * 生成唯一用户id
