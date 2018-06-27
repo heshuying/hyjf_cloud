@@ -13,10 +13,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author dongzeshan
  * @version WebMvcConfig, v0.1 2018/6/22 10:56
  */
-@SuppressWarnings("deprecation")
-@Configuration
+/*@SuppressWarnings("deprecation")
+@Configuration*/
  public class InterceptorConfig implements WebMvcConfigurer {
-	@Override
+/*	@Override
     public void addInterceptors(InterceptorRegistry registry) {
 		InterceptorRegistration addIn= registry.addInterceptor(new AdminInterceptor());
 		//所有都拦截
@@ -28,5 +28,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 				"/swagger-resources/**",
 				"/v2/**"
 				);
-    }
+    }*/
 }
