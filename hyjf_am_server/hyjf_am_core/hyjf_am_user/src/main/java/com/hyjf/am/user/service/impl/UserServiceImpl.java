@@ -121,34 +121,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return user;
 	}
 
-	@Override
-	public User findUserByUserId(int userId) {
-		UserExample usersExample = new UserExample();
-		usersExample.createCriteria().andUserIdEqualTo(userId);
-		List<User> usersList = userMapper.selectByExample(usersExample);
-		if (!CollectionUtils.isEmpty(usersList)) {
-			return usersList.get(0);
-		}
-		return null;
-	}
-
-	/**
-	 * 根据userId查询userInfo
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public UserInfo findUsersInfo(int userId) {
-		UserInfoExample example = new UserInfoExample();
-		UserInfoExample.Criteria criteria = example.createCriteria();
-		criteria.andUserIdEqualTo(userId);
-		List<UserInfo> list = userInfoMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(0);
-		}
-		return null;
-	}
 
 	/** 获取唯一username */
 	@Override
@@ -356,8 +328,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param password
 	 * @param loginIp
 	 * @param platform
-	 * @param refferUserId
-	 * @param refferUsername
+	 * @param
+	 * @param
 	 * @return
 	 */
 	private User insertUser(String mobile, String password, String loginIp, String platform, String instCode) {
