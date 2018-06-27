@@ -28,7 +28,7 @@ public class DebtInvestLog implements Serializable {
 
     private Integer client;
 
-    private String addip;
+    private String addIp;
 
     private String remark;
 
@@ -142,12 +142,12 @@ public class DebtInvestLog implements Serializable {
         this.client = client;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public String getRemark() {

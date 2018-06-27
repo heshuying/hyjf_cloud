@@ -1,12 +1,13 @@
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.EmployeeCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.UserInfoCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;

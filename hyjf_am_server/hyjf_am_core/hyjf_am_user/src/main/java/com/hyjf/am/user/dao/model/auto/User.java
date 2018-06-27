@@ -44,8 +44,6 @@ public class User implements Serializable {
 
     private Integer accountEsb;
 
-    private Integer investflag;
-
     private Integer userType;
 
     private Integer paymentAuthStatus;
@@ -232,14 +230,6 @@ public class User implements Serializable {
 
     public void setAccountEsb(Integer accountEsb) {
         this.accountEsb = accountEsb;
-    }
-
-    public Integer getInvestflag() {
-        return investflag;
-    }
-
-    public void setInvestflag(Integer investflag) {
-        this.investflag = investflag;
     }
 
     public Integer getUserType() {

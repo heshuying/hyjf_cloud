@@ -25,13 +25,9 @@ public class AccountWithdraw implements Serializable {
 
     private String fee;
 
-    private Date addTime;
-
-    private String addip;
+    private String addIp;
 
     private String remark;
-
-    private Date updateTime;
 
     private Integer client;
 
@@ -50,6 +46,10 @@ public class AccountWithdraw implements Serializable {
     private String bankSeqNo;
 
     private Integer withdrawType;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -133,20 +133,12 @@ public class AccountWithdraw implements Serializable {
         this.fee = fee == null ? null : fee.trim();
     }
 
-    public Date getAddTime() {
-        return addTime;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public String getRemark() {
@@ -155,14 +147,6 @@ public class AccountWithdraw implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 
     public Integer getClient() {
@@ -235,5 +219,21 @@ public class AccountWithdraw implements Serializable {
 
     public void setWithdrawType(Integer withdrawType) {
         this.withdrawType = withdrawType;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

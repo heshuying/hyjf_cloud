@@ -46,7 +46,7 @@
     <result column="receive_advance_interest_yes" property="receiveAdvanceInterestYes" jdbcType="DECIMAL" />
     <result column="receive_late_interest_yes" property="receiveLateInterestYes" jdbcType="DECIMAL" />
     <result column="receive_delay_interest_yes" property="receiveDelayInterestYes" jdbcType="DECIMAL" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="sendmail" property="sendmail" jdbcType="TINYINT" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="credit_amount" property="creditAmount" jdbcType="DECIMAL" />
@@ -128,7 +128,7 @@
     repay_advance_interest, repay_advance_interest_yes, late_days, repay_late_interest, 
     repay_late_interest_yes, delay_days, repay_delay_interest, repay_delay_interest_yes, 
     receive_advance_interest, receive_late_interest, receive_delay_interest, receive_advance_interest_yes, 
-    receive_late_interest_yes, receive_delay_interest_yes, addip, sendmail, web, credit_amount, 
+    receive_late_interest_yes, receive_delay_interest_yes, add_ip, sendmail, web, credit_amount, 
     credit_interest_amount, credit_time, repay_order_id, repay_order_date, create_time, 
     create_user_id, create_user_name, update_time, update_user_id, update_user_name
   </sql>
@@ -184,7 +184,7 @@
       repay_delay_interest_yes, receive_advance_interest, 
       receive_late_interest, receive_delay_interest, 
       receive_advance_interest_yes, receive_late_interest_yes, 
-      receive_delay_interest_yes, addip, sendmail, 
+      receive_delay_interest_yes, add_ip, sendmail, 
       web, credit_amount, credit_interest_amount, 
       credit_time, repay_order_id, repay_order_date, 
       create_time, create_user_id, create_user_name, 
@@ -205,7 +205,7 @@
       #{repayDelayInterestYes,jdbcType=DECIMAL}, #{receiveAdvanceInterest,jdbcType=DECIMAL}, 
       #{receiveLateInterest,jdbcType=DECIMAL}, #{receiveDelayInterest,jdbcType=DECIMAL}, 
       #{receiveAdvanceInterestYes,jdbcType=DECIMAL}, #{receiveLateInterestYes,jdbcType=DECIMAL}, 
-      #{receiveDelayInterestYes,jdbcType=DECIMAL}, #{addip,jdbcType=VARCHAR}, #{sendmail,jdbcType=TINYINT}, 
+      #{receiveDelayInterestYes,jdbcType=DECIMAL}, #{addIp,jdbcType=VARCHAR}, #{sendmail,jdbcType=TINYINT}, 
       #{web,jdbcType=TINYINT}, #{creditAmount,jdbcType=DECIMAL}, #{creditInterestAmount,jdbcType=DECIMAL}, 
       #{creditTime,jdbcType=INTEGER}, #{repayOrderId,jdbcType=VARCHAR}, #{repayOrderDate,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
@@ -347,8 +347,8 @@
       <if test="receiveDelayInterestYes != null" >
         receive_delay_interest_yes,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="sendmail != null" >
         sendmail,
@@ -520,8 +520,8 @@
       <if test="receiveDelayInterestYes != null" >
         #{receiveDelayInterestYes,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="sendmail != null" >
         #{sendmail,jdbcType=TINYINT},
@@ -705,8 +705,8 @@
       <if test="record.receiveDelayInterestYes != null" >
         receive_delay_interest_yes = #{record.receiveDelayInterestYes,jdbcType=DECIMAL},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.sendmail != null" >
         sendmail = #{record.sendmail,jdbcType=TINYINT},
@@ -798,7 +798,7 @@
       receive_advance_interest_yes = #{record.receiveAdvanceInterestYes,jdbcType=DECIMAL},
       receive_late_interest_yes = #{record.receiveLateInterestYes,jdbcType=DECIMAL},
       receive_delay_interest_yes = #{record.receiveDelayInterestYes,jdbcType=DECIMAL},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       sendmail = #{record.sendmail,jdbcType=TINYINT},
       web = #{record.web,jdbcType=TINYINT},
       credit_amount = #{record.creditAmount,jdbcType=DECIMAL},
@@ -948,8 +948,8 @@
       <if test="receiveDelayInterestYes != null" >
         receive_delay_interest_yes = #{receiveDelayInterestYes,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="sendmail != null" >
         sendmail = #{sendmail,jdbcType=TINYINT},
@@ -1038,7 +1038,7 @@
       receive_advance_interest_yes = #{receiveAdvanceInterestYes,jdbcType=DECIMAL},
       receive_late_interest_yes = #{receiveLateInterestYes,jdbcType=DECIMAL},
       receive_delay_interest_yes = #{receiveDelayInterestYes,jdbcType=DECIMAL},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       sendmail = #{sendmail,jdbcType=TINYINT},
       web = #{web,jdbcType=TINYINT},
       credit_amount = #{creditAmount,jdbcType=DECIMAL},

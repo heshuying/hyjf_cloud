@@ -6,11 +6,11 @@
     <result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="attribute" property="attribute" jdbcType="INTEGER" />
-    <result column="add_user" property="addUser" jdbcType="VARCHAR" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -71,8 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, coupon_grant_id, order_id, `attribute`, add_user, update_user, del_flag, add_time, 
-    update_time
+    id, coupon_grant_id, order_id, `attribute`, create_user_id, update_user_id, del_flag, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponTenderExample" >
     select
@@ -112,11 +112,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_coupon_tender (coupon_grant_id, order_id, `attribute`, 
-      add_user, update_user, del_flag, 
-      add_time, update_time)
+      create_user_id, update_user_id, del_flag, 
+      create_time, update_time)
     values (#{couponGrantId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, 
-      #{addUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
-      #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER})
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponTender" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -133,17 +133,17 @@
       <if test="attribute != null" >
         `attribute`,
       </if>
-      <if test="addUser != null" >
-        add_user,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updateUser != null" >
-        update_user,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="delFlag != null" >
         del_flag,
       </if>
-      <if test="addTime != null" >
-        add_time,
+      <if test="createTime != null" >
+        create_time,
       </if>
       <if test="updateTime != null" >
         update_time,
@@ -159,20 +159,20 @@
       <if test="attribute != null" >
         #{attribute,jdbcType=INTEGER},
       </if>
-      <if test="addUser != null" >
-        #{addUser,jdbcType=VARCHAR},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -197,20 +197,20 @@
       <if test="record.attribute != null" >
         `attribute` = #{record.attribute,jdbcType=INTEGER},
       </if>
-      <if test="record.addUser != null" >
-        add_user = #{record.addUser,jdbcType=VARCHAR},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -223,11 +223,11 @@
       coupon_grant_id = #{record.couponGrantId,jdbcType=INTEGER},
       order_id = #{record.orderId,jdbcType=VARCHAR},
       `attribute` = #{record.attribute,jdbcType=INTEGER},
-      add_user = #{record.addUser,jdbcType=VARCHAR},
-      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      add_time = #{record.addTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -244,20 +244,20 @@
       <if test="attribute != null" >
         `attribute` = #{attribute,jdbcType=INTEGER},
       </if>
-      <if test="addUser != null" >
-        add_user = #{addUser,jdbcType=VARCHAR},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=VARCHAR},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -267,11 +267,11 @@
     set coupon_grant_id = #{couponGrantId,jdbcType=INTEGER},
       order_id = #{orderId,jdbcType=VARCHAR},
       `attribute` = #{attribute,jdbcType=INTEGER},
-      add_user = #{addUser,jdbcType=VARCHAR},
-      update_user = #{updateUser,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      add_time = #{addTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

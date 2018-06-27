@@ -51,7 +51,7 @@
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
@@ -125,7 +125,7 @@
     repay_capital_wait, repay_interest_wait, repay_status, manage_fee, service_fee, advance_status, 
     advance_days, advance_interest, late_days, late_interest, late_interest_assigned, 
     delay_days, delay_interest, delay_interest_assigned, repay_order_id, repay_order_date, 
-    expire_fair_value, last_liquidation_time, `status`, del_flag, client, remark, addip, 
+    expire_fair_value, last_liquidation_time, `status`, del_flag, client, remark, add_ip, 
     create_time, create_user_id, create_user_name, update_time, update_user_id, update_user_name
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDetailExample" >
@@ -181,7 +181,7 @@
       delay_interest_assigned, repay_order_id, repay_order_date, 
       expire_fair_value, last_liquidation_time, `status`, 
       del_flag, client, remark, 
-      addip, create_time, create_user_id, 
+      add_ip, create_time, create_user_id, 
       create_user_name, update_time, update_user_id, 
       update_user_name)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
@@ -200,7 +200,7 @@
       #{delayInterestAssigned,jdbcType=DECIMAL}, #{repayOrderId,jdbcType=VARCHAR}, #{repayOrderDate,jdbcType=VARCHAR}, 
       #{expireFairValue,jdbcType=DECIMAL}, #{lastLiquidationTime,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
       #{delFlag,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
-      #{addip,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+      #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
       #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
       #{updateUserName,jdbcType=VARCHAR})
   </insert>
@@ -354,8 +354,8 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -521,8 +521,8 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=INTEGER},
@@ -700,8 +700,8 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=INTEGER},
@@ -777,7 +777,7 @@
       del_flag = #{record.delFlag,jdbcType=TINYINT},
       client = #{record.client,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
@@ -935,8 +935,8 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=INTEGER},
@@ -1009,7 +1009,7 @@
       del_flag = #{delFlag,jdbcType=TINYINT},
       client = #{client,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},

@@ -3,7 +3,7 @@ package com.hyjf.am.user.controller;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoCustomize;
+import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.UserInfoService;

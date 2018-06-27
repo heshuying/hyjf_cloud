@@ -777,7 +777,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 			increaseInterestInvest.setStatus(0);
 			increaseInterestInvest.setWeb(0);
 			increaseInterestInvest.setClient(client);
-			increaseInterestInvest.setAddip(ip);
+			increaseInterestInvest.setAddIp(ip);
 			increaseInterestInvest.setRemark("产品加息");
 			increaseInterestInvest.setInvestType(0);
 			increaseInterestInvest.setCreateTime(GetDate.getDate());
@@ -901,7 +901,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 				BorrowTender borrowTender = new BorrowTender();
 				borrowTender.setAccount(accountDecimal);
 				//borrowTender.setAccountTender(new BigDecimal(0));
-				borrowTender.setAddip(ip);
+				borrowTender.setAddIp(ip);
 				borrowTender.setBorrowNid(borrowNid);
 				borrowTender.setClient(1);// modify by cwyang 2017-5-3 投资平台为微信端
 				borrowTender.setLoanAmount(accountDecimal.subtract(perService));

@@ -39,7 +39,7 @@ public class DebtBorrow implements Serializable {
 
     private String addtime;
 
-    private String addip;
+    private String addIp;
 
     private BigDecimal amountAccount;
 
@@ -511,12 +511,12 @@ public class DebtBorrow implements Serializable {
         this.addtime = addtime == null ? null : addtime.trim();
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public BigDecimal getAmountAccount() {

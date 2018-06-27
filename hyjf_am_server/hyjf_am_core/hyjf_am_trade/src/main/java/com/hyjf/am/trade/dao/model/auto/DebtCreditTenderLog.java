@@ -74,7 +74,7 @@ public class DebtCreditTenderLog implements Serializable {
 
     private Integer assignType;
 
-    private String addip;
+    private String addIp;
 
     private Integer client;
 
@@ -372,12 +372,12 @@ public class DebtCreditTenderLog implements Serializable {
         this.assignType = assignType;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getClient() {

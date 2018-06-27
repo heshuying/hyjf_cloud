@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BorrowTender implements Serializable {
     private Integer id;
@@ -56,9 +57,7 @@ public class BorrowTender implements Serializable {
 
     private BigDecimal loanFee;
 
-    private Integer addTime;
-
-    private String addip;
+    private String addIp;
 
     private Integer client;
 
@@ -93,6 +92,8 @@ public class BorrowTender implements Serializable {
     private Integer investType;
 
     private Integer tenderType;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -304,20 +305,12 @@ public class BorrowTender implements Serializable {
         this.loanFee = loanFee;
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getClient() {
@@ -454,5 +447,13 @@ public class BorrowTender implements Serializable {
 
     public void setTenderType(Integer tenderType) {
         this.tenderType = tenderType;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
