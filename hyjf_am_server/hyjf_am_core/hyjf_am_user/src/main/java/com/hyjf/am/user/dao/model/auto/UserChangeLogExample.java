@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.model.auto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserChangeLogExample {
@@ -834,256 +835,6 @@ public class UserChangeLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andChangeTypeIsNull() {
-            addCriterion("change_type is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeIsNotNull() {
-            addCriterion("change_type is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeEqualTo(Integer value) {
-            addCriterion("change_type =", value, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeNotEqualTo(Integer value) {
-            addCriterion("change_type <>", value, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeGreaterThan(Integer value) {
-            addCriterion("change_type >", value, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("change_type >=", value, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeLessThan(Integer value) {
-            addCriterion("change_type <", value, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("change_type <=", value, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeIn(List<Integer> values) {
-            addCriterion("change_type in", values, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeNotIn(List<Integer> values) {
-            addCriterion("change_type not in", values, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeBetween(Integer value1, Integer value2) {
-            addCriterion("change_type between", value1, value2, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("change_type not between", value1, value2, "changeType");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdIsNull() {
-            addCriterion("change_user_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdIsNotNull() {
-            addCriterion("change_user_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdEqualTo(Integer value) {
-            addCriterion("change_user_id =", value, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdNotEqualTo(Integer value) {
-            addCriterion("change_user_id <>", value, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdGreaterThan(Integer value) {
-            addCriterion("change_user_id >", value, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("change_user_id >=", value, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdLessThan(Integer value) {
-            addCriterion("change_user_id <", value, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdLessThanOrEqualTo(Integer value) {
-            addCriterion("change_user_id <=", value, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdIn(List<Integer> values) {
-            addCriterion("change_user_id in", values, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdNotIn(List<Integer> values) {
-            addCriterion("change_user_id not in", values, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdBetween(Integer value1, Integer value2) {
-            addCriterion("change_user_id between", value1, value2, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("change_user_id not between", value1, value2, "changeUserId");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIsNull() {
-            addCriterion("change_user is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIsNotNull() {
-            addCriterion("change_user is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserEqualTo(String value) {
-            addCriterion("change_user =", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserNotEqualTo(String value) {
-            addCriterion("change_user <>", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserGreaterThan(String value) {
-            addCriterion("change_user >", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserGreaterThanOrEqualTo(String value) {
-            addCriterion("change_user >=", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserLessThan(String value) {
-            addCriterion("change_user <", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserLessThanOrEqualTo(String value) {
-            addCriterion("change_user <=", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserLike(String value) {
-            addCriterion("change_user like", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserNotLike(String value) {
-            addCriterion("change_user not like", value, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserIn(List<String> values) {
-            addCriterion("change_user in", values, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserNotIn(List<String> values) {
-            addCriterion("change_user not in", values, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserBetween(String value1, String value2) {
-            addCriterion("change_user between", value1, value2, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeUserNotBetween(String value1, String value2) {
-            addCriterion("change_user not between", value1, value2, "changeUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeIsNull() {
-            addCriterion("change_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeIsNotNull() {
-            addCriterion("change_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeEqualTo(Integer value) {
-            addCriterion("change_time =", value, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeNotEqualTo(Integer value) {
-            addCriterion("change_time <>", value, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeGreaterThan(Integer value) {
-            addCriterion("change_time >", value, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("change_time >=", value, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeLessThan(Integer value) {
-            addCriterion("change_time <", value, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeLessThanOrEqualTo(Integer value) {
-            addCriterion("change_time <=", value, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeIn(List<Integer> values) {
-            addCriterion("change_time in", values, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeNotIn(List<Integer> values) {
-            addCriterion("change_time not in", values, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeBetween(Integer value1, Integer value2) {
-            addCriterion("change_time between", value1, value2, "changeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andChangeTimeNotBetween(Integer value1, Integer value2) {
-            addCriterion("change_time not between", value1, value2, "changeTime");
-            return (Criteria) this;
-        }
-
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;
@@ -1211,6 +962,256 @@ public class UserChangeLogExample {
 
         public Criteria andBorrowerTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("borrower_type not between", value1, value2, "borrowerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeIsNull() {
+            addCriterion("update_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeIsNotNull() {
+            addCriterion("update_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeEqualTo(Boolean value) {
+            addCriterion("update_type =", value, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeNotEqualTo(Boolean value) {
+            addCriterion("update_type <>", value, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeGreaterThan(Boolean value) {
+            addCriterion("update_type >", value, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("update_type >=", value, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeLessThan(Boolean value) {
+            addCriterion("update_type <", value, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeLessThanOrEqualTo(Boolean value) {
+            addCriterion("update_type <=", value, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeIn(List<Boolean> values) {
+            addCriterion("update_type in", values, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeNotIn(List<Boolean> values) {
+            addCriterion("update_type not in", values, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeBetween(Boolean value1, Boolean value2) {
+            addCriterion("update_type between", value1, value2, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTypeNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("update_type not between", value1, value2, "updateType");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdIsNull() {
+            addCriterion("update_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdIsNotNull() {
+            addCriterion("update_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdEqualTo(Integer value) {
+            addCriterion("update_user_id =", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdNotEqualTo(Integer value) {
+            addCriterion("update_user_id <>", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdGreaterThan(Integer value) {
+            addCriterion("update_user_id >", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("update_user_id >=", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdLessThan(Integer value) {
+            addCriterion("update_user_id <", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("update_user_id <=", value, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdIn(List<Integer> values) {
+            addCriterion("update_user_id in", values, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdNotIn(List<Integer> values) {
+            addCriterion("update_user_id not in", values, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("update_user_id between", value1, value2, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("update_user_id not between", value1, value2, "updateUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIsNull() {
+            addCriterion("update_user is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIsNotNull() {
+            addCriterion("update_user is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserEqualTo(String value) {
+            addCriterion("update_user =", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNotEqualTo(String value) {
+            addCriterion("update_user <>", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserGreaterThan(String value) {
+            addCriterion("update_user >", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserGreaterThanOrEqualTo(String value) {
+            addCriterion("update_user >=", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserLessThan(String value) {
+            addCriterion("update_user <", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserLessThanOrEqualTo(String value) {
+            addCriterion("update_user <=", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserLike(String value) {
+            addCriterion("update_user like", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNotLike(String value) {
+            addCriterion("update_user not like", value, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserIn(List<String> values) {
+            addCriterion("update_user in", values, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNotIn(List<String> values) {
+            addCriterion("update_user not in", values, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserBetween(String value1, String value2) {
+            addCriterion("update_user between", value1, value2, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUserNotBetween(String value1, String value2) {
+            addCriterion("update_user not between", value1, value2, "updateUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("update_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("update_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeEqualTo(Date value) {
+            addCriterion("update_time =", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotEqualTo(Date value) {
+            addCriterion("update_time <>", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThan(Date value) {
+            addCriterion("update_time >", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("update_time >=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThan(Date value) {
+            addCriterion("update_time <", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("update_time <=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIn(List<Date> values) {
+            addCriterion("update_time in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotIn(List<Date> values) {
+            addCriterion("update_time not in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("update_time between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
     }

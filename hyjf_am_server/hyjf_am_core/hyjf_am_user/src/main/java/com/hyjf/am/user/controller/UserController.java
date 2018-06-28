@@ -13,12 +13,12 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -520,12 +520,6 @@ public class UserController {
         return 1;
     }
 
-    @PostMapping("/updateUserInvestFlag")
-	public boolean updateUserInvestFlag(@RequestBody JSONObject para){
-		return userService.updateUserInvestFlag(para);
-	}
-
-
 	@PostMapping("/insertVipUserTender")
 	public boolean insertVipUserTender(@RequestBody JSONObject para){
 		return userService.insertVipUserTender(para);
@@ -541,4 +535,35 @@ public class UserController {
 		logger.info("countNewUserTotal...userId is :{}", userId);
 		return userService.selectTenderCount(userId);
 	}
+
+	/**
+	 *
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/getCertificateAuthorityList")
+	public CertificateAuthorityResponse getCertificateAuthorityList(@RequestBody CertificateAuthorityRequest request){
+		CertificateAuthorityResponse response = new CertificateAuthorityResponse();
+		List<CertificateAuthority> certificateAuthorityList=userService.getCertificateAuthorityList(request);
+		if (CollectionUtils.isNotEmpty(certificateAuthorityList)){
+			response.setResultList(CommonUtils.convertBeanList(certificateAuthorityList,CertificateAuthorityVO.class));
+		}
+		return response;
+	}
+
+
+	/**
+	 *
+	 */
+	@PostMapping("/getLoanSubjectCertificateAuthorityList")
+	public LoanSubjectCertificateAuthorityResponse getLoanSubjectCertificateAuthorityList(@RequestBody LoanSubjectCertificateAuthorityRequest request){
+		LoanSubjectCertificateAuthorityResponse response = new LoanSubjectCertificateAuthorityResponse();
+		List<LoanSubjectCertificateAuthority> resultList=userService.getLoanSubjectCertificateAuthorityList(request);
+		if(CollectionUtils.isNotEmpty(resultList)){
+			response.setResultList(CommonUtils.convertBeanList(resultList,LoanSubjectCertificateAuthorityVO.class));
+		}
+		return response;
+	}
+
+
 }

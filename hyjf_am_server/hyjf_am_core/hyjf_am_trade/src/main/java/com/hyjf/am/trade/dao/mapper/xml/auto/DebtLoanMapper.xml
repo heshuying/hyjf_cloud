@@ -47,7 +47,7 @@
     <result column="receive_advance_interest_yes" property="receiveAdvanceInterestYes" jdbcType="DECIMAL" />
     <result column="receive_late_interest_yes" property="receiveLateInterestYes" jdbcType="DECIMAL" />
     <result column="receive_delay_interest_yes" property="receiveDelayInterestYes" jdbcType="DECIMAL" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="sendmail" property="sendmail" jdbcType="TINYINT" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="credit_amount" property="creditAmount" jdbcType="DECIMAL" />
@@ -56,10 +56,10 @@
     <result column="credit_status" property="creditStatus" jdbcType="TINYINT" />
     <result column="repay_order_id" property="repayOrderId" jdbcType="VARCHAR" />
     <result column="repay_order_date" property="repayOrderDate" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
   </resultMap>
@@ -130,7 +130,7 @@
     advance_days, repay_advance_interest, repay_advance_interest_yes, late_days, repay_late_interest, 
     repay_late_interest_yes, delay_days, repay_delay_interest, repay_delay_interest_yes, 
     receive_advance_interest, receive_late_interest, receive_delay_interest, receive_advance_interest_yes, 
-    receive_late_interest_yes, receive_delay_interest_yes, addip, sendmail, web, credit_amount, 
+    receive_late_interest_yes, receive_delay_interest_yes, add_ip, sendmail, web, credit_amount, 
     credit_interest_amount, credit_time, credit_status, repay_order_id, repay_order_date, 
     create_time, create_user_id, create_user_name, update_time, update_user_id, update_user_name
   </sql>
@@ -187,7 +187,7 @@
       receive_advance_interest, receive_late_interest, 
       receive_delay_interest, receive_advance_interest_yes, 
       receive_late_interest_yes, receive_delay_interest_yes, 
-      addip, sendmail, web, 
+      add_ip, sendmail, web, 
       credit_amount, credit_interest_amount, credit_time, 
       credit_status, repay_order_id, repay_order_date, 
       create_time, create_user_id, create_user_name, 
@@ -209,11 +209,11 @@
       #{receiveAdvanceInterest,jdbcType=DECIMAL}, #{receiveLateInterest,jdbcType=DECIMAL}, 
       #{receiveDelayInterest,jdbcType=DECIMAL}, #{receiveAdvanceInterestYes,jdbcType=DECIMAL}, 
       #{receiveLateInterestYes,jdbcType=DECIMAL}, #{receiveDelayInterestYes,jdbcType=DECIMAL}, 
-      #{addip,jdbcType=VARCHAR}, #{sendmail,jdbcType=TINYINT}, #{web,jdbcType=TINYINT}, 
+      #{addIp,jdbcType=VARCHAR}, #{sendmail,jdbcType=TINYINT}, #{web,jdbcType=TINYINT}, 
       #{creditAmount,jdbcType=DECIMAL}, #{creditInterestAmount,jdbcType=DECIMAL}, #{creditTime,jdbcType=INTEGER}, 
       #{creditStatus,jdbcType=TINYINT}, #{repayOrderId,jdbcType=VARCHAR}, #{repayOrderDate,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}
+      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtLoan" >
@@ -354,8 +354,8 @@
       <if test="receiveDelayInterestYes != null" >
         receive_delay_interest_yes,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="sendmail != null" >
         sendmail,
@@ -533,8 +533,8 @@
       <if test="receiveDelayInterestYes != null" >
         #{receiveDelayInterestYes,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="sendmail != null" >
         #{sendmail,jdbcType=TINYINT},
@@ -561,7 +561,7 @@
         #{repayOrderDate,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -570,7 +570,7 @@
         #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
@@ -724,8 +724,8 @@
       <if test="record.receiveDelayInterestYes != null" >
         receive_delay_interest_yes = #{record.receiveDelayInterestYes,jdbcType=DECIMAL},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.sendmail != null" >
         sendmail = #{record.sendmail,jdbcType=TINYINT},
@@ -752,7 +752,7 @@
         repay_order_date = #{record.repayOrderDate,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -761,7 +761,7 @@
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -821,7 +821,7 @@
       receive_advance_interest_yes = #{record.receiveAdvanceInterestYes,jdbcType=DECIMAL},
       receive_late_interest_yes = #{record.receiveLateInterestYes,jdbcType=DECIMAL},
       receive_delay_interest_yes = #{record.receiveDelayInterestYes,jdbcType=DECIMAL},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       sendmail = #{record.sendmail,jdbcType=TINYINT},
       web = #{record.web,jdbcType=TINYINT},
       credit_amount = #{record.creditAmount,jdbcType=DECIMAL},
@@ -830,10 +830,10 @@
       credit_status = #{record.creditStatus,jdbcType=TINYINT},
       repay_order_id = #{record.repayOrderId,jdbcType=VARCHAR},
       repay_order_date = #{record.repayOrderDate,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -975,8 +975,8 @@
       <if test="receiveDelayInterestYes != null" >
         receive_delay_interest_yes = #{receiveDelayInterestYes,jdbcType=DECIMAL},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="sendmail != null" >
         sendmail = #{sendmail,jdbcType=TINYINT},
@@ -1003,7 +1003,7 @@
         repay_order_date = #{repayOrderDate,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -1012,7 +1012,7 @@
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
@@ -1069,7 +1069,7 @@
       receive_advance_interest_yes = #{receiveAdvanceInterestYes,jdbcType=DECIMAL},
       receive_late_interest_yes = #{receiveLateInterestYes,jdbcType=DECIMAL},
       receive_delay_interest_yes = #{receiveDelayInterestYes,jdbcType=DECIMAL},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       sendmail = #{sendmail,jdbcType=TINYINT},
       web = #{web,jdbcType=TINYINT},
       credit_amount = #{creditAmount,jdbcType=DECIMAL},
@@ -1078,10 +1078,10 @@
       credit_status = #{creditStatus,jdbcType=TINYINT},
       repay_order_id = #{repayOrderId,jdbcType=VARCHAR},
       repay_order_date = #{repayOrderDate,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

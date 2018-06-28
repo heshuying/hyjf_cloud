@@ -55,7 +55,7 @@ public class BankOpenRecordController {
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
     public JSONObject bankOpenRecordAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = new JSONObject();
         AccountRecordRequest accountRecordRequest =setRequese(map);
         List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
         String status="error";
@@ -71,7 +71,7 @@ public class BankOpenRecordController {
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
     public JSONObject bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = new JSONObject();
         BankAccountRecordRequest registerRcordeRequest =setBankRequese(map);
         List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
         String status="error";

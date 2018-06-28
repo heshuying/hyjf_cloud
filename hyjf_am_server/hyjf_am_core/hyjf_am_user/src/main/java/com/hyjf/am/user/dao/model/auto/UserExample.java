@@ -1405,66 +1405,6 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andInvestflagIsNull() {
-            addCriterion("investFlag is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagIsNotNull() {
-            addCriterion("investFlag is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagEqualTo(Integer value) {
-            addCriterion("investFlag =", value, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagNotEqualTo(Integer value) {
-            addCriterion("investFlag <>", value, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagGreaterThan(Integer value) {
-            addCriterion("investFlag >", value, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagGreaterThanOrEqualTo(Integer value) {
-            addCriterion("investFlag >=", value, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagLessThan(Integer value) {
-            addCriterion("investFlag <", value, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagLessThanOrEqualTo(Integer value) {
-            addCriterion("investFlag <=", value, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagIn(List<Integer> values) {
-            addCriterion("investFlag in", values, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagNotIn(List<Integer> values) {
-            addCriterion("investFlag not in", values, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagBetween(Integer value1, Integer value2) {
-            addCriterion("investFlag between", value1, value2, "investflag");
-            return (Criteria) this;
-        }
-
-        public Criteria andInvestflagNotBetween(Integer value1, Integer value2) {
-            addCriterion("investFlag not between", value1, value2, "investflag");
-            return (Criteria) this;
-        }
-
         public Criteria andUserTypeIsNull() {
             addCriterion("user_type is null");
             return (Criteria) this;

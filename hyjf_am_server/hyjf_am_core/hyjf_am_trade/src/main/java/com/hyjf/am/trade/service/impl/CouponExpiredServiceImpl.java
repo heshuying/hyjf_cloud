@@ -47,7 +47,6 @@ public class CouponExpiredServiceImpl implements CouponExpiredService {
         // 已失效
         couponUser.setUsedFlag(4);
         couponUser.setUpdateTime(GetDate.str2Date(GetDate.timestamptoStrYYYYMMDDHHMMSS(nowTime),sdf) );
-        couponUser.setUpdateUser(CustomConstants.OPERATOR_AUTO_REPAY);
         int count = couponUserMapper.updateByExampleSelective(couponUser, example);
         if (count > 0) {
             logger.info("优惠券过期失效更新成功，共有{}张优惠券过期", count);

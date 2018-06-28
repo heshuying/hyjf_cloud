@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class DebtCreditRepay implements Serializable {
     private Integer id;
@@ -66,7 +67,7 @@ public class DebtCreditRepay implements Serializable {
 
     private Integer assignCreateDate;
 
-    private String addip;
+    private String addIp;
 
     private Integer client;
 
@@ -112,17 +113,17 @@ public class DebtCreditRepay implements Serializable {
 
     private BigDecimal receiveDelayInterestYes;
 
-    private Integer createTime;
-
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
-
     private Integer updateUserId;
 
     private String updateUserName;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -374,12 +375,12 @@ public class DebtCreditRepay implements Serializable {
         this.assignCreateDate = assignCreateDate;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getClient() {
@@ -558,14 +559,6 @@ public class DebtCreditRepay implements Serializable {
         this.receiveDelayInterestYes = receiveDelayInterestYes;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getCreateUserId() {
         return createUserId;
     }
@@ -582,14 +575,6 @@ public class DebtCreditRepay implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
@@ -604,5 +589,21 @@ public class DebtCreditRepay implements Serializable {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -37,9 +37,7 @@ public class DebtBorrow implements Serializable {
 
     private String viewType;
 
-    private String addtime;
-
-    private String addip;
+    private String addIp;
 
     private BigDecimal amountAccount;
 
@@ -289,8 +287,6 @@ public class DebtBorrow implements Serializable {
 
     private Integer ontime;
 
-    private Date updatetime;
-
     private String serviceFeeRate;
 
     private String manageFeeRate;
@@ -307,7 +303,7 @@ public class DebtBorrow implements Serializable {
 
     private String operationLabel;
 
-    private String companyOrPersonal;
+    private Integer companyOrPersonal;
 
     private String borrowManager;
 
@@ -372,6 +368,10 @@ public class DebtBorrow implements Serializable {
     private BigDecimal borrowRepayWebAdvance;
 
     private String borrowLevel;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -503,20 +503,12 @@ public class DebtBorrow implements Serializable {
         this.viewType = viewType == null ? null : viewType.trim();
     }
 
-    public String getAddtime() {
-        return addtime;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddtime(String addtime) {
-        this.addtime = addtime == null ? null : addtime.trim();
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public BigDecimal getAmountAccount() {
@@ -1511,14 +1503,6 @@ public class DebtBorrow implements Serializable {
         this.ontime = ontime;
     }
 
-    public Date getUpdatetime() {
-        return updatetime;
-    }
-
-    public void setUpdatetime(Date updatetime) {
-        this.updatetime = updatetime;
-    }
-
     public String getServiceFeeRate() {
         return serviceFeeRate;
     }
@@ -1583,12 +1567,12 @@ public class DebtBorrow implements Serializable {
         this.operationLabel = operationLabel == null ? null : operationLabel.trim();
     }
 
-    public String getCompanyOrPersonal() {
+    public Integer getCompanyOrPersonal() {
         return companyOrPersonal;
     }
 
-    public void setCompanyOrPersonal(String companyOrPersonal) {
-        this.companyOrPersonal = companyOrPersonal == null ? null : companyOrPersonal.trim();
+    public void setCompanyOrPersonal(Integer companyOrPersonal) {
+        this.companyOrPersonal = companyOrPersonal;
     }
 
     public String getBorrowManager() {
@@ -1845,5 +1829,21 @@ public class DebtBorrow implements Serializable {
 
     public void setBorrowLevel(String borrowLevel) {
         this.borrowLevel = borrowLevel == null ? null : borrowLevel.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

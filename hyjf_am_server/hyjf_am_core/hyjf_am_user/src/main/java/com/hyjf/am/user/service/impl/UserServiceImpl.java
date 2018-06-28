@@ -2,11 +2,8 @@ package com.hyjf.am.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.*;
-import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
@@ -17,6 +14,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
@@ -48,71 +46,15 @@ import java.util.Map;
  */
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	@Autowired
-	private UserMapper usersMapper;
-	@Autowired
-	private UserLoginLogMapper userLoginLogMapper;
-	@Autowired
-	private PreRegistMapper preRegistMapper;
-
-	@Autowired
-	private UserInfoMapper usersInfoMapper;
 
 	@Autowired
 	private AccountProducer accountProducer;
-
 	@Autowired
-	private SpreadsUserMapper spreadsUsersMapper;
-
+	private CertificateAuthorityMapper certificateAuthorityMapper;
 	@Autowired
-	private UserLogMapper usersLogMapper;
-
-	@Autowired
-	UserInfoService userInfoService;
-
-	@Autowired
-	EvalationMapper evalationMapper;
-
-	@Autowired
-	HjhUserAuthMapper hjhUserAuthMapper;
-
-	@Autowired
-	HjhUserAuthLogMapper hjhUserAuthLogMapper;
-
-	@Autowired
-	UserEvalationResultMapper userEvalationResultMapper;
-
-	@Autowired
-	UserEvalationMapper userEvalationMapper;
-
-	@Autowired
-	AccountChinapnrMapper accountChinapnrMapper;
-	
-	@Autowired
-	UserContactMapper UserContactMapper;
-	
-	@Autowired
-	UserBindEmailLogMapper userBindEmailLogMapper;
-
-	@Autowired
-	UtmRegMapper utmRegMapper;
-
-	@Autowired
-	UtmPlatMapper utmPlatMapper;
-
-	@Autowired
-	CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
-
-    @Autowired
-    UtmRegCustomizeMapper utmRegCustomizeMapper;
-
-    @Autowired
-	VipUserTenderMapper vipUserTenderMapper;
-
-	@Autowired
-	UserManagerCustomizeMapper userManagerCustomizeMapper;
+	private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -134,9 +76,7 @@ public class UserServiceImpl implements UserService {
 		String platform = userRequest.getPlatform();
 		String password = userRequest.getPassword();
 		String utmId = userRequest.getUtmId();
-		int instType = userRequest.getInstCode();
-		Integer refferUserId = null;
-		String refferUserName = null;
+
 		Integer attribute = null;
 		// 获取推荐人表
 		User refferUser = getRefferUsers(mobile, reffer);
@@ -145,8 +85,6 @@ public class UserServiceImpl implements UserService {
 			if (refferUserInfo != null) {
 				// 如果该用户的上级不为空
 				if (Validator.isNotNull(refferUserInfo.getAttribute())) {
-					refferUserId = refferUser.getUserId();
-					refferUserName = refferUser.getUsername();
 					if (Arrays.asList(2, 3).contains(refferUserInfo.getAttribute())) {
 						// 有推荐人且推荐人为员工(Attribute=2或3)时才设置为有主单
 						attribute = 1;
@@ -156,11 +94,12 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 1. 写入用户信息表
-		User users = this.insertUsers(mobile, password, loginIp, platform, refferUserId, refferUserName);
-		int userId = users.getUserId();
+		User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+		logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
+		int userId = user.getUserId();
 
 		// 2. 写入用户详情表
-		this.insertUsersInfo(userId,instType, loginIp, attribute);
+		this.insertUserInfo(userId, loginIp, attribute);
 
 		// 3. 写入用户账户表
 		this.insertAccount(userId);
@@ -181,37 +120,9 @@ public class UserServiceImpl implements UserService {
 		// 7. 注册成功默认登录
 		this.updateLoginUser(userId, loginIp);
 
-		return users;
+		return user;
 	}
 
-	@Override
-	public User findUserByUserId(int userId) {
-		UserExample usersExample = new UserExample();
-		usersExample.createCriteria().andUserIdEqualTo(userId);
-		List<User> usersList = usersMapper.selectByExample(usersExample);
-		if (!CollectionUtils.isEmpty(usersList)) {
-			return usersList.get(0);
-		}
-		return null;
-	}
-
-	/**
-	 * 根据userId查询userInfo
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public UserInfo findUsersInfo(int userId) {
-		UserInfoExample example = new UserInfoExample();
-		UserInfoExample.Criteria criteria = example.createCriteria();
-		criteria.andUserIdEqualTo(userId);
-		List<UserInfo> list = usersInfoMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(0);
-		}
-		return null;
-	}
 
 	/** 获取唯一username */
 	@Override
@@ -221,14 +132,14 @@ public class UserServiceImpl implements UserService {
 		UserExample ue = new UserExample();
 		UserExample.Criteria cr = ue.createCriteria();
 		cr.andUsernameEqualTo(username);
-		int cn1 = usersMapper.countByExample(ue);
+		int cn1 = userMapper.countByExample(ue);
 		if (cn1 > 0) {
 			// 第二规则
 			UserExample ue2 = new UserExample();
 			UserExample.Criteria cr2 = ue2.createCriteria();
 			username = "hyjf" + mobile;
 			cr2.andUsernameEqualTo(username);
-			int cn2 = usersMapper.countByExample(ue2);
+			int cn2 = userMapper.countByExample(ue2);
 			if (cn2 > 0) {
 				// 第三规则
 				int i = 0;
@@ -238,7 +149,7 @@ public class UserServiceImpl implements UserService {
 					UserExample.Criteria cr3 = ue3.createCriteria();
 					username = "hyjf" + mobile.substring(mobile.length() - 6, mobile.length()) + i;
 					cr3.andUsernameEqualTo(username);
-					int cn3 = usersMapper.countByExample(ue3);
+					int cn3 = userMapper.countByExample(ue3);
 					if (cn3 == 0) {
 						break;
 					}
@@ -252,7 +163,7 @@ public class UserServiceImpl implements UserService {
 	public User findUserByMobile(String mobile) {
 		UserExample usersExample = new UserExample();
 		usersExample.createCriteria().andMobileEqualTo(mobile);
-		List<User> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = userMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -263,14 +174,14 @@ public class UserServiceImpl implements UserService {
 	public User findUserByUsernameOrMobile(String condition) {
 		UserExample mobileExample = new UserExample();
 		mobileExample.createCriteria().andMobileEqualTo(condition);
-		List<User> usersList1 = usersMapper.selectByExample(mobileExample);
+		List<User> usersList1 = userMapper.selectByExample(mobileExample);
 		if (!CollectionUtils.isEmpty(usersList1)) {
 			return usersList1.get(0);
 		}
 
 		UserExample usernameExample = new UserExample();
 		usernameExample.createCriteria().andUsernameEqualTo(condition);
-		List<User> usersList2 = usersMapper.selectByExample(usernameExample);
+		List<User> usersList2 = userMapper.selectByExample(usernameExample);
 		if (!CollectionUtils.isEmpty(usersList2)) {
 			return usersList2.get(0);
 		}
@@ -286,7 +197,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			criteria.andUserIdEqualTo(Integer.valueOf(reffer));
 		}
-		List<User> usersList = usersMapper.selectByExample(usersExample);
+		List<User> usersList = userMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(usersList)) {
 			return usersList.get(0);
 		}
@@ -404,7 +315,7 @@ public class UserServiceImpl implements UserService {
 				criteria1.andUserIdEqualTo(recommend);
 			}
 
-			recommends = usersMapper.selectByExample(exampleUser);
+			recommends = userMapper.selectByExample(exampleUser);
 		}
 		if (!CollectionUtils.isEmpty(recommends)) {
 			return recommends.get(0);
@@ -419,26 +330,23 @@ public class UserServiceImpl implements UserService {
 	 * @param password
 	 * @param loginIp
 	 * @param platform
-	 * @param refferUserId
-	 * @param refferUsername
+	 * @param
+	 * @param
 	 * @return
 	 */
-	private User insertUsers(String mobile, String password, String loginIp, String platform, Integer refferUserId,
-			String refferUsername) {
+	private User insertUser(String mobile, String password, String loginIp, String platform, String instCode) {
 		User user = new User();
 		String userName = generateUniqueUsername(mobile);
-		user.setInstCode("10000000");
+		user.setInstCode(StringUtils.isBlank(instCode) ? CommonConstant.HYJF_INST_CODE : instCode);
 		user.setIsInstFlag(0);
 		user.setUsername(userName);
 		user.setMobile(mobile);
 		user.setRechargeSms(0);
 		user.setWithdrawSms(0);
-		user.setInvestflag(0);
 		user.setInvestSms(0);
 		user.setRecieveSms(0);
 		user.setUserType(0);
 		user.setIsSetPassword(0);
-		int time = GetDate.getNowTime10();
 		String codeSalt = GetCode.getRandomCode(6);
 		user.setPassword(MD5Utils.MD5(password + codeSalt));
 		user.setRegIp(loginIp);
@@ -453,7 +361,7 @@ public class UserServiceImpl implements UserService {
 			user.setRegEsb(Integer.parseInt(platform));
 			// 账户开通平台 0pc 1微信 2安卓 3IOS 4其他
 		}
-		usersMapper.insertSelective(user);
+		userMapper.insertSelective(user);
 		return user;
 	}
 
@@ -464,7 +372,7 @@ public class UserServiceImpl implements UserService {
 	 * @param loginIp
 	 * @param attribute
 	 */
-	private void insertUsersInfo(int userId,int instType, String loginIp, Integer attribute) {
+	private void insertUserInfo(int userId, String loginIp, Integer attribute) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);
 		// 默认为无主单
@@ -473,7 +381,8 @@ public class UserServiceImpl implements UserService {
 			getAddress(loginIp, userInfo);
 		}
 		userInfo.setUserId(userId);
-		userInfo.setRoleId(instType);
+		// 默认投资人角色
+		userInfo.setRoleId(1);
 		userInfo.setMobileIsapprove(1);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
@@ -487,7 +396,7 @@ public class UserServiceImpl implements UserService {
 		userInfo.setIsContact(0);
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
-		usersInfoMapper.insertSelective(userInfo);
+		userInfoMapper.insertSelective(userInfo);
 	}
 
 	/**
@@ -561,7 +470,7 @@ public class UserServiceImpl implements UserService {
 		spreadUser.setOpernote("reg");
 		spreadUser.setOperation(userId + "");
 		logger.info("注册插入spreadUser：{}", JSON.toJSONString(spreadUser));
-		spreadsUsersMapper.insertSelective(spreadUser);
+		spreadsUserMapper.insertSelective(spreadUser);
 	}
 
 	/**
@@ -688,8 +597,8 @@ public class UserServiceImpl implements UserService {
 	 * @return int
 	 */
 	@Override
-	public int updateUserById(User record){
-		return usersMapper.updateByPrimaryKeySelective(record);
+	public int updateUserById(User record) {
+		return userMapper.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
@@ -898,7 +807,7 @@ public class UserServiceImpl implements UserService {
 	public boolean checkEmailUsed(String email) {
 		UserExample example1 = new UserExample();
 		example1.createCriteria().andEmailEqualTo(email);
-		int size = usersMapper.countByExample(example1);
+		int size = userMapper.countByExample(example1);
 		if (size > 0) {
 			return true;
 		} else {
@@ -924,7 +833,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		// 插入新的邮件
-		log.setCreatetime(new Date());
+		log.setCreateTime(new Date());
 		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
 		userBindEmailLogMapper.insertSelective(log);
@@ -956,10 +865,10 @@ public class UserServiceImpl implements UserService {
 	public void updateBindEmail(Integer userId, String email) {
 		UserExample example = new UserExample();
 		example.createCriteria().andUserIdEqualTo(userId);
-		List<User> usersList = usersMapper.selectByExample(example);
+		List<User> usersList = userMapper.selectByExample(example);
 		User u = usersList.get(0);
 		u.setEmail(email);
-		usersMapper.updateByPrimaryKeySelective(u);
+		userMapper.updateByPrimaryKeySelective(u);
 		
 		UserBindEmailLog log = this.getUserBindEmail(userId);
 		if(log != null) {
@@ -982,7 +891,7 @@ public class UserServiceImpl implements UserService {
 		UserExample.Criteria userCri = usersExample.createCriteria();
 		userCri.andUsernameEqualTo(repayOrgName);
 		userCri.andBankOpenAccountEqualTo(1);// 汇付已开户
-		List<User> ulist = this.usersMapper.selectByExample(usersExample);
+		List<User> ulist = this.userMapper.selectByExample(usersExample);
 		if (!CollectionUtils.isEmpty(ulist)) {
 			return ulist;
 		}
@@ -1016,11 +925,11 @@ public class UserServiceImpl implements UserService {
 		int i=userEvalationResultMapper.insertSelective(userEvalationResult);
 		if(i>0){
 			// 更新用户信息
-			User user = usersMapper.selectByPrimaryKey(userId);
+			User user = userMapper.selectByPrimaryKey(userId);
 			if (user != null){
 				user.setIsEvaluationFlag(1);// 已测评
 				// 更新用户是否测评标志位
-				this.usersMapper.updateByPrimaryKey(user);
+				this.userMapper.updateByPrimaryKey(user);
 			}
 			for (int j = 0; j < answerList.size(); j++) {
 				UserEvalation userEvalation=new UserEvalation();
@@ -1093,36 +1002,6 @@ public class UserServiceImpl implements UserService {
     }
 
 	/**
-	 * 更新用户投资标记
-	 * @param para
-	 */
-	@Override
-	public boolean updateUserInvestFlag(JSONObject para) {
-		boolean result = true;
-		User users= (User) para.get("user");
-		Integer userId= (Integer) para.get("userId");
-		int projectType= (int) para.get("projectType");
-
-		if (users.getInvestflag() == 0) {
-			users.setInvestflag(1);
-			UserExample userExample = new UserExample();
-			userExample.createCriteria().andUserIdEqualTo(userId).andInvestflagEqualTo(0);
-			boolean userFlag = this.usersMapper.updateByExampleSelective(users, userExample) > 0 ? true : false;
-			if (!userFlag) {
-				logger.info("更新新手标识失败，用户userId：" + userId);
-				result = false;
-			}
-		}else{
-			if (projectType == 4) {
-				// 回滚事务
-				logger.info("用户已不是新手投资，用户userId：" + userId);
-				result = false;
-			}
-		}
-		return result;
-	}
-
-	/**
 	 *  插入vip user
 	 * @param para
 	 */
@@ -1168,5 +1047,40 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Integer selectTenderCount(Integer userId) {
 		return userManagerCustomizeMapper.selectTenderCount(userId);
+	}
+
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<CertificateAuthority> getCertificateAuthorityList(CertificateAuthorityRequest request) {
+		CertificateAuthorityExample example = new CertificateAuthorityExample();
+		CertificateAuthorityExample.Criteria cra = example.createCriteria();
+		cra.andTrueNameEqualTo(request.getTrueName());
+		cra.andIdNoEqualTo(request.getIdNo());
+		cra.andIdTypeEqualTo(request.getIdType());
+		return this.certificateAuthorityMapper.selectByExample(example);
+	}
+
+	/**
+	 * 借款主体CA认证记录表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request) {
+		LoanSubjectCertificateAuthorityExample loanSubjectCertificateAuthorityExample = new LoanSubjectCertificateAuthorityExample();
+		LoanSubjectCertificateAuthorityExample.Criteria  loanSubjectCra = loanSubjectCertificateAuthorityExample.createCriteria();
+		loanSubjectCra.andNameEqualTo(request.getName());
+		loanSubjectCra.andIdTypeEqualTo(request.getIdType());
+		loanSubjectCra.andIdNoEqualTo(request.getIdNo());
+		return this.loanSubjectCertificateAuthorityMapper.selectByExample(loanSubjectCertificateAuthorityExample);
+
 	}
 }

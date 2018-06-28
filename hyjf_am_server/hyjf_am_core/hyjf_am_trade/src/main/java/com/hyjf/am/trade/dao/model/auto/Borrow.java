@@ -127,9 +127,9 @@ public class Borrow implements Serializable {
 
     private String createUserName;
 
-    private Date addTime;
+    private String addIp;
 
-    private String addip;
+    private Date createTime;
 
     private Date updatetime;
 
@@ -623,20 +623,20 @@ public class Borrow implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Date getAddTime() {
-        return addTime;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
-    public String getAddip() {
-        return addip;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdatetime() {

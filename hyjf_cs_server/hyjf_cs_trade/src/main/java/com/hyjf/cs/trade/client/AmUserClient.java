@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -111,12 +113,6 @@ public interface AmUserClient {
     boolean checkIs51UserCanInvest(Integer userId);
 
     /**
-     * 更新用户投资信息
-     * @param para
-     */
-    boolean updateUserInvestFlag(JSONObject para);
-
-    /**
      * 插入VIPuser
      * @param para
      */
@@ -128,4 +124,25 @@ public interface AmUserClient {
 	 * @return
 	 */
     int countNewUserTotal(Integer userId);
+
+    /**
+     * 根据用户id获取用户CA认证记录表
+     * @return
+     */
+	CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId);
+
+	/**
+	 * 用户CA认证记录表
+	 * @param request
+	 * @return
+	 */
+	List<CertificateAuthorityVO> getCertificateAuthorityList(CertificateAuthorityRequest request);
+
+	/**
+	 * 借款主体CA认证记录表
+	 * @param request1
+	 * @return
+	 */
+	List<LoanSubjectCertificateAuthorityVO> getLoanSubjectCertificateAuthorityList(
+			LoanSubjectCertificateAuthorityRequest request1);
 }

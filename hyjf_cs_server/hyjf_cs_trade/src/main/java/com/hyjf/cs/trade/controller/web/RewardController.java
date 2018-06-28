@@ -47,6 +47,9 @@ public class RewardController {
     public WebResult<List<MyRewardRecordCustomizeVO>> selectMyRewardList(@RequestHeader(value = "token", required = true) String token, Map<String,String> param, HttpServletRequest request){
         WebResult<List<MyRewardRecordCustomizeVO>> result = new WebResult<List<MyRewardRecordCustomizeVO>>();
         WebViewUserVO userVO = rewardService.getUsersByToken(token);
+
+        logger.info("获取我的奖励列表开始，userId：{}", userVO.getUserId());
+
         // 请求参数校验
         rewardService.checkForRewardList(param);
 

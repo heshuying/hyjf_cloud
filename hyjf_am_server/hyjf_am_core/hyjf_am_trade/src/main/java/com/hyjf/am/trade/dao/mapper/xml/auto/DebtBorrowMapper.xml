@@ -9,7 +9,7 @@
     <result column="is_repay_org_flag" property="isRepayOrgFlag" jdbcType="TINYINT" />
     <result column="repay_org_user_id" property="repayOrgUserId" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="order" property="order" jdbcType="INTEGER" />
     <result column="borrow_pic" property="borrowPic" jdbcType="VARCHAR" />
     <result column="hits" property="hits" jdbcType="INTEGER" />
@@ -18,18 +18,17 @@
     <result column="flag" property="flag" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="view_type" property="viewType" jdbcType="VARCHAR" />
-    <result column="addtime" property="addtime" jdbcType="VARCHAR" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="amount_account" property="amountAccount" jdbcType="DECIMAL" />
     <result column="amount_type" property="amountType" jdbcType="VARCHAR" />
-    <result column="cash_status" property="cashStatus" jdbcType="INTEGER" />
+    <result column="cash_status" property="cashStatus" jdbcType="TINYINT" />
     <result column="account" property="account" jdbcType="DECIMAL" />
-    <result column="other_web_status" property="otherWebStatus" jdbcType="INTEGER" />
+    <result column="other_web_status" property="otherWebStatus" jdbcType="TINYINT" />
     <result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
     <result column="borrow_password" property="borrowPassword" jdbcType="VARCHAR" />
     <result column="borrow_flag" property="borrowFlag" jdbcType="VARCHAR" />
     <result column="borrow_status" property="borrowStatus" jdbcType="INTEGER" />
-    <result column="borrow_full_status" property="borrowFullStatus" jdbcType="INTEGER" />
+    <result column="borrow_full_status" property="borrowFullStatus" jdbcType="TINYINT" />
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
     <result column="borrow_pre_nid" property="borrowPreNid" jdbcType="INTEGER" />
     <result column="borrow_account_yes" property="borrowAccountYes" jdbcType="DECIMAL" />
@@ -47,9 +46,9 @@
     <result column="borrow_valid_time" property="borrowValidTime" jdbcType="INTEGER" />
     <result column="borrow_success_time" property="borrowSuccessTime" jdbcType="INTEGER" />
     <result column="borrow_end_time" property="borrowEndTime" jdbcType="VARCHAR" />
-    <result column="borrow_part_status" property="borrowPartStatus" jdbcType="INTEGER" />
+    <result column="borrow_part_status" property="borrowPartStatus" jdbcType="TINYINT" />
     <result column="cancel_userid" property="cancelUserid" jdbcType="INTEGER" />
-    <result column="cancel_status" property="cancelStatus" jdbcType="INTEGER" />
+    <result column="cancel_status" property="cancelStatus" jdbcType="TINYINT" />
     <result column="cancel_time" property="cancelTime" jdbcType="VARCHAR" />
     <result column="cancel_remark" property="cancelRemark" jdbcType="VARCHAR" />
     <result column="cancel_contents" property="cancelContents" jdbcType="VARCHAR" />
@@ -57,9 +56,9 @@
     <result column="tender_account_max" property="tenderAccountMax" jdbcType="INTEGER" />
     <result column="tender_times" property="tenderTimes" jdbcType="INTEGER" />
     <result column="tender_last_time" property="tenderLastTime" jdbcType="VARCHAR" />
-    <result column="repay_advance_status" property="repayAdvanceStatus" jdbcType="INTEGER" />
+    <result column="repay_advance_status" property="repayAdvanceStatus" jdbcType="TINYINT" />
     <result column="repay_advance_time" property="repayAdvanceTime" jdbcType="VARCHAR" />
-    <result column="repay_advance_step" property="repayAdvanceStep" jdbcType="INTEGER" />
+    <result column="repay_advance_step" property="repayAdvanceStep" jdbcType="TINYINT" />
     <result column="repay_account_all" property="repayAccountAll" jdbcType="DECIMAL" />
     <result column="repay_account_interest" property="repayAccountInterest" jdbcType="DECIMAL" />
     <result column="repay_account_capital" property="repayAccountCapital" jdbcType="DECIMAL" />
@@ -76,15 +75,15 @@
     <result column="repay_next_time" property="repayNextTime" jdbcType="INTEGER" />
     <result column="repay_next_account" property="repayNextAccount" jdbcType="DECIMAL" />
     <result column="repay_times" property="repayTimes" jdbcType="INTEGER" />
-    <result column="repay_full_status" property="repayFullStatus" jdbcType="INTEGER" />
+    <result column="repay_full_status" property="repayFullStatus" jdbcType="TINYINT" />
     <result column="repay_fee_normal" property="repayFeeNormal" jdbcType="DECIMAL" />
     <result column="repay_fee_advance" property="repayFeeAdvance" jdbcType="DECIMAL" />
     <result column="repay_fee_late" property="repayFeeLate" jdbcType="DECIMAL" />
     <result column="late_interest" property="lateInterest" jdbcType="DECIMAL" />
     <result column="late_forfeit" property="lateForfeit" jdbcType="DECIMAL" />
-    <result column="vouch_status" property="vouchStatus" jdbcType="INTEGER" />
-    <result column="vouch_advance_status" property="vouchAdvanceStatus" jdbcType="INTEGER" />
-    <result column="vouch_user_status" property="vouchUserStatus" jdbcType="INTEGER" />
+    <result column="vouch_status" property="vouchStatus" jdbcType="TINYINT" />
+    <result column="vouch_advance_status" property="vouchAdvanceStatus" jdbcType="TINYINT" />
+    <result column="vouch_user_status" property="vouchUserStatus" jdbcType="TINYINT" />
     <result column="vouch_users" property="vouchUsers" jdbcType="VARCHAR" />
     <result column="vouch_account" property="vouchAccount" jdbcType="DECIMAL" />
     <result column="vouch_account_yes" property="vouchAccountYes" jdbcType="DECIMAL" />
@@ -101,20 +100,20 @@
     <result column="vouchjg_lianxi" property="vouchjgLianxi" jdbcType="VARCHAR" />
     <result column="vouchjg_js" property="vouchjgJs" jdbcType="VARCHAR" />
     <result column="vouchjg_xy" property="vouchjgXy" jdbcType="VARCHAR" />
-    <result column="fast_status" property="fastStatus" jdbcType="INTEGER" />
-    <result column="vouchstatus" property="vouchstatus" jdbcType="INTEGER" />
-    <result column="group_status" property="groupStatus" jdbcType="INTEGER" />
+    <result column="fast_status" property="fastStatus" jdbcType="TINYINT" />
+    <result column="vouchstatus" property="vouchstatus" jdbcType="TINYINT" />
+    <result column="group_status" property="groupStatus" jdbcType="TINYINT" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
-    <result column="award_status" property="awardStatus" jdbcType="INTEGER" />
-    <result column="award_false" property="awardFalse" jdbcType="INTEGER" />
+    <result column="award_status" property="awardStatus" jdbcType="TINYINT" />
+    <result column="award_false" property="awardFalse" jdbcType="TINYINT" />
     <result column="award_account" property="awardAccount" jdbcType="DECIMAL" />
     <result column="award_scale" property="awardScale" jdbcType="DECIMAL" />
     <result column="award_account_all" property="awardAccountAll" jdbcType="DECIMAL" />
-    <result column="open_account" property="openAccount" jdbcType="INTEGER" />
-    <result column="open_borrow" property="openBorrow" jdbcType="INTEGER" />
-    <result column="open_tender" property="openTender" jdbcType="INTEGER" />
-    <result column="open_credit" property="openCredit" jdbcType="INTEGER" />
-    <result column="comment_staus" property="commentStaus" jdbcType="INTEGER" />
+    <result column="open_account" property="openAccount" jdbcType="TINYINT" />
+    <result column="open_borrow" property="openBorrow" jdbcType="TINYINT" />
+    <result column="open_tender" property="openTender" jdbcType="TINYINT" />
+    <result column="open_credit" property="openCredit" jdbcType="TINYINT" />
+    <result column="comment_staus" property="commentStaus" jdbcType="TINYINT" />
     <result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
     <result column="comment_usertype" property="commentUsertype" jdbcType="VARCHAR" />
     <result column="borrow_pawn_app" property="borrowPawnApp" jdbcType="VARCHAR" />
@@ -144,7 +143,6 @@
     <result column="guarantee_type" property="guaranteeType" jdbcType="TINYINT" />
     <result column="project_type" property="projectType" jdbcType="TINYINT" />
     <result column="ontime" property="ontime" jdbcType="INTEGER" />
-    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="service_fee_rate" property="serviceFeeRate" jdbcType="VARCHAR" />
     <result column="manage_fee_rate" property="manageFeeRate" jdbcType="VARCHAR" />
     <result column="differential_rate" property="differentialRate" jdbcType="VARCHAR" />
@@ -153,7 +151,7 @@
     <result column="can_transaction_ios" property="canTransactionIos" jdbcType="VARCHAR" />
     <result column="can_transaction_android" property="canTransactionAndroid" jdbcType="VARCHAR" />
     <result column="operation_label" property="operationLabel" jdbcType="VARCHAR" />
-    <result column="company_or_personal" property="companyOrPersonal" jdbcType="VARCHAR" />
+    <result column="company_or_personal" property="companyOrPersonal" jdbcType="TINYINT" />
     <result column="borrow_manager" property="borrowManager" jdbcType="VARCHAR" />
     <result column="borrow_service" property="borrowService" jdbcType="VARCHAR" />
     <result column="borrow_manager_scale_end" property="borrowManagerScaleEnd" jdbcType="VARCHAR" />
@@ -186,6 +184,8 @@
     <result column="borrow_plan_selected" property="borrowPlanSelected" jdbcType="TINYINT" />
     <result column="borrow_repay_web_advance" property="borrowRepayWebAdvance" jdbcType="DECIMAL" />
     <result column="borrow_level" property="borrowLevel" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.DebtBorrowWithBLOBs" extends="BaseResultMap" >
     <result column="account_contents" property="accountContents" jdbcType="LONGVARCHAR" />
@@ -268,10 +268,10 @@
   <sql id="Base_Column_List" >
     id, user_id, applicant, repay_org_name, is_repay_org_flag, repay_org_user_id, `name`, 
     `status`, `order`, borrow_pic, hits, comment_count, litpic, flag, `type`, view_type, 
-    addtime, addip, amount_account, amount_type, cash_status, account, other_web_status, 
-    borrow_type, borrow_password, borrow_flag, borrow_status, borrow_full_status, borrow_nid, 
-    borrow_pre_nid, borrow_account_yes, borrow_account_wait, borrow_account_scale, borrow_use, 
-    borrow_style, borrow_period, borrow_period_roam, borrow_day, borrow_apr, borrow_frost_account, 
+    add_ip, amount_account, amount_type, cash_status, account, other_web_status, borrow_type, 
+    borrow_password, borrow_flag, borrow_status, borrow_full_status, borrow_nid, borrow_pre_nid, 
+    borrow_account_yes, borrow_account_wait, borrow_account_scale, borrow_use, borrow_style, 
+    borrow_period, borrow_period_roam, borrow_day, borrow_apr, borrow_frost_account, 
     borrow_frost_scale, borrow_frost_second, borrow_valid_time, borrow_success_time, 
     borrow_end_time, borrow_part_status, cancel_userid, cancel_status, cancel_time, cancel_remark, 
     cancel_contents, tender_account_min, tender_account_max, tender_times, tender_last_time, 
@@ -291,8 +291,8 @@
     borrow_pawn_type, borrow_pawn_time, borrow_pawn_value, borrow_pawn_xin, order_top, 
     verify_userid, verify_time, verify_remark, verify_contents, verify_status, reverify_userid, 
     reverify_time, reverify_remark, reverify_status, reverify_contents, upfiles_id, xmupfiles_id, 
-    dyupfiles_id, guarantee_type, project_type, ontime, updatetime, service_fee_rate, 
-    manage_fee_rate, differential_rate, can_transaction_pc, can_transaction_wei, can_transaction_ios, 
+    dyupfiles_id, guarantee_type, project_type, ontime, service_fee_rate, manage_fee_rate, 
+    differential_rate, can_transaction_pc, can_transaction_wei, can_transaction_ios, 
     can_transaction_android, operation_label, company_or_personal, borrow_manager, borrow_service, 
     borrow_manager_scale_end, borrow_full_time, recover_last_time, consume_id, verify_over_time, 
     borrow_user_name, disposal_price_estimate, disposal_period, disposal_channel, disposal_result, 
@@ -300,7 +300,7 @@
     disposal_ownership_category, disposal_asset_origin, disposal_attachment_info, borrow_increase_money, 
     borrow_interest_coupon, borrow_taste_money, bank_input_flag, booking_begin_time, 
     booking_end_time, booking_status, borrow_account_wait_appoint, borrow_account_scale_appoint, 
-    borrow_plan_selected, borrow_repay_web_advance, borrow_level
+    borrow_plan_selected, borrow_repay_web_advance, borrow_level, create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     account_contents, borrow_contents, borrow_upfiles, diya_contents, borrow_pawn_description, 
@@ -372,22 +372,22 @@
       `status`, `order`, borrow_pic, 
       hits, comment_count, litpic, 
       flag, `type`, view_type, 
-      addtime, addip, amount_account, 
-      amount_type, cash_status, account, 
-      other_web_status, borrow_type, borrow_password, 
-      borrow_flag, borrow_status, borrow_full_status, 
-      borrow_nid, borrow_pre_nid, borrow_account_yes, 
-      borrow_account_wait, borrow_account_scale, 
-      borrow_use, borrow_style, borrow_period, 
-      borrow_period_roam, borrow_day, borrow_apr, 
-      borrow_frost_account, borrow_frost_scale, borrow_frost_second, 
-      borrow_valid_time, borrow_success_time, borrow_end_time, 
-      borrow_part_status, cancel_userid, cancel_status, 
-      cancel_time, cancel_remark, cancel_contents, 
-      tender_account_min, tender_account_max, tender_times, 
-      tender_last_time, repay_advance_status, repay_advance_time, 
-      repay_advance_step, repay_account_all, repay_account_interest, 
-      repay_account_capital, repay_account_yes, repay_account_interest_yes, 
+      add_ip, amount_account, amount_type, 
+      cash_status, account, other_web_status, 
+      borrow_type, borrow_password, borrow_flag, 
+      borrow_status, borrow_full_status, borrow_nid, 
+      borrow_pre_nid, borrow_account_yes, borrow_account_wait, 
+      borrow_account_scale, borrow_use, borrow_style, 
+      borrow_period, borrow_period_roam, borrow_day, 
+      borrow_apr, borrow_frost_account, borrow_frost_scale, 
+      borrow_frost_second, borrow_valid_time, borrow_success_time, 
+      borrow_end_time, borrow_part_status, cancel_userid, 
+      cancel_status, cancel_time, cancel_remark, 
+      cancel_contents, tender_account_min, tender_account_max, 
+      tender_times, tender_last_time, repay_advance_status, 
+      repay_advance_time, repay_advance_step, repay_account_all, 
+      repay_account_interest, repay_account_capital, 
+      repay_account_yes, repay_account_interest_yes, 
       repay_account_capital_yes, repay_account_wait, 
       repay_account_interest_wait, repay_account_capital_wait, 
       repay_account_times, repay_month_account, repay_last_time, 
@@ -415,12 +415,11 @@
       reverify_userid, reverify_time, reverify_remark, 
       reverify_status, reverify_contents, upfiles_id, 
       xmupfiles_id, dyupfiles_id, guarantee_type, 
-      project_type, ontime, updatetime, 
-      service_fee_rate, manage_fee_rate, differential_rate, 
-      can_transaction_pc, can_transaction_wei, can_transaction_ios, 
-      can_transaction_android, operation_label, 
-      company_or_personal, borrow_manager, borrow_service, 
-      borrow_manager_scale_end, borrow_full_time, 
+      project_type, ontime, service_fee_rate, 
+      manage_fee_rate, differential_rate, can_transaction_pc, 
+      can_transaction_wei, can_transaction_ios, can_transaction_android, 
+      operation_label, company_or_personal, borrow_manager, 
+      borrow_service, borrow_manager_scale_end, borrow_full_time, 
       recover_last_time, consume_id, verify_over_time, 
       borrow_user_name, disposal_price_estimate, 
       disposal_period, disposal_channel, disposal_result, 
@@ -432,9 +431,9 @@
       bank_input_flag, booking_begin_time, booking_end_time, 
       booking_status, borrow_account_wait_appoint, 
       borrow_account_scale_appoint, borrow_plan_selected, 
-      borrow_repay_web_advance, borrow_level, account_contents, 
-      borrow_contents, borrow_upfiles, 
-      diya_contents, borrow_pawn_description, 
+      borrow_repay_web_advance, borrow_level, create_time, 
+      update_time, account_contents, borrow_contents, 
+      borrow_upfiles, diya_contents, borrow_pawn_description, 
       borrow_running_use, borrow_running_soruce, 
       borrow_measures_instit, borrow_measures_mort, 
       borrow_measures_mea, borrow_analysis_policy, 
@@ -444,43 +443,43 @@
       borrow_operating_process)
     values (#{userId,jdbcType=INTEGER}, #{applicant,jdbcType=VARCHAR}, #{repayOrgName,jdbcType=VARCHAR}, 
       #{isRepayOrgFlag,jdbcType=TINYINT}, #{repayOrgUserId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{order,jdbcType=INTEGER}, #{borrowPic,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{order,jdbcType=INTEGER}, #{borrowPic,jdbcType=VARCHAR}, 
       #{hits,jdbcType=INTEGER}, #{commentCount,jdbcType=INTEGER}, #{litpic,jdbcType=VARCHAR}, 
       #{flag,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{viewType,jdbcType=VARCHAR}, 
-      #{addtime,jdbcType=VARCHAR}, #{addip,jdbcType=VARCHAR}, #{amountAccount,jdbcType=DECIMAL}, 
-      #{amountType,jdbcType=VARCHAR}, #{cashStatus,jdbcType=INTEGER}, #{account,jdbcType=DECIMAL}, 
-      #{otherWebStatus,jdbcType=INTEGER}, #{borrowType,jdbcType=VARCHAR}, #{borrowPassword,jdbcType=VARCHAR}, 
-      #{borrowFlag,jdbcType=VARCHAR}, #{borrowStatus,jdbcType=INTEGER}, #{borrowFullStatus,jdbcType=INTEGER}, 
-      #{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=INTEGER}, #{borrowAccountYes,jdbcType=DECIMAL}, 
-      #{borrowAccountWait,jdbcType=DECIMAL}, #{borrowAccountScale,jdbcType=DECIMAL}, 
-      #{borrowUse,jdbcType=VARCHAR}, #{borrowStyle,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=INTEGER}, 
-      #{borrowPeriodRoam,jdbcType=INTEGER}, #{borrowDay,jdbcType=INTEGER}, #{borrowApr,jdbcType=DECIMAL}, 
-      #{borrowFrostAccount,jdbcType=DECIMAL}, #{borrowFrostScale,jdbcType=VARCHAR}, #{borrowFrostSecond,jdbcType=DECIMAL}, 
-      #{borrowValidTime,jdbcType=INTEGER}, #{borrowSuccessTime,jdbcType=INTEGER}, #{borrowEndTime,jdbcType=VARCHAR}, 
-      #{borrowPartStatus,jdbcType=INTEGER}, #{cancelUserid,jdbcType=INTEGER}, #{cancelStatus,jdbcType=INTEGER}, 
-      #{cancelTime,jdbcType=VARCHAR}, #{cancelRemark,jdbcType=VARCHAR}, #{cancelContents,jdbcType=VARCHAR}, 
-      #{tenderAccountMin,jdbcType=INTEGER}, #{tenderAccountMax,jdbcType=INTEGER}, #{tenderTimes,jdbcType=INTEGER}, 
-      #{tenderLastTime,jdbcType=VARCHAR}, #{repayAdvanceStatus,jdbcType=INTEGER}, #{repayAdvanceTime,jdbcType=VARCHAR}, 
-      #{repayAdvanceStep,jdbcType=INTEGER}, #{repayAccountAll,jdbcType=DECIMAL}, #{repayAccountInterest,jdbcType=DECIMAL}, 
-      #{repayAccountCapital,jdbcType=DECIMAL}, #{repayAccountYes,jdbcType=DECIMAL}, #{repayAccountInterestYes,jdbcType=DECIMAL}, 
+      #{addIp,jdbcType=VARCHAR}, #{amountAccount,jdbcType=DECIMAL}, #{amountType,jdbcType=VARCHAR}, 
+      #{cashStatus,jdbcType=TINYINT}, #{account,jdbcType=DECIMAL}, #{otherWebStatus,jdbcType=TINYINT}, 
+      #{borrowType,jdbcType=VARCHAR}, #{borrowPassword,jdbcType=VARCHAR}, #{borrowFlag,jdbcType=VARCHAR}, 
+      #{borrowStatus,jdbcType=INTEGER}, #{borrowFullStatus,jdbcType=TINYINT}, #{borrowNid,jdbcType=VARCHAR}, 
+      #{borrowPreNid,jdbcType=INTEGER}, #{borrowAccountYes,jdbcType=DECIMAL}, #{borrowAccountWait,jdbcType=DECIMAL}, 
+      #{borrowAccountScale,jdbcType=DECIMAL}, #{borrowUse,jdbcType=VARCHAR}, #{borrowStyle,jdbcType=VARCHAR}, 
+      #{borrowPeriod,jdbcType=INTEGER}, #{borrowPeriodRoam,jdbcType=INTEGER}, #{borrowDay,jdbcType=INTEGER}, 
+      #{borrowApr,jdbcType=DECIMAL}, #{borrowFrostAccount,jdbcType=DECIMAL}, #{borrowFrostScale,jdbcType=VARCHAR}, 
+      #{borrowFrostSecond,jdbcType=DECIMAL}, #{borrowValidTime,jdbcType=INTEGER}, #{borrowSuccessTime,jdbcType=INTEGER}, 
+      #{borrowEndTime,jdbcType=VARCHAR}, #{borrowPartStatus,jdbcType=TINYINT}, #{cancelUserid,jdbcType=INTEGER}, 
+      #{cancelStatus,jdbcType=TINYINT}, #{cancelTime,jdbcType=VARCHAR}, #{cancelRemark,jdbcType=VARCHAR}, 
+      #{cancelContents,jdbcType=VARCHAR}, #{tenderAccountMin,jdbcType=INTEGER}, #{tenderAccountMax,jdbcType=INTEGER}, 
+      #{tenderTimes,jdbcType=INTEGER}, #{tenderLastTime,jdbcType=VARCHAR}, #{repayAdvanceStatus,jdbcType=TINYINT}, 
+      #{repayAdvanceTime,jdbcType=VARCHAR}, #{repayAdvanceStep,jdbcType=TINYINT}, #{repayAccountAll,jdbcType=DECIMAL}, 
+      #{repayAccountInterest,jdbcType=DECIMAL}, #{repayAccountCapital,jdbcType=DECIMAL}, 
+      #{repayAccountYes,jdbcType=DECIMAL}, #{repayAccountInterestYes,jdbcType=DECIMAL}, 
       #{repayAccountCapitalYes,jdbcType=DECIMAL}, #{repayAccountWait,jdbcType=DECIMAL}, 
       #{repayAccountInterestWait,jdbcType=DECIMAL}, #{repayAccountCapitalWait,jdbcType=DECIMAL}, 
       #{repayAccountTimes,jdbcType=INTEGER}, #{repayMonthAccount,jdbcType=INTEGER}, #{repayLastTime,jdbcType=VARCHAR}, 
       #{repayEachTime,jdbcType=VARCHAR}, #{repayNextTime,jdbcType=INTEGER}, #{repayNextAccount,jdbcType=DECIMAL}, 
-      #{repayTimes,jdbcType=INTEGER}, #{repayFullStatus,jdbcType=INTEGER}, #{repayFeeNormal,jdbcType=DECIMAL}, 
+      #{repayTimes,jdbcType=INTEGER}, #{repayFullStatus,jdbcType=TINYINT}, #{repayFeeNormal,jdbcType=DECIMAL}, 
       #{repayFeeAdvance,jdbcType=DECIMAL}, #{repayFeeLate,jdbcType=DECIMAL}, #{lateInterest,jdbcType=DECIMAL}, 
-      #{lateForfeit,jdbcType=DECIMAL}, #{vouchStatus,jdbcType=INTEGER}, #{vouchAdvanceStatus,jdbcType=INTEGER}, 
-      #{vouchUserStatus,jdbcType=INTEGER}, #{vouchUsers,jdbcType=VARCHAR}, #{vouchAccount,jdbcType=DECIMAL}, 
+      #{lateForfeit,jdbcType=DECIMAL}, #{vouchStatus,jdbcType=TINYINT}, #{vouchAdvanceStatus,jdbcType=TINYINT}, 
+      #{vouchUserStatus,jdbcType=TINYINT}, #{vouchUsers,jdbcType=VARCHAR}, #{vouchAccount,jdbcType=DECIMAL}, 
       #{vouchAccountYes,jdbcType=DECIMAL}, #{vouchAccountWait,jdbcType=DECIMAL}, #{vouchAccountScale,jdbcType=DECIMAL}, 
       #{vouchTimes,jdbcType=INTEGER}, #{vouchAwardStatus,jdbcType=INTEGER}, #{vouchAwardScale,jdbcType=DECIMAL}, 
       #{vouchAwardAccount,jdbcType=DECIMAL}, #{voucherName,jdbcType=VARCHAR}, #{voucherLianxi,jdbcType=VARCHAR}, 
       #{voucherAtt,jdbcType=VARCHAR}, #{vouchjgName,jdbcType=VARCHAR}, #{vouchjgLianxi,jdbcType=VARCHAR}, 
-      #{vouchjgJs,jdbcType=VARCHAR}, #{vouchjgXy,jdbcType=VARCHAR}, #{fastStatus,jdbcType=INTEGER}, 
-      #{vouchstatus,jdbcType=INTEGER}, #{groupStatus,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, 
-      #{awardStatus,jdbcType=INTEGER}, #{awardFalse,jdbcType=INTEGER}, #{awardAccount,jdbcType=DECIMAL}, 
-      #{awardScale,jdbcType=DECIMAL}, #{awardAccountAll,jdbcType=DECIMAL}, #{openAccount,jdbcType=INTEGER}, 
-      #{openBorrow,jdbcType=INTEGER}, #{openTender,jdbcType=INTEGER}, #{openCredit,jdbcType=INTEGER}, 
-      #{commentStaus,jdbcType=INTEGER}, #{commentTimes,jdbcType=INTEGER}, #{commentUsertype,jdbcType=VARCHAR}, 
+      #{vouchjgJs,jdbcType=VARCHAR}, #{vouchjgXy,jdbcType=VARCHAR}, #{fastStatus,jdbcType=TINYINT}, 
+      #{vouchstatus,jdbcType=TINYINT}, #{groupStatus,jdbcType=TINYINT}, #{groupId,jdbcType=INTEGER}, 
+      #{awardStatus,jdbcType=TINYINT}, #{awardFalse,jdbcType=TINYINT}, #{awardAccount,jdbcType=DECIMAL}, 
+      #{awardScale,jdbcType=DECIMAL}, #{awardAccountAll,jdbcType=DECIMAL}, #{openAccount,jdbcType=TINYINT}, 
+      #{openBorrow,jdbcType=TINYINT}, #{openTender,jdbcType=TINYINT}, #{openCredit,jdbcType=TINYINT}, 
+      #{commentStaus,jdbcType=TINYINT}, #{commentTimes,jdbcType=INTEGER}, #{commentUsertype,jdbcType=VARCHAR}, 
       #{borrowPawnApp,jdbcType=VARCHAR}, #{borrowPawnAppUrl,jdbcType=VARCHAR}, #{borrowPawnAuth,jdbcType=VARCHAR}, 
       #{borrowPawnAuthUrl,jdbcType=VARCHAR}, #{borrowPawnFormalities,jdbcType=VARCHAR}, 
       #{borrowPawnFormalitiesUrl,jdbcType=VARCHAR}, #{borrowPawnType,jdbcType=VARCHAR}, 
@@ -490,12 +489,11 @@
       #{reverifyUserid,jdbcType=VARCHAR}, #{reverifyTime,jdbcType=VARCHAR}, #{reverifyRemark,jdbcType=VARCHAR}, 
       #{reverifyStatus,jdbcType=INTEGER}, #{reverifyContents,jdbcType=VARCHAR}, #{upfilesId,jdbcType=VARCHAR}, 
       #{xmupfilesId,jdbcType=VARCHAR}, #{dyupfilesId,jdbcType=VARCHAR}, #{guaranteeType,jdbcType=TINYINT}, 
-      #{projectType,jdbcType=TINYINT}, #{ontime,jdbcType=INTEGER}, #{updatetime,jdbcType=TIMESTAMP}, 
-      #{serviceFeeRate,jdbcType=VARCHAR}, #{manageFeeRate,jdbcType=VARCHAR}, #{differentialRate,jdbcType=VARCHAR}, 
-      #{canTransactionPc,jdbcType=VARCHAR}, #{canTransactionWei,jdbcType=VARCHAR}, #{canTransactionIos,jdbcType=VARCHAR}, 
-      #{canTransactionAndroid,jdbcType=VARCHAR}, #{operationLabel,jdbcType=VARCHAR}, 
-      #{companyOrPersonal,jdbcType=VARCHAR}, #{borrowManager,jdbcType=VARCHAR}, #{borrowService,jdbcType=VARCHAR}, 
-      #{borrowManagerScaleEnd,jdbcType=VARCHAR}, #{borrowFullTime,jdbcType=INTEGER}, 
+      #{projectType,jdbcType=TINYINT}, #{ontime,jdbcType=INTEGER}, #{serviceFeeRate,jdbcType=VARCHAR}, 
+      #{manageFeeRate,jdbcType=VARCHAR}, #{differentialRate,jdbcType=VARCHAR}, #{canTransactionPc,jdbcType=VARCHAR}, 
+      #{canTransactionWei,jdbcType=VARCHAR}, #{canTransactionIos,jdbcType=VARCHAR}, #{canTransactionAndroid,jdbcType=VARCHAR}, 
+      #{operationLabel,jdbcType=VARCHAR}, #{companyOrPersonal,jdbcType=TINYINT}, #{borrowManager,jdbcType=VARCHAR}, 
+      #{borrowService,jdbcType=VARCHAR}, #{borrowManagerScaleEnd,jdbcType=VARCHAR}, #{borrowFullTime,jdbcType=INTEGER}, 
       #{recoverLastTime,jdbcType=INTEGER}, #{consumeId,jdbcType=VARCHAR}, #{verifyOverTime,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{disposalPriceEstimate,jdbcType=VARCHAR}, 
       #{disposalPeriod,jdbcType=VARCHAR}, #{disposalChannel,jdbcType=VARCHAR}, #{disposalResult,jdbcType=VARCHAR}, 
@@ -507,9 +505,9 @@
       #{bankInputFlag,jdbcType=TINYINT}, #{bookingBeginTime,jdbcType=INTEGER}, #{bookingEndTime,jdbcType=INTEGER}, 
       #{bookingStatus,jdbcType=TINYINT}, #{borrowAccountWaitAppoint,jdbcType=DECIMAL}, 
       #{borrowAccountScaleAppoint,jdbcType=DECIMAL}, #{borrowPlanSelected,jdbcType=TINYINT}, 
-      #{borrowRepayWebAdvance,jdbcType=DECIMAL}, #{borrowLevel,jdbcType=VARCHAR}, #{accountContents,jdbcType=LONGVARCHAR}, 
-      #{borrowContents,jdbcType=LONGVARCHAR}, #{borrowUpfiles,jdbcType=LONGVARCHAR}, 
-      #{diyaContents,jdbcType=LONGVARCHAR}, #{borrowPawnDescription,jdbcType=LONGVARCHAR}, 
+      #{borrowRepayWebAdvance,jdbcType=DECIMAL}, #{borrowLevel,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{accountContents,jdbcType=LONGVARCHAR}, #{borrowContents,jdbcType=LONGVARCHAR}, 
+      #{borrowUpfiles,jdbcType=LONGVARCHAR}, #{diyaContents,jdbcType=LONGVARCHAR}, #{borrowPawnDescription,jdbcType=LONGVARCHAR}, 
       #{borrowRunningUse,jdbcType=LONGVARCHAR}, #{borrowRunningSoruce,jdbcType=LONGVARCHAR}, 
       #{borrowMeasuresInstit,jdbcType=LONGVARCHAR}, #{borrowMeasuresMort,jdbcType=LONGVARCHAR}, 
       #{borrowMeasuresMea,jdbcType=LONGVARCHAR}, #{borrowAnalysisPolicy,jdbcType=LONGVARCHAR}, 
@@ -569,11 +567,8 @@
       <if test="viewType != null" >
         view_type,
       </if>
-      <if test="addtime != null" >
-        addtime,
-      </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="amountAccount != null" >
         amount_account,
@@ -947,9 +942,6 @@
       <if test="ontime != null" >
         ontime,
       </if>
-      <if test="updatetime != null" >
-        updatetime,
-      </if>
       <if test="serviceFeeRate != null" >
         service_fee_rate,
       </if>
@@ -1073,6 +1065,12 @@
       <if test="borrowLevel != null" >
         borrow_level,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
       <if test="accountContents != null" >
         account_contents,
       </if>
@@ -1148,7 +1146,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="order != null" >
         #{order,jdbcType=INTEGER},
@@ -1174,11 +1172,8 @@
       <if test="viewType != null" >
         #{viewType,jdbcType=VARCHAR},
       </if>
-      <if test="addtime != null" >
-        #{addtime,jdbcType=VARCHAR},
-      </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="amountAccount != null" >
         #{amountAccount,jdbcType=DECIMAL},
@@ -1187,13 +1182,13 @@
         #{amountType,jdbcType=VARCHAR},
       </if>
       <if test="cashStatus != null" >
-        #{cashStatus,jdbcType=INTEGER},
+        #{cashStatus,jdbcType=TINYINT},
       </if>
       <if test="account != null" >
         #{account,jdbcType=DECIMAL},
       </if>
       <if test="otherWebStatus != null" >
-        #{otherWebStatus,jdbcType=INTEGER},
+        #{otherWebStatus,jdbcType=TINYINT},
       </if>
       <if test="borrowType != null" >
         #{borrowType,jdbcType=VARCHAR},
@@ -1208,7 +1203,7 @@
         #{borrowStatus,jdbcType=INTEGER},
       </if>
       <if test="borrowFullStatus != null" >
-        #{borrowFullStatus,jdbcType=INTEGER},
+        #{borrowFullStatus,jdbcType=TINYINT},
       </if>
       <if test="borrowNid != null" >
         #{borrowNid,jdbcType=VARCHAR},
@@ -1262,13 +1257,13 @@
         #{borrowEndTime,jdbcType=VARCHAR},
       </if>
       <if test="borrowPartStatus != null" >
-        #{borrowPartStatus,jdbcType=INTEGER},
+        #{borrowPartStatus,jdbcType=TINYINT},
       </if>
       <if test="cancelUserid != null" >
         #{cancelUserid,jdbcType=INTEGER},
       </if>
       <if test="cancelStatus != null" >
-        #{cancelStatus,jdbcType=INTEGER},
+        #{cancelStatus,jdbcType=TINYINT},
       </if>
       <if test="cancelTime != null" >
         #{cancelTime,jdbcType=VARCHAR},
@@ -1292,13 +1287,13 @@
         #{tenderLastTime,jdbcType=VARCHAR},
       </if>
       <if test="repayAdvanceStatus != null" >
-        #{repayAdvanceStatus,jdbcType=INTEGER},
+        #{repayAdvanceStatus,jdbcType=TINYINT},
       </if>
       <if test="repayAdvanceTime != null" >
         #{repayAdvanceTime,jdbcType=VARCHAR},
       </if>
       <if test="repayAdvanceStep != null" >
-        #{repayAdvanceStep,jdbcType=INTEGER},
+        #{repayAdvanceStep,jdbcType=TINYINT},
       </if>
       <if test="repayAccountAll != null" >
         #{repayAccountAll,jdbcType=DECIMAL},
@@ -1349,7 +1344,7 @@
         #{repayTimes,jdbcType=INTEGER},
       </if>
       <if test="repayFullStatus != null" >
-        #{repayFullStatus,jdbcType=INTEGER},
+        #{repayFullStatus,jdbcType=TINYINT},
       </if>
       <if test="repayFeeNormal != null" >
         #{repayFeeNormal,jdbcType=DECIMAL},
@@ -1367,13 +1362,13 @@
         #{lateForfeit,jdbcType=DECIMAL},
       </if>
       <if test="vouchStatus != null" >
-        #{vouchStatus,jdbcType=INTEGER},
+        #{vouchStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchAdvanceStatus != null" >
-        #{vouchAdvanceStatus,jdbcType=INTEGER},
+        #{vouchAdvanceStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchUserStatus != null" >
-        #{vouchUserStatus,jdbcType=INTEGER},
+        #{vouchUserStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchUsers != null" >
         #{vouchUsers,jdbcType=VARCHAR},
@@ -1424,22 +1419,22 @@
         #{vouchjgXy,jdbcType=VARCHAR},
       </if>
       <if test="fastStatus != null" >
-        #{fastStatus,jdbcType=INTEGER},
+        #{fastStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchstatus != null" >
-        #{vouchstatus,jdbcType=INTEGER},
+        #{vouchstatus,jdbcType=TINYINT},
       </if>
       <if test="groupStatus != null" >
-        #{groupStatus,jdbcType=INTEGER},
+        #{groupStatus,jdbcType=TINYINT},
       </if>
       <if test="groupId != null" >
         #{groupId,jdbcType=INTEGER},
       </if>
       <if test="awardStatus != null" >
-        #{awardStatus,jdbcType=INTEGER},
+        #{awardStatus,jdbcType=TINYINT},
       </if>
       <if test="awardFalse != null" >
-        #{awardFalse,jdbcType=INTEGER},
+        #{awardFalse,jdbcType=TINYINT},
       </if>
       <if test="awardAccount != null" >
         #{awardAccount,jdbcType=DECIMAL},
@@ -1451,19 +1446,19 @@
         #{awardAccountAll,jdbcType=DECIMAL},
       </if>
       <if test="openAccount != null" >
-        #{openAccount,jdbcType=INTEGER},
+        #{openAccount,jdbcType=TINYINT},
       </if>
       <if test="openBorrow != null" >
-        #{openBorrow,jdbcType=INTEGER},
+        #{openBorrow,jdbcType=TINYINT},
       </if>
       <if test="openTender != null" >
-        #{openTender,jdbcType=INTEGER},
+        #{openTender,jdbcType=TINYINT},
       </if>
       <if test="openCredit != null" >
-        #{openCredit,jdbcType=INTEGER},
+        #{openCredit,jdbcType=TINYINT},
       </if>
       <if test="commentStaus != null" >
-        #{commentStaus,jdbcType=INTEGER},
+        #{commentStaus,jdbcType=TINYINT},
       </if>
       <if test="commentTimes != null" >
         #{commentTimes,jdbcType=INTEGER},
@@ -1552,9 +1547,6 @@
       <if test="ontime != null" >
         #{ontime,jdbcType=INTEGER},
       </if>
-      <if test="updatetime != null" >
-        #{updatetime,jdbcType=TIMESTAMP},
-      </if>
       <if test="serviceFeeRate != null" >
         #{serviceFeeRate,jdbcType=VARCHAR},
       </if>
@@ -1580,7 +1572,7 @@
         #{operationLabel,jdbcType=VARCHAR},
       </if>
       <if test="companyOrPersonal != null" >
-        #{companyOrPersonal,jdbcType=VARCHAR},
+        #{companyOrPersonal,jdbcType=TINYINT},
       </if>
       <if test="borrowManager != null" >
         #{borrowManager,jdbcType=VARCHAR},
@@ -1678,6 +1670,12 @@
       <if test="borrowLevel != null" >
         #{borrowLevel,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="accountContents != null" >
         #{accountContents,jdbcType=LONGVARCHAR},
       </if>
@@ -1765,7 +1763,7 @@
         `name` = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.order != null" >
         `order` = #{record.order,jdbcType=INTEGER},
@@ -1791,11 +1789,8 @@
       <if test="record.viewType != null" >
         view_type = #{record.viewType,jdbcType=VARCHAR},
       </if>
-      <if test="record.addtime != null" >
-        addtime = #{record.addtime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.amountAccount != null" >
         amount_account = #{record.amountAccount,jdbcType=DECIMAL},
@@ -1804,13 +1799,13 @@
         amount_type = #{record.amountType,jdbcType=VARCHAR},
       </if>
       <if test="record.cashStatus != null" >
-        cash_status = #{record.cashStatus,jdbcType=INTEGER},
+        cash_status = #{record.cashStatus,jdbcType=TINYINT},
       </if>
       <if test="record.account != null" >
         account = #{record.account,jdbcType=DECIMAL},
       </if>
       <if test="record.otherWebStatus != null" >
-        other_web_status = #{record.otherWebStatus,jdbcType=INTEGER},
+        other_web_status = #{record.otherWebStatus,jdbcType=TINYINT},
       </if>
       <if test="record.borrowType != null" >
         borrow_type = #{record.borrowType,jdbcType=VARCHAR},
@@ -1825,7 +1820,7 @@
         borrow_status = #{record.borrowStatus,jdbcType=INTEGER},
       </if>
       <if test="record.borrowFullStatus != null" >
-        borrow_full_status = #{record.borrowFullStatus,jdbcType=INTEGER},
+        borrow_full_status = #{record.borrowFullStatus,jdbcType=TINYINT},
       </if>
       <if test="record.borrowNid != null" >
         borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
@@ -1879,13 +1874,13 @@
         borrow_end_time = #{record.borrowEndTime,jdbcType=VARCHAR},
       </if>
       <if test="record.borrowPartStatus != null" >
-        borrow_part_status = #{record.borrowPartStatus,jdbcType=INTEGER},
+        borrow_part_status = #{record.borrowPartStatus,jdbcType=TINYINT},
       </if>
       <if test="record.cancelUserid != null" >
         cancel_userid = #{record.cancelUserid,jdbcType=INTEGER},
       </if>
       <if test="record.cancelStatus != null" >
-        cancel_status = #{record.cancelStatus,jdbcType=INTEGER},
+        cancel_status = #{record.cancelStatus,jdbcType=TINYINT},
       </if>
       <if test="record.cancelTime != null" >
         cancel_time = #{record.cancelTime,jdbcType=VARCHAR},
@@ -1909,13 +1904,13 @@
         tender_last_time = #{record.tenderLastTime,jdbcType=VARCHAR},
       </if>
       <if test="record.repayAdvanceStatus != null" >
-        repay_advance_status = #{record.repayAdvanceStatus,jdbcType=INTEGER},
+        repay_advance_status = #{record.repayAdvanceStatus,jdbcType=TINYINT},
       </if>
       <if test="record.repayAdvanceTime != null" >
         repay_advance_time = #{record.repayAdvanceTime,jdbcType=VARCHAR},
       </if>
       <if test="record.repayAdvanceStep != null" >
-        repay_advance_step = #{record.repayAdvanceStep,jdbcType=INTEGER},
+        repay_advance_step = #{record.repayAdvanceStep,jdbcType=TINYINT},
       </if>
       <if test="record.repayAccountAll != null" >
         repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
@@ -1966,7 +1961,7 @@
         repay_times = #{record.repayTimes,jdbcType=INTEGER},
       </if>
       <if test="record.repayFullStatus != null" >
-        repay_full_status = #{record.repayFullStatus,jdbcType=INTEGER},
+        repay_full_status = #{record.repayFullStatus,jdbcType=TINYINT},
       </if>
       <if test="record.repayFeeNormal != null" >
         repay_fee_normal = #{record.repayFeeNormal,jdbcType=DECIMAL},
@@ -1984,13 +1979,13 @@
         late_forfeit = #{record.lateForfeit,jdbcType=DECIMAL},
       </if>
       <if test="record.vouchStatus != null" >
-        vouch_status = #{record.vouchStatus,jdbcType=INTEGER},
+        vouch_status = #{record.vouchStatus,jdbcType=TINYINT},
       </if>
       <if test="record.vouchAdvanceStatus != null" >
-        vouch_advance_status = #{record.vouchAdvanceStatus,jdbcType=INTEGER},
+        vouch_advance_status = #{record.vouchAdvanceStatus,jdbcType=TINYINT},
       </if>
       <if test="record.vouchUserStatus != null" >
-        vouch_user_status = #{record.vouchUserStatus,jdbcType=INTEGER},
+        vouch_user_status = #{record.vouchUserStatus,jdbcType=TINYINT},
       </if>
       <if test="record.vouchUsers != null" >
         vouch_users = #{record.vouchUsers,jdbcType=VARCHAR},
@@ -2041,22 +2036,22 @@
         vouchjg_xy = #{record.vouchjgXy,jdbcType=VARCHAR},
       </if>
       <if test="record.fastStatus != null" >
-        fast_status = #{record.fastStatus,jdbcType=INTEGER},
+        fast_status = #{record.fastStatus,jdbcType=TINYINT},
       </if>
       <if test="record.vouchstatus != null" >
-        vouchstatus = #{record.vouchstatus,jdbcType=INTEGER},
+        vouchstatus = #{record.vouchstatus,jdbcType=TINYINT},
       </if>
       <if test="record.groupStatus != null" >
-        group_status = #{record.groupStatus,jdbcType=INTEGER},
+        group_status = #{record.groupStatus,jdbcType=TINYINT},
       </if>
       <if test="record.groupId != null" >
         group_id = #{record.groupId,jdbcType=INTEGER},
       </if>
       <if test="record.awardStatus != null" >
-        award_status = #{record.awardStatus,jdbcType=INTEGER},
+        award_status = #{record.awardStatus,jdbcType=TINYINT},
       </if>
       <if test="record.awardFalse != null" >
-        award_false = #{record.awardFalse,jdbcType=INTEGER},
+        award_false = #{record.awardFalse,jdbcType=TINYINT},
       </if>
       <if test="record.awardAccount != null" >
         award_account = #{record.awardAccount,jdbcType=DECIMAL},
@@ -2068,19 +2063,19 @@
         award_account_all = #{record.awardAccountAll,jdbcType=DECIMAL},
       </if>
       <if test="record.openAccount != null" >
-        open_account = #{record.openAccount,jdbcType=INTEGER},
+        open_account = #{record.openAccount,jdbcType=TINYINT},
       </if>
       <if test="record.openBorrow != null" >
-        open_borrow = #{record.openBorrow,jdbcType=INTEGER},
+        open_borrow = #{record.openBorrow,jdbcType=TINYINT},
       </if>
       <if test="record.openTender != null" >
-        open_tender = #{record.openTender,jdbcType=INTEGER},
+        open_tender = #{record.openTender,jdbcType=TINYINT},
       </if>
       <if test="record.openCredit != null" >
-        open_credit = #{record.openCredit,jdbcType=INTEGER},
+        open_credit = #{record.openCredit,jdbcType=TINYINT},
       </if>
       <if test="record.commentStaus != null" >
-        comment_staus = #{record.commentStaus,jdbcType=INTEGER},
+        comment_staus = #{record.commentStaus,jdbcType=TINYINT},
       </if>
       <if test="record.commentTimes != null" >
         comment_times = #{record.commentTimes,jdbcType=INTEGER},
@@ -2169,9 +2164,6 @@
       <if test="record.ontime != null" >
         ontime = #{record.ontime,jdbcType=INTEGER},
       </if>
-      <if test="record.updatetime != null" >
-        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.serviceFeeRate != null" >
         service_fee_rate = #{record.serviceFeeRate,jdbcType=VARCHAR},
       </if>
@@ -2197,7 +2189,7 @@
         operation_label = #{record.operationLabel,jdbcType=VARCHAR},
       </if>
       <if test="record.companyOrPersonal != null" >
-        company_or_personal = #{record.companyOrPersonal,jdbcType=VARCHAR},
+        company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
       </if>
       <if test="record.borrowManager != null" >
         borrow_manager = #{record.borrowManager,jdbcType=VARCHAR},
@@ -2295,6 +2287,12 @@
       <if test="record.borrowLevel != null" >
         borrow_level = #{record.borrowLevel,jdbcType=VARCHAR},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.accountContents != null" >
         account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
       </if>
@@ -2363,7 +2361,7 @@
       is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
       repay_org_user_id = #{record.repayOrgUserId,jdbcType=INTEGER},
       `name` = #{record.name,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       `order` = #{record.order,jdbcType=INTEGER},
       borrow_pic = #{record.borrowPic,jdbcType=VARCHAR},
       hits = #{record.hits,jdbcType=INTEGER},
@@ -2372,18 +2370,17 @@
       flag = #{record.flag,jdbcType=VARCHAR},
       `type` = #{record.type,jdbcType=VARCHAR},
       view_type = #{record.viewType,jdbcType=VARCHAR},
-      addtime = #{record.addtime,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       amount_account = #{record.amountAccount,jdbcType=DECIMAL},
       amount_type = #{record.amountType,jdbcType=VARCHAR},
-      cash_status = #{record.cashStatus,jdbcType=INTEGER},
+      cash_status = #{record.cashStatus,jdbcType=TINYINT},
       account = #{record.account,jdbcType=DECIMAL},
-      other_web_status = #{record.otherWebStatus,jdbcType=INTEGER},
+      other_web_status = #{record.otherWebStatus,jdbcType=TINYINT},
       borrow_type = #{record.borrowType,jdbcType=VARCHAR},
       borrow_password = #{record.borrowPassword,jdbcType=VARCHAR},
       borrow_flag = #{record.borrowFlag,jdbcType=VARCHAR},
       borrow_status = #{record.borrowStatus,jdbcType=INTEGER},
-      borrow_full_status = #{record.borrowFullStatus,jdbcType=INTEGER},
+      borrow_full_status = #{record.borrowFullStatus,jdbcType=TINYINT},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       borrow_pre_nid = #{record.borrowPreNid,jdbcType=INTEGER},
       borrow_account_yes = #{record.borrowAccountYes,jdbcType=DECIMAL},
@@ -2401,9 +2398,9 @@
       borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
       borrow_success_time = #{record.borrowSuccessTime,jdbcType=INTEGER},
       borrow_end_time = #{record.borrowEndTime,jdbcType=VARCHAR},
-      borrow_part_status = #{record.borrowPartStatus,jdbcType=INTEGER},
+      borrow_part_status = #{record.borrowPartStatus,jdbcType=TINYINT},
       cancel_userid = #{record.cancelUserid,jdbcType=INTEGER},
-      cancel_status = #{record.cancelStatus,jdbcType=INTEGER},
+      cancel_status = #{record.cancelStatus,jdbcType=TINYINT},
       cancel_time = #{record.cancelTime,jdbcType=VARCHAR},
       cancel_remark = #{record.cancelRemark,jdbcType=VARCHAR},
       cancel_contents = #{record.cancelContents,jdbcType=VARCHAR},
@@ -2411,9 +2408,9 @@
       tender_account_max = #{record.tenderAccountMax,jdbcType=INTEGER},
       tender_times = #{record.tenderTimes,jdbcType=INTEGER},
       tender_last_time = #{record.tenderLastTime,jdbcType=VARCHAR},
-      repay_advance_status = #{record.repayAdvanceStatus,jdbcType=INTEGER},
+      repay_advance_status = #{record.repayAdvanceStatus,jdbcType=TINYINT},
       repay_advance_time = #{record.repayAdvanceTime,jdbcType=VARCHAR},
-      repay_advance_step = #{record.repayAdvanceStep,jdbcType=INTEGER},
+      repay_advance_step = #{record.repayAdvanceStep,jdbcType=TINYINT},
       repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
       repay_account_interest = #{record.repayAccountInterest,jdbcType=DECIMAL},
       repay_account_capital = #{record.repayAccountCapital,jdbcType=DECIMAL},
@@ -2430,15 +2427,15 @@
       repay_next_time = #{record.repayNextTime,jdbcType=INTEGER},
       repay_next_account = #{record.repayNextAccount,jdbcType=DECIMAL},
       repay_times = #{record.repayTimes,jdbcType=INTEGER},
-      repay_full_status = #{record.repayFullStatus,jdbcType=INTEGER},
+      repay_full_status = #{record.repayFullStatus,jdbcType=TINYINT},
       repay_fee_normal = #{record.repayFeeNormal,jdbcType=DECIMAL},
       repay_fee_advance = #{record.repayFeeAdvance,jdbcType=DECIMAL},
       repay_fee_late = #{record.repayFeeLate,jdbcType=DECIMAL},
       late_interest = #{record.lateInterest,jdbcType=DECIMAL},
       late_forfeit = #{record.lateForfeit,jdbcType=DECIMAL},
-      vouch_status = #{record.vouchStatus,jdbcType=INTEGER},
-      vouch_advance_status = #{record.vouchAdvanceStatus,jdbcType=INTEGER},
-      vouch_user_status = #{record.vouchUserStatus,jdbcType=INTEGER},
+      vouch_status = #{record.vouchStatus,jdbcType=TINYINT},
+      vouch_advance_status = #{record.vouchAdvanceStatus,jdbcType=TINYINT},
+      vouch_user_status = #{record.vouchUserStatus,jdbcType=TINYINT},
       vouch_users = #{record.vouchUsers,jdbcType=VARCHAR},
       vouch_account = #{record.vouchAccount,jdbcType=DECIMAL},
       vouch_account_yes = #{record.vouchAccountYes,jdbcType=DECIMAL},
@@ -2455,20 +2452,20 @@
       vouchjg_lianxi = #{record.vouchjgLianxi,jdbcType=VARCHAR},
       vouchjg_js = #{record.vouchjgJs,jdbcType=VARCHAR},
       vouchjg_xy = #{record.vouchjgXy,jdbcType=VARCHAR},
-      fast_status = #{record.fastStatus,jdbcType=INTEGER},
-      vouchstatus = #{record.vouchstatus,jdbcType=INTEGER},
-      group_status = #{record.groupStatus,jdbcType=INTEGER},
+      fast_status = #{record.fastStatus,jdbcType=TINYINT},
+      vouchstatus = #{record.vouchstatus,jdbcType=TINYINT},
+      group_status = #{record.groupStatus,jdbcType=TINYINT},
       group_id = #{record.groupId,jdbcType=INTEGER},
-      award_status = #{record.awardStatus,jdbcType=INTEGER},
-      award_false = #{record.awardFalse,jdbcType=INTEGER},
+      award_status = #{record.awardStatus,jdbcType=TINYINT},
+      award_false = #{record.awardFalse,jdbcType=TINYINT},
       award_account = #{record.awardAccount,jdbcType=DECIMAL},
       award_scale = #{record.awardScale,jdbcType=DECIMAL},
       award_account_all = #{record.awardAccountAll,jdbcType=DECIMAL},
-      open_account = #{record.openAccount,jdbcType=INTEGER},
-      open_borrow = #{record.openBorrow,jdbcType=INTEGER},
-      open_tender = #{record.openTender,jdbcType=INTEGER},
-      open_credit = #{record.openCredit,jdbcType=INTEGER},
-      comment_staus = #{record.commentStaus,jdbcType=INTEGER},
+      open_account = #{record.openAccount,jdbcType=TINYINT},
+      open_borrow = #{record.openBorrow,jdbcType=TINYINT},
+      open_tender = #{record.openTender,jdbcType=TINYINT},
+      open_credit = #{record.openCredit,jdbcType=TINYINT},
+      comment_staus = #{record.commentStaus,jdbcType=TINYINT},
       comment_times = #{record.commentTimes,jdbcType=INTEGER},
       comment_usertype = #{record.commentUsertype,jdbcType=VARCHAR},
       borrow_pawn_app = #{record.borrowPawnApp,jdbcType=VARCHAR},
@@ -2498,7 +2495,6 @@
       guarantee_type = #{record.guaranteeType,jdbcType=TINYINT},
       project_type = #{record.projectType,jdbcType=TINYINT},
       ontime = #{record.ontime,jdbcType=INTEGER},
-      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
       service_fee_rate = #{record.serviceFeeRate,jdbcType=VARCHAR},
       manage_fee_rate = #{record.manageFeeRate,jdbcType=VARCHAR},
       differential_rate = #{record.differentialRate,jdbcType=VARCHAR},
@@ -2507,7 +2503,7 @@
       can_transaction_ios = #{record.canTransactionIos,jdbcType=VARCHAR},
       can_transaction_android = #{record.canTransactionAndroid,jdbcType=VARCHAR},
       operation_label = #{record.operationLabel,jdbcType=VARCHAR},
-      company_or_personal = #{record.companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
       borrow_manager = #{record.borrowManager,jdbcType=VARCHAR},
       borrow_service = #{record.borrowService,jdbcType=VARCHAR},
       borrow_manager_scale_end = #{record.borrowManagerScaleEnd,jdbcType=VARCHAR},
@@ -2540,6 +2536,8 @@
       borrow_plan_selected = #{record.borrowPlanSelected,jdbcType=TINYINT},
       borrow_repay_web_advance = #{record.borrowRepayWebAdvance,jdbcType=DECIMAL},
       borrow_level = #{record.borrowLevel,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
       borrow_contents = #{record.borrowContents,jdbcType=LONGVARCHAR},
       borrow_upfiles = #{record.borrowUpfiles,jdbcType=LONGVARCHAR},
@@ -2571,7 +2569,7 @@
       is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
       repay_org_user_id = #{record.repayOrgUserId,jdbcType=INTEGER},
       `name` = #{record.name,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       `order` = #{record.order,jdbcType=INTEGER},
       borrow_pic = #{record.borrowPic,jdbcType=VARCHAR},
       hits = #{record.hits,jdbcType=INTEGER},
@@ -2580,18 +2578,17 @@
       flag = #{record.flag,jdbcType=VARCHAR},
       `type` = #{record.type,jdbcType=VARCHAR},
       view_type = #{record.viewType,jdbcType=VARCHAR},
-      addtime = #{record.addtime,jdbcType=VARCHAR},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       amount_account = #{record.amountAccount,jdbcType=DECIMAL},
       amount_type = #{record.amountType,jdbcType=VARCHAR},
-      cash_status = #{record.cashStatus,jdbcType=INTEGER},
+      cash_status = #{record.cashStatus,jdbcType=TINYINT},
       account = #{record.account,jdbcType=DECIMAL},
-      other_web_status = #{record.otherWebStatus,jdbcType=INTEGER},
+      other_web_status = #{record.otherWebStatus,jdbcType=TINYINT},
       borrow_type = #{record.borrowType,jdbcType=VARCHAR},
       borrow_password = #{record.borrowPassword,jdbcType=VARCHAR},
       borrow_flag = #{record.borrowFlag,jdbcType=VARCHAR},
       borrow_status = #{record.borrowStatus,jdbcType=INTEGER},
-      borrow_full_status = #{record.borrowFullStatus,jdbcType=INTEGER},
+      borrow_full_status = #{record.borrowFullStatus,jdbcType=TINYINT},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       borrow_pre_nid = #{record.borrowPreNid,jdbcType=INTEGER},
       borrow_account_yes = #{record.borrowAccountYes,jdbcType=DECIMAL},
@@ -2609,9 +2606,9 @@
       borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
       borrow_success_time = #{record.borrowSuccessTime,jdbcType=INTEGER},
       borrow_end_time = #{record.borrowEndTime,jdbcType=VARCHAR},
-      borrow_part_status = #{record.borrowPartStatus,jdbcType=INTEGER},
+      borrow_part_status = #{record.borrowPartStatus,jdbcType=TINYINT},
       cancel_userid = #{record.cancelUserid,jdbcType=INTEGER},
-      cancel_status = #{record.cancelStatus,jdbcType=INTEGER},
+      cancel_status = #{record.cancelStatus,jdbcType=TINYINT},
       cancel_time = #{record.cancelTime,jdbcType=VARCHAR},
       cancel_remark = #{record.cancelRemark,jdbcType=VARCHAR},
       cancel_contents = #{record.cancelContents,jdbcType=VARCHAR},
@@ -2619,9 +2616,9 @@
       tender_account_max = #{record.tenderAccountMax,jdbcType=INTEGER},
       tender_times = #{record.tenderTimes,jdbcType=INTEGER},
       tender_last_time = #{record.tenderLastTime,jdbcType=VARCHAR},
-      repay_advance_status = #{record.repayAdvanceStatus,jdbcType=INTEGER},
+      repay_advance_status = #{record.repayAdvanceStatus,jdbcType=TINYINT},
       repay_advance_time = #{record.repayAdvanceTime,jdbcType=VARCHAR},
-      repay_advance_step = #{record.repayAdvanceStep,jdbcType=INTEGER},
+      repay_advance_step = #{record.repayAdvanceStep,jdbcType=TINYINT},
       repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
       repay_account_interest = #{record.repayAccountInterest,jdbcType=DECIMAL},
       repay_account_capital = #{record.repayAccountCapital,jdbcType=DECIMAL},
@@ -2638,15 +2635,15 @@
       repay_next_time = #{record.repayNextTime,jdbcType=INTEGER},
       repay_next_account = #{record.repayNextAccount,jdbcType=DECIMAL},
       repay_times = #{record.repayTimes,jdbcType=INTEGER},
-      repay_full_status = #{record.repayFullStatus,jdbcType=INTEGER},
+      repay_full_status = #{record.repayFullStatus,jdbcType=TINYINT},
       repay_fee_normal = #{record.repayFeeNormal,jdbcType=DECIMAL},
       repay_fee_advance = #{record.repayFeeAdvance,jdbcType=DECIMAL},
       repay_fee_late = #{record.repayFeeLate,jdbcType=DECIMAL},
       late_interest = #{record.lateInterest,jdbcType=DECIMAL},
       late_forfeit = #{record.lateForfeit,jdbcType=DECIMAL},
-      vouch_status = #{record.vouchStatus,jdbcType=INTEGER},
-      vouch_advance_status = #{record.vouchAdvanceStatus,jdbcType=INTEGER},
-      vouch_user_status = #{record.vouchUserStatus,jdbcType=INTEGER},
+      vouch_status = #{record.vouchStatus,jdbcType=TINYINT},
+      vouch_advance_status = #{record.vouchAdvanceStatus,jdbcType=TINYINT},
+      vouch_user_status = #{record.vouchUserStatus,jdbcType=TINYINT},
       vouch_users = #{record.vouchUsers,jdbcType=VARCHAR},
       vouch_account = #{record.vouchAccount,jdbcType=DECIMAL},
       vouch_account_yes = #{record.vouchAccountYes,jdbcType=DECIMAL},
@@ -2663,20 +2660,20 @@
       vouchjg_lianxi = #{record.vouchjgLianxi,jdbcType=VARCHAR},
       vouchjg_js = #{record.vouchjgJs,jdbcType=VARCHAR},
       vouchjg_xy = #{record.vouchjgXy,jdbcType=VARCHAR},
-      fast_status = #{record.fastStatus,jdbcType=INTEGER},
-      vouchstatus = #{record.vouchstatus,jdbcType=INTEGER},
-      group_status = #{record.groupStatus,jdbcType=INTEGER},
+      fast_status = #{record.fastStatus,jdbcType=TINYINT},
+      vouchstatus = #{record.vouchstatus,jdbcType=TINYINT},
+      group_status = #{record.groupStatus,jdbcType=TINYINT},
       group_id = #{record.groupId,jdbcType=INTEGER},
-      award_status = #{record.awardStatus,jdbcType=INTEGER},
-      award_false = #{record.awardFalse,jdbcType=INTEGER},
+      award_status = #{record.awardStatus,jdbcType=TINYINT},
+      award_false = #{record.awardFalse,jdbcType=TINYINT},
       award_account = #{record.awardAccount,jdbcType=DECIMAL},
       award_scale = #{record.awardScale,jdbcType=DECIMAL},
       award_account_all = #{record.awardAccountAll,jdbcType=DECIMAL},
-      open_account = #{record.openAccount,jdbcType=INTEGER},
-      open_borrow = #{record.openBorrow,jdbcType=INTEGER},
-      open_tender = #{record.openTender,jdbcType=INTEGER},
-      open_credit = #{record.openCredit,jdbcType=INTEGER},
-      comment_staus = #{record.commentStaus,jdbcType=INTEGER},
+      open_account = #{record.openAccount,jdbcType=TINYINT},
+      open_borrow = #{record.openBorrow,jdbcType=TINYINT},
+      open_tender = #{record.openTender,jdbcType=TINYINT},
+      open_credit = #{record.openCredit,jdbcType=TINYINT},
+      comment_staus = #{record.commentStaus,jdbcType=TINYINT},
       comment_times = #{record.commentTimes,jdbcType=INTEGER},
       comment_usertype = #{record.commentUsertype,jdbcType=VARCHAR},
       borrow_pawn_app = #{record.borrowPawnApp,jdbcType=VARCHAR},
@@ -2706,7 +2703,6 @@
       guarantee_type = #{record.guaranteeType,jdbcType=TINYINT},
       project_type = #{record.projectType,jdbcType=TINYINT},
       ontime = #{record.ontime,jdbcType=INTEGER},
-      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
       service_fee_rate = #{record.serviceFeeRate,jdbcType=VARCHAR},
       manage_fee_rate = #{record.manageFeeRate,jdbcType=VARCHAR},
       differential_rate = #{record.differentialRate,jdbcType=VARCHAR},
@@ -2715,7 +2711,7 @@
       can_transaction_ios = #{record.canTransactionIos,jdbcType=VARCHAR},
       can_transaction_android = #{record.canTransactionAndroid,jdbcType=VARCHAR},
       operation_label = #{record.operationLabel,jdbcType=VARCHAR},
-      company_or_personal = #{record.companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
       borrow_manager = #{record.borrowManager,jdbcType=VARCHAR},
       borrow_service = #{record.borrowService,jdbcType=VARCHAR},
       borrow_manager_scale_end = #{record.borrowManagerScaleEnd,jdbcType=VARCHAR},
@@ -2747,7 +2743,9 @@
       borrow_account_scale_appoint = #{record.borrowAccountScaleAppoint,jdbcType=DECIMAL},
       borrow_plan_selected = #{record.borrowPlanSelected,jdbcType=TINYINT},
       borrow_repay_web_advance = #{record.borrowRepayWebAdvance,jdbcType=DECIMAL},
-      borrow_level = #{record.borrowLevel,jdbcType=VARCHAR}
+      borrow_level = #{record.borrowLevel,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -2774,7 +2772,7 @@
         `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="order != null" >
         `order` = #{order,jdbcType=INTEGER},
@@ -2800,11 +2798,8 @@
       <if test="viewType != null" >
         view_type = #{viewType,jdbcType=VARCHAR},
       </if>
-      <if test="addtime != null" >
-        addtime = #{addtime,jdbcType=VARCHAR},
-      </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="amountAccount != null" >
         amount_account = #{amountAccount,jdbcType=DECIMAL},
@@ -2813,13 +2808,13 @@
         amount_type = #{amountType,jdbcType=VARCHAR},
       </if>
       <if test="cashStatus != null" >
-        cash_status = #{cashStatus,jdbcType=INTEGER},
+        cash_status = #{cashStatus,jdbcType=TINYINT},
       </if>
       <if test="account != null" >
         account = #{account,jdbcType=DECIMAL},
       </if>
       <if test="otherWebStatus != null" >
-        other_web_status = #{otherWebStatus,jdbcType=INTEGER},
+        other_web_status = #{otherWebStatus,jdbcType=TINYINT},
       </if>
       <if test="borrowType != null" >
         borrow_type = #{borrowType,jdbcType=VARCHAR},
@@ -2834,7 +2829,7 @@
         borrow_status = #{borrowStatus,jdbcType=INTEGER},
       </if>
       <if test="borrowFullStatus != null" >
-        borrow_full_status = #{borrowFullStatus,jdbcType=INTEGER},
+        borrow_full_status = #{borrowFullStatus,jdbcType=TINYINT},
       </if>
       <if test="borrowNid != null" >
         borrow_nid = #{borrowNid,jdbcType=VARCHAR},
@@ -2888,13 +2883,13 @@
         borrow_end_time = #{borrowEndTime,jdbcType=VARCHAR},
       </if>
       <if test="borrowPartStatus != null" >
-        borrow_part_status = #{borrowPartStatus,jdbcType=INTEGER},
+        borrow_part_status = #{borrowPartStatus,jdbcType=TINYINT},
       </if>
       <if test="cancelUserid != null" >
         cancel_userid = #{cancelUserid,jdbcType=INTEGER},
       </if>
       <if test="cancelStatus != null" >
-        cancel_status = #{cancelStatus,jdbcType=INTEGER},
+        cancel_status = #{cancelStatus,jdbcType=TINYINT},
       </if>
       <if test="cancelTime != null" >
         cancel_time = #{cancelTime,jdbcType=VARCHAR},
@@ -2918,13 +2913,13 @@
         tender_last_time = #{tenderLastTime,jdbcType=VARCHAR},
       </if>
       <if test="repayAdvanceStatus != null" >
-        repay_advance_status = #{repayAdvanceStatus,jdbcType=INTEGER},
+        repay_advance_status = #{repayAdvanceStatus,jdbcType=TINYINT},
       </if>
       <if test="repayAdvanceTime != null" >
         repay_advance_time = #{repayAdvanceTime,jdbcType=VARCHAR},
       </if>
       <if test="repayAdvanceStep != null" >
-        repay_advance_step = #{repayAdvanceStep,jdbcType=INTEGER},
+        repay_advance_step = #{repayAdvanceStep,jdbcType=TINYINT},
       </if>
       <if test="repayAccountAll != null" >
         repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
@@ -2975,7 +2970,7 @@
         repay_times = #{repayTimes,jdbcType=INTEGER},
       </if>
       <if test="repayFullStatus != null" >
-        repay_full_status = #{repayFullStatus,jdbcType=INTEGER},
+        repay_full_status = #{repayFullStatus,jdbcType=TINYINT},
       </if>
       <if test="repayFeeNormal != null" >
         repay_fee_normal = #{repayFeeNormal,jdbcType=DECIMAL},
@@ -2993,13 +2988,13 @@
         late_forfeit = #{lateForfeit,jdbcType=DECIMAL},
       </if>
       <if test="vouchStatus != null" >
-        vouch_status = #{vouchStatus,jdbcType=INTEGER},
+        vouch_status = #{vouchStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchAdvanceStatus != null" >
-        vouch_advance_status = #{vouchAdvanceStatus,jdbcType=INTEGER},
+        vouch_advance_status = #{vouchAdvanceStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchUserStatus != null" >
-        vouch_user_status = #{vouchUserStatus,jdbcType=INTEGER},
+        vouch_user_status = #{vouchUserStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchUsers != null" >
         vouch_users = #{vouchUsers,jdbcType=VARCHAR},
@@ -3050,22 +3045,22 @@
         vouchjg_xy = #{vouchjgXy,jdbcType=VARCHAR},
       </if>
       <if test="fastStatus != null" >
-        fast_status = #{fastStatus,jdbcType=INTEGER},
+        fast_status = #{fastStatus,jdbcType=TINYINT},
       </if>
       <if test="vouchstatus != null" >
-        vouchstatus = #{vouchstatus,jdbcType=INTEGER},
+        vouchstatus = #{vouchstatus,jdbcType=TINYINT},
       </if>
       <if test="groupStatus != null" >
-        group_status = #{groupStatus,jdbcType=INTEGER},
+        group_status = #{groupStatus,jdbcType=TINYINT},
       </if>
       <if test="groupId != null" >
         group_id = #{groupId,jdbcType=INTEGER},
       </if>
       <if test="awardStatus != null" >
-        award_status = #{awardStatus,jdbcType=INTEGER},
+        award_status = #{awardStatus,jdbcType=TINYINT},
       </if>
       <if test="awardFalse != null" >
-        award_false = #{awardFalse,jdbcType=INTEGER},
+        award_false = #{awardFalse,jdbcType=TINYINT},
       </if>
       <if test="awardAccount != null" >
         award_account = #{awardAccount,jdbcType=DECIMAL},
@@ -3077,19 +3072,19 @@
         award_account_all = #{awardAccountAll,jdbcType=DECIMAL},
       </if>
       <if test="openAccount != null" >
-        open_account = #{openAccount,jdbcType=INTEGER},
+        open_account = #{openAccount,jdbcType=TINYINT},
       </if>
       <if test="openBorrow != null" >
-        open_borrow = #{openBorrow,jdbcType=INTEGER},
+        open_borrow = #{openBorrow,jdbcType=TINYINT},
       </if>
       <if test="openTender != null" >
-        open_tender = #{openTender,jdbcType=INTEGER},
+        open_tender = #{openTender,jdbcType=TINYINT},
       </if>
       <if test="openCredit != null" >
-        open_credit = #{openCredit,jdbcType=INTEGER},
+        open_credit = #{openCredit,jdbcType=TINYINT},
       </if>
       <if test="commentStaus != null" >
-        comment_staus = #{commentStaus,jdbcType=INTEGER},
+        comment_staus = #{commentStaus,jdbcType=TINYINT},
       </if>
       <if test="commentTimes != null" >
         comment_times = #{commentTimes,jdbcType=INTEGER},
@@ -3178,9 +3173,6 @@
       <if test="ontime != null" >
         ontime = #{ontime,jdbcType=INTEGER},
       </if>
-      <if test="updatetime != null" >
-        updatetime = #{updatetime,jdbcType=TIMESTAMP},
-      </if>
       <if test="serviceFeeRate != null" >
         service_fee_rate = #{serviceFeeRate,jdbcType=VARCHAR},
       </if>
@@ -3206,7 +3198,7 @@
         operation_label = #{operationLabel,jdbcType=VARCHAR},
       </if>
       <if test="companyOrPersonal != null" >
-        company_or_personal = #{companyOrPersonal,jdbcType=VARCHAR},
+        company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
       </if>
       <if test="borrowManager != null" >
         borrow_manager = #{borrowManager,jdbcType=VARCHAR},
@@ -3304,6 +3296,12 @@
       <if test="borrowLevel != null" >
         borrow_level = #{borrowLevel,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="accountContents != null" >
         account_contents = #{accountContents,jdbcType=LONGVARCHAR},
       </if>
@@ -3369,7 +3367,7 @@
       is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
       repay_org_user_id = #{repayOrgUserId,jdbcType=INTEGER},
       `name` = #{name,jdbcType=VARCHAR},
-      `status` = #{status,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       `order` = #{order,jdbcType=INTEGER},
       borrow_pic = #{borrowPic,jdbcType=VARCHAR},
       hits = #{hits,jdbcType=INTEGER},
@@ -3378,18 +3376,17 @@
       flag = #{flag,jdbcType=VARCHAR},
       `type` = #{type,jdbcType=VARCHAR},
       view_type = #{viewType,jdbcType=VARCHAR},
-      addtime = #{addtime,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       amount_account = #{amountAccount,jdbcType=DECIMAL},
       amount_type = #{amountType,jdbcType=VARCHAR},
-      cash_status = #{cashStatus,jdbcType=INTEGER},
+      cash_status = #{cashStatus,jdbcType=TINYINT},
       account = #{account,jdbcType=DECIMAL},
-      other_web_status = #{otherWebStatus,jdbcType=INTEGER},
+      other_web_status = #{otherWebStatus,jdbcType=TINYINT},
       borrow_type = #{borrowType,jdbcType=VARCHAR},
       borrow_password = #{borrowPassword,jdbcType=VARCHAR},
       borrow_flag = #{borrowFlag,jdbcType=VARCHAR},
       borrow_status = #{borrowStatus,jdbcType=INTEGER},
-      borrow_full_status = #{borrowFullStatus,jdbcType=INTEGER},
+      borrow_full_status = #{borrowFullStatus,jdbcType=TINYINT},
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       borrow_pre_nid = #{borrowPreNid,jdbcType=INTEGER},
       borrow_account_yes = #{borrowAccountYes,jdbcType=DECIMAL},
@@ -3407,9 +3404,9 @@
       borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
       borrow_success_time = #{borrowSuccessTime,jdbcType=INTEGER},
       borrow_end_time = #{borrowEndTime,jdbcType=VARCHAR},
-      borrow_part_status = #{borrowPartStatus,jdbcType=INTEGER},
+      borrow_part_status = #{borrowPartStatus,jdbcType=TINYINT},
       cancel_userid = #{cancelUserid,jdbcType=INTEGER},
-      cancel_status = #{cancelStatus,jdbcType=INTEGER},
+      cancel_status = #{cancelStatus,jdbcType=TINYINT},
       cancel_time = #{cancelTime,jdbcType=VARCHAR},
       cancel_remark = #{cancelRemark,jdbcType=VARCHAR},
       cancel_contents = #{cancelContents,jdbcType=VARCHAR},
@@ -3417,9 +3414,9 @@
       tender_account_max = #{tenderAccountMax,jdbcType=INTEGER},
       tender_times = #{tenderTimes,jdbcType=INTEGER},
       tender_last_time = #{tenderLastTime,jdbcType=VARCHAR},
-      repay_advance_status = #{repayAdvanceStatus,jdbcType=INTEGER},
+      repay_advance_status = #{repayAdvanceStatus,jdbcType=TINYINT},
       repay_advance_time = #{repayAdvanceTime,jdbcType=VARCHAR},
-      repay_advance_step = #{repayAdvanceStep,jdbcType=INTEGER},
+      repay_advance_step = #{repayAdvanceStep,jdbcType=TINYINT},
       repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
       repay_account_interest = #{repayAccountInterest,jdbcType=DECIMAL},
       repay_account_capital = #{repayAccountCapital,jdbcType=DECIMAL},
@@ -3436,15 +3433,15 @@
       repay_next_time = #{repayNextTime,jdbcType=INTEGER},
       repay_next_account = #{repayNextAccount,jdbcType=DECIMAL},
       repay_times = #{repayTimes,jdbcType=INTEGER},
-      repay_full_status = #{repayFullStatus,jdbcType=INTEGER},
+      repay_full_status = #{repayFullStatus,jdbcType=TINYINT},
       repay_fee_normal = #{repayFeeNormal,jdbcType=DECIMAL},
       repay_fee_advance = #{repayFeeAdvance,jdbcType=DECIMAL},
       repay_fee_late = #{repayFeeLate,jdbcType=DECIMAL},
       late_interest = #{lateInterest,jdbcType=DECIMAL},
       late_forfeit = #{lateForfeit,jdbcType=DECIMAL},
-      vouch_status = #{vouchStatus,jdbcType=INTEGER},
-      vouch_advance_status = #{vouchAdvanceStatus,jdbcType=INTEGER},
-      vouch_user_status = #{vouchUserStatus,jdbcType=INTEGER},
+      vouch_status = #{vouchStatus,jdbcType=TINYINT},
+      vouch_advance_status = #{vouchAdvanceStatus,jdbcType=TINYINT},
+      vouch_user_status = #{vouchUserStatus,jdbcType=TINYINT},
       vouch_users = #{vouchUsers,jdbcType=VARCHAR},
       vouch_account = #{vouchAccount,jdbcType=DECIMAL},
       vouch_account_yes = #{vouchAccountYes,jdbcType=DECIMAL},
@@ -3461,20 +3458,20 @@
       vouchjg_lianxi = #{vouchjgLianxi,jdbcType=VARCHAR},
       vouchjg_js = #{vouchjgJs,jdbcType=VARCHAR},
       vouchjg_xy = #{vouchjgXy,jdbcType=VARCHAR},
-      fast_status = #{fastStatus,jdbcType=INTEGER},
-      vouchstatus = #{vouchstatus,jdbcType=INTEGER},
-      group_status = #{groupStatus,jdbcType=INTEGER},
+      fast_status = #{fastStatus,jdbcType=TINYINT},
+      vouchstatus = #{vouchstatus,jdbcType=TINYINT},
+      group_status = #{groupStatus,jdbcType=TINYINT},
       group_id = #{groupId,jdbcType=INTEGER},
-      award_status = #{awardStatus,jdbcType=INTEGER},
-      award_false = #{awardFalse,jdbcType=INTEGER},
+      award_status = #{awardStatus,jdbcType=TINYINT},
+      award_false = #{awardFalse,jdbcType=TINYINT},
       award_account = #{awardAccount,jdbcType=DECIMAL},
       award_scale = #{awardScale,jdbcType=DECIMAL},
       award_account_all = #{awardAccountAll,jdbcType=DECIMAL},
-      open_account = #{openAccount,jdbcType=INTEGER},
-      open_borrow = #{openBorrow,jdbcType=INTEGER},
-      open_tender = #{openTender,jdbcType=INTEGER},
-      open_credit = #{openCredit,jdbcType=INTEGER},
-      comment_staus = #{commentStaus,jdbcType=INTEGER},
+      open_account = #{openAccount,jdbcType=TINYINT},
+      open_borrow = #{openBorrow,jdbcType=TINYINT},
+      open_tender = #{openTender,jdbcType=TINYINT},
+      open_credit = #{openCredit,jdbcType=TINYINT},
+      comment_staus = #{commentStaus,jdbcType=TINYINT},
       comment_times = #{commentTimes,jdbcType=INTEGER},
       comment_usertype = #{commentUsertype,jdbcType=VARCHAR},
       borrow_pawn_app = #{borrowPawnApp,jdbcType=VARCHAR},
@@ -3504,7 +3501,6 @@
       guarantee_type = #{guaranteeType,jdbcType=TINYINT},
       project_type = #{projectType,jdbcType=TINYINT},
       ontime = #{ontime,jdbcType=INTEGER},
-      updatetime = #{updatetime,jdbcType=TIMESTAMP},
       service_fee_rate = #{serviceFeeRate,jdbcType=VARCHAR},
       manage_fee_rate = #{manageFeeRate,jdbcType=VARCHAR},
       differential_rate = #{differentialRate,jdbcType=VARCHAR},
@@ -3513,7 +3509,7 @@
       can_transaction_ios = #{canTransactionIos,jdbcType=VARCHAR},
       can_transaction_android = #{canTransactionAndroid,jdbcType=VARCHAR},
       operation_label = #{operationLabel,jdbcType=VARCHAR},
-      company_or_personal = #{companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
       borrow_manager = #{borrowManager,jdbcType=VARCHAR},
       borrow_service = #{borrowService,jdbcType=VARCHAR},
       borrow_manager_scale_end = #{borrowManagerScaleEnd,jdbcType=VARCHAR},
@@ -3546,6 +3542,8 @@
       borrow_plan_selected = #{borrowPlanSelected,jdbcType=TINYINT},
       borrow_repay_web_advance = #{borrowRepayWebAdvance,jdbcType=DECIMAL},
       borrow_level = #{borrowLevel,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       account_contents = #{accountContents,jdbcType=LONGVARCHAR},
       borrow_contents = #{borrowContents,jdbcType=LONGVARCHAR},
       borrow_upfiles = #{borrowUpfiles,jdbcType=LONGVARCHAR},
@@ -3574,7 +3572,7 @@
       is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
       repay_org_user_id = #{repayOrgUserId,jdbcType=INTEGER},
       `name` = #{name,jdbcType=VARCHAR},
-      `status` = #{status,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       `order` = #{order,jdbcType=INTEGER},
       borrow_pic = #{borrowPic,jdbcType=VARCHAR},
       hits = #{hits,jdbcType=INTEGER},
@@ -3583,18 +3581,17 @@
       flag = #{flag,jdbcType=VARCHAR},
       `type` = #{type,jdbcType=VARCHAR},
       view_type = #{viewType,jdbcType=VARCHAR},
-      addtime = #{addtime,jdbcType=VARCHAR},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       amount_account = #{amountAccount,jdbcType=DECIMAL},
       amount_type = #{amountType,jdbcType=VARCHAR},
-      cash_status = #{cashStatus,jdbcType=INTEGER},
+      cash_status = #{cashStatus,jdbcType=TINYINT},
       account = #{account,jdbcType=DECIMAL},
-      other_web_status = #{otherWebStatus,jdbcType=INTEGER},
+      other_web_status = #{otherWebStatus,jdbcType=TINYINT},
       borrow_type = #{borrowType,jdbcType=VARCHAR},
       borrow_password = #{borrowPassword,jdbcType=VARCHAR},
       borrow_flag = #{borrowFlag,jdbcType=VARCHAR},
       borrow_status = #{borrowStatus,jdbcType=INTEGER},
-      borrow_full_status = #{borrowFullStatus,jdbcType=INTEGER},
+      borrow_full_status = #{borrowFullStatus,jdbcType=TINYINT},
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       borrow_pre_nid = #{borrowPreNid,jdbcType=INTEGER},
       borrow_account_yes = #{borrowAccountYes,jdbcType=DECIMAL},
@@ -3612,9 +3609,9 @@
       borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
       borrow_success_time = #{borrowSuccessTime,jdbcType=INTEGER},
       borrow_end_time = #{borrowEndTime,jdbcType=VARCHAR},
-      borrow_part_status = #{borrowPartStatus,jdbcType=INTEGER},
+      borrow_part_status = #{borrowPartStatus,jdbcType=TINYINT},
       cancel_userid = #{cancelUserid,jdbcType=INTEGER},
-      cancel_status = #{cancelStatus,jdbcType=INTEGER},
+      cancel_status = #{cancelStatus,jdbcType=TINYINT},
       cancel_time = #{cancelTime,jdbcType=VARCHAR},
       cancel_remark = #{cancelRemark,jdbcType=VARCHAR},
       cancel_contents = #{cancelContents,jdbcType=VARCHAR},
@@ -3622,9 +3619,9 @@
       tender_account_max = #{tenderAccountMax,jdbcType=INTEGER},
       tender_times = #{tenderTimes,jdbcType=INTEGER},
       tender_last_time = #{tenderLastTime,jdbcType=VARCHAR},
-      repay_advance_status = #{repayAdvanceStatus,jdbcType=INTEGER},
+      repay_advance_status = #{repayAdvanceStatus,jdbcType=TINYINT},
       repay_advance_time = #{repayAdvanceTime,jdbcType=VARCHAR},
-      repay_advance_step = #{repayAdvanceStep,jdbcType=INTEGER},
+      repay_advance_step = #{repayAdvanceStep,jdbcType=TINYINT},
       repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
       repay_account_interest = #{repayAccountInterest,jdbcType=DECIMAL},
       repay_account_capital = #{repayAccountCapital,jdbcType=DECIMAL},
@@ -3641,15 +3638,15 @@
       repay_next_time = #{repayNextTime,jdbcType=INTEGER},
       repay_next_account = #{repayNextAccount,jdbcType=DECIMAL},
       repay_times = #{repayTimes,jdbcType=INTEGER},
-      repay_full_status = #{repayFullStatus,jdbcType=INTEGER},
+      repay_full_status = #{repayFullStatus,jdbcType=TINYINT},
       repay_fee_normal = #{repayFeeNormal,jdbcType=DECIMAL},
       repay_fee_advance = #{repayFeeAdvance,jdbcType=DECIMAL},
       repay_fee_late = #{repayFeeLate,jdbcType=DECIMAL},
       late_interest = #{lateInterest,jdbcType=DECIMAL},
       late_forfeit = #{lateForfeit,jdbcType=DECIMAL},
-      vouch_status = #{vouchStatus,jdbcType=INTEGER},
-      vouch_advance_status = #{vouchAdvanceStatus,jdbcType=INTEGER},
-      vouch_user_status = #{vouchUserStatus,jdbcType=INTEGER},
+      vouch_status = #{vouchStatus,jdbcType=TINYINT},
+      vouch_advance_status = #{vouchAdvanceStatus,jdbcType=TINYINT},
+      vouch_user_status = #{vouchUserStatus,jdbcType=TINYINT},
       vouch_users = #{vouchUsers,jdbcType=VARCHAR},
       vouch_account = #{vouchAccount,jdbcType=DECIMAL},
       vouch_account_yes = #{vouchAccountYes,jdbcType=DECIMAL},
@@ -3666,20 +3663,20 @@
       vouchjg_lianxi = #{vouchjgLianxi,jdbcType=VARCHAR},
       vouchjg_js = #{vouchjgJs,jdbcType=VARCHAR},
       vouchjg_xy = #{vouchjgXy,jdbcType=VARCHAR},
-      fast_status = #{fastStatus,jdbcType=INTEGER},
-      vouchstatus = #{vouchstatus,jdbcType=INTEGER},
-      group_status = #{groupStatus,jdbcType=INTEGER},
+      fast_status = #{fastStatus,jdbcType=TINYINT},
+      vouchstatus = #{vouchstatus,jdbcType=TINYINT},
+      group_status = #{groupStatus,jdbcType=TINYINT},
       group_id = #{groupId,jdbcType=INTEGER},
-      award_status = #{awardStatus,jdbcType=INTEGER},
-      award_false = #{awardFalse,jdbcType=INTEGER},
+      award_status = #{awardStatus,jdbcType=TINYINT},
+      award_false = #{awardFalse,jdbcType=TINYINT},
       award_account = #{awardAccount,jdbcType=DECIMAL},
       award_scale = #{awardScale,jdbcType=DECIMAL},
       award_account_all = #{awardAccountAll,jdbcType=DECIMAL},
-      open_account = #{openAccount,jdbcType=INTEGER},
-      open_borrow = #{openBorrow,jdbcType=INTEGER},
-      open_tender = #{openTender,jdbcType=INTEGER},
-      open_credit = #{openCredit,jdbcType=INTEGER},
-      comment_staus = #{commentStaus,jdbcType=INTEGER},
+      open_account = #{openAccount,jdbcType=TINYINT},
+      open_borrow = #{openBorrow,jdbcType=TINYINT},
+      open_tender = #{openTender,jdbcType=TINYINT},
+      open_credit = #{openCredit,jdbcType=TINYINT},
+      comment_staus = #{commentStaus,jdbcType=TINYINT},
       comment_times = #{commentTimes,jdbcType=INTEGER},
       comment_usertype = #{commentUsertype,jdbcType=VARCHAR},
       borrow_pawn_app = #{borrowPawnApp,jdbcType=VARCHAR},
@@ -3709,7 +3706,6 @@
       guarantee_type = #{guaranteeType,jdbcType=TINYINT},
       project_type = #{projectType,jdbcType=TINYINT},
       ontime = #{ontime,jdbcType=INTEGER},
-      updatetime = #{updatetime,jdbcType=TIMESTAMP},
       service_fee_rate = #{serviceFeeRate,jdbcType=VARCHAR},
       manage_fee_rate = #{manageFeeRate,jdbcType=VARCHAR},
       differential_rate = #{differentialRate,jdbcType=VARCHAR},
@@ -3718,7 +3714,7 @@
       can_transaction_ios = #{canTransactionIos,jdbcType=VARCHAR},
       can_transaction_android = #{canTransactionAndroid,jdbcType=VARCHAR},
       operation_label = #{operationLabel,jdbcType=VARCHAR},
-      company_or_personal = #{companyOrPersonal,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
       borrow_manager = #{borrowManager,jdbcType=VARCHAR},
       borrow_service = #{borrowService,jdbcType=VARCHAR},
       borrow_manager_scale_end = #{borrowManagerScaleEnd,jdbcType=VARCHAR},
@@ -3750,7 +3746,9 @@
       borrow_account_scale_appoint = #{borrowAccountScaleAppoint,jdbcType=DECIMAL},
       borrow_plan_selected = #{borrowPlanSelected,jdbcType=TINYINT},
       borrow_repay_web_advance = #{borrowRepayWebAdvance,jdbcType=DECIMAL},
-      borrow_level = #{borrowLevel,jdbcType=VARCHAR}
+      borrow_level = #{borrowLevel,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

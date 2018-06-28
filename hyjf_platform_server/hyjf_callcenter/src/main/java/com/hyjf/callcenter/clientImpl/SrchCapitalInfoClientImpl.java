@@ -3,17 +3,18 @@
  */
 package com.hyjf.callcenter.clientImpl;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.callcenter.CallCenterAccountDetailResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.callcenter.client.SrchCapitalInfoClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 /**
  * @author wangjun
@@ -22,7 +23,8 @@ import java.util.List;
 @Service
 public class SrchCapitalInfoClientImpl implements SrchCapitalInfoClient {
     private static final Logger logger = LoggerFactory.getLogger(SrchCapitalInfoClientImpl.class);
-    private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
     @Override
     public List<CallCenterAccountDetailVO> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest) {
         CallCenterAccountDetailResponse callCenterAccountDetailResponse = restTemplate

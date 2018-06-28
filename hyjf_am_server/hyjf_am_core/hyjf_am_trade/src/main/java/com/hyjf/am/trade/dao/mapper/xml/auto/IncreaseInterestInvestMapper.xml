@@ -25,7 +25,7 @@
     <result column="repay_times" property="repayTimes" jdbcType="INTEGER" />
     <result column="loan_amount" property="loanAmount" jdbcType="DECIMAL" />
     <result column="client" property="client" jdbcType="TINYINT" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="invest_type" property="investType" jdbcType="TINYINT" />
@@ -98,7 +98,7 @@
     id, user_id, invest_user_name, tender_id, tender_nid, borrow_nid, borrow_apr, borrow_extra_yield, 
     borrow_period, borrow_style, borrow_style_name, order_id, order_date, account, `status`, 
     loan_order_date, loan_order_id, repay_interest, repay_interest_yes, repay_interest_wait, 
-    repay_times, loan_amount, client, addip, web, remark, invest_type, create_user_id, 
+    repay_times, loan_amount, client, add_ip, web, remark, invest_type, create_user_id, 
     create_user_name, update_user_id, update_user_name, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample" >
@@ -145,7 +145,7 @@
       account, `status`, loan_order_date, 
       loan_order_id, repay_interest, repay_interest_yes, 
       repay_interest_wait, repay_times, loan_amount, 
-      client, addip, web, 
+      client, add_ip, web, 
       remark, invest_type, create_user_id, 
       create_user_name, update_user_id, update_user_name, 
       create_time, update_time)
@@ -156,7 +156,7 @@
       #{account,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{loanOrderDate,jdbcType=VARCHAR}, 
       #{loanOrderId,jdbcType=VARCHAR}, #{repayInterest,jdbcType=DECIMAL}, #{repayInterestYes,jdbcType=DECIMAL}, 
       #{repayInterestWait,jdbcType=DECIMAL}, #{repayTimes,jdbcType=INTEGER}, #{loanAmount,jdbcType=DECIMAL}, 
-      #{client,jdbcType=TINYINT}, #{addip,jdbcType=VARCHAR}, #{web,jdbcType=TINYINT}, 
+      #{client,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, #{web,jdbcType=TINYINT}, 
       #{remark,jdbcType=VARCHAR}, #{investType,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
       #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
@@ -233,8 +233,8 @@
       <if test="client != null" >
         client,
       </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="web != null" >
         web,
@@ -331,8 +331,8 @@
       <if test="client != null" >
         #{client,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="web != null" >
         #{web,jdbcType=TINYINT},
@@ -441,8 +441,8 @@
       <if test="record.client != null" >
         client = #{record.client,jdbcType=TINYINT},
       </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.web != null" >
         web = #{record.web,jdbcType=TINYINT},
@@ -501,7 +501,7 @@
       repay_times = #{record.repayTimes,jdbcType=INTEGER},
       loan_amount = #{record.loanAmount,jdbcType=DECIMAL},
       client = #{record.client,jdbcType=TINYINT},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       web = #{record.web,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       invest_type = #{record.investType,jdbcType=TINYINT},
@@ -584,8 +584,8 @@
       <if test="client != null" >
         client = #{client,jdbcType=TINYINT},
       </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="web != null" >
         web = #{web,jdbcType=TINYINT},
@@ -641,7 +641,7 @@
       repay_times = #{repayTimes,jdbcType=INTEGER},
       loan_amount = #{loanAmount,jdbcType=DECIMAL},
       client = #{client,jdbcType=TINYINT},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       web = #{web,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       invest_type = #{investType,jdbcType=TINYINT},

@@ -239,7 +239,7 @@ public class BorrowServiceImpl implements BorrowService {
         temp.setBorrowNid(tenderRequest.getBorrowNid());
         temp.setNid(tenderRequest.getOrderId());
         temp.setAccount(new BigDecimal(tenderRequest.getAccount()));
-        temp.setAddip(tenderRequest.getIp());
+        temp.setAddIp(tenderRequest.getIp());
        /* temp.setChangeStatus(0);
         temp.setChangeUserid(0);
         temp.setChangePeriod(0);
@@ -338,7 +338,7 @@ public class BorrowServiceImpl implements BorrowService {
         // 插入BorrowTender表
         BorrowTender borrowTender = new BorrowTender();
         borrowTender.setAccount(tenderBg.getAccountDecimal());
-        borrowTender.setAddip(tenderBg.getIp());
+        borrowTender.setAddIp(tenderBg.getIp());
         borrowTender.setBorrowNid(tenderBg.getBorrowNid());
         borrowTender.setClient(tenderBg.getClient());
         borrowTender.setLoanAmount(tenderBg.getAccountDecimal().subtract(tenderBg.getPerService()));

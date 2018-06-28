@@ -178,25 +178,4 @@ public class AverageCapitalPlusInterestUtils {
 		count = count.setScale(2, BigDecimal.ROUND_DOWN);
 		return count;
 	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		BigDecimal invest = new BigDecimal(12000); // 本金
-		int month = 12;
-		BigDecimal yearRate = new BigDecimal(0.15); // 年利率
-		BigDecimal perMonthPrincipalInterest = getPerMonthPrincipalInterest(invest, yearRate, month);
-		System.out.println("等额本息---每月还款本息：" + perMonthPrincipalInterest);
-		Map<Integer, BigDecimal> mapInterest = getPerMonthInterest(invest, yearRate, month);
-		System.out.println("等额本息---每月还款利息：" + mapInterest);
-		Map<Integer, BigDecimal> mapPrincipal = getPerMonthPrincipal(invest, yearRate, month);
-		System.out.println("等额本息---每月还款本金：" + mapPrincipal);
-		BigDecimal count = getInterestCount(invest, yearRate, month);
-		System.out.println("等额本息---总利息：" + count);
-		BigDecimal principalInterestCount = getPrincipalInterestCount(invest, yearRate, month);
-		System.out.println("等额本息---应还本息总和：" + principalInterestCount);
-		BigDecimal principalCount = getPrincipalCount(invest, yearRate, month);
-		System.out.println("等额本息---应还总本金：" + principalCount);
-	}
 }

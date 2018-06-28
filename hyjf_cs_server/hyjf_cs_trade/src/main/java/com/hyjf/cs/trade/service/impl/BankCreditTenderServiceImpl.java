@@ -1,20 +1,37 @@
 package com.hyjf.cs.trade.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.EmployeeCustomizeVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.trade.bean.fdd.fddgeneratecontract.FddGenerateContractBean;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
@@ -26,16 +43,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 债转投资异常Service实现类
@@ -243,7 +250,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                     // 查询相应的承接记录，如果相应的承接记录存在，则承接成功
                                     CreditTenderVO creditTender = this.bankCreditTenderClient.selectByAssignNidAndUserId(logOrderId, userId);
                                     // 发送法大大PDF处理MQ start
-                                    this.sendFDDToMQ(userId,creditTender);
+                                    this.sendFDDPdfToMQ(userId,creditTender.getBidNid(),creditTender.getAssignNid(),creditTender.getCreditNid(),creditTender.getCreditTenderNid());
                                     // 发送法大大PDF处理MQ end
                                     logger.info("债转投资异常修复成功:承接订单号=" + creditTender.getAssignNid());
                                 }else{
@@ -295,17 +302,21 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 
 
     /**
-     * 发送法大大PDF处理MQ
+     * 发送法大大PDF生成MQ处理
      */
-    private void sendFDDToMQ(Integer userId,CreditTenderVO creditTender){
-        JSONObject params = new JSONObject();
-        params.put("userId", userId);
-        params.put("bidNid", creditTender.getBidNid());
-        params.put("assignNid", creditTender.getAssignNid());
-        params.put("creditNid",creditTender.getCreditNid());
-        params.put("creditTenderNid",creditTender.getCreditTenderNid());
+    private void sendFDDPdfToMQ(Integer tenderUserId,String borrowNid, String assignOrderId, String creditNid, String creditTenderNid){
+        FddGenerateContractBean bean = new FddGenerateContractBean();
+        bean.setAssignOrderId(assignOrderId);
+        bean.setOrdid(assignOrderId);
+        bean.setCreditNid(creditNid);
+        bean.setCreditTenderNid(creditTenderNid);
+        bean.setBorrowNid(borrowNid);
+        bean.setTenderUserId(tenderUserId);
+        bean.setTransType(3);
+        bean.setTenderType(1);
         try {
-            fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_CONTRACT_TOPIC, params));
+            fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG,JSON.toJSONBytes(bean)));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("法大大发送消息失败...", e);

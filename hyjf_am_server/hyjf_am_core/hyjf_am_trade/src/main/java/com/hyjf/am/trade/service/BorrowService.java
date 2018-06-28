@@ -18,11 +18,9 @@ import java.util.List;
  * @author fuqiang
  * @version BorrowService, v0.1 2018/6/13 18:52
  */
-public interface BorrowService {
-    Borrow getBorrow(String borrowNid);
+public interface BorrowService extends BaseService{
 
     BorrowStyle getborrowStyleByNid(String borrowStyle);
-
 
     /**
      * 根据项目类型，期限，获取借款利率
@@ -58,13 +56,6 @@ public interface BorrowService {
      * @return
      */
     List<Borrow> selectBorrowList();
-
-    /**
-     * 获取BorrowInfo
-     * @param borrowNid
-     * @return
-     */
-    BorrowInfo getBorrowInfoByNid(String borrowNid);
 
     /**
      * 投资之前插入tmp表

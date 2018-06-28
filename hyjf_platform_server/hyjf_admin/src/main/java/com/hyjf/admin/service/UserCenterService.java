@@ -4,6 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -16,12 +17,14 @@ import java.util.Map;
  * @version UserCenterService, v0.1 2018/6/20 15:34
  */
 public interface UserCenterService {
+
+    JSONObject initUserManaget();
     /**
      *查找用户信息
      * @param request
      * @return
      */
-    Map<String,Object> selectUserMemberList(UserManagerRequest request);
+    JSONObject selectUserMemberList(UserManagerRequest request);
 
     /**
      * 根据机构编号获取机构列表
@@ -85,7 +88,7 @@ public interface UserCenterService {
      * @param userId
      * @return
      */
-    UserRecommendVO selectUserRecommendByUserId(String userId);
+    UserRecommendCustomizeVO selectUserRecommendByUserId(String userId);
 
     /**
      * 校验手机号
@@ -132,5 +135,16 @@ public interface UserCenterService {
      * @return
      */
     JSONObject saveCompanyInfo(Map<String,String> mapParam);
-
+    /**
+     * 获取某一用户的信息修改列表
+     * @param request
+     * @return
+     */
+    List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request);
+//    /**
+//     * 根据用户id查找推荐人信息
+//     * @param userId
+//     * @return
+//     */
+//    UserRecommendCustomizeVO selectUserRecommendUserId(String userId);
 }

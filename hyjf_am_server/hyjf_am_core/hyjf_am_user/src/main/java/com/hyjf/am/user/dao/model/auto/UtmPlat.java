@@ -10,6 +10,8 @@ public class UtmPlat implements Serializable {
 
     private String sourceName;
 
+    private Integer sourceType;
+
     private Integer delFlag;
 
     private Integer attornFlag;
@@ -27,8 +29,6 @@ public class UtmPlat implements Serializable {
     private Date createTime;
 
     private Date updateTime;
-
-    private Integer sourceType;
 
     private static final long serialVersionUID = 1L;
 
@@ -54,6 +54,14 @@ public class UtmPlat implements Serializable {
 
     public void setSourceName(String sourceName) {
         this.sourceName = sourceName == null ? null : sourceName.trim();
+    }
+
+    public Integer getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 
     public Integer getDelFlag() {
@@ -126,13 +134,5 @@ public class UtmPlat implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getSourceType() {
-        return sourceType;
-    }
-
-    public void setSourceType(Integer sourceType) {
-        this.sourceType = sourceType;
     }
 }

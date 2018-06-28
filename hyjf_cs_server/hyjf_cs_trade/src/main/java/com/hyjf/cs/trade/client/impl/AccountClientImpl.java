@@ -23,4 +23,15 @@ public class AccountClientImpl implements AccountClient {
         }
         return null;
     }
+
+    @Override
+    public Integer updateOfPlanRepayAccount(AccountVO accountVO) {
+        Integer result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/updateOfPlanRepayAccount/", accountVO,
+                Integer.class).getBody();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
 }

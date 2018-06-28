@@ -4,10 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.resquest.user.BankOpenAccountRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -112,7 +109,7 @@ public interface UserCenterClient {
      * @param userId
      * @return
      */
-    UserRecommendVO selectUserRecommendByUserId(String userId);
+    UserRecommendCustomizeVO selectUserRecommendByUserId(String userId);
 
     /**
      * 校验手机号
@@ -252,4 +249,20 @@ public interface UserCenterClient {
      */
     int updateUser(UserVO userVO);
 
+    /**
+     * 获取某一用户的信息修改列表
+     * @param request
+     * @return
+     */
+//    List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request);
+
+    /**
+     * 根据推荐人姓名查找用户
+     * @param recommendName
+     * @return
+     */
+    /*UserVO selectUserByRecommendName(String recommendName);
+
+    SpreadsUserVO selectSpreadsUsersByUserId(String userId);
+*/
 }

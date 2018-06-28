@@ -36,8 +36,7 @@
     <result column="auto_status" property="autoStatus" jdbcType="TINYINT" />
     <result column="web_status" property="webStatus" jdbcType="TINYINT" />
     <result column="api_status" property="apiStatus" jdbcType="TINYINT" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
-    <result column="addip" property="addip" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="period_status" property="periodStatus" jdbcType="TINYINT" />
     <result column="isok" property="isok" jdbcType="TINYINT" />
     <result column="is_report" property="isReport" jdbcType="TINYINT" />
@@ -58,8 +57,9 @@
     <result column="invite_region_id" property="inviteRegionId" jdbcType="INTEGER" />
     <result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
     <result column="tender_user_name" property="tenderUserName" jdbcType="VARCHAR" />
-    <result column="tender_type" property="tenderType" jdbcType="INTEGER" />
+    <result column="tender_type" property="tenderType" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -126,11 +126,11 @@
     recover_account_interest_yes, recover_account_capital_yes, recover_account_wait, 
     recover_account_interest_wait, recover_account_capital_wait, recover_times, recover_advance_fee, 
     recover_late_fee, tender_award_fee, loan_amount, loan_fee, contents, auto_status, 
-    web_status, api_status, add_time, addip, period_status, isok, is_report, flag, activity_flag, 
+    web_status, api_status, add_ip, period_status, isok, is_report, flag, activity_flag, 
     client, web, invite_user_name, invite_branch_id, invite_branch_name, invite_department_id, 
     invite_department_name, tender_user_attribute, invite_user_attribute, order_date, 
     loan_ordid, invite_user_id, invite_region_id, invite_region_name, tender_user_name, 
-    tender_type, remark
+    tender_type, remark, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpnExample" >
     select
@@ -181,15 +181,16 @@
       recover_times, recover_advance_fee, recover_late_fee, 
       tender_award_fee, loan_amount, loan_fee, 
       contents, auto_status, web_status, 
-      api_status, add_time, addip, 
-      period_status, isok, is_report, 
-      flag, activity_flag, client, 
-      web, invite_user_name, invite_branch_id, 
-      invite_branch_name, invite_department_id, invite_department_name, 
+      api_status, add_ip, period_status, 
+      isok, is_report, flag, 
+      activity_flag, client, web, 
+      invite_user_name, invite_branch_id, invite_branch_name, 
+      invite_department_id, invite_department_name, 
       tender_user_attribute, invite_user_attribute, 
       order_date, loan_ordid, invite_user_id, 
       invite_region_id, invite_region_name, tender_user_name, 
-      tender_type, remark)
+      tender_type, remark, create_time
+      )
     values (#{userId,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{borrowNid,jdbcType=VARCHAR}, 
       #{nid,jdbcType=VARCHAR}, #{accountTender,jdbcType=DECIMAL}, #{account,jdbcType=DECIMAL}, 
       #{changeStatus,jdbcType=TINYINT}, #{changeUserid,jdbcType=INTEGER}, #{changePeriod,jdbcType=INTEGER}, 
@@ -202,15 +203,16 @@
       #{recoverTimes,jdbcType=INTEGER}, #{recoverAdvanceFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
       #{tenderAwardFee,jdbcType=DECIMAL}, #{loanAmount,jdbcType=DECIMAL}, #{loanFee,jdbcType=DECIMAL}, 
       #{contents,jdbcType=VARCHAR}, #{autoStatus,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, 
-      #{apiStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{addip,jdbcType=VARCHAR}, 
-      #{periodStatus,jdbcType=TINYINT}, #{isok,jdbcType=TINYINT}, #{isReport,jdbcType=TINYINT}, 
-      #{flag,jdbcType=TINYINT}, #{activityFlag,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, 
-      #{web,jdbcType=TINYINT}, #{inviteUserName,jdbcType=VARCHAR}, #{inviteBranchId,jdbcType=INTEGER}, 
-      #{inviteBranchName,jdbcType=VARCHAR}, #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
+      #{apiStatus,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, #{periodStatus,jdbcType=TINYINT}, 
+      #{isok,jdbcType=TINYINT}, #{isReport,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}, 
+      #{activityFlag,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{web,jdbcType=TINYINT}, 
+      #{inviteUserName,jdbcType=VARCHAR}, #{inviteBranchId,jdbcType=INTEGER}, #{inviteBranchName,jdbcType=VARCHAR}, 
+      #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
       #{tenderUserAttribute,jdbcType=INTEGER}, #{inviteUserAttribute,jdbcType=INTEGER}, 
       #{orderDate,jdbcType=VARCHAR}, #{loanOrdid,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
       #{inviteRegionId,jdbcType=INTEGER}, #{inviteRegionName,jdbcType=VARCHAR}, #{tenderUserName,jdbcType=VARCHAR}, 
-      #{tenderType,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+      #{tenderType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -317,11 +319,8 @@
       <if test="apiStatus != null" >
         api_status,
       </if>
-      <if test="addTime != null" >
-        add_time,
-      </if>
-      <if test="addip != null" >
-        addip,
+      <if test="addIp != null" >
+        add_ip,
       </if>
       <if test="periodStatus != null" >
         period_status,
@@ -388,6 +387,9 @@
       </if>
       <if test="remark != null" >
         remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -490,11 +492,8 @@
       <if test="apiStatus != null" >
         #{apiStatus,jdbcType=TINYINT},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addip != null" >
-        #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="periodStatus != null" >
         #{periodStatus,jdbcType=TINYINT},
@@ -557,10 +556,13 @@
         #{tenderUserName,jdbcType=VARCHAR},
       </if>
       <if test="tenderType != null" >
-        #{tenderType,jdbcType=INTEGER},
+        #{tenderType,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -675,11 +677,8 @@
       <if test="record.apiStatus != null" >
         api_status = #{record.apiStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.addip != null" >
-        addip = #{record.addip,jdbcType=VARCHAR},
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
       <if test="record.periodStatus != null" >
         period_status = #{record.periodStatus,jdbcType=TINYINT},
@@ -742,10 +741,13 @@
         tender_user_name = #{record.tenderUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.tenderType != null" >
-        tender_type = #{record.tenderType,jdbcType=INTEGER},
+        tender_type = #{record.tenderType,jdbcType=TINYINT},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -788,8 +790,7 @@
       auto_status = #{record.autoStatus,jdbcType=TINYINT},
       web_status = #{record.webStatus,jdbcType=TINYINT},
       api_status = #{record.apiStatus,jdbcType=TINYINT},
-      add_time = #{record.addTime,jdbcType=INTEGER},
-      addip = #{record.addip,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
       period_status = #{record.periodStatus,jdbcType=TINYINT},
       isok = #{record.isok,jdbcType=TINYINT},
       is_report = #{record.isReport,jdbcType=TINYINT},
@@ -810,8 +811,9 @@
       invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
       invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
       tender_user_name = #{record.tenderUserName,jdbcType=VARCHAR},
-      tender_type = #{record.tenderType,jdbcType=INTEGER},
-      remark = #{record.remark,jdbcType=VARCHAR}
+      tender_type = #{record.tenderType,jdbcType=TINYINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -918,11 +920,8 @@
       <if test="apiStatus != null" >
         api_status = #{apiStatus,jdbcType=TINYINT},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addip != null" >
-        addip = #{addip,jdbcType=VARCHAR},
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
       <if test="periodStatus != null" >
         period_status = #{periodStatus,jdbcType=TINYINT},
@@ -985,10 +984,13 @@
         tender_user_name = #{tenderUserName,jdbcType=VARCHAR},
       </if>
       <if test="tenderType != null" >
-        tender_type = #{tenderType,jdbcType=INTEGER},
+        tender_type = #{tenderType,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -1028,8 +1030,7 @@
       auto_status = #{autoStatus,jdbcType=TINYINT},
       web_status = #{webStatus,jdbcType=TINYINT},
       api_status = #{apiStatus,jdbcType=TINYINT},
-      add_time = #{addTime,jdbcType=INTEGER},
-      addip = #{addip,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
       period_status = #{periodStatus,jdbcType=TINYINT},
       isok = #{isok,jdbcType=TINYINT},
       is_report = #{isReport,jdbcType=TINYINT},
@@ -1050,8 +1051,9 @@
       invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
       invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
       tender_user_name = #{tenderUserName,jdbcType=VARCHAR},
-      tender_type = #{tenderType,jdbcType=INTEGER},
-      remark = #{remark,jdbcType=VARCHAR}
+      tender_type = #{tenderType,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -68,8 +68,8 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
         cra.andStatusIn(status);// 提现状态为提现中, 审核中（处理中）, 提现失败
         cra.andBankFlagEqualTo(1);// 提现平台:江西银行
         // 当前时间
-        cra.andAddTimeGreaterThanOrEqualTo(GetDate.countDate(5,2));// TODO T-1天之前
-        cra.andAddTimeLessThanOrEqualTo(GetDate.getMinutesAfter(GetDate.getDate(),-30));// 30分钟之前的充值订单TODO
+        cra.andCreateTimeGreaterThanOrEqualTo(GetDate.countDate(5,2));// TODO T-1天之前
+        cra.andCreateTimeLessThanOrEqualTo(GetDate.getMinutesAfter(GetDate.getDate(),-30));// 30分钟之前的充值订单TODO
         return this.accountwithdrawMapper.selectByExample(example);
     }
 

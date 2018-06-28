@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.user.dao.mapper.auto.UserInfoCustomizeMapper">
-	<resultMap id="UserInfoMapResult" type="com.hyjf.am.user.dao.model.auto.UserInfoCustomize">
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserInfoCustomizeMapper">
+	<resultMap id="UserInfoMapResult" type="com.hyjf.am.user.dao.model.customize.UserInfoCustomize">
 		<result column="user_id" property="userId" /> <!-- 用户名 -->
 		<result column="username" property="userName" /> <!-- 用户名 -->
 		<result column="truename" property="trueName" /> <!--   -->
@@ -14,7 +14,7 @@
 		<result column="attribute" property="attribute" /> <!-- 属性-->
 	</resultMap>
 
-	<resultMap id="UsersPortraitMap" type="com.hyjf.am.user.dao.model.auto.UsersPortrait">
+	<resultMap id="UsersPortraitMap" type="com.hyjf.am.user.dao.model.auto.UserPortrait">
 		<id column="user_id" jdbcType="INTEGER" property="userId" />
 		<result column="user_name" jdbcType="VARCHAR" property="userName" />
 		<result column="age" jdbcType="INTEGER" property="age" />
@@ -124,7 +124,7 @@
 		group by u.user_id
 	</select>
 
-	<resultMap id="UserDepartmentInfoMapResult" type="com.hyjf.am.user.dao.model.auto.UserInfoCustomize">
+	<resultMap id="UserDepartmentInfoMapResult" type="com.hyjf.am.user.dao.model.customize.UserInfoCustomize">
 		<result column="user_id" property="userId"  jdbcType="INTEGER" /> <!-- 用户名 -->
 		<result column="username" property="userName"  jdbcType="VARCHAR" /> <!-- 用户名 -->
 		<result column="regionId" property="regionId"  jdbcType="INTEGER" /> <!-- 大区 -->
@@ -171,7 +171,7 @@
 			`od`.id IS NOT NULL
 	</select>
 
-	<resultMap id="DepartmentInfoResultMap" type="com.hyjf.am.user.dao.model.auto.OADepartmentCustomize" >
+	<resultMap id="DepartmentInfoResultMap" type="com.hyjf.am.user.dao.model.customize.OADepartmentCustomize" >
 	  <id column="id" property="id" jdbcType="INTEGER" />
 	  <result column="parentid" property="parentid" jdbcType="INTEGER" />
 	  <result column="name" property="name" jdbcType="VARCHAR" />
@@ -189,7 +189,7 @@
 	</resultMap>
 	<!-- 查询部门信息  -->
 	<select id="queryDepartmentInfo" resultMap="DepartmentInfoResultMap"
-		parameterType="com.hyjf.am.user.dao.model.auto.OADepartmentCustomize">
+		parameterType="com.hyjf.am.user.dao.model.customize.OADepartmentCustomize">
 		SELECT
 			id,
 			parentid,

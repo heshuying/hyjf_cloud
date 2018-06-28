@@ -1183,66 +1183,6 @@ public class HjhAccedeExample {
             return (Criteria) this;
         }
 
-        public Criteria andAddTimeIsNull() {
-            addCriterion("add_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeIsNotNull() {
-            addCriterion("add_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeEqualTo(Integer value) {
-            addCriterion("add_time =", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotEqualTo(Integer value) {
-            addCriterion("add_time <>", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeGreaterThan(Integer value) {
-            addCriterion("add_time >", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("add_time >=", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeLessThan(Integer value) {
-            addCriterion("add_time <", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeLessThanOrEqualTo(Integer value) {
-            addCriterion("add_time <=", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeIn(List<Integer> values) {
-            addCriterion("add_time in", values, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotIn(List<Integer> values) {
-            addCriterion("add_time not in", values, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeBetween(Integer value1, Integer value2) {
-            addCriterion("add_time between", value1, value2, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotBetween(Integer value1, Integer value2) {
-            addCriterion("add_time not between", value1, value2, "addTime");
-            return (Criteria) this;
-        }
-
         public Criteria andCountInterestTimeIsNull() {
             addCriterion("count_interest_time is null");
             return (Criteria) this;
@@ -2500,6 +2440,606 @@ public class HjhAccedeExample {
 
         public Criteria andShouldPayInterestNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("should_pay_interest not between", value1, value2, "shouldPayInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprIsNull() {
+            addCriterion("expect_apr is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprIsNotNull() {
+            addCriterion("expect_apr is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprEqualTo(BigDecimal value) {
+            addCriterion("expect_apr =", value, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprNotEqualTo(BigDecimal value) {
+            addCriterion("expect_apr <>", value, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprGreaterThan(BigDecimal value) {
+            addCriterion("expect_apr >", value, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("expect_apr >=", value, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprLessThan(BigDecimal value) {
+            addCriterion("expect_apr <", value, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("expect_apr <=", value, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprIn(List<BigDecimal> values) {
+            addCriterion("expect_apr in", values, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprNotIn(List<BigDecimal> values) {
+            addCriterion("expect_apr not in", values, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("expect_apr between", value1, value2, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpectAprNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("expect_apr not between", value1, value2, "expectApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueIsNull() {
+            addCriterion("fair_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueIsNotNull() {
+            addCriterion("fair_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueEqualTo(BigDecimal value) {
+            addCriterion("fair_value =", value, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueNotEqualTo(BigDecimal value) {
+            addCriterion("fair_value <>", value, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueGreaterThan(BigDecimal value) {
+            addCriterion("fair_value >", value, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("fair_value >=", value, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueLessThan(BigDecimal value) {
+            addCriterion("fair_value <", value, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("fair_value <=", value, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueIn(List<BigDecimal> values) {
+            addCriterion("fair_value in", values, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueNotIn(List<BigDecimal> values) {
+            addCriterion("fair_value not in", values, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("fair_value between", value1, value2, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andFairValueNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("fair_value not between", value1, value2, "fairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueIsNull() {
+            addCriterion("liquidation_fair_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueIsNotNull() {
+            addCriterion("liquidation_fair_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueEqualTo(BigDecimal value) {
+            addCriterion("liquidation_fair_value =", value, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueNotEqualTo(BigDecimal value) {
+            addCriterion("liquidation_fair_value <>", value, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueGreaterThan(BigDecimal value) {
+            addCriterion("liquidation_fair_value >", value, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("liquidation_fair_value >=", value, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueLessThan(BigDecimal value) {
+            addCriterion("liquidation_fair_value <", value, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("liquidation_fair_value <=", value, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueIn(List<BigDecimal> values) {
+            addCriterion("liquidation_fair_value in", values, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueNotIn(List<BigDecimal> values) {
+            addCriterion("liquidation_fair_value not in", values, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("liquidation_fair_value between", value1, value2, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andLiquidationFairValueNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("liquidation_fair_value not between", value1, value2, "liquidationFairValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprIsNull() {
+            addCriterion("actual_apr is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprIsNotNull() {
+            addCriterion("actual_apr is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprEqualTo(BigDecimal value) {
+            addCriterion("actual_apr =", value, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprNotEqualTo(BigDecimal value) {
+            addCriterion("actual_apr <>", value, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprGreaterThan(BigDecimal value) {
+            addCriterion("actual_apr >", value, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("actual_apr >=", value, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprLessThan(BigDecimal value) {
+            addCriterion("actual_apr <", value, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("actual_apr <=", value, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprIn(List<BigDecimal> values) {
+            addCriterion("actual_apr in", values, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprNotIn(List<BigDecimal> values) {
+            addCriterion("actual_apr not in", values, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("actual_apr between", value1, value2, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualAprNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("actual_apr not between", value1, value2, "actualApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsIsNull() {
+            addCriterion("invest_counts is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsIsNotNull() {
+            addCriterion("invest_counts is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsEqualTo(Integer value) {
+            addCriterion("invest_counts =", value, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsNotEqualTo(Integer value) {
+            addCriterion("invest_counts <>", value, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsGreaterThan(Integer value) {
+            addCriterion("invest_counts >", value, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invest_counts >=", value, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsLessThan(Integer value) {
+            addCriterion("invest_counts <", value, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsLessThanOrEqualTo(Integer value) {
+            addCriterion("invest_counts <=", value, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsIn(List<Integer> values) {
+            addCriterion("invest_counts in", values, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsNotIn(List<Integer> values) {
+            addCriterion("invest_counts not in", values, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsBetween(Integer value1, Integer value2) {
+            addCriterion("invest_counts between", value1, value2, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestCountsNotBetween(Integer value1, Integer value2) {
+            addCriterion("invest_counts not between", value1, value2, "investCounts");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesIsNull() {
+            addCriterion("match_dates is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesIsNotNull() {
+            addCriterion("match_dates is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesEqualTo(Byte value) {
+            addCriterion("match_dates =", value, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesNotEqualTo(Byte value) {
+            addCriterion("match_dates <>", value, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesGreaterThan(Byte value) {
+            addCriterion("match_dates >", value, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesGreaterThanOrEqualTo(Byte value) {
+            addCriterion("match_dates >=", value, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesLessThan(Byte value) {
+            addCriterion("match_dates <", value, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesLessThanOrEqualTo(Byte value) {
+            addCriterion("match_dates <=", value, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesIn(List<Byte> values) {
+            addCriterion("match_dates in", values, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesNotIn(List<Byte> values) {
+            addCriterion("match_dates not in", values, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesBetween(Byte value1, Byte value2) {
+            addCriterion("match_dates between", value1, value2, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andMatchDatesNotBetween(Byte value1, Byte value2) {
+            addCriterion("match_dates not between", value1, value2, "matchDates");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeIsNull() {
+            addCriterion("lqd_service_fee is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeIsNotNull() {
+            addCriterion("lqd_service_fee is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_fee =", value, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeNotEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_fee <>", value, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeGreaterThan(BigDecimal value) {
+            addCriterion("lqd_service_fee >", value, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_fee >=", value, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeLessThan(BigDecimal value) {
+            addCriterion("lqd_service_fee <", value, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_fee <=", value, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeIn(List<BigDecimal> values) {
+            addCriterion("lqd_service_fee in", values, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeNotIn(List<BigDecimal> values) {
+            addCriterion("lqd_service_fee not in", values, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lqd_service_fee between", value1, value2, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceFeeNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lqd_service_fee not between", value1, value2, "lqdServiceFee");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprIsNull() {
+            addCriterion("lqd_service_apr is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprIsNotNull() {
+            addCriterion("lqd_service_apr is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_apr =", value, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprNotEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_apr <>", value, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprGreaterThan(BigDecimal value) {
+            addCriterion("lqd_service_apr >", value, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_apr >=", value, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprLessThan(BigDecimal value) {
+            addCriterion("lqd_service_apr <", value, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("lqd_service_apr <=", value, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprIn(List<BigDecimal> values) {
+            addCriterion("lqd_service_apr in", values, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprNotIn(List<BigDecimal> values) {
+            addCriterion("lqd_service_apr not in", values, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lqd_service_apr between", value1, value2, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdServiceAprNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lqd_service_apr not between", value1, value2, "lqdServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprIsNull() {
+            addCriterion("invest_service_apr is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprIsNotNull() {
+            addCriterion("invest_service_apr is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprEqualTo(BigDecimal value) {
+            addCriterion("invest_service_apr =", value, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprNotEqualTo(BigDecimal value) {
+            addCriterion("invest_service_apr <>", value, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprGreaterThan(BigDecimal value) {
+            addCriterion("invest_service_apr >", value, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("invest_service_apr >=", value, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprLessThan(BigDecimal value) {
+            addCriterion("invest_service_apr <", value, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("invest_service_apr <=", value, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprIn(List<BigDecimal> values) {
+            addCriterion("invest_service_apr in", values, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprNotIn(List<BigDecimal> values) {
+            addCriterion("invest_service_apr not in", values, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("invest_service_apr between", value1, value2, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestServiceAprNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("invest_service_apr not between", value1, value2, "investServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressIsNull() {
+            addCriterion("lqd_progress is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressIsNotNull() {
+            addCriterion("lqd_progress is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressEqualTo(BigDecimal value) {
+            addCriterion("lqd_progress =", value, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressNotEqualTo(BigDecimal value) {
+            addCriterion("lqd_progress <>", value, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressGreaterThan(BigDecimal value) {
+            addCriterion("lqd_progress >", value, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("lqd_progress >=", value, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressLessThan(BigDecimal value) {
+            addCriterion("lqd_progress <", value, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("lqd_progress <=", value, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressIn(List<BigDecimal> values) {
+            addCriterion("lqd_progress in", values, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressNotIn(List<BigDecimal> values) {
+            addCriterion("lqd_progress not in", values, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lqd_progress between", value1, value2, "lqdProgress");
+            return (Criteria) this;
+        }
+
+        public Criteria andLqdProgressNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lqd_progress not between", value1, value2, "lqdProgress");
             return (Criteria) this;
         }
 

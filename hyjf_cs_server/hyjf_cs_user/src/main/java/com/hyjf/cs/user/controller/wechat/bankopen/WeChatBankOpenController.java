@@ -8,7 +8,7 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.WechatResult;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -48,9 +47,9 @@ public class WeChatBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
     @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
-    public WechatResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public WeChatResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         logger.info("openAccount userInfo start, token is :{}", token);
-        WechatResult<String> result = new WechatResult<String>();
+        WeChatResult<String> result = new WeChatResult<String>();
         UserVO userVO = bankOpenService.getUsers(token);
         if (userVO != null) {
             logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());

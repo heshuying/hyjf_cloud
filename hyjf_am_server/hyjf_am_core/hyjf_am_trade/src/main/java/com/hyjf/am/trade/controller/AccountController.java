@@ -49,4 +49,9 @@ public class AccountController {
         }
         return result;
     }
+
+    @PostMapping("/updateOfPlanRepayAccount")
+    public Integer updateOfPlanRepayAccount(@RequestBody AccountVO accountVO){
+        return this.accountService.updateOfPlanRepayAccount(accountVO);
+    }
 }

@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.DES;
-import com.hyjf.cs.common.bean.result.WechatResult;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
@@ -50,9 +50,9 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WechatResult register(@RequestHeader String key, @RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+    public WeChatResult register(@RequestHeader String key, @RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         logger.info("微信端注册接口, mobile is :{}", JSONObject.toJSONString(registerRequest));
-        WechatResult resultBean = new WechatResult();
+        WeChatResult resultBean = new WeChatResult();
         String pwd = DES.decodeValue(key, registerRequest.getPassword());
         registerRequest.setPassword(pwd);
         registService.checkParam(registerRequest);
