@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.HjhDebtDetailCustomizeMapper">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.HjhDebtDetailCustomizeMapper">
 
 	<resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhDebtDetail" >
 	    <id column="id" property="id" jdbcType="INTEGER" />
@@ -126,6 +126,21 @@
 			repay_period ASC
 		LIMIT 1;
   </select>
+
+	<!-- 查询当前时间所在的计息期间-->
+	<select id="selectDebtDetailCurPeriod" resultMap="BaseResultMap" parameterType="String" >
+		select
+		<include refid="Base_Column_List" />
+		FROM
+		hyjf_hjh_debt_detail
+		WHERE
+		order_id = #{orderId}
+		AND UNIX_TIMESTAMP(FROM_UNIXTIME(repay_time,'%Y-%m-%d')) - UNIX_TIMESTAMP(DATE_FORMAT(now(),'%Y-%m-%d')) >= 0
+		AND status = 1
+		ORDER BY
+		repay_period ASC
+		LIMIT 1;
+	</select>
   
   <select id="selectDebtDetailLastRepay" resultMap="BaseResultMap" parameterType="String"  >
 	    select 
@@ -158,5 +173,27 @@
 		WHERE
 			order_id = #{orderId};
   </update>
+  <!--清算时,更新计划订单的公允价值等 -->
+  <update id="updateLiquidationHjhAccede" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
+	  UPDATE hyjf_hjh_accede
+        SET
+			 fair_value = #{fairValue,jdbcType=DECIMAL},
+			 lqd_service_apr = #{lqdServiceApr,jdbcType=DECIMAL},
+			 liquidation_fair_value = #{liquidationFairValue,jdbcType=DECIMAL},
+			 lqd_progress = #{lqdProgress,jdbcType=DECIMAL}
+	  WHERE
+	     	 accede_order_id = #{accedeOrderId};
+  </update>
+
+	<!--计算时,更新计划订单的公允价值等 -->
+	<update id="updateCalculateHjhAccede" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
+		UPDATE hyjf_hjh_accede
+		SET
+			fair_value = #{fairValue,jdbcType=DECIMAL},
+			lqd_service_apr = #{lqdServiceApr,jdbcType=DECIMAL},
+			lqd_progress = #{lqdProgress,jdbcType=DECIMAL}
+		WHERE
+			accede_order_id = #{accedeOrderId};
+	</update>
 	
 </mapper>
