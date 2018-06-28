@@ -113,7 +113,7 @@ public interface MQConstant {
 	String FDD_TOPIC = "FDD_TOPIC";
 
 	/**
-	 * 法大大
+	 * 法大大CA认证
 	 */
 	String FDD_CERTIFICATE_AUTHORITY_GROUP = "FDD_CERTIFICATE_AUTHORITY_GROUP";
 	String FDD_CERTIFICATE_AUTHORITY_TOPIC = "FDD_CERTIFICATE_AUTHORITY_TOPIC";
@@ -128,6 +128,12 @@ public interface MQConstant {
 	 */
 	String HJH_QUIT = "HJH_QUIT";
 	String HJH_QUIT_TOPIC = "HJH_QUIT_TOPIC";
+
+	/**
+	 * 汇计划自动计算公允价值
+	 */
+	String HJH_CALCULATE_FAIR_VALUE_GROUP = "HJH_GROUP";
+	String HJH_CALCULATE_FAIR_VALUE_TOPIC = "HJH_CALCULATE_FAIR_VALUE_TOPIC";
 
 	/**
 	 * 存款业务红包流水全明细数据文件下载定时任务相关

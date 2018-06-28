@@ -10,13 +10,12 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
+import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.UserManagerService;
+import com.hyjf.am.user.service.callcenter.CallCenterBankService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +45,8 @@ import java.util.Map;
 public class UserManagerController {
     @Autowired
     private UserManagerService userManagerService;
+    @Autowired
+    private CallCenterBankService callCenterBankService;
     private static Logger logger = LoggerFactory.getLogger(UserManagerController.class);
 
     /**
@@ -58,19 +59,24 @@ public class UserManagerController {
     public UserManagerResponse findUserslist(@RequestBody @Valid UserManagerRequest request) {
         logger.info("---findUserslist by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
+        String returnCode = Response.FAIL;
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = userManagerService.countUserRecord(mapParam);
         Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
+        if(request.getLimit()==0){
+            paginator = new Paginator(request.getPaginatorPage(), usesrCount);
+        }
         List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,paginator.getOffset(), paginator.getLimit());
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, UserManagerVO.class);
                 response.setResultList(userVoList);
                 response.setCount(usesrCount);
-                response.setRtn(Response.SUCCESS);//代表成功
+                returnCode = Response.SUCCESS;
+
             }
         }
-
+        response.setRtn(returnCode);//代表成功
         return response;
     }
 
@@ -219,10 +225,11 @@ public class UserManagerController {
     @RequestMapping("/selectUserUpdateInfoByUserId/{userId}")
     public UserManagerUpdateResponse selectUserUpdateInfoByUserId(@PathVariable String userId) {
         logger.info("---selectUserUpdateInfoByUserId---  " + userId);
+        //
         UserManagerUpdateResponse response = new UserManagerUpdateResponse();
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
-            UserManagerUpdateVO userManagerUpdateVo = null;
+            UserManagerUpdateVO userManagerUpdateVo = new UserManagerUpdateVO();
             UserManagerUpdateCustomize userManagerUpdateCustomize = userManagerService.selectUserUpdateInfoByUserId(intUserId);
             if (null != userManagerUpdateCustomize) {
                 BeanUtils.copyProperties(userManagerUpdateCustomize, userManagerUpdateVo);
@@ -356,7 +363,7 @@ public class UserManagerController {
     @RequestMapping("/queryBankOpenAccountByUserId/{userId}")
     public BankOpenAccountResponse queryBankOpenAccountByUserId(@Valid int userId) {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
-        BankOpenAccountVO bankOpenAccountVO = null;
+        BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
         BankOpenAccount bankOpenAccount = userManagerService.queryBankOpenAccountByUserId(userId);
         if (null != bankOpenAccount) {
             BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
@@ -444,8 +451,6 @@ public class UserManagerController {
         mapParam.put("combotreeListSrch", userRequest.getCombotreeListSrch());
         mapParam.put("customerId", userRequest.getCustomerId());
         mapParam.put("instCodeSrch", userRequest.getInstCodeSrch());
-       /* mapParam.put("limitStart", userRequest.getLimitStart());
-        mapParam.put("limitEnd", userRequest.getLimitEnd());*/
         mapParam.put("whereFlag", getWhereFlag(mapParam));
         return mapParam;
     }
@@ -472,5 +477,100 @@ public class UserManagerController {
         return whereFlag;
     }
 
+    /**
+     * 获取某一用户的信息修改列表
+     * @param request
+     * @return
+     */
+    @RequestMapping("/selectUserChageLog")
+    public UserChangeLogResponse selectUserChageLog(@RequestBody @Valid UserChangeLogRequest request){
+        UserChangeLogResponse response = new UserChangeLogResponse();
+        Map<String,Object> mapParam = new HashMap<>();
+        String returnCode = Response.FAIL;
+        if(null!=request){
+            mapParam.put("userId",request.getUserId());
+            //mapParam.put("changeType",request.getChangeType());
+        }
+       /* List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
+        if (!CollectionUtils.isEmpty(userChangeLogsList)) {
+            List<UserChangeLogVO> userChangeLogVOList = CommonUtils.convertBeanList(userChangeLogsList, UserChangeLogVO.class);
+            response.setResultList(userChangeLogVOList);
+            response.setCount(userChangeLogsList.size());
+            returnCode = Response.SUCCESS;
+        }*/
+        response.setRtn(returnCode);//代表成功
+        return response;
+    }
+
+    /**
+     * 获取推荐人姓名查找用户
+     * @param recommendName
+     * @return
+     */
+    @RequestMapping("/selectUserByRecommendName/{recommendName}")
+    public UserResponse selectUserByRecommendName(@PathVariable String recommendName){
+        UserResponse response = new UserResponse();
+        String returnCode = Response.FAIL;
+        User userChangeLogs= userManagerService.selectUserByRecommendName(recommendName);
+        UserVO userVO = new UserVO();
+        if(null!=userChangeLogs){
+            BeanUtils.copyProperties(userChangeLogs, userVO);
+            response.setResult(userVO);
+            returnCode = Response.SUCCESS;
+        }
+        response.setRtn(returnCode);//代表成功
+        return response;
+    }
+
+    /**
+     * 获取推荐人姓名查找用户
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectUserRecommendUserId/{userId}")
+    public UserRecommendCustomizeResponse selectUserRecommendUserId(@PathVariable String userId){
+        UserRecommendCustomizeResponse response = new UserRecommendCustomizeResponse();
+        String returnCode = Response.FAIL;
+        if(StringUtils.isNotBlank(userId)){
+            int userInt = Integer.parseInt(userId);
+            UserRecommendCustomize userRecommendCustomize = userManagerService.searchUserRecommend(userInt);
+            UserRecommendCustomizeVO userRecommendCustomizeVO = new UserRecommendCustomizeVO();
+            if(null!=userRecommendCustomize){
+                BeanUtils.copyProperties(userRecommendCustomize, userRecommendCustomizeVO);
+                response.setResult(userRecommendCustomizeVO);
+                returnCode = Response.SUCCESS;
+            }
+        }
+        response.setRtn(returnCode);//代表成功
+        return response;
+    }
+
+    @RequestMapping("/selectSpreadsUsersByUserId")
+    public SpreadsUserResponse selectSpreadsUsersByUserId(@Valid String userId){
+        SpreadsUserResponse response = new SpreadsUserResponse();
+        String returnCode = Response.FAIL;
+        if(StringUtils.isNotEmpty(userId)){
+            int intUserId = Integer.parseInt(userId);
+            SpreadsUser spreadsUser = userManagerService.selectSpreadsUsersByUserId(intUserId);
+            SpreadsUserVO spreadsUserVO = new SpreadsUserVO();
+            if(null!=spreadsUser){
+                BeanUtils.copyProperties(spreadsUser, spreadsUserVO);
+                response.setResult(spreadsUserVO);
+                returnCode = Response.SUCCESS;
+            }
+        }
+        response.setRtn(returnCode);
+        return response;
+    }
+    @RequestMapping("/getTiedCardForBank/{userId}")
+    public BankCardResponse getTiedCardOfAccountBank(@PathVariable Integer userId){
+        BankCardResponse bankCardResponse = new BankCardResponse();
+        List<BankCard> bankCardList = callCenterBankService.getTiedCardOfAccountBank(userId);
+        if(!CollectionUtils.isEmpty(bankCardList)){
+            List<BankCardVO> bankCardVOList = CommonUtils.convertBeanList(bankCardList,BankCardVO.class);
+            bankCardResponse.setResultList(bankCardVOList);
+        }
+        return bankCardResponse;
+    }
 
 }
