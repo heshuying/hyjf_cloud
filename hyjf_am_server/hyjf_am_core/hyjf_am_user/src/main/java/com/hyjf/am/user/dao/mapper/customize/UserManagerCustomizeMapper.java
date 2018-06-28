@@ -3,11 +3,8 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
+import com.hyjf.am.user.dao.model.auto.UserChangeLog;
+import com.hyjf.am.user.dao.model.customize.*;
 
 import java.util.List;
 import java.util.Map;
@@ -58,4 +55,19 @@ public interface UserManagerCustomizeMapper {
      * @return
      */
     Integer selectTenderCount(Integer userId);
+
+    List<UserManagerUpdateCustomize> selectUserUpdateById(int userId);
+    /**
+     * 获取某一用户的信息修改列表
+     * @param mapParam
+     * @return
+     */
+   List<UserChangeLog> queryChangeLogList(Map<String,Object> mapParam);
+
+    /**
+     * 根据用户id获取推荐信息
+     * @param userId
+     * @return
+     */
+    List<UserRecommendCustomize> searchUserRecommend(int userId);
 }

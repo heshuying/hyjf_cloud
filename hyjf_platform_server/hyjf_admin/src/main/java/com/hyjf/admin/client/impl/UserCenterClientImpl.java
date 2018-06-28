@@ -220,9 +220,12 @@ public class UserCenterClientImpl implements UserCenterClient {
      * @return
      */
     @Override
-    public UserRecommendVO selectUserRecommendByUserId(String userId) {
-        UserRecommendResponse response;
-
+    public UserRecommendCustomizeVO selectUserRecommendByUserId(String userId) {
+        UserRecommendCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userManager/selectUserRecommendUserId/" +userId, UserRecommendCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
         return null;
     }
 
@@ -236,7 +239,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public int countUserByMobile(int userId, String mobile) {
         int checkFlg = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/checkMobileByUserId/" + userId + mobile, Integer.class).
+                getForEntity("http://AM-USER/am-user/userManager/checkMobileByUserId/" + userId +"/"+ mobile, Integer.class,String.class).
                 getBody();
         return checkFlg;
     }
@@ -251,7 +254,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public int checkRecommend(String userId, String recommendName) {
         int checkFlg = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/checkRecommend/{userId}/{recommendName}" + userId + recommendName, Integer.class).
+                getForEntity("http://AM-USER/am-user/userManager/checkRecommend/" + userId +"/"+ recommendName, Integer.class).
                 getBody();
         return checkFlg;
     }
@@ -475,4 +478,45 @@ public class UserCenterClientImpl implements UserCenterClient {
                 .postForEntity("http://AM-USER/am-user/userManager/updateUser", request, Integer.class).getBody();
         return result;
     }
+
+    /**
+     * 获取某一用户的信息修改列表
+     * @param request
+     * @return
+     */
+    @Override
+    public  List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request){
+        UserChangeLogResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/selectUserChageLog" ,request, UserChangeLogResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据推荐人姓名查找用户
+     * @param recommendName
+     * @return
+     */
+    @Override
+    public  UserVO selectUserByRecommendName(String recommendName){
+        UserResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userManager/selectUserByRecommendName/" +recommendName, UserResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public  SpreadsUserVO selectSpreadsUsersByUserId(String userId){
+        SpreadsUserResponse  response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userManager/selectSpreadsUsersByUserId/" +userId, SpreadsUserResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 }
