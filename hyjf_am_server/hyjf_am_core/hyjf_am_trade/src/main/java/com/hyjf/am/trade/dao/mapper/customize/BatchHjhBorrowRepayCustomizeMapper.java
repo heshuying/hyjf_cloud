@@ -13,10 +13,25 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccede;
  */
 public interface BatchHjhBorrowRepayCustomizeMapper {
 
+    /**
+     * 变更计划还款账户数据
+     * @param account
+     * @return
+     */
     Integer updateOfPlanRepayAccount(Account account);
 
+    /**
+     * 更新待收收益
+     * @param hjhAccede
+     * @return
+     */
     Integer updateHjhBorrowRepayInterest(HjhAccede hjhAccede);
 
+    /**
+     * 进入锁定期后 修改账户总资产 待收收益
+     * @param account
+     * @return
+     */
     Integer updateBankTotalForLockPlan(Account account);
 
     /**

@@ -101,6 +101,11 @@
             <artifactId>hyjf_am_common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.hyjf</groupId>
+            <artifactId>hyjf_pay_lib</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -131,12 +136,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
-                <configuration>
+              <!--  <configuration>
                     <excludes>
                         <exclude>**/application.yml</exclude>
                         <exclude>**/bootstrap.yml</exclude>
                     </excludes>
-                </configuration>
+                </configuration>-->
             </plugin>
         </plugins>
 
