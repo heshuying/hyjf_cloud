@@ -348,7 +348,7 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
                         // 加入订单的债权价值
                         totalFairValue = totalFairValue.add(fairValue);
                     } else {
-                        // TODO 有未还款 最后一期或者往前逾期
+                        // 有未还款 最后一期或者往前逾期
                         // 三个月计划 包含 2个月 标的
                         // 取最后一期债权信息
                         HjhDebtDetail lastTermDebtDetail = this.selectLastTermDebtDetail(hjhDebtDetail);
