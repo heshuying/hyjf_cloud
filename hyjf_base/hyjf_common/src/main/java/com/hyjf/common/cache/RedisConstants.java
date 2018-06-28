@@ -64,4 +64,15 @@ public class RedisConstants {
      * 汇计划进入锁定期处理中队列
      */
     public static final String HJH_LOCK_REPEAT = "hjh_lockisrepeat";
+
+    /**
+     * 散标投资异步防重校验
+     */
+    public static final String TENDER_ORDERID = "tender_orderid";
+
+    /**
+     * 投资优惠券使用rediskey
+     */
+    public static final String COUPON_TENDER_KEY = "coupon_tender";
+
 }

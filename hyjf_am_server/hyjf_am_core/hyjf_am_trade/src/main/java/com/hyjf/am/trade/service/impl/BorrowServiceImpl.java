@@ -3,58 +3,32 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.model.auto.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
-import java.util.Date;
-import java.util.List;
-
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.model.auto.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowManinfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
 import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.mapper.customize.trade.AccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.Producer;
+import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.TenderBgVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +38,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.hyjf.common.util.GetDate;
 
 /**
  * @author fuqiang
@@ -96,9 +69,37 @@ public class BorrowServiceImpl implements BorrowService {
     @Autowired
     private BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
 
-
     @Autowired
     private BorrowCustomizeMapper borrowCustomizeMapper;
+
+    @Autowired
+    private FreezeListMapper freezeListMapper;
+
+    @Autowired
+    private BorrowTenderMapper borrowTenderMapper;
+
+    @Autowired
+    private AccountCustomizeMapper accountCustomizeMapper;
+
+    @Autowired
+    private AccountMapper accountMapper;
+    @Autowired
+    private AccountListMapper accountListMapper;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private CalculateInvestInterestMapper calculateInvestInterestMapper;
+
+    @Autowired
+    private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
+
+    @Autowired
+    private BorrowSendTypeMapper borrowSendTypeMapper;
+    @Autowired
+    private SmsProducer smsProducer;
+
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -152,7 +153,7 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     public int insertBorrowManinfo(BorrowManinfo borrowManinfo) {
-         return borrowManinfoMapper.insertSelective(borrowManinfo);
+        return borrowManinfoMapper.insertSelective(borrowManinfo);
     }
 
     @Override
@@ -176,6 +177,7 @@ public class BorrowServiceImpl implements BorrowService {
 
     /**
      * 检索正在还款中的标的
+     *
      * @return
      */
     @Override
@@ -193,6 +195,7 @@ public class BorrowServiceImpl implements BorrowService {
 
     /**
      * 获取borrowInfo
+     *
      * @param borrowNid
      * @return
      */
@@ -201,8 +204,8 @@ public class BorrowServiceImpl implements BorrowService {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)){
+        List<BorrowInfo> list = this.borrowInfoMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)) {
             return list.get(0);
         }
         return null;
@@ -211,16 +214,16 @@ public class BorrowServiceImpl implements BorrowService {
     /**
      * 检索逾期的还款标的
      */
-	@Override
-	public List<Borrow> selectOverdueBorrowList() {
-		BorrowExample example = new BorrowExample();
-    	example.createCriteria().andRepayLastTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getTodayBeforeOrAfter(-1))).andStatusEqualTo(4).andPlanNidIsNull();
-    	List<Borrow> borrows = borrowMapper.selectByExample(example);
-    	if(CollectionUtils.isNotEmpty(borrows)){
-    		return borrows;
-    	}
-    	return null;
-	}
+    @Override
+    public List<Borrow> selectOverdueBorrowList() {
+        BorrowExample example = new BorrowExample();
+        example.createCriteria().andRepayLastTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getTodayBeforeOrAfter(-1))).andStatusEqualTo(4).andPlanNidIsNull();
+        List<Borrow> borrows = borrowMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(borrows)) {
+            return borrows;
+        }
+        return null;
+    }
 
     /**
      * 投资之前插入tmp表
@@ -256,7 +259,7 @@ public class BorrowServiceImpl implements BorrowService {
         temp.setWeb(0);*/
         temp.setIsBankTender(1);
         Integer couponGrantId = tenderRequest.getCouponGrantId();
-        if (couponGrantId==null) {
+        if (couponGrantId == null) {
             couponGrantId = 0;
         }
         temp.setCouponGrantId(couponGrantId);// 为投资完全掉单优惠券投资时修复做记录
@@ -296,6 +299,211 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public WebProjectPersonDetailVO getProjectPerson(String borrowNid) {
         return borrowCustomizeMapper.getProjectPsersonDetail(borrowNid);
+    }
+
+    /**
+     * 投资异步修改表
+     *
+     * @param tenderBg
+     */
+    @Override
+    public void updateTenderAfter(TenderBgVO tenderBg) {
+        Integer userId = tenderBg.getUserId();
+        // 删除临时表
+        BorrowTenderTmpExample borrowTenderTmpExample = new BorrowTenderTmpExample();
+        BorrowTenderTmpExample.Criteria criteria1 = borrowTenderTmpExample.createCriteria();
+        criteria1.andNidEqualTo(tenderBg.getOrderId());
+        criteria1.andUserIdEqualTo(tenderBg.getUserId());
+        criteria1.andBorrowNidEqualTo(tenderBg.getBorrowNid());
+        boolean tenderTempFlag = borrowTenderTmpMapper.deleteByExample(borrowTenderTmpExample) > 0 ? true : false;
+        if (!tenderTempFlag) {
+            throw new RuntimeException("删除borrowTenderTmp表失败");
+        }
+        // 插入冻结表
+        FreezeList record = new FreezeList();
+        record.setAmount(tenderBg.getAccountDecimal());
+        record.setBorrowNid(tenderBg.getBorrowNid());
+        record.setOrdid(tenderBg.getOrderId());
+        record.setUserId(tenderBg.getUserId());
+        record.setRespcode(tenderBg.getRetCode());
+        record.setTrxid("");
+        record.setUsrcustid(tenderBg.getAccountId());
+        record.setXfrom(1);
+        record.setStatus(0);
+        record.setUnfreezeManual(0);
+        boolean freezeFlag = freezeListMapper.insertSelective(record) > 0 ? true : false;
+        if (!freezeFlag) {
+            throw new RuntimeException("插入freezeFlag表失败");
+        }
+        // 插入BorrowTender表
+        BorrowTender borrowTender = new BorrowTender();
+        borrowTender.setAccount(tenderBg.getAccountDecimal());
+        borrowTender.setAddip(tenderBg.getIp());
+        borrowTender.setBorrowNid(tenderBg.getBorrowNid());
+        borrowTender.setClient(tenderBg.getClient());
+        borrowTender.setLoanAmount(tenderBg.getAccountDecimal().subtract(tenderBg.getPerService()));
+        borrowTender.setNid(tenderBg.getOrderId());
+        borrowTender.setOrderDate(tenderBg.getOrderDate());
+        borrowTender.setRecoverAccountAll(new BigDecimal(0));//
+        borrowTender.setRecoverAccountCapitalWait(new BigDecimal(0));//
+        borrowTender.setRecoverAccountCapitalYes(new BigDecimal(0));
+        borrowTender.setRecoverAccountInterest(new BigDecimal(0));
+        borrowTender.setRecoverAccountInterestWait(new BigDecimal(0));
+        borrowTender.setRecoverAccountInterestYes(new BigDecimal(0));
+        borrowTender.setRecoverAccountWait(new BigDecimal(0));
+        borrowTender.setRecoverAccountYes(new BigDecimal(0));
+        borrowTender.setRecoverAdvanceFee(new BigDecimal(0));
+        borrowTender.setRecoverFee(new BigDecimal(0));
+        borrowTender.setRecoverFullStatus(0);
+        borrowTender.setRecoverLateFee(new BigDecimal(0));
+        borrowTender.setRecoverTimes(0);
+        borrowTender.setStatus(0);
+        borrowTender.setUserId(tenderBg.getUserId());
+        borrowTender.setInviteRegionId(tenderBg.getInviteRegionId());
+        borrowTender.setInviteRegionName(tenderBg.getInviteRegionName());
+        borrowTender.setInviteBranchId(tenderBg.getInviteBranchId());
+        borrowTender.setInviteBranchName(tenderBg.getInviteBranchName());
+        borrowTender.setInviteDepartmentId(tenderBg.getInviteDepartmentId());
+        borrowTender.setInviteDepartmentName(tenderBg.getInviteDepartmentName());
+        borrowTender.setInviteUserId(tenderBg.getInviteUserId());
+        borrowTender.setInviteUserName(tenderBg.getInviteUserName());
+        borrowTender.setInviteUserAttribute(tenderBg.getAttribute());
+        borrowTender.setInvestType(0);
+        // 单笔投资的融资服务费
+        borrowTender.setLoanFee(tenderBg.getPerService());
+        //投资授权码
+        borrowTender.setAuthCode(tenderBg.getAuthCode());
+        borrowTender.setRemark("现金投资");
+        borrowTenderMapper.insertSelective(borrowTender);
+
+        // 更新用户账户余额表
+        Account accountBean = new Account();
+        accountBean.setUserId(userId);
+        // 投资人冻结金额增加
+        accountBean.setBankFrost(tenderBg.getAccountDecimal());
+        // 投资人可用余额扣减
+        accountBean.setBankBalance(tenderBg.getAccountDecimal());
+        // 江西银行账户余额
+        // 此账户余额投资后应该扣减掉相应投资金额,sql已改
+        accountBean.setBankBalanceCash(tenderBg.getAccountDecimal());
+        // 江西银行账户冻结金额
+        accountBean.setBankFrostCash(tenderBg.getAccountDecimal());
+        Boolean accountFlag = this.accountCustomizeMapper.updateOfTender(accountBean) > 0 ? true : false;
+        if (!accountFlag) {
+            throw new RuntimeException("用户账户信息表更新失败");
+        }
+        // 插入account_list表
+        Account account = this.accountService.getAccount(userId);
+        AccountList accountList = new AccountList();
+        accountList.setAmount(tenderBg.getAccountDecimal());
+        /** 银行存管相关字段设置 */
+        accountList.setAccountId(account.getAccountId());
+        accountList.setBankAwait(account.getBankAwait());
+        accountList.setBankAwaitCapital(account.getBankAwaitCapital());
+        accountList.setBankAwaitInterest(account.getBankAwaitInterest());
+        accountList.setBankBalance(account.getBankBalance());
+        accountList.setBankFrost(account.getBankFrost());
+        accountList.setBankInterestSum(account.getBankInterestSum());
+        accountList.setBankTotal(account.getBankTotal());
+        accountList.setBankWaitCapital(account.getBankWaitCapital());
+        accountList.setBankWaitInterest(account.getBankWaitInterest());
+        accountList.setBankWaitRepay(account.getBankWaitRepay());
+        accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
+        accountList.setPlanFrost(account.getPlanFrost());
+        accountList.setCheckStatus(0);
+        accountList.setTradeStatus(1);// 交易状态
+        // 0:失败 1:成功
+        accountList.setIsBank(1);
+        accountList.setTxDate(Integer.parseInt(tenderBg.getTxDate()));
+        accountList.setTxTime(Integer.parseInt(tenderBg.getTxTime()));
+        accountList.setSeqNo(tenderBg.getSeqNo());
+        accountList.setBankSeqNo(tenderBg.getTxDate() + tenderBg.getTxTime() + tenderBg.getSeqNo());
+        /** 非银行存管相关字段 */
+        accountList.setAwait(new BigDecimal(0));
+        accountList.setBalance(account.getBalance());
+        accountList.setFrost(account.getFrost());
+        accountList.setIp(tenderBg.getIp());
+        accountList.setNid(tenderBg.getOrderId());
+        accountList.setOperator(userId + "");
+        accountList.setRemark(tenderBg.getBorrowNid());
+        accountList.setRepay(new BigDecimal(0));
+        accountList.setTotal(account.getTotal());
+        accountList.setTrade("tender");// 投资
+        accountList.setTradeCode("frost");// 投标冻结后为frost
+        accountList.setType(3);// 收支类型1收入2支出3冻结
+        accountList.setUserId(userId);
+        accountList.setWeb(0);
+        accountList.setIsBank(1);// 是否是银行的交易记录(0:否,1:是)
+        boolean accountListFlag = accountListMapper.insertSelective(accountList) > 0 ? true : false;
+        if (!accountListFlag) {
+            throw new RuntimeException("用户账户交易明细表更新失败");
+        }
+
+        // 更新borrow表
+        Map<String, Object> borrowParam = new HashMap<String, Object>();
+        borrowParam.put("borrowAccountYes", tenderBg.getAccountDecimal());
+        borrowParam.put("borrowService", tenderBg.getPerService());
+        borrowParam.put("borrowId", tenderBg.getBorrowNid());
+        boolean updateBorrowAccountFlag = borrowCustomizeMapper.updateOfBorrow(borrowParam) > 0 ? true : false;
+        // 更新borrow表
+        if (!updateBorrowAccountFlag) {
+            throw new RuntimeException("borrow表更新失败");
+        }
+
+        // 投资、收益统计表
+        List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
+        if (calculates != null && calculates.size() > 0) {
+            CalculateInvestInterest calculateNew = new CalculateInvestInterest();
+            calculateNew.setTenderSum(tenderBg.getAccountDecimal());
+            calculateNew.setId(calculates.get(0).getId());
+            calculateNew.setCreateTime(GetDate.getDate(GetDate.getNowTime10()));
+            this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
+        }
+
+        // 计算此时的剩余可投资金额
+        BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
+        String borrowNid = tenderBg.getBorrowNid();
+        // 满标处理
+        if (accountWait.compareTo(new BigDecimal(0)) == 0) {
+            System.out.println("用户:" + userId + "***********************************项目满标，订单号：" + tenderBg.getOrderId());
+            Map<String, Object> borrowFull = new HashMap<String, Object>();
+            borrowFull.put("borrowId", borrowNid);
+            boolean fullFlag = borrowCustomizeMapper.updateOfFullBorrow(borrowFull) > 0 ? true : false;
+            if (!fullFlag) {
+                throw new RuntimeException("满标更新borrow表失败");
+            }
+            // 清除标总额的缓存
+            RedisUtils.del(borrowNid);
+            // 纯发短信接口
+            Map<String, String> replaceMap = new HashMap<String, String>();
+            replaceMap.put("val_title", borrowNid);
+            replaceMap.put("val_date", DateUtils.getNowDate());
+            BorrowSendTypeExample sendTypeExample = new BorrowSendTypeExample();
+            BorrowSendTypeExample.Criteria sendTypeCriteria = sendTypeExample.createCriteria();
+            sendTypeCriteria.andSendCdEqualTo("AUTO_FULL");
+            List<BorrowSendType> sendTypeList = borrowSendTypeMapper.selectByExample(sendTypeExample);
+            if (sendTypeList == null || sendTypeList.size() == 0) {
+                throw new RuntimeException("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "数据库查不到 sendTypeList == null");
+            }
+            BorrowSendType sendType = sendTypeList.get(0);
+            if (sendType.getAfterTime() == null) {
+                throw new RuntimeException("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "sendType.getAfterTime()==null");
+            }
+            replaceMap.put("val_times", sendType.getAfterTime() + "");
+            // 发送短信验证码
+            SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
+            try{
+                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+            }catch (Exception e){
+
+            }
+            // 增加redis防重校验 2017-08-02
+           // RedisUtils.tranactionSet("tendersuccess_orderid" + orderId, 20);
+        } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
+        }
+
+
     }
 
 
