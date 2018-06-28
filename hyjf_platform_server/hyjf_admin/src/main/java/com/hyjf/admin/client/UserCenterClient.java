@@ -254,15 +254,15 @@ public interface UserCenterClient {
      * @param request
      * @return
      */
-    List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request);
+//    List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request);
 
     /**
      * 根据推荐人姓名查找用户
      * @param recommendName
      * @return
      */
-    UserVO selectUserByRecommendName(String recommendName);
+    /*UserVO selectUserByRecommendName(String recommendName);
 
     SpreadsUserVO selectSpreadsUsersByUserId(String userId);
-
+*/
 }

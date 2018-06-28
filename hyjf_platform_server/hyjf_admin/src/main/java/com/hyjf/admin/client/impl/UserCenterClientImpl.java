@@ -220,10 +220,10 @@ public class UserCenterClientImpl implements UserCenterClient {
      * @return
      */
     @Override
-    public UserRecommendVO selectUserRecommendByUserId(String userId) {
-        UserRecommendResponse response;
-
-        return null;
+    public UserRecommendCustomizeVO selectUserRecommendByUserId(String userId) {
+        UserRecommendCustomizeResponse response;
+        UserRecommendCustomizeVO userRecommendCustomizeVO = new UserRecommendCustomizeVO();
+        return userRecommendCustomizeVO;
     }
 
     /**
