@@ -4,6 +4,8 @@
 package com.hyjf.cs.trade.controller;
 
 import com.hyjf.cs.common.controller.BaseController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 组合层Market用Controller基类
@@ -11,4 +13,5 @@ import com.hyjf.cs.common.controller.BaseController;
  * @version BaseMarketController, v0.1 2018/6/1:36
  */
 public class BaseTradeController extends BaseController {
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 }

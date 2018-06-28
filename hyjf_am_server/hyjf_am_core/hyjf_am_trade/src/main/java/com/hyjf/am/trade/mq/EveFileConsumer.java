@@ -107,6 +107,7 @@ public class EveFileConsumer extends Consumer{
 
             } catch (Exception e) {
                 logger.error("eveLog插入失败",e);
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             logger.info("********************导入流水明细Eve结束*************************");
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

@@ -178,8 +178,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	/**
 	 * 我的奖励列表
-	 * @param requestBean
-	 * @return
 	 */
 	@Override
 	public List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean){
@@ -190,6 +188,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+
+    /**
+     * 我的奖励列表总记录数
+     */
+    @Override
+    public int selectMyRewardCount(MyInviteListRequest requestBean) {
+        int count = restTemplate
+                .postForEntity(urlBase + "reward/myRewardTotal", requestBean, Integer.class).getBody();
+        return count;
+    }
 
 	/**
 	 * 统计总的奖励金额

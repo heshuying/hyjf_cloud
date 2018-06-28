@@ -260,5 +260,29 @@ public class BorrowController {
 		}
 	}
 
+	/**
+	 * 散标投资异步返回结果
+	 * @param tenderRetMsg
+	 * @return
+	 */
+	@PostMapping("/updateTenderResult")
+	public int updateTenderResult(@RequestBody TenderRetMsg tenderRetMsg) {
+		try{
+			borrowService.updateTenderResult(tenderRetMsg);
+			return 1;
+		}catch (Exception e){
+			return 0;
+		}
+	}
+
+	/**
+	 * 获取散标投资异步结果
+	 * @param borrowNid
+	 * @return
+	 */
+	@GetMapping("/getBorrowTenderResult/{userId}/{logOrdId}/{borrowNid}")
+	public String getBorrowTenderResult(@PathVariable Integer userId, @PathVariable String logOrdId, @PathVariable String borrowNid){
+		return borrowService.getBorrowTenderResult(userId,logOrdId,borrowNid);
+	}
 
 }

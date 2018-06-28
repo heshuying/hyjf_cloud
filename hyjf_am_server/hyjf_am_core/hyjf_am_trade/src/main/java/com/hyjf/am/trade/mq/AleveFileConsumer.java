@@ -111,7 +111,7 @@ public class AleveFileConsumer extends Consumer{
                 }
             } catch (Exception e) {
                 logger.error("AleveLog插入失败",e);
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             JSONObject params = new JSONObject();
             params.put("status", "1");
