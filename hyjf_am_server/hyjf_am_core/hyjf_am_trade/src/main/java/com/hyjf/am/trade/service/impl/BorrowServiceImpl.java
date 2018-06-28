@@ -44,7 +44,7 @@ import java.util.Map;
  * @version BorrowServiceImpl, v0.1 2018/6/13 18:53
  */
 @Service
-public class BorrowServiceImpl implements BorrowService {
+public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService {
 
     @Autowired
     private BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
@@ -121,18 +121,6 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     @Override
-    public Borrow getBorrow(String borrowNid) {
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<Borrow> list = this.borrowMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-        return null;
-    }
-
-    @Override
     public BorrowStyle getborrowStyleByNid(String borrowStyle) {
         BorrowStyleExample example = new BorrowStyleExample();
         BorrowStyleExample.Criteria cri = example.createCriteria();
@@ -177,7 +165,6 @@ public class BorrowServiceImpl implements BorrowService {
 
     /**
      * 检索正在还款中的标的
-     *
      * @return
      */
     @Override
@@ -195,7 +182,6 @@ public class BorrowServiceImpl implements BorrowService {
 
     /**
      * 获取borrowInfo
-     *
      * @param borrowNid
      * @return
      */
@@ -204,8 +190,8 @@ public class BorrowServiceImpl implements BorrowService {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowInfo> list = this.borrowInfoMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)) {
+        List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)){
             return list.get(0);
         }
         return null;
