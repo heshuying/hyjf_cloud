@@ -57,18 +57,14 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
      * 同步银行卡号
      */
     public void accountSynchronize(){
-        try {
-            List<AccountMobileSynchVO> accountMobileSynches = amUserClient.searchAccountMobileSynch("2");
-            if(CollectionUtils.isEmpty(accountMobileSynches)){
-                logger.info("未查询到同步银行卡号数据，同步银行卡号(每日)定时任务结束....");
-                return;
-            }
-            for (AccountMobileSynchVO accountMobileSynchVO : accountMobileSynches) {
-                // 同步银行卡号
-                this.bankCardSynchronize(accountMobileSynchVO);
-            }
-        }catch(Exception e){
-            throw new RuntimeException("查询同步银行卡号异常");
+        List<AccountMobileSynchVO> accountMobileSynches = amUserClient.searchAccountMobileSynch("2");
+        if(CollectionUtils.isEmpty(accountMobileSynches)){
+            logger.info("未查询到同步银行卡号数据，同步银行卡号(每日)定时任务结束....");
+            return;
+        }
+        for (AccountMobileSynchVO accountMobileSynchVO : accountMobileSynches) {
+            // 同步银行卡号
+            this.bankCardSynchronize(accountMobileSynchVO);
         }
     }
 

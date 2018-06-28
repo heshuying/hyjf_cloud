@@ -447,6 +447,7 @@
         <table tableName="ht_aleve_log" domainObjectName="AleveLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="upd_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_bank_credit_end" domainObjectName="BankCreditEnd">
