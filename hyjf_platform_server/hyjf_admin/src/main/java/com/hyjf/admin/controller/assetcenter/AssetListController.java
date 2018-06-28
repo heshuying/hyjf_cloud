@@ -32,8 +32,8 @@ public class AssetListController extends BaseController {
 	
 	@Autowired
 	private AssetListService assetListService;
-/*	@Autowired
-	AssetListRequest request;*/
+	@Autowired
+	AssetListRequest request;
 	// 开户状态
 	private static final  String ACCOUNT_STATUS = "ACCOUNT_STATUS";
 	// 审核状态
