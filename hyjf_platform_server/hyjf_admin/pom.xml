@@ -123,6 +123,17 @@
 			<artifactId>hyjf_pay_lib</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!--poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.5-FINAL</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.5-FINAL</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

@@ -182,7 +182,7 @@
 		<result column="borrow_apr" property="borrowApr" />
 		<result column="ten_user_id" property="tenUserId" />
 		<result column="nid" property="nid" />
-		<result column="addtime" property="addtime" />
+		<result column="create_time" property="createTime" />
 		<result column="invest_date" property="investDate" />
 		<result column="capital" property="capital" />
 		<result column="type" property="type" />
@@ -216,8 +216,8 @@
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
 		ten.user_id AS ten_user_id,
 		ten.nid nid,
-		FROM_UNIXTIME( ten.addtime, '%Y-%m-%d' ) AS addtime,
-		ten.addtime as orderby_addtime,
+		FROM_UNIXTIME( ten.create_time, '%Y-%m-%d' ) AS create_time,
+		ten.create_time as orderby_addtime,
 		IFNULL(FROM_UNIXTIME( IF(borrow.repay_last_time='',NULL,borrow.repay_last_time), '%Y-%m-%d' ),'--') AS invest_date,
 		borrow.repay_last_time as orderby_invest_date,
 		(ten.account-(
@@ -299,8 +299,8 @@
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
 		ten.user_id AS ten_user_id,
 		ten.assign_nid nid,
-		FROM_UNIXTIME(ten.add_time, '%Y-%m-%d') AS addtime,
-		ten.add_time,
+		FROM_UNIXTIME(ten.create_time, '%Y-%m-%d') AS create_time,
+		ten.create_time,
 		IFNULL(FROM_UNIXTIME(IF(borrow.repay_last_time='',NULL,borrow.repay_last_time),'%Y-%m-%d'),'--') AS invest_date,
 		borrow.repay_last_time,
 		ten.assign_capital AS capital,
@@ -358,8 +358,8 @@
 		borrow_apr,
 		hbtc.user_id AS ten_user_id,
 		hbtc.nid nid,
-		FROM_UNIXTIME( hbtc.addtime, '%Y-%m-%d' ) AS addtime,
-		hbtc.addtime,
+		FROM_UNIXTIME( hbtc.create_time, '%Y-%m-%d' ) AS create_time,
+		hbtc.create_time,
 		IFNULL(FROM_UNIXTIME( IF(MAX(hcr.recover_time)='',NULL,MAX(hcr.recover_time)), '%Y-%m-%d' ),'--') AS recover_time,
 		MAX(hcr.recover_time),
 		CASE
@@ -414,7 +414,7 @@
 		CONCAT(hiii.borrow_extra_yield, '%') borrow_apr,
 		hiii.user_id AS ten_user_id,
 		hiii.order_id nid,
-		FROM_UNIXTIME( hiii.create_time, '%Y-%m-%d' ) AS addtime,
+		FROM_UNIXTIME( hiii.create_time, '%Y-%m-%d' ) AS create_time,
 		hiii.create_time,
 		IFNULL(FROM_UNIXTIME( IF(borrow.repay_last_time='',NULL,borrow.repay_last_time), '%Y-%m-%d' ),'--') AS invest_date,
 		borrow.repay_last_time,
@@ -883,8 +883,8 @@
 		<result column="credit_repay_next_time" property="creditRepayNextTime" />
 		<result column="credit_repay_yes_time" property="creditRepayYesTime" />
 		<result column="create_date" property="createDate" />
-		<result column="add_time" property="addTime" />
-		<result column="add_time_int" property="addTimeInt" />
+		<result column="create_time" property="createTime" />
+		<result column="create_time_int" property="createTimeInt" />
 		<result column="end_time" property="endTime" />
 		<result column="assign_time" property="assignTime" />
 		<result column="assign_num" property="assignNum" />
@@ -906,9 +906,9 @@
 		<!-- 折让比例 -->
 		hbc.credit_discount,
 		<!-- 债转时间 -->
-		FROM_UNIXTIME(hbc.add_time,'%Y-%m-%d %H:%i') AS add_time,
+		FROM_UNIXTIME(hbc.create_time,'%Y-%m-%d %H:%i') AS create_time,
 		<!-- 债转时间 -->
-		hbc.add_time AS add_time_int,
+		hbc.create_time AS create_time_int,
 		<!-- 已转让金额 -->
 		hbc.credit_capital_assigned,
 		<!-- 累计收到金额 -->
@@ -921,7 +921,7 @@
 		hct.credit_tender_nid = hbc.tender_nid
 		AND hbc.credit_nid = hct.credit_nid
 		) AS receivedAccount,
-		FROM_UNIXTIME(hbt.add_time, '%Y-%m-%d %H:%i:%s') AS tenderTime,
+		FROM_UNIXTIME(hbt.create_time, '%Y-%m-%d %H:%i:%s') AS tenderTime,
 		(DATEDIFF(
 		FROM_UNIXTIME(
 		unix_timestamp(now()),
@@ -951,7 +951,7 @@
 				AND hbc.credit_user_id = #{userId}
 			</if>
 		</where>
-		order by hbc.credit_status, hbc.add_time desc
+		order by hbc.credit_status, hbc.create_time desc
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
@@ -1011,8 +1011,8 @@
 		hha.user_id user_id,
 		hha.accede_account accede_account,
 		IF(hha.wait_total=0,'--',hha.wait_total) wait_total,
-		IFNULL(FROM_UNIXTIME( hha.add_time, '%Y-%m-%d' ),'--') AS add_time,
-		hha.add_time orderby_add_time,
+		IFNULL(FROM_UNIXTIME( hha.create_time, '%Y-%m-%d' ),'--') AS create_time,
+		hha.create_time orderby_add_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'--') AS quit_time,
 		hha.quit_time orderby_last_payment_time,
 		1 type,
@@ -1043,8 +1043,8 @@
 		hcc.coupon_quota
 		END AS accede_account,
 		IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) AS wait_total,
-		FROM_UNIXTIME( hbtc.add_time, '%Y-%m-%d' ) AS addtime,
-		hbtc.add_time orderby_add_time,
+		FROM_UNIXTIME( hbtc.create_time, '%Y-%m-%d' ) AS create_time,
+		hbtc.create_time orderby_add_time,
 		IFNULL(FROM_UNIXTIME( IF(MAX(hcr.recover_time)='',NULL,MAX(hcr.recover_time)), '%Y-%m-%d' ),'--') AS recover_time,
 		hcr.recover_time orderby_quit_time,
 		2 type,
