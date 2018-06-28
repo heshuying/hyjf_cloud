@@ -7,7 +7,7 @@ import com.hyjf.am.vo.BaseVO;
  * @author hesy
  * @version MyInviteListCustomize, v0.1 2018/6/22 19:53
  */
-public class MyInviteListCustomizeVO extends BaseVO {
+public class MyInviteListCustomizeVO extends BaseVO{
     public Integer userId;
     public String username;
     /**  邀请时间  */

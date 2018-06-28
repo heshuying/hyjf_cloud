@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +46,7 @@ public class InviteController {
     @PostMapping(value = "/myInviteList", produces = "application/json; charset=utf-8")
     public WebResult<List<MyInviteListCustomizeVO>> selectMyInviteList(@RequestHeader(value = "token", required = true) String token, Map<String,String> param, HttpServletRequest request){
         WebResult<List<MyInviteListCustomizeVO>> result = new WebResult<List<MyInviteListCustomizeVO>>();
+        List<MyInviteListCustomizeVO> resultList = Collections.emptyList();
         WebViewUserVO userVO = inviteService.getUsersByToken(token);
 
         logger.info("获取我的邀请列表开始，userId：{}", userVO.getUserId());
@@ -51,15 +54,20 @@ public class InviteController {
         // 请求参数校验
         inviteService.checkForInviteList(param);
 
+        Integer inviteCount = inviteService.selectMyInviteCount(String.valueOf(userVO.getUserId()));
         Page page = Page.initPage(Integer.parseInt(param.get("currPage")), Integer.parseInt(param.get("pageSize")));
+        page.setTotal(inviteCount);
 
         try {
-            List<MyInviteListCustomizeVO> resultList = inviteService.selectMyInviteList(String.valueOf(userVO.getUserId()), page.getOffset(), page.getLimit());
+            resultList = inviteService.selectMyInviteList(String.valueOf(userVO.getUserId()), page.getOffset(), page.getLimit());
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取我的邀请列表异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
         }
 
+        result.setPage(page);
         return result;
     }
 

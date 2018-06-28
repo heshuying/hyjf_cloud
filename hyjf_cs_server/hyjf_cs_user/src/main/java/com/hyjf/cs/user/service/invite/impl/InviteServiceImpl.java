@@ -2,11 +2,9 @@ package com.hyjf.cs.user.service.invite.impl;
 
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
-import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.invite.InviteService;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +17,9 @@ import java.util.Map;
  */
 @Service
 public class InviteServiceImpl extends BaseUserServiceImpl implements InviteService {
-    @Autowired
-    AmUserClient amUserClient;
 
     /**
      * 邀请列表请求校验
-     * @param param
      */
     @Override
     public void checkForInviteList(Map<String, String> param){
@@ -49,6 +44,16 @@ public class InviteServiceImpl extends BaseUserServiceImpl implements InviteServ
         requestBean.setLimitStart(limitStart);
         requestBean.setLimitEnd(limitEnd);
         return amUserClient.selectMyInviteList(requestBean);
+    }
+
+    /**
+     * 我的邀请记录总数
+     */
+    @Override
+    public Integer selectMyInviteCount(String userId){
+        MyInviteListRequest requestBean = new MyInviteListRequest();
+        requestBean.setUserId(userId);
+        return amUserClient.selectMyInviteCount(requestBean);
     }
 
 }

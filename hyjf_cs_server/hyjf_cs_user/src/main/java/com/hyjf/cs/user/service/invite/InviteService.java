@@ -16,4 +16,5 @@ public interface InviteService extends BaseUserService {
 
     List<MyInviteListCustomizeVO> selectMyInviteList(String userId, Integer limitStart, Integer limitEnd);
 
+    Integer selectMyInviteCount(String userId);
 }

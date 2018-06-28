@@ -148,7 +148,9 @@ public interface AmUserClient {
 
     List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 
-	/**
+    int selectMyInviteCount(MyInviteListRequest requestBean);
+
+    /**
 	 * 查询同步银行卡号
 	 * @param flag
 	 * @return

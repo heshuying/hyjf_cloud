@@ -13,4 +13,6 @@ public interface RewardService extends BaseTradeService{
     void checkForRewardList(Map<String, String> param);
 
     List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId, Integer limitStart, Integer limitEnd);
+
+    Integer selectMyRewardCount(String userId);
 }
