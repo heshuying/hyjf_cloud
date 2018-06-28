@@ -28,10 +28,9 @@ public class TransactionServiceImpl implements TransactionService {
     AccountService accountService;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void commitAmount(int userId) throws MQException {
 		boolean commitFlag = accountTProducer
-				.messageSend(new AccountTProducer.MassageContent("userTransationTest" , UUID.randomUUID().toString(), JSON.toJSONBytes(userId)));
+				.messageSend(new AccountTProducer.MassageContent("userTransationTest1" , UUID.randomUUID().toString(), JSON.toJSONBytes(userId)));
 		if (!commitFlag) {
 			throw new RuntimeException("事务消息发送失败...");
 		}

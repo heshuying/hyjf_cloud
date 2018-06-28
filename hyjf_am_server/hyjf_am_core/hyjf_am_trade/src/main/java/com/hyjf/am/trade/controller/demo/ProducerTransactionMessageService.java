@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.demo;
 
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
+import org.apache.rocketmq.client.exception.MQClientException;
 
 /**
  * @author xiasq
@@ -21,4 +22,9 @@ public interface ProducerTransactionMessageService {
      * @return
      */
     ProducerTransactionMessage findByCondition(String topic, String keys, String tag);
+
+    /**
+     * 事务回查
+     */
+    void callBackQuery() throws MQClientException, InterruptedException;
 }
