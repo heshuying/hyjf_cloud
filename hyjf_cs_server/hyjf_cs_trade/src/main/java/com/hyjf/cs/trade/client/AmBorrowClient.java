@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
@@ -57,4 +58,11 @@ public interface AmBorrowClient {
      * @param request
      */
     boolean updateBeforeChinaPnR(TenderRequest request);
+
+    /**
+     * 用户投资散标操作表
+     * @param tenderBg
+     * @return
+     */
+    boolean borrowTender(TenderBgVO tenderBg);
 }
