@@ -158,7 +158,7 @@
 	<select id="selectUserWithdrawList" resultMap="UserWithdrawListMap" parameterType="Map" >
 		SELECT
 		hydaw.id,
-		FROM_UNIXTIME(hydaw.addtime,'%Y-%m-%d %H:%i:%s') AS time,
+		FROM_UNIXTIME(hydaw.create_time,'%Y-%m-%d %H:%i:%s') AS time,
 		hydaw.total AS money,
 		hydaw.fee AS fee,
 		hydaw.credited AS balance,
