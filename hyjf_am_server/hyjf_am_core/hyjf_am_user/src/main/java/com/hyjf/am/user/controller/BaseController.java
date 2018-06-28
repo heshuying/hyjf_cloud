@@ -10,6 +10,6 @@ import org.slf4j.LoggerFactory;
  * @author liubin
  * @version BaseUserController, v0.1 2018/6/28 19:29
  */
-public class BaseUserController {
+public class BaseController {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 }
