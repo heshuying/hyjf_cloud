@@ -17,8 +17,9 @@ import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 
 /**
- * @author ${yaoy}
+ * @author yaoy
  * @version AccountController, v0.1 2018/6/14 16:59
+ * account表操作类
  */
 @RestController
 @RequestMapping("/am-trade/account")
