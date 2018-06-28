@@ -3,17 +3,18 @@
  */
 package com.hyjf.callcenter.clientImpl;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.callcenter.CallCenterRechargeResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterRechargeVO;
 import com.hyjf.callcenter.client.SrchRechargeInfoClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 /**
  * @author wangjun
@@ -22,8 +23,8 @@ import java.util.List;
 @Service
 public class SrchRechargeInfoClientImpl implements SrchRechargeInfoClient {
     private static final Logger logger = LoggerFactory.getLogger(SrchRechargeInfoClientImpl.class);
-    private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
-
+    @Autowired
+    private RestTemplate restTemplate;
     /**
      * 查询充值明细
      * @param callCenterBaseRequest

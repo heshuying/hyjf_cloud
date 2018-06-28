@@ -2,6 +2,7 @@ package com.hyjf.cs.user.service;
 
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.cs.user.bean.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,6 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.user.bean.AutoPlusRequestBean;
-import com.hyjf.cs.user.bean.AutoStateQueryRequest;
-import com.hyjf.cs.user.bean.BaseBean;
-import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -39,6 +36,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	@Autowired
 	SystemConfig systemConfig;
 
+	@Override
+	public boolean existUser(String mobile) {
+		UserVO userVO = amUserClient.findUserByMobile(mobile);
+		return userVO == null ? false : true;
+	}
 	/**
 	 * @param token
 	 * @Description 根据token查询user
@@ -119,6 +121,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 授权状态查询
 			AutoStateQueryRequest bean = (AutoStateQueryRequest) paramBean;
 			sign = bean.getInstCode() +bean.getAccountId() + bean.getTimestamp();
+		}else if(BaseDefine.ORGANIZATION_LIST.endsWith(methodName)){
+			// 集团组织机构查询
+			OrganizationStructureRequestBean bean = (OrganizationStructureRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

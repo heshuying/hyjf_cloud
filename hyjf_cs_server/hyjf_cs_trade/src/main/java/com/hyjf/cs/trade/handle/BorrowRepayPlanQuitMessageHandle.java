@@ -3,11 +3,12 @@
  */
 package com.hyjf.cs.trade.handle;
 
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.cs.trade.service.BatchHjhBorrowRepayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,13 +18,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class BorrowRepayPlanQuitMessageHandle{
 
+    @Autowired
+    BatchHjhBorrowRepayService batchHjhBorrowRepayService;
+
     private static final Logger logger = LoggerFactory.getLogger(BorrowRepayPlanQuitMessageHandle.class);
 
-    public void sendMessage(HjhAccedeVO hjhAccede) {
+    public void sendMessage(String accedeOrderId,Integer orderStatus,Integer creditCompleteFlag) {
 
-        String accedeOrderId = hjhAccede.getAccedeOrderId();
-        Integer orderStatus = hjhAccede.getOrderStatus();
-        Integer creditCompleteFlag = hjhAccede.getCreditCompleteFlag();
         if (orderStatus == 2) {
             logger.info("--------------计划订单号："+ accedeOrderId +"，开始进入锁定期！------");
         }else if(orderStatus == 5 && creditCompleteFlag == 1){//计划退出中并且清算标示完成
@@ -40,9 +41,9 @@ public class BorrowRepayPlanQuitMessageHandle{
 
         try{
             if (orderStatus == 2) {//锁定计划
-//                batchRepayService.updateLockRepayInfo(accedeOrderId);
+                batchHjhBorrowRepayService.updateLockRepayInfo(accedeOrderId);
             }else if(orderStatus == 5 && creditCompleteFlag == 1){//退出计划 计划退出中并且清算标示完成
-//                batchRepayService.updateQuitRepayInfo(accedeOrderId);
+                batchHjhBorrowRepayService.updateQuitRepayInfo(accedeOrderId);
             }
         }catch(Exception e){
             // 消息队列指令不消费

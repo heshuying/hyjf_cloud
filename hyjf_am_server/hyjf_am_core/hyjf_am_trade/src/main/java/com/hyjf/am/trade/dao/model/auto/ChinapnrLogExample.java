@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ChinapnrLogExample {
@@ -794,73 +795,63 @@ public class ChinapnrLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeIsNull() {
-            addCriterion("addtime is null");
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeIsNotNull() {
-            addCriterion("addtime is not null");
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeEqualTo(String value) {
-            addCriterion("addtime =", value, "addtime");
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("create_time =", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeNotEqualTo(String value) {
-            addCriterion("addtime <>", value, "addtime");
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("create_time <>", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeGreaterThan(String value) {
-            addCriterion("addtime >", value, "addtime");
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("create_time >", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeGreaterThanOrEqualTo(String value) {
-            addCriterion("addtime >=", value, "addtime");
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_time >=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeLessThan(String value) {
-            addCriterion("addtime <", value, "addtime");
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("create_time <", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeLessThanOrEqualTo(String value) {
-            addCriterion("addtime <=", value, "addtime");
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("create_time <=", value, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeLike(String value) {
-            addCriterion("addtime like", value, "addtime");
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("create_time in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeNotLike(String value) {
-            addCriterion("addtime not like", value, "addtime");
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("create_time not in", values, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeIn(List<String> values) {
-            addCriterion("addtime in", values, "addtime");
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
             return (Criteria) this;
         }
 
-        public Criteria andAddtimeNotIn(List<String> values) {
-            addCriterion("addtime not in", values, "addtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddtimeBetween(String value1, String value2) {
-            addCriterion("addtime between", value1, value2, "addtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddtimeNotBetween(String value1, String value2) {
-            addCriterion("addtime not between", value1, value2, "addtime");
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
 

@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
-    <result column="attribute" property="attribute" jdbcType="INTEGER" />
+    <result column="attribute" property="attribute" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
@@ -114,7 +114,7 @@
     insert into ht_coupon_tender (coupon_grant_id, order_id, `attribute`, 
       create_user_id, update_user_id, del_flag, 
       create_time, update_time)
-    values (#{couponGrantId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, 
+    values (#{couponGrantId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{attribute,jdbcType=TINYINT}, 
       #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -157,7 +157,7 @@
         #{orderId,jdbcType=VARCHAR},
       </if>
       <if test="attribute != null" >
-        #{attribute,jdbcType=INTEGER},
+        #{attribute,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -195,7 +195,7 @@
         order_id = #{record.orderId,jdbcType=VARCHAR},
       </if>
       <if test="record.attribute != null" >
-        `attribute` = #{record.attribute,jdbcType=INTEGER},
+        `attribute` = #{record.attribute,jdbcType=TINYINT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -222,7 +222,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       coupon_grant_id = #{record.couponGrantId,jdbcType=INTEGER},
       order_id = #{record.orderId,jdbcType=VARCHAR},
-      `attribute` = #{record.attribute,jdbcType=INTEGER},
+      `attribute` = #{record.attribute,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
@@ -242,7 +242,7 @@
         order_id = #{orderId,jdbcType=VARCHAR},
       </if>
       <if test="attribute != null" >
-        `attribute` = #{attribute,jdbcType=INTEGER},
+        `attribute` = #{attribute,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -266,7 +266,7 @@
     update ht_coupon_tender
     set coupon_grant_id = #{couponGrantId,jdbcType=INTEGER},
       order_id = #{orderId,jdbcType=VARCHAR},
-      `attribute` = #{attribute,jdbcType=INTEGER},
+      `attribute` = #{attribute,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       del_flag = #{delFlag,jdbcType=TINYINT},

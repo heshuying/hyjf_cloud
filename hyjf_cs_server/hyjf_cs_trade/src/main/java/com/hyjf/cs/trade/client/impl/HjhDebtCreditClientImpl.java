@@ -3,9 +3,12 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.trade.HjhDebtCreditResponse;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.cs.trade.client.HjhDebtCreditClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -15,8 +18,18 @@ import java.util.List;
  */
 @Service
 public class HjhDebtCreditClientImpl implements HjhDebtCreditClient {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Override
     public List<HjhDebtCreditVO> selectHjhDebtCreditListByAccedeOrderId(String accedeOrderId) {
+        HjhDebtCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhDebtCreditListByAccedeOrderId/",
+                HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
         return null;
     }
 
@@ -32,6 +45,12 @@ public class HjhDebtCreditClientImpl implements HjhDebtCreditClient {
      */
     @Override
     public List<HjhDebtCreditVO> selectHjhDebtCreditListByOrderIdNid(String accedeOrderId, String borrowNid) {
+        HjhDebtCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhDebtCreditListByOrderIdNid/" + accedeOrderId + "/" + borrowNid,
+                HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
         return null;
     }
 }

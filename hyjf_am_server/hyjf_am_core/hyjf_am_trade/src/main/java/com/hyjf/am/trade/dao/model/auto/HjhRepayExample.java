@@ -1656,6 +1656,126 @@ public class HjhRepayExample {
             return (Criteria) this;
         }
 
+        public Criteria andActualRevenueIsNull() {
+            addCriterion("actual_revenue is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueIsNotNull() {
+            addCriterion("actual_revenue is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueEqualTo(BigDecimal value) {
+            addCriterion("actual_revenue =", value, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueNotEqualTo(BigDecimal value) {
+            addCriterion("actual_revenue <>", value, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueGreaterThan(BigDecimal value) {
+            addCriterion("actual_revenue >", value, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("actual_revenue >=", value, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueLessThan(BigDecimal value) {
+            addCriterion("actual_revenue <", value, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("actual_revenue <=", value, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueIn(List<BigDecimal> values) {
+            addCriterion("actual_revenue in", values, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueNotIn(List<BigDecimal> values) {
+            addCriterion("actual_revenue not in", values, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("actual_revenue between", value1, value2, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualRevenueNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("actual_revenue not between", value1, value2, "actualRevenue");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalIsNull() {
+            addCriterion("actual_pay_total is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalIsNotNull() {
+            addCriterion("actual_pay_total is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalEqualTo(BigDecimal value) {
+            addCriterion("actual_pay_total =", value, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalNotEqualTo(BigDecimal value) {
+            addCriterion("actual_pay_total <>", value, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalGreaterThan(BigDecimal value) {
+            addCriterion("actual_pay_total >", value, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("actual_pay_total >=", value, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalLessThan(BigDecimal value) {
+            addCriterion("actual_pay_total <", value, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("actual_pay_total <=", value, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalIn(List<BigDecimal> values) {
+            addCriterion("actual_pay_total in", values, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalNotIn(List<BigDecimal> values) {
+            addCriterion("actual_pay_total not in", values, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("actual_pay_total between", value1, value2, "actualPayTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andActualPayTotalNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("actual_pay_total not between", value1, value2, "actualPayTotal");
+            return (Criteria) this;
+        }
+
         public Criteria andDelFlagIsNull() {
             addCriterion("del_flag is null");
             return (Criteria) this;

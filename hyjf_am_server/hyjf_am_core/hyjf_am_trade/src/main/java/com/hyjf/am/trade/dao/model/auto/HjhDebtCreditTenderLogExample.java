@@ -2226,6 +2226,66 @@ public class HjhDebtCreditTenderLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andAssignServiceAprIsNull() {
+            addCriterion("assign_service_apr is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprIsNotNull() {
+            addCriterion("assign_service_apr is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprEqualTo(BigDecimal value) {
+            addCriterion("assign_service_apr =", value, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprNotEqualTo(BigDecimal value) {
+            addCriterion("assign_service_apr <>", value, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprGreaterThan(BigDecimal value) {
+            addCriterion("assign_service_apr >", value, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("assign_service_apr >=", value, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprLessThan(BigDecimal value) {
+            addCriterion("assign_service_apr <", value, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("assign_service_apr <=", value, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprIn(List<BigDecimal> values) {
+            addCriterion("assign_service_apr in", values, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprNotIn(List<BigDecimal> values) {
+            addCriterion("assign_service_apr not in", values, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("assign_service_apr between", value1, value2, "assignServiceApr");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignServiceAprNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("assign_service_apr not between", value1, value2, "assignServiceApr");
+            return (Criteria) this;
+        }
+
         public Criteria andAssignServiceFeeIsNull() {
             addCriterion("assign_service_fee is null");
             return (Criteria) this;

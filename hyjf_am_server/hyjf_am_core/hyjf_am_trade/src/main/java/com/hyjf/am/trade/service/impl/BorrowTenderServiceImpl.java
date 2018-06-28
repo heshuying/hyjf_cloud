@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
@@ -25,5 +26,19 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
         cri.andUserIdEqualTo(userId);
         int count = borrowTenderMapper.countByExample(example);
         return count;
+    }
+
+    @Override
+    public BorrowTender selectBorrowTender(BorrowTenderRequest request) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria cra = example.createCriteria();
+        cra.andNidEqualTo(request.getTenderNid());
+        cra.andBorrowNidEqualTo(request.getBorrowNid());
+        cra.andUserIdEqualTo(request.getTenderUserId());
+        List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
+        if(tenderList != null && tenderList.size() > 0){
+            return tenderList.get(0);
+        }
+        return null;
     }
 }

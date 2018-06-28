@@ -8,12 +8,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <version>0.0.1-SNAPSHOT</version>
     <artifactId>hyjf_base</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>hyjf_ribbon_client</module>
         <module>hyjf_common</module>
         <module>hyjf_mybatis_generator</module>
     </modules>

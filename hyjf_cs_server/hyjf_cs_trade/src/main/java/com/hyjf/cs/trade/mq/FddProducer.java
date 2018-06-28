@@ -17,7 +17,7 @@ public class FddProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.BORROW_RECORD_GROUP);
+        wrapper.setGroup(MQConstant.FDD_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }

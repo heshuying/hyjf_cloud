@@ -4,17 +4,18 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.service.AccountListService;
+import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.service.AccountListService;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.common.util.CommonUtils;
+import javax.validation.Valid;
 
 /**
  * @author ${yaoy}
@@ -63,6 +64,16 @@ public class AccountListController {
         return response;
     }
 
+    @RequestMapping("/insertAccountListSelective")
+    public Integer insertAccountListSelective(@RequestBody @Valid AccountListVO accountListVO) {
+        return this.accountListService.insertAccountListSelective(accountListVO);
+    }
+
+    @RequestMapping("/updateOfPlanRepayAccount")
+    public Integer updateOfPlanRepayAccount(@RequestBody @Valid AccountVO accountVO) {
+        return this.accountListService.updateOfPlanRepayAccount(accountVO);
+    }
+
     @GetMapping("/selectAccountListByNidCoupon/{orderId}")
     public AccountListResponse selectAccountListByNidCoupon(@PathVariable String orderId) {
         AccountListResponse response = new AccountListResponse();
@@ -74,5 +85,5 @@ public class AccountListController {
         }
         return response;
     }
-    
+
 }

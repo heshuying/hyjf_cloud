@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;

@@ -24,7 +24,7 @@
     <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
     <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
-    <result column="check_status" property="checkStatus" jdbcType="INTEGER" />
+    <result column="check_status" property="checkStatus" jdbcType="TINYINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -143,7 +143,7 @@
       #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{computeTime,jdbcType=INTEGER}, 
       #{regionId,jdbcType=INTEGER}, #{branchId,jdbcType=INTEGER}, #{regionName,jdbcType=VARCHAR}, 
       #{branchName,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, 
-      #{checkStatus,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+      #{checkStatus,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.TenderCommission" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -286,7 +286,7 @@
         #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="checkStatus != null" >
-        #{checkStatus,jdbcType=INTEGER},
+        #{checkStatus,jdbcType=TINYINT},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -369,7 +369,7 @@
         account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
       <if test="record.checkStatus != null" >
-        check_status = #{record.checkStatus,jdbcType=INTEGER},
+        check_status = #{record.checkStatus,jdbcType=TINYINT},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -403,7 +403,7 @@
       branch_name = #{record.branchName,jdbcType=VARCHAR},
       department_name = #{record.departmentName,jdbcType=VARCHAR},
       account_id = #{record.accountId,jdbcType=VARCHAR},
-      check_status = #{record.checkStatus,jdbcType=INTEGER},
+      check_status = #{record.checkStatus,jdbcType=TINYINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -476,7 +476,7 @@
         account_id = #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="checkStatus != null" >
-        check_status = #{checkStatus,jdbcType=INTEGER},
+        check_status = #{checkStatus,jdbcType=TINYINT},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -507,7 +507,7 @@
       branch_name = #{branchName,jdbcType=VARCHAR},
       department_name = #{departmentName,jdbcType=VARCHAR},
       account_id = #{accountId,jdbcType=VARCHAR},
-      check_status = #{checkStatus,jdbcType=INTEGER},
+      check_status = #{checkStatus,jdbcType=TINYINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

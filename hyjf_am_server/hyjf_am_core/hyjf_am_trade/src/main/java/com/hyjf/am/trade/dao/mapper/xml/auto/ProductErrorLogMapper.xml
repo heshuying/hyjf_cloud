@@ -9,7 +9,7 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="amount" property="amount" jdbcType="DECIMAL" />
     <result column="date" property="date" jdbcType="VARCHAR" />
-    <result column="is_sms" property="isSms" jdbcType="INTEGER" />
+    <result column="is_sms" property="isSms" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -114,7 +114,7 @@
       is_sms)
     values (#{userId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{investTime,jdbcType=INTEGER}, 
       #{remark,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{date,jdbcType=VARCHAR}, 
-      #{isSms,jdbcType=INTEGER})
+      #{isSms,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProductErrorLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -164,7 +164,7 @@
         #{date,jdbcType=VARCHAR},
       </if>
       <if test="isSms != null" >
-        #{isSms,jdbcType=INTEGER},
+        #{isSms,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -199,7 +199,7 @@
         `date` = #{record.date,jdbcType=VARCHAR},
       </if>
       <if test="record.isSms != null" >
-        is_sms = #{record.isSms,jdbcType=INTEGER},
+        is_sms = #{record.isSms,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -215,7 +215,7 @@
       remark = #{record.remark,jdbcType=VARCHAR},
       amount = #{record.amount,jdbcType=DECIMAL},
       `date` = #{record.date,jdbcType=VARCHAR},
-      is_sms = #{record.isSms,jdbcType=INTEGER}
+      is_sms = #{record.isSms,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -242,7 +242,7 @@
         `date` = #{date,jdbcType=VARCHAR},
       </if>
       <if test="isSms != null" >
-        is_sms = #{isSms,jdbcType=INTEGER},
+        is_sms = #{isSms,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -255,7 +255,7 @@
       remark = #{remark,jdbcType=VARCHAR},
       amount = #{amount,jdbcType=DECIMAL},
       `date` = #{date,jdbcType=VARCHAR},
-      is_sms = #{isSms,jdbcType=INTEGER}
+      is_sms = #{isSms,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

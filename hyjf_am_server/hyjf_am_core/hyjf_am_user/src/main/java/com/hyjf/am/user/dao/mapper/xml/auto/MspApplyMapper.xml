@@ -12,7 +12,7 @@
     <result column="loan_money" property="loanMoney" jdbcType="DECIMAL" />
     <result column="loan_time_limit" property="loanTimeLimit" jdbcType="INTEGER" />
     <result column="credit_address" property="creditAddress" jdbcType="VARCHAR" />
-    <result column="share_identification" property="shareIdentification" jdbcType="INTEGER" />
+    <result column="share_identification" property="shareIdentification" jdbcType="TINYINT" />
     <result column="service_type" property="serviceType" jdbcType="VARCHAR" />
     <result column="unredeemed_money" property="unredeemedMoney" jdbcType="DECIMAL" />
     <result column="repayment_status" property="repaymentStatus" jdbcType="VARCHAR" />
@@ -147,7 +147,7 @@
     values (#{applyId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR}, 
       #{mobileNo,jdbcType=VARCHAR}, #{applyDate,jdbcType=VARCHAR}, #{loanType,jdbcType=VARCHAR}, 
       #{loanMoney,jdbcType=DECIMAL}, #{loanTimeLimit,jdbcType=INTEGER}, #{creditAddress,jdbcType=VARCHAR}, 
-      #{shareIdentification,jdbcType=INTEGER}, #{serviceType,jdbcType=VARCHAR}, #{unredeemedMoney,jdbcType=DECIMAL}, 
+      #{shareIdentification,jdbcType=TINYINT}, #{serviceType,jdbcType=VARCHAR}, #{unredeemedMoney,jdbcType=DECIMAL}, 
       #{repaymentStatus,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=DECIMAL}, #{overdueDate,jdbcType=VARCHAR}, 
       #{overdueLength,jdbcType=VARCHAR}, #{overdueReason,jdbcType=VARCHAR}, #{approvalResult,jdbcType=VARCHAR}, 
       #{approvalDate,jdbcType=VARCHAR}, #{contractBegin,jdbcType=VARCHAR}, #{contractEnd,jdbcType=VARCHAR}, 
@@ -275,7 +275,7 @@
         #{creditAddress,jdbcType=VARCHAR},
       </if>
       <if test="shareIdentification != null" >
-        #{shareIdentification,jdbcType=INTEGER},
+        #{shareIdentification,jdbcType=TINYINT},
       </if>
       <if test="serviceType != null" >
         #{serviceType,jdbcType=VARCHAR},
@@ -373,7 +373,7 @@
         credit_address = #{record.creditAddress,jdbcType=VARCHAR},
       </if>
       <if test="record.shareIdentification != null" >
-        share_identification = #{record.shareIdentification,jdbcType=INTEGER},
+        share_identification = #{record.shareIdentification,jdbcType=TINYINT},
       </if>
       <if test="record.serviceType != null" >
         service_type = #{record.serviceType,jdbcType=VARCHAR},
@@ -446,7 +446,7 @@
       loan_money = #{record.loanMoney,jdbcType=DECIMAL},
       loan_time_limit = #{record.loanTimeLimit,jdbcType=INTEGER},
       credit_address = #{record.creditAddress,jdbcType=VARCHAR},
-      share_identification = #{record.shareIdentification,jdbcType=INTEGER},
+      share_identification = #{record.shareIdentification,jdbcType=TINYINT},
       service_type = #{record.serviceType,jdbcType=VARCHAR},
       unredeemed_money = #{record.unredeemedMoney,jdbcType=DECIMAL},
       repayment_status = #{record.repaymentStatus,jdbcType=VARCHAR},
@@ -500,7 +500,7 @@
         credit_address = #{creditAddress,jdbcType=VARCHAR},
       </if>
       <if test="shareIdentification != null" >
-        share_identification = #{shareIdentification,jdbcType=INTEGER},
+        share_identification = #{shareIdentification,jdbcType=TINYINT},
       </if>
       <if test="serviceType != null" >
         service_type = #{serviceType,jdbcType=VARCHAR},
@@ -570,7 +570,7 @@
       loan_money = #{loanMoney,jdbcType=DECIMAL},
       loan_time_limit = #{loanTimeLimit,jdbcType=INTEGER},
       credit_address = #{creditAddress,jdbcType=VARCHAR},
-      share_identification = #{shareIdentification,jdbcType=INTEGER},
+      share_identification = #{shareIdentification,jdbcType=TINYINT},
       service_type = #{serviceType,jdbcType=VARCHAR},
       unredeemed_money = #{unredeemedMoney,jdbcType=DECIMAL},
       repayment_status = #{repaymentStatus,jdbcType=VARCHAR},

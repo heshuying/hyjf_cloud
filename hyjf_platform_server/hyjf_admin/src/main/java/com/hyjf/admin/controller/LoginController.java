@@ -10,7 +10,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.Utils.ShiroConstants;
-import com.hyjf.admin.beans.PermissionsBean;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -60,9 +58,9 @@ public class LoginController extends BaseController {
 	@ResponseBody
 	@AuthorityAnnotation(key = key, value = ShiroConstants.PERMISSION_AUTH)
 	public JSONObject login(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> map) {
-    	System.out.println(request.getRequestURI());
     	JSONObject info = new JSONObject();
 		String username=map.get("username");
+		logger.info("登陆开始用户:"+username);
 		String password=map.get("password");
 		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
 		adminSystemRequest.setUsername(username);
@@ -93,8 +91,6 @@ public class LoginController extends BaseController {
     @PostMapping(value = "/getMenuTree")
 	@ResponseBody
 	public JSONObject getMenuTree(HttpServletRequest request, HttpServletResponse response) {
-    	System.out.println(this.getUser(request).getTruename());
-    	System.out.println(request.getHeader("Cookies"));
     	JSONObject info = new JSONObject();
     	//AdminSystemVO user = this.getUser(request);
 		List<TreeVO> prs = loginService.selectLeftMenuTree2(this.getUser(request).getId());
@@ -117,7 +113,6 @@ public class LoginController extends BaseController {
 	public JSONObject getUserPermission(HttpServletRequest request, HttpServletResponse response) {
     	JSONObject info = new JSONObject();
 		 List<AdminSystemVO> prs = loginService.getUserPermission(this.getUser(request).getUsername());
-		 JSONArray jsonArray1 = new JSONArray();
 		 List<String> perm = new ArrayList<String>();
 		 String key=null;
 		 StringBuilder val=new StringBuilder();

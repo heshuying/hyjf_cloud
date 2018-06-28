@@ -6,10 +6,15 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -294,5 +299,40 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
+
+	@Override
+	public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
+		  CertificateAuthorityResponse response = restTemplate.
+	                getForEntity("http://AM-USER/am-user/userManager/selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
+	                getBody();
+	        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+	            return response.getResult();
+	        }
+	        return null;
+	}
+
+	@Override
+	public List<CertificateAuthorityVO> getCertificateAuthorityList(CertificateAuthorityRequest request) {
+		String url ="http://AM-USER/am-user/user/getCertificateAuthorityList";
+		CertificateAuthorityResponse response = restTemplate.postForEntity(url,request,CertificateAuthorityResponse.class).getBody();
+		if(Validator.isNotNull(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<LoanSubjectCertificateAuthorityVO> getLoanSubjectCertificateAuthorityList(
+			LoanSubjectCertificateAuthorityRequest request1) {
+		String url = "http://AM-USER/am-user/user/getLoanSubjectCertificateAuthorityList";
+		LoanSubjectCertificateAuthorityResponse response = restTemplate.postForEntity(url,request1,LoanSubjectCertificateAuthorityResponse.class).getBody();
+		if(Validator.isNotNull(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+
+	
 
 }

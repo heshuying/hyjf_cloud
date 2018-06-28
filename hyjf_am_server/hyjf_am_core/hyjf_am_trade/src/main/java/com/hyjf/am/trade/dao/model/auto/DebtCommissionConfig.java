@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class DebtCommissionConfig implements Serializable {
     private Integer id;
@@ -17,11 +18,11 @@ public class DebtCommissionConfig implements Serializable {
 
     private Integer delFlag;
 
-    private Integer createTime;
-
     private Integer createUserId;
 
     private String createUserName;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -81,14 +82,6 @@ public class DebtCommissionConfig implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getCreateUserId() {
         return createUserId;
     }
@@ -103,5 +96,13 @@ public class DebtCommissionConfig implements Serializable {
 
     public void setCreateUserName(String createUserName) {
         this.createUserName = createUserName == null ? null : createUserName.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

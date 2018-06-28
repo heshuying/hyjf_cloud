@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.response.trade.BorrowProjectRepayReponse;
 import com.hyjf.am.response.trade.HjhAssetBorrowTypeResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;

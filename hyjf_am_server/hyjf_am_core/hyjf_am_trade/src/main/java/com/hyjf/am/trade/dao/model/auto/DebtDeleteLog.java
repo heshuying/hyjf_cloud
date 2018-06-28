@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class DebtDeleteLog implements Serializable {
     private Integer id;
@@ -33,7 +34,7 @@ public class DebtDeleteLog implements Serializable {
 
     private String status;
 
-    private String addtime;
+    private Date createTime;
 
     private String borrowFullTime;
 
@@ -169,12 +170,12 @@ public class DebtDeleteLog implements Serializable {
         this.status = status == null ? null : status.trim();
     }
 
-    public String getAddtime() {
-        return addtime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddtime(String addtime) {
-        this.addtime = addtime == null ? null : addtime.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public String getBorrowFullTime() {

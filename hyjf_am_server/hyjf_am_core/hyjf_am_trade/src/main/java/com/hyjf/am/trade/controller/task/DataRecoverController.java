@@ -271,7 +271,7 @@ public class DataRecoverController {
         // 更新时间
         cr.setUpdateTime(nowTime);
         // 更新用户
-        cr.setUpdateUser(CustomConstants.OPERATOR_AUTO_REPAY);
+        //cr.setUpdateUserId(CustomConstants.OPERATOR_AUTO_REPAY); todo 确定一下这个字段有啥用
         // 通知用户
         cr.setNoticeFlg(1);
         this.couponRecoverService.updateByPrimaryKeySelective(cr);

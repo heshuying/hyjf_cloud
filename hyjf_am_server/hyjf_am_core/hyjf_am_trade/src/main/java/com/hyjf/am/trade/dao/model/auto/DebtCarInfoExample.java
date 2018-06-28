@@ -815,52 +815,52 @@ public class DebtCarInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeEqualTo(Integer value) {
+        public Criteria andIsSafeEqualTo(Byte value) {
             addCriterion("is_safe =", value, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeNotEqualTo(Integer value) {
+        public Criteria andIsSafeNotEqualTo(Byte value) {
             addCriterion("is_safe <>", value, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeGreaterThan(Integer value) {
+        public Criteria andIsSafeGreaterThan(Byte value) {
             addCriterion("is_safe >", value, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andIsSafeGreaterThanOrEqualTo(Byte value) {
             addCriterion("is_safe >=", value, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeLessThan(Integer value) {
+        public Criteria andIsSafeLessThan(Byte value) {
             addCriterion("is_safe <", value, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeLessThanOrEqualTo(Integer value) {
+        public Criteria andIsSafeLessThanOrEqualTo(Byte value) {
             addCriterion("is_safe <=", value, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeIn(List<Integer> values) {
+        public Criteria andIsSafeIn(List<Byte> values) {
             addCriterion("is_safe in", values, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeNotIn(List<Integer> values) {
+        public Criteria andIsSafeNotIn(List<Byte> values) {
             addCriterion("is_safe not in", values, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeBetween(Integer value1, Integer value2) {
+        public Criteria andIsSafeBetween(Byte value1, Byte value2) {
             addCriterion("is_safe between", value1, value2, "isSafe");
             return (Criteria) this;
         }
 
-        public Criteria andIsSafeNotBetween(Integer value1, Integer value2) {
+        public Criteria andIsSafeNotBetween(Byte value1, Byte value2) {
             addCriterion("is_safe not between", value1, value2, "isSafe");
             return (Criteria) this;
         }
