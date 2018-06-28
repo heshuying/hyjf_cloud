@@ -33,7 +33,7 @@ public class HjhAccedeController {
      * 查询准备退出计划和准备进入锁定期的标的
      * @return
      */
-    @RequestMapping
+    @RequestMapping("/selectWaitQuitHjhList")
     public HjhAccedeResponse selectWaitQuitHjhList() {
         HjhAccedeResponse response = new HjhAccedeResponse();
         List<HjhAccede> hjhAccedeResponse = hjhAccedeService.selectWaitQuitHjhList();

@@ -84,12 +84,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
+			<!--	<configuration>
 					<excludes>
 						<exclude>**/application.yml</exclude>
 						<exclude>**/bootstrap.yml</exclude>
 					</excludes>
-				</configuration>
+				</configuration>-->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

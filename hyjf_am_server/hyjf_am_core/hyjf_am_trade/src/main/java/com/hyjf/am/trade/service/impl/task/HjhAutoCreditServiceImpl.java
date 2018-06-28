@@ -38,6 +38,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
 
     private static final Logger logger = LoggerFactory.getLogger(HjhAutoCreditServiceImpl.class);
 
+    // 汇计划加入订单计算公允价值MQ
     @Autowired
     private HjhCalculateFairValueProducer hjhCalculateFairValueProducer;
 

@@ -22,6 +22,7 @@ import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
+import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -490,6 +491,51 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
 
 
+    }
+
+    /**
+     * 散标投资异步返回结果
+     *
+     * @param tenderRetMsg
+     */
+    @Override
+    public void updateTenderResult(TenderRetMsg tenderRetMsg) {
+        BorrowTenderTmpExample borrowTenderTmpExample = new BorrowTenderTmpExample();
+        BorrowTenderTmpExample.Criteria criteria1 = borrowTenderTmpExample.createCriteria();
+        criteria1.andNidEqualTo(tenderRetMsg.getLogOrderId());
+        criteria1.andUserIdEqualTo(Integer.parseInt(tenderRetMsg.getLogUserId()));
+        criteria1.andBorrowNidEqualTo(tenderRetMsg.getProductId());
+        List<BorrowTenderTmp> list = borrowTenderTmpMapper.selectByExample(borrowTenderTmpExample);
+        if (list != null && list.size() == 1) {
+            BorrowTenderTmp borrowTenderTmp = list.get(0);
+            // TODO: 2018/6/28 修改结果
+            borrowTenderTmpMapper.updateByPrimaryKeySelective(borrowTenderTmp);
+        }
+    }
+
+    /**
+     * 获取散标投资异步返回结果
+     *
+     * @param userId
+     * @param logOrdId
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
+        String result = "";
+        BorrowTenderTmpExample borrowTenderTmpExample = new BorrowTenderTmpExample();
+        BorrowTenderTmpExample.Criteria criteria1 = borrowTenderTmpExample.createCriteria();
+        criteria1.andNidEqualTo(logOrdId);
+        criteria1.andUserIdEqualTo(userId);
+        criteria1.andBorrowNidEqualTo(borrowNid);
+        List<BorrowTenderTmp> list = borrowTenderTmpMapper.selectByExample(borrowTenderTmpExample);
+        if (list != null && list.size() == 1) {
+            BorrowTenderTmp borrowTenderTmp = list.get(0);
+            // TODO: 2018/6/28 返回错误码  一会改了
+            result = borrowTenderTmp.getAddIp();
+        }
+        return result;
     }
 
 
