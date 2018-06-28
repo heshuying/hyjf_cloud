@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.customize;
 
 
+import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,8 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.HjhDebtDetailCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
+
+import javax.annotation.Resource;
 
 @Service
 public class CustomizeMapper extends AutoMapper {
@@ -32,4 +35,7 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected BorrowRepayMapper borrowRepayMapper;
+
+    @Resource
+    protected RepayManageCustomizeMapper repayManageCustomizeMapper;
 }

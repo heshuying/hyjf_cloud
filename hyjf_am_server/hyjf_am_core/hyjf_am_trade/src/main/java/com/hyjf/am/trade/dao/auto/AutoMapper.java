@@ -5,6 +5,8 @@ import com.hyjf.am.trade.dao.mapper.auto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Service
 public class AutoMapper {
 
@@ -31,5 +33,11 @@ public class AutoMapper {
 
     @Autowired
     protected BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
+
+    @Resource
+    protected BorrowTenderMapper borrowTenderMapper;
+
+    @Resource
+    protected TenderAgreementMapper tenderAgreementMapper;
 }
 

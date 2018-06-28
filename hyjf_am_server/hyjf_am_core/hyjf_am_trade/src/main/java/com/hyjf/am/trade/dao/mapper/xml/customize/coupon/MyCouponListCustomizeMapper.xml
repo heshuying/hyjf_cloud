@@ -40,7 +40,7 @@
 		ELSE
 			cc.coupon_quota
 		END AS coupon_quota,
-		 FROM_UNIXTIME(cu.add_time, '%Y.%m.%d') AS add_time,
+		 cu.create_time AS add_time,
 		 FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
 		 cc.coupon_system coupon_system,
 		 cc.project_type project_type,
