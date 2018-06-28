@@ -45,15 +45,15 @@ public class CouponRecover implements Serializable {
 
     private Integer expTime;
 
-    private Date createTime;
+    private Integer delFlag;
 
     private Integer createUserId;
 
-    private Integer updateTime;
-
     private Integer updateUserId;
 
-    private Integer delFlag;
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -217,12 +217,12 @@ public class CouponRecover implements Serializable {
         this.expTime = expTime;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public Integer getCreateUserId() {
@@ -233,14 +233,6 @@ public class CouponRecover implements Serializable {
         this.createUserId = createUserId;
     }
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
@@ -249,11 +241,19 @@ public class CouponRecover implements Serializable {
         this.updateUserId = updateUserId;
     }
 
-    public Integer getDelFlag() {
-        return delFlag;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

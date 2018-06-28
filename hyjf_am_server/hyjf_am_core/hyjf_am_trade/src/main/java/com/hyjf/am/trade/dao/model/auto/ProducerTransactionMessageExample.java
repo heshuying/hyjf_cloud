@@ -385,63 +385,63 @@ public class ProducerTransactionMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesIsNull() {
-            addCriterion("send_times is null");
+        public Criteria andRetryTimesIsNull() {
+            addCriterion("retry_times is null");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesIsNotNull() {
-            addCriterion("send_times is not null");
+        public Criteria andRetryTimesIsNotNull() {
+            addCriterion("retry_times is not null");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesEqualTo(Integer value) {
-            addCriterion("send_times =", value, "sendTimes");
+        public Criteria andRetryTimesEqualTo(Integer value) {
+            addCriterion("retry_times =", value, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesNotEqualTo(Integer value) {
-            addCriterion("send_times <>", value, "sendTimes");
+        public Criteria andRetryTimesNotEqualTo(Integer value) {
+            addCriterion("retry_times <>", value, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesGreaterThan(Integer value) {
-            addCriterion("send_times >", value, "sendTimes");
+        public Criteria andRetryTimesGreaterThan(Integer value) {
+            addCriterion("retry_times >", value, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesGreaterThanOrEqualTo(Integer value) {
-            addCriterion("send_times >=", value, "sendTimes");
+        public Criteria andRetryTimesGreaterThanOrEqualTo(Integer value) {
+            addCriterion("retry_times >=", value, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesLessThan(Integer value) {
-            addCriterion("send_times <", value, "sendTimes");
+        public Criteria andRetryTimesLessThan(Integer value) {
+            addCriterion("retry_times <", value, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesLessThanOrEqualTo(Integer value) {
-            addCriterion("send_times <=", value, "sendTimes");
+        public Criteria andRetryTimesLessThanOrEqualTo(Integer value) {
+            addCriterion("retry_times <=", value, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesIn(List<Integer> values) {
-            addCriterion("send_times in", values, "sendTimes");
+        public Criteria andRetryTimesIn(List<Integer> values) {
+            addCriterion("retry_times in", values, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesNotIn(List<Integer> values) {
-            addCriterion("send_times not in", values, "sendTimes");
+        public Criteria andRetryTimesNotIn(List<Integer> values) {
+            addCriterion("retry_times not in", values, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesBetween(Integer value1, Integer value2) {
-            addCriterion("send_times between", value1, value2, "sendTimes");
+        public Criteria andRetryTimesBetween(Integer value1, Integer value2) {
+            addCriterion("retry_times between", value1, value2, "retryTimes");
             return (Criteria) this;
         }
 
-        public Criteria andSendTimesNotBetween(Integer value1, Integer value2) {
-            addCriterion("send_times not between", value1, value2, "sendTimes");
+        public Criteria andRetryTimesNotBetween(Integer value1, Integer value2) {
+            addCriterion("retry_times not between", value1, value2, "retryTimes");
             return (Criteria) this;
         }
 
@@ -512,6 +512,146 @@ public class ProducerTransactionMessageExample {
 
         public Criteria andTopicNotBetween(String value1, String value2) {
             addCriterion("topic not between", value1, value2, "topic");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsIsNull() {
+            addCriterion("tags is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsIsNotNull() {
+            addCriterion("tags is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsEqualTo(String value) {
+            addCriterion("tags =", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsNotEqualTo(String value) {
+            addCriterion("tags <>", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsGreaterThan(String value) {
+            addCriterion("tags >", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsGreaterThanOrEqualTo(String value) {
+            addCriterion("tags >=", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsLessThan(String value) {
+            addCriterion("tags <", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsLessThanOrEqualTo(String value) {
+            addCriterion("tags <=", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsLike(String value) {
+            addCriterion("tags like", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsNotLike(String value) {
+            addCriterion("tags not like", value, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsIn(List<String> values) {
+            addCriterion("tags in", values, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsNotIn(List<String> values) {
+            addCriterion("tags not in", values, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsBetween(String value1, String value2) {
+            addCriterion("tags between", value1, value2, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagsNotBetween(String value1, String value2) {
+            addCriterion("tags not between", value1, value2, "tags");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysIsNull() {
+            addCriterion("`keys` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysIsNotNull() {
+            addCriterion("`keys` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysEqualTo(String value) {
+            addCriterion("`keys` =", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysNotEqualTo(String value) {
+            addCriterion("`keys` <>", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysGreaterThan(String value) {
+            addCriterion("`keys` >", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysGreaterThanOrEqualTo(String value) {
+            addCriterion("`keys` >=", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysLessThan(String value) {
+            addCriterion("`keys` <", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysLessThanOrEqualTo(String value) {
+            addCriterion("`keys` <=", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysLike(String value) {
+            addCriterion("`keys` like", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysNotLike(String value) {
+            addCriterion("`keys` not like", value, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysIn(List<String> values) {
+            addCriterion("`keys` in", values, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysNotIn(List<String> values) {
+            addCriterion("`keys` not in", values, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysBetween(String value1, String value2) {
+            addCriterion("`keys` between", value1, value2, "keys");
+            return (Criteria) this;
+        }
+
+        public Criteria andKeysNotBetween(String value1, String value2) {
+            addCriterion("`keys` not between", value1, value2, "keys");
             return (Criteria) this;
         }
 

@@ -52,12 +52,12 @@
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -126,7 +126,8 @@
     advance_days, advance_interest, late_days, late_interest, late_interest_assigned, 
     delay_days, delay_interest, delay_interest_assigned, repay_order_id, repay_order_date, 
     expire_fair_value, last_liquidation_time, `status`, del_flag, client, remark, add_ip, 
-    create_time, create_user_id, create_user_name, update_time, update_user_id, update_user_name
+    create_user_id, create_user_name, update_user_id, update_user_name, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDetailExample" >
     select
@@ -181,9 +182,9 @@
       delay_interest_assigned, repay_order_id, repay_order_date, 
       expire_fair_value, last_liquidation_time, `status`, 
       del_flag, client, remark, 
-      add_ip, create_time, create_user_id, 
-      create_user_name, update_time, update_user_id, 
-      update_user_name)
+      add_ip, create_user_id, create_user_name, 
+      update_user_id, update_user_name, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{borrowName,jdbcType=VARCHAR}, 
       #{borrowApr,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, 
@@ -200,9 +201,9 @@
       #{delayInterestAssigned,jdbcType=DECIMAL}, #{repayOrderId,jdbcType=VARCHAR}, #{repayOrderDate,jdbcType=VARCHAR}, 
       #{expireFairValue,jdbcType=DECIMAL}, #{lastLiquidationTime,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
       #{delFlag,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
-      #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
-      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateUserName,jdbcType=VARCHAR})
+      #{addIp,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDetail" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -357,23 +358,23 @@
       <if test="addIp != null" >
         add_ip,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
       </if>
       <if test="createUserName != null" >
         create_user_name,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="updateUserId != null" >
         update_user_id,
       </if>
       <if test="updateUserName != null" >
         update_user_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -524,23 +525,23 @@
       <if test="addIp != null" >
         #{addIp,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
-      </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateUserName != null" >
         #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -703,23 +704,23 @@
       <if test="record.addIp != null" >
         add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
-      </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
-      </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.updateUserName != null" >
         update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -778,12 +779,12 @@
       client = #{record.client,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       add_ip = #{record.addIp,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -938,23 +939,23 @@
       <if test="addIp != null" >
         add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateUserName != null" >
         update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -1010,12 +1011,12 @@
       client = #{client,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       add_ip = #{addIp,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -85,13 +85,9 @@ public class DebtInvest implements Serializable {
 
     private String addIp;
 
-    private Date createTime;
-
     private Integer createUserId;
 
     private String createUserName;
-
-    private Date updateTime;
 
     private Integer updateUserId;
 
@@ -118,6 +114,10 @@ public class DebtInvest implements Serializable {
     private Integer changeUserid;
 
     private BigDecimal tenderAwardAccount;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -441,14 +441,6 @@ public class DebtInvest implements Serializable {
         this.addIp = addIp == null ? null : addIp.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getCreateUserId() {
         return createUserId;
     }
@@ -463,14 +455,6 @@ public class DebtInvest implements Serializable {
 
     public void setCreateUserName(String createUserName) {
         this.createUserName = createUserName == null ? null : createUserName.trim();
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 
     public Integer getUpdateUserId() {
@@ -575,5 +559,21 @@ public class DebtInvest implements Serializable {
 
     public void setTenderAwardAccount(BigDecimal tenderAwardAccount) {
         this.tenderAwardAccount = tenderAwardAccount;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

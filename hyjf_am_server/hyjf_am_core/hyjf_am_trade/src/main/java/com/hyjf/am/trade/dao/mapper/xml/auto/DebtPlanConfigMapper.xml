@@ -19,15 +19,15 @@
     <result column="invest_account_limit" property="investAccountLimit" jdbcType="DECIMAL" />
     <result column="min_surplus_invest_account" property="minSurplusInvestAccount" jdbcType="DECIMAL" />
     <result column="round_amount" property="roundAmount" jdbcType="DECIMAL" />
+    <result column="coupon_config" property="couponConfig" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
-    <result column="coupon_config" property="couponConfig" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.DebtPlanConfig" extends="BaseResultMap" >
     <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
@@ -94,8 +94,8 @@
     id, debt_plan_type, debt_plan_type_name, debt_plan_prefix, debt_lock_period, debt_min_investment, 
     debt_investment_increment, debt_max_investment, debt_quit_style, debt_quit_period, 
     min_invest_number, max_invest_number, cycle_times, unable_cycle_times, invest_account_limit, 
-    min_surplus_invest_account, round_amount, `status`, del_flag, create_time, create_user_id, 
-    create_user_name, update_time, update_user_id, update_user_name, coupon_config
+    min_surplus_invest_account, round_amount, coupon_config, `status`, del_flag, create_user_id, 
+    create_user_name, update_user_id, update_user_name, create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     remark
@@ -163,19 +163,19 @@
       debt_max_investment, debt_quit_style, debt_quit_period, 
       min_invest_number, max_invest_number, cycle_times, 
       unable_cycle_times, invest_account_limit, min_surplus_invest_account, 
-      round_amount, `status`, del_flag, 
-      create_time, create_user_id, create_user_name, 
-      update_time, update_user_id, update_user_name, 
-      coupon_config, remark)
+      round_amount, coupon_config, `status`, 
+      del_flag, create_user_id, create_user_name, 
+      update_user_id, update_user_name, create_time, 
+      update_time, remark)
     values (#{debtPlanType,jdbcType=INTEGER}, #{debtPlanTypeName,jdbcType=VARCHAR}, #{debtPlanPrefix,jdbcType=VARCHAR}, 
       #{debtLockPeriod,jdbcType=INTEGER}, #{debtMinInvestment,jdbcType=DECIMAL}, #{debtInvestmentIncrement,jdbcType=DECIMAL}, 
       #{debtMaxInvestment,jdbcType=DECIMAL}, #{debtQuitStyle,jdbcType=TINYINT}, #{debtQuitPeriod,jdbcType=INTEGER}, 
       #{minInvestNumber,jdbcType=INTEGER}, #{maxInvestNumber,jdbcType=INTEGER}, #{cycleTimes,jdbcType=INTEGER}, 
       #{unableCycleTimes,jdbcType=INTEGER}, #{investAccountLimit,jdbcType=DECIMAL}, #{minSurplusInvestAccount,jdbcType=DECIMAL}, 
-      #{roundAmount,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
-      #{couponConfig,jdbcType=VARCHAR}, #{remark,jdbcType=LONGVARCHAR})
+      #{roundAmount,jdbcType=DECIMAL}, #{couponConfig,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -231,14 +231,14 @@
       <if test="roundAmount != null" >
         round_amount,
       </if>
+      <if test="couponConfig != null" >
+        coupon_config,
+      </if>
       <if test="status != null" >
         `status`,
       </if>
       <if test="delFlag != null" >
         del_flag,
-      </if>
-      <if test="createTime != null" >
-        create_time,
       </if>
       <if test="createUserId != null" >
         create_user_id,
@@ -246,17 +246,17 @@
       <if test="createUserName != null" >
         create_user_name,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="updateUserId != null" >
         update_user_id,
       </if>
       <if test="updateUserName != null" >
         update_user_name,
       </if>
-      <if test="couponConfig != null" >
-        coupon_config,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
       <if test="remark != null" >
         remark,
@@ -311,14 +311,14 @@
       <if test="roundAmount != null" >
         #{roundAmount,jdbcType=DECIMAL},
       </if>
+      <if test="couponConfig != null" >
+        #{couponConfig,jdbcType=VARCHAR},
+      </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -326,17 +326,17 @@
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateUserName != null" >
         #{updateUserName,jdbcType=VARCHAR},
       </if>
-      <if test="couponConfig != null" >
-        #{couponConfig,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=LONGVARCHAR},
@@ -403,14 +403,14 @@
       <if test="record.roundAmount != null" >
         round_amount = #{record.roundAmount,jdbcType=DECIMAL},
       </if>
+      <if test="record.couponConfig != null" >
+        coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      </if>
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=TINYINT},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -418,17 +418,17 @@
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
-      </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.updateUserName != null" >
         update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.couponConfig != null" >
-        coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=LONGVARCHAR},
@@ -457,15 +457,15 @@
       invest_account_limit = #{record.investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{record.minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{record.roundAmount,jdbcType=DECIMAL},
+      coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-      coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -490,15 +490,15 @@
       invest_account_limit = #{record.investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{record.minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{record.roundAmount,jdbcType=DECIMAL},
+      coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-      coupon_config = #{record.couponConfig,jdbcType=VARCHAR}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -554,14 +554,14 @@
       <if test="roundAmount != null" >
         round_amount = #{roundAmount,jdbcType=DECIMAL},
       </if>
+      <if test="couponConfig != null" >
+        coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -569,17 +569,17 @@
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateUserName != null" >
         update_user_name = #{updateUserName,jdbcType=VARCHAR},
       </if>
-      <if test="couponConfig != null" >
-        coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=LONGVARCHAR},
@@ -605,15 +605,15 @@
       invest_account_limit = #{investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{roundAmount,jdbcType=DECIMAL},
+      coupon_config = #{couponConfig,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -635,15 +635,15 @@
       invest_account_limit = #{investAccountLimit,jdbcType=DECIMAL},
       min_surplus_invest_account = #{minSurplusInvestAccount,jdbcType=DECIMAL},
       round_amount = #{roundAmount,jdbcType=DECIMAL},
+      coupon_config = #{couponConfig,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      coupon_config = #{couponConfig,jdbcType=VARCHAR}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

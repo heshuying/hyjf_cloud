@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class DebtPlanInfoStaticCount implements Serializable {
     private Integer id;
@@ -58,9 +59,9 @@ public class DebtPlanInfoStaticCount implements Serializable {
 
     private Integer accedeClientCountAndroid;
 
-    private Integer createTime;
+    private Date createTime;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -280,19 +281,19 @@ public class DebtPlanInfoStaticCount implements Serializable {
         this.accedeClientCountAndroid = accedeClientCountAndroid;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 }

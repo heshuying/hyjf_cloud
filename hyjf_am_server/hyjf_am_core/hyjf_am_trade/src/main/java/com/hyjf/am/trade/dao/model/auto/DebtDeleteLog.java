@@ -34,8 +34,6 @@ public class DebtDeleteLog implements Serializable {
 
     private String status;
 
-    private Date createTime;
-
     private String borrowFullTime;
 
     private String recoverLastTime;
@@ -47,6 +45,8 @@ public class DebtDeleteLog implements Serializable {
     private String operaterUser;
 
     private Integer operaterTime;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -170,14 +170,6 @@ public class DebtDeleteLog implements Serializable {
         this.status = status == null ? null : status.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public String getBorrowFullTime() {
         return borrowFullTime;
     }
@@ -224,5 +216,13 @@ public class DebtDeleteLog implements Serializable {
 
     public void setOperaterTime(Integer operaterTime) {
         this.operaterTime = operaterTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class DebtPlanInfoStatic implements Serializable {
     private Integer id;
@@ -50,7 +51,7 @@ public class DebtPlanInfoStatic implements Serializable {
 
     private Integer creditPeriodTf;
 
-    private Integer createTime;
+    private Date createTime;
 
     private String dataDate;
 
@@ -244,11 +245,11 @@ public class DebtPlanInfoStatic implements Serializable {
         this.creditPeriodTf = creditPeriodTf;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
