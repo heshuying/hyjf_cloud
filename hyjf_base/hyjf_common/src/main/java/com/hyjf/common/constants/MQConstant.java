@@ -128,4 +128,10 @@ public interface MQConstant {
 	 */
 	String HJH_QUIT = "HJH_QUIT";
 	String HJH_QUIT_TOPIC = "HJH_QUIT_TOPIC";
+
+	/**
+	 * 汇计划自动计算公允价值
+	 */
+	String HJH_CALCULATE_FAIR_VALUE_GROUP = "HJH_GROUP";
+	String HJH_CALCULATE_FAIR_VALUE_TOPIC = "HJH_CALCULATE_FAIR_VALUE_TOPIC";
 }

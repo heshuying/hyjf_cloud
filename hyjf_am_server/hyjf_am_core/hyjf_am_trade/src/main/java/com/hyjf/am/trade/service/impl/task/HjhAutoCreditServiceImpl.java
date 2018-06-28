@@ -5,8 +5,8 @@ package com.hyjf.am.trade.service.impl.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.mq.hjh.calculatefairvalue.HjhCalculateFairValueProducer;
 import com.hyjf.am.trade.mq.Producer;
+import com.hyjf.am.trade.mq.hjh.calculatefairvalue.HjhCalculateFairValueProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
@@ -1019,7 +1019,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         BorrowRepayPlanExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
         // 应还时间 >= 当天开始时间
-        cra.andRepayTimeGreaterThanOrEqualTo(GetDate.getDayStart10(GetDate.getDate()));
+        cra.andRepayTimeGreaterThanOrEqualTo(GetDate.getDayStart11(GetDate.getDate()));
         // 应还时间 <= 当天结束时间
         cra.andRepayTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getDate()));
         // 还款状态未还款
@@ -1039,7 +1039,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         BorrowRepayExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
         // 应还时间 >= 当天开始时间
-        cra.andRepayTimeGreaterThanOrEqualTo(GetDate.getDayStart10(GetDate.getDate()));
+        cra.andRepayTimeGreaterThanOrEqualTo(GetDate.getDayStart11(GetDate.getDate()));
         // 应还时间 <= 当天结束时间
         cra.andRepayTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getDate()));
         // 还款状态未还款
