@@ -16,6 +16,7 @@ import com.hyjf.cs.trade.service.BorrowRepayToHjhQuitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * @version BorrowRepayToHjhQuitController, v0.1 2018/6/25 9:33
  */
 @RestController
-@RequestMapping("/batch/borrowRepay")
+@RequestMapping("/borrowRepay")
 public class BorrowRepayToHjhQuitController {
     private static final Logger logger = LoggerFactory.getLogger(BorrowRepayToHjhQuitController.class);
 

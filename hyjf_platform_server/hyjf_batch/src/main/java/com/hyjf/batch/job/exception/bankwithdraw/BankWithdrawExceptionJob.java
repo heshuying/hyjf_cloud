@@ -1,7 +1,6 @@
 package com.hyjf.batch.job.exception.bankwithdraw;
 
 import com.hyjf.batch.job.BaseJob;
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
  * @author jijun
  * @date 2018年6月14日
  */
-@DisallowConcurrentExecution
 public class BankWithdrawExceptionJob extends BaseJob implements Job {
 
     Logger logger = LoggerFactory.getLogger(getClass());

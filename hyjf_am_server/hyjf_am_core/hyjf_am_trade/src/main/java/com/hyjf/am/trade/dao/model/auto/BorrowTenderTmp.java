@@ -83,10 +83,6 @@ public class BorrowTenderTmp implements Serializable {
 
     private Integer isBankTender;
 
-    private String retCode;
-
-    private String retMsg;
-
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
@@ -401,22 +397,6 @@ public class BorrowTenderTmp implements Serializable {
 
     public void setIsBankTender(Integer isBankTender) {
         this.isBankTender = isBankTender;
-    }
-
-    public String getRetCode() {
-        return retCode;
-    }
-
-    public void setRetCode(String retCode) {
-        this.retCode = retCode == null ? null : retCode.trim();
-    }
-
-    public String getRetMsg() {
-        return retMsg;
-    }
-
-    public void setRetMsg(String retMsg) {
-        this.retMsg = retMsg == null ? null : retMsg.trim();
     }
 
     public Date getCreateTime() {

@@ -4,23 +4,22 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.borrow.TenderBgVO;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.*;
-import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
-import com.hyjf.common.validator.Validator;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.DigitalUtils;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -31,18 +30,13 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,9 +75,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     @Autowired
     SystemConfig systemConfig;
-
-    @Autowired
-    private AmConfigClient amConfigClient;
 
 
     /**
@@ -124,16 +115,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 查询用户账户表-投资账户
         AccountVO tenderAccount = rechargeClient.getAccount(userId);
         // 投资检查参数
-        this.checkParam(request, borrow, account, userInfo, user);
+        this.checkParam(request, borrow, account, userInfo,user);
         // 检查金额
-        this.checkTenderMoney(request, borrow, cuc, tenderAccount, userInfo, user);
+        this.checkTenderMoney(request, borrow, cuc, tenderAccount,userInfo,user);
         // 开始真正的投资逻辑
-        return tender(request, borrow, account, cuc, tenderAccount, userInfo, user);
+        return tender(request, borrow, account, cuc, tenderAccount,userInfo,user);
     }
 
     /**
      * 开始真正的投资
-     *
      * @param request
      * @param borrow
      * @param account
@@ -143,12 +133,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @param user
      * @return
      */
-    private WebResult<Map<String, Object>> tender(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount, UserInfoVO userInfo, UserVO user) {
+    private WebResult<Map<String,Object>> tender(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount, UserInfoVO userInfo, UserVO user) {
         // 生成订单id
         Integer userId = request.getUser().getUserId();
         String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
         request.setOrderId(orderId);
-        BankCallBean callBean = new BankCallBean(userId, BankCallConstant.TXCODE_BID_APPLY, Integer.parseInt(request.getPlatform()), BankCallConstant.BANK_URL_MOBILE_BIDAPPLY);
+        BankCallBean callBean =  new BankCallBean(userId,BankCallConstant.TXCODE_BID_APPLY,Integer.parseInt(request.getPlatform()),BankCallConstant.BANK_URL_MOBILE_BIDAPPLY);
         callBean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
         callBean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
         callBean.setAccountId(account.getAccount());// 电子账号
@@ -163,31 +153,30 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogUserName(request.getUser().getUsername());// 投资用户名
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
-        String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + orderId;
-        String successUrl = systemConfig.getFrontHost() + "/user/openSuccess?logOrdId="+orderId;
+        String retUrl = systemConfig.getFrontHost() + "/user/openError"+"?logOrdId="+orderId;
+        String successUrl = systemConfig.getFrontHost() +"/user/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
+        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?" ;
         //忘记密码url
-        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
+        String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL;
         callBean.setRetUrl(retUrl);
         callBean.setSuccessfulUrl(successUrl);
         callBean.setNotifyUrl(bgRetUrl);
-        callBean.setForgotPwdUrl(forgetPassWoredUrl);
+        callBean.setForgotPwdUrl(forgetPassworedUrl);
         // 插入记录 tmp表
         amBorrowClient.updateBeforeChinaPnR(request);
-        try {
-            Map<String, Object> map = BankCallUtils.callApiMap(callBean);
-            WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+        try{
+            Map<String,Object> map = BankCallUtils.callApiMap(callBean);
+            WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
             result.setData(map);
             return result;
-        } catch (Exception e) {
+        }catch (Exception e){
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
     }
 
     /**
      * 检查投资金额
-     *
      * @param request
      * @param borrow
      * @param cuc
@@ -207,7 +196,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 投资金额不能为0元
         if (("0".equals(account) && cuc == null)
-                || ("0".equals(account) && cuc != null && cuc.getCouponType() == 2)) {
+                        || ("0".equals(account) && cuc != null && cuc.getCouponType() == 2)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
         }
         // 投资金额是否为整数
@@ -272,9 +261,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_BIG);
         }
         // add by cwyang 在只使用代金券和体验金,并且没有本金的情况下,不进行投资递增金额的判断,在投资金额等于最大可投金额时也不做递增金额的判断
-        if (!(cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1) && accountInt == 0)) {
+        if (!(cuc != null && (cuc.getCouponType() == 3||cuc.getCouponType() == 1) && accountInt == 0)) {
             // 投资递增金额须为" + borrowDetail.getIncreaseMoney() + " 元的整数倍
-            if (borrow.getBorrowIncreaseMoney() != null && (accountInt - min) % borrow.getBorrowIncreaseMoney() != 0
+            if (borrow.getBorrowIncreaseMoney()!= null && (accountInt - min) % borrow.getBorrowIncreaseMoney() != 0
                     && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1 && accountInt < borrow.getTenderAccountMax()) {
                 throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_INCREMENTING);
             }
@@ -282,8 +271,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     }
 
     /**
-     * 检查用户状态  角色  授权状态等  是否允许投资
-     *
+     *  检查用户状态  角色  授权状态等  是否允许投资
      * @param user
      * @param userInfo
      */
@@ -312,14 +300,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     /**
      * 散标投资参数校验
-     *
      * @param request
      * @param borrow
      * @param account
      * @param userInfo
      * @param user
      */
-    private void checkParam(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account, UserInfoVO userInfo, UserVO user) {
+    private void checkParam(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account,UserInfoVO userInfo, UserVO user) {
         Integer userId = request.getUser().getUserId();
         // 借款人不存在
         if (borrow.getUserId() == null) {
@@ -361,7 +348,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 投资客户端 校验
         // 投资平台不能为空
-        if (request.getPlatform() == null) {
+        if(request.getPlatform()==null){
             throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
         }
         if (request.getPlatform().equals("2") && borrow.getCanTransactionAndroid().equals("0")) {
@@ -402,7 +389,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     /**
      * 获取项目类型
-     *
      * @param projectType
      * @return
      */
@@ -419,12 +405,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * 散标投资异步处理
      *
      * @param bean
-     * @param couponGrantId
      * @return
      */
     @Override
-    public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
-        logger.info("开始调用投资异步方法");
+    public BankCallResult borrowTenderBgReturn(BankCallBean bean) {
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());// 用户Userid
         String respCode = bean.getRetCode();// 投资结果返回码
         Integer platForm = bean.getLogClient();
@@ -436,16 +420,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             return result;
         }
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
-            // 更新失败原因
-            String retMsg = bean.getRetMsg();
-            BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(respCode);
-            if (retMsgVo != null) {
-                retMsg = retMsgVo.getErrorMsg();
-            }
-            amBorrowClient.updateTenderResult(bean.getLogUserId(),bean.getLogOrderId(),respCode,retMsg,bean.getProductId());
             // 返回码提示余额不足，不结冻
             if (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(respCode)) {
-                logger.info("用户:" + userId + "**投资接口调用失败，余额不足，错误码: " + respCode);
+                logger.info("PC用户:" + userId + "**投资接口调用失败，余额不足，错误码: " + respCode);
                 result.setMessage("投资失败，可用余额不足！请联系客服.");
                 return result;
             } else {
@@ -454,327 +431,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
 
-        bean.convert();
-        String borrowId = bean.getProductId();// 借款Id
-
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowId);
-        if (borrow == null) {
-            logger.info("PC用户:" + userId + "**回调时,borrowNid为空，错误码: " + respCode);
-            result.setMessage("回调时,borrowNid为空.");
-            return result;
-        }
-
-        // 开始投资逻辑
-        this.userBorrowTender(borrow, bean, couponGrantId);
-        return result;
-    }
-
-    /**
-     * 获取投资结果 ---失败
-     *
-     * @param userVO
-     * @param logOrdId
-     * @param borrowNid
-     * @return
-     */
-    @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResult(WebViewUserVO userVO, String logOrdId, String borrowNid) {
-        WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-        String retMsg = amBorrowClient.getBorrowTenderResult(userVO.getUserId(),logOrdId,borrowNid);
-        Map<String, Object> map = new HashedMap();
-        map.put("error",retMsg);
-        result.setData(map);
-        return result;
-    }
-
-    /**
-     * 投资异步逻辑
-     *
-     * @param borrow
-     * @param bean
-     * @param couponGrantId
-     */
-    private void userBorrowTender(BorrowVO borrow, BankCallBean bean, String couponGrantId) {
-        int nowTime = GetDate.getNowTime10();
-        String ip = bean.getLogIp();// 操作ip
-        int client = bean.getLogClient() != 0 ? bean.getLogClient() : 0;// 操作平台
-        String accountId = bean.getAccountId();// 获取投资用户的投资客户号
-        Integer userId = Integer.parseInt(bean.getLogUserId());// 投资人id
-        String txAmount = bean.getTxAmount();// 借款金额
-        String orderId = bean.getOrderId();// 订单id
-        String orderDate = bean.getLogOrderDate(); // 订单日期
-        String retCode = bean.getRetCode();// 投资结果返回码
-        String authCode = bean.getAuthCode();// 投资结果授权码
-        String borrowNid = borrow.getBorrowNid();// 项目编号
-        String borrowStyle = borrow.getBorrowStyle();// 项目的还款方式
-        int projectType = borrow.getProjectType();// 项目类型
-        BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate()); // 服务费率
-        Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
-        Integer borrowId = borrow.getId();// 借款项目主键
-        BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
-        // 检查redis是否已经执行了
-        boolean checkTender = RedisUtils.tranactionSet(RedisConstants.TENDER_ORDERID + orderId, 20);
-        if (!checkTender) {//同步/异步 优先执行完毕
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_HANDING);
-        }
-        // redis扣减
-        redisTender(userId, borrowNid, txAmount);
-        // 操作数据库表
-        this.borrowTender(borrow, bean);
-
-
-        logger.info("用户:" + userId + "***投资成功: " + txAmount);
-        logger.info("异步调用优惠劵ID:" + couponGrantId);
-        // 如果用了优惠券
-        if (StringUtils.isNotEmpty(couponGrantId)) {
-            couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
-        }
-
-    }
-
-    /**
-     * 操作数据库表
-     *
-     * @param borrow
-     * @param bean
-     */
-    private void borrowTender(BorrowVO borrow, BankCallBean bean) {
-        // 1.删除临时表
-
-        // 2.插入冻结表
-        BigDecimal accountDecimal = new BigDecimal(bean.getTxAmount());
-
-        TenderBgVO tenderBg = new TenderBgVO();
-        tenderBg.setAccountDecimal(accountDecimal);
-        tenderBg.setAccountId(bean.getAccountId());
-        tenderBg.setBorrowNid(borrow.getBorrowNid());
-        tenderBg.setOrderId(bean.getOrderId());
-        tenderBg.setRetCode(bean.getRetCode());
-        tenderBg.setUserId(Integer.parseInt(bean.getLogUserId()));
-        tenderBg.setIp(bean.getLogIp());
-        tenderBg.setTxDate(bean.getTxDate());
-        tenderBg.setTxTime(bean.getTxTime());
-        tenderBg.setSeqNo(bean.getSeqNo());
-        UserInfoVO userInfo = amUserClient.findUsersInfoById(Integer.parseInt(bean.getLogUserId()));
-        tenderBg.setTenderUserAttribute(userInfo.getAttribute());
-        tenderBg.setClient(bean.getLogClient());
-        Integer attribute = null;
-        if (userInfo != null) {
-            // 获取投资用户的用户属性
-            attribute = userInfo.getAttribute();
-            if (attribute != null) {
-                // 投资人用户属性
-                tenderBg.setTenderUserAttribute(attribute);
-                // 如果是线上员工或线下员工，推荐人的userId和username不插
-                if (attribute == 2 || attribute == 3) {
-                    UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(Integer.parseInt(bean.getLogUserId()));
-                    if (userInfoCustomize != null) {
-                        tenderBg.setInviteRegionId(userInfoCustomize.getRegionId());
-                        tenderBg.setInviteRegionName(userInfoCustomize.getRegionName());
-                        tenderBg.setInviteBranchId(userInfoCustomize.getBranchId());
-                        tenderBg.setInviteBranchName(userInfoCustomize.getBranchName());
-                        tenderBg.setInviteDepartmentId(userInfoCustomize.getDepartmentId());
-                        tenderBg.setInviteDepartmentName(userInfoCustomize.getDepartmentName());
-                    }
-                } else if (attribute == 1) {
-                    UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(Integer.parseInt(bean.getLogUserId()));
-                    if (spreadsUsers != null) {
-                        int refUserId = spreadsUsers.getUserId();
-                        // 查找用户推荐人
-                        tenderBg.setInviteUserId(spreadsUsers.getUserId());
-                        tenderBg.setInviteUserName(spreadsUsers.getUsername());
-                        // 推荐人信息
-                        UserInfoVO refUsers = amUserClient.findUsersInfoById(refUserId);
-                        // 推荐人用户属性
-                        if (refUsers != null) {
-                            tenderBg.setInviteUserAttribute(refUsers.getAttribute());
-                        }
-                        // 查找用户推荐人部门
-                        UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(refUserId);
-                        if (userInfoCustomize != null) {
-                            tenderBg.setInviteRegionId(userInfoCustomize.getRegionId());
-                            tenderBg.setInviteRegionName(userInfoCustomize.getRegionName());
-                            tenderBg.setInviteBranchId(userInfoCustomize.getBranchId());
-                            tenderBg.setInviteBranchName(userInfoCustomize.getBranchName());
-                            tenderBg.setInviteDepartmentId(userInfoCustomize.getDepartmentId());
-                            tenderBg.setInviteDepartmentName(userInfoCustomize.getDepartmentName());
-                        }
-                    }
-                } else if (attribute == 0) {
-                    UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(Integer.parseInt(bean.getLogUserId()));
-                    if (spreadsUsers != null) {
-                        int refUserId = spreadsUsers.getUserId();
-                        // 查找推荐人
-                        tenderBg.setInviteUserId(spreadsUsers.getUserId());
-                        tenderBg.setInviteUserName(spreadsUsers.getUsername());
-                        // 推荐人信息
-                        UserInfoVO refUsers = amUserClient.findUsersInfoById(refUserId);
-                        // 推荐人用户属性
-                        if (refUsers != null) {
-                            tenderBg.setInviteUserAttribute(refUsers.getAttribute());
-                        }
-                    }
-                }
-            }
-        }
-
-        // 单笔投资的融资服务费
-        String borrowStyle = borrow.getBorrowStyle();
-        BigDecimal perService = new BigDecimal(0);
-        BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate()); // 服务费率
-        if (StringUtils.isNotEmpty(borrow.getBorrowStyle())) {
-            BigDecimal serviceScale = serviceFeeRate;
-            // 到期还本还息end/先息后本endmonth/等额本息month/等额本金principal
-            if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
-                    || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                perService = FinancingServiceChargeUtils.getMonthsPrincipalServiceCharge(accountDecimal, serviceScale);
-            }
-            // 按天计息到期还本还息
-            else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
-                perService = FinancingServiceChargeUtils.getDaysPrincipalServiceCharge(accountDecimal, serviceScale, borrow.getBorrowPeriod());
-            }
-        }
-        tenderBg.setPerService(perService);
-        //投资授权码 投资结果授权码
-        if (StringUtils.isNotBlank(bean.getAuthCode())) {
-            tenderBg.setAuthCode(bean.getAuthCode());
-        }
-
-        boolean insertFlag = amBorrowClient.borrowTender(tenderBg);
-        if (insertFlag) {
-            updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
-        }
-    }
-
-    /**
-     * 操作redis扣钱
-     *
-     * @param userId
-     * @param borrowNid
-     * @param txAmount
-     */
-    private void redisTender(Integer userId, String borrowNid, String txAmount) {
-        BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
-        String accountRedisWait = RedisUtils.get(borrowNid);
-        if (StringUtils.isNotBlank(accountRedisWait)) {
-            // 操作redis
-            JedisPool pool = RedisUtils.getPool();
-            Jedis jedis = pool.getResource();
-            MsgCode redisMsgCode = null;
-            try {
-                while ("OK".equals(jedis.watch(borrowNid))) {
-                    accountRedisWait = RedisUtils.get(borrowNid);
-                    if (StringUtils.isNotBlank(accountRedisWait)) {
-                        logger.info("用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
-                        if (new BigDecimal(accountRedisWait).compareTo(BigDecimal.ZERO) == 0) {
-                            // 您来晚了，下次再来抢吧！
-                            redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
-                            throw new ReturnMessageException(redisMsgCode);
-                        } else {
-                            if (new BigDecimal(accountRedisWait).compareTo(accountDecimal) < 0) {
-                                // 可投剩余金额为" + accountRedisWait + "元！"
-                                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS);
-                            } else {
-                                Transaction transaction = jedis.multi();
-                                BigDecimal lastAccount = new BigDecimal(accountRedisWait).subtract(accountDecimal);
-                                transaction.set(borrowNid, lastAccount.toString());
-                                List<Object> result = transaction.exec();
-                                if (result == null || result.isEmpty()) {
-                                    jedis.unwatch();
-                                } else {
-                                    String ret = (String) result.get(0);
-                                    if (ret != null && ret.equals("OK")) {
-                                        logger.info("redis操作成功  用户:" + userId + "***冻结前减redis：" + accountDecimal);
-                                        break;
-                                    } else {
-                                        jedis.unwatch();
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        // 您来晚了，下次再来抢吧！
-                        redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
-                        throw new ReturnMessageException(redisMsgCode);
-                    }
-                }
-            } catch (Exception e) {
-                if (redisMsgCode != null) {
-                    throw new ReturnMessageException(redisMsgCode);
-                } else {
-                    throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
-                }
-            } finally {
-                RedisUtils.returnResource(pool, jedis);
-            }
-
-        } else {
-            // 您来晚了，下次再来抢吧！
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
-        }
-    }
-
-    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowVO borrow) {
-        //更新汇计划列表成功的前提下
-        // 更新渠道统计用户累计投资
-        // 投资人信息
-        UserVO users = amUserClient.findUserById(userId);
-        if (users != null) {
-            // 更新渠道统计用户累计投资 从mongo里面查询
-            AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
-            if (appChannelStatisticsDetails != null) {
-                // TODO: 2018/6/22  发送消息到mq
-                // appChannelStatisticsDetails != null && appChannelStatisticsDetails.size() == 1) {
-              /*  AppChannelStatisticsDetail channelDetail = appChannelStatisticsDetails.get(0);
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("id", channelDetail.getId());
-                // 认购本金
-                params.put("accountDecimal", accountDecimal);
-                // 投资时间
-                params.put("investTime", nowTime);
-                // 项目类型
-                params.put("projectType", "汇计划");
-                // 首次投标项目期限
-                String investProjectPeriod = debtPlan.getLockPeriod() + "天";
-                params.put("investProjectPeriod", investProjectPeriod);
-                // 更新渠道统计用户累计投资
-                if (users.getInvestflag() == 1) {
-                    this.appChannelStatisticsDetailCustomizeMapper.updateAppChannelStatisticsDetail(params);
-                } else if (users.getInvestflag() == 0) {
-                    // 更新首投投资
-                    this.appChannelStatisticsDetailCustomizeMapper.updateFirstAppChannelStatisticsDetail(params);
-                }
-                logger.info("用户:"+ userId+ "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号："+ planAccede.getAccedeOrderId());
-           */
-            } else {
-                // 更新huiyingdai_utm_reg的首投信息
-                UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
-                if (utmReg != null) {
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("id", utmReg.getId());
-                    params.put("accountDecimal", accountDecimal);
-                    // 投资时间
-                    params.put("investTime", nowTime);
-                    // 项目类型
-                    params.put("projectType", "汇计划");
-                    String investProjectPeriod = "";
-                    // 首次投标项目期限
-                    String borrowStyle = borrow.getBorrowStyle();// 还款方式
-                    if ("endday".equals(borrowStyle)) {
-                        investProjectPeriod = borrow.getBorrowPeriod() + "天";
-                    } else {
-                        investProjectPeriod = borrow.getBorrowPeriod() + "月";
-                    }
-                    // 首次投标项目期限
-                    params.put("investProjectPeriod", investProjectPeriod);
-                    // 更新渠道统计用户累计投资
-                    if (users.getInvestflag() == 0) {
-                        // 更新huiyingdai_utm_reg的首投信息
-                        boolean updateUtmFlag = amUserClient.updateFirstUtmReg(params);
-                    }
-                }
-            }
-        }
-        /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
+        return null;
     }
 }

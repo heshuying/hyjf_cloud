@@ -29,7 +29,7 @@
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
-    <result column="upd_flag" property="updFlag" jdbcType="TINYINT" />
+    <result column="upd_flag" property="updFlag" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -150,7 +150,7 @@
       #{revind,jdbcType=INTEGER}, #{accchg,jdbcType=VARCHAR}, #{seqno,jdbcType=INTEGER}, 
       #{oriNum,jdbcType=INTEGER}, #{resv,jdbcType=VARCHAR}, #{createDay,jdbcType=VARCHAR}, 
       #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}, #{updFlag,jdbcType=TINYINT}
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}, #{updFlag,jdbcType=BIT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AleveLog" >
@@ -321,7 +321,7 @@
         #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="updFlag != null" >
-        #{updFlag,jdbcType=TINYINT},
+        #{updFlag,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -416,7 +416,7 @@
         del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.updFlag != null" >
-        upd_flag = #{record.updFlag,jdbcType=TINYINT},
+        upd_flag = #{record.updFlag,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -452,7 +452,7 @@
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      upd_flag = #{record.updFlag,jdbcType=TINYINT}
+      upd_flag = #{record.updFlag,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -539,7 +539,7 @@
         del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="updFlag != null" >
-        upd_flag = #{updFlag,jdbcType=TINYINT},
+        upd_flag = #{updFlag,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -572,7 +572,7 @@
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      upd_flag = #{updFlag,jdbcType=TINYINT}
+      upd_flag = #{updFlag,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

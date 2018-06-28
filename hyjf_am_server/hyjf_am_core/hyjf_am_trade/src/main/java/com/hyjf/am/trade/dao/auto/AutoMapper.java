@@ -59,17 +59,5 @@ public class AutoMapper {
     @Autowired
     protected HjhAccedeMapper hjhAccedeMapper;
 
-    @Autowired
-    protected BorrowApicronMapper borrowApicronMapper;
-
-    @Autowired
-    protected BorrowRepayPlanMapper borrowRepayPlanMapper;
-
-    @Autowired
-    protected BorrowRepayMapper borrowRepayMapper;
-
-    @Autowired
-    protected HjhPlanMapper hjhPlanMapper;
-
 }
 

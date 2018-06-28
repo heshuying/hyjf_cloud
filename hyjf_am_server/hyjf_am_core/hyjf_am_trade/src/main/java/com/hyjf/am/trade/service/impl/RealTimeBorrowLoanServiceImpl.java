@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.common.GetOrderIdUtils;
@@ -67,6 +66,7 @@ import com.hyjf.am.trade.mq.MailProducer;
 import com.hyjf.am.trade.mq.Producer;
 import com.hyjf.am.trade.mq.SmsProducer;
 import com.hyjf.am.trade.service.RealTimeBorrowLoanService;
+import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -86,7 +86,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @author dxj
  * @version RealTimeBorrowLoanServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
-@Service
 public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService {
 
 	private static final Logger logger = LoggerFactory.getLogger(RealTimeBorrowLoanServiceImpl.class);
@@ -157,7 +156,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		try {
 			// 取得借款人账户信息
 			Account borrowAccount = this.getAccountByUserId(borrowUserId);
-			if (borrowAccount == null || borrowAccount.getAccountId() == null) {
+			if (borrowAccount == null) {
 				throw new Exception("借款人账户不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 			}
 			// 借款人在汇付的账户信息
@@ -903,9 +902,9 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 			int tenderUserId = borrowTender.getUserId();
 			// 投资金额
 			BigDecimal account = borrowTender.getAccount();
-			// 借款人的账户信息
+			// 借款人在汇付的账户信息
 			Account tenderAccount = this.getAccountByUserId(tenderUserId);
-			if (tenderAccount == null || tenderAccount.getAccountId() == null) {
+			if (tenderAccount == null) {
 				throw new RuntimeException("投资人未开户。[投资人ID：" + borrowTender.getUserId() + "]，" + "[投资订单号：" + borrowTender.getNid() + "]");
 			}
 			String ordId = borrowTender.getNid();// 投资订单号
@@ -1785,7 +1784,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		SmsMessage borrowerSmsMessage = new SmsMessage(borrowUserId, borrowerReplaceStrs, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_JIEKUAN_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
-			mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(borrowerSmsMessage)));
+			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(borrowerSmsMessage)));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}
@@ -1800,7 +1799,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
-			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}

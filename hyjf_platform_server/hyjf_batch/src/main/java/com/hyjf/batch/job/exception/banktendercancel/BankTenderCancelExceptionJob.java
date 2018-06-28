@@ -1,7 +1,6 @@
 package com.hyjf.batch.job.exception.banktendercancel;
 
 import com.hyjf.batch.job.BaseJob;
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
  * @author jijun
  * @since 20180625
  */
-@DisallowConcurrentExecution
 public class BankTenderCancelExceptionJob extends BaseJob implements Job{
 	
 	Logger logger = LoggerFactory.getLogger(getClass());

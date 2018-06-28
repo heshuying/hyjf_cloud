@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * @author yaoy
+ * @author ${yaoy}
  * @version AccountController, v0.1 2018/6/14 16:59
  */
 @RestController

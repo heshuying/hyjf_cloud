@@ -12,120 +12,282 @@ public class AssetListRequest implements Serializable {
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	// ×Ê²ú±àºÅ
+	String assetIdSrch;
+	// ×Ê²úÀ´Ô´
+	String instCodeSrch;
+	// ²úÆ·ÀàĞÍ
+	String assetTypeSrch;
+	// ÏîÄ¿±àºÅ
+	String borrowNidSrch;
+	// ¼Æ»®±àºÅ
+	String planNidSrch;
+	// ÓÃ»§Ãû
+	String userNameSrch;
+	//±êµÄ±êÇ©
+	String labelNameSrch;
+	// ¿ª»§×´Ì¬
+	String bankOpenAccountSrch;
+	// ÉóºË×´Ì¬
+	String verifyStatusSrch;
+	// ÏîÄ¿×´Ì¬
+	String statusSrch;
+	// ÍÆËÍÊ±¼ä
+	String recieveTimeStartSrch;
+	// ÍÆËÍÊ±¼ä
+	String recieveTimeEndSrch;
+	/*private List<AssetListCustomize> recordList;*/
+	// ¼ìË÷Ìõ¼ş limitStart
+	private int limitStart = -1;
+	// ¼ìË÷Ìõ¼ş limitEnd
+	private int limitEnd = -1;
+/*	*//**
+	 * ·­Ò³»úÄÜÓÃµÄÒş²Ø±äÁ¿
+	 *//*
+	private int paginatorPage = 1;*/
 
-	// èµ„äº§ç¼–å·
-	private String assetIdSrch;
-	// èµ„äº§æ¥æº
-	private String instCodeSrch;
-	// äº§å“ç±»å‹
-	private String assetTypeSrch;
-	// é¡¹ç›®ç¼–å·
-	private String borrowNidSrch;
-	// è®¡åˆ’ç¼–å·
-	private String planNidSrch;
-	// ç”¨æˆ·å
-	private String userNameSrch;
-	//æ ‡çš„æ ‡ç­¾
-	private String labelNameSrch;
-	// å¼€æˆ·çŠ¶æ€
-	private String bankOpenAccountSrch;
-	// å®¡æ ¸çŠ¶æ€
-	private String verifyStatusSrch;
-	// é¡¹ç›®çŠ¶æ€
-	private String statusSrch;
-	// æ¨é€æ—¶é—´
-	private String recieveTimeStartSrch;
-	// æ¨é€æ—¶é—´
-	private String recieveTimeEndSrch;
+	/**
+	 * ÁĞ±í»­Ãæ×Ô¶¨Òå±êÇ©ÉÏµÄÓÃ·­Ò³¶ÔÏó£ºpaginator
+	 */
+	/*private Paginator paginator;*/
 
-	public int limit;
-
-	private int paginatorPage = 1;
-	public int getPaginatorPage() {
+/*	public int getPaginatorPage() {
 		if (paginatorPage == 0) {
 			paginatorPage = 1;
 		}
 		return paginatorPage;
 	}
+
 	public void setPaginatorPage(int paginatorPage) {
 		this.paginatorPage = paginatorPage;
 	}
+
+	public Paginator getPaginator() {
+		return paginator;
+	}
+
+	public void setPaginator(Paginator paginator) {
+		this.paginator = paginator;
+	}*/
+
+	/**
+	 * assetIdSrch
+	 * @return the assetIdSrch
+	 */
 	public String getAssetIdSrch() {
 		return assetIdSrch;
 	}
+
+	/**
+	 * @param assetIdSrch the assetIdSrch to set
+	 */
 	public void setAssetIdSrch(String assetIdSrch) {
 		this.assetIdSrch = assetIdSrch;
 	}
+
+	/**
+	 * instCodeSrch
+	 * @return the instCodeSrch
+	 */
 	public String getInstCodeSrch() {
 		return instCodeSrch;
 	}
+
+	/**
+	 * @param instCodeSrch the instCodeSrch to set
+	 */
 	public void setInstCodeSrch(String instCodeSrch) {
 		this.instCodeSrch = instCodeSrch;
 	}
+
+	/**
+	 * assetTypeSrch
+	 * @return the assetTypeSrch
+	 */
 	public String getAssetTypeSrch() {
 		return assetTypeSrch;
 	}
+
+	/**
+	 * @param assetTypeSrch the assetTypeSrch to set
+	 */
 	public void setAssetTypeSrch(String assetTypeSrch) {
 		this.assetTypeSrch = assetTypeSrch;
 	}
+
+	/**
+	 * borrowNidSrch
+	 * @return the borrowNidSrch
+	 */
 	public String getBorrowNidSrch() {
 		return borrowNidSrch;
 	}
+
+	/**
+	 * @param borrowNidSrch the borrowNidSrch to set
+	 */
 	public void setBorrowNidSrch(String borrowNidSrch) {
 		this.borrowNidSrch = borrowNidSrch;
 	}
+
+	/**
+	 * planNidSrch
+	 * @return the planNidSrch
+	 */
 	public String getPlanNidSrch() {
 		return planNidSrch;
 	}
+
+	/**
+	 * @param planNidSrch the planNidSrch to set
+	 */
 	public void setPlanNidSrch(String planNidSrch) {
 		this.planNidSrch = planNidSrch;
 	}
+
+	/**
+	 * userNameSrch
+	 * @return the userNameSrch
+	 */
 	public String getUserNameSrch() {
 		return userNameSrch;
 	}
+
+	/**
+	 * @param userNameSrch the userNameSrch to set
+	 */
 	public void setUserNameSrch(String userNameSrch) {
 		this.userNameSrch = userNameSrch;
 	}
-	public String getLabelNameSrch() {
-		return labelNameSrch;
-	}
-	public void setLabelNameSrch(String labelNameSrch) {
-		this.labelNameSrch = labelNameSrch;
-	}
+
+	/**
+	 * bankOpenAccountSrch
+	 * @return the bankOpenAccountSrch
+	 */
 	public String getBankOpenAccountSrch() {
 		return bankOpenAccountSrch;
 	}
+
+	/**
+	 * @param bankOpenAccountSrch the bankOpenAccountSrch to set
+	 */
 	public void setBankOpenAccountSrch(String bankOpenAccountSrch) {
 		this.bankOpenAccountSrch = bankOpenAccountSrch;
 	}
+
+	/**
+	 * verifyStatusSrch
+	 * @return the verifyStatusSrch
+	 */
 	public String getVerifyStatusSrch() {
 		return verifyStatusSrch;
 	}
+
+	/**
+	 * @param verifyStatusSrch the verifyStatusSrch to set
+	 */
 	public void setVerifyStatusSrch(String verifyStatusSrch) {
 		this.verifyStatusSrch = verifyStatusSrch;
 	}
+
+	/**
+	 * statusSrch
+	 * @return the statusSrch
+	 */
 	public String getStatusSrch() {
 		return statusSrch;
 	}
+
+	/**
+	 * @param statusSrch the statusSrch to set
+	 */
 	public void setStatusSrch(String statusSrch) {
 		this.statusSrch = statusSrch;
 	}
+
+	/**
+	 * recieveTimeStartSrch
+	 * @return the recieveTimeStartSrch
+	 */
 	public String getRecieveTimeStartSrch() {
 		return recieveTimeStartSrch;
 	}
+
+	/**
+	 * @param recieveTimeStartSrch the recieveTimeStartSrch to set
+	 */
 	public void setRecieveTimeStartSrch(String recieveTimeStartSrch) {
 		this.recieveTimeStartSrch = recieveTimeStartSrch;
 	}
+
+	/**
+	 * recieveTimeEndSrch
+	 * @return the recieveTimeEndSrch
+	 */
 	public String getRecieveTimeEndSrch() {
 		return recieveTimeEndSrch;
 	}
+
+	/**
+	 * @param recieveTimeEndSrch the recieveTimeEndSrch to set
+	 */
 	public void setRecieveTimeEndSrch(String recieveTimeEndSrch) {
 		this.recieveTimeEndSrch = recieveTimeEndSrch;
 	}
-	public int getLimit() {
-		return limit;
+
+/*	*//**
+	 * recordList
+	 * @return the recordList
+	 *//*
+	public List<AssetListCustomize> getRecordList() {
+		return recordList;
 	}
-	public void setLimit(int limit) {
-		this.limit = limit;
+
+	*//**
+	 * @param recordList the recordList to set
+	 *//*
+	public void setRecordList(List<AssetListCustomize> recordList) {
+		this.recordList = recordList;
+	}*/
+
+	/**
+	 * limitStart
+	 * @return the limitStart
+	 */
+	public int getLimitStart() {
+		return limitStart;
 	}
+
+	/**
+	 * @param limitStart the limitStart to set
+	 */
+	public void setLimitStart(int limitStart) {
+		this.limitStart = limitStart;
+	}
+
+	/**
+	 * limitEnd
+	 * @return the limitEnd
+	 */
+	public int getLimitEnd() {
+		return limitEnd;
+	}
+
+	/**
+	 * @param limitEnd the limitEnd to set
+	 */
+	public void setLimitEnd(int limitEnd) {
+		this.limitEnd = limitEnd;
+	}
+
+	public String getLabelNameSrch() {
+		return labelNameSrch;
+	}
+
+	public void setLabelNameSrch(String labelNameSrch) {
+		this.labelNameSrch = labelNameSrch;
+	}
+
+
 }

@@ -4,7 +4,6 @@
 package com.hyjf.batch.job.coupon;
 
 import com.hyjf.batch.job.BaseJob;
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -16,7 +15,6 @@ import org.slf4j.LoggerFactory;
  * @version CouponExpiredJob, v0.1 2018/6/19 9:09
  * 优惠劵过期提醒
  */
-@DisallowConcurrentExecution
 public class CouponExpiredJob extends BaseJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(CouponRepayJob.class);

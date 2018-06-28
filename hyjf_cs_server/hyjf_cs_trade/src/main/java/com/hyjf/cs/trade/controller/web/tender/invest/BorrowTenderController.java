@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
@@ -66,21 +65,10 @@ public class BorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "web端散标投资异步处理", notes = "web端散标投资异步处理")
     @RequestMapping("/bgReturn")
     @ResponseBody
-    public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
+    public BankCallResult borrowTenderBgReturn(BankCallBean bean) {
         logger.info("web端散标投资异步处理start,userId:{}", bean.getLogUserId());
-        BankCallResult result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
+        BankCallResult result = borrowTenderService.borrowTenderBgReturn(bean);
         return result;
-    }
-
-    @ApiOperation(value = "web端散标投资获取投资结果", notes = "web端散标投资获取投资结果")
-    @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "token", required = true) String token,
-                                                               @RequestParam String logOrdId,
-                                                               @RequestParam String borrowNid,
-                                                               HttpServletRequest request) {
-        logger.info("web端请求获取投资结果接口，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
-        return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
     }
 
 }

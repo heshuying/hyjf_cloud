@@ -32,7 +32,7 @@ public class CurrentHoldObligatoryRightListCustomizeVO extends BaseVO implements
 	/**投资订单号*/
 	private String nid;
 	/**投资时间*/
-	private String createTime;
+	private String addtime;
 	/**预计还款时间*/
 	private String investDate;
 	/**待还本金*/
@@ -94,15 +94,12 @@ public class CurrentHoldObligatoryRightListCustomizeVO extends BaseVO implements
     public void setNid(String nid) {
         this.nid = nid;
     }
-
-    public String getCreateTime() {
-        return createTime;
+    public String getAddtime() {
+        return addtime;
     }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setAddtime(String addtime) {
+        this.addtime = addtime;
     }
-
     public String getInvestDate() {
         if("投资中".equals(this.data)){
             return "--";
