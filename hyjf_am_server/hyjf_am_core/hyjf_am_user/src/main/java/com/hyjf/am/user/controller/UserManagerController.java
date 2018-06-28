@@ -318,7 +318,10 @@ public class UserManagerController {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
         logger.info("---selectBankOpenAccountByAccountId---  " + accountId);
         BankOpenAccountVO bankOpenAccountVO = null;
-        BankOpenAccount bankOpenAccount = userManagerService.selectBankOpenAccountByAccountId(accountId);
+        BankOpenAccountExample openExample = new BankOpenAccountExample();
+        openExample.createCriteria().andAccountEqualTo(accountId);
+       // BankOpenAccount bankOpenAccount = userManagerService.selectBankOpenAccountByAccountId(accountId);
+        BankOpenAccount bankOpenAccount =bankOpenService.selectByExample(openExample);
         if (null != bankOpenAccount) {
             BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
             response.setResult(bankOpenAccountVO);
@@ -368,7 +371,10 @@ public class UserManagerController {
     public BankOpenAccountResponse queryBankOpenAccountByUserId(@Valid int userId) {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
         BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
-        BankOpenAccount bankOpenAccount = userManagerService.queryBankOpenAccountByUserId(userId);
+//        BankOpenAccount bankOpenAccount = userManagerService.queryBankOpenAccountByUserId(userId);
+        BankOpenAccountExample openExample = new BankOpenAccountExample();
+        openExample.createCriteria().andUserIdEqualTo(userId);
+        BankOpenAccount bankOpenAccount =bankOpenService.selectByExample(openExample);
         if (null != bankOpenAccount) {
             BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
             response.setResult(bankOpenAccountVO);

@@ -118,7 +118,7 @@ public interface UserManagerService {
      */
     User selectUserByUserId(int userId);
 
-    BankOpenAccount selectBankOpenAccountByAccountId(String accountId);
+//    BankOpenAccount selectBankOpenAccountByAccountId(String accountId);
 
     /**
      * 更新企业用户开户记录
@@ -141,7 +141,7 @@ public interface UserManagerService {
      *
      * @return
      */
-    BankOpenAccount queryBankOpenAccountByUserId(int userId);
+//    BankOpenAccount queryBankOpenAccountByUserId(int userId);
 
     /**
      * 更新开户信息
