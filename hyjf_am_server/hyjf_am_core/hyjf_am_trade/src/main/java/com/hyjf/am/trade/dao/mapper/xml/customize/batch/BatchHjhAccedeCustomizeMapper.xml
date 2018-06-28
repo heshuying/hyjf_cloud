@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper">
+  
+  	<!-- 计划放款后计划订单冻结金额变化  -->
+	<update id="updateOfPlanLoansTender" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
+		update hyjf_hjh_accede
+		set
+		frost_account = IFNULL(frost_account,0) - #{frostAccount,jdbcType=DECIMAL}
+		where
+		id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+</mapper>
