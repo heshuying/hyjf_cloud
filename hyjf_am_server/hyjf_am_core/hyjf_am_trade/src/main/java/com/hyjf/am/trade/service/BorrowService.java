@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
+import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 
 import java.util.List;
 
@@ -95,4 +96,19 @@ public interface BorrowService extends BaseService{
      * @param tenderBg
      */
     void updateTenderAfter(TenderBgVO tenderBg);
+
+    /**
+     * 修改散标投资异步返回结果
+     * @param tenderRetMsg
+     */
+    void updateTenderResult(TenderRetMsg tenderRetMsg);
+
+    /**
+     * 获取散标投资异步返回结果
+     * @param userId
+     * @param logOrdId
+     * @param borrowNid
+     * @return
+     */
+    String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 }

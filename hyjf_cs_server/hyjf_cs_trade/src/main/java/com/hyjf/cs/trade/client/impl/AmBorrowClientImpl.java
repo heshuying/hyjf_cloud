@@ -4,10 +4,7 @@ import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.borrow.TenderBgVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.cs.trade.client.AmBorrowClient;
@@ -140,5 +137,47 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 			return result == 0 ? false : true;
 		}
 		return false;
+	}
+
+	/**
+	 * 修改状态临时表结果
+	 *  @param logUserId
+	 * @param logOrderId
+	 * @param respCode
+	 * @param retMsg
+	 * @param productId
+	 */
+	@Override
+	public boolean updateTenderResult(String logUserId, String logOrderId, String respCode, String retMsg, String productId) {
+		TenderRetMsg tenderRetMsg = new TenderRetMsg();
+		tenderRetMsg.setLogOrderId(logOrderId);
+		tenderRetMsg.setLogUserId(logUserId);
+		tenderRetMsg.setRespCode(respCode);
+		tenderRetMsg.setRetMsg(retMsg);
+		tenderRetMsg.setProductId(productId);
+		Integer result = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/borrow/updateTenderResult", tenderRetMsg, Integer.class).getBody();
+		if (result != null) {
+			return result == 0 ? false : true;
+		}
+		return false;
+	}
+
+	/**
+	 * 获取投资异步结果
+	 *
+	 * @param userId
+	 * @param logOrdId
+	 * @param borrowNid
+	 * @return
+	 */
+	@Override
+	public String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
+		String url = "http://AM-TRADE/am-trade/borrow/getBorrowTenderResult/" + userId + "/" + logOrdId + "/" + borrowNid;
+		String response = restTemplate.getForEntity(url, String.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
 	}
 }

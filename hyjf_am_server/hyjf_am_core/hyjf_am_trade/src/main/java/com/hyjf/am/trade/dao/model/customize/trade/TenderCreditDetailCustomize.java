@@ -154,7 +154,7 @@ public class TenderCreditDetailCustomize {
 	/**
 	 * 创建时间
 	 */
-	private String addTime;
+	private String createTime;
 	/**
 	 * 结束时间
 	 */
@@ -179,7 +179,7 @@ public class TenderCreditDetailCustomize {
 	/**
 	 * 创建时间INT
 	 */
-	private Integer addTimeInt;
+	private Integer createTimeInt;
 	/**
 	 * 投资时间
 	 */
@@ -436,13 +436,7 @@ public class TenderCreditDetailCustomize {
 		this.createDate = createDate;
 	}
 
-	public String getAddTime() {
-		return addTime;
-	}
 
-	public void setAddTime(String addTime) {
-		this.addTime = addTime;
-	}
 
 	public String getEndTime() {
 		return endTime;
@@ -500,12 +494,20 @@ public class TenderCreditDetailCustomize {
 		this.borrowStyleName = borrowStyleName;
 	}
 
-	public Integer getAddTimeInt() {
-		return addTimeInt;
+	public String getCreateTime() {
+		return createTime;
 	}
 
-	public void setAddTimeInt(Integer addTimeInt) {
-		this.addTimeInt = addTimeInt;
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getCreateTimeInt() {
+		return createTimeInt;
+	}
+
+	public void setCreateTimeInt(Integer createTimeInt) {
+		this.createTimeInt = createTimeInt;
 	}
 
 	public String getTenderTime() {
