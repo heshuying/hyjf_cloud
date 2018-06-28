@@ -221,11 +221,13 @@ public class UserCenterClientImpl implements UserCenterClient {
      */
     @Override
     public UserRecommendCustomizeVO selectUserRecommendByUserId(String userId) {
-        UserRecommendCustomizeResponse response;
-        UserRecommendCustomizeVO userRecommendCustomizeVO = new UserRecommendCustomizeVO();
-        return userRecommendCustomizeVO;
+        UserRecommendCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userManager/selectUserRecommendUserId/" +userId, UserRecommendCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
     }
-
     /**
      * 校验手机号
      *
