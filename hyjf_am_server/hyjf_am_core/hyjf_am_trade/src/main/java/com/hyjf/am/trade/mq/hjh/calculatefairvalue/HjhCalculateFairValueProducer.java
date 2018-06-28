@@ -19,7 +19,7 @@ public class HjhCalculateFairValueProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.HJH_GROUP);
+        wrapper.setGroup(MQConstant.HJH_CALCULATE_FAIR_VALUE_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }

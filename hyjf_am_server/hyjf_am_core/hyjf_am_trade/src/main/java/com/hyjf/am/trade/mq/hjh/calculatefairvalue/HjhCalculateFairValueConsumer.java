@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 汇计划清算MQ消费者
+ * 汇计划计算计划加入订单公允价值MQ消费者
  *
  * @author liuyang
  * @version HjhCalculateFairValueConsumer, v0.1 2018/6/26 17:12
@@ -41,7 +41,7 @@ public class HjhCalculateFairValueConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.HJH_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.HJH_CALCULATE_FAIR_VALUE_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
         defaultMQPushConsumer.subscribe(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费

@@ -55,5 +55,9 @@ public class AutoMapper {
 
     @Autowired
     protected TenderAgreementMapper tenderAgreementMapper;
+
+    @Autowired
+    protected HjhAccedeMapper hjhAccedeMapper;
+
 }
 
