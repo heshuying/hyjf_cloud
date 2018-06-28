@@ -336,7 +336,7 @@ public class UserManagerServiceImpl implements UserManagerService {
      * @param accountId
      * @return
      */
-    @Override
+/*    @Override
     public BankOpenAccount selectBankOpenAccountByAccountId(String accountId) {
         BankOpenAccountExample openExample = new BankOpenAccountExample();
         openExample.createCriteria().andAccountEqualTo(accountId);
@@ -345,7 +345,7 @@ public class UserManagerServiceImpl implements UserManagerService {
             return bankOpenAccount.get(0);
         }
         return null;
-    }
+    }*/
 
     /**
      * 更新企业用户开户记录
@@ -386,7 +386,7 @@ public class UserManagerServiceImpl implements UserManagerService {
      *
      * @return
      */
-    @Override
+   /* @Override
     public BankOpenAccount queryBankOpenAccountByUserId(int userId) {
         BankOpenAccountExample openExample = new BankOpenAccountExample();
         openExample.createCriteria().andUserIdEqualTo(userId);
@@ -396,7 +396,7 @@ public class UserManagerServiceImpl implements UserManagerService {
         }
         return null;
     }
-
+*/
     /**
      * 更新开户信息
      *
