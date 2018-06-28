@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -30,6 +31,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +81,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     @Autowired
     SystemConfig systemConfig;
+
+    @Autowired
+    private AmConfigClient amConfigClient;
 
 
     /**
@@ -159,7 +164,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
         String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + orderId;
-        String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
+        String successUrl = systemConfig.getFrontHost() + "/user/openSuccess?logOrdId="+orderId;
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
         //忘记密码url
@@ -431,6 +436,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             return result;
         }
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
+            // 更新失败原因
+            String retMsg = bean.getRetMsg();
+            BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(respCode);
+            if (retMsgVo != null) {
+                retMsg = retMsgVo.getErrorMsg();
+            }
+            amBorrowClient.updateTenderResult(bean.getLogUserId(),bean.getLogOrderId(),respCode,retMsg,bean.getProductId());
             // 返回码提示余额不足，不结冻
             if (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(respCode)) {
                 logger.info("用户:" + userId + "**投资接口调用失败，余额不足，错误码: " + respCode);
@@ -444,8 +456,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         bean.convert();
         String borrowId = bean.getProductId();// 借款Id
-        String account = bean.getTxAmount();// 借款金额
-        String orderId = bean.getOrderId();// 订单id
 
         BorrowVO borrow = borrowClient.selectBorrowByNid(borrowId);
         if (borrow == null) {
@@ -456,7 +466,25 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         // 开始投资逻辑
         this.userBorrowTender(borrow, bean, couponGrantId);
-        return null;
+        return result;
+    }
+
+    /**
+     * 获取投资结果 ---失败
+     *
+     * @param userVO
+     * @param logOrdId
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> getBorrowTenderResult(WebViewUserVO userVO, String logOrdId, String borrowNid) {
+        WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+        String retMsg = amBorrowClient.getBorrowTenderResult(userVO.getUserId(),logOrdId,borrowNid);
+        Map<String, Object> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
+        return result;
     }
 
     /**

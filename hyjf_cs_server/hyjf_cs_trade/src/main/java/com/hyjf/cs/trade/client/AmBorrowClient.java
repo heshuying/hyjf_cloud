@@ -65,4 +65,23 @@ public interface AmBorrowClient {
      * @return
      */
     boolean borrowTender(TenderBgVO tenderBg);
+
+    /**
+     * 修改状态临时表结果
+     * @param logUserId
+     * @param logOrderId
+     * @param respCode
+     * @param retMsg
+     * @param productId
+     */
+    boolean updateTenderResult(String logUserId, String logOrderId, String respCode, String retMsg, String productId);
+
+    /**
+     * 获取投资异步结果
+     * @param userId
+     * @param logOrdId
+     * @param borrowNid
+     * @return
+     */
+    String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 }
