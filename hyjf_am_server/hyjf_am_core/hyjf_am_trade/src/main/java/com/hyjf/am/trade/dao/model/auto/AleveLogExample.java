@@ -1866,52 +1866,52 @@ public class AleveLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagEqualTo(Integer value) {
+        public Criteria andUpdFlagEqualTo(Boolean value) {
             addCriterion("upd_flag =", value, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagNotEqualTo(Integer value) {
+        public Criteria andUpdFlagNotEqualTo(Boolean value) {
             addCriterion("upd_flag <>", value, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagGreaterThan(Integer value) {
+        public Criteria andUpdFlagGreaterThan(Boolean value) {
             addCriterion("upd_flag >", value, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagGreaterThanOrEqualTo(Integer value) {
+        public Criteria andUpdFlagGreaterThanOrEqualTo(Boolean value) {
             addCriterion("upd_flag >=", value, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagLessThan(Integer value) {
+        public Criteria andUpdFlagLessThan(Boolean value) {
             addCriterion("upd_flag <", value, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagLessThanOrEqualTo(Integer value) {
+        public Criteria andUpdFlagLessThanOrEqualTo(Boolean value) {
             addCriterion("upd_flag <=", value, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagIn(List<Integer> values) {
+        public Criteria andUpdFlagIn(List<Boolean> values) {
             addCriterion("upd_flag in", values, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagNotIn(List<Integer> values) {
+        public Criteria andUpdFlagNotIn(List<Boolean> values) {
             addCriterion("upd_flag not in", values, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagBetween(Integer value1, Integer value2) {
+        public Criteria andUpdFlagBetween(Boolean value1, Boolean value2) {
             addCriterion("upd_flag between", value1, value2, "updFlag");
             return (Criteria) this;
         }
 
-        public Criteria andUpdFlagNotBetween(Integer value1, Integer value2) {
+        public Criteria andUpdFlagNotBetween(Boolean value1, Boolean value2) {
             addCriterion("upd_flag not between", value1, value2, "updFlag");
             return (Criteria) this;
         }

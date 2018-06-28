@@ -323,8 +323,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL("EAM000213","剩余可投只剩{}元，须全部购买"),
 	ERR_AMT_TENDER_GREATER_THAN_TOTAL("EAM000216","投资金额不能大于项目总额"),
 	ERR_AMT_TENDER_MONEY_INCREMENTING("EAM000216","投资递增金额须为{}元的整数倍"),
-	ERR_AMT_TENDER_HANDING("EAM000216","投资处理中"),
-	ERR_AMT_TENDER_MONEY_LESS("EAM000213","可投剩余金额为{}元"),
+
 
 	ERR_SUCCESS("0", ""),
 	// 枚举终结

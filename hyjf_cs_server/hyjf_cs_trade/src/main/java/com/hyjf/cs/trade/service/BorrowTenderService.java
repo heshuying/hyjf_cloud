@@ -24,8 +24,7 @@ public interface BorrowTenderService extends BaseTradeService{
     /**
      * 散标投资异步处理
      * @param bean
-     * @param couponGrantId
      * @return
      */
-    BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId);
+    BankCallResult borrowTenderBgReturn(BankCallBean bean);
 }

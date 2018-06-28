@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import com.hyjf.admin.client.AssetListClient;
 import com.hyjf.admin.service.AssetListService;
 import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
@@ -20,9 +18,9 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
  */
 @Service
 public class AssetListServiceImpl implements AssetListService {
-
-	@Autowired
-	public AssetListClient assetListClient;
+	
+    @Autowired
+    public AssetListClient assetListClient;
 
 	@Override
 	public List<HjhInstConfigVO> hjhInstConfigList(AssetListRequest request) {
@@ -42,15 +40,4 @@ public class AssetListServiceImpl implements AssetListService {
 		return paramMap;
 	}
 
-	@Override
-	public List<AssetListCustomizeVO> findAssetList(AssetListRequest request) {
-		List<AssetListCustomizeVO> assetList = assetListClient.findAssetList(request);
-		return assetList;
-	}
-
-	@Override
-	public AssetDetailCustomizeVO getDetailById(String assetId, String instCode) {
-		AssetDetailCustomizeVO assetDetailCustomizeVO = assetListClient.findDetailById(assetId,instCode);
-		return null;
-	}
 }

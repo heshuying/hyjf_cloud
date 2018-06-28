@@ -154,7 +154,7 @@ public class TenderCreditDetailCustomizeVO extends BaseVO implements Serializabl
 	/**
 	 * 创建时间
 	 */
-	private String createTime;
+	private String addTime;
 	/**
 	 * 结束时间
 	 */
@@ -179,7 +179,7 @@ public class TenderCreditDetailCustomizeVO extends BaseVO implements Serializabl
 	/**
 	 * 创建时间INT
 	 */
-	private Integer createTimeInt;
+	private Integer addTimeInt;
 	/**
 	 * 投资时间
 	 */
@@ -436,6 +436,13 @@ public class TenderCreditDetailCustomizeVO extends BaseVO implements Serializabl
 		this.createDate = createDate;
 	}
 
+	public String getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(String addTime) {
+		this.addTime = addTime;
+	}
 
 	public String getEndTime() {
 		return endTime;
@@ -493,20 +500,12 @@ public class TenderCreditDetailCustomizeVO extends BaseVO implements Serializabl
 		this.borrowStyleName = borrowStyleName;
 	}
 
-	public String getCreateTime() {
-		return createTime;
+	public Integer getAddTimeInt() {
+		return addTimeInt;
 	}
 
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
-	}
-
-	public Integer getCreateTimeInt() {
-		return createTimeInt;
-	}
-
-	public void setCreateTimeInt(Integer createTimeInt) {
-		this.createTimeInt = createTimeInt;
+	public void setAddTimeInt(Integer addTimeInt) {
+		this.addTimeInt = addTimeInt;
 	}
 
 	public String getTenderTime() {

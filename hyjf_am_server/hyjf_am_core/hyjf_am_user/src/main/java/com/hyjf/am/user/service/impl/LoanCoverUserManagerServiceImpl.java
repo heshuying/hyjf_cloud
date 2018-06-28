@@ -8,6 +8,7 @@ import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
 import com.hyjf.am.user.service.LoanCoverUserManagerService;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

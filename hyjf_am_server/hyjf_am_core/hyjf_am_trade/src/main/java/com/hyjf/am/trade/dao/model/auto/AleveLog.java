@@ -59,7 +59,7 @@ public class AleveLog implements Serializable {
 
     private Integer delFlag;
 
-    private Integer updFlag;
+    private Boolean updFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -279,11 +279,11 @@ public class AleveLog implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public Integer getUpdFlag() {
+    public Boolean getUpdFlag() {
         return updFlag;
     }
 
-    public void setUpdFlag(Integer updFlag) {
+    public void setUpdFlag(Boolean updFlag) {
         this.updFlag = updFlag;
     }
 }

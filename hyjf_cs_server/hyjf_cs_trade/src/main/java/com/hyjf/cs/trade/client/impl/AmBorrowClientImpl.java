@@ -7,7 +7,6 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.cs.trade.client.AmBorrowClient;
@@ -120,22 +119,6 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 	public boolean updateBeforeChinaPnR(TenderRequest request) {
 		Integer result = restTemplate
 				.postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, Integer.class).getBody();
-		if (result != null) {
-			return result == 0 ? false : true;
-		}
-		return false;
-	}
-
-	/**
-	 * 用户投资散标操作表
-	 *
-	 * @param tenderBg
-	 * @return
-	 */
-	@Override
-	public boolean borrowTender(TenderBgVO tenderBg) {
-		Integer result = restTemplate
-				.postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, Integer.class).getBody();
 		if (result != null) {
 			return result == 0 ? false : true;
 		}
