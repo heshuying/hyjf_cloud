@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.user;
+package com.hyjf.am.resquest.user;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -9,9 +9,9 @@ import java.io.Serializable;
 
 /**
  * @author nxl
- * @version UserBankOpenAccountCustomize, v0.1 2018/6/21 21:38
+ * @version UserRecommendCustomize, v0.1 2018/6/21 21:38
  */
-public class UserRecommendVO extends BaseVO implements Serializable {
+public class UserRecommendCustomizeRequest{
     /** 用户id */
     private String userId;
     /** 用户名 */

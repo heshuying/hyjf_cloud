@@ -11,6 +11,9 @@ import com.hyjf.am.user.dao.model.auto.UserInfoExample;
 import com.hyjf.am.user.service.BaseService;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,4 +58,21 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
         return null;
     }
+
+    /**
+     * 获取所有用户
+     * @return
+     * @throws ParseException
+     */
+    @Override
+    public List<User> findAllUser() throws ParseException {
+        UserExample usersExample = new UserExample();
+        UserExample.Criteria cra = usersExample.createCriteria();
+        cra.andBankOpenAccountEqualTo(1);
+        cra.andIsCaFlagEqualTo(0);
+        //法大大上线时间2018-03-14 00:00:00
+        cra.andRegTimeGreaterThanOrEqualTo(DateFormat.getDateTimeInstance().parse("2018/3/14"));
+        return userMapper.selectByExample(usersExample);
+    }
+
 }

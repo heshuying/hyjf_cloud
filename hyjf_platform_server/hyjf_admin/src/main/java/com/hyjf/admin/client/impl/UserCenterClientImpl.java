@@ -174,7 +174,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     @Override
     public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
         CertificateAuthorityResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager//selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -220,12 +220,14 @@ public class UserCenterClientImpl implements UserCenterClient {
      * @return
      */
     @Override
-    public UserRecommendVO selectUserRecommendByUserId(String userId) {
-        UserRecommendResponse response;
-
+    public UserRecommendCustomizeVO selectUserRecommendByUserId(String userId) {
+        UserRecommendCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userManager/selectUserRecommendUserId/" +userId, UserRecommendCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
         return null;
     }
-
     /**
      * 校验手机号
      *
