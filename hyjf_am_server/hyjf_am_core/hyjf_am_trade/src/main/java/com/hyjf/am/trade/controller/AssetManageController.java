@@ -1,32 +1,26 @@
 package com.hyjf.am.trade.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.AccountWithdrawResponse;
-import com.hyjf.am.response.trade.AssetManageResponse;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
-import com.hyjf.am.trade.dao.model.customize.trade.*;
-import com.hyjf.am.trade.service.AssetManageService;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.common.util.CommonUtils;
-import netscape.javascript.JSObject;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.AssetManageResponse;
+import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.trade.*;
+import com.hyjf.am.trade.service.AssetManageService;
+import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author pangchengchao

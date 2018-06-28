@@ -23,7 +23,7 @@ public class BorrowRepayToHjhQuitJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BorrowRepayToHjhQuitJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        restTemplate.getForEntity("http://AM-TRADE/batch/borrowCredit/hjhQuit", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/batch/borrowRepay/hjhQuit", String.class);
 
         logger.info("BorrowRepayToHjhQuitJob execute end...");
     }
