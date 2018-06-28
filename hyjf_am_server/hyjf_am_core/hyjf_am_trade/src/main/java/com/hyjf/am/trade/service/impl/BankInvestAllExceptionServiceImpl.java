@@ -56,10 +56,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 投資全部掉單处理
@@ -1153,7 +1150,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 					replaceMap.put("val_times", sendType.getAfterTime() + "");
 					// 发送短信验证码
 					SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
-					smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+					smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 
 				} else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
 					result.put("message", "投资失败！");

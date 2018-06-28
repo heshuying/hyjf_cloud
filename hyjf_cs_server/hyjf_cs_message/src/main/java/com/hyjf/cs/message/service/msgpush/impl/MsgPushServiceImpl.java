@@ -4,6 +4,7 @@
 package com.hyjf.cs.message.service.msgpush.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 					// 添加到发送队列
 					AppMsMessage message = new AppMsMessage(MessageConstant.APP_MS_SEND_FOR_MSG, list.get(i).getId());
 					appMessageProducer.messageSend(
-							new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(message)));
+							new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(message)));
 				}
 			}
 		} catch (MQException e) {

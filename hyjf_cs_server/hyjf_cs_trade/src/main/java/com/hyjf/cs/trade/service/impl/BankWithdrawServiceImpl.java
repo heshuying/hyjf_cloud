@@ -46,10 +46,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author pangchengchao
@@ -236,9 +233,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                         CustomConstants.CHANNEL_TYPE_NORMAL);
                                 AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                                 smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
-                                        JSON.toJSONBytes(smsMessage)));
+                                        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
                                 appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
-                                        JSON.toJSONBytes(appMsMessage)));
+                                        UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 
                             } else {
                                 // 替换参数
@@ -250,7 +247,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
                                 AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                                 appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
-                                        JSON.toJSONBytes(appMsMessage)));
+                                        UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
                             }
                             // TODO 活动统计 需要的时候放开
                             /*CommonSoaUtils.listedTwoWithdraw(userId, total);*/

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import org.apache.commons.lang3.StringUtils;
@@ -495,7 +496,7 @@ public class IncreaseInterestInvestServiceImpl implements IncreaseInterestInvest
 										try {
 											accountWebListProducer.messageSend(
 													new Producer.MassageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
-															JSON.toJSONBytes(accountWebList)));
+															UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
 										} catch (MQException e) {
 											logger.error("网站收支记录(huiyingdai_account_web_list)更新失败!" + "[投资订单号:"
 													+ investOrderId + "]", e);
@@ -515,9 +516,9 @@ public class IncreaseInterestInvestServiceImpl implements IncreaseInterestInvest
 											MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_JIAXIHUANKUAN);
 									try {
 										smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
-												JSON.toJSONBytes(smsMessage)));
+												UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 										appMessageProducer.messageSend(new Producer.MassageContent(
-												MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(appMsMessage)));
+												MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 									} catch (MQException e) {
 										logger.error("融通宝还款成功发送消息通知失败...", e);
 									}

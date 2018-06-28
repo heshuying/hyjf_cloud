@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -116,7 +117,7 @@ public class AleveFileConsumer extends Consumer{
             JSONObject params = new JSONObject();
             params.put("status", "1");
             try {
-                downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.AUTO_CORRECTION_TOPIC, params));
+                downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.AUTO_CORRECTION_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
             } catch (MQException e) {
                 logger.error("发送【自动冲正】MQ失败...");
             }

@@ -35,10 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -448,7 +445,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		account.setPlanRepayInterest(BigDecimal.ZERO);
 		account.setVersion(BigDecimal.ZERO);
 		logger.info("注册插入account：{}", JSON.toJSONString(account));
-		accountProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_TOPIC, JSON.toJSONBytes(account)));
+		accountProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(account)));
 	}
 
 	/**

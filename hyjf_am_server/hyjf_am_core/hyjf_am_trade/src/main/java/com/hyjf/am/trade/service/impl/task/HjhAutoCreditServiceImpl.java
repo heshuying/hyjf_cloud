@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 汇计划自动清算Service实现类
@@ -69,7 +70,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         params.put("accedeOrderId", hjhCalculateFairValueBean.getAccedeOrderId());
         params.put("calculateType", String.valueOf(hjhCalculateFairValueBean.getCalculateType()));
         try {
-            hjhCalculateFairValueProducer.messageSend(new Producer.MassageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, params));
+            hjhCalculateFairValueProducer.messageSend(new Producer.MassageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             logger.error("发送汇计划加入订单计算公允价值MQ失败...");
         }

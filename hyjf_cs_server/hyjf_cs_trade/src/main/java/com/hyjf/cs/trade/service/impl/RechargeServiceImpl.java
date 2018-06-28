@@ -46,6 +46,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 用户充值Service实现类
@@ -200,9 +201,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
 										MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
 								smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
-										JSON.toJSONBytes(smsMessage)));
+										UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 								appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
-										JSON.toJSONBytes(appMsMessage)));
+										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}else{
 								// 替换参数
 								Map<String, String> replaceMap = new HashMap<String, String>();
@@ -214,7 +215,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
 										MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
 								appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
-										JSON.toJSONBytes(appMsMessage)));
+										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}
 							return jsonMessage("充值成功!", "0");
 						} else {

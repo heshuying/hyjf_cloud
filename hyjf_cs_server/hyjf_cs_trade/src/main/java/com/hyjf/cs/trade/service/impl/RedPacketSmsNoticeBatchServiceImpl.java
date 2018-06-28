@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -78,7 +79,7 @@ public class RedPacketSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl imp
                     CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(
-                        new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+                        new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             } catch (MQException e) {
                 logger.error("短信发送失败...", e);
             }

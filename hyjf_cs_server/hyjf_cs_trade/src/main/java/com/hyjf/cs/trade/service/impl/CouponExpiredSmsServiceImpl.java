@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author yaoy
@@ -98,13 +99,13 @@ public class CouponExpiredSmsServiceImpl implements CouponExpiredSmsService {
                         // 一日到期短信提醒
                         smsMessage = new SmsMessage(userCoupon.getUserId(), msg, userCoupon.getMobile(), null, "smsSendForMobile", null,
                                 CustomConstants.PARAM_TPL_ONE_DEADLINE, CustomConstants.CHANNEL_TYPE_NORMAL);
-                        smsProcesser.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+                        smsProcesser.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                         logger.info("代金券一日到期短信提醒，用户编号：" + userCoupon.getUserId() + "体验金面值总额：" + userCoupon.getCouponQuota());
                     } else {
                         // 三日到期短信提醒
                         smsMessage = new SmsMessage(userCoupon.getUserId(), msg, userCoupon.getMobile(), null, "smsSendForMobile", null,
                                 CustomConstants.PARAM_TPL_THREE_DEADLINE, CustomConstants.CHANNEL_TYPE_NORMAL);
-                        smsProcesser.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+                        smsProcesser.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                         logger.info("代金券三日到期短信提醒，用户编号：" + userCoupon.getUserId() + "体验金面值总额：" + userCoupon.getCouponQuota());
                     }
 

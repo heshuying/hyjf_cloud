@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -72,7 +73,7 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 		param.put("val_title", borrowNid);
 		SmsMessage smsMessage = new SmsMessage(userId, param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
 				CustomConstants.PARAM_TPL_NOTICE_BORROW_REPAY_OVERDUE, CustomConstants.CHANNEL_TYPE_NORMAL);
-		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 	}
 
 }

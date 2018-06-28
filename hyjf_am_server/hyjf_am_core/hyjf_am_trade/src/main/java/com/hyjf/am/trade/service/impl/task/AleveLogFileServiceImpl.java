@@ -35,6 +35,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -111,12 +112,12 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
                     params.put("filePathEve", systemConfig.getEveFileName());
                     params.put("filePathAleve", systemConfig.getAleveFileName());
                     try {
-                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.ALEVE_FILE_TOPIC, params));
+                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
                     }
                     try {
-                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.EVE_FILE_TOPIC, params));
+                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
                     }

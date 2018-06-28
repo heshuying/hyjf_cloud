@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -52,7 +53,7 @@ public class BorrowRepayToHjhQuitController {
                     params.put("orderStatus", accede.getOrderStatus());
                     params.put("creditCompleteFlag", accede.getCreditCompleteFlag());
                     try {
-                        hjhQuitProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, params));
+                        hjhQuitProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("汇计划计划进入锁定期/退出计划发送消息失败...", e);
                     }

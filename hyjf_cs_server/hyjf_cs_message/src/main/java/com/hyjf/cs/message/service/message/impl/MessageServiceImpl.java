@@ -4,6 +4,7 @@
 package com.hyjf.cs.message.service.message.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -103,7 +104,7 @@ public class MessageServiceImpl implements MessageService {
 						SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
 								MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 						smsProducer.messageSend(
-								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 					} catch (Exception e) {
 						logger.error("发送短信失败......", e);
 						errorCnt++;
@@ -125,7 +126,7 @@ public class MessageServiceImpl implements MessageService {
 					SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
 							MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 					smsProducer.messageSend(
-							new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+							new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 				}
 			} catch (Exception e) {
 				sbError.append(e.getMessage()).append("<br/>");

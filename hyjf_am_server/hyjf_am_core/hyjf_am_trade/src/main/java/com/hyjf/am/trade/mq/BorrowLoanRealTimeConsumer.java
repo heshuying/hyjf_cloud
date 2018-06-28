@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.mq;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -165,7 +166,7 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 						null, MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
 
 				try {
-					mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailmessage)));
+					mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailmessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}

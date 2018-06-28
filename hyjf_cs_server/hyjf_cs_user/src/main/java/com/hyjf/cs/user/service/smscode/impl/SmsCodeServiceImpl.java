@@ -1,9 +1,6 @@
 package com.hyjf.cs.user.service.smscode.impl;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -77,7 +74,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 				validCodeType, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 	}
 
 	/**
@@ -139,7 +136,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(
-								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 					} catch (MQException e) {
 						logger.error("短信发送失败...", e);
 					}
@@ -167,7 +164,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(
-								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 					} catch (MQException e) {
 						logger.error("短信发送失败...", e);
 					}

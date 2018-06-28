@@ -1,5 +1,8 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.controller.demo.ProducerTransactionMessageService;
+import com.hyjf.am.trade.dao.mapper.auto.ProducerTransactionMessageMapper;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
 import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionSendResult;
@@ -25,6 +28,8 @@ public class AccountTProducer extends TransactionProducer {
 
 	@Autowired
 	TransactionService transactionService;
+	@Autowired
+	ProducerTransactionMessageService producerTransactionMessageService;
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {
@@ -50,30 +55,54 @@ public class AccountTProducer extends TransactionProducer {
 				logger.error("事务消息发送失败....", e);
 				return LocalTransactionState.ROLLBACK_MESSAGE;
 			}
-			logger.info("事务消息提交确认, 保存本地消息表...");
+			logger.info("事务消息提交确认, 开始保存本地消息表...");
 			this.saveProducerTransactionMessage(msg);
 			return LocalTransactionState.COMMIT_MESSAGE;
 		});
-		// 事务消息推送成功，修改状态
-		if (result.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE){
 
-			return true;
+		// 事务消息推送成功，修改状态
+		try {
+			this.updateProducerTransactionMessage(messageContent, result);
+		} catch (Exception e) {
+			logger.error("更新推送表结果不影响业务执行....");
 		}
 
+		if (result.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE) {
+			return true;
+		}
 		return false;
 	}
 
-	private void saveProducerTransactionMessage(Message msg){
-		// tags key
+	private void saveProducerTransactionMessage(Message msg) {
 		ProducerTransactionMessage message = new ProducerTransactionMessage();
-
-		//message.setMsgId(msg.get);
 		message.setMessageStatus(MessageStatus.UNKKOWN.getCode());
-		message.setSendTimes(0);
+		message.setRetryTimes(0);
+		message.setTags(msg.getTags());
+		message.setKeys(msg.getKeys());
 		message.setTopic(msg.getTopic());
 		message.setBody(new String(msg.getBody()));
 		message.setCreateTime(new Date());
 		message.setUpdateTime(new Date());
+		producerTransactionMessageService.save(message);
+	}
+
+	private void updateProducerTransactionMessage(MassageContent messageContent, TransactionSendResult result) {
+		ProducerTransactionMessage message = producerTransactionMessageService.findByCondition(messageContent.topic,
+				messageContent.keys, messageContent.tag);
+		if (message == null) {
+			logger.error("事务消息未提交成功...messageContent is :{}", JSONObject.toJSONString(messageContent));
+			return;
+		}
+
+		if (result.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE) {
+			message.setMessageStatus(MessageStatus.COMMIT.getCode());
+		} else if (result.getLocalTransactionState() == LocalTransactionState.ROLLBACK_MESSAGE) {
+			message.setMessageStatus(MessageStatus.ROLLBACK.getCode());
+		} else if (result.getLocalTransactionState() == LocalTransactionState.UNKNOW) {
+			message.setMessageStatus(MessageStatus.UNKKOWN.getCode());
+		}
+		message.setUpdateTime(new Date());
+		producerTransactionMessageService.save(message);
 	}
 
 }

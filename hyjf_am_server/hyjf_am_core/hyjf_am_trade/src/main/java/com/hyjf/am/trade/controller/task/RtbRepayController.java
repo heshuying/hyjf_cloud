@@ -34,6 +34,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author xiasq
@@ -123,7 +124,7 @@ public class RtbRepayController {
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 					try {
 						smsProducer.messageSend(
-								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 					} catch (MQException e1) {
 						logger.error("发送短信失败..", e1);
 					}
@@ -173,7 +174,7 @@ public class RtbRepayController {
 						null, CustomConstants.PARAM_TPL_HUANKUAN_FAILD, CustomConstants.CHANNEL_TYPE_NORMAL);
 				try {
 					smsProducer.messageSend(
-							new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+							new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 				} catch (MQException e1) {
 					logger.error("发送短信失败..", e1);
 				}
@@ -225,7 +226,7 @@ public class RtbRepayController {
 				borrowNid + "-" + periodNow + "融通宝加息还款,第" + runCnt + "次还款失败", msg.toString(), null, toMail, null,
 				MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 		try {
-			mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));
+			mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
 		} catch (MQException e) {
 			logger.error("发送邮件失败..", e);
 		}

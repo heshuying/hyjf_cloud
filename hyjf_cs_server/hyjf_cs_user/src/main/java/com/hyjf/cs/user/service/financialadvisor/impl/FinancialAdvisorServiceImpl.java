@@ -32,10 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -133,7 +130,8 @@ public class FinancialAdvisorServiceImpl extends BaseUserServiceImpl implements 
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "1");
-                couponProducer.messageSend(new Producer.MassageContent(MQConstant.GRANT_COUPON_TOPIC,JSON.toJSONBytes(params)));
+				couponProducer.messageSend(new Producer.MassageContent(MQConstant.GRANT_COUPON_TOPIC,
+						UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
             } catch (MQException e) {
                 e.printStackTrace();
 

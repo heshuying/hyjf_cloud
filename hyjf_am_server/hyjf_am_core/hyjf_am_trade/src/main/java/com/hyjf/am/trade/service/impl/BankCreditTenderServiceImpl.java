@@ -38,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 银行债转异常处理
@@ -289,10 +286,10 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			// 发送短信验证码
 			SmsMessage smsMessage = new SmsMessage(null, param, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
 					CustomConstants.CHANNEL_TYPE_NORMAL);
-			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 			
 			AppMsMessage appMsMessage = new AppMsMessage(null, param, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
-			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(appMsMessage)));
+			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 		}
 	}
 
@@ -620,7 +617,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 					accountWebList.setOperator(null);
 					accountWebList.setFlag(1);
 					
-					accountWebListProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, JSON.toJSONBytes(accountWebList)));
+					accountWebListProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
 					
 				}
 
@@ -844,7 +841,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			param.put("val_balance", creditTender.getAssignPay() + "");
 			param.put("val_profit", creditTender.getAssignInterest() + "");
 			param.put("val_amount", creditTender.getAssignAccount() + "");
-			appMsProcesser.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(param)));
+			appMsProcesser.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(param)));
 		}
 	}
 

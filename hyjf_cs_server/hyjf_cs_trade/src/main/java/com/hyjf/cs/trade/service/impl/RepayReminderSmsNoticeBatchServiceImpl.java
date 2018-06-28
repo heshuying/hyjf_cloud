@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -99,7 +100,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             temp, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+                        smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                 JSON.toJSONBytes(smsMessage)));
                     } catch (MQException e) {
                         logger.error("还款提醒发送消息通知失败...", e);

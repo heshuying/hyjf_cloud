@@ -1,5 +1,7 @@
 package com.hyjf.common.constants;
 
+import java.util.UUID;
+
 /**
  * @author xiasq
  * @version MQConstant, v0.1 2018/5/4 13:45
@@ -10,10 +12,6 @@ public interface MQConstant {
 	 * 不特别指定的时候使用的默认tag
 	 */
 	String HYJF_DEFAULT_TAG = "HYJF_DEFAULT_TAG";
-	/**
-	 * 不特别指定的时候使用的默认key,标识一条消息唯一
-	 */
-	String HYJF_DEFAULT_KEY = String.valueOf(System.currentTimeMillis());
 
 	/**
 	 * 发送短信的 group topic
