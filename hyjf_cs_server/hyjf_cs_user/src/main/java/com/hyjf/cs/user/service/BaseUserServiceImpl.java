@@ -28,7 +28,7 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
 
-	Logger logger = LoggerFactory.getLogger(BaseUserServiceImpl.class);
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	public AmUserClient amUserClient;

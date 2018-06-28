@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 
 public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeService {
-    Logger logger = LoggerFactory.getLogger(BaseTradeServiceImpl.class);
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public RechargeClient rechargeClient;
