@@ -11,7 +11,7 @@
     <result column="add_user" property="addUser" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-    <result column="del_flg" property="delFlg" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -73,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, `day`, week, interest_wait_total, interest_yes_total, add_time, add_user, update_time, 
-    update_user, del_flg
+    update_user, del_flag
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRepayMonitorExample" >
     select
@@ -114,11 +114,11 @@
     </selectKey>
     insert into ht_coupon_repay_monitor (`day`, week, interest_wait_total, 
       interest_yes_total, add_time, add_user, 
-      update_time, update_user, del_flg
+      update_time, update_user, del_flag
       )
     values (#{day,jdbcType=VARCHAR}, #{week,jdbcType=VARCHAR}, #{interestWaitTotal,jdbcType=DECIMAL}, 
       #{interestYesTotal,jdbcType=DECIMAL}, #{addTime,jdbcType=INTEGER}, #{addUser,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{delFlg,jdbcType=INTEGER}
+      #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{delFlag,jdbcType=BIT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor" >
@@ -151,8 +151,8 @@
       <if test="updateUser != null" >
         update_user,
       </if>
-      <if test="delFlg != null" >
-        del_flg,
+      <if test="delFlag != null" >
+        del_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -180,8 +180,8 @@
       <if test="updateUser != null" >
         #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null" >
-        #{delFlg,jdbcType=INTEGER},
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -221,8 +221,8 @@
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=INTEGER},
       </if>
-      <if test="record.delFlg != null" >
-        del_flg = #{record.delFlg,jdbcType=INTEGER},
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -240,7 +240,7 @@
       add_user = #{record.addUser,jdbcType=INTEGER},
       update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=INTEGER},
-      del_flg = #{record.delFlg,jdbcType=INTEGER}
+      del_flag = #{record.delFlag,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -272,8 +272,8 @@
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=INTEGER},
       </if>
-      <if test="delFlg != null" >
-        del_flg = #{delFlg,jdbcType=INTEGER},
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -288,7 +288,7 @@
       add_user = #{addUser,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=INTEGER},
-      del_flg = #{delFlg,jdbcType=INTEGER}
+      del_flag = #{delFlag,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

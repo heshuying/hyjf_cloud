@@ -5,6 +5,8 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -35,54 +37,27 @@ import java.util.Map;
 public class UserCenterController {
 
     //public static final String PERMISSIONS = "userslist";
-
+    public static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
     @Autowired
     private UserCenterService userCenterService;
 
     @ApiOperation(value = "会员管理", notes = "会员管理页面初始化")
-//    @RequestMapping(value = "/usersInit")
     @PostMapping(value = "/usersInit")
     @ResponseBody
     public JSONObject userManagerInit() {
-        JSONObject jsonObject = new JSONObject();
-        // 用户角色
-      /*  Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
-        // 用户属性
-        Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
-        // 开户状态
-        Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
-        // 用户状态
-        Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
-        // 注册平台
-        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
-        // 用户类型
-        Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
-        // 借款人类型
-        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");*/
-        // 资金来源
-        List<HjhInstConfigVO> listHjhInstConfig = userCenterService.selectInstConfigAll();
-        /*jsonObject.put("userRoles", userRoles);
-        jsonObject.put("userPropertys", userPropertys);
-        jsonObject.put("accountStatus", accountStatus);
-        jsonObject.put("userStatus", userStatus);
-        jsonObject.put("registPlat", registPlat);
-        jsonObject.put("userTypes", userTypes);
-        jsonObject.put("borrowTypes", borrowTypes);*/
-        jsonObject.put("hjhInstConfigList", listHjhInstConfig);
+        JSONObject jsonObject =userCenterService.initUserManaget();
         return jsonObject;
 
     }
 
     //会员管理列表查询
     @ApiOperation(value = "会员管理", notes = "会员管理列表查询")
-//    @RequestMapping(value = "/userslist")
     @PostMapping(value = "/userslist")
     @ResponseBody
     public JSONObject getUserslist(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject();
         UserManagerRequest managerRequest = serParamRequest(map);
-        Map<String, Object> mapUserData = userCenterService.selectUserMemberList(managerRequest);
-        jsonObject.put("userInfo", mapUserData);
+        jsonObject = userCenterService.selectUserMemberList(managerRequest);
         return jsonObject;
     }
 
@@ -137,24 +112,35 @@ public class UserCenterController {
     @ResponseBody
     public JSONObject initUserUpdate(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
 
+        String status = Response.FAIL;
         JSONObject jsonObject = new JSONObject();
         // 用户角色
-        Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
+        /*Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
         // 用户状态
         Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
         //借款人类型
         Map<String, String> borrowerType = CacheUtil.getParamNameMap("BORROWER_TYPE");
         jsonObject.put("userRoles", userRoles);
         jsonObject.put("userStatus", userStatus);
-        jsonObject.put("borrowerType", borrowerType);
+        jsonObject.put("borrowerType", borrowerType);*/
         String strUserId = map.get("userId");
         // 根据用户id查询用户详情信息
         UserManagerUpdateVO userManagerUpdateVo = userCenterService.selectUserUpdateInfoByUserId(strUserId);
-        jsonObject.put("usersUpdateForm", userManagerUpdateVo);
+        if(null!=userManagerUpdateVo){
+            status = Response.SUCCESS;
+            jsonObject.put("usersUpdateForm", userManagerUpdateVo);
+        }
         // 加载修改日志 userChageLog
-
-
-        return null;
+        UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
+        if(StringUtils.isNotEmpty(strUserId)){
+            int intUserId = Integer.parseInt(strUserId);
+            userChangeLogRequest.setUserId(intUserId);
+            userChangeLogRequest.setChangeType(CHANGELOG_TYPE_RECOMMEND);
+            List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
+            jsonObject.put("usersChangeLogForm", userChangeLogVOList);
+        }
+        jsonObject.put("status", status);
+        return jsonObject;
     }
 
     @ApiOperation(value = "修改更新用户信息", notes = "会员管理")
@@ -166,35 +152,43 @@ public class UserCenterController {
         //1代表更新成功，0为失败
         int intUpdFlg = userCenterService.updataUserInfo(map);
         if (intUpdFlg == 1) {
-            jsonObject.put("updFlg", "success");
+            jsonObject.put("status", Response.SUCCESS);
         } else {
-            jsonObject.put("updFlg", "error");
+            jsonObject.put("status", Response.FAIL);
         }
         return jsonObject;
     }
 
     @ApiOperation(value = "会员管理", notes = "获取推荐人信息")
 //    @RequestMapping(value = "/initmodifyre")
-    @PostMapping(value = "/initmodifyre")
+    @PostMapping(value = "/initModifyre")
     @ResponseBody
     public JSONObject initModifyre(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userIdStr = map.get("userId");
         //推荐人信息
-        UserRecommendVO userRecommendVO = userCenterService.selectUserRecommendByUserId(userIdStr);
+        UserRecommendCustomizeVO userRecommendVO = userCenterService.selectUserRecommendByUserId(userIdStr);
         jsonObject.put("modifyReForm", userRecommendVO);
         //加载修改日志 userChageLog
+        UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
+        if(StringUtils.isNotEmpty(userIdStr)){
+            int intUserId = Integer.parseInt(userIdStr);
+            userChangeLogRequest.setUserId(intUserId);
+            //userChangeLogRequest.setChangeType(CHANGELOG_TYPE_RECOMMEND);
+            List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
+            jsonObject.put("usersChangeLogForm", userChangeLogVOList);
+        }
 
         return jsonObject;
     }
 
-/*    @ApiOperation(value = "会员管理", notes = "修改用户推荐人")
-    @RequestMapping(value = "/initmodifyre")
+/*
+    @ApiOperation(value = "会员管理", notes = "修改用户推荐人")
+    @RequestMapping(value = "/updateModifyre")
     @ResponseBody
     public JSONObject updateRe() {
         return null;
-    }*/
-
+    }
 
     /**
      * 检查手机号码或用户名唯一性
@@ -202,36 +196,34 @@ public class UserCenterController {
      * @param request
      * @return
      */
-    @ResponseBody
-//    @RequestMapping(value = "checkReAction")
     @PostMapping(value = "/checkReAction")
+    @ResponseBody
+    @ApiOperation(value = "会员管理", notes = "校验推荐人")
     public JSONObject checkReAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
-        String userId = map.get("id");
-        String name = map.get("name");
-        String param = map.get("param");
-        String flg = "success";
+        String userId = map.get("userId");
+        String param = map.get("userName");
+        String flg =  Response.SUCCESS;
         String msg = "";
-        // 检查手机号码唯一性
-        if ("recommendName".equals(name)) {
-            // 检查用户名唯一性
-            if (Validator.isNotNull(userId)) {
-                if (StringUtils.isNotEmpty(param)) {
-                    int recomFlag = userCenterService.checkRecommend(userId, param);
-                    if (recomFlag == 2) {// 推荐人不能是自己
-                        msg = "不能将推荐人设置为自己";
-                        flg = "error";
-                    } else if (recomFlag == 1) {// 推荐人不存在
-                        msg = "推荐人不存在";
-                        flg = "error";
-                    }
+        //校验推荐人
+        if (Validator.isNotNull(userId)) {
+            if (StringUtils.isNotEmpty(param)) {
+                int recomFlag = userCenterService.checkRecommend(userId, param);
+                if (recomFlag == 2) {// 推荐人不能是自己
+                    msg = "不能将推荐人设置为自己";
+                    flg =  Response.FAIL;
+                } else if (recomFlag == 1) {// 推荐人不存在
+                    msg = "推荐人不存在";
+                    flg =  Response.FAIL;
                 }
             }
         }
         jsonObject.put("info", msg);
-        jsonObject.put("checkFlg", flg);
+        jsonObject.put("status", flg);
         return jsonObject;
     }
+
+
 
     /**
      * 检查手机号码或用户名唯一性
@@ -239,26 +231,23 @@ public class UserCenterController {
      * @param request
      * @return
      */
-//    @RequestMapping(value = "checkAction")
     @PostMapping(value = "/checkAction")
     @ResponseBody
+    @ApiOperation(value = "会员管理", notes = "校验手机号")
     public JSONObject checkAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
-        String userId = map.get("id");
-        String name = map.get("name");
-        String param = map.get("param");
-        String flg = "success";
+        String userId = map.get("userId");
+        String param = map.get("mobile");
+        String flg = Response.SUCCESS;
         String msg = "";
         // 检查手机号码唯一性
-        if ("mobile".equals(name)) {
-            int cnt = userCenterService.countUserByMobile(GetterUtil.getInteger(userId), param);
-            if (cnt > 0) {
-                msg = "手机号已经存在！";
-                flg = "error";
-            }
+        int cnt = userCenterService.countUserByMobile(Integer.parseInt(userId), param);
+        if (cnt > 0) {
+            msg = "手机号已经存在！";
+            flg =  Response.FAIL;
         }
         jsonObject.put("info", msg);
-        jsonObject.put("checkFlg", flg);
+        jsonObject.put("status", flg);
         return jsonObject;
     }
 
@@ -271,9 +260,9 @@ public class UserCenterController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "exportusers")
+  /*  @RequestMapping(value = "exportusers")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) throws Exception {
-        /*// 表格sheet名称
+        // 表格sheet名称
         String sheetName = "会员列表";
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
@@ -424,8 +413,8 @@ public class UserCenterController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-        LogUtil.endLog(ManageUsersDefine.THIS_CLASS, ManageUsersDefine.EXPORT_USERS_ACTION);*/
-    }
+        LogUtil.endLog(ManageUsersDefine.THIS_CLASS, ManageUsersDefine.EXPORT_USERS_ACTION);*//*
+    }*/
 
     /**
      * 企业用户信息补录
@@ -435,9 +424,9 @@ public class UserCenterController {
      * @return
      */
 
-//    @RequestMapping(value = "initCompanyInfo")
     @PostMapping(value = "/initCompanyInfo")
     @ResponseBody
+    @ApiOperation(value = "会员管理", notes = "初始化企业用户信息")
     public JSONObject insertCompanyInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         String userId = map.get("userId");
@@ -463,6 +452,7 @@ public class UserCenterController {
     @ResponseBody
 //    @RequestMapping(value = "serchCompanyInfo")
     @PostMapping(value = "/serchCompanyInfo")
+    @ApiOperation(value = "会员管理", notes = "查询企业开户信息")
     public JSONObject serchCompanyInfo(@RequestBody Map<String, String> map) {
         JSONObject ret = new JSONObject();
         String accountId = map.get("accountId");
@@ -502,8 +492,8 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-//    @RequestMapping("saveCompanyInfo")
     @PostMapping(value = "/saveCompanyInfo")
+    @ApiOperation(value = "会员管理", notes = "保存企业开户信息")
     public JSONObject saveCompanyInfo(@RequestBody Map<String, String> map) {
         JSONObject ret = new JSONObject();
         ret = userCenterService.saveCompanyInfo(map);

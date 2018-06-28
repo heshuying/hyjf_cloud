@@ -31,5 +31,42 @@ public class AutoMapper {
 
     @Autowired
     protected BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
+
+    @Autowired
+    protected HjhDebtCreditMapper hjhDebtCreditMapper;
+
+    @Autowired
+    protected BorrowRecoverMapper borrowRecoverMapper;
+
+    @Autowired
+    protected BorrowRecoverPlanMapper borrowRecoverPlanMapper;
+
+    @Autowired
+    protected HjhDebtDetailMapper hjhDebtDetailMapper;
+
+    @Autowired
+    protected HjhRepayMapper hjhRepayMapper;
+
+    @Autowired
+    protected HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
+
+    @Autowired
+    protected BorrowTenderMapper borrowTenderMapper;
+
+    @Autowired
+    protected TenderAgreementMapper tenderAgreementMapper;
+
+    @Autowired
+    protected HjhAccedeMapper hjhAccedeMapper;
+
+    @Autowired
+    protected BorrowApicronMapper borrowApicronMapper;
+
+    @Autowired
+    protected BorrowRepayPlanMapper borrowRepayPlanMapper;
+
+    @Autowired
+    protected BorrowRepayMapper borrowRepayMapper;
+
 }
 

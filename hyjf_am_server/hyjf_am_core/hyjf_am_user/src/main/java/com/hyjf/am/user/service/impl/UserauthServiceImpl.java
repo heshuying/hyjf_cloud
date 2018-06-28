@@ -210,6 +210,8 @@ public class UserauthServiceImpl  implements UserauthService {
 		hjhUserAuthMapper.updateByPrimaryKeySelective(hjhUserAuth);
 		
 	}
+
+
 	
 	
 

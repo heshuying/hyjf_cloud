@@ -6,6 +6,9 @@ package com.hyjf.am.user.service;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 
+import java.text.ParseException;
+import java.util.List;
+
 /**
  * 用户服务:BaseService
  *
@@ -30,4 +33,10 @@ public interface BaseService {
      * @return
      */
     UserInfo findUsersInfo(int userId);
+
+    /**
+     * 获取所有用户
+     * @return
+     */
+    List<User> findAllUser() throws ParseException;
 }

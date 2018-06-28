@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class DebtAccountList implements Serializable {
     private Integer id;
@@ -56,17 +57,17 @@ public class DebtAccountList implements Serializable {
 
     private Integer web;
 
-    private Integer createTime;
-
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
-
     private Integer updateUserId;
 
     private String updateUserName;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -278,14 +279,6 @@ public class DebtAccountList implements Serializable {
         this.web = web;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getCreateUserId() {
         return createUserId;
     }
@@ -302,14 +295,6 @@ public class DebtAccountList implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
@@ -324,5 +309,21 @@ public class DebtAccountList implements Serializable {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

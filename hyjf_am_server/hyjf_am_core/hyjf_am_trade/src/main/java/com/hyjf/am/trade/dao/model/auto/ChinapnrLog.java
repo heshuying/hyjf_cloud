@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ChinapnrLog implements Serializable {
     private Integer id;
@@ -23,7 +24,7 @@ public class ChinapnrLog implements Serializable {
 
     private String trxid;
 
-    private String addtime;
+    private Date createTime;
 
     private String remark;
 
@@ -123,12 +124,12 @@ public class ChinapnrLog implements Serializable {
         this.trxid = trxid == null ? null : trxid.trim();
     }
 
-    public String getAddtime() {
-        return addtime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddtime(String addtime) {
-        this.addtime = addtime == null ? null : addtime.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public String getRemark() {

@@ -61,13 +61,13 @@
     <result column="assign_num" property="assignNum" jdbcType="INTEGER" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="client" property="client" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
     <result column="source_type" property="sourceType" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -139,8 +139,8 @@
     credit_discount, credit_income, credit_service_fee, credit_price, repay_account, 
     repay_capital, repay_interest, repay_account_wait, repay_capital_wait, repay_interest_wait, 
     credit_repay_end_time, credit_repay_last_time, credit_repay_next_time, credit_repay_yes_time, 
-    end_time, assign_num, del_flag, client, create_time, create_user_id, create_user_name, 
-    update_time, update_user_id, update_user_name, source_type
+    end_time, assign_num, del_flag, client, create_user_id, create_user_name, update_user_id, 
+    update_user_name, source_type, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCreditExample" >
     select
@@ -201,9 +201,9 @@
       credit_repay_end_time, credit_repay_last_time, 
       credit_repay_next_time, credit_repay_yes_time, 
       end_time, assign_num, del_flag, 
-      client, create_time, create_user_id, 
-      create_user_name, update_time, update_user_id, 
-      update_user_name, source_type)
+      client, create_user_id, create_user_name, 
+      update_user_id, update_user_name, source_type, 
+      create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
       #{planOrderId,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{borrowName,jdbcType=VARCHAR}, 
       #{borrowApr,jdbcType=DECIMAL}, #{actualApr,jdbcType=DECIMAL}, #{investOrderId,jdbcType=VARCHAR}, 
@@ -226,9 +226,9 @@
       #{creditRepayEndTime,jdbcType=INTEGER}, #{creditRepayLastTime,jdbcType=INTEGER}, 
       #{creditRepayNextTime,jdbcType=INTEGER}, #{creditRepayYesTime,jdbcType=INTEGER}, 
       #{endTime,jdbcType=INTEGER}, #{assignNum,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
-      #{client,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
-      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateUserName,jdbcType=VARCHAR}, #{sourceType,jdbcType=TINYINT})
+      #{client,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{sourceType,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCredit" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -410,17 +410,11 @@
       <if test="client != null" >
         client,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
       </if>
       <if test="createUserName != null" >
         create_user_name,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
       </if>
       <if test="updateUserId != null" >
         update_user_id,
@@ -430,6 +424,12 @@
       </if>
       <if test="sourceType != null" >
         source_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -607,17 +607,11 @@
       <if test="client != null" >
         #{client,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
-      </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
@@ -627,6 +621,12 @@
       </if>
       <if test="sourceType != null" >
         #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -816,17 +816,11 @@
       <if test="record.client != null" >
         client = #{record.client,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
-      </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -836,6 +830,12 @@
       </if>
       <if test="record.sourceType != null" >
         source_type = #{record.sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -903,13 +903,13 @@
       assign_num = #{record.assignNum,jdbcType=INTEGER},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
       client = #{record.client,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-      source_type = #{record.sourceType,jdbcType=TINYINT}
+      source_type = #{record.sourceType,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -1091,17 +1091,11 @@
       <if test="client != null" >
         client = #{client,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
@@ -1111,6 +1105,12 @@
       </if>
       <if test="sourceType != null" >
         source_type = #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -1175,13 +1175,13 @@
       assign_num = #{assignNum,jdbcType=INTEGER},
       del_flag = #{delFlag,jdbcType=TINYINT},
       client = #{client,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      source_type = #{sourceType,jdbcType=TINYINT}
+      source_type = #{sourceType,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

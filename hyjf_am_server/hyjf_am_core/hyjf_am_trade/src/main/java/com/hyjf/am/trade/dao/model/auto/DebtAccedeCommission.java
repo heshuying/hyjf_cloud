@@ -44,7 +44,7 @@ public class DebtAccedeCommission implements Serializable {
 
     private BigDecimal commission;
 
-    private Integer status;
+    private Byte status;
 
     private String remark;
 
@@ -218,11 +218,11 @@ public class DebtAccedeCommission implements Serializable {
         this.commission = commission;
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 

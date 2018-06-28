@@ -43,6 +43,7 @@ public class MyCouponListController {
     public WebResult<Map<String,Object>> selectMyCouponList(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         WebViewUserVO userVO = myCouponListService.getUsersByToken(token);
+        logger.info("获取我的优惠券列表数据开始，userId:{}", userVO.getUserId());
 
         try {
             List<MyCouponListCustomizeVO> listUnUsed = myCouponListService.selectMyCouponListUnUsed(String.valueOf(userVO.getUserId()));

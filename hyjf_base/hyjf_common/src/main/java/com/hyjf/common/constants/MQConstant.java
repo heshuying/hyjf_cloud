@@ -112,6 +112,11 @@ public interface MQConstant {
 	String FDD_GROUP = "FDD_GROUP";
 	String FDD_TOPIC = "FDD_TOPIC";
 
+	/**
+	 * 法大大CA认证
+	 */
+	String FDD_CERTIFICATE_AUTHORITY_GROUP = "FDD_CERTIFICATE_AUTHORITY_GROUP";
+	String FDD_CERTIFICATE_AUTHORITY_TOPIC = "FDD_CERTIFICATE_AUTHORITY_TOPIC";
 	//法大大生成合同处理
 	String FDD_GENERATE_CONTRACT_TAG = "FDD_GENERATE_CONTRACT_TAG";
 	//法大大自动签署处理
@@ -123,4 +128,10 @@ public interface MQConstant {
 	 */
 	String HJH_QUIT = "HJH_QUIT";
 	String HJH_QUIT_TOPIC = "HJH_QUIT_TOPIC";
+
+	/**
+	 * 汇计划自动计算公允价值
+	 */
+	String HJH_CALCULATE_FAIR_VALUE_GROUP = "HJH_GROUP";
+	String HJH_CALCULATE_FAIR_VALUE_TOPIC = "HJH_CALCULATE_FAIR_VALUE_TOPIC";
 }

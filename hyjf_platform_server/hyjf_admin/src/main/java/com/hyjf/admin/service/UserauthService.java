@@ -6,7 +6,9 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
+import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
+import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
 
 /**
  * @author DongZeShan
@@ -17,6 +19,7 @@ public interface UserauthService {
 	public AdminUserAuthListResponse cancelInvestAuth(int userId, String ordId);
 	public AdminUserAuthListResponse cancelCreditAuth( int userId,  String ordId);
 	 //@GetMapping("/canCancelAuth/{userId}")
-	public HjhAccedeResponse selectByAssignNidAndUserId(Integer userId);
+	public HjhAccedeResponse canCancelAuth(Integer userId);
+	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest);
 
 }

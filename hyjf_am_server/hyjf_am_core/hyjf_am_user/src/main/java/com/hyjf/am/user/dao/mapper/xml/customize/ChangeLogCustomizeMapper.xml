@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.customize.ChangeLogCustomize" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="INTEGER" />
+    <result column="attribute" property="attribute" jdbcType="INTEGER" />
+    <result column="recommend_user" property="recommendUser" jdbcType="VARCHAR" />
+    <result column="is51" property="is51" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="change_type" property="changeType" jdbcType="INTEGER" />
+    <result column="change_userid" property="changeUserid" jdbcType="INTEGER" />
+    <result column="change_user" property="changeUser" jdbcType="VARCHAR" />
+    <result column="change_time" property="changeTime" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="borrower_type" property="borrowerType" jdbcType="VARCHAR" />
+    <result column="idcard" property="idCard" jdbcType="VARCHAR" />
+  </resultMap>
+
+	<sql id="where-all-page-condition">
+		<if test="userId != null and userId != 0">
+			AND l.user_id = #{userId}
+		</if>
+		<if test="username != null and username != ''">
+			AND l.username LIKE CONCAT('%', #{username}, '%')
+		</if>
+		<if test="realName != null and realName != ''">
+			AND l.real_name LIKE CONCAT('%', #{realName}, '%')
+		</if>
+		<if test="mobile != null and mobile != ''">
+			AND l.mobile LIKE CONCAT('%', #{mobile}, '%')
+		</if>
+		<if test="recommendUser != null and recommendUser != ''">
+			AND l.recommend_user LIKE CONCAT('%', #{recommendUser}, '%')
+		</if>
+		<if test="attribute != null and attribute != ''">
+			AND l.attribute = #{attribute}
+		</if>
+		<if test="is51 != null and is51 != ''">
+			AND l.is51 = #{is51}
+		</if>
+		<if test="changeType != null and changeType != ''">
+			AND l.change_type = #{changeType}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND FROM_UNIXTIME(l.change_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startTime},'00:00:00'
+			),'%Y-%m-%d %H:%i:%s')
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND FROM_UNIXTIME(l.change_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endTime},'23:59:59'
+			),'%Y-%m-%d %H:%i:%s')
+		</if>
+	</sql>
+	<select id="queryChangeLogCount" resultType="java.lang.Integer"
+		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
+		SELECT COUNT(1)
+		from hyjf_users_change_log l
+		
+		WHERE 1=1
+		<include refid="where-all-page-condition"/>
+	</select>
+
+	<select id="queryChangeLogList" resultMap="BaseResultMap"
+		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
+		SELECT id, user_id, username, real_name, mobile, idcard, `role`, `attribute`, recommend_user, is51, 
+               `status`, change_userid, change_user, change_type, FROM_UNIXTIME(change_time, '%Y-%m-%d %H:%i:%S') as change_time, remark
+		,borrower_type from hyjf_users_change_log l
+		
+		WHERE 1=1 
+		<include refid="where-all-page-condition"/>
+		ORDER BY l.change_time DESC
+	    <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+
+</mapper>
+

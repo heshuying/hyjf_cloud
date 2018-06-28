@@ -11,7 +11,9 @@ import com.hyjf.admin.client.UserauthClient;
 import com.hyjf.admin.service.UserauthService;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
+import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
+import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
 
 /**
  * @author DongZeShan
@@ -39,8 +41,13 @@ public class UserauthServiceImpl  implements UserauthService{
 	}
 
 	@Override
-	public HjhAccedeResponse selectByAssignNidAndUserId(Integer userId) {
-		return userauthClient.selectByAssignNidAndUserId(userId);
+	public HjhAccedeResponse canCancelAuth(Integer userId) {
+		return userauthClient.canCancelAuth(userId);
+	}
+
+	@Override
+	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest) {
+		return userauthClient.userauthLoglist(adminUserAuthListRequest);
 	}
 
 

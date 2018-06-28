@@ -8,13 +8,11 @@ import com.hyjf.admin.client.UserCenterClient;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.resquest.user.BankOpenAccountRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -30,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +47,34 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
+    @Override
+    public JSONObject initUserManaget(){
+        JSONObject jsonObject = new JSONObject();
+       /* // 用户角色
+        Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
+        // 用户属性
+        Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
+        // 开户状态
+        Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+        // 用户状态
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
+        // 注册平台
+        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
+        // 用户类型
+        Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
+        // 借款人类型
+        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");
+        List<HjhInstConfigVO> listHjhInstConfig =  userCenterClient.selectInstConfigAll();
+         jsonObject.put("userRoles", userRoles);
+        jsonObject.put("userPropertys", userPropertys);
+        jsonObject.put("accountStatus", accountStatus);
+        jsonObject.put("userStatus", userStatus);
+        jsonObject.put("registPlat", registPlat);
+        jsonObject.put("userTypes", userTypes);
+        jsonObject.put("borrowTypes", borrowTypes);
+        jsonObject.put("hjhInstConfigList", listHjhInstConfig);*/
+        return jsonObject;
+    }
     /**
      * 查找用户信息
      *
@@ -55,7 +82,8 @@ public class UserCenterServiceImpl implements UserCenterService {
      * @return
      */
     @Override
-    public Map<String, Object> selectUserMemberList(UserManagerRequest request) {
+    public JSONObject selectUserMemberList(UserManagerRequest request) {
+        JSONObject jsonObject = new JSONObject();
         Map<String, Object> mapReturn = new HashMap<String, Object>();
         String status = Response.SUCCESS;//0->成功,99->失败
         // 初始化分页参数，并组合到请求参数
@@ -78,9 +106,9 @@ public class UserCenterServiceImpl implements UserCenterService {
             status = Response.FAIL;
         }
         //用户列表信息
-        mapReturn.put("data", listUserMember);
-        mapReturn.put("status", status);
-        return mapReturn;
+        jsonObject.put("record", listUserMember);
+        jsonObject.put("status", status);
+        return jsonObject;
     }
 
     /**
@@ -226,11 +254,22 @@ public class UserCenterServiceImpl implements UserCenterService {
      * @return
      */
     @Override
-    public UserRecommendVO selectUserRecommendByUserId(String userId) {
-        UserRecommendVO userRecommendVO = userCenterClient.selectUserRecommendByUserId(userId);
+    public UserRecommendCustomizeVO selectUserRecommendByUserId(String userId) {
+        UserRecommendCustomizeVO userRecommendVO = userCenterClient.selectUserRecommendByUserId(userId);
         return userRecommendVO;
     }
 
+    /**
+     * 获取某一用户的信息修改列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request){
+//        List<UserChangeLogVO> userChangeLogVO = userCenterClient.selectUserChageLog(request);
+        List<UserChangeLogVO> userChangeLogVO = new ArrayList<UserChangeLogVO>();
+        return userChangeLogVO;
+    }
     /**
      * 校验手机号
      *
@@ -592,5 +631,151 @@ public class UserCenterServiceImpl implements UserCenterService {
         return BankCallUtils.callApiBg(bean);
     }
 
+   /* *//**
+     * 保持推荐信息
+     * @param recommendName
+     * @return
+     *//*
+    public void updateUserRe(Map<String,Object> mapParam) {
+        // 根据推荐人用户名查询用户
+
+        UserVO userRecommendNew = userCenterClient.selectUserByRecommendName(mapParam.get("recommendName").toString());
+        String oldRecommendUser = "";
+//        AdminSystem adminSystem = (AdminSystem) SessionUtils.getSession(CustomConstants.LOGIN_USER_INFO);
+        int time = GetDate.getNowTime10();
+        String userId = mapParam.get("userId").toString();
+        if (null!= userRecommendNew) {
+            // 获取新推荐人
+            // 根据主键查询用户信息
+            UserVO user = userCenterClient.selectUserByUserId(Integer.parseInt(userId));
+            oldRecommendUser = user.getReferrerUserName();
+            // 更新推荐人
+           *//* user.setReferrer(userRecommendNew.getUserId());
+            user.setReferrerUserName(userRecommendNew.getUsername());
+            usersMapper.updateByPrimaryKey(user);*//*
+            // 更新userInfo的主单与非主单信息 2015年12月30日18:27:22 孙亮
+            //updateUserParam(user.getUserId());
+
+           *//* SpreadsUsersExample example = new SpreadsUsersExample();
+            example.createCriteria().andUserIdEqualTo(Integer.parseInt(form.getUserId()));
+
+            List<SpreadsUsers> spreadUsers = spreadsUsersMapper.selectByExample(example);*//*
+           SpreadsUserVO spreadsUserVO = userCenterClient.selectSpreadsUsersByUserId(userId);
+            Integer oldSpreadUserId = null;
+            if (spreadsUserVO != null) {
+                oldSpreadUserId = spreadsUserVO.getSpreadsUserId();
+                spreadsUserVO.setSpreadsUserId(userRecommendNew.getUserId());
+//                spreadsUserVO.setOperation(adminSystem.getUsername());
+                // 保存用户推荐人信息
+                spreadsUsersMapper.updateByPrimaryKeyWithBLOBs(spreadUser);
+
+                SpreadsUserLogVO spreadsUsersLog = new SpreadsUserLogVO();
+                spreadsUsersLog.setOldSpreadsUserId(oldSpreadUserId);
+                spreadsUsersLog.setUserId(Integer.parseInt(userId));
+                spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
+                spreadsUsersLog.setType("web");
+                spreadsUsersLog.setOpernote(form.getRemark());
+                spreadsUsersLog.setOperation(adminSystem.getUsername());
+                spreadsUsersLog.setCreateTime(new Date());
+                spreadsUsersLog.setCreateIp(form.getIp());
+                // 保存相应的更新日志信息
+                spreadsUsersLogMapper.insertSelective(spreadsUsersLog);
+            } else {
+                SpreadsUserVO spreadUser = new SpreadsUserVO();
+                spreadUser.setUserId(Integer.parseInt(form.getUserId()));
+                spreadUser.setOldSpreadsUserId(userRecommendNew.getUserId());
+                spreadUser.setCreateIp(form.getIp());
+                spreadUser.setCreateTime(new Date());
+                spreadUser.setType("web");
+                spreadUser.setOpernote("web");
+                spreadUser.setOperation(adminSystem.getUsername());
+                // 插入推荐人
+                spreadsUsersMapper.insertSelective(spreadUser);
+
+                SpreadsUserLogVO spreadsUsersLog = new SpreadsUserLogVO();
+                spreadsUsersLog.setOldSpreadsUserId(null);
+                spreadsUsersLog.setUserId(Integer.parseInt(form.getUserId()));
+                spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
+                spreadsUsersLog.setType("web");
+                spreadsUsersLog.setOpernote(form.getRemark());
+                spreadsUsersLog.setOperation(adminSystem.getUsername());
+                spreadsUsersLog.setCreateTime(new Date());
+                spreadsUsersLog.setCreateIp(form.getIp());
+                // 保存相应的更新日志信息
+                spreadsUsersLogMapper.insertSelective(spreadsUsersLog);
+            }
+
+        } else {
+            // 根据主键查询用户信息
+            UserVO user = userCenterClient.selectUserByUserId(Integer.parseInt(userId));
+            // 更新推荐人
+            *//*user.setReferrer(null);
+            user.setReferrerUserName(null);
+            usersMapper.updateByPrimaryKey(user);*//*
+            // 更新userInfo的主单与非主单信息 2015年12月30日18:27:22 孙亮
+            updateUserParam(user.getUserId());
+           *//* SpreadsUsersExample example = new SpreadsUsersExample();
+            example.createCriteria().andUserIdEqualTo(Integer.parseInt(form.getUserId()));
+            List<SpreadsUsers> spreadUsers = spreadsUsersMapper.selectByExample(example);*//*
+            SpreadsUserVO spreadsUserVO = userCenterClient.selectSpreadsUsersByUserId(userId);
+            if (spreadsUserVO != null) {
+                // 删除用户的推荐人
+                spreadsUsersMapper.deleteByPrimaryKey(spreadsUserVO.getId());
+
+                SpreadsUserLogVO spreadsUsersLog = new SpreadsUserLogVO();
+                spreadsUsersLog.setOldSpreadsUserId(spreadsUserVO.getSpreadsUserId());
+                spreadsUsersLog.setUserId(Integer.parseInt(form.getUserId()));
+                spreadsUsersLog.setSpreadsUserId(null);
+                spreadsUsersLog.setType("web");
+                spreadsUsersLog.setOpernote(form.getRemark());
+                spreadsUsersLog.setOperation(adminSystem.getUsername());
+                spreadsUsersLog.setCreateTime(new Date());
+                spreadsUsersLog.setCreateIp(form.getIp());
+                // 保存相应的更新日志信息
+                spreadsUsersLogMapper.insertSelective(spreadsUsersLog);
+            }
+        }
+
+        // 保存用户信息修改日志
+        List<UserInfoForLogCustomize> users = usersCustomizeMapper
+                .selectUserByUserId(Integer.parseInt(form.getUserId()));
+        if (users != null && !users.isEmpty()) {
+            UserInfoForLogCustomize customize = users.get(0);
+            UserChangeLogVO changeLog = new UsersChangeLog();
+            changeLog.setUserId(customize.getUserId());
+            changeLog.setUsername(customize.getUserName());
+            changeLog.setAttribute(customize.getAttribute());
+            changeLog.setIs51(customize.getIs51());
+            changeLog.setRole(customize.getUserRole());
+            changeLog.setMobile(customize.getMobile());
+            changeLog.setRealName(customize.getRealName());
+            changeLog.setRecommendUser(oldRecommendUser);
+            changeLog.setStatus(customize.getUserStatus());
+            changeLog.setChangeType(ChangeLogDefine.CHANGELOG_TYPE_RECOMMEND);
+            changeLog.setIdcard(customize.getIdCard());
+
+            UsersChangeLogExample logExample = new UsersChangeLogExample();
+            UsersChangeLogExample.Criteria logCriteria = logExample.createCriteria();
+            logCriteria.andUserIdEqualTo(Integer.parseInt(form.getUserId()));
+            int count = usersChangeLogMapper.countByExample(logExample);
+            if (count <= 0) {
+                // 如果从来没有添加过操作日志，则将原始信息插入修改日志中
+                changeLog.setRemark("初始注册");
+                changeLog.setChangeUser("system");
+                changeLog.setChangeTime(customize.getRegTime());
+                usersChangeLogMapper.insertSelective(changeLog);
+            }
+
+            // 插入一条用户信息修改日志
+            changeLog.setChangeUser(adminSystem.getUsername());
+            changeLog.setChangeUserid(Integer.parseInt(adminSystem.getId()));
+            changeLog.setRecommendUser(form.getRecommendName());
+            changeLog.setRemark(form.getRemark());
+            changeLog.setChangeTime(GetDate.getNowTime10());
+            usersChangeLogMapper.insertSelective(changeLog);
+        }
+
+    }
+*/
 
 }

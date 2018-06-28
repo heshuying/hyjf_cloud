@@ -3,13 +3,11 @@
  */
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
+import com.hyjf.am.user.dao.model.customize.*;
 
 import java.util.List;
 import java.util.Map;
@@ -176,4 +174,25 @@ public interface UserManagerService {
      * @return
      */
     int updateUser(User user);
+
+    /**
+     * 获取某一用户的信息修改列表
+     * @param mapParam
+     * @return
+     */
+    List<UserChangeLog> queryChangeLogList(Map<String,Object> mapParam);
+    /**
+     * 获取推荐人姓名查找用户
+     * @param recommendName
+     * @return
+     */
+    User selectUserByRecommendName(String recommendName);
+
+    SpreadsUser selectSpreadsUsersByUserId(int userId);
+    /**
+     * 根据用户id获取推荐信息
+     * @param userId
+     * @return
+     */
+    UserRecommendCustomize searchUserRecommend(int userId);
 }

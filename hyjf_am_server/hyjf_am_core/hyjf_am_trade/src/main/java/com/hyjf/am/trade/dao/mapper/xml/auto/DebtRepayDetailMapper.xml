@@ -40,7 +40,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
-    <result column="repay_money_source" property="repayMoneySource" jdbcType="INTEGER" />
+    <result column="repay_money_source" property="repayMoneySource" jdbcType="TINYINT" />
     <result column="repay_user_id" property="repayUserId" jdbcType="INTEGER" />
     <result column="repay_username" property="repayUsername" jdbcType="VARCHAR" />
   </resultMap>
@@ -174,7 +174,7 @@
       #{lateDays,jdbcType=INTEGER}, #{lateInterest,jdbcType=DECIMAL}, #{delayRemark,jdbcType=VARCHAR}, 
       #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
       #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateUserName,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=INTEGER}, #{repayUserId,jdbcType=INTEGER}, 
+      #{updateUserName,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=TINYINT}, #{repayUserId,jdbcType=INTEGER}, 
       #{repayUsername,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtRepayDetail" >
@@ -417,7 +417,7 @@
         #{updateUserName,jdbcType=VARCHAR},
       </if>
       <if test="repayMoneySource != null" >
-        #{repayMoneySource,jdbcType=INTEGER},
+        #{repayMoneySource,jdbcType=TINYINT},
       </if>
       <if test="repayUserId != null" >
         #{repayUserId,jdbcType=INTEGER},
@@ -551,7 +551,7 @@
         update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.repayMoneySource != null" >
-        repay_money_source = #{record.repayMoneySource,jdbcType=INTEGER},
+        repay_money_source = #{record.repayMoneySource,jdbcType=TINYINT},
       </if>
       <if test="record.repayUserId != null" >
         repay_user_id = #{record.repayUserId,jdbcType=INTEGER},
@@ -604,7 +604,7 @@
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-      repay_money_source = #{record.repayMoneySource,jdbcType=INTEGER},
+      repay_money_source = #{record.repayMoneySource,jdbcType=TINYINT},
       repay_user_id = #{record.repayUserId,jdbcType=INTEGER},
       repay_username = #{record.repayUsername,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -726,7 +726,7 @@
         update_user_name = #{updateUserName,jdbcType=VARCHAR},
       </if>
       <if test="repayMoneySource != null" >
-        repay_money_source = #{repayMoneySource,jdbcType=INTEGER},
+        repay_money_source = #{repayMoneySource,jdbcType=TINYINT},
       </if>
       <if test="repayUserId != null" >
         repay_user_id = #{repayUserId,jdbcType=INTEGER},
@@ -776,7 +776,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      repay_money_source = #{repayMoneySource,jdbcType=INTEGER},
+      repay_money_source = #{repayMoneySource,jdbcType=TINYINT},
       repay_user_id = #{repayUserId,jdbcType=INTEGER},
       repay_username = #{repayUsername,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

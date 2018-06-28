@@ -57,7 +57,7 @@
     <result column="invite_region_id" property="inviteRegionId" jdbcType="INTEGER" />
     <result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
     <result column="tender_user_name" property="tenderUserName" jdbcType="VARCHAR" />
-    <result column="tender_type" property="tenderType" jdbcType="INTEGER" />
+    <result column="tender_type" property="tenderType" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -211,7 +211,7 @@
       #{tenderUserAttribute,jdbcType=INTEGER}, #{inviteUserAttribute,jdbcType=INTEGER}, 
       #{orderDate,jdbcType=VARCHAR}, #{loanOrdid,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
       #{inviteRegionId,jdbcType=INTEGER}, #{inviteRegionName,jdbcType=VARCHAR}, #{tenderUserName,jdbcType=VARCHAR}, 
-      #{tenderType,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      #{tenderType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn" >
@@ -556,7 +556,7 @@
         #{tenderUserName,jdbcType=VARCHAR},
       </if>
       <if test="tenderType != null" >
-        #{tenderType,jdbcType=INTEGER},
+        #{tenderType,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -741,7 +741,7 @@
         tender_user_name = #{record.tenderUserName,jdbcType=VARCHAR},
       </if>
       <if test="record.tenderType != null" >
-        tender_type = #{record.tenderType,jdbcType=INTEGER},
+        tender_type = #{record.tenderType,jdbcType=TINYINT},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -811,7 +811,7 @@
       invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
       invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
       tender_user_name = #{record.tenderUserName,jdbcType=VARCHAR},
-      tender_type = #{record.tenderType,jdbcType=INTEGER},
+      tender_type = #{record.tenderType,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -984,7 +984,7 @@
         tender_user_name = #{tenderUserName,jdbcType=VARCHAR},
       </if>
       <if test="tenderType != null" >
-        tender_type = #{tenderType,jdbcType=INTEGER},
+        tender_type = #{tenderType,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -1051,7 +1051,7 @@
       invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
       invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
       tender_user_name = #{tenderUserName,jdbcType=VARCHAR},
-      tender_type = #{tenderType,jdbcType=INTEGER},
+      tender_type = #{tenderType,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
