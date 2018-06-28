@@ -68,5 +68,8 @@ public class AutoMapper {
     @Autowired
     protected BorrowRepayMapper borrowRepayMapper;
 
+    @Autowired
+    protected HjhPlanMapper hjhPlanMapper;
+
 }
 

@@ -75,7 +75,6 @@ public class HjhCalculateFairValueConsumer extends Consumer {
                 }
                 // 计算类型
                 Integer calculateType = hjhCalculateFairValueVO.getCalculateType();
-
                 // 根据加入订单号查询计划订单
                 HjhAccede hjhAccede = hjhCalculateFairValueService.selectHjhAccedeByAccedeOrderId(accedeOrderId);
                 if (hjhAccede == null) {
@@ -88,17 +87,17 @@ public class HjhCalculateFairValueConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
                 logger.info("计划加入订单计算公允价值:计划加入订单号:[" + accedeOrderId + "].");
-
                 // 计算加入订单的公允价值
                 hjhCalculateFairValueService.calculateFairValue(hjhAccede, calculateType);
-
                 // 如果没有return success ，consumer会重新消费该消息，直到return success
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
                 e.printStackTrace();
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                if (msgs.get(0).getReconsumeTimes() == 3) {
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                } else {
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                }
             }
         }
     }
