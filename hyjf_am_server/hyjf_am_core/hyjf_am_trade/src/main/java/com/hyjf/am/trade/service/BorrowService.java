@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 
 import java.util.List;
 
@@ -88,4 +89,10 @@ public interface BorrowService extends BaseService{
      * @date 2018/6/26 16:10
      */
     WebProjectPersonDetailVO getProjectPerson(String borrowNid);
+
+    /**
+     * 投资异步修改表
+     * @param tenderBg
+     */
+    void updateTenderAfter(TenderBgVO tenderBg);
 }
