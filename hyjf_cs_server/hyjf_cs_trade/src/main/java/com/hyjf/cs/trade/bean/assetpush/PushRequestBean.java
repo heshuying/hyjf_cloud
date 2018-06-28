@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.bean.assetpush;
 
-import com.hyjf.am.assetpush.InfoBean;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.cs.trade.bean.BaseBean;
 
 import java.util.List;

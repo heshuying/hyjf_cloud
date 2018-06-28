@@ -49,5 +49,11 @@ public class AutoMapper {
 
     @Autowired
     protected HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
+
+    @Autowired
+    protected BorrowTenderMapper borrowTenderMapper;
+
+    @Autowired
+    protected TenderAgreementMapper tenderAgreementMapper;
 }
 

@@ -3,15 +3,13 @@
  */
 package com.hyjf.am.user.service.impl;
 
+import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
+import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.UserManagerService;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.validator.Validator;
@@ -49,6 +47,8 @@ public class UserManagerServiceImpl implements UserManagerService {
     @Autowired
     public BankOpenAccountMapper bankOpenAccountMapper;
 
+    @Autowired
+    public SpreadsUserMapper  spreadsUserMapper;
 
     private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
 
@@ -56,7 +56,7 @@ public class UserManagerServiceImpl implements UserManagerService {
     /**
      * 根据筛选条件查找会员列表
      *
-     * @param userRequest 筛选条件
+     * @param mapParam 筛选条件
      * @return
      */
     @Override
@@ -220,7 +220,7 @@ public class UserManagerServiceImpl implements UserManagerService {
      */
     @Override
     public UserManagerUpdateCustomize selectUserUpdateInfoByUserId(int userId) {
-        List<UserManagerUpdateCustomize> userManagerUpdateCustomizeList = userManagerCustomizeMapper.selectUserUpdateInfoByUserId(userId);
+        List<UserManagerUpdateCustomize> userManagerUpdateCustomizeList = userManagerCustomizeMapper.selectUserUpdateById(userId);
         if (null != userManagerUpdateCustomizeList && userManagerUpdateCustomizeList.size() > 0) {
             return userManagerUpdateCustomizeList.get(0);
         }
@@ -463,5 +463,59 @@ public class UserManagerServiceImpl implements UserManagerService {
             throw new RuntimeException("用户表信息保存异常!");
         }
         return userFlag;
+    }
+
+    /**
+     * 获取某一用户的信息修改列表
+     * @param mapParam
+     * @return
+     */
+    @Override
+    public List<UserChangeLog> queryChangeLogList(Map<String,Object>mapParam){
+        return userManagerCustomizeMapper.queryChangeLogList(mapParam);
+    }
+
+    /**
+     * 获取推荐人姓名查找用户
+     * @param recommendName
+     * @return
+     */
+    @Override
+    public User selectUserByRecommendName(String recommendName){
+        UserExample example = new UserExample();
+        example.createCriteria().andUsernameEqualTo(recommendName);
+        List<User> usersList = this.userMapper.selectByExample(example);
+        if (usersList != null && usersList.size() > 0) {
+            return usersList.get(0);
+        }
+        return null;
+    }
+    /**
+     * 获取推荐人姓名查找用户
+     * @param userId
+     * @return
+     */
+    @Override
+    public SpreadsUser selectSpreadsUsersByUserId(int userId){
+        SpreadsUserExample example = new SpreadsUserExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<SpreadsUser> spreadUsersList = spreadsUserMapper.selectByExample(example);
+        if (spreadUsersList != null && spreadUsersList.size() > 0) {
+            return spreadUsersList.get(0);
+        }
+        return null;
+    }
+    /**
+     * 根据用户id获取推荐信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserRecommendCustomize searchUserRecommend(int userId){
+        List<UserRecommendCustomize> userRecommendCustomizeList =  userManagerCustomizeMapper.searchUserRecommend(userId);
+        if(null!=userRecommendCustomizeList&&userRecommendCustomizeList.size()>0){
+            return userRecommendCustomizeList.get(0);
+        }
+        return null;
     }
 }

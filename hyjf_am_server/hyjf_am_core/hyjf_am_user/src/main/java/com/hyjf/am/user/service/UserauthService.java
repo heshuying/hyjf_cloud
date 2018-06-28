@@ -102,4 +102,5 @@ public interface UserauthService {
 	 * @param userId
 	 */
 	void updateCancelCreditAuth(int userId);
+
 }

@@ -10,8 +10,8 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="allpupper" property="allpupper" jdbcType="DECIMAL" />
-    <result column="is_tender" property="isTender" jdbcType="INTEGER" />
-    <result column="is_redeem" property="isRedeem" jdbcType="INTEGER" />
+    <result column="is_tender" property="isTender" jdbcType="TINYINT" />
+    <result column="is_redeem" property="isRedeem" jdbcType="TINYINT" />
     <result column="error_remark" property="errorRemark" jdbcType="VARCHAR" />
     <result column="pnumber_new" property="pnumberNew" jdbcType="VARCHAR" />
   </resultMap>
@@ -120,7 +120,7 @@
       error_remark, pnumber_new)
     values (#{pnumber,jdbcType=VARCHAR}, #{interestRate,jdbcType=DECIMAL}, #{pupper,jdbcType=DECIMAL}, 
       #{plower,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{total,jdbcType=DECIMAL}, 
-      #{allpupper,jdbcType=DECIMAL}, #{isTender,jdbcType=INTEGER}, #{isRedeem,jdbcType=INTEGER}, 
+      #{allpupper,jdbcType=DECIMAL}, #{isTender,jdbcType=TINYINT}, #{isRedeem,jdbcType=TINYINT}, 
       #{errorRemark,jdbcType=VARCHAR}, #{pnumberNew,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Product" >
@@ -186,10 +186,10 @@
         #{allpupper,jdbcType=DECIMAL},
       </if>
       <if test="isTender != null" >
-        #{isTender,jdbcType=INTEGER},
+        #{isTender,jdbcType=TINYINT},
       </if>
       <if test="isRedeem != null" >
-        #{isRedeem,jdbcType=INTEGER},
+        #{isRedeem,jdbcType=TINYINT},
       </if>
       <if test="errorRemark != null" >
         #{errorRemark,jdbcType=VARCHAR},
@@ -233,10 +233,10 @@
         allpupper = #{record.allpupper,jdbcType=DECIMAL},
       </if>
       <if test="record.isTender != null" >
-        is_tender = #{record.isTender,jdbcType=INTEGER},
+        is_tender = #{record.isTender,jdbcType=TINYINT},
       </if>
       <if test="record.isRedeem != null" >
-        is_redeem = #{record.isRedeem,jdbcType=INTEGER},
+        is_redeem = #{record.isRedeem,jdbcType=TINYINT},
       </if>
       <if test="record.errorRemark != null" >
         error_remark = #{record.errorRemark,jdbcType=VARCHAR},
@@ -259,8 +259,8 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       total = #{record.total,jdbcType=DECIMAL},
       allpupper = #{record.allpupper,jdbcType=DECIMAL},
-      is_tender = #{record.isTender,jdbcType=INTEGER},
-      is_redeem = #{record.isRedeem,jdbcType=INTEGER},
+      is_tender = #{record.isTender,jdbcType=TINYINT},
+      is_redeem = #{record.isRedeem,jdbcType=TINYINT},
       error_remark = #{record.errorRemark,jdbcType=VARCHAR},
       pnumber_new = #{record.pnumberNew,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -292,10 +292,10 @@
         allpupper = #{allpupper,jdbcType=DECIMAL},
       </if>
       <if test="isTender != null" >
-        is_tender = #{isTender,jdbcType=INTEGER},
+        is_tender = #{isTender,jdbcType=TINYINT},
       </if>
       <if test="isRedeem != null" >
-        is_redeem = #{isRedeem,jdbcType=INTEGER},
+        is_redeem = #{isRedeem,jdbcType=TINYINT},
       </if>
       <if test="errorRemark != null" >
         error_remark = #{errorRemark,jdbcType=VARCHAR},
@@ -315,8 +315,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       total = #{total,jdbcType=DECIMAL},
       allpupper = #{allpupper,jdbcType=DECIMAL},
-      is_tender = #{isTender,jdbcType=INTEGER},
-      is_redeem = #{isRedeem,jdbcType=INTEGER},
+      is_tender = #{isTender,jdbcType=TINYINT},
+      is_redeem = #{isRedeem,jdbcType=TINYINT},
       error_remark = #{errorRemark,jdbcType=VARCHAR},
       pnumber_new = #{pnumberNew,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

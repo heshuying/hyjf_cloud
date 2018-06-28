@@ -2,9 +2,7 @@ package com.hyjf.am.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -53,6 +51,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Autowired
 	private AccountProducer accountProducer;
+	@Autowired
+	private CertificateAuthorityMapper certificateAuthorityMapper;
+	@Autowired
+	private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -121,34 +123,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return user;
 	}
 
-	@Override
-	public User findUserByUserId(int userId) {
-		UserExample usersExample = new UserExample();
-		usersExample.createCriteria().andUserIdEqualTo(userId);
-		List<User> usersList = userMapper.selectByExample(usersExample);
-		if (!CollectionUtils.isEmpty(usersList)) {
-			return usersList.get(0);
-		}
-		return null;
-	}
-
-	/**
-	 * 根据userId查询userInfo
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public UserInfo findUsersInfo(int userId) {
-		UserInfoExample example = new UserInfoExample();
-		UserInfoExample.Criteria criteria = example.createCriteria();
-		criteria.andUserIdEqualTo(userId);
-		List<UserInfo> list = userInfoMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(0);
-		}
-		return null;
-	}
 
 	/** 获取唯一username */
 	@Override
@@ -356,8 +330,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param password
 	 * @param loginIp
 	 * @param platform
-	 * @param refferUserId
-	 * @param refferUsername
+	 * @param
+	 * @param
 	 * @return
 	 */
 	private User insertUser(String mobile, String password, String loginIp, String platform, String instCode) {
@@ -1073,5 +1047,40 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	@Override
 	public Integer selectTenderCount(Integer userId) {
 		return userManagerCustomizeMapper.selectTenderCount(userId);
+	}
+
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<CertificateAuthority> getCertificateAuthorityList(CertificateAuthorityRequest request) {
+		CertificateAuthorityExample example = new CertificateAuthorityExample();
+		CertificateAuthorityExample.Criteria cra = example.createCriteria();
+		cra.andTrueNameEqualTo(request.getTrueName());
+		cra.andIdNoEqualTo(request.getIdNo());
+		cra.andIdTypeEqualTo(request.getIdType());
+		return this.certificateAuthorityMapper.selectByExample(example);
+	}
+
+	/**
+	 * 借款主体CA认证记录表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request) {
+		LoanSubjectCertificateAuthorityExample loanSubjectCertificateAuthorityExample = new LoanSubjectCertificateAuthorityExample();
+		LoanSubjectCertificateAuthorityExample.Criteria  loanSubjectCra = loanSubjectCertificateAuthorityExample.createCriteria();
+		loanSubjectCra.andNameEqualTo(request.getName());
+		loanSubjectCra.andIdTypeEqualTo(request.getIdType());
+		loanSubjectCra.andIdNoEqualTo(request.getIdNo());
+		return this.loanSubjectCertificateAuthorityMapper.selectByExample(loanSubjectCertificateAuthorityExample);
+
 	}
 }

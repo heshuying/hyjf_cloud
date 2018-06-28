@@ -56,8 +56,7 @@ public class UserauthController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "授权状态", notes = "授权状态集合")
-	// @RequestMapping(value = "/usersInit")
-	@PostMapping(value = "/userauthlist")
+	@RequestMapping(value = "/userauthlist")
 	@ResponseBody
 	public JSONObject userManagerInit(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody Map<String, String> map) {
@@ -81,151 +80,78 @@ public class UserauthController extends BaseController {
 
 	}
 
-//	/**
-//	 * 自动授权查询 - 调用江西银行接口查询
-//	 *
-//	 * @param userId
-//	 */
-//	@RequestMapping(value = UserauthDefine.USERAUTH_QUERY_ACTION)
-//	@ResponseBody
-//	public JSONObject queryUserAuth(@RequestParam Integer userId) {
-//		// 返回结果
-//		JSONObject result = new JSONObject();
-//		logger.info("授权查询开始，查询用户：{}", userId);
-//		BankCallBean retBean = autoPlusService.getTermsAuthQuery(userId, BankCallConstant.CHANNEL_PC);
-//		try {
-//			if (retBean != null
-//					&& BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
-//				this.autoPlusService.updateUserAuth(userId, retBean);
-//				result.put("success", "0");
-//				result.put("msg", "自动授权查询成功！");
-//			} else {
-//				String retCode = retBean != null ? retBean.getRetCode() : "";
-//				String retMessage = this.autoPlusService.getBankRetMsg(retCode);
-//				result.put("success", "1");
-//				result.put("msg", StringUtils.isNotEmpty(retMessage) ? retMessage : "未知错误");
-//			}
-//		} catch (Exception e) {
-//			logger.error("授权查询出错", e);
-//			result.put("success", "1");
-//			result.put("msg", e.getMessage());
-//		}
-//		logger.info("queryUserAuth result is: {}", result.toJSONString());
-//		return result;
-//	}
-//
-//	/**
-//	 * 自动投资解约
-//	 *
-//	 * @param userId
-//	 */
-//	@RequestMapping(UserauthDefine.USER_INVEST_CANCEL_ACTION)
-//	@ResponseBody
-//	public JSONObject cancelInvestAuth(@RequestParam int userId) {
-//		// 返回结果
-//		JSONObject result = new JSONObject();
-//		logger.info("自动投资解约开始，用户：{}", userId);
-//		if (!this.autoPlusService.canCancelAuth(userId)) {
-//			result.put("success", "1");
-//			result.put("msg", "当前用户存在持有中计划，不能解约！");
-//			return result;
-//		}
-//		String authType = "7";
-//		BankCallBean retBean = this.autoPlusService.cancelInvestAuth(userId, BankCallConstant.CHANNEL_PC);
-//		try {
-//			if (retBean != null) {
-//				if (BankCallConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
-//					// 关闭授权操作
-//					autoPlusService.updateCancelInvestAuth(userId);
-//					// 在auth_log表中插入解约记录
-//					autoPlusService.insertUserAuthLog2(userId, retBean, authType);
-//					result.put("success", "0");
-//					result.put("msg", "自动投资解约成功！");
-//				} else {
-//					String retCode = retBean != null ? retBean.getRetCode() : "";
-//					String retMessage = this.autoPlusService.getBankRetMsg(retCode);
-//					result.put("success", "1");
-//					result.put("msg", StringUtils.isNotEmpty(retMessage) ? retMessage : "未知错误");
-//				}
-//			} else {
-//				result.put("success", "1");
-//				result.put("msg", "调用银行接口失败");
-//			}
-//		} catch (Exception e) {
-//			logger.error("自动投资解约出错", e);
-//			result.put("success", "1");
-//			result.put("msg", e.getMessage());
-//		}
-//		return result;
-//	}
-//
-//	/**
-//	 * 自动债转解约
-//	 *
-//	 * @param userId
-//	 */
-//	@RequestMapping(UserauthDefine.USER_CREDIT_CANCEL_ACTION)
-//	@ResponseBody
-//	public JSONObject cancelCreditAuth(@RequestParam int userId) {
-//		// 返回结果
-//		JSONObject result = new JSONObject();
-//		logger.info("自动债转授权开始，用户：{}", userId);
-//		if (!this.autoPlusService.canCancelAuth(userId)) {
-//			result.put("success", "1");
-//			result.put("msg", "当前用户存在持有中计划，不能解约！");
-//			return result;
-//		}
-//		String authType = "8";
-//		BankCallBean retBean = this.autoPlusService.cancelCreditAuth(userId, BankCallConstant.CHANNEL_PC);
-//		try {
-//			if (retBean != null) {
-//				if (BankCallConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
-//					// 关闭授权操作
-//					autoPlusService.updateCancelCreditAuth(userId);
-//					// 在auth_log表中插入解约记录
-//					autoPlusService.insertUserAuthLog2(userId, retBean, authType);
-//					result.put("success", "0");
-//					result.put("msg", "自动债转解约成功！");
-//				} else {
-//					String retCode = retBean != null ? retBean.getRetCode() : "";
-//					String retMessage = this.autoPlusService.getBankRetMsg(retCode);
-//					result.put("success", "1");
-//					result.put("msg", StringUtils.isNotEmpty(retMessage) ? retMessage : "未知错误");
-//				}
-//			} else {
-//				result.put("success", "1");
-//				result.put("msg", "调用银行接口失败");
-//			}
-//		} catch (Exception e) {
-//			logger.error("自动债转解约出错", e);
-//			result.put("success", "1");
-//			result.put("msg", e.getMessage());
-//		}
-//		return result;
-//	}
-//
-//	/**
-//	 * 构建查询条件
-//	 *
-//	 * @param form
-//	 * @return
-//	 */
-//	private Map<String, Object> buildQueryCondition(UserauthListCustomizeBean form) {
-//		// 封装查询条件
-//		Map<String, Object> authUser = new HashMap<String, Object>();
-//		authUser.put("userName", form.getUserName());
-//		authUser.put("recommendName", form.getRecommendName());
-//		// 投资授权状态
-//		authUser.put("autoInvesStatus", form.getAutoInvesStatus());
-//		// 债转授权状态
-//		authUser.put("autoCreditStatus", form.getAutoCreditStatus());
-//		// 授权时间
-//		authUser.put("invesAddTimeStart", form.getInvesAddTimeStart());
-//		authUser.put("invesAddTimeEnd", form.getInvesAddTimeEnd());
-//		// 签约到期日
-//		authUser.put("invesEndTimeStart", form.getInvestEndTimeStart());
-//		authUser.put("invesEndTimeEnd", form.getInvestEndTimeEnd());
-//		return authUser;
-//	}
+
+	/**
+	 * 自动投资解约
+	 *
+	 * @param userId
+	 */
+	@ApiOperation(value = "授权状态", notes = "自动投资解约")
+	@RequestMapping(value = "/userinvescancel")
+	@ResponseBody
+	public JSONObject cancelInvestAuth(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Map<String, String> map) {
+		int userid=Integer.valueOf(map.get("userId"));
+		// 返回结果
+		JSONObject result = new JSONObject();
+		logger.info("自动投资解约开始，用户：{}", userid);
+		if (userauthService.canCancelAuth(userid).getRtn().equals("00")) {
+			result.put("success", "99");
+			result.put("msg", "当前用户存在持有中计划，不能解约！");
+			return result;
+		}
+		//TODO 请求江苏银行
+		/*
+		 * 		result.put("success", "1");
+				result.put("msg", "调用银行接口失败");
+				result.put("success", "1");
+				result.put("msg", e.getMessage());
+		 */
+		//插入数据库
+		userauthService.cancelInvestAuth(userid, "123");
+		result.put("success", "00");
+		result.put("msg", "自动投资解约成功！");
+
+		return result;
+	}
+
+	/**
+	 * 自动债转解约
+	 *
+	 * @param userId
+	 */
+	@ApiOperation(value = "授权状态", notes = "自动债转解约")
+	@RequestMapping(value = "/usercreditcancel")
+	@ResponseBody
+	public JSONObject cancelCreditAuth(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Map<String, String> map) {
+		
+		
+		int userid=Integer.valueOf(map.get("userId"));
+		// 返回结果
+		JSONObject result = new JSONObject();
+		logger.info("自动债转授权开始，用户：{}", userid);
+		if (userauthService.canCancelAuth(userid).getRtn().equals("00")) {
+			result.put("success", "99");
+			result.put("msg", "当前用户存在持有中计划，不能解约！");
+			return result;
+		}
+		//TODO 请求江苏银行
+		/*
+		 * 		result.put("success", "1");
+				result.put("msg", "调用银行接口失败");
+				result.put("success", "1");
+				result.put("msg", e.getMessage());
+		 */
+		//插入数据库
+		userauthService.cancelCreditAuth(userid, "123");
+		result.put("success", "00");
+		result.put("msg", "自动投资解约成功！");
+
+		return result;
+		
+	}
+
+
 
 }

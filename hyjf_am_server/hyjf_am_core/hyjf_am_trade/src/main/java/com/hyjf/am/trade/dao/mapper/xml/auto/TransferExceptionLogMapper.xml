@@ -5,7 +5,7 @@
     <id column="uuid" property="uuid" jdbcType="VARCHAR" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="recover_id" property="recoverId" jdbcType="INTEGER" />
-    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="respcode" property="respcode" jdbcType="VARCHAR" />
     <result column="trans_amt" property="transAmt" jdbcType="DECIMAL" />
@@ -155,7 +155,7 @@
       del_flag, add_user, update_user, 
       add_time, update_time, content, 
       `result`)
-    values (#{orderId,jdbcType=VARCHAR}, #{recoverId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+    values (#{orderId,jdbcType=VARCHAR}, #{recoverId,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, 
       #{status,jdbcType=TINYINT}, #{respcode,jdbcType=VARCHAR}, #{transAmt,jdbcType=DECIMAL}, 
       #{accountId,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, #{cusId,jdbcType=VARCHAR}, 
       #{acctId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
@@ -235,7 +235,7 @@
         #{recoverId,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
-        #{type,jdbcType=INTEGER},
+        #{type,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
@@ -306,7 +306,7 @@
         recover_id = #{record.recoverId,jdbcType=INTEGER},
       </if>
       <if test="record.type != null" >
-        `type` = #{record.type,jdbcType=INTEGER},
+        `type` = #{record.type,jdbcType=TINYINT},
       </if>
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
@@ -366,7 +366,7 @@
     set uuid = #{record.uuid,jdbcType=VARCHAR},
       order_id = #{record.orderId,jdbcType=VARCHAR},
       recover_id = #{record.recoverId,jdbcType=INTEGER},
-      `type` = #{record.type,jdbcType=INTEGER},
+      `type` = #{record.type,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
       respcode = #{record.respcode,jdbcType=VARCHAR},
       trans_amt = #{record.transAmt,jdbcType=DECIMAL},
@@ -392,7 +392,7 @@
     set uuid = #{record.uuid,jdbcType=VARCHAR},
       order_id = #{record.orderId,jdbcType=VARCHAR},
       recover_id = #{record.recoverId,jdbcType=INTEGER},
-      `type` = #{record.type,jdbcType=INTEGER},
+      `type` = #{record.type,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
       respcode = #{record.respcode,jdbcType=VARCHAR},
       trans_amt = #{record.transAmt,jdbcType=DECIMAL},
@@ -421,7 +421,7 @@
         recover_id = #{recoverId,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
-        `type` = #{type,jdbcType=INTEGER},
+        `type` = #{type,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
@@ -478,7 +478,7 @@
     update ht_transfer_exception_log
     set order_id = #{orderId,jdbcType=VARCHAR},
       recover_id = #{recoverId,jdbcType=INTEGER},
-      `type` = #{type,jdbcType=INTEGER},
+      `type` = #{type,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
       respcode = #{respcode,jdbcType=VARCHAR},
       trans_amt = #{transAmt,jdbcType=DECIMAL},
@@ -501,7 +501,7 @@
     update ht_transfer_exception_log
     set order_id = #{orderId,jdbcType=VARCHAR},
       recover_id = #{recoverId,jdbcType=INTEGER},
-      `type` = #{type,jdbcType=INTEGER},
+      `type` = #{type,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
       respcode = #{respcode,jdbcType=VARCHAR},
       trans_amt = #{transAmt,jdbcType=DECIMAL},

@@ -3,15 +3,15 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtCommissionConfigMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtCommissionConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="commission_type" property="commissionType" jdbcType="INTEGER" />
-    <result column="user_type" property="userType" jdbcType="INTEGER" />
+    <result column="commission_type" property="commissionType" jdbcType="TINYINT" />
+    <result column="user_type" property="userType" jdbcType="TINYINT" />
     <result column="rate" property="rate" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, commission_type, user_type, rate, `status`, remark, del_flag, create_time, create_user_id, 
-    create_user_name
+    id, commission_type, user_type, rate, `status`, remark, del_flag, create_user_id, 
+    create_user_name, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCommissionConfigExample" >
     select
@@ -114,11 +114,11 @@
     </selectKey>
     insert into ht_debt_commission_config (commission_type, user_type, rate, 
       `status`, remark, del_flag, 
-      create_time, create_user_id, create_user_name
+      create_user_id, create_user_name, create_time
       )
-    values (#{commissionType,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER}, #{rate,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}
+    values (#{commissionType,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, #{rate,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCommissionConfig" >
@@ -145,43 +145,43 @@
       <if test="delFlag != null" >
         del_flag,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
       </if>
       <if test="createUserName != null" >
         create_user_name,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="commissionType != null" >
-        #{commissionType,jdbcType=INTEGER},
+        #{commissionType,jdbcType=TINYINT},
       </if>
       <if test="userType != null" >
-        #{userType,jdbcType=INTEGER},
+        #{userType,jdbcType=TINYINT},
       </if>
       <if test="rate != null" >
         #{rate,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -198,31 +198,31 @@
         id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.commissionType != null" >
-        commission_type = #{record.commissionType,jdbcType=INTEGER},
+        commission_type = #{record.commissionType,jdbcType=TINYINT},
       </if>
       <if test="record.userType != null" >
-        user_type = #{record.userType,jdbcType=INTEGER},
+        user_type = #{record.userType,jdbcType=TINYINT},
       </if>
       <if test="record.rate != null" >
         rate = #{record.rate,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        `status` = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -232,15 +232,15 @@
   <update id="updateByExample" parameterType="map" >
     update ht_debt_commission_config
     set id = #{record.id,jdbcType=INTEGER},
-      commission_type = #{record.commissionType,jdbcType=INTEGER},
-      user_type = #{record.userType,jdbcType=INTEGER},
+      commission_type = #{record.commissionType,jdbcType=TINYINT},
+      user_type = #{record.userType,jdbcType=TINYINT},
       rate = #{record.rate,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      create_user_name = #{record.createUserName,jdbcType=VARCHAR}
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -249,25 +249,22 @@
     update ht_debt_commission_config
     <set >
       <if test="commissionType != null" >
-        commission_type = #{commissionType,jdbcType=INTEGER},
+        commission_type = #{commissionType,jdbcType=TINYINT},
       </if>
       <if test="userType != null" >
-        user_type = #{userType,jdbcType=INTEGER},
+        user_type = #{userType,jdbcType=TINYINT},
       </if>
       <if test="rate != null" >
         rate = #{rate,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        `status` = #{status,jdbcType=TINYINT},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -275,20 +272,23 @@
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtCommissionConfig" >
     update ht_debt_commission_config
-    set commission_type = #{commissionType,jdbcType=INTEGER},
-      user_type = #{userType,jdbcType=INTEGER},
+    set commission_type = #{commissionType,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT},
       rate = #{rate,jdbcType=VARCHAR},
-      `status` = #{status,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_user_name = #{createUserName,jdbcType=VARCHAR}
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

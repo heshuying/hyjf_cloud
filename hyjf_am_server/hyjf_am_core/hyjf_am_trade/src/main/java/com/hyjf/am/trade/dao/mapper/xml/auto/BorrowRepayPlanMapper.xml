@@ -32,8 +32,8 @@
     <result column="delay_days" property="delayDays" jdbcType="INTEGER" />
     <result column="delay_interest" property="delayInterest" jdbcType="DECIMAL" />
     <result column="delay_remark" property="delayRemark" jdbcType="VARCHAR" />
-    <result column="repay_money_source" property="repayMoneySource" jdbcType="INTEGER" />
-    <result column="repay_sms_reminder" property="repaySmsReminder" jdbcType="INTEGER" />
+    <result column="repay_money_source" property="repayMoneySource" jdbcType="TINYINT" />
+    <result column="repay_sms_reminder" property="repaySmsReminder" jdbcType="TINYINT" />
     <result column="auto_repay" property="autoRepay" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
@@ -167,8 +167,8 @@
       #{repayInterestYes,jdbcType=DECIMAL}, #{repayCapitalYes,jdbcType=DECIMAL}, #{repayCapitalWait,jdbcType=DECIMAL}, 
       #{repayInterestWait,jdbcType=DECIMAL}, #{chargeDays,jdbcType=INTEGER}, #{chargeInterest,jdbcType=DECIMAL}, 
       #{lateDays,jdbcType=INTEGER}, #{lateInterest,jdbcType=DECIMAL}, #{delayDays,jdbcType=INTEGER}, 
-      #{delayInterest,jdbcType=DECIMAL}, #{delayRemark,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=INTEGER}, 
-      #{repaySmsReminder,jdbcType=INTEGER}, #{autoRepay,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{delayInterest,jdbcType=DECIMAL}, #{delayRemark,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=TINYINT}, 
+      #{repaySmsReminder,jdbcType=TINYINT}, #{autoRepay,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
       #{repayStatus,jdbcType=TINYINT}, #{advanceStatus,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
@@ -379,10 +379,10 @@
         #{delayRemark,jdbcType=VARCHAR},
       </if>
       <if test="repayMoneySource != null" >
-        #{repayMoneySource,jdbcType=INTEGER},
+        #{repayMoneySource,jdbcType=TINYINT},
       </if>
       <if test="repaySmsReminder != null" >
-        #{repaySmsReminder,jdbcType=INTEGER},
+        #{repaySmsReminder,jdbcType=TINYINT},
       </if>
       <if test="autoRepay != null" >
         #{autoRepay,jdbcType=TINYINT},
@@ -504,10 +504,10 @@
         delay_remark = #{record.delayRemark,jdbcType=VARCHAR},
       </if>
       <if test="record.repayMoneySource != null" >
-        repay_money_source = #{record.repayMoneySource,jdbcType=INTEGER},
+        repay_money_source = #{record.repayMoneySource,jdbcType=TINYINT},
       </if>
       <if test="record.repaySmsReminder != null" >
-        repay_sms_reminder = #{record.repaySmsReminder,jdbcType=INTEGER},
+        repay_sms_reminder = #{record.repaySmsReminder,jdbcType=TINYINT},
       </if>
       <if test="record.autoRepay != null" >
         auto_repay = #{record.autoRepay,jdbcType=TINYINT},
@@ -564,8 +564,8 @@
       delay_days = #{record.delayDays,jdbcType=INTEGER},
       delay_interest = #{record.delayInterest,jdbcType=DECIMAL},
       delay_remark = #{record.delayRemark,jdbcType=VARCHAR},
-      repay_money_source = #{record.repayMoneySource,jdbcType=INTEGER},
-      repay_sms_reminder = #{record.repaySmsReminder,jdbcType=INTEGER},
+      repay_money_source = #{record.repayMoneySource,jdbcType=TINYINT},
+      repay_sms_reminder = #{record.repaySmsReminder,jdbcType=TINYINT},
       auto_repay = #{record.autoRepay,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=TINYINT},
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
@@ -667,10 +667,10 @@
         delay_remark = #{delayRemark,jdbcType=VARCHAR},
       </if>
       <if test="repayMoneySource != null" >
-        repay_money_source = #{repayMoneySource,jdbcType=INTEGER},
+        repay_money_source = #{repayMoneySource,jdbcType=TINYINT},
       </if>
       <if test="repaySmsReminder != null" >
-        repay_sms_reminder = #{repaySmsReminder,jdbcType=INTEGER},
+        repay_sms_reminder = #{repaySmsReminder,jdbcType=TINYINT},
       </if>
       <if test="autoRepay != null" >
         auto_repay = #{autoRepay,jdbcType=TINYINT},
@@ -724,8 +724,8 @@
       delay_days = #{delayDays,jdbcType=INTEGER},
       delay_interest = #{delayInterest,jdbcType=DECIMAL},
       delay_remark = #{delayRemark,jdbcType=VARCHAR},
-      repay_money_source = #{repayMoneySource,jdbcType=INTEGER},
-      repay_sms_reminder = #{repaySmsReminder,jdbcType=INTEGER},
+      repay_money_source = #{repayMoneySource,jdbcType=TINYINT},
+      repay_sms_reminder = #{repaySmsReminder,jdbcType=TINYINT},
       auto_repay = #{autoRepay,jdbcType=TINYINT},
       `status` = #{status,jdbcType=TINYINT},
       repay_status = #{repayStatus,jdbcType=TINYINT},

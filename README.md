@@ -20,7 +20,7 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 ├── hyjf_base                   -- 基础模块
 |   ├── hyjf-common             -- 公共模块 被依赖
 |   ├── hyjf_mybatis_generator  -- mybatis自动生成工具
-|   └── hyjf_ribbon_client      -- 未注册服务访问注册中心基础
+|   └── hyjf_ribbon_client      -- 未注册服务访问注册中心基础 废弃
 ├── hyjf_am_server              -- 原子服务层
 |   ├── hyjf_am_model           -- 原子层统一数据模型 request vo response
 |   ├── hyjf_am_util            -- 原子层工具

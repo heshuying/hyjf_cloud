@@ -145,7 +145,7 @@ public class SynBalanceServiceImpl implements SynBalanceService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:"+account.getUserId());
+            throw new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:"+account.getUserId());
         }
         return true;
     }

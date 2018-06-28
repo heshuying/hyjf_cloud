@@ -11,8 +11,9 @@ import org.springframework.web.client.RestTemplate;
 import com.hyjf.admin.client.UserauthClient;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
-
+import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
+import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
 
 
 /**
@@ -51,11 +52,20 @@ public class UserauthClientImpl implements UserauthClient {
 	}
 
 	@Override
-	public HjhAccedeResponse selectByAssignNidAndUserId(Integer userId) {
+	public HjhAccedeResponse canCancelAuth(Integer userId) {
 		HjhAccedeResponse response = restTemplate.
                 getForEntity("http://AM-TRADE/am-trade/hjhAccede/canCancelAuth/" + userId , HjhAccedeResponse.class).
                 getBody();
 		return response;
+	}
+
+	@Override
+	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest) {
+		AdminUserAuthLogListResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userauth/userauthloglist",adminUserAuthListRequest, AdminUserAuthLogListResponse.class)
+                .getBody();
+
+        return response;
 	}
 
 

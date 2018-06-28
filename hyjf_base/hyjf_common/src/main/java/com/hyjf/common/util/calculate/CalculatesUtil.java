@@ -537,32 +537,4 @@ public class CalculatesUtil {
         return info;
     }
 
-    public static void main(String[] args) {
-        BigDecimal account = new BigDecimal(466000.00);
-        Integer borrowPeriod = 12;
-        BigDecimal apr = new BigDecimal(15);
-        String borrowStyle = STYLE_MONTH;
-        Integer time = (int) (GetDate.str2Timestamp("2015-12-30").getTime() / 1000L);
-        BigDecimal monthRate = new BigDecimal(0.195);
-        BigDecimal monthRateEnd = new BigDecimal(0.15);
-        Integer projectType = 8;
-        InterestInfo info = getInterestInfo(account, borrowPeriod, apr, borrowStyle, time, monthRate, monthRateEnd, projectType,new BigDecimal("0.002"),1463134474);
-        System.out.println("还款总额:" + info.getRepayAccount());
-        System.out.println("还款利息:" + info.getRepayAccountInterest());
-        System.out.println("还款本金:" + info.getRepayAccountCapital());
-        System.out.println("还款时间:" + info.getRepayTime() + "   " + GetDate.formatDate(GetDate.getDate(info.getRepayTime() * 1000L)));
-        System.out.println("管理费:" + info.getFee());
-        if (info.getListMonthly() != null) {
-            int i = 0;
-            for (InterestInfo sub : info.getListMonthly()) {
-                System.out.println("--------------第" + ++i + "期-----------------");
-                System.out.println("还款总额:" + sub.getRepayAccount());
-                System.out.println("还款利息:" + sub.getRepayAccountInterest());
-                System.out.println("还款本金:" + sub.getRepayAccountCapital());
-                System.out.println("还款时间:" + sub.getRepayTime() + "   " + GetDate.formatDate(GetDate.getDate(sub.getRepayTime() * 1000L)));
-                System.out.println("管理费:" + sub.getFee());
-            }
-        }
-    }
-
 }

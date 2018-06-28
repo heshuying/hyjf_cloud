@@ -45,6 +45,9 @@ public class InviteController {
     public WebResult<List<MyInviteListCustomizeVO>> selectMyInviteList(@RequestHeader(value = "token", required = true) String token, Map<String,String> param, HttpServletRequest request){
         WebResult<List<MyInviteListCustomizeVO>> result = new WebResult<List<MyInviteListCustomizeVO>>();
         WebViewUserVO userVO = inviteService.getUsersByToken(token);
+
+        logger.info("获取我的邀请列表开始，userId：{}", userVO.getUserId());
+
         // 请求参数校验
         inviteService.checkForInviteList(param);
 

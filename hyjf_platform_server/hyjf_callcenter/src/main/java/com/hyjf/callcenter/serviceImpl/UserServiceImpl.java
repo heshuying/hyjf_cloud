@@ -1,15 +1,14 @@
 package com.hyjf.callcenter.serviceImpl;
 
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.callcenter.beans.UserBean;
-import com.hyjf.callcenter.client.AmCallcenterBaseClient;
-import com.hyjf.callcenter.service.UserService;
-import com.hyjf.ribbon.EurekaInvokeClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.callcenter.beans.UserBean;
+import com.hyjf.callcenter.client.AmCallcenterBaseClient;
+import com.hyjf.callcenter.service.UserService;
 
 /**
  * @author libin

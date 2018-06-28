@@ -22,7 +22,7 @@ public class CouponRepayMonitor implements Serializable {
 
     private Integer updateUser;
 
-    private Integer delFlg;
+    private Boolean delFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -98,11 +98,11 @@ public class CouponRepayMonitor implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Boolean getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
     }
 }

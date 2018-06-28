@@ -332,46 +332,4 @@ public class RSAKeyUtil {
 			e.printStackTrace();
 		}
 	}
-
-	public static void testGenerateKeys() throws Exception {
-		byte[] keyBytes1 = Hex.decodeHex(
-				"30819f300d06092a864886f70d010101050003818d0030818902818100886a4ba7ad410db5e579244afefa34dbd42dbfa0aa9d9d7079940b95d1b4e8f8f2d598c45ace42fb5ccc15941300d4723f22acc90c222ae5631fe9a4c7e5a6d8cc5333da22404a4fd2ba0dd58e1e77be12b590077e6ac3ee30658619669760036b7721ad6229289b13a6801dfcf55fefa20b43fbdbbfbc3034a15bf9dc8b970f0203010001"
-						.toCharArray());
-		PublicKey publicKey1 = getPublicKey(keyBytes1);
-		System.out.println("PublicKey1: " + new String(Hex.encodeHex(publicKey1.getEncoded())));
-		System.out.println("PublicKey1: " + Base64.encodeBase64String(publicKey1.getEncoded()));
-
-		byte[] keyBytes2 = Base64.decodeBase64(
-				"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDGR1Tvv5OUwUuonkTgqbzN53+4wqB5mr+k6mMFKqUJ7Gu0t22urHBDC27zyARwMf45V/CRoRvmJCQi2VfntEuKkhAiSDjBz3AUuHrcpnSV0d+iGFSQ2IcbWVhI2MoUuWCiGFoRWbsQa5cUjztuXJfakvROcLYNhXTnGlCq83LFmQIDAQAB");
-		PublicKey publicKey2 = getPublicKey(keyBytes2);
-		System.out.println("PublicKey2: " + new String(Hex.encodeHex(publicKey2.getEncoded())));
-		System.out.println("PublicKey2: " + Base64.encodeBase64String(publicKey2.getEncoded()));
-
-		byte[] keyBytes3 = Base64.decodeBase64(
-				"MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMZHVO+/k5TBS6ieROCpvM3nf7jCoHmav6TqYwUqpQnsa7S3ba6scEMLbvPIBHAx/jlX8JGhG+YkJCLZV+e0S4qSECJIOMHPcBS4etymdJXR36IYVJDYhxtZWEjYyhS5YKIYWhFZuxBrlxSPO25cl9qS9E5wtg2FdOcaUKrzcsWZAgMBAAECgYEAsTKEdLJoKPPKMsom0gS/Z+Bwo2TEV4j1pmOV1MM0tTalVt7q1cTjmvc31AO3+7Ch+wtdQjiSH03DQaWtSrQ1IPINOpl22wiA5pS1iHSOJQtCIxqvAwoEs78E5D1/0TUs8O4P1SfZbpMabb0pLgFhtBQWGwvJN6zETSH/jUa1pNUCQQDjCikIh06qGA4Ws2l2H760n5FTzVXZhDMFZSqVEFsJa3ocumbdcQVPFE3eLBv3ysMv15MJ5JbtlpctSf0slrOHAkEA35H/UkNf+lR58nPZ5Wgu7tE3siFsou9RcNxIj2c5w4wj4gqyD8q3g+wZLUtvLZomlfMTn+a0MUz4luB0OC9F3wJALbflDWeZypyvcZjNOtEnqN2c+SAXEocRcxutGHlDq8DtxQ0wG5VfuU3gZEXDmAFHjsG9RTe3wL4bUS5eAfWSzwJBAJP7PCfERtwYXFt6CWlKa35R5261pwW2KI7uj+yzo81mjj3JXJENWiks9oE/pAhoN1AbhArcFrtnOkgLq4Gg8LsCQEKy7soJ4tcYvWED8uKq8x5fPoPHPk2OdJ3G+OVhKx1/yyfUFLjkTeN3+YHAmg89fyb4Yj/lQjPOoUJvonjIp4M=");
-		PrivateKey privateKey = getPrivateKey(keyBytes3);
-		System.out.println("privateKey3: " + new String(Hex.encodeHex(privateKey.getEncoded())));
-		System.out.println("privateKey3: " + Base64.encodeBase64String(privateKey.getEncoded()));
-
-		RSAKeyUtil ru1 = new RSAKeyUtil("certs/credit2go.p12", "credit2go");
-		System.out.println("PublicKey5: " + new String(Hex.encodeHex(ru1.getPublicKey().getEncoded())));
-		System.out.println("PublicKey5: " + Base64.encodeBase64String(ru1.getPublicKey().getEncoded()));
-		System.out.println("privateKey6: " + new String(Hex.encodeHex(ru1.getPrivateKey().getEncoded())));
-		System.out.println("privateKey6: " + Base64.encodeBase64String(ru1.getPrivateKey().getEncoded()));
-
-		RSAKeyUtil ru2 = new RSAKeyUtil(new File("S:/work/dev/openssl/_cedit2go/certs/credit2go.crt"));
-		System.out.println("PublicKey7: " + new String(Hex.encodeHex(ru2.getPublicKey().getEncoded())));
-		System.out.println("PublicKey7: " + Base64.encodeBase64String(ru2.getPublicKey().getEncoded()));
-	}
-
-	public static void main(String[] args) {
-		try {
-			// getPrivateKey("certs/credit2go.p12","pwd");
-			testGenerateKeyPair();
-			testGenerateKeys();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }

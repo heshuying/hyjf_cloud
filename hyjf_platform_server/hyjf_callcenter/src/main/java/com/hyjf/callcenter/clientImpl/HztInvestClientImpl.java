@@ -2,6 +2,7 @@ package com.hyjf.callcenter.clientImpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,7 +10,6 @@ import com.hyjf.am.response.callcenter.CallcenterHztInvestResponse;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.vo.callcenter.CallcenterHztInvestVO;
 import com.hyjf.callcenter.client.HztInvestClient;
-import com.hyjf.ribbon.EurekaInvokeClient;
 
 /**
  * @author libin
@@ -17,7 +17,8 @@ import com.hyjf.ribbon.EurekaInvokeClient;
  */
 @Service
 public class HztInvestClientImpl implements HztInvestClient{
-	private RestTemplate restTemplate = EurekaInvokeClient.getInstance().buildRestTemplate();
+	@Autowired
+	private RestTemplate restTemplate;
 	@Override
 	public List<CallcenterHztInvestVO> selectBorrowInvestList(CallcenterHztInvestRequest callcenterHztInvestRequest) {
 		CallcenterHztInvestResponse callcenterHztInvestResponse = restTemplate
