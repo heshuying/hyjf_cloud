@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowApicronMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayPlanMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.HjhDebtDetailCustomizeMapper;
@@ -33,4 +34,7 @@ public class CustomizeMapper extends AutoMapper {
 
     @Resource
     protected RepayManageCustomizeMapper repayManageCustomizeMapper;
+
+    @Autowired
+    protected BatchUserPortraitQueryCustomizeMapper batchUserPortraitQueryCustomizeMapper;
 }

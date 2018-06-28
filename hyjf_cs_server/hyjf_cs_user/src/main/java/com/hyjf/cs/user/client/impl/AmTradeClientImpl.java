@@ -4,8 +4,10 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -57,6 +59,16 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .getForEntity("http://AM-TRADE/am-trade/borrow/selectRecentPaymentList/" + userId, RecentPaymentListCustomizeResponse.class)
                 .getBody();
         if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(String userIds) {
+        String url = "http://AM-TRADE/am-trade/batch/searchUserPortraitList/" + userIds;
+        BatchUserPortraitQueryResponse response = restTemplate.getForEntity(url, BatchUserPortraitQueryResponse.class).getBody();
+        if(response != null){
             return response.getResultList();
         }
         return null;
