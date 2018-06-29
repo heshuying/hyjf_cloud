@@ -44,4 +44,6 @@ public interface BankCreditTenderClient {
 	List<CreditTenderVO> getCreditTenderList(CreditTenderRequest request);
 
     List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String,Object> params);
+
+    List<TenderToCreditDetailCustomizeVO> selectHJHWebCreditTenderDetail(Map<String,Object> params);
 }

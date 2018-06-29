@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 
@@ -34,4 +35,11 @@ public interface HjhDebtCreditClient {
      * @return
      */
     List<HjhDebtCreditTenderVO> selectHjhCreditTenderListByAssignOrderId(String assignNid);
+
+    /**
+     * 获取债转信息
+     * @param request1
+     * @return
+     */
+    List<HjhDebtCreditVO> getHjhDebtCreditList(HjhDebtCreditRequest request1);
 }

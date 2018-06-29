@@ -20,6 +20,8 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
 
+import javax.validation.Valid;
+
 /**
  * 债转投资异常client实现类
  * @author jun
@@ -191,6 +193,16 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
         TenderToCreditDetailCustomizeResponse response = restTemplate.postForEntity(url, params, TenderToCreditDetailCustomizeResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<TenderToCreditDetailCustomizeVO> selectHJHWebCreditTenderDetail(Map<String, Object> params) {
+        String url  = "http://AM-TRADE/am-trade/creditTender/selectHJHWebCreditTenderDetail";
+        TenderToCreditDetailCustomizeResponse response = restTemplate.postForEntity(url,params,TenderToCreditDetailCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResultList();
         }
         return null;
     }
