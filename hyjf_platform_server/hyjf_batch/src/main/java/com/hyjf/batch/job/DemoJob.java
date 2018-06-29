@@ -18,7 +18,7 @@ public class DemoJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("demoJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MARKET/batch/demo", String.class);
+        restTemplate.getForEntity("http://CS-MARKET/batch/transactiondemo", String.class);
         logger.info("demoJob execute end...");
     }
 }

@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.demo;
+package com.hyjf.am.trade.controller.transactiondemo;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.Account;

@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.demo;
+package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
 import org.apache.rocketmq.client.exception.MQBrokerException;
