@@ -5,11 +5,13 @@ package com.hyjf.am.user.mq;
 
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.springframework.stereotype.Component;
 
 /**
  * @author zhangqingqing
  * @version CrmBankOpenMessageProducer, v0.1 2018/6/28 14:23
  */
+@Component
 public class CrmBankOpenMessageProducer extends Producer {
     @Override
     protected Producer.ProducerFieldsWrapper getFieldsWrapper() {

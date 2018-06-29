@@ -67,4 +67,3 @@ public class AssetListServiceImpl implements AssetListService {
 		return sum;
 	}
 }
-

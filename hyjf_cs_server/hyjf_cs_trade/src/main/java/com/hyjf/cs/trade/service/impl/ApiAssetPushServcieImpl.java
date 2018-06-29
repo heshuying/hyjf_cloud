@@ -51,7 +51,7 @@ import java.util.UUID;
 @Service
 public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements ApiAssetPushService {
 
-    private Logger _log = LoggerFactory.getLogger(ApiAssetPushServcieImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ApiAssetPushServcieImpl.class);
 
     private static final Long MAX_ASSET_MONEY = 1000000L;
 
@@ -73,7 +73,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         try {
             autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
-            _log.error("自动录标发送消息失败...", e);
+            logger.error("自动录标发送消息失败...", e);
         }
     }
 
@@ -85,7 +85,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         // 查看机构表是否存在
         HjhAssetBorrowTypeVO assetBorrow = apiAssetClient.selectAssetBorrowType(pushRequestBean.getInstCode(), pushRequestBean.getAssetType());
         if (assetBorrow == null) {
-            _log.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------机构编号不存在");
+            logger.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------机构编号不存在");
             return resultBean;
         }
 
@@ -100,12 +100,12 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
             }
             if (assets.size() > 1000) {
                 resultBean.setStatusDesc("请求参数过长");
-                _log.error("------请求参数过长-------");
+                logger.error("------请求参数过长-------");
                 return resultBean;
             }
 
         } catch (Exception e) {
-            _log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             return resultBean;
         }
 
@@ -165,7 +165,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
                 //校验还款方式
                 if (!checkIsMonthStyle(pushBean.getBorrowStyle(), pushBean.getIsMonth()) || !checkBorrowStyle(projectRepays, pushBean.getBorrowStyle())) {
-                    _log.info(pushRequestBean.getInstCode() + " 还款方式不正确 " + projectRepays);
+                    logger.info(pushRequestBean.getInstCode() + " 还款方式不正确 " + projectRepays);
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000005);
                     pushBean.setRetMsg("不支持这种还款方式");
                     continue;
@@ -241,7 +241,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 BeanUtils.copyProperties(record, pushBean);
                 // 性别,如果没传，用身份证的
                 String idCard = pushBean.getIdcard();
-                int sexInt = Integer.parseInt(idCard.substring(16, 17));// 性别
+                // 性别
+                int sexInt = Integer.parseInt(idCard.substring(16, 17));
                 if (sexInt % 2 == 0) {
                     sexInt = 2;
                 } else {
@@ -261,14 +262,17 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 record.setMobile(users.getMobile());
 
                 // 状态
-                record.setVerifyStatus(1);// 默认审核通过
+                // 默认审核通过
+                record.setVerifyStatus(1);
                 record.setStatus(0);
 
-                int nowTime = GetDate.getNowTime10(); // 当前时间
+                // 当前时间
+                int nowTime = GetDate.getNowTime10();
                 record.setRecieveTime(nowTime);
                 record.setCreateTime(nowTime);
                 record.setUpdateTime(nowTime);
-                record.setCreateUserId(1);// 默认系统用户
+                // 默认系统用户
+                record.setCreateUserId(1);
                 record.setUpdateUserId(1);
 
                 // 受托支付
@@ -303,7 +307,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
             } catch (Exception e) {
                 // ZT000008
-                _log.error(e.getMessage(), e);
+                logger.error(e.getMessage(), e);
                 if (e instanceof DuplicateKeyException) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
                     pushBean.setRetMsg("资产已入库");
@@ -314,20 +318,20 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
             }
         }
 
-        _log.info(pushRequestBean.getInstCode()+" 结束推送资产");
+        logger.info(pushRequestBean.getInstCode()+" 结束推送资产");
 
         //商家信息未解析版
-        _log.info("----------------商家信息导入开始-----------------------");
+        logger.info("----------------商家信息导入开始-----------------------");
         List<InfoBean> riskInfo = pushRequestBean.getRiskInfo();
         if (Validator.isNotNull(riskInfo)) {
             if (riskInfo.size() > 1000) {
                 resultBean.setStatusDesc("商家信息数量超限");
-                _log.error("------------商家信息数量超限-----------");
+                logger.error("------------商家信息数量超限-----------");
                 return resultBean;
             }
             this.apiAssetClient.insertRiskInfo(riskInfo);
         }
-        _log.info("----------------商家信息导入完成-----------------------");
+        logger.info("----------------商家信息导入完成-----------------------");
 
         resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
         resultBean.setStatusDesc("请求成功");
@@ -346,7 +350,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
         List<HjhLabelVO> list = autoSendClient.seleHjhLabel(borrowVO.getBorrowStyle());
         if (list != null && list.size() <= 0) {
-            _log.info(borrowVO.getBorrowStyle()+" 该原始标还款方式 没有一个标签");
+            logger.info(borrowVO.getBorrowStyle()+" 该原始标还款方式 没有一个标签");
             return resultLabel;
         }
         // continue过滤输入了但是不匹配的标签，如果找到就是第一个
@@ -487,7 +491,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
             autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_RECORD_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             e.printStackTrace();
-            _log.error("自动备案送消息失败...", e);
+            logger.error("自动备案送消息失败...", e);
         }
     }
 

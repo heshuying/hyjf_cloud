@@ -30,4 +30,3 @@ public interface AssetListService {
 	// 列总计
 	BigDecimal sumAccount(AssetListRequest request);
 }
-
