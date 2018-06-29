@@ -712,6 +712,18 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 我的邀请记录数
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public int selectMyInviteCount(MyInviteListRequest requestBean) {
+		int count = restTemplate
+				.postForEntity("http://AM-USER//am-user/invite/myInviteCount", requestBean, Integer.class).getBody();
+		return count;
+	}
+
+	/**
 	 * 查询同步银行卡号
 	 * @param flag
 	 * @return

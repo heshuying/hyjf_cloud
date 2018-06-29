@@ -19,12 +19,9 @@ import java.util.Map;
  */
 @Service
 public class InviteServiceImpl extends BaseUserServiceImpl implements InviteService {
-    @Autowired
-    AmUserClient amUserClient;
 
     /**
      * 邀请列表请求校验
-     * @param param
      */
     @Override
     public void checkForInviteList(Map<String, String> param){
@@ -49,6 +46,16 @@ public class InviteServiceImpl extends BaseUserServiceImpl implements InviteServ
         requestBean.setLimitStart(limitStart);
         requestBean.setLimitEnd(limitEnd);
         return amUserClient.selectMyInviteList(requestBean);
+    }
+
+    /**
+     * 我的邀请记录总数
+     */
+    @Override
+    public Integer selectMyInviteCount(String userId){
+        MyInviteListRequest requestBean = new MyInviteListRequest();
+        requestBean.setUserId(userId);
+        return amUserClient.selectMyInviteCount(requestBean);
     }
 
 }

@@ -31,10 +31,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	Logger logger = LoggerFactory.getLogger(BaseUserServiceImpl.class);
 
 	@Autowired
-	AmUserClient amUserClient;
+	public AmUserClient amUserClient;
 
 	@Autowired
-	SystemConfig systemConfig;
+	public SystemConfig systemConfig;
 
 	@Override
 	public boolean existUser(String mobile) {

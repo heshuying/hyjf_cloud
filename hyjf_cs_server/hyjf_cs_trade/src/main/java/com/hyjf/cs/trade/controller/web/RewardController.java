@@ -54,14 +54,19 @@ public class RewardController {
         rewardService.checkForRewardList(param);
 
         Page page = Page.initPage(Integer.parseInt(param.get("currPage")), Integer.parseInt(param.get("pageSize")));
+        Integer rewardCount = rewardService.selectMyRewardCount(String.valueOf(userVO.getUserId()));
+        page.setTotal(rewardCount);
 
         try {
             List<MyRewardRecordCustomizeVO> resultList = rewardService.selectMyRewardList(String.valueOf(userVO.getUserId()), page.getOffset(), page.getLimit());
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取我的奖励列表异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
         }
 
+        result.setPage(page);
         return result;
     }
 }
