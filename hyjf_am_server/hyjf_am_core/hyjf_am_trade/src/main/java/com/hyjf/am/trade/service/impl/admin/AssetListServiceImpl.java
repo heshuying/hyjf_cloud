@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.impl.admin;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -19,18 +20,24 @@ import com.hyjf.common.cache.CacheUtil;
  */
 @Service
 public class AssetListServiceImpl implements AssetListService{
-	
-    @Autowired
-    private AssetListServiceCustomizeMapper assetListServiceCustomizeMapper;
+
+	@Autowired
+	private AssetListServiceCustomizeMapper assetListServiceCustomizeMapper;
 
 	@Override
-	public List<AssetListCustomizeVO> findAssetList(AssetListRequest request) {
-		
-		List<AssetListCustomizeVO> list = assetListServiceCustomizeMapper.queryAssetList(request);
+	public List<AssetListCustomizeVO> findAssetList(Map<String, Object> mapParam,int limitStart, int limitEnd) {
+		// 封装查询条件
+		if (limitStart == 0 || limitStart > 0) {
+			mapParam.put("limitStart", limitStart);
+		}
+		if (limitEnd > 0) {
+			mapParam.put("limitEnd", limitEnd);
+		}
+		List<AssetListCustomizeVO> list = assetListServiceCustomizeMapper.queryAssetList(mapParam);
 		if(!CollectionUtils.isEmpty(list)){
-	        Map<String, String> assetStatusMap = CacheUtil.getParamNameMap("ASSET_STATUS");
-	        Map<String, String> assetApplyStatusMap = CacheUtil.getParamNameMap("ASSET_APPLY_STATUS");
-	        Map<String, String> accountStatusMap = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+			Map<String, String> assetStatusMap = CacheUtil.getParamNameMap("ASSET_STATUS");
+			Map<String, String> assetApplyStatusMap = CacheUtil.getParamNameMap("ASSET_APPLY_STATUS");
+			Map<String, String> accountStatusMap = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
 			for(AssetListCustomizeVO assetListCustomizeVO : list){
 				assetListCustomizeVO.setStatus(assetStatusMap.getOrDefault(assetListCustomizeVO.getStatus(),null));
 				assetListCustomizeVO.setVerifyStatus(assetApplyStatusMap.getOrDefault(assetListCustomizeVO.getVerifyStatus(),null));
@@ -41,7 +48,18 @@ public class AssetListServiceImpl implements AssetListService{
 	}
 
 	@Override
-	public AssetDetailCustomizeVO findDetailById(String assetId, String instCode) {
-		return assetListServiceCustomizeMapper.selectAssetDetail(assetId, instCode);
+	public AssetDetailCustomizeVO findDetailById(Map<String, Object> mapParam) {
+		return assetListServiceCustomizeMapper.selectAssetDetail(mapParam);
+	}
+
+	@Override
+	public Integer getRecordCount(AssetListRequest request) {
+		return assetListServiceCustomizeMapper.countAssetList(request);
+	}
+
+	@Override
+	public BigDecimal getSumAccount(AssetListRequest request) {
+		return assetListServiceCustomizeMapper.getSumAccount(request);
 	}
 }
+

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface AssetManageService {
     List<RepayMentPlanListCustomize> selectRepayMentPlanList(AssetManageBeanRequest request);
 
     int countRepayMentPlanTotal(AssetManageBeanRequest request);
+
+    List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 }
