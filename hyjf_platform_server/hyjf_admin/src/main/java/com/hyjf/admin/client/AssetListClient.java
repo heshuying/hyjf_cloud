@@ -13,7 +13,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
  */
 public interface AssetListClient {
     /**
-     * 资产来源
+     * 资产来源lb
      * @param request
      * @return
      */

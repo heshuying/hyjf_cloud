@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.bean.fdd.fddgeneratecontract;
+package com.hyjf.cs.trade.bean.fdd;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
