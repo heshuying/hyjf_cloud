@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -104,7 +105,7 @@ public class BorrowCreditExpiresController {
                         new SmsMessage(borrowCreditVO.getCreditUserId(), param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                                 CustomConstants.PARAM_TPL_ZZBFZRCG, CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,JSON.toJSONBytes(smsMessage)));
+                    smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("债转部分转让发送短信失败：userId:"+borrowCreditVO.getCreditUserId()+",trueName:"+userInfo.getTruename(), e);
                 }
@@ -116,14 +117,14 @@ public class BorrowCreditExpiresController {
                         new SmsMessage(borrowCreditVO.getCreditUserId(), param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                                 CustomConstants.PARAM_TPL_ZZDQ, CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,JSON.toJSONBytes(smsMessage)));
+                    smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("债转0转让发送短信失败：userId:"+borrowCreditVO.getCreditUserId()+",trueName:"+userInfo.getTruename(), e);
                 }
             }
             AppMsMessage appMsMessage = new AppMsMessage(borrowCreditVO.getCreditUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
             try {
-                appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, JSON.toJSONBytes(appMsMessage)));
+                appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
             } catch (MQException e) {
                 logger.error("债转转让结束发送消息失败：userId:"+borrowCreditVO.getCreditUserId()+",trueName:"+userInfo.getTruename(), e);
             }

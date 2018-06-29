@@ -38,7 +38,8 @@ public class UserauthServiceImpl  implements UserauthService {
 	 * 
 	 * @return
 	 */
-	public List<AdminUserAuthListCustomize> getRecordList(Map<String, Object> authUser, int limitStart, int limitEnd) {
+	@Override
+    public List<AdminUserAuthListCustomize> getRecordList(Map<String, Object> authUser, int limitStart, int limitEnd) {
 
 		if (limitStart == 0 || limitStart > 0) {
 			authUser.put("limitStart", limitStart);

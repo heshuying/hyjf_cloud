@@ -802,7 +802,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 AppMsMessage appMsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
                 try {
                     appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
-                            JSON.toJSONBytes(appMsMessage)));
+                            UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
                 } catch (MQException e) {
                     logger.error("计划进入锁定期发送消息通知失败...", e);
                 }
@@ -856,7 +856,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
                 try {
                     appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
-                            JSON.toJSONBytes(smsMessage)));
+                            UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("计划进入锁定期发送消息通知失败...", e);
                 }
@@ -912,7 +912,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+            smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                     JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
             logger.error("计划进入锁定期发送短信通知失败...", e);
@@ -1005,7 +1005,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 }
                 AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
                 try {
-                    appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+                    appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),
                             JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("计划退出推送消息通知失败...", e);
@@ -1051,7 +1051,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+            smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                     JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
             logger.error("计划还款成功发送短信通知失败...", e);

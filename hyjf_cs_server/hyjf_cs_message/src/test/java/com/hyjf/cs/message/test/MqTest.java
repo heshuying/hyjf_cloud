@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.UUID;
+
 /**
  * @author xiasq
  * @version MqTest, v0.1 2018/5/8 16:31
@@ -34,7 +36,7 @@ public class MqTest {
         MailMessage mailMessage = new MailMessage(399044, null, "邮件主题aaa", "12345,上山打老虎",  null, null, null, MessageConstant.MAIL_SEND_FOR_USER);
 
         // 发送
-        mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));
+        mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
 
     }
 

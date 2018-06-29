@@ -1063,7 +1063,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @param date
 	 * @return
 	 */
-	public static Date getDayStart10(Date date){
+	public static Date getDayStartOfSomeDay(Date date){
 	    String dayStartString = date_sdf.format(date) + " 00:00:00";
 	    SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date2 = null;

@@ -84,10 +84,12 @@ public class RegisterVO extends BaseBean{
         this.utmId = utmId;
     }
 
+    @Override
     public String getInstCode() {
         return instCode;
     }
 
+    @Override
     public void setInstCode(String instCode) {
         this.instCode = instCode;
     }

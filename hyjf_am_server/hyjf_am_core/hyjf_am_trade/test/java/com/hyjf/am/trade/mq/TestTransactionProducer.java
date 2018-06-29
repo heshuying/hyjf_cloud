@@ -17,6 +17,8 @@ import com.hyjf.am.trade.mq.transactionmq.TransactionProducer;
 import com.hyjf.am.trade.service.UserService;
 import com.hyjf.common.exception.MQException;
 
+import java.util.UUID;
+
 /**
  * @author xiasq
  * @version TestTransactionProducer, v0.1 2018/6/26 14:57
@@ -39,7 +41,7 @@ public class TestTransactionProducer {
 	public void testCommintTransaction() throws MQException {
 		logger.info("testCommintTransaction begin...");
 
-		accountTProducer.messageSend(new TransactionProducer.MassageContent("userTransationTest", JSON.toJSONBytes("25")));
+		accountTProducer.messageSend(new TransactionProducer.MassageContent("userTransationTest", UUID.randomUUID().toString(),JSON.toJSONBytes("25")));
 		logger.info("第2步，发送mq消息...");
 	}
 

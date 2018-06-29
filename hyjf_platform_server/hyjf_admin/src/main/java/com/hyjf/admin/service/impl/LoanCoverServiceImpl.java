@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,15 @@ public class LoanCoverServiceImpl implements LoanCoverService {
      */
     @Override
     public List<LoanCoverUserVO> selectUserMemberList(LoanCoverUserRequest request){
-        return loanCoverClient.selectUserMemberList(request);
+        List<LoanCoverUserVO> loanCoverUserVOList = loanCoverClient.selectUserMemberList(request);
+        SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(null!=loanCoverUserVOList&&loanCoverUserVOList.size()>0){
+            for(LoanCoverUserVO loanCoverUserVO :loanCoverUserVOList){
+                loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
+                loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
+            }
+        }
+        return loanCoverUserVOList;
     }
     /**
      * 保存记录
@@ -76,7 +85,7 @@ public class LoanCoverServiceImpl implements LoanCoverService {
         JSONObject result = new JSONObject();
         if(StringUtils.isNotBlank(mapParam.get("id").toString())){
             LoanCoverUserVO loanCoverUserVO = loanCoverClient.selectIsExistsRecordById(mapParam.get("id").toString());
-            if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&&loanCoverUserVO.getStatus().equals("success")) {
+            if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&& "success".equals(loanCoverUserVO.getStatus())) {
                 if (!loanCoverUserVO.getMobile().equals(mapParam.get("mobile"))) {
                     DzqzCallBean bean = new DzqzCallBean();
                     bean.setUserId(0);

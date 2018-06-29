@@ -229,6 +229,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 开户失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 开户失败   将开户记录状态改为4
+            // TODO: 2018/6/21  记录失败原因
             // 查询失败原因
             String retMsg = bean.getRetMsg();
             BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);

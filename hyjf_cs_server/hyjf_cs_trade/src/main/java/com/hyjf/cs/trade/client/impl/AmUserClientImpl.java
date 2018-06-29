@@ -61,7 +61,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CorpOpenAccountRecordVO selectCorpOpenAccountRecordByUserId(Integer userId) {
 		CorpOpenAccountRecordResponse response = restTemplate
-				.getForEntity(urlBase + "corpOpenAccountRecord/findByUserId/" + userId, CorpOpenAccountRecordResponse.class).getBody();
+				.getForEntity(urlBase + "bankopen/getCorpOpenAccountRecord/" + userId, CorpOpenAccountRecordResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -330,6 +330,15 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	/**
+	 * 通过userID获得CA认证的客户ID
+	 */
+	@Override
+	public String getCustomerIDByUserID(Integer userId, String code) {
+		String url ="http://AM-USER/am-user/user/getCustomerIDByUserID/"+userId+"/"+code;
+		return restTemplate.getForEntity(url, String.class).getBody();
 	}
 
 

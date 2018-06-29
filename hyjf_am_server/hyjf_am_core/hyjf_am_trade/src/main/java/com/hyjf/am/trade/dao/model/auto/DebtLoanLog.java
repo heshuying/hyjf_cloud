@@ -23,15 +23,13 @@ public class DebtLoanLog implements Serializable {
 
     private String remark;
 
+    private String operator;
+
+    private String addIp;
+
     private Date createTime;
 
     private Date updateTime;
-
-    private String operator;
-
-    private String addtime;
-
-    private String addIp;
 
     private static final long serialVersionUID = 1L;
 
@@ -107,6 +105,22 @@ public class DebtLoanLog implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator == null ? null : operator.trim();
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -121,29 +135,5 @@ public class DebtLoanLog implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
-    }
-
-    public String getAddtime() {
-        return addtime;
-    }
-
-    public void setAddtime(String addtime) {
-        this.addtime = addtime == null ? null : addtime.trim();
-    }
-
-    public String getAddIp() {
-        return addIp;
-    }
-
-    public void setAddIp(String addIp) {
-        this.addIp = addIp == null ? null : addIp.trim();
     }
 }

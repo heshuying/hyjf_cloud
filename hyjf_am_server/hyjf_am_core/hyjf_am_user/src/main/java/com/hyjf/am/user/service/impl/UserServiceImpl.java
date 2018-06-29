@@ -35,10 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -448,7 +445,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		account.setPlanRepayInterest(BigDecimal.ZERO);
 		account.setVersion(BigDecimal.ZERO);
 		logger.info("注册插入account：{}", JSON.toJSONString(account));
-		accountProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_TOPIC, JSON.toJSONBytes(account)));
+		accountProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(account)));
 	}
 
 	/**
@@ -516,7 +513,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		userLog.setEvent("register");
 		userLog.setContent("注册成功");
 		logger.info("注册插入userLog：{}", JSON.toJSONString(userLog));
-		usersLogMapper.insertSelective(userLog);
+		userLogMapper.insertSelective(userLog);
 	}
 
 	/**
@@ -778,8 +775,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		BeanUtils.copyProperties(record, contact);
 		contact.setCreateTime(GetDate.getNowTime());
 		contact.setUpdateTime(GetDate.getNowTime());
-		UserContactMapper.deleteByPrimaryKey(record.getUserId());
-		return UserContactMapper.insert(contact);
+		userContactMapper.deleteByPrimaryKey(record.getUserId());
+		return userContactMapper.insert(contact);
 	}
 
 	/**
@@ -794,7 +791,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		if(userId == null) {
 			return null;
 		}
-		UserContact result = UserContactMapper.selectByPrimaryKey(userId);
+		UserContact result = userContactMapper.selectByPrimaryKey(userId);
 		return result;
 	}
 

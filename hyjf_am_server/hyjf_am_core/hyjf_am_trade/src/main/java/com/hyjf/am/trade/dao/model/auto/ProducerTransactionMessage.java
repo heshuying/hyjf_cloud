@@ -12,9 +12,13 @@ public class ProducerTransactionMessage implements Serializable {
 
     private Integer messageStatus;
 
-    private Integer sendTimes;
+    private Integer retryTimes;
 
     private String topic;
+
+    private String tags;
+
+    private String keys;
 
     private Date createTime;
 
@@ -54,12 +58,12 @@ public class ProducerTransactionMessage implements Serializable {
         this.messageStatus = messageStatus;
     }
 
-    public Integer getSendTimes() {
-        return sendTimes;
+    public Integer getRetryTimes() {
+        return retryTimes;
     }
 
-    public void setSendTimes(Integer sendTimes) {
-        this.sendTimes = sendTimes;
+    public void setRetryTimes(Integer retryTimes) {
+        this.retryTimes = retryTimes;
     }
 
     public String getTopic() {
@@ -68,6 +72,22 @@ public class ProducerTransactionMessage implements Serializable {
 
     public void setTopic(String topic) {
         this.topic = topic == null ? null : topic.trim();
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags == null ? null : tags.trim();
+    }
+
+    public String getKeys() {
+        return keys;
+    }
+
+    public void setKeys(String keys) {
+        this.keys = keys == null ? null : keys.trim();
     }
 
     public Date getCreateTime() {

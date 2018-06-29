@@ -10,9 +10,9 @@ public class CouponOperationHistory implements Serializable {
 
     private Integer operationCode;
 
-    private Date createTime;
-
     private Integer createUserId;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -40,19 +40,19 @@ public class CouponOperationHistory implements Serializable {
         this.operationCode = operationCode;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getCreateUserId() {
         return createUserId;
     }
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

@@ -11,12 +11,10 @@ import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
-import com.hyjf.am.user.service.BankOpenService;
 import com.hyjf.am.user.service.UserManagerService;
 import com.hyjf.am.user.service.callcenter.CallCenterBankService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,8 +46,6 @@ public class UserManagerController {
     private UserManagerService userManagerService;
     @Autowired
     private CallCenterBankService callCenterBankService;
-    @Autowired
-    private BankOpenService bankOpenService;
     private static Logger logger = LoggerFactory.getLogger(UserManagerController.class);
 
     /**
@@ -160,8 +156,7 @@ public class UserManagerController {
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
             CorpOpenAccountRecordVO corpOpenAccountRecordVO = null;
-           // CorpOpenAccountRecord corpOpenAccountRecord = userManagerService.selectCorpOpenAccountRecordByUserId(intUserId);
-            CorpOpenAccountRecord corpOpenAccountRecord = bankOpenService.getCorpOpenAccountRecord(intUserId);
+            CorpOpenAccountRecord corpOpenAccountRecord = userManagerService.selectCorpOpenAccountRecordByUserId(intUserId);
             if (null != corpOpenAccountRecord) {
                 BeanUtils.copyProperties(corpOpenAccountRecord, corpOpenAccountRecordVO);
                 response.setResult(corpOpenAccountRecordVO);
@@ -469,8 +464,8 @@ public class UserManagerController {
         String whereFlag = "0";
         for (Map.Entry<String, Object> entry : user.entrySet()) {
             // key!=whereFlag,limitStart,limitEnd时
-            if (!(entry.getKey().equals("whereFlag") || entry.getKey().equals("limitStart")
-                    || entry.getKey().equals("limitEnd"))) {
+            if (!("whereFlag".equals(entry.getKey()) || "limitStart".equals(entry.getKey())
+                    || "limitEnd".equals(entry.getKey()))) {
                 if (entry.getValue() != null) {
                     // 有limit外的检索条件
                     whereFlag = "1";
@@ -495,13 +490,13 @@ public class UserManagerController {
             mapParam.put("userId",request.getUserId());
             //mapParam.put("changeType",request.getChangeType());
         }
-        List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
+       /* List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
         if (!CollectionUtils.isEmpty(userChangeLogsList)) {
             List<UserChangeLogVO> userChangeLogVOList = CommonUtils.convertBeanList(userChangeLogsList, UserChangeLogVO.class);
             response.setResultList(userChangeLogVOList);
             response.setCount(userChangeLogsList.size());
             returnCode = Response.SUCCESS;
-        }
+        }*/
         response.setRtn(returnCode);//代表成功
         return response;
     }
@@ -549,8 +544,8 @@ public class UserManagerController {
         return response;
     }
 
-    @RequestMapping("/selectSpreadsUsersByUserId/{userId}")
-    public SpreadsUserResponse selectSpreadsUsersByUserId(@PathVariable String userId){
+    @RequestMapping("/selectSpreadsUsersByUserId")
+    public SpreadsUserResponse selectSpreadsUsersByUserId(@Valid String userId){
         SpreadsUserResponse response = new SpreadsUserResponse();
         String returnCode = Response.FAIL;
         if(StringUtils.isNotEmpty(userId)){

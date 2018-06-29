@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -20,4 +21,8 @@ public interface AmTradeClient {
     AccountVO getAccount(Integer userId);
 
     List<RecentPaymentListCustomizeVO> selectRecentPaymentList(Integer userId);
+    /**
+     * 根据userId获得填充userPortrait的info --用户画像定时任务用
+     * */
+    List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(String userIds);
 }

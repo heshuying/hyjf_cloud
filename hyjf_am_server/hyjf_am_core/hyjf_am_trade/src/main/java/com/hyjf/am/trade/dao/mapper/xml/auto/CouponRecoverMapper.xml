@@ -22,11 +22,11 @@
     <result column="recover_type" property="recoverType" jdbcType="TINYINT" />
     <result column="notice_flg" property="noticeFlg" jdbcType="TINYINT" />
     <result column="exp_time" property="expTime" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -90,8 +90,8 @@
     id, tender_id, transfer_id, recover_status, received_flg, recover_period, transfer_time, 
     recover_time, recover_yestime, main_recover_yestime, recover_interest, recover_interest_yes, 
     recover_account, recover_account_yes, recover_capital, recover_capital_yes, current_recover_flg, 
-    recover_type, notice_flg, exp_time, create_time, create_user_id, update_time, update_user_id, 
-    del_flag
+    recover_type, notice_flg, exp_time, del_flag, create_user_id, update_user_id, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecoverExample" >
     select
@@ -136,8 +136,8 @@
       recover_interest, recover_interest_yes, recover_account, 
       recover_account_yes, recover_capital, recover_capital_yes, 
       current_recover_flg, recover_type, notice_flg, 
-      exp_time, create_time, create_user_id, 
-      update_time, update_user_id, del_flag
+      exp_time, del_flag, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{tenderId,jdbcType=VARCHAR}, #{transferId,jdbcType=VARCHAR}, #{recoverStatus,jdbcType=TINYINT}, 
       #{receivedFlg,jdbcType=TINYINT}, #{recoverPeriod,jdbcType=INTEGER}, #{transferTime,jdbcType=INTEGER}, 
@@ -145,8 +145,8 @@
       #{recoverInterest,jdbcType=DECIMAL}, #{recoverInterestYes,jdbcType=DECIMAL}, #{recoverAccount,jdbcType=DECIMAL}, 
       #{recoverAccountYes,jdbcType=DECIMAL}, #{recoverCapital,jdbcType=DECIMAL}, #{recoverCapitalYes,jdbcType=DECIMAL}, 
       #{currentRecoverFlg,jdbcType=TINYINT}, #{recoverType,jdbcType=TINYINT}, #{noticeFlg,jdbcType=TINYINT}, 
-      #{expTime,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}
+      #{expTime,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRecover" >
@@ -212,20 +212,20 @@
       <if test="expTime != null" >
         exp_time,
       </if>
-      <if test="createTime != null" >
-        create_time,
+      <if test="delFlag != null" >
+        del_flag,
       </if>
       <if test="createUserId != null" >
         create_user_id,
       </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
       <if test="updateUserId != null" >
         update_user_id,
       </if>
-      <if test="delFlag != null" >
-        del_flag,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -286,20 +286,20 @@
       <if test="expTime != null" >
         #{expTime,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="delFlag != null" >
-        #{delFlag,jdbcType=TINYINT},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -372,20 +372,20 @@
       <if test="record.expTime != null" >
         exp_time = #{record.expTime,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
-      </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -414,11 +414,11 @@
       recover_type = #{record.recoverType,jdbcType=TINYINT},
       notice_flg = #{record.noticeFlg,jdbcType=TINYINT},
       exp_time = #{record.expTime,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      del_flag = #{record.delFlag,jdbcType=TINYINT}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -483,20 +483,20 @@
       <if test="expTime != null" >
         exp_time = #{expTime,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
-      <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=TINYINT},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -522,11 +522,11 @@
       recover_type = #{recoverType,jdbcType=TINYINT},
       notice_flg = #{noticeFlg,jdbcType=TINYINT},
       exp_time = #{expTime,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      del_flag = #{delFlag,jdbcType=TINYINT}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -7,11 +7,11 @@
     <result column="week" property="week" jdbcType="VARCHAR" />
     <result column="interest_wait_total" property="interestWaitTotal" jdbcType="DECIMAL" />
     <result column="interest_yes_total" property="interestYesTotal" jdbcType="DECIMAL" />
-    <result column="add_time" property="addTime" jdbcType="INTEGER" />
-    <result column="add_user" property="addUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
     <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `day`, week, interest_wait_total, interest_yes_total, add_time, add_user, update_time, 
-    update_user, del_flag
+    id, `day`, week, interest_wait_total, interest_yes_total, del_flag, create_user_id, 
+    update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRepayMonitorExample" >
     select
@@ -113,12 +113,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_coupon_repay_monitor (`day`, week, interest_wait_total, 
-      interest_yes_total, add_time, add_user, 
-      update_time, update_user, del_flag
+      interest_yes_total, del_flag, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{day,jdbcType=VARCHAR}, #{week,jdbcType=VARCHAR}, #{interestWaitTotal,jdbcType=DECIMAL}, 
-      #{interestYesTotal,jdbcType=DECIMAL}, #{addTime,jdbcType=INTEGER}, #{addUser,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{delFlag,jdbcType=BIT}
+      #{interestYesTotal,jdbcType=DECIMAL}, #{delFlag,jdbcType=BIT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor" >
@@ -139,20 +139,20 @@
       <if test="interestYesTotal != null" >
         interest_yes_total,
       </if>
-      <if test="addTime != null" >
-        add_time,
+      <if test="delFlag != null" >
+        del_flag,
       </if>
-      <if test="addUser != null" >
-        add_user,
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
       <if test="updateTime != null" >
         update_time,
-      </if>
-      <if test="updateUser != null" >
-        update_user,
-      </if>
-      <if test="delFlag != null" >
-        del_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -168,20 +168,20 @@
       <if test="interestYesTotal != null" >
         #{interestYesTotal,jdbcType=DECIMAL},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addUser != null" >
-        #{addUser,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=INTEGER},
-      </if>
       <if test="delFlag != null" >
         #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -209,20 +209,20 @@
       <if test="record.interestYesTotal != null" >
         interest_yes_total = #{record.interestYesTotal,jdbcType=DECIMAL},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.addUser != null" >
-        add_user = #{record.addUser,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=INTEGER},
-      </if>
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=BIT},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -236,11 +236,11 @@
       week = #{record.week,jdbcType=VARCHAR},
       interest_wait_total = #{record.interestWaitTotal,jdbcType=DECIMAL},
       interest_yes_total = #{record.interestYesTotal,jdbcType=DECIMAL},
-      add_time = #{record.addTime,jdbcType=INTEGER},
-      add_user = #{record.addUser,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER},
-      update_user = #{record.updateUser,jdbcType=INTEGER},
-      del_flag = #{record.delFlag,jdbcType=BIT}
+      del_flag = #{record.delFlag,jdbcType=BIT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -260,20 +260,20 @@
       <if test="interestYesTotal != null" >
         interest_yes_total = #{interestYesTotal,jdbcType=DECIMAL},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="addUser != null" >
-        add_user = #{addUser,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=INTEGER},
-      </if>
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -284,11 +284,11 @@
       week = #{week,jdbcType=VARCHAR},
       interest_wait_total = #{interestWaitTotal,jdbcType=DECIMAL},
       interest_yes_total = #{interestYesTotal,jdbcType=DECIMAL},
-      add_time = #{addTime,jdbcType=INTEGER},
-      add_user = #{addUser,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      update_user = #{updateUser,jdbcType=INTEGER},
-      del_flag = #{delFlag,jdbcType=BIT}
+      del_flag = #{delFlag,jdbcType=BIT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

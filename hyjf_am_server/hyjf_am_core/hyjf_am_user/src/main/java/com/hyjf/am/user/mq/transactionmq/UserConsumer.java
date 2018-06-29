@@ -1,7 +1,8 @@
 package com.hyjf.am.user.mq.transactionmq;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.service.UserService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -15,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.service.UserService;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -35,7 +34,7 @@ public class UserConsumer extends Consumer {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		defaultMQPushConsumer.setConsumerGroup("user_transaction_group_test");
 		// 订阅指定MyTopic下tags等于MyTag
-		defaultMQPushConsumer.subscribe("userTransationTest", "*");
+		defaultMQPushConsumer.subscribe("userTransationTest1", "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -56,8 +55,9 @@ public class UserConsumer extends Consumer {
 
 			try {
 				User user = userService.findUserByUserId(userId);
-				if (user == null)
-					throw new RuntimeException("找不到用户，userId is : " + userId);
+				if (user == null) {
+                    throw new RuntimeException("找不到用户，userId is : " + userId);
+                }
 				userService.updateUserById(user);
 			} catch (Exception e) {
 				logger.error("更新user投资标志失败....", e);

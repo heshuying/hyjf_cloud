@@ -4,10 +4,7 @@
 package com.hyjf.am.trade.service.impl;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -1784,7 +1781,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		SmsMessage borrowerSmsMessage = new SmsMessage(borrowUserId, borrowerReplaceStrs, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_JIEKUAN_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
-			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(borrowerSmsMessage)));
+			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}
@@ -1799,7 +1796,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
-			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}

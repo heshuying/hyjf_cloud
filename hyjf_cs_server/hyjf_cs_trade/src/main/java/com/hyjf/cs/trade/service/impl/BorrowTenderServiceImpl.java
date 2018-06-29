@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -139,7 +140,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     /**
      * 开始真正的投资
-     *
      * @param request
      * @param borrow
      * @param account
@@ -193,7 +193,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     /**
      * 检查投资金额
-     *
      * @param request
      * @param borrow
      * @param cuc
@@ -213,7 +212,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 投资金额不能为0元
         if (("0".equals(account) && cuc == null)
-                || ("0".equals(account) && cuc != null && cuc.getCouponType() == 2)) {
+                        || ("0".equals(account) && cuc != null && cuc.getCouponType() == 2)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
         }
         // 投资金额是否为整数
@@ -288,8 +287,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     }
 
     /**
-     * 检查用户状态  角色  授权状态等  是否允许投资
-     *
+     *  检查用户状态  角色  授权状态等  是否允许投资
      * @param user
      * @param userInfo
      */
@@ -318,7 +316,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     /**
      * 散标投资参数校验
-     *
      * @param request
      * @param borrow
      * @param account
@@ -342,7 +339,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new ReturnMessageException(MsgEnum.ERR_TRADE_BORROR_USER_NOT_EXIST);
         }
         // 51老用户标
-        if (borrowProjectType.getInvestUserType().equals("0")) {
+        if ("0".equals(borrowProjectType.getInvestUserType())) {
             Integer is51 = userInfo.getIs51();// 1是51，0不是
             // 该项目只能51老用户投资
             if (is51 != null && is51 == 1) {
@@ -350,7 +347,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         // 新手标
-        if (borrowProjectType.getInvestUserType().equals("1")) {
+        if ("1".equals(borrowProjectType.getInvestUserType())) {
             boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资
             if (!isNew) {
@@ -367,28 +364,28 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 投资客户端 校验
         // 投资平台不能为空
-        if (request.getPlatform() == null) {
+        if(request.getPlatform()==null){
             throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
         }
-        if (request.getPlatform().equals("2") && borrow.getCanTransactionAndroid().equals("0")) {
+        if ("2".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionAndroid())) {
             String tmpInfo = "";
-            if (borrow.getCanTransactionPc().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionPc())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if (borrow.getCanTransactionIos().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionIos())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_IOS);
             }
-            if (borrow.getCanTransactionWei().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionWei())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
-        } else if (request.getPlatform().equals("3") && borrow.getCanTransactionIos().equals("0")) {
-            if (borrow.getCanTransactionPc().equals("1")) {
+        } else if ("3".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionIos())) {
+            if ("1".equals(borrow.getCanTransactionPc())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if (borrow.getCanTransactionAndroid().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionAndroid())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_ANDROID);
             }
-            if (borrow.getCanTransactionWei().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionWei())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
         }
@@ -408,7 +405,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     /**
      * 获取项目类型
-     *
      * @param projectType
      * @return
      */
@@ -425,12 +421,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * 散标投资异步处理
      *
      * @param bean
-     * @param couponGrantId
      * @return
      */
     @Override
-    public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
-        logger.info("开始调用投资异步方法");
+    public BankCallResult borrowTenderBgReturn(BankCallBean bean) {
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());// 用户Userid
         String respCode = bean.getRetCode();// 投资结果返回码
         Integer platForm = bean.getLogClient();

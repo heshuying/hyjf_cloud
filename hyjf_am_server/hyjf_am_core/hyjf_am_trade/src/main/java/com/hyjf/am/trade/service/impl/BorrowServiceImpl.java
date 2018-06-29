@@ -35,10 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author fuqiang
@@ -47,57 +44,16 @@ import java.util.Map;
 @Service
 public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService {
 
-    @Autowired
-    private BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
-
-    @Autowired
-    private BorrowConfigMapper borrowConfigMapper;
-
-    @Autowired
-    private BorrowMapper borrowMapper;
-
-    @Autowired
-    private BorrowManinfoMapper borrowManinfoMapper;
-    @Autowired
-    private BorrowStyleMapper borrowStyleMapper;
-
-    @Autowired
-    private BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    private BorrowTenderTmpMapper borrowTenderTmpMapper;
-
-    @Autowired
-    private BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
-
-    @Autowired
-    private BorrowCustomizeMapper borrowCustomizeMapper;
-
-    @Autowired
-    private FreezeListMapper freezeListMapper;
-
-    @Autowired
-    private BorrowTenderMapper borrowTenderMapper;
 
     @Autowired
     private AccountCustomizeMapper accountCustomizeMapper;
 
     @Autowired
-    private AccountMapper accountMapper;
-    @Autowired
-    private AccountListMapper accountListMapper;
-
-    @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private CalculateInvestInterestMapper calculateInvestInterestMapper;
 
     @Autowired
     private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
 
-    @Autowired
-    private BorrowSendTypeMapper borrowSendTypeMapper;
     @Autowired
     private SmsProducer smsProducer;
 
@@ -130,6 +86,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         return style.get(0);
     }
 
+    @Override
     public BorrowConfig getBorrowConfigByConfigCd(String configCd) {
         BorrowConfig borrowConfig = this.borrowConfigMapper.selectByPrimaryKey(configCd);
         return borrowConfig;
@@ -142,7 +99,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Override
     public int insertBorrowManinfo(BorrowManinfo borrowManinfo) {
-        return borrowManinfoMapper.insertSelective(borrowManinfo);
+         return borrowManinfoMapper.insertSelective(borrowManinfo);
     }
 
     @Override
@@ -201,16 +158,16 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     /**
      * 检索逾期的还款标的
      */
-    @Override
-    public List<Borrow> selectOverdueBorrowList() {
-        BorrowExample example = new BorrowExample();
-        example.createCriteria().andRepayLastTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getTodayBeforeOrAfter(-1))).andStatusEqualTo(4).andPlanNidIsNull();
-        List<Borrow> borrows = borrowMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(borrows)) {
-            return borrows;
-        }
-        return null;
-    }
+	@Override
+	public List<Borrow> selectOverdueBorrowList() {
+		BorrowExample example = new BorrowExample();
+    	example.createCriteria().andRepayLastTimeLessThanOrEqualTo(GetDate.getDayEnd10(GetDate.getTodayBeforeOrAfter(-1))).andStatusEqualTo(4).andPlanNidIsNull();
+    	List<Borrow> borrows = borrowMapper.selectByExample(example);
+    	if(CollectionUtils.isNotEmpty(borrows)){
+    		return borrows;
+    	}
+    	return null;
+	}
 
     /**
      * 投资之前插入tmp表
@@ -246,7 +203,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         temp.setWeb(0);*/
         temp.setIsBankTender(1);
         Integer couponGrantId = tenderRequest.getCouponGrantId();
-        if (couponGrantId == null) {
+        if (couponGrantId==null) {
             couponGrantId = 0;
         }
         temp.setCouponGrantId(couponGrantId);// 为投资完全掉单优惠券投资时修复做记录
@@ -262,7 +219,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         map.put("account", tenderRequest.getAccount() + "");
         map.put("status", "0");
         map.put("nid", tenderRequest.getOrderId());
-        map.put("addtime", (new Date().getTime() / 1000) + "");
+        map.put("addtime", (System.currentTimeMillis() / 1000) + "");
         map.put("addip", tenderRequest.getIp());
         String array = JSON.toJSONString(map);
         info.setTmpArray(array);
@@ -480,7 +437,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // 发送短信验证码
             SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
             try{
-                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             }catch (Exception e){
 
             }

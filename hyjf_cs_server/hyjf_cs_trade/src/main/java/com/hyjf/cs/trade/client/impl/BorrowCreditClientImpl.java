@@ -5,7 +5,9 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.BorrowCreditResponse;
 import com.hyjf.am.response.trade.BorrowRepayResponse;
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BorrowCreditClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +44,15 @@ public class BorrowCreditClientImpl implements BorrowCreditClient {
             return 0;
         }
         return result;
+    }
+
+    @Override
+    public List<BorrowCreditVO> getBorrowCreditList(BorrowCreditRequest request1) {
+        String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditList";
+        BorrowCreditResponse response=restTemplate.postForEntity(url,request1,BorrowCreditResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
     }
 }

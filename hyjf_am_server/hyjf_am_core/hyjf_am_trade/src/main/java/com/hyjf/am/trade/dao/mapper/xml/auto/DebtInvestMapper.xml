@@ -42,10 +42,8 @@
     <result column="client" property="client" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
     <result column="recover_advance_fee" property="recoverAdvanceFee" jdbcType="DECIMAL" />
@@ -59,6 +57,8 @@
     <result column="change_period" property="changePeriod" jdbcType="INTEGER" />
     <result column="change_userid" property="changeUserid" jdbcType="INTEGER" />
     <result column="tender_award_account" property="tenderAwardAccount" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -125,10 +125,10 @@
     repay_capital_wait, repay_interest_wait, invest_type, repay_times, invite_user_id, 
     invite_user_name, invite_user_attribute, invite_region_id, invite_region_name, invite_branch_id, 
     invite_branch_name, invite_department_id, invite_department_name, loan_order_id, 
-    loan_order_date, `status`, web, client, remark, add_ip, create_time, create_user_id, 
-    create_user_name, update_time, update_user_id, update_user_name, recover_advance_fee, 
-    recover_late_fee, tender_award_fee, contents, recover_full_status, recover_fee, recover_type, 
-    change_status, change_period, change_userid, tender_award_account
+    loan_order_date, `status`, web, client, remark, add_ip, create_user_id, create_user_name, 
+    update_user_id, update_user_name, recover_advance_fee, recover_late_fee, tender_award_fee, 
+    contents, recover_full_status, recover_fee, recover_type, change_status, change_period, 
+    change_userid, tender_award_account, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtInvestExample" >
     select
@@ -180,12 +180,12 @@
       invite_department_id, invite_department_name, 
       loan_order_id, loan_order_date, `status`, 
       web, client, remark, 
-      add_ip, create_time, create_user_id, 
-      create_user_name, update_time, update_user_id, 
-      update_user_name, recover_advance_fee, recover_late_fee, 
-      tender_award_fee, contents, recover_full_status, 
-      recover_fee, recover_type, change_status, 
-      change_period, change_userid, tender_award_account
+      add_ip, create_user_id, create_user_name, 
+      update_user_id, update_user_name, recover_advance_fee, 
+      recover_late_fee, tender_award_fee, contents, 
+      recover_full_status, recover_fee, recover_type, 
+      change_status, change_period, change_userid, 
+      tender_award_account, create_time, update_time
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userAttribute,jdbcType=INTEGER}, 
       #{planNid,jdbcType=VARCHAR}, #{planOrderId,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
@@ -200,12 +200,12 @@
       #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
       #{loanOrderId,jdbcType=VARCHAR}, #{loanOrderDate,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
       #{web,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
-      #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
-      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateUserName,jdbcType=VARCHAR}, #{recoverAdvanceFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
-      #{tenderAwardFee,jdbcType=DECIMAL}, #{contents,jdbcType=VARCHAR}, #{recoverFullStatus,jdbcType=INTEGER}, 
-      #{recoverFee,jdbcType=DECIMAL}, #{recoverType,jdbcType=VARCHAR}, #{changeStatus,jdbcType=INTEGER}, 
-      #{changePeriod,jdbcType=INTEGER}, #{changeUserid,jdbcType=INTEGER}, #{tenderAwardAccount,jdbcType=DECIMAL}
+      #{addIp,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{recoverAdvanceFee,jdbcType=DECIMAL}, 
+      #{recoverLateFee,jdbcType=DECIMAL}, #{tenderAwardFee,jdbcType=DECIMAL}, #{contents,jdbcType=VARCHAR}, 
+      #{recoverFullStatus,jdbcType=INTEGER}, #{recoverFee,jdbcType=DECIMAL}, #{recoverType,jdbcType=VARCHAR}, 
+      #{changeStatus,jdbcType=INTEGER}, #{changePeriod,jdbcType=INTEGER}, #{changeUserid,jdbcType=INTEGER}, 
+      #{tenderAwardAccount,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtInvest" >
@@ -331,17 +331,11 @@
       <if test="addIp != null" >
         add_ip,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
       </if>
       <if test="createUserName != null" >
         create_user_name,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
       </if>
       <if test="updateUserId != null" >
         update_user_id,
@@ -381,6 +375,12 @@
       </if>
       <if test="tenderAwardAccount != null" >
         tender_award_account,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -501,17 +501,11 @@
       <if test="addIp != null" >
         #{addIp,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
@@ -551,6 +545,12 @@
       </if>
       <if test="tenderAwardAccount != null" >
         #{tenderAwardAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -683,17 +683,11 @@
       <if test="record.addIp != null" >
         add_ip = #{record.addIp,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -733,6 +727,12 @@
       </if>
       <if test="record.tenderAwardAccount != null" >
         tender_award_account = #{record.tenderAwardAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -781,10 +781,8 @@
       client = #{record.client,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       add_ip = #{record.addIp,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       recover_advance_fee = #{record.recoverAdvanceFee,jdbcType=DECIMAL},
@@ -797,7 +795,9 @@
       change_status = #{record.changeStatus,jdbcType=INTEGER},
       change_period = #{record.changePeriod,jdbcType=INTEGER},
       change_userid = #{record.changeUserid,jdbcType=INTEGER},
-      tender_award_account = #{record.tenderAwardAccount,jdbcType=DECIMAL}
+      tender_award_account = #{record.tenderAwardAccount,jdbcType=DECIMAL},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -922,17 +922,11 @@
       <if test="addIp != null" >
         add_ip = #{addIp,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
@@ -972,6 +966,12 @@
       </if>
       <if test="tenderAwardAccount != null" >
         tender_award_account = #{tenderAwardAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -1017,10 +1017,8 @@
       client = #{client,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       add_ip = #{addIp,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
       recover_advance_fee = #{recoverAdvanceFee,jdbcType=DECIMAL},
@@ -1033,7 +1031,9 @@
       change_status = #{changeStatus,jdbcType=INTEGER},
       change_period = #{changePeriod,jdbcType=INTEGER},
       change_userid = #{changeUserid,jdbcType=INTEGER},
-      tender_award_account = #{tenderAwardAccount,jdbcType=DECIMAL}
+      tender_award_account = #{tenderAwardAccount,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

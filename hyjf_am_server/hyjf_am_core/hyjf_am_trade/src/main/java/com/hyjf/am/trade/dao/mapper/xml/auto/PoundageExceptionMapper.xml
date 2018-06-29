@@ -8,9 +8,9 @@
     <result column="ledger_id" property="ledgerId" jdbcType="INTEGER" />
     <result column="payee_name" property="payeeName" jdbcType="VARCHAR" />
     <result column="ledger_status" property="ledgerStatus" jdbcType="TINYINT" />
+    <result column="updater" property="updater" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="updater" property="updater" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -71,8 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, ledger_amount, poundage_id, ledger_id, payee_name, ledger_status, create_time, 
-    update_time, updater
+    id, ledger_amount, poundage_id, ledger_id, payee_name, ledger_status, updater, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageExceptionExample" >
     select
@@ -112,11 +112,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_poundage_exception (ledger_amount, poundage_id, ledger_id, 
-      payee_name, ledger_status, create_time, 
-      update_time, updater)
+      payee_name, ledger_status, updater, 
+      create_time, update_time)
     values (#{ledgerAmount,jdbcType=DECIMAL}, #{poundageId,jdbcType=INTEGER}, #{ledgerId,jdbcType=INTEGER}, 
-      #{payeeName,jdbcType=VARCHAR}, #{ledgerStatus,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=INTEGER})
+      #{payeeName,jdbcType=VARCHAR}, #{ledgerStatus,jdbcType=TINYINT}, #{updater,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageException" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -139,14 +139,14 @@
       <if test="ledgerStatus != null" >
         ledger_status,
       </if>
+      <if test="updater != null" >
+        updater,
+      </if>
       <if test="createTime != null" >
         create_time,
       </if>
       <if test="updateTime != null" >
         update_time,
-      </if>
-      <if test="updater != null" >
-        updater,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -165,14 +165,14 @@
       <if test="ledgerStatus != null" >
         #{ledgerStatus,jdbcType=TINYINT},
       </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updater != null" >
-        #{updater,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -203,14 +203,14 @@
       <if test="record.ledgerStatus != null" >
         ledger_status = #{record.ledgerStatus,jdbcType=TINYINT},
       </if>
+      <if test="record.updater != null" >
+        updater = #{record.updater,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updater != null" >
-        updater = #{record.updater,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -225,9 +225,9 @@
       ledger_id = #{record.ledgerId,jdbcType=INTEGER},
       payee_name = #{record.payeeName,jdbcType=VARCHAR},
       ledger_status = #{record.ledgerStatus,jdbcType=TINYINT},
+      updater = #{record.updater,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      updater = #{record.updater,jdbcType=INTEGER}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -250,14 +250,14 @@
       <if test="ledgerStatus != null" >
         ledger_status = #{ledgerStatus,jdbcType=TINYINT},
       </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updater != null" >
-        updater = #{updater,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -269,9 +269,9 @@
       ledger_id = #{ledgerId,jdbcType=INTEGER},
       payee_name = #{payeeName,jdbcType=VARCHAR},
       ledger_status = #{ledgerStatus,jdbcType=TINYINT},
+      updater = #{updater,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      updater = #{updater,jdbcType=INTEGER}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

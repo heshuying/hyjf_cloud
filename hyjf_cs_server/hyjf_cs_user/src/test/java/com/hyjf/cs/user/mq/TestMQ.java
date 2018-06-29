@@ -15,6 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.CsUserApplication;
 
+import java.util.UUID;
+
 /**
  * @author xiasq
  * @version TestMQ, v0.1 2018/4/19 11:35
@@ -36,7 +38,7 @@ public class TestMQ {
 		params.put("mobile", "15311112222");
 
 		// 发送
-		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(params)));
+		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 
 	}
 

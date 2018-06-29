@@ -24,7 +24,7 @@ import cn.jpush.api.push.model.notification.Notification;
 public class PushExample {
     protected static final Logger LOG = LoggerFactory.getLogger(PushExample.class);
 
-    // demo App defined in resources/jpush-api.conf 
+    // transactiondemo App defined in resources/jpush-api.conf
 	private static final String appKey ="dd1066407b044738b6479275";
 	private static final String masterSecret = "e8cc9a76d5b7a580859bcfa7";
 	

@@ -35,6 +35,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -77,6 +78,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
     /**
      * 存款业务红包流水全明细数据文件下载
      */
+    @Override
     public void downloadFiles(){
         SFTPParameter para = new SFTPParameter();
 
@@ -111,12 +113,12 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
                     params.put("filePathEve", systemConfig.getEveFileName());
                     params.put("filePathAleve", systemConfig.getAleveFileName());
                     try {
-                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.ALEVE_FILE_TOPIC, params));
+                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
                     }
                     try {
-                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.EVE_FILE_TOPIC, params));
+                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
                     }
@@ -133,6 +135,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * aleveLog表数据插入
      * @param list
      */
+    @Override
     public void insertAleveLog(List<AleveLog> list){
         for (AleveLog aleve : list) {
 //            AleveLogExample example = new AleveLogExample();
@@ -150,6 +153,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * eveLog表数据插入
      * @param list
      */
+    @Override
     public void insertEveLog(List<EveLog> list){
         for (EveLog eve : list) {
 //            EveLogExample example = new EveLogExample();
@@ -167,6 +171,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * aleveErrorLog表数据插入
      * @param aleveErrorLogs
      */
+    @Override
     public void insertAleveErrorLog(List<AleveErrorLog> aleveErrorLogs){
         for(AleveErrorLog aleveErrorLog : aleveErrorLogs){
             aleveErrorLogMapper.insert(aleveErrorLog);

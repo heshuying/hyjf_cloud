@@ -6,7 +6,6 @@
     <result column="nid" property="nid" jdbcType="VARCHAR" />
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
     <result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
     <result column="usernname" property="usernname" jdbcType="VARCHAR" />
     <result column="poundage_type" property="poundageType" jdbcType="VARCHAR" />
     <result column="source" property="source" jdbcType="VARCHAR" />
@@ -15,6 +14,7 @@
     <result column="amount" property="amount" jdbcType="DECIMAL" />
     <result column="ledger_time" property="ledgerTime" jdbcType="INTEGER" />
     <result column="ledger_id" property="ledgerId" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -75,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, nid, borrow_nid, borrow_type, add_time, usernname, poundage_type, `source`, invite_region_name, 
-    invite_user_id, amount, ledger_time, ledger_id
+    id, nid, borrow_nid, borrow_type, usernname, poundage_type, `source`, invite_region_name, 
+    invite_user_id, amount, ledger_time, ledger_id, add_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetailExample" >
     select
@@ -116,14 +116,14 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_poundage_detail (nid, borrow_nid, borrow_type, 
-      add_time, usernname, poundage_type, 
-      `source`, invite_region_name, invite_user_id, 
-      amount, ledger_time, ledger_id
+      usernname, poundage_type, `source`, 
+      invite_region_name, invite_user_id, amount, 
+      ledger_time, ledger_id, add_time
       )
     values (#{nid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{borrowType,jdbcType=VARCHAR}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{usernname,jdbcType=VARCHAR}, #{poundageType,jdbcType=VARCHAR}, 
-      #{source,jdbcType=VARCHAR}, #{inviteRegionName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
-      #{amount,jdbcType=DECIMAL}, #{ledgerTime,jdbcType=INTEGER}, #{ledgerId,jdbcType=INTEGER}
+      #{usernname,jdbcType=VARCHAR}, #{poundageType,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{inviteRegionName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, 
+      #{ledgerTime,jdbcType=INTEGER}, #{ledgerId,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetail" >
@@ -140,9 +140,6 @@
       </if>
       <if test="borrowType != null" >
         borrow_type,
-      </if>
-      <if test="addTime != null" >
-        add_time,
       </if>
       <if test="usernname != null" >
         usernname,
@@ -168,6 +165,9 @@
       <if test="ledgerId != null" >
         ledger_id,
       </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="nid != null" >
@@ -178,9 +178,6 @@
       </if>
       <if test="borrowType != null" >
         #{borrowType,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
       </if>
       <if test="usernname != null" >
         #{usernname,jdbcType=VARCHAR},
@@ -206,6 +203,9 @@
       <if test="ledgerId != null" >
         #{ledgerId,jdbcType=INTEGER},
       </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageDetailExample" resultType="java.lang.Integer" >
@@ -228,9 +228,6 @@
       </if>
       <if test="record.borrowType != null" >
         borrow_type = #{record.borrowType,jdbcType=VARCHAR},
-      </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.usernname != null" >
         usernname = #{record.usernname,jdbcType=VARCHAR},
@@ -256,6 +253,9 @@
       <if test="record.ledgerId != null" >
         ledger_id = #{record.ledgerId,jdbcType=INTEGER},
       </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -267,7 +267,6 @@
       nid = #{record.nid,jdbcType=VARCHAR},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       borrow_type = #{record.borrowType,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
       usernname = #{record.usernname,jdbcType=VARCHAR},
       poundage_type = #{record.poundageType,jdbcType=VARCHAR},
       `source` = #{record.source,jdbcType=VARCHAR},
@@ -275,7 +274,8 @@
       invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
       amount = #{record.amount,jdbcType=DECIMAL},
       ledger_time = #{record.ledgerTime,jdbcType=INTEGER},
-      ledger_id = #{record.ledgerId,jdbcType=INTEGER}
+      ledger_id = #{record.ledgerId,jdbcType=INTEGER},
+      add_time = #{record.addTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -291,9 +291,6 @@
       </if>
       <if test="borrowType != null" >
         borrow_type = #{borrowType,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
       </if>
       <if test="usernname != null" >
         usernname = #{usernname,jdbcType=VARCHAR},
@@ -319,6 +316,9 @@
       <if test="ledgerId != null" >
         ledger_id = #{ledgerId,jdbcType=INTEGER},
       </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -327,7 +327,6 @@
     set nid = #{nid,jdbcType=VARCHAR},
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       borrow_type = #{borrowType,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
       usernname = #{usernname,jdbcType=VARCHAR},
       poundage_type = #{poundageType,jdbcType=VARCHAR},
       `source` = #{source,jdbcType=VARCHAR},
@@ -335,7 +334,8 @@
       invite_user_id = #{inviteUserId,jdbcType=INTEGER},
       amount = #{amount,jdbcType=DECIMAL},
       ledger_time = #{ledgerTime,jdbcType=INTEGER},
-      ledger_id = #{ledgerId,jdbcType=INTEGER}
+      ledger_id = #{ledgerId,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

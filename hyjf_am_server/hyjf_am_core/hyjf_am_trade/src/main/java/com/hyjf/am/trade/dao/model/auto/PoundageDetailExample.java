@@ -396,66 +396,6 @@ public class PoundageDetailExample {
             return (Criteria) this;
         }
 
-        public Criteria andAddTimeIsNull() {
-            addCriterion("add_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeIsNotNull() {
-            addCriterion("add_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeEqualTo(Date value) {
-            addCriterion("add_time =", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotEqualTo(Date value) {
-            addCriterion("add_time <>", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeGreaterThan(Date value) {
-            addCriterion("add_time >", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("add_time >=", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeLessThan(Date value) {
-            addCriterion("add_time <", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeLessThanOrEqualTo(Date value) {
-            addCriterion("add_time <=", value, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeIn(List<Date> values) {
-            addCriterion("add_time in", values, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotIn(List<Date> values) {
-            addCriterion("add_time not in", values, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeBetween(Date value1, Date value2) {
-            addCriterion("add_time between", value1, value2, "addTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andAddTimeNotBetween(Date value1, Date value2) {
-            addCriterion("add_time not between", value1, value2, "addTime");
-            return (Criteria) this;
-        }
-
         public Criteria andUsernnameIsNull() {
             addCriterion("usernname is null");
             return (Criteria) this;
@@ -973,6 +913,66 @@ public class PoundageDetailExample {
 
         public Criteria andLedgerIdNotBetween(Integer value1, Integer value2) {
             addCriterion("ledger_id not between", value1, value2, "ledgerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeIsNull() {
+            addCriterion("add_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeIsNotNull() {
+            addCriterion("add_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeEqualTo(Date value) {
+            addCriterion("add_time =", value, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeNotEqualTo(Date value) {
+            addCriterion("add_time <>", value, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeGreaterThan(Date value) {
+            addCriterion("add_time >", value, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("add_time >=", value, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeLessThan(Date value) {
+            addCriterion("add_time <", value, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeLessThanOrEqualTo(Date value) {
+            addCriterion("add_time <=", value, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeIn(List<Date> values) {
+            addCriterion("add_time in", values, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeNotIn(List<Date> values) {
+            addCriterion("add_time not in", values, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeBetween(Date value1, Date value2) {
+            addCriterion("add_time between", value1, value2, "addTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddTimeNotBetween(Date value1, Date value2) {
+            addCriterion("add_time not between", value1, value2, "addTime");
             return (Criteria) this;
         }
     }

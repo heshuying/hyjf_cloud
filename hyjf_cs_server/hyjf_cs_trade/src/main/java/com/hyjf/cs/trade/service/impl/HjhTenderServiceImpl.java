@@ -196,7 +196,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                                 jedis.unwatch();
                                 logger.info("计划可用开放额度redis扣除失败：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
                                 redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
-                                throw new ReturnMessageException(redisMsgCode);
                             } else {
                                 logger.info("加计划redis操作成功userId:{},平台:{},planNid{},计划扣除后可用开放额度redis", userId, request.getPlatform(), plan.getPlanNid(), lastAccount);
                                 // 写队列
@@ -206,7 +205,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     } else {
                         logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
                         redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
-                        throw new ReturnMessageException(redisMsgCode);
                     }
                 }
             } catch (Exception e) {
@@ -393,7 +391,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 // 检查优惠券能用不
                 logger.info("优惠券投资校验开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
                 Map<String, String> validateMap = couponService.validateCoupon(userId, accountStr, couponGrantId,
-                        request.getPlatform(), plan.getLockPeriod(),plan.getCouponConfig());
+                        request.getPlatform(), plan);
                 if (MapUtils.isEmpty(validateMap)) {
                     // 校验通过 进行优惠券投资投资
                     logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);

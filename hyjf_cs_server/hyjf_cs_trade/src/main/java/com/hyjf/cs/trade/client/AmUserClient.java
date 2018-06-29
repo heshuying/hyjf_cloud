@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
@@ -145,4 +146,14 @@ public interface AmUserClient {
 	 */
 	List<LoanSubjectCertificateAuthorityVO> getLoanSubjectCertificateAuthorityList(
 			LoanSubjectCertificateAuthorityRequest request1);
+
+	/**
+	 * 通过userID获得CA认证的客户ID
+	 * @param userId
+	 * @param code
+	 * @return
+	 */
+	String getCustomerIDByUserID(Integer userId, String code);
+
+	
 }

@@ -8,8 +8,8 @@ import java.util.Map;
  * @version MessageStatus, v0.1 2018/6/27 14:54
  */
 public enum MessageStatus {
-	COMMIT(0, "已确认"),
-	UNKKOWN(1, "未确认"),
+	UNKKOWN(0, "未确认"),
+	COMMIT(1, "已确认"),
 	ROLLBACK(2, "回滚");
 
 	private int code;

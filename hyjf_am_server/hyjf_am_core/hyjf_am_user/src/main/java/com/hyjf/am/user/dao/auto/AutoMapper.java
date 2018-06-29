@@ -7,17 +7,51 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AutoMapper {
-    @Autowired
-    protected UserMapper userMapper;
 
     @Autowired
-    protected UserInfoMapper userInfoMapper;
+    protected AccountBankMapper accountBankMapper;
 
     @Autowired
-    protected SpreadsUserMapper spreadsUserMapper;
+    protected AccountChinapnrMapper accountChinapnrMapper;
 
     @Autowired
-    protected UserLogMapper usersLogMapper;
+    protected AccountMobileSynchMapper accountMobileSynchMapper;
+
+    @Autowired
+    protected AppointmentAuthLogMapper appointmentAuthLogMapper;
+
+    @Autowired
+    protected AppointmentRecodLogMapper appointmentRecodLogMapper;
+
+    @Autowired
+    protected BankCardMapper bankCardMapper;
+
+    @Autowired
+    protected BankCardLogMapper bankCardLogMapper;
+
+    @Autowired
+    protected BankOpenAccountMapper bankOpenAccountMapper;
+
+    @Autowired
+    protected BankOpenAccountLogMapper bankOpenAccountLogMapper;
+
+    @Autowired
+    protected BankSmsAuthCodeMapper bankSmsAuthCodeMapper;
+
+    @Autowired
+    protected BindUserMapper bindUserMapper;
+
+    @Autowired
+    protected BorrowAppointMapper borrowAppointMapper;
+
+    @Autowired
+    protected CallcenterServiceUsersMapper callcenterServiceUsersMapper;
+
+    @Autowired
+    protected CertificateAuthorityMapper certificateAuthorityMapper;
+
+    @Autowired
+    protected CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
 
     @Autowired
     protected EvalationMapper evalationMapper;
@@ -29,36 +63,144 @@ public class AutoMapper {
     protected HjhUserAuthLogMapper hjhUserAuthLogMapper;
 
     @Autowired
-    protected UserEvalationResultMapper userEvalationResultMapper;
+    protected LabPlatformMapper labPlatformMapper;
 
     @Autowired
-    protected UserEvalationMapper userEvalationMapper;
+    protected LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
 
     @Autowired
-    protected AccountChinapnrMapper accountChinapnrMapper;
+    protected MspAbnormalcreditMapper mspAbnormalcreditMapper;
 
     @Autowired
-    protected UserContactMapper UserContactMapper;
+    protected MspAbnormalcreditdetailMapper mspAbnormalcreditdetailMapper;
+
+    @Autowired
+    protected MspAnliinfosMapper mspAnliinfosMapper;
+
+    @Autowired
+    protected MspApplyMapper mspApplyMapper;
+
+    @Autowired
+    protected MspApplydetailsMapper mspApplydetailsMapper;
+
+    @Autowired
+    protected MspBlackdataMapper mspBlackdataMapper;
+
+    @Autowired
+    protected MspConfigureMapper mspConfigureMapper;
+
+    @Autowired
+    protected MspDegreeresultMapper mspDegreeresultMapper;
+
+    @Autowired
+    protected MspFqzMapper mspFqzMapper;
+
+    @Autowired
+    protected MspNormalcreditdetailMapper mspNormalcreditdetailMapper;
+
+    @Autowired
+    protected MspQuerydetailMapper mspQuerydetailMapper;
+
+    @Autowired
+    protected MspRegionMapper mspRegionMapper;
+
+    @Autowired
+    protected MspShixininfosMapper mspShixininfosMapper;
+
+    @Autowired
+    protected MspTitleMapper mspTitleMapper;
+
+    @Autowired
+    protected MspZhixinginfosMapper mspZhixinginfosMapper;
+
+    @Autowired
+    protected PreRegistMapper preRegistMapper;
+
+    @Autowired
+    protected ROaDepartmentMapper rOaDepartmentMapper;
+
+    @Autowired
+    protected ROaUsersMapper rOaUsersMapper;
+
+    @Autowired
+    protected SmsCodeMapper smsCodeMapper;
+
+    @Autowired
+    protected SpreadsLogMapper spreadsLogMapper;
+
+    @Autowired
+    protected SpreadsUserMapper spreadsUserMapper;
+
+    @Autowired
+    protected SpreadsUserLogMapper spreadsUserLogMapper;
+
+    @Autowired
+    protected UserMapper userMapper;
+
+    @Autowired
+    protected UserAliasMapper userAliasMapper;
 
     @Autowired
     protected UserBindEmailLogMapper userBindEmailLogMapper;
 
     @Autowired
-    protected UtmRegMapper utmRegMapper;
+    protected UserChangeLogMapper userChangeLogMapper;
 
     @Autowired
-    protected UtmPlatMapper utmPlatMapper;
+    protected UserContactMapper userContactMapper;
 
     @Autowired
-    protected VipUserTenderMapper vipUserTenderMapper;
+    protected UserEvalationMapper userEvalationMapper;
 
     @Autowired
-    protected CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
+    protected UserEvalationBehaviorMapper userEvalationBehaviorMapper;
+
+    @Autowired
+    protected UserEvalationResultMapper userEvalationResultMapper;
+
+    @Autowired
+    protected UserInfoMapper userInfoMapper;
+
+    @Autowired
+    protected UserLogMapper userLogMapper;
 
     @Autowired
     protected UserLoginLogMapper userLoginLogMapper;
 
     @Autowired
-    protected PreRegistMapper preRegistMapper;
+    protected UserPlatMapper userPlatMapper;
+
+    @Autowired
+    protected UserPortraitMapper userPortraitMapper;
+
+    @Autowired
+    protected UtmMapper utmMapper;
+
+    @Autowired
+    protected UtmPlatMapper utmPlatMapper;
+
+    @Autowired
+    protected UtmRegMapper utmRegMapper;
+
+    @Autowired
+    protected UtmSourceMapper utmSourceMapper;
+
+    @Autowired
+    protected UtmVisitMapper utmVisitMapper;
+
+    @Autowired
+    protected VipAuthMapper vipAuthMapper;
+
+    @Autowired
+    protected VipInfoMapper vipInfoMapper;
+
+    @Autowired
+    protected VipTransferLogMapper vipTransferLogMapper;
+
+    @Autowired
+    protected VipUserTenderMapper vipUserTenderMapper;
+
+    @Autowired
+    protected VipUserUpgradeMapper vipUserUpgradeMapper;
 }
 

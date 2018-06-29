@@ -42,6 +42,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author fuqiang
@@ -70,7 +71,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
-            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, params));
+            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.ASSET_PUST_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             _log.error("自动录标发送消息失败...", e);
         }
@@ -361,7 +362,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 }
             }else if ((hjhLabelVO.getLabelTermEnd() != null && hjhLabelVO.getLabelTermEnd().intValue()>0) ||
                     (hjhLabelVO.getLabelTermStart()!=null && hjhLabelVO.getLabelTermStart().intValue()>0)) {
-                if(borrowVO.getBorrowPeriod() == hjhLabelVO.getLabelTermStart() || borrowVO.getBorrowPeriod() == hjhLabelVO.getLabelTermEnd()){
+                if(borrowVO.getBorrowPeriod().equals(hjhLabelVO.getLabelTermStart()) || borrowVO.getBorrowPeriod().equals(hjhLabelVO.getLabelTermEnd())){
 //					score = score+1;
                 }else{
                     continue;
@@ -483,7 +484,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("assetId", hjhPlanAssetVO.getAssetId());
         params.put("instCode", hjhPlanAssetVO.getInstCode());
         try {
-            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_RECORD_TOPIC, params));
+            autoSendProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_RECORD_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             e.printStackTrace();
             _log.error("自动备案送消息失败...", e);

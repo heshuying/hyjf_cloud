@@ -1,13 +1,15 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 标的操作
@@ -60,28 +62,16 @@ public interface AmBorrowClient {
     boolean updateBeforeChinaPnR(TenderRequest request);
 
     /**
-     * 用户投资散标操作表
-     * @param tenderBg
+     * 获取还款方式
+     * @param borrowStyle
      * @return
      */
-    boolean borrowTender(TenderBgVO tenderBg);
+    public BorrowStyleVO getBorrowStyle(String borrowStyle);
 
     /**
-     * 修改状态临时表结果
-     * @param logUserId
-     * @param logOrderId
-     * @param respCode
-     * @param retMsg
-     * @param productId
-     */
-    boolean updateTenderResult(String logUserId, String logOrderId, String respCode, String retMsg, String productId);
-
-    /**
-     * 获取投资异步结果
-     * @param userId
-     * @param logOrdId
-     * @param borrowNid
+     * 会计划投资详情
+     * @param params
      * @return
      */
-    String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
+    public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params);
 }
