@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -20,7 +22,7 @@ public interface AssetListServiceCustomizeMapper {
 	 * @param callCenterAccountDetailRequest
 	 * @return
 	 */
-	List<AssetListCustomizeVO> queryAssetList(AssetListRequest assetListRequest);
+	List<AssetListCustomizeVO> queryAssetList(Map<String, Object> mapParam);
 	
 	/**
 	 * 查询资产详情
@@ -28,5 +30,21 @@ public interface AssetListServiceCustomizeMapper {
 	 * @param callCenterAccountDetailRequest
 	 * @return
 	 */
-	AssetDetailCustomizeVO selectAssetDetail(@Param("assetId") String assetId, @Param("instCode") String instCode);
+	AssetDetailCustomizeVO selectAssetDetail(Map<String, Object> mapParam);
+	
+	/**
+	 * COUNT
+	 * 
+	 * @param map
+	 * @return
+	 */
+	Integer countAssetList(AssetListRequest request);
+	
+	/**
+	 * COUNT
+	 * 
+	 * @param map
+	 * @return
+	 */
+	BigDecimal getSumAccount(AssetListRequest request);
 }
