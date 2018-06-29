@@ -73,6 +73,6 @@ public class AccountTProducer extends TransactionProducer {
 		message.setBody(new String(msg.getBody()));
 		message.setCreateTime(new Date());
 		message.setUpdateTime(new Date());
-		producerTransactionMessageService.save(message);
+		producerTransactionMessageService.insert(message);
 	}
 }

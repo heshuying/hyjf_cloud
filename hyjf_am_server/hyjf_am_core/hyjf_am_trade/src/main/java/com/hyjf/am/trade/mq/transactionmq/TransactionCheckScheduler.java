@@ -7,6 +7,7 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  * rocketmq事务回查
  */
 @Component
+@EnableScheduling
 public class TransactionCheckScheduler {
 	private Logger logger = LoggerFactory.getLogger(TransactionCheckScheduler.class);
 
@@ -25,9 +27,10 @@ public class TransactionCheckScheduler {
 	/**
 	 * 每分钟执行一次
 	 */
-	@Scheduled(fixedRate = 60 * 1000)
+	@Scheduled(fixedRate = 30 * 1000)
 	public void checkTransactionMessage() {
 		try {
+			logger.info("rocketmq事务回查开始....");
 			messageService.callBackQuery();
 		} catch (MQClientException e) {
 			logger.error("rocketmq事务回查失败...", e);
