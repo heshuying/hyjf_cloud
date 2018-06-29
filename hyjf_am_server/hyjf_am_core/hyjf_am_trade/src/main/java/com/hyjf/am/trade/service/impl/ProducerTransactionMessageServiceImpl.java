@@ -101,7 +101,21 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
 			for (ProducerTransactionMessage message : list) {
 				// 回查3次以上，重新发送确认消息，否则继续回查， 避免生产端刚发送消息就出发回查，这时候无需重发确认
 				if (message.getRetryTimes() >= 3) {
-					// 发送普通消息
+					// 发送普通消息   todo 这块处理的逻辑要确认是重发还是人工处理  ？？？？？？？
+
+					QueryResult queryResult = accountTProducer.getTransactionMQProducer().queryMessage(message.getTopic(),
+							message.getKeys(), 64, startDate.getTime(), endDate.getTime());
+					List<MessageExt> msgList = queryResult.getMessageList();
+					if (CollectionUtils.isEmpty(msgList)) {
+						throw new RuntimeException("根据key值未查询到消息...");
+					}
+
+					for(MessageExt messageExt : msgList){
+						if (messageExt.getSysFlag() == 8){
+							return;
+						}
+					}
+
 					Message repeatMsg = new Message();
 					repeatMsg.setBody(message.getBody().getBytes());
 					repeatMsg.setKeys(message.getKeys());

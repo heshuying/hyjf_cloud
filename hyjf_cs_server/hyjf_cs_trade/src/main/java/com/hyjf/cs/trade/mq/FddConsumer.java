@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.fdd.fddgeneratecontract.FddGenerateContractBean;
+import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
 import com.hyjf.cs.trade.handle.FddHandle;
 
 /**
