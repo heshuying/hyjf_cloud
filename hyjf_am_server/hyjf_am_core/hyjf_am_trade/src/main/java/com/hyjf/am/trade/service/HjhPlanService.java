@@ -49,11 +49,4 @@ public interface HjhPlanService {
      * @return
      */
     int insertHJHPlanAccede(HjhAccedeVO planAccede, Account userAccount);
-
-    /**
-     * 获取汇计划投资详情
-     * @param params
-     * @return
-     */
-    UserHjhInvistDetailCustomize selectUserHjhInvistDetail(Map<String,Object> params);
 }
