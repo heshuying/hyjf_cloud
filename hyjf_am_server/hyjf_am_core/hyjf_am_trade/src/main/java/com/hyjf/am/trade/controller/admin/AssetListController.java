@@ -33,7 +33,7 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping("/am-trade/assetList")
 public class AssetListController {
-
+	
 	@Autowired
 	AssetListService assetListService;
 	/**
@@ -45,14 +45,14 @@ public class AssetListController {
 		Map<String, Object> mapParam = paramSet(request);
 		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
 		Integer registCount = assetListService.getRecordCount(request);
-		Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
+        Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
 		String returnCode = "00";//代表成功
 		List<AssetListCustomizeVO> assetList = assetListService.findAssetList(mapParam,paginator.getOffset(), paginator.getLimit());
 		if(registCount>0){
 			if(null!=assetList&&assetList.size()>0){
 				List<AssetListCustomizeVO> assetListCustomizeVO = CommonUtils.convertBeanList(assetList,AssetListCustomizeVO.class);
-				response.setResultList(assetListCustomizeVO);
-				response.setCount(registCount);
+	            response.setResultList(assetListCustomizeVO);
+	            response.setCount(registCount);
 				response.setRtn(returnCode);
 			}
 		}
@@ -73,7 +73,7 @@ public class AssetListController {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * @Author: libin
 	 * @Desc :获取总数
@@ -87,7 +87,7 @@ public class AssetListController {
 		}
 		return response;
 	}
-
+	
 	/**
 	 * @Author: libin
 	 * @Desc :获取总数
@@ -99,28 +99,27 @@ public class AssetListController {
 		response.setSum(sum);
 		return response;
 	}
-
-	/**
+	
+    /**
 	 * 查询条件设置
 	 *
 	 * @param userRequest
 	 * @return
 	 */
 	private Map<String, Object> paramSet(AssetListRequest request) {
-		Map<String, Object> mapParam = new HashMap<String, Object>();
-		mapParam.put("assetIdSrch", request.getAssetIdSrch());
-		mapParam.put("instCodeSrch", request.getInstCodeSrch());
-		mapParam.put("assetTypeSrch", request.getAssetTypeSrch());
-		mapParam.put("borrowNidSrch", request.getBorrowNidSrch());
-		mapParam.put("planNidSrch", request.getPlanNidSrch());
-		mapParam.put("userNameSrch", request.getUserNameSrch());
-		mapParam.put("labelNameSrch", request.getLabelNameSrch());
-		mapParam.put("bankOpenAccountSrch", request.getBankOpenAccountSrch());
-		mapParam.put("verifyStatusSrch", request.getVerifyStatusSrch());
-		mapParam.put("statusSrch", request.getStatusSrch());
-		mapParam.put("recieveTimeStartSrch", request.getRecieveTimeStartSrch());
-		mapParam.put("recieveTimeEndSrch", request.getRecieveTimeEndSrch());
-		return mapParam;
+	    Map<String, Object> mapParam = new HashMap<String, Object>();
+	    mapParam.put("assetIdSrch", request.getAssetIdSrch());
+	    mapParam.put("instCodeSrch", request.getInstCodeSrch());
+	    mapParam.put("assetTypeSrch", request.getAssetTypeSrch());
+	    mapParam.put("borrowNidSrch", request.getBorrowNidSrch());
+	    mapParam.put("planNidSrch", request.getPlanNidSrch());
+	    mapParam.put("userNameSrch", request.getUserNameSrch());
+	    mapParam.put("labelNameSrch", request.getLabelNameSrch());
+	    mapParam.put("bankOpenAccountSrch", request.getBankOpenAccountSrch());
+	    mapParam.put("verifyStatusSrch", request.getVerifyStatusSrch());
+	    mapParam.put("statusSrch", request.getStatusSrch());
+	    mapParam.put("recieveTimeStartSrch", request.getRecieveTimeStartSrch());
+	    mapParam.put("recieveTimeEndSrch", request.getRecieveTimeEndSrch());
+	    return mapParam;
 	}
 }
-

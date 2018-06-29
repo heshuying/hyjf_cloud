@@ -14,13 +14,12 @@ import com.hyjf.am.vo.admin.AssetListCustomizeVO;
  */
 public interface AssetListService {
 	List<AssetListCustomizeVO> findAssetList(Map<String, Object> mapParam,int limitStart, int limitEnd);
-
+	
 	AssetDetailCustomizeVO findDetailById(Map<String, Object> mapParam);
-
+	
 	Integer getRecordCount(AssetListRequest request);
-
+	
 	BigDecimal getSumAccount(AssetListRequest request);
 }
-
 
 
