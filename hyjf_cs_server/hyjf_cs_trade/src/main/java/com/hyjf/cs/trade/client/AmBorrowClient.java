@@ -88,6 +88,7 @@ public interface AmBorrowClient {
      */
     String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 
+
     /**
      * 获取还款方式
      * @param borrowStyle
