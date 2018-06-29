@@ -3,15 +3,18 @@
  */
 package com.hyjf.am.user.service.impl;
 
+import com.hyjf.am.response.user.GroupInfoResponse;
 import com.hyjf.am.user.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.service.GroupInfoService;
+import com.hyjf.am.vo.user.OrganizationStructureVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,24 +23,19 @@ import java.util.List;
  * 集团组织结构查询
  */
 @Service
-public class GroupInfoServiceImpl implements GroupInfoService {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
+public class GroupInfoServiceImpl extends BaseServiceImpl implements GroupInfoService {
 
     @Autowired
     private ROaDepartmentMapper rOaDepartmentMapper;
 
     /**
      * 查询集团组织结构List
-     * @param
-     * @return List<ROaDepartment>
+     * @return List<ROaDepartment> 组织结构list
      */
     @Override
-    public List<ROaDepartment> selectByExample(ROaDepartmentExample example) {
+    public List<ROaDepartment> searchGroupInfo() {
+        ROaDepartmentExample example = new ROaDepartmentExample();
         List<ROaDepartment> rOaDepartmentList = rOaDepartmentMapper.selectByExample(example);
-        if (rOaDepartmentList != null && rOaDepartmentList.size() > 0) {
-            return rOaDepartmentList;
-        }
-        return null;
+        return rOaDepartmentList;
     }
 }

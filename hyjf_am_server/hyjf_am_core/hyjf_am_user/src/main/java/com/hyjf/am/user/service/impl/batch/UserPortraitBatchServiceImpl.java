@@ -106,7 +106,6 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                     if (StringUtils.isNotBlank(userInfo.getIdcard())) {
                         try {
                             String idcard = userInfo.getIdcard();
-                            log.info("userId::::{},idcard======={}",userId,idcard);
                             SimpleDateFormat sdf = GetDate.date_sdf;
 
                             Boolean isIdCard = IdCard15To18.isValid(idcard);
@@ -155,7 +154,6 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                     userPortrait.setMobile(user.getMobile());
                 }
             }
-            log.info("userPortrait::::::::::=========={}",userPortrait.toString());
 
             // 更新用户画像表信息
             int count = 0;

@@ -3,14 +3,17 @@
  */
 package com.hyjf.am.user.controller;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.GroupInfoResponse;
 import com.hyjf.am.user.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.service.GroupInfoService;
 import com.hyjf.am.vo.user.OrganizationStructureVO;
+import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,8 +29,6 @@ import java.util.List;
 @RequestMapping("/am-user/group")
 public class GroupInfoController {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private GroupInfoService groupInfoService;
     /**
@@ -35,28 +36,18 @@ public class GroupInfoController {
      * @auther: sunpeikai
      * @date: 2018/6/27
      */
-    @RequestMapping("/queryGroupInfo")
+    @RequestMapping("/query_group_info")
     public GroupInfoResponse queryGroupInfo() {
         GroupInfoResponse response = new GroupInfoResponse();
-        ROaDepartmentExample example = new ROaDepartmentExample();
-        List<OrganizationStructureVO> organizationStructureVOList = new ArrayList<>();
         // 查询全部
-        List<ROaDepartment> rOaDepartmentList = groupInfoService.selectByExample(example);
-        if (rOaDepartmentList != null) {
-            for(ROaDepartment rOaDepartment:rOaDepartmentList){
-                // 参数赋值
-                OrganizationStructureVO organizationStructureVO = new OrganizationStructureVO();
-                organizationStructureVO.setId(rOaDepartment.getId());
-                organizationStructureVO.setParentid(rOaDepartment.getParentid());
-                organizationStructureVO.setName(rOaDepartment.getName());
-                organizationStructureVO.setCuttype(rOaDepartment.getCuttype());
-                organizationStructureVO.setFlag(rOaDepartment.getFlag());
-                // 塞入列表
-                organizationStructureVOList.add(organizationStructureVO);
-            }
+        List<ROaDepartment> rOaDepartmentList = groupInfoService.searchGroupInfo();
+        if(!CollectionUtils.isEmpty(rOaDepartmentList)){
+            List<OrganizationStructureVO> organizationStructureVOList = CommonUtils.convertBeanList(rOaDepartmentList, OrganizationStructureVO.class);
             // 塞入返回列表
             response.setResultList(organizationStructureVOList);
+            response.setRtn(Response.SUCCESS);
         }
+
         return response;
     }
 }

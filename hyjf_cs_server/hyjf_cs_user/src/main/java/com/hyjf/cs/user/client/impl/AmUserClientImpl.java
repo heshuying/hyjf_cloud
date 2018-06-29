@@ -755,7 +755,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 * */
 	@Override
 	public List<OrganizationStructureVO> searchGroupInfo() {
-		String url = "http://AM-USER//am-user/group/queryGroupInfo";
+		String url = "http://AM-USER//am-user/group/query_group_info";
 		GroupInfoResponse response = restTemplate.getForEntity(url,GroupInfoResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();

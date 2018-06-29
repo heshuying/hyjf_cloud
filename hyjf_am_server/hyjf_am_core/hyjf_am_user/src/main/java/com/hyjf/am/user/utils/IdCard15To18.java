@@ -216,7 +216,6 @@ public class IdCard15To18 {
                 properties.load(inputStream);
                 String json = properties.toString();
                 String area = json.substring(1, json.length() -1);
-                System.out.println(area);
                 if(area != null && !"".equals(area)){
                     String[] text = area.split(";");
                     for(String str:text){

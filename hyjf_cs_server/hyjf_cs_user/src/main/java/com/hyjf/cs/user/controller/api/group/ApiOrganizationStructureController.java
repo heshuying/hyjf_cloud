@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.api.group;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.user.OrganizationStructureVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -12,8 +11,6 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.group.ApiOrganizationStructureService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,8 +28,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user")
 public class ApiOrganizationStructureController extends BaseUserController {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     ApiOrganizationStructureService apiGroupQueryService;
