@@ -1,4 +1,4 @@
-package com.hyjf.callcenter.clientImpl;
+package com.hyjf.callcenter.client.impl;
 
 import java.util.List;
 

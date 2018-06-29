@@ -1,4 +1,4 @@
-package com.hyjf.callcenter.serviceImpl;
+package com.hyjf.callcenter.service.impl;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;

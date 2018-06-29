@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.callcenter.clientImpl;
+package com.hyjf.callcenter.client.impl;
 
 import java.util.List;
 
