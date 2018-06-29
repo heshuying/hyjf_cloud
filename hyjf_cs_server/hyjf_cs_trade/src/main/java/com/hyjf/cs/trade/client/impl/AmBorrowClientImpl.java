@@ -189,5 +189,16 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 		String url = "http://AM-TRADE/am-trade/hjhPlan/selectUserHjhInvistDetail";
 		return null;
 	}
-
+	/**
+	 * 获取还款方式
+	 */
+	@Override
+	public BorrowStyleVO getBorrowStyle(String borrowStyle) {
+		String url = "http://AM-TRADE/am-trade/borrow/getBorrowStyle/"+borrowStyle;
+		BorrowStyleResponse response=restTemplate.getForEntity(url,BorrowStyleResponse.class).getBody();
+		if(response!=null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

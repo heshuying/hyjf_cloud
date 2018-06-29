@@ -409,7 +409,7 @@ public class FddHandle {
 	/**
 	 * 通过userID获得CA认证的客户ID
 	 * 
-	 * @param creditUserID
+	 * @param
 	 * @return
 	 */
 	private String getCustomerIDByUserID(Integer userId) {
