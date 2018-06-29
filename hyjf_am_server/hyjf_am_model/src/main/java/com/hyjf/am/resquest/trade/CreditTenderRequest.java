@@ -48,6 +48,12 @@ public class CreditTenderRequest extends Request {
 
     private List<BorrowCreditVO> borrowCreditList;
 
+    private String bidNid;
+    
+    private String creditNid;
+    
+    private String creditTenderNid;
+    
     public List<BorrowCreditVO> getBorrowCreditList() {
         return borrowCreditList;
     }
@@ -182,5 +188,29 @@ public class CreditTenderRequest extends Request {
 
 	public void setEmployeeCustomizeResponse(EmployeeCustomizeResponse employeeCustomizeResponse) {
 		this.employeeCustomizeResponse = employeeCustomizeResponse;
+	}
+
+	public String getBidNid() {
+		return bidNid;
+	}
+
+	public void setBidNid(String bidNid) {
+		this.bidNid = bidNid;
+	}
+
+	public String getCreditNid() {
+		return creditNid;
+	}
+
+	public void setCreditNid(String creditNid) {
+		this.creditNid = creditNid;
+	}
+
+	public String getCreditTenderNid() {
+		return creditTenderNid;
+	}
+
+	public void setCreditTenderNid(String creditTenderNid) {
+		this.creditTenderNid = creditTenderNid;
 	}
 }
