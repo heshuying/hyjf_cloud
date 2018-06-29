@@ -7,9 +7,11 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -47,4 +49,11 @@ public interface HjhPlanService {
      * @return
      */
     int insertHJHPlanAccede(HjhAccedeVO planAccede, Account userAccount);
+
+    /**
+     * 获取汇计划投资详情
+     * @param params
+     * @return
+     */
+    UserHjhInvistDetailCustomize selectUserHjhInvistDetail(Map<String,Object> params);
 }
