@@ -1,12 +1,15 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 标的操作
@@ -57,4 +60,18 @@ public interface AmBorrowClient {
      * @param request
      */
     boolean updateBeforeChinaPnR(TenderRequest request);
+
+    /**
+     * 获取还款方式
+     * @param borrowStyle
+     * @return
+     */
+    public BorrowStyleVO getBorrowStyle(String borrowStyle);
+
+    /**
+     * 会计划投资详情
+     * @param params
+     * @return
+     */
+    public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params);
 }
