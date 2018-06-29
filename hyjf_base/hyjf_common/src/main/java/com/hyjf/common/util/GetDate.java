@@ -1884,5 +1884,15 @@ public class GetDate extends PropertyEditorSupport {
         return calendar.get(Calendar.HOUR_OF_DAY);
 
     }
-    
+
+	/**
+	 * Date转Int10
+	 *
+	 * @param date
+	 *            指定日期
+	 * @return 指定日期的时间戳
+	 */
+	public static int getTime10(Date date) {
+		return (int) date.getTime()/1000;
+	}
 }
