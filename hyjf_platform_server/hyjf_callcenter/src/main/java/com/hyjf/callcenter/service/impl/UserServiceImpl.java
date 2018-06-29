@@ -1,4 +1,4 @@
-package com.hyjf.callcenter.serviceImpl;
+package com.hyjf.callcenter.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
