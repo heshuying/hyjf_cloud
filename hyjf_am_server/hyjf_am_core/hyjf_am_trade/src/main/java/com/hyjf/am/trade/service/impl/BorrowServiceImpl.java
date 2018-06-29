@@ -7,9 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.trade.AccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.Producer;
@@ -46,6 +44,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
 
     @Autowired
+    private SmsProducer smsProducer;
+    @Autowired
     private AccountCustomizeMapper accountCustomizeMapper;
 
     @Autowired
@@ -53,9 +53,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Autowired
     private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
-
-    @Autowired
-    private SmsProducer smsProducer;
 
 
     @Override
@@ -437,7 +434,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // 发送短信验证码
             SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
             try{
-                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+                        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
             }catch (Exception e){
 
             }

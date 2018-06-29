@@ -47,4 +47,5 @@ public interface BorrowTenderService extends BaseTradeService{
      * @return
      */
     WebResult<Map<String,Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId);
+    BankCallResult borrowTenderBgReturn(BankCallBean bean);
 }
