@@ -25,6 +25,7 @@ public interface BorrowTenderService extends BaseTradeService{
     /**
      * 散标投资异步处理
      * @param bean
+     * @param couponGrantId
      * @return
      */
     BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId);
@@ -47,5 +48,4 @@ public interface BorrowTenderService extends BaseTradeService{
      * @return
      */
     WebResult<Map<String,Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId);
-    BankCallResult borrowTenderBgReturn(BankCallBean bean);
 }
