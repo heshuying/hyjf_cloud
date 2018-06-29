@@ -496,6 +496,66 @@ public class PoundageExceptionExample {
             return (Criteria) this;
         }
 
+        public Criteria andUpdaterIsNull() {
+            addCriterion("updater is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterIsNotNull() {
+            addCriterion("updater is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterEqualTo(Integer value) {
+            addCriterion("updater =", value, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterNotEqualTo(Integer value) {
+            addCriterion("updater <>", value, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterGreaterThan(Integer value) {
+            addCriterion("updater >", value, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterGreaterThanOrEqualTo(Integer value) {
+            addCriterion("updater >=", value, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterLessThan(Integer value) {
+            addCriterion("updater <", value, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterLessThanOrEqualTo(Integer value) {
+            addCriterion("updater <=", value, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterIn(List<Integer> values) {
+            addCriterion("updater in", values, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterNotIn(List<Integer> values) {
+            addCriterion("updater not in", values, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterBetween(Integer value1, Integer value2) {
+            addCriterion("updater between", value1, value2, "updater");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdaterNotBetween(Integer value1, Integer value2) {
+            addCriterion("updater not between", value1, value2, "updater");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;
@@ -613,66 +673,6 @@ public class PoundageExceptionExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterIsNull() {
-            addCriterion("updater is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterIsNotNull() {
-            addCriterion("updater is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterEqualTo(Integer value) {
-            addCriterion("updater =", value, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterNotEqualTo(Integer value) {
-            addCriterion("updater <>", value, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterGreaterThan(Integer value) {
-            addCriterion("updater >", value, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterGreaterThanOrEqualTo(Integer value) {
-            addCriterion("updater >=", value, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterLessThan(Integer value) {
-            addCriterion("updater <", value, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterLessThanOrEqualTo(Integer value) {
-            addCriterion("updater <=", value, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterIn(List<Integer> values) {
-            addCriterion("updater in", values, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterNotIn(List<Integer> values) {
-            addCriterion("updater not in", values, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterBetween(Integer value1, Integer value2) {
-            addCriterion("updater between", value1, value2, "updater");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdaterNotBetween(Integer value1, Integer value2) {
-            addCriterion("updater not between", value1, value2, "updater");
             return (Criteria) this;
         }
     }

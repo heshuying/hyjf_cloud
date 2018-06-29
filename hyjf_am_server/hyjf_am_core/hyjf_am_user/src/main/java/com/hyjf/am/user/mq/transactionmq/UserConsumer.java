@@ -34,7 +34,7 @@ public class UserConsumer extends Consumer {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		defaultMQPushConsumer.setConsumerGroup("user_transaction_group_test");
 		// 订阅指定MyTopic下tags等于MyTag
-		defaultMQPushConsumer.subscribe("userTransationTest", "*");
+		defaultMQPushConsumer.subscribe("userTransationTest1", "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);

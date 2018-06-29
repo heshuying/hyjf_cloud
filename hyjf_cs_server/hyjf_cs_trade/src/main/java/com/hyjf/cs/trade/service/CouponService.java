@@ -6,10 +6,8 @@ package com.hyjf.cs.trade.service;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.Map;
 
@@ -35,16 +33,8 @@ public interface CouponService {
      * @param accountStr
      * @param couponGrantId
      * @param platform
-     * @param period
+     * @param plan
      * @return
      */
-    Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period,String config);
-
-    /**
-     * 散标投资优惠券使用
-     * @param couponGrantId
-     * @param borrow
-     * @param bean
-     */
-    void borrowTenderCouponUse(String couponGrantId, BorrowVO borrow, BankCallBean bean);
+    Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, HjhPlanVO plan);
 }

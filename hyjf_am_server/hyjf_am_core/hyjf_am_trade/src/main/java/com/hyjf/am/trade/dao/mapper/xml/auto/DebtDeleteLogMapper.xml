@@ -17,13 +17,13 @@
     <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
     <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="borrow_full_time" property="borrowFullTime" jdbcType="VARCHAR" />
     <result column="recover_last_time" property="recoverLastTime" jdbcType="VARCHAR" />
     <result column="bail_num" property="bailNum" jdbcType="DECIMAL" />
     <result column="operater_uid" property="operaterUid" jdbcType="INTEGER" />
     <result column="operater_user" property="operaterUser" jdbcType="VARCHAR" />
     <result column="operater_time" property="operaterTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -86,8 +86,8 @@
   <sql id="Base_Column_List" >
     id, borrow_nid, borrow_name, username, account, borrow_account_yes, borrow_account_wait, 
     borrow_account_scale, borrow_style, borrow_style_name, project_type, project_type_name, 
-    borrow_period, borrow_apr, `status`, create_time, borrow_full_time, recover_last_time, 
-    bail_num, operater_uid, operater_user, operater_time
+    borrow_period, borrow_apr, `status`, borrow_full_time, recover_last_time, bail_num, 
+    operater_uid, operater_user, operater_time, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLogExample" >
     select
@@ -130,17 +130,17 @@
       account, borrow_account_yes, borrow_account_wait, 
       borrow_account_scale, borrow_style, borrow_style_name, 
       project_type, project_type_name, borrow_period, 
-      borrow_apr, `status`, create_time, 
-      borrow_full_time, recover_last_time, bail_num, 
-      operater_uid, operater_user, operater_time
+      borrow_apr, `status`, borrow_full_time, 
+      recover_last_time, bail_num, operater_uid, 
+      operater_user, operater_time, create_time
       )
     values (#{borrowNid,jdbcType=VARCHAR}, #{borrowName,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
       #{account,jdbcType=VARCHAR}, #{borrowAccountYes,jdbcType=VARCHAR}, #{borrowAccountWait,jdbcType=VARCHAR}, 
       #{borrowAccountScale,jdbcType=VARCHAR}, #{borrowStyle,jdbcType=VARCHAR}, #{borrowStyleName,jdbcType=VARCHAR}, 
       #{projectType,jdbcType=TINYINT}, #{projectTypeName,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=VARCHAR}, 
-      #{borrowApr,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{borrowFullTime,jdbcType=VARCHAR}, #{recoverLastTime,jdbcType=VARCHAR}, #{bailNum,jdbcType=DECIMAL}, 
-      #{operaterUid,jdbcType=INTEGER}, #{operaterUser,jdbcType=VARCHAR}, #{operaterTime,jdbcType=INTEGER}
+      #{borrowApr,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{borrowFullTime,jdbcType=VARCHAR}, 
+      #{recoverLastTime,jdbcType=VARCHAR}, #{bailNum,jdbcType=DECIMAL}, #{operaterUid,jdbcType=INTEGER}, 
+      #{operaterUser,jdbcType=VARCHAR}, #{operaterTime,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtDeleteLog" >
@@ -191,9 +191,6 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="borrowFullTime != null" >
         borrow_full_time,
       </if>
@@ -211,6 +208,9 @@
       </if>
       <if test="operaterTime != null" >
         operater_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -256,9 +256,6 @@
       <if test="status != null" >
         #{status,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="borrowFullTime != null" >
         #{borrowFullTime,jdbcType=VARCHAR},
       </if>
@@ -276,6 +273,9 @@
       </if>
       <if test="operaterTime != null" >
         #{operaterTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -333,9 +333,6 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.borrowFullTime != null" >
         borrow_full_time = #{record.borrowFullTime,jdbcType=VARCHAR},
       </if>
@@ -353,6 +350,9 @@
       </if>
       <if test="record.operaterTime != null" >
         operater_time = #{record.operaterTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -376,13 +376,13 @@
       borrow_period = #{record.borrowPeriod,jdbcType=VARCHAR},
       borrow_apr = #{record.borrowApr,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       borrow_full_time = #{record.borrowFullTime,jdbcType=VARCHAR},
       recover_last_time = #{record.recoverLastTime,jdbcType=VARCHAR},
       bail_num = #{record.bailNum,jdbcType=DECIMAL},
       operater_uid = #{record.operaterUid,jdbcType=INTEGER},
       operater_user = #{record.operaterUser,jdbcType=VARCHAR},
-      operater_time = #{record.operaterTime,jdbcType=INTEGER}
+      operater_time = #{record.operaterTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -432,9 +432,6 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="borrowFullTime != null" >
         borrow_full_time = #{borrowFullTime,jdbcType=VARCHAR},
       </if>
@@ -452,6 +449,9 @@
       </if>
       <if test="operaterTime != null" >
         operater_time = #{operaterTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -472,13 +472,13 @@
       borrow_period = #{borrowPeriod,jdbcType=VARCHAR},
       borrow_apr = #{borrowApr,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       borrow_full_time = #{borrowFullTime,jdbcType=VARCHAR},
       recover_last_time = #{recoverLastTime,jdbcType=VARCHAR},
       bail_num = #{bailNum,jdbcType=DECIMAL},
       operater_uid = #{operaterUid,jdbcType=INTEGER},
       operater_user = #{operaterUser,jdbcType=VARCHAR},
-      operater_time = #{operaterTime,jdbcType=INTEGER}
+      operater_time = #{operaterTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

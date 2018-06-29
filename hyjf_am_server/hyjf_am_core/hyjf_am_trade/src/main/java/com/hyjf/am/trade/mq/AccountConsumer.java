@@ -45,9 +45,9 @@ public class AccountConsumer extends Consumer {
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
-		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
+		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可
 		defaultMQPushConsumer.start();
-		logger.info("====sms consumer=====");
+		logger.info("====AccountConsumer start=====");
 	}
 
 	public class MessageListener implements MessageListenerConcurrently {
@@ -63,7 +63,8 @@ public class AccountConsumer extends Consumer {
 				BeanUtils.copyProperties(accountVO, account);
 				accountService.insert(account);
 			} else {
-				throw new RuntimeException("消费失败，未获取账户信息...");
+			    logger.error("消费失败，未获取账户信息...");
+				return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 			}
 
 			// 如果没有return success ，consumer会重新消费该消息，直到return success

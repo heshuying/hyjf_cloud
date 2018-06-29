@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SystemConfig {
-
+	
 	@Value("${hyjf.env.test}")
 	private boolean envTest;
 
@@ -40,6 +40,12 @@ public class SystemConfig {
 
     @Value("${evefile.name}")
     public String eveFileName;
+
+    @Value("${batch.repay.verify.url}")
+    private String repayVerifyUrl;
+
+    @Value("${batch.repay.result.url}")
+    private String repayResultUrl;
 
     public String getFtpHostName() {
         return ftpHostName;
@@ -104,4 +110,22 @@ public class SystemConfig {
     public void setEveFileName(String eveFileName) {
         this.eveFileName = eveFileName;
     }
+
+	public String getRepayVerifyUrl() {
+		return repayVerifyUrl;
+	}
+
+	public void setRepayVerifyUrl(String repayVerifyUrl) {
+		this.repayVerifyUrl = repayVerifyUrl;
+	}
+
+	public String getRepayResultUrl() {
+		return repayResultUrl;
+	}
+
+	public void setRepayResultUrl(String repayResultUrl) {
+		this.repayResultUrl = repayResultUrl;
+	}
+
+    
 }

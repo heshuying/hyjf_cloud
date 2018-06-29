@@ -5,8 +5,8 @@
     <id column="uuid" property="uuid" jdbcType="VARCHAR" />
     <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
     <result column="operation_code" property="operationCode" jdbcType="TINYINT" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" extends="BaseResultMap" >
     <result column="operation_content_from" property="operationContentFrom" jdbcType="LONGVARCHAR" />
@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    uuid, coupon_code, operation_code, create_time, create_user_id
+    uuid, coupon_code, operation_code, create_user_id, create_time
   </sql>
   <sql id="Blob_Column_List" >
     operation_content_from, operation_content_to
@@ -134,11 +134,11 @@
     <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_coupon_operation_history (coupon_code, operation_code, create_time, 
-      create_user_id, operation_content_from, 
+    insert into ht_coupon_operation_history (coupon_code, operation_code, create_user_id, 
+      create_time, operation_content_from, 
       operation_content_to)
-    values (#{couponCode,jdbcType=VARCHAR}, #{operationCode,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUserId,jdbcType=INTEGER}, #{operationContentFrom,jdbcType=LONGVARCHAR}, 
+    values (#{couponCode,jdbcType=VARCHAR}, #{operationCode,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{operationContentFrom,jdbcType=LONGVARCHAR}, 
       #{operationContentTo,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" >
@@ -153,11 +153,11 @@
       <if test="operationCode != null" >
         operation_code,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="createUserId != null" >
         create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
       <if test="operationContentFrom != null" >
         operation_content_from,
@@ -173,11 +173,11 @@
       <if test="operationCode != null" >
         #{operationCode,jdbcType=TINYINT},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operationContentFrom != null" >
         #{operationContentFrom,jdbcType=LONGVARCHAR},
@@ -205,11 +205,11 @@
       <if test="record.operationCode != null" >
         operation_code = #{record.operationCode,jdbcType=TINYINT},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.operationContentFrom != null" >
         operation_content_from = #{record.operationContentFrom,jdbcType=LONGVARCHAR},
@@ -227,8 +227,8 @@
     set uuid = #{record.uuid,jdbcType=VARCHAR},
       coupon_code = #{record.couponCode,jdbcType=VARCHAR},
       operation_code = #{record.operationCode,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       operation_content_from = #{record.operationContentFrom,jdbcType=LONGVARCHAR},
       operation_content_to = #{record.operationContentTo,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
@@ -240,8 +240,8 @@
     set uuid = #{record.uuid,jdbcType=VARCHAR},
       coupon_code = #{record.couponCode,jdbcType=VARCHAR},
       operation_code = #{record.operationCode,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER}
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -255,11 +255,11 @@
       <if test="operationCode != null" >
         operation_code = #{operationCode,jdbcType=TINYINT},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="operationContentFrom != null" >
         operation_content_from = #{operationContentFrom,jdbcType=LONGVARCHAR},
@@ -274,8 +274,8 @@
     update ht_coupon_operation_history
     set coupon_code = #{couponCode,jdbcType=VARCHAR},
       operation_code = #{operationCode,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       operation_content_from = #{operationContentFrom,jdbcType=LONGVARCHAR},
       operation_content_to = #{operationContentTo,jdbcType=LONGVARCHAR}
     where uuid = #{uuid,jdbcType=VARCHAR}
@@ -284,8 +284,8 @@
     update ht_coupon_operation_history
     set coupon_code = #{couponCode,jdbcType=VARCHAR},
       operation_code = #{operationCode,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user_id = #{createUserId,jdbcType=INTEGER}
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
 </mapper>

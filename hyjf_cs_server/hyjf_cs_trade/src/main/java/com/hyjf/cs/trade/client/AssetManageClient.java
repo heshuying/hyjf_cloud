@@ -37,4 +37,6 @@ public interface AssetManageClient {
     Integer countRepayMentPlanTotal(AssetManageBeanRequest request);
 
     List<RepayMentPlanListCustomizeVO> selectRepayMentPlanList(AssetManageBeanRequest request);
+
+	List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 }

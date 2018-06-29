@@ -11,7 +11,6 @@ import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
-import com.hyjf.am.user.service.BankOpenService;
 import com.hyjf.am.user.service.UserManagerService;
 import com.hyjf.am.user.service.callcenter.CallCenterBankService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -47,8 +46,6 @@ public class UserManagerController {
     private UserManagerService userManagerService;
     @Autowired
     private CallCenterBankService callCenterBankService;
-    @Autowired
-    private BankOpenService bankOpenService;
     private static Logger logger = LoggerFactory.getLogger(UserManagerController.class);
 
     /**
@@ -159,8 +156,7 @@ public class UserManagerController {
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
             CorpOpenAccountRecordVO corpOpenAccountRecordVO = null;
-           // CorpOpenAccountRecord corpOpenAccountRecord = userManagerService.selectCorpOpenAccountRecordByUserId(intUserId);
-            CorpOpenAccountRecord corpOpenAccountRecord = bankOpenService.getCorpOpenAccountRecord(intUserId);
+            CorpOpenAccountRecord corpOpenAccountRecord = userManagerService.selectCorpOpenAccountRecordByUserId(intUserId);
             if (null != corpOpenAccountRecord) {
                 BeanUtils.copyProperties(corpOpenAccountRecord, corpOpenAccountRecordVO);
                 response.setResult(corpOpenAccountRecordVO);
@@ -494,13 +490,13 @@ public class UserManagerController {
             mapParam.put("userId",request.getUserId());
             //mapParam.put("changeType",request.getChangeType());
         }
-        List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
+       /* List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
         if (!CollectionUtils.isEmpty(userChangeLogsList)) {
             List<UserChangeLogVO> userChangeLogVOList = CommonUtils.convertBeanList(userChangeLogsList, UserChangeLogVO.class);
             response.setResultList(userChangeLogVOList);
             response.setCount(userChangeLogsList.size());
             returnCode = Response.SUCCESS;
-        }
+        }*/
         response.setRtn(returnCode);//代表成功
         return response;
     }
@@ -548,8 +544,8 @@ public class UserManagerController {
         return response;
     }
 
-    @RequestMapping("/selectSpreadsUsersByUserId/{userId}")
-    public SpreadsUserResponse selectSpreadsUsersByUserId(@PathVariable String userId){
+    @RequestMapping("/selectSpreadsUsersByUserId")
+    public SpreadsUserResponse selectSpreadsUsersByUserId(@Valid String userId){
         SpreadsUserResponse response = new SpreadsUserResponse();
         String returnCode = Response.FAIL;
         if(StringUtils.isNotEmpty(userId)){

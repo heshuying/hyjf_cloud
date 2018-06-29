@@ -1,24 +1,24 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.BorrowCreditResponse;
-import com.hyjf.am.response.trade.CreditTenderLogResponse;
-import com.hyjf.am.response.trade.CreditTenderResponse;
+import java.util.List;
+import java.util.Map;
+
+import com.hyjf.am.response.trade.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 /**
  * 债转投资异常client实现类
@@ -174,6 +174,26 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
 		}
 		return null;
 	}
+
+	@Override
+	public List<CreditTenderVO> getCreditTenderList(CreditTenderRequest request) {
+		String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderList";
+		CreditTenderResponse response = restTemplate.postForEntity(url, request, CreditTenderResponse.class).getBody();
+		if(Validator.isNotNull(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+    @Override
+    public List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String, Object> params) {
+	    String url  = "http://AM-TRADE/am-trade/creditTender/selectWebCreditTenderDetailForContract";
+        TenderToCreditDetailCustomizeResponse response = restTemplate.postForEntity(url, params, TenderToCreditDetailCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 
 
 }

@@ -1441,15 +1441,4 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final Integer CKCODE_YIYAN = 8;
     /** 短信验证码状态,已用 */
     public static final Integer CKCODE_USED = 9;
-
-
-    /**
-     * 优惠券投资  投资类别：1：直投类，2：汇添金 3：汇计划
-     */
-    public static final Integer COUPON_TENDER_TYPE_HJH = 3;
-    /**
-     * 优惠券投资  投资类别：1：直投类，2：汇添金 3：汇计划
-     */
-    public static final Integer COUPON_TENDER_TYPE_HZT = 1;
-
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -161,5 +162,13 @@ public interface AmUserClient {
 	 * @return
 	 */
 	boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest);
+	/**
+	 * 集团组织信息查询
+	 * */
 	List<OrganizationStructureVO> searchGroupInfo();
+	/**
+	 * 获取需要更新用户画像的userInfo --用户画像定时任务用
+	 * */
+	List<UserInfoVO> searchUserInfo();
+
 }

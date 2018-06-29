@@ -49,6 +49,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -437,7 +438,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 发送短信验证码
         SmsMessage smsMessage = new SmsMessage(null, param, sendSmsVO.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CHANNEL_TYPE_NORMAL);
         // 发送
-        smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+        smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             // 累加手机次数
             String currentMaxPhoneCount = RedisUtils.get(sendSmsVO.getMobile() + ":MaxPhoneCount");
             if (StringUtils.isBlank(currentMaxPhoneCount)) {

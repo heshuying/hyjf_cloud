@@ -23,7 +23,7 @@ eureka:
   instance:
     preferIpAddress: true
 server:
-    port: 8096
+  port: 8096
 
 logging:
   file: am-trade.log

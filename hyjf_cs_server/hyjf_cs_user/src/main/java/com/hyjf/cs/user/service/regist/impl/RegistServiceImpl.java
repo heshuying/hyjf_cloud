@@ -49,6 +49,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -235,7 +236,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 params.put("userId", String.valueOf(userId));
                 params.put("sendFlg", "11");
                 couponProducer.messageSend(new Producer.MassageContent(MQConstant.REGISTER_COUPON_TOPIC,
-                        MQConstant.REGISTER_COUPON_TAG, JSON.toJSONBytes(params)));
+                        MQConstant.REGISTER_COUPON_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
             } catch (Exception e) {
                 logger.error("注册发放888红包失败...", e);
             }
@@ -245,7 +246,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                     CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(
-                        new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+                        new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             } catch (MQException e) {
                 logger.error("短信发送失败...", e);
             }

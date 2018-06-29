@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 
-import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -17,8 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
 /**
@@ -68,10 +66,6 @@ public abstract class Producer {
 		}
 	}
 
-	protected DefaultMQProducer getDefaultMQProducer() throws MQClientException {
-		return defaultMQProducer;
-	}
-
 	public static class MassageContent implements Serializable {
 		private static final long serialVersionUID = -6846413929342308237L;
 		public final String topic;
@@ -86,24 +80,8 @@ public abstract class Producer {
 			this.body = body;
 		}
 
-		public MassageContent(String topic, String tag, String keys, JSONObject body) {
-			this(topic, tag, keys, JSON.toJSONBytes(body));
-		}
-
-		public MassageContent(String topic, String tag, byte[] body) {
-			this(topic, tag, MQConstant.HYJF_DEFAULT_KEY, body);
-		}
-
-		public MassageContent(String topic, byte[] body) {
-			this(topic, MQConstant.HYJF_DEFAULT_TAG, MQConstant.HYJF_DEFAULT_KEY, body);
-		}
-
-		public MassageContent(String topic, String tag, JSONObject body) {
-			this(topic, tag, MQConstant.HYJF_DEFAULT_KEY, body);
-		}
-
-		public MassageContent(String topic, JSONObject body) {
-			this(topic, MQConstant.HYJF_DEFAULT_TAG, MQConstant.HYJF_DEFAULT_KEY, body);
+		public MassageContent(String topic, String keys, byte[] body) {
+			this(topic, MQConstant.HYJF_DEFAULT_TAG, keys, body);
 		}
 	}
 

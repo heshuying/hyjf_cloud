@@ -8,6 +8,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -745,4 +746,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public List<UserInfoVO> searchUserInfo() {
+		String url = "http://AM-USER/userBatch/portrait/searchUserInfoList";
+		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+		if(response != null){
+			return response.getResultList();
+		}
+		return null;
+	}
+
 }

@@ -13,8 +13,6 @@ public class PoundageDetail implements Serializable {
 
     private String borrowType;
 
-    private Date addTime;
-
     private String usernname;
 
     private String poundageType;
@@ -30,6 +28,8 @@ public class PoundageDetail implements Serializable {
     private Integer ledgerTime;
 
     private Integer ledgerId;
+
+    private Date addTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -63,14 +63,6 @@ public class PoundageDetail implements Serializable {
 
     public void setBorrowType(String borrowType) {
         this.borrowType = borrowType == null ? null : borrowType.trim();
-    }
-
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
     }
 
     public String getUsernname() {
@@ -135,5 +127,13 @@ public class PoundageDetail implements Serializable {
 
     public void setLedgerId(Integer ledgerId) {
         this.ledgerId = ledgerId;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
     }
 }

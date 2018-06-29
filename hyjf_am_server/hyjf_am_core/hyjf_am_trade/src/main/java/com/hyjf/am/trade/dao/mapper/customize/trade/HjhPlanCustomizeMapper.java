@@ -22,15 +22,13 @@ public interface HjhPlanCustomizeMapper {
 
     /**
      * 加入计划后更新计划总信息
-     *
      * @param planUpdate
      * @return
      */
-    int updateByDebtPlanId(Map<String, Object> planUpdate);
+    int updateByDebtPlanId(Map<String,Object> planUpdate);
 
     /**
-     * 还款/终止未完全承接的债权时,减扣计划的开放额度
-     *
+     * 更新还款后复投的开放额度
      * @param hjhPlan
      * @return
      */

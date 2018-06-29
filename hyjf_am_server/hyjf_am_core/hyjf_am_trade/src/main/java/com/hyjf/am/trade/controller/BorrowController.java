@@ -244,21 +244,4 @@ public class BorrowController {
 			return 0;
 		}
 	}
-
-	/**
-	 * 散标投资操作数据库表
-	 * @param tenderBg
-	 * @return
-	 */
-	@PostMapping("/borrowTender")
-	public int borrowTender(@RequestBody TenderBgVO tenderBg) {
-		try{
-			borrowService.updateTenderAfter(tenderBg);
-			return 1;
-		}catch (Exception e){
-			return 0;
-		}
-	}
-
-
 }

@@ -3,10 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl.task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -63,7 +60,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
     	
         try {
 			borrowLoanRepayProducer.messageSend(
-			        new Producer.MassageContent(key, JSON.toJSONBytes(message)));
+			        new Producer.MassageContent(key, UUID.randomUUID().toString(),JSON.toJSONBytes(message)));
 			
 		} catch (MQException e) {
 			e.printStackTrace();
@@ -241,7 +238,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 
         try {
             smsProducer.messageSend(
-                    new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+                    new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
         	_log.error("短信发送失败...", e);
         }

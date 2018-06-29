@@ -25,7 +25,7 @@
     <result column="credit_period_nine_twel" property="creditPeriodNineTwel" jdbcType="INTEGER" />
     <result column="credit_period_twel_tf" property="creditPeriodTwelTf" jdbcType="INTEGER" />
     <result column="credit_period_tf" property="creditPeriodTf" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="data_date" property="dataDate" jdbcType="VARCHAR" />
     <result column="data_month" property="dataMonth" jdbcType="VARCHAR" />
     <result column="data_hour" property="dataHour" jdbcType="VARCHAR" />
@@ -150,7 +150,7 @@
       #{investPeriodTwelTf,jdbcType=INTEGER}, #{investPeriodTf,jdbcType=INTEGER}, #{creditPeriodOne,jdbcType=INTEGER}, 
       #{creditPeriodTwoFour,jdbcType=INTEGER}, #{creditPeriodFiveEight,jdbcType=INTEGER}, 
       #{creditPeriodNineTwel,jdbcType=INTEGER}, #{creditPeriodTwelTf,jdbcType=INTEGER}, 
-      #{creditPeriodTf,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{dataDate,jdbcType=VARCHAR}, 
+      #{creditPeriodTf,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{dataDate,jdbcType=VARCHAR}, 
       #{dataMonth,jdbcType=VARCHAR}, #{dataHour,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStatic" >
@@ -306,7 +306,7 @@
         #{creditPeriodTf,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="dataDate != null" >
         #{dataDate,jdbcType=VARCHAR},
@@ -398,7 +398,7 @@
         credit_period_tf = #{record.creditPeriodTf,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.dataDate != null" >
         data_date = #{record.dataDate,jdbcType=VARCHAR},
@@ -439,7 +439,7 @@
       credit_period_nine_twel = #{record.creditPeriodNineTwel,jdbcType=INTEGER},
       credit_period_twel_tf = #{record.creditPeriodTwelTf,jdbcType=INTEGER},
       credit_period_tf = #{record.creditPeriodTf,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       data_date = #{record.dataDate,jdbcType=VARCHAR},
       data_month = #{record.dataMonth,jdbcType=VARCHAR},
       data_hour = #{record.dataHour,jdbcType=VARCHAR}
@@ -517,7 +517,7 @@
         credit_period_tf = #{creditPeriodTf,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="dataDate != null" >
         data_date = #{dataDate,jdbcType=VARCHAR},
@@ -555,7 +555,7 @@
       credit_period_nine_twel = #{creditPeriodNineTwel,jdbcType=INTEGER},
       credit_period_twel_tf = #{creditPeriodTwelTf,jdbcType=INTEGER},
       credit_period_tf = #{creditPeriodTf,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       data_date = #{dataDate,jdbcType=VARCHAR},
       data_month = #{dataMonth,jdbcType=VARCHAR},
       data_hour = #{dataHour,jdbcType=VARCHAR}

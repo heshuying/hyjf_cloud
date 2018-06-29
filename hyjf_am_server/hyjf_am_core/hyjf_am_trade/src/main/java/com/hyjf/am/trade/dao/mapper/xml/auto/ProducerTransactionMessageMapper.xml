@@ -6,8 +6,10 @@
     <result column="msg_id" property="msgId" jdbcType="VARCHAR" />
     <result column="body" property="body" jdbcType="VARCHAR" />
     <result column="message_status" property="messageStatus" jdbcType="TINYINT" />
-    <result column="send_times" property="sendTimes" jdbcType="INTEGER" />
+    <result column="retry_times" property="retryTimes" jdbcType="INTEGER" />
     <result column="topic" property="topic" jdbcType="VARCHAR" />
+    <result column="tags" property="tags" jdbcType="VARCHAR" />
+    <result column="keys" property="keys" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -70,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, msg_id, body, message_status, send_times, topic, create_time, update_time
+    id, msg_id, body, message_status, retry_times, topic, tags, `keys`, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" >
     select
@@ -110,11 +113,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_producer_transaction_message (msg_id, body, message_status, 
-      send_times, topic, create_time, 
-      update_time)
+      retry_times, topic, tags, 
+      `keys`, create_time, update_time
+      )
     values (#{msgId,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR}, #{messageStatus,jdbcType=TINYINT}, 
-      #{sendTimes,jdbcType=INTEGER}, #{topic,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{retryTimes,jdbcType=INTEGER}, #{topic,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, 
+      #{keys,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
@@ -131,11 +136,17 @@
       <if test="messageStatus != null" >
         message_status,
       </if>
-      <if test="sendTimes != null" >
-        send_times,
+      <if test="retryTimes != null" >
+        retry_times,
       </if>
       <if test="topic != null" >
         topic,
+      </if>
+      <if test="tags != null" >
+        tags,
+      </if>
+      <if test="keys != null" >
+        `keys`,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -154,11 +165,17 @@
       <if test="messageStatus != null" >
         #{messageStatus,jdbcType=TINYINT},
       </if>
-      <if test="sendTimes != null" >
-        #{sendTimes,jdbcType=INTEGER},
+      <if test="retryTimes != null" >
+        #{retryTimes,jdbcType=INTEGER},
       </if>
       <if test="topic != null" >
         #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="keys != null" >
+        #{keys,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -189,11 +206,17 @@
       <if test="record.messageStatus != null" >
         message_status = #{record.messageStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.sendTimes != null" >
-        send_times = #{record.sendTimes,jdbcType=INTEGER},
+      <if test="record.retryTimes != null" >
+        retry_times = #{record.retryTimes,jdbcType=INTEGER},
       </if>
       <if test="record.topic != null" >
         topic = #{record.topic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tags != null" >
+        tags = #{record.tags,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keys != null" >
+        `keys` = #{record.keys,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -212,8 +235,10 @@
       msg_id = #{record.msgId,jdbcType=VARCHAR},
       body = #{record.body,jdbcType=VARCHAR},
       message_status = #{record.messageStatus,jdbcType=TINYINT},
-      send_times = #{record.sendTimes,jdbcType=INTEGER},
+      retry_times = #{record.retryTimes,jdbcType=INTEGER},
       topic = #{record.topic,jdbcType=VARCHAR},
+      tags = #{record.tags,jdbcType=VARCHAR},
+      `keys` = #{record.keys,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -232,11 +257,17 @@
       <if test="messageStatus != null" >
         message_status = #{messageStatus,jdbcType=TINYINT},
       </if>
-      <if test="sendTimes != null" >
-        send_times = #{sendTimes,jdbcType=INTEGER},
+      <if test="retryTimes != null" >
+        retry_times = #{retryTimes,jdbcType=INTEGER},
       </if>
       <if test="topic != null" >
         topic = #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="keys != null" >
+        `keys` = #{keys,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -252,8 +283,10 @@
     set msg_id = #{msgId,jdbcType=VARCHAR},
       body = #{body,jdbcType=VARCHAR},
       message_status = #{messageStatus,jdbcType=TINYINT},
-      send_times = #{sendTimes,jdbcType=INTEGER},
+      retry_times = #{retryTimes,jdbcType=INTEGER},
       topic = #{topic,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      `keys` = #{keys,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

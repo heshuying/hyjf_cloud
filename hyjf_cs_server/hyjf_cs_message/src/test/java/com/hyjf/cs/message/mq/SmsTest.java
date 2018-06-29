@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author xiasq
@@ -35,6 +36,6 @@ public class SmsTest {
                 "TPL_ZHUCE", CustomConstants.CHANNEL_TYPE_NORMAL);
 
         // 发送
-        smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, JSON.toJSONBytes(smsMessage)));
+        smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
     }
 }

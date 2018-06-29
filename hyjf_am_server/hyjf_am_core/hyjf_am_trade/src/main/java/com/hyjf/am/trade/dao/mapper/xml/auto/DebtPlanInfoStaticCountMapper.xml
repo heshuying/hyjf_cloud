@@ -29,8 +29,8 @@
     <result column="accede_client_count_wei" property="accedeClientCountWei" jdbcType="INTEGER" />
     <result column="accede_client_count_ios" property="accedeClientCountIos" jdbcType="INTEGER" />
     <result column="accede_client_count_android" property="accedeClientCountAndroid" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -147,8 +147,8 @@
       accede_client_money_wei, accede_client_money_ios, 
       accede_client_money_android, accede_client_count_pc, 
       accede_client_count_wei, accede_client_count_ios, 
-      accede_client_count_android, create_time, update_time
-      )
+      accede_client_count_android, create_time, 
+      update_time)
     values (#{accedeMoneyOne,jdbcType=DECIMAL}, #{accedeMoneyTwo,jdbcType=DECIMAL}, #{accedeMoneyThree,jdbcType=DECIMAL}, 
       #{accedeMoneyFour,jdbcType=DECIMAL}, #{accedeMoneyFive,jdbcType=DECIMAL}, #{accedeMoneyFiveUp,jdbcType=DECIMAL}, 
       #{accedeMoneyCountOne,jdbcType=INTEGER}, #{accedeMoneyCountTwo,jdbcType=INTEGER}, 
@@ -160,8 +160,8 @@
       #{accedeClientMoneyWei,jdbcType=DECIMAL}, #{accedeClientMoneyIos,jdbcType=DECIMAL}, 
       #{accedeClientMoneyAndroid,jdbcType=DECIMAL}, #{accedeClientCountPc,jdbcType=INTEGER}, 
       #{accedeClientCountWei,jdbcType=INTEGER}, #{accedeClientCountIos,jdbcType=INTEGER}, 
-      #{accedeClientCountAndroid,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}
-      )
+      #{accedeClientCountAndroid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStaticCount" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -334,10 +334,10 @@
         #{accedeClientCountAndroid,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -432,10 +432,10 @@
         accede_client_count_android = #{record.accedeClientCountAndroid,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -471,8 +471,8 @@
       accede_client_count_wei = #{record.accedeClientCountWei,jdbcType=INTEGER},
       accede_client_count_ios = #{record.accedeClientCountIos,jdbcType=INTEGER},
       accede_client_count_android = #{record.accedeClientCountAndroid,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -559,10 +559,10 @@
         accede_client_count_android = #{accedeClientCountAndroid,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -595,8 +595,8 @@
       accede_client_count_wei = #{accedeClientCountWei,jdbcType=INTEGER},
       accede_client_count_ios = #{accedeClientCountIos,jdbcType=INTEGER},
       accede_client_count_android = #{accedeClientCountAndroid,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

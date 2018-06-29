@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class DebtPlanConfig implements Serializable {
     private Integer id;
@@ -38,23 +39,23 @@ public class DebtPlanConfig implements Serializable {
 
     private BigDecimal roundAmount;
 
+    private String couponConfig;
+
     private Integer status;
 
     private Integer delFlag;
-
-    private Integer createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
-
     private Integer updateUserId;
 
     private String updateUserName;
 
-    private String couponConfig;
+    private Date createTime;
+
+    private Date updateTime;
 
     private String remark;
 
@@ -196,6 +197,14 @@ public class DebtPlanConfig implements Serializable {
         this.roundAmount = roundAmount;
     }
 
+    public String getCouponConfig() {
+        return couponConfig;
+    }
+
+    public void setCouponConfig(String couponConfig) {
+        this.couponConfig = couponConfig == null ? null : couponConfig.trim();
+    }
+
     public Integer getStatus() {
         return status;
     }
@@ -210,14 +219,6 @@ public class DebtPlanConfig implements Serializable {
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
     }
 
     public Integer getCreateUserId() {
@@ -236,14 +237,6 @@ public class DebtPlanConfig implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
@@ -260,12 +253,20 @@ public class DebtPlanConfig implements Serializable {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
     }
 
-    public String getCouponConfig() {
-        return couponConfig;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCouponConfig(String couponConfig) {
-        this.couponConfig = couponConfig == null ? null : couponConfig.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getRemark() {
