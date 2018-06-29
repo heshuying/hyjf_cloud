@@ -27,7 +27,7 @@ public class TransactionCheckScheduler {
 	/**
 	 * 每分钟执行一次
 	 */
-	@Scheduled(fixedRate = 30 * 1000)
+	@Scheduled(fixedRate = 60 * 1000)
 	public void checkTransactionMessage() {
 		try {
 			logger.info("rocketmq事务回查开始....");

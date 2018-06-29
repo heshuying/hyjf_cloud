@@ -101,7 +101,7 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
 			for (ProducerTransactionMessage message : list) {
 				// 回查3次以上，重新发送确认消息，否则继续回查， 避免生产端刚发送消息就出发回查，这时候无需重发确认
 				if (message.getRetryTimes() >= 3) {
-					// todo 重发的消息需要修改sysflag是8，现在是发普通消息 怎么做？
+					// 发送普通消息
 					Message repeatMsg = new Message();
 					repeatMsg.setBody(message.getBody().getBytes());
 					repeatMsg.setKeys(message.getKeys());
