@@ -37,9 +37,6 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 	@Autowired
 	private AppChannelStatisticsDetailDao appChannelStatisticsDetailDao;
 
-	
-
-
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
@@ -83,37 +80,35 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 					if (entity != null) {
 						appChannelStatisticsDetailDao.save(entity);
 					}
-				}else if(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_OLD_TAG.equals(msg.getTags())
-						&& MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_OLD_TAG.equals(msg.getTags())) {
-					JSONObject entity = JSONObject.parseObject(msg.getBody(),JSONObject.class);
-					if (Validator.isNotNull(entity)){
-						Integer investFlag= (Integer) entity.get("investFlag");
-						if (investFlag==1){
+				} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG.equals(msg.getTags())
+						|| MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG.equals(msg.getTags())) {
+					JSONObject entity = JSONObject.parseObject(msg.getBody(), JSONObject.class);
+					if (Validator.isNotNull(entity)) {
+						Integer investFlag = entity.getInteger("investFlag");
+						if (investFlag == 1) {
 							Query query = new Query();
-							Integer userId= (Integer) entity.get("userId");
+							Integer userId = entity.getInteger("userId");
 							Criteria criteria = Criteria.where("userId").is(userId);
 							query.addCriteria(criteria);
 							Update update = new Update();
-							BigDecimal accountDecimal= (BigDecimal) entity.get("accountDecimal");
-							update.inc("cumulativeInvest",accountDecimal);
-							appChannelStatisticsDetailDao.update(query,update);
-						}else if (investFlag==0){
+							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
+							update.inc("cumulativeInvest", accountDecimal);
+							appChannelStatisticsDetailDao.update(query, update);
+						} else if (investFlag == 0) {
 							Query query = new Query();
-							Integer userId= (Integer) entity.get("userId");
+							Integer userId = entity.getInteger("userId");
 							Criteria criteria = Criteria.where("userId").is(userId);
 							query.addCriteria(criteria);
 							Update update = new Update();
-							BigDecimal accountDecimal= (BigDecimal) entity.get("accountDecimal");
-							String projectType= (String) entity.get("projectType");
-							int investTime= (int) entity.get("investTime");
-							String investProjectPeriod = (String) entity.get("investProjectPeriod");
+							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
+							String projectType = entity.getString("projectType");
+							Integer investTime = entity.getInteger("investTime");
+							String investProjectPeriod = entity.getString("investProjectPeriod");
 
-							update.inc("cumulativeInvest",accountDecimal)
-									.set("investAmount",accountDecimal)
-									.set("investProjectType",projectType)
-									.set("firstInvestTime",investTime)
-									.set("investProjectPeriod",investProjectPeriod);
-							appChannelStatisticsDetailDao.update(query,update);
+							update.inc("cumulativeInvest", accountDecimal).set("investAmount", accountDecimal)
+									.set("investProjectType", projectType).set("firstInvestTime", investTime)
+									.set("investProjectPeriod", investProjectPeriod);
+							appChannelStatisticsDetailDao.update(query, update);
 						}
 					}
 				}

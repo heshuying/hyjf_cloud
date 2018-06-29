@@ -215,7 +215,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         //推送mq
                                         this.appChannelStatisticsDetailProducer.messageSend(
                                                 new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDITTENDER_OLD_TAG,JSON.toJSONBytes(params)));
+                                                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG,JSON.toJSONBytes(params)));
                                     }else{
 
                                         UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);

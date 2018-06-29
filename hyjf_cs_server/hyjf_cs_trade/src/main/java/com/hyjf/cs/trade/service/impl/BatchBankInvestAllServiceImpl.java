@@ -161,7 +161,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							//压入消息队列
 							try {
 								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_OLD_TAG,JSON.toJSONBytes(params)));
+										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG,JSON.toJSONBytes(params)));
 							} catch (MQException e) {
 								e.printStackTrace();
 								logger.error("渠道统计用户累计投资推送消息队列失败！！！");
