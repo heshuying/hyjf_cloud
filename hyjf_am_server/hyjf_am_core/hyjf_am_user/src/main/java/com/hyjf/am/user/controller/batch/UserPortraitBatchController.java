@@ -4,17 +4,24 @@
 package com.hyjf.am.user.controller.batch;
 
 import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
+import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserPortrait;
 import com.hyjf.am.user.service.batch.UserPortraitBatchService;
+import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -41,5 +48,10 @@ public class UserPortraitBatchController {
             response.setResultList(list);
         }
         return response;
+    }
+    @PostMapping("/saveUserPortrait")
+    public void saveUserPortrait(@RequestBody @Valid BatchUserPortraitQueryRequest request){
+        logger.info("员工画像.....saveUserPortrait::::::::::request======={}",request);
+        userPortraitBatchService.saveUserPortrait(request);
     }
 }

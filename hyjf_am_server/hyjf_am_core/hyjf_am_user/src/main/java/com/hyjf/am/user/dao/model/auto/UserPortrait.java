@@ -275,4 +275,37 @@ public class UserPortrait implements Serializable {
     public void setMobile(String mobile) {
         this.mobile = mobile == null ? null : mobile.trim();
     }
+
+    @Override
+    public String toString() {
+        return "UserPortrait{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", age=" + age +
+                ", sex='" + sex + '\'' +
+                ", education='" + education + '\'' +
+                ", occupation='" + occupation + '\'' +
+                ", city='" + city + '\'' +
+                ", interest='" + interest + '\'' +
+                ", interestSum=" + interestSum +
+                ", investSum=" + investSum +
+                ", rechargeSum=" + rechargeSum +
+                ", withdrawSum=" + withdrawSum +
+                ", loginActive='" + loginActive + '\'' +
+                ", customerSource='" + customerSource + '\'' +
+                ", lastLoginTime=" + lastLoginTime +
+                ", lastRechargeTime=" + lastRechargeTime +
+                ", lastWithdrawTime=" + lastWithdrawTime +
+                ", investPlatform=" + investPlatform +
+                ", investAge=" + investAge +
+                ", tradeNumber=" + tradeNumber +
+                ", currentOwner='" + currentOwner + '\'' +
+                ", addWechat='" + addWechat + '\'' +
+                ", investProcess='" + investProcess + '\'' +
+                ", customerComplaint='" + customerComplaint + '\'' +
+                ", inviteCustomer=" + inviteCustomer +
+                ", remark='" + remark + '\'' +
+                ", mobile='" + mobile + '\'' +
+                '}';
+    }
 }
