@@ -910,7 +910,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     borrowPreNid = borrowPreNidNew;
                     break;
                 } else {

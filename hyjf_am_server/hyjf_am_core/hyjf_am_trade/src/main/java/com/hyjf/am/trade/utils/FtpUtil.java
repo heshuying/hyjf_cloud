@@ -28,16 +28,19 @@ public class FtpUtil {
      */
     public static Boolean connectSFTP(SFTPParameter para, Integer count) throws InterruptedException, JSchException {
         Boolean ret = false;
-        if (para == null)
+        if (para == null) {
             return ret;
+        }
         if (count == 1) {
                     int interval = para.checkInterval();
                     Thread.sleep(interval);
         }
-        if (count == 0)
+        if (count == 0) {
             count = 1;
-        if (para.isConnected)
+        }
+        if (para.isConnected) {
             return true;
+        }
         if (StringUtils.isEmpty(para.hostName) || para.port == 0
                 || para.userName == null || para.passWord == null) {
             logger.error("SFTP connect parameter error !");
@@ -151,11 +154,17 @@ public class FtpUtil {
     public static Boolean downloadFiles(SFTPParameter para) throws InterruptedException, JSchException, SftpException{
         Boolean ret = true ;
         List<ChannelSftp.LsEntry> files = getFiles(para) ;
-        if(!para.isConnected) connectSFTP(para, para.conFTPTryCount) ;
+        if(!para.isConnected) {
+            connectSFTP(para, para.conFTPTryCount) ;
+        }
         for(ChannelSftp.LsEntry file : files){
             ChannelSftp cs = para.sftp;
-            if(!para.downloadPath.endsWith("/")) para.downloadPath = para.downloadPath + "/" ;
-            if(!para.savePath.endsWith("/")) para.savePath = para.savePath + "/" ;
+            if(!para.downloadPath.endsWith("/")) {
+                para.downloadPath = para.downloadPath + "/" ;
+            }
+            if(!para.savePath.endsWith("/")) {
+                para.savePath = para.savePath + "/" ;
+            }
             String fromFile = para.downloadPath + file.getFilename() ;
             String toFile = para.savePath  + file.getFilename() ;
             cs.get(fromFile, toFile);
@@ -174,10 +183,14 @@ public class FtpUtil {
      */
     public static Boolean uploadFile(SFTPParameter para,File file) throws InterruptedException, JSchException, SftpException{
         Boolean ret = false ;
-        if(!file.exists()) return ret ;
+        if(!file.exists()) {
+            return ret ;
+        }
         if (connectSFTP(para, para.conFTPTryCount)) {
                 ChannelSftp cs = para.sftp ;
-                if(!para.uploadPath.endsWith("/")) para.uploadPath = para.uploadPath + "/" ;
+                if(!para.uploadPath.endsWith("/")) {
+                    para.uploadPath = para.uploadPath + "/" ;
+                }
                 cs.put(file.getAbsolutePath(), para.uploadPath  + file.getName());
                 ret = true ;
         }
@@ -195,10 +208,14 @@ public class FtpUtil {
      */
     public static Boolean uploadFiles(SFTPParameter para,List<File> files) throws InterruptedException, JSchException, SftpException{
         Boolean ret = true ;
-        if(files == null || files.size() <= 0) return ret ;
+        if(files == null || files.size() <= 0) {
+            return ret ;
+        }
             int  i = 0 ;
                 for(File file : files){
-                    if(!uploadFile(para, file)) i ++ ;
+                    if(!uploadFile(para, file)) {
+                        i ++ ;
+                    }
                 }
                 if(i > 0){
                 logger.error(i + " items were uploaded failed!");
@@ -237,11 +254,15 @@ public class FtpUtil {
      */
     public static Boolean deleteFiles(SFTPParameter para,List<String> list) throws InterruptedException, JSchException, SftpException{
         Boolean ret = true ;
-        if(list == null || list.size() <= 0)  ret = false;
+        if(list == null || list.size() <= 0) {
+            ret = false;
+        }
         int i = 0 ;
         for(String s : list ){
 
-            if(!deleteFile(para, s)) i ++  ;
+            if(!deleteFile(para, s)) {
+                i ++  ;
+            }
         }
         if(i > 0){
             logger.equals(i + " items were deleted failed!");
@@ -313,7 +334,9 @@ public class FtpUtil {
      * @throws SftpException
      */
     public static void makeDir(SFTPParameter para,String makeDir) throws InterruptedException, JSchException, SftpException {
-        if("".equals(makeDir) || makeDir == null) return;
+        if("".equals(makeDir) || makeDir == null) {
+            return;
+        }
         connectSFTP(para, para.conFTPTryCount) ;
         ChannelSftp cs = para.sftp ;
         String[] makedirs = makeDir.split("\\/") ;

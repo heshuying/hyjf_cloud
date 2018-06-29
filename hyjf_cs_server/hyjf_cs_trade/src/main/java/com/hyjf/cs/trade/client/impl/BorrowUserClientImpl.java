@@ -19,6 +19,7 @@ public class BorrowUserClientImpl implements BorrowUserClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Override
     public BorrowUserVO getBorrowUser(String borrowNid) {
         BorrowUserResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/borrowuser/borrowuserinfo/" + borrowNid,

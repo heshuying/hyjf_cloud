@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class BankOpenServiceImpl implements BankOpenService {
+public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
     @Autowired
     private BankOpenAccountLogMapper bankOpenAccountLogMapper;
@@ -275,15 +275,6 @@ public class BankOpenServiceImpl implements BankOpenService {
         return null;
     }
 
-    @Override
-    public BankOpenAccount selectByExample(BankOpenAccountExample example) {
-        List<BankOpenAccount> bankOpenAccountList = bankOpenAccountMapper.selectByExample(example);
-        if (bankOpenAccountList != null && bankOpenAccountList.size() == 1) {
-            return bankOpenAccountList.get(0);
-        }
-        return null;
-    }
-
     /**
      * 根据用户Id检索用户银行卡信息
      *
@@ -328,25 +319,7 @@ public class BankOpenServiceImpl implements BankOpenService {
         return null;
     }
 
-    /**
-     * 根据用户ID查询企业用户信息
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId) {
-        CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
-        CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        // 江西银行
-        cra.andIsBankEqualTo(1);
-        List<CorpOpenAccountRecord> list = this.corpOpenAccountRecordMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-        return null;
-    }
+
 
     /**
      * @Description 开户成功后保存银行卡信息

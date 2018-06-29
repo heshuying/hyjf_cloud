@@ -289,7 +289,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         String week = GetDate.getWeekOfDate(calendar.getTime());
-        if(week.equals("周六") || week.equals("周日")){
+        if("周六".equals(week) || "周日".equals(week)){
             calendar.add(Calendar.DAY_OF_MONTH, 1);
             getStatisticEndTime(calendar);
         }
@@ -320,7 +320,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         String week = GetDate.getWeekOfDate(calendar.getTime());
-        if(week.equals("周六") || week.equals("周日")){
+        if("周六".equals(week) || "周日".equals(week)){
             return true;
         }
 

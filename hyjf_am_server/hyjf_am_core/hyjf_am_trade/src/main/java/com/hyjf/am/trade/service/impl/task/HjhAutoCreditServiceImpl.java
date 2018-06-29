@@ -617,7 +617,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                                 capital = capital.add(debtDetailNoRepay.getRepayCapitalWait());
                                 interest = interest.add(debtDetailNoRepay.getRepayInterestWait());
                                 total = capital.add(interest);
-                                if (debtDetailNoRepay.getRepayPeriod() == debtDetailNoRepay.getBorrowPeriod()) {
+                                if (debtDetailNoRepay.getRepayPeriod().equals(debtDetailNoRepay.getBorrowPeriod())) {
                                     // 最后还款日
                                     hjhDebtCredit.setCreditRepayEndTime(debtDetailNoRepay.getRepayTime());
                                 }
@@ -833,7 +833,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                                     capital = capital.add(debtDetailNoRepay.getRepayCapitalWait());
                                     interest = interest.add(debtDetailNoRepay.getRepayInterestWait());
                                     total = capital.add(interest);
-                                    if (debtDetailNoRepay.getRepayPeriod() == debtDetailNoRepay.getBorrowPeriod()) {
+                                    if (debtDetailNoRepay.getRepayPeriod().equals(debtDetailNoRepay.getBorrowPeriod())) {
                                         // 最后还款日
                                         hjhDebtCredit.setCreditRepayEndTime(debtDetailNoRepay.getRepayTime());
                                     }

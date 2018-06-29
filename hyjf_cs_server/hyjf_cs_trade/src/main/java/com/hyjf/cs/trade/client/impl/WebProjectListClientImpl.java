@@ -45,8 +45,9 @@ public class WebProjectListClientImpl implements WebProjectListClient {
     public ProjectCustomeDetailVO searchProjectDetail(Map map) {
         ProjectDetailResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectDetail",map,ProjectDetailResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
-        if (Response.isSuccess(response))
+        if (Response.isSuccess(response)) {
             return response.getResult();
+        }
         return null;
     }
 

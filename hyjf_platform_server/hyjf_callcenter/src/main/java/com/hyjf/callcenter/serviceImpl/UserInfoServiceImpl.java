@@ -36,10 +36,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 		conditionMap.put("limitEnd", bean.getLimitSize());*/
 		List<CallCenterUserBaseVO> users = null;
 		/*此接口情况特殊，直接是跨库查询  start*/
-		if (bean.getFlag().equals("1")) {
+		if ("1".equals(bean.getFlag())) {
 			// 复投用户筛选---参考  CallcenterUserInfoCustomizeMapper.xml 的 selectNoServiceFuTouUsersList 查询
 			users = this.amCallcenterUserInfoClient.selectNoServiceFuTouUsersList(callCenterUserInfoRequest);
-		}else if(bean.getFlag().equals("2")){
+		}else if("2".equals(bean.getFlag())){
 			// 流失用户筛选
 			users = this.amCallcenterUserInfoClient.selectNoServiceLiuShiUsersList(callCenterUserInfoRequest);
 		} else {

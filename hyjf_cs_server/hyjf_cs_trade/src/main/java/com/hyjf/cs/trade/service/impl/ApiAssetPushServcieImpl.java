@@ -361,7 +361,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 }
             }else if ((hjhLabelVO.getLabelTermEnd() != null && hjhLabelVO.getLabelTermEnd().intValue()>0) ||
                     (hjhLabelVO.getLabelTermStart()!=null && hjhLabelVO.getLabelTermStart().intValue()>0)) {
-                if(borrowVO.getBorrowPeriod() == hjhLabelVO.getLabelTermStart() || borrowVO.getBorrowPeriod() == hjhLabelVO.getLabelTermEnd()){
+                if(borrowVO.getBorrowPeriod().equals(hjhLabelVO.getLabelTermStart()) || borrowVO.getBorrowPeriod().equals(hjhLabelVO.getLabelTermEnd())){
 //					score = score+1;
                 }else{
                     continue;

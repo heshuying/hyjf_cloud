@@ -331,7 +331,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new ReturnMessageException(MsgEnum.ERR_TRADE_BORROR_USER_NOT_EXIST);
         }
         // 51老用户标
-        if (borrowProjectType.getInvestUserType().equals("0")) {
+        if ("0".equals(borrowProjectType.getInvestUserType())) {
             Integer is51 = userInfo.getIs51();// 1是51，0不是
             // 该项目只能51老用户投资
             if (is51 != null && is51 == 1) {
@@ -339,7 +339,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         // 新手标
-        if (borrowProjectType.getInvestUserType().equals("1")) {
+        if ("1".equals(borrowProjectType.getInvestUserType())) {
             boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资
             if (!isNew) {
@@ -359,25 +359,25 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (request.getPlatform() == null) {
             throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
         }
-        if (request.getPlatform().equals("2") && borrow.getCanTransactionAndroid().equals("0")) {
+        if ("2".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionAndroid())) {
             String tmpInfo = "";
-            if (borrow.getCanTransactionPc().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionPc())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if (borrow.getCanTransactionIos().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionIos())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_IOS);
             }
-            if (borrow.getCanTransactionWei().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionWei())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
-        } else if (request.getPlatform().equals("3") && borrow.getCanTransactionIos().equals("0")) {
-            if (borrow.getCanTransactionPc().equals("1")) {
+        } else if ("3".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionIos())) {
+            if ("1".equals(borrow.getCanTransactionPc())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if (borrow.getCanTransactionAndroid().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionAndroid())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_ANDROID);
             }
-            if (borrow.getCanTransactionWei().equals("1")) {
+            if ("1".equals(borrow.getCanTransactionWei())) {
                 throw new ReturnMessageException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
         }
@@ -655,7 +655,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                                     jedis.unwatch();
                                 } else {
                                     String ret = (String) result.get(0);
-                                    if (ret != null && ret.equals("OK")) {
+                                    if (ret != null && "OK".equals(ret)) {
                                         logger.info("redis操作成功  用户:" + userId + "***冻结前减redis：" + accountDecimal);
                                         break;
                                     } else {

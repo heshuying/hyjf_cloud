@@ -60,5 +60,11 @@ public class AutoMapper {
 
     @Autowired
     protected PreRegistMapper preRegistMapper;
+
+    @Autowired
+    protected CertificateAuthorityMapper certificateAuthorityMapper;
+
+    @Autowired
+    protected BankOpenAccountMapper bankOpenAccountMapper;
 }
 

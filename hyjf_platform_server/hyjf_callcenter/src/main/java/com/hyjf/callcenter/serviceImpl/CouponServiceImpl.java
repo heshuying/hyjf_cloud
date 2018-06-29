@@ -38,6 +38,7 @@ public class CouponServiceImpl implements CouponService {
      * @return ResultListBean
      * @author wangjun
      */
+    @Override
     public ResultListBean selectCouponUserList(CallCenterBaseRequest centerBaseRequest){
         ResultListBean result = new ResultListBean();
         List<CallCenterCouponUserVO> list = couponClient.selectCouponUserList(centerBaseRequest);
@@ -54,7 +55,7 @@ public class CouponServiceImpl implements CouponService {
                 returnBean.setMobile(centerBaseRequest.getMobile());
 
                 //获取优惠券内容
-                if(recordBean.getCouponSource().equals("3")){
+                if("3".equals(recordBean.getCouponSource())){
                     returnBean.setCouponContent(couponClient.getCouponContent(recordBean.getCouponCode()));
                 }
                 result.getDataList().add(returnBean);
@@ -74,6 +75,7 @@ public class CouponServiceImpl implements CouponService {
      * @return ResultListBean
      * @author wangjun
      */
+    @Override
     public ResultListBean selectCouponTenderList(CallCenterBaseRequest centerBaseRequest){
         ResultListBean result = new ResultListBean();
         List<CallCenterCouponTenderVO> list =  couponClient.selectCouponTenderList(centerBaseRequest);
@@ -105,6 +107,7 @@ public class CouponServiceImpl implements CouponService {
      * @return List<CallCenterCouponBackMoneyVO>
      * @author wangjun
      */
+    @Override
     public ResultListBean selectCouponBackMoneyList(CallCenterBaseRequest centerBaseRequest){
         ResultListBean result = new ResultListBean();
         List<CallCenterCouponBackMoneyVO> recordList = this.couponClient.selectCouponBackMoneyList(centerBaseRequest);

@@ -35,12 +35,10 @@ public class CalculatesUtil {
      *
      * @param account
      *            本金
-     * @param period
-     *            还款期数
+     * @param还款期数
      * @param apr
      *            年利率
-     * @param style
-     *            还款类型
+     * @param还款类型
      * @param time
      *            本期还款时间
      * @param monthRate
@@ -51,7 +49,7 @@ public class CalculatesUtil {
      *            项目类型
      * @param return_rate 
      * //新加收益差率
-     * @param man_charge_rate 
+     * @param
      *  //新加管理费率
      * @param verifyTime 
      *  //初审时间
@@ -105,12 +103,10 @@ public class CalculatesUtil {
      *
      * @param account
      *            本金
-     * @param period
-     *            还款期数
+     * @param还款期数
      * @param apr
      *            年利率
-     * @param style
-     *            还款类型
+     * @param还款类型
      * @param time
      *            本期还款时间
      * @param monthRate
@@ -120,7 +116,7 @@ public class CalculatesUtil {
      * @param projectType
      *            项目类型
      * @param return_rate 
-     * @param man_charge_rate 
+     * @param
      * @return
      */
     public static InterestInfo getMonth(BigDecimal account, Integer borrowPeriod, BigDecimal apr, Integer time, BigDecimal monthRate, BigDecimal monthRateEnd, Integer projectType, BigDecimal return_rate,int verifyTime) {
@@ -153,7 +149,7 @@ public class CalculatesUtil {
         BigDecimal monthlyInterestStart = null;
         BigDecimal monthlyInterestEnd = null;
         // 汇消费时
-        if (PROJECT_TYPE_HXF == projectType) {
+        if (PROJECT_TYPE_HXF.equals(projectType)) {
         	//TODO
         	
             monthlyInterestStart = AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterest(account, monthRate, borrowPeriod);
@@ -177,7 +173,7 @@ public class CalculatesUtil {
                 // 还款时间
                 monthly.setRepayTime(DateUtils.getRepayNextDate(STYLE_MONTH, GetDate.getDate(time * 1000L), entry.getKey(), 0));
                 // 管理费
-                if (PROJECT_TYPE_HXF == projectType && monthlyInterestStart != null && monthlyInterestEnd != null) { // 汇消费(最大费率-最小费率)
+                if (PROJECT_TYPE_HXF.equals(projectType) && monthlyInterestStart != null && monthlyInterestEnd != null) { // 汇消费(最大费率-最小费率)
                     monthly.setFee(monthlyInterestStart.subtract(monthlyInterestEnd));
                 } else {
                 	if (entry.getKey()==monthlyCapital.size()) {
@@ -220,18 +216,16 @@ public class CalculatesUtil {
      *
      * @param account
      *            本金
-     * @param period
-     *            还款期数
+     * @param还款期数
      * @param apr
      *            年利率
-     * @param style
-     *            还款类型
+     * @param还款类型
      * @param time
      *            本期还款时间
      * @param monthRate
      *            月利率
      * @param return_rate 
-     * @param man_charge_rate 
+     * @param
      * @param verifyTime 
      * @return
      */
@@ -329,18 +323,16 @@ public class CalculatesUtil {
      *
      * @param account
      *            本金
-     * @param period
-     *            还款期数
+     * @param还款期数
      * @param apr
      *            年利率
-     * @param style
-     *            还款类型
+     * @param还款类型
      * @param time
      *            本期还款时间
      * @param monthRate
      *            服务费率
      * @param return_rate 
-     * @param man_charge_rate 
+     * @param
      * @param verifyTime 
      * @return
      */
@@ -381,18 +373,16 @@ public class CalculatesUtil {
      *
      * @param account
      *            本金
-     * @param period
-     *            还款期数
+     * @param还款期数
      * @param apr
      *            年利率
-     * @param style
-     *            还款类型
+     * @param还款类型
      * @param time
      *            本期还款时间
      * @param monthRate
      *            月利率
      * @param return_rate 
-     * @param man_charge_rate 
+     * @param
      * @param verifyTime 
      * @return
      */
@@ -434,18 +424,16 @@ public class CalculatesUtil {
      *
      * @param account
      *            本金
-     * @param period
-     *            还款期数
+     * @param还款期数
      * @param apr
      *            年利率
-     * @param style
-     *            还款类型
+     * @param还款类型
      * @param time
      *            本期还款时间
      * @param monthRate
      *            月利率
      * @param return_rate 
-     * @param man_charge_rate 
+     * @param
      * @param verifyTime 
      * @return
      */

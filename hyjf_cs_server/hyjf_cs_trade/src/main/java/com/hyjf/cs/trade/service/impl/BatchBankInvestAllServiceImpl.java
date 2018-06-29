@@ -150,7 +150,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							}
 							// 首次投标项目期限
 							String investProjectPeriod = "";
-							if (request.getBorrow().getBorrowStyle().equals("endday")) {
+							if ("endday".equals(request.getBorrow().getBorrowStyle())) {
 								investProjectPeriod = request.getBorrow().getBorrowPeriod() + "天";
 							} else {
 								investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
@@ -184,7 +184,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								}
 								// 首次投标项目期限
 								String investProjectPeriod = "";
-								if (request.getBorrow().getBorrowStyle().equals("endday")) {
+								if ("endday".equals(request.getBorrow().getBorrowStyle())) {
 									investProjectPeriod = request.getBorrow().getBorrowPeriod() + "天";
 								} else {
 									investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";

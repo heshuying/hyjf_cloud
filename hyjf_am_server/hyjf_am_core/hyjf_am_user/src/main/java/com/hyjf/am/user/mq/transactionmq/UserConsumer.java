@@ -1,7 +1,8 @@
 package com.hyjf.am.user.mq.transactionmq;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.service.UserService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -15,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.service.UserService;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -56,8 +55,9 @@ public class UserConsumer extends Consumer {
 
 			try {
 				User user = userService.findUserByUserId(userId);
-				if (user == null)
-					throw new RuntimeException("找不到用户，userId is : " + userId);
+				if (user == null) {
+                    throw new RuntimeException("找不到用户，userId is : " + userId);
+                }
 				userService.updateUserById(user);
 			} catch (Exception e) {
 				logger.error("更新user投资标志失败....", e);

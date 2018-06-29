@@ -56,6 +56,7 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
     /**
      * 同步银行卡号
      */
+    @Override
     public void accountSynchronize(){
         List<AccountMobileSynchVO> accountMobileSynches = amUserClient.searchAccountMobileSynch("2");
         if(CollectionUtils.isEmpty(accountMobileSynches)){

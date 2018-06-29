@@ -77,6 +77,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
     /**
      * 存款业务红包流水全明细数据文件下载
      */
+    @Override
     public void downloadFiles(){
         SFTPParameter para = new SFTPParameter();
 
@@ -133,6 +134,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * aleveLog表数据插入
      * @param list
      */
+    @Override
     public void insertAleveLog(List<AleveLog> list){
         for (AleveLog aleve : list) {
 //            AleveLogExample example = new AleveLogExample();
@@ -150,6 +152,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * eveLog表数据插入
      * @param list
      */
+    @Override
     public void insertEveLog(List<EveLog> list){
         for (EveLog eve : list) {
 //            EveLogExample example = new EveLogExample();
@@ -167,6 +170,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * aleveErrorLog表数据插入
      * @param aleveErrorLogs
      */
+    @Override
     public void insertAleveErrorLog(List<AleveErrorLog> aleveErrorLogs){
         for(AleveErrorLog aleveErrorLog : aleveErrorLogs){
             aleveErrorLogMapper.insert(aleveErrorLog);

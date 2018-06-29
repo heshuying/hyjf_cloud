@@ -4,10 +4,7 @@
 package com.hyjf.am.user.service.impl;
 
 import com.hyjf.am.user.dao.customize.CustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BaseService;
 import org.springframework.util.CollectionUtils;
 
@@ -23,6 +20,7 @@ import java.util.List;
  * @version BaseServiceImpl, v0.1 2018/6/27 9:46
  */
 public class BaseServiceImpl extends CustomizeMapper implements BaseService {
+
     /**
      * 根据用户ID获取用户信息
      *
@@ -73,6 +71,70 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         //法大大上线时间2018-03-14 00:00:00
         cra.andRegTimeGreaterThanOrEqualTo(DateFormat.getDateTimeInstance().parse("2018/3/14"));
         return userMapper.selectByExample(usersExample);
+    }
+
+    /**
+     * 根据用户ID查询企业用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId) {
+        CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
+        CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        // 江西银行
+        cra.andIsBankEqualTo(1);
+        List<CorpOpenAccountRecord> list = this.corpOpenAccountRecordMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户Id查询用户CA认证相关信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public CertificateAuthority selectCAInfoByUserId(Integer userId) {
+        CertificateAuthorityExample example = new CertificateAuthorityExample();
+        CertificateAuthorityExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<CertificateAuthority> list = this.certificateAuthorityMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取推荐人姓名查找用户
+     * @param userId
+     * @return
+     */
+    @Override
+    public SpreadsUser selectSpreadsUsersByUserId(int userId){
+        SpreadsUserExample example = new SpreadsUserExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<SpreadsUser> spreadUsersList = spreadsUserMapper.selectByExample(example);
+        if (spreadUsersList != null && spreadUsersList.size() > 0) {
+            return spreadUsersList.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public BankOpenAccount selectByExample(BankOpenAccountExample example) {
+        List<BankOpenAccount> bankOpenAccountList = bankOpenAccountMapper.selectByExample(example);
+        if (bankOpenAccountList != null && bankOpenAccountList.size() == 1) {
+            return bankOpenAccountList.get(0);
+        }
+        return null;
     }
 
 }

@@ -16,6 +16,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomizeV2;
 import com.hyjf.am.trade.mq.Producer;
 import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.service.BankInvestAllService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
@@ -27,11 +28,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
 import com.hyjf.common.validator.Validator;
@@ -46,8 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.hyjf.am.trade.service.BankInvestAllService;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -223,13 +218,13 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 			return jsonMessage("未查询到该投资项目的配置信息", "1");
 		}
 		// 51老用户标
-		if (borrowProjectType.getInvestUserType().equals("0")) {
+		if ("0".equals(borrowProjectType.getInvestUserType())) {
 			//判断是否51老用户,如果是则返回true，否则返回false
 			if (!request.getIs51User()) {
 				return jsonMessage("该项目只能51老用户投资", "1");
 			}
 		}
-		if (borrowProjectType.getInvestUserType().equals("1")) {
+		if ("1".equals(borrowProjectType.getInvestUserType())) {
 			boolean newUser = this.checkIsNewUserCanInvest(Integer.parseInt(userId));
 			if (!newUser) {
 				return jsonMessage("该项目只能新手投资", "1");
@@ -457,7 +452,8 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 	 * 獲取需要處理的投資掉單
 	 * @return
 	 */
-	public List<BorrowTenderTmp> getBorrowTenderTmpList() {
+	@Override
+    public List<BorrowTenderTmp> getBorrowTenderTmpList() {
 		BorrowTenderTmpExample bexample = new BorrowTenderTmpExample();
 		bexample.createCriteria().andStatusEqualTo(0).andIsBankTenderEqualTo(1);
 		List<BorrowTenderTmp> borrowTenderTmpList = this.borrowTenderTmpMapper.selectByExample(bexample);
@@ -497,7 +493,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 						JSONObject checkParamResult = checkParam(borrowNid, account, userId, null, couponGrantId,request);
 						if (checkParamResult == null) {
 							logger.info("投资掉单修复校验失败!");
-						} else if (checkParamResult.get("error") != null && checkParamResult.get("error").equals("1")) {
+						} else if (checkParamResult.get("error") != null && "1".equals(checkParamResult.get("error"))) {
 							logger.info(checkParamResult.get("data") + "");
 
 						}
@@ -511,7 +507,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 							BorrowInfo borrow1=this.getBorrowInfoByNid(borrowNid);
 							JSONObject tenderResult = this.updateTender(borrow,borrow1,bean,request);
 							// 投资成功
-							if (tenderResult.getString("status").equals("1")) {
+							if ("1".equals(tenderResult.getString("status"))) {
 								logger.info("投资全部掉单修复:" + userId + "***掉单修复投资成功：" + account);
 								if (StringUtils.isNotBlank(couponGrantId)) {
 									// 优惠券投资校验
@@ -845,7 +841,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 		JSONObject result = this.redisTender(userId, borrowNid, txAmount);
 		// redis结果状态
 		String redisStatus = result.getString("status");
-		if (redisStatus.equals("0")) {
+		if ("0".equals(redisStatus)) {
 			// 手动控制事务
 			TransactionStatus txStatus = null;
 			try {
@@ -1194,7 +1190,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 					jedis.unwatch();
 				} else {
 					String ret = (String) result.get(0);
-					if (ret != null && ret.equals("OK")) {
+					if (ret != null && "OK".equals(ret)) {
 						System.out.println("用户:" + userId + "*******from redis恢复redis：" + account);
 						return true;
 					} else {
@@ -1244,7 +1240,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 								jedis.unwatch();
 							} else {
 								String ret = (String) result.get(0);
-								if (ret != null && ret.equals("OK")) {
+								if (ret != null && "OK".equals(ret)) {
 									status = BankCallConstant.STATUS_SUCCESS;
 									info.put("message", "redis操作成功！");
 									info.put("status", status);
