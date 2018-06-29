@@ -5,22 +5,14 @@ package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
-import com.hyjf.am.response.user.RegistRecordResponse;
-import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
-import com.hyjf.am.resquest.user.RegistRcordRequest;
-import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
-import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
 import com.hyjf.am.user.service.LoanCoverUserManagerService;
-import com.hyjf.am.user.service.RegistRecordManagerService;
-import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
-import com.hyjf.am.vo.user.RegistRecordVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -34,7 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author nxl
@@ -59,14 +52,13 @@ public class LoanCoverUserManagerController {
     public LoanCoverUserResponse findLoanCoverUserRecord(@RequestBody @Valid LoanCoverUserRequest request) {
         logger.info("---findLoanCoverUserRecord by param---  " + JSONObject.toJSON(request));
 //        Map<String, Object> mapParam = paramSet(request);
-        int start = 0;
+        /*int start = 0;
         int end = 0;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (request.getStartCreate() != null) {
             Date date;
             try {
                 date = simpleDateFormat.parse(request.getStartCreate());
-
                 start = (int) (date.getTime() / 1000);
             } catch (ParseException e) {
                 logger.info("借款盖章用户返回日期格式化异常：" + e.getMessage());
@@ -86,14 +78,27 @@ public class LoanCoverUserManagerController {
                 logger.info("借款盖章用户返回日期格式化异常：" + e.getMessage());
             }
 
+        }*/
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dateStart = new Date();
+        Date dateEnd = new Date();
+        if (StringUtils.isNotBlank(request.getStartCreate()) || StringUtils.isNotBlank(request.getStartCreate())) {
+            try {
+                dateStart = smp.parse(request.getStartCreate());
+                dateEnd = smp.parse(request.getStartCreate());
+            }catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         }
         LoanCoverUserResponse response = new LoanCoverUserResponse();
-        Integer registCount = loanCoverUserManagerService.countLoanSubjectCertificateAuthority(request,start,end);
+        Integer registCount = loanCoverUserManagerService.countLoanSubjectCertificateAuthority(request,dateStart,dateEnd);
         Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
         if(request.getLimit() ==0){
             paginator = new Paginator(request.getPaginatorPage(), registCount);
         }
-        List<LoanSubjectCertificateAuthority> registRecordCustomizeList = loanCoverUserManagerService.getRecordList(request,paginator.getOffset(), paginator.getLimit(),start,end);
+        List<LoanSubjectCertificateAuthority> registRecordCustomizeList = loanCoverUserManagerService.getRecordList(request,paginator.getOffset(), paginator.getLimit(),dateStart,dateEnd);
         if(registCount>0){
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<LoanCoverUserVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, LoanCoverUserVO.class);

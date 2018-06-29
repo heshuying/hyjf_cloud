@@ -6,6 +6,7 @@ package com.hyjf.am.vo.user;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author NXL
@@ -33,17 +34,20 @@ public class LoanCoverUserVO extends BaseVO implements Serializable{
 
     private String remark;
 
-    private Integer createTime;
-
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
-
     private Integer updateUserId;
 
     private String updateUserName;
+
+    private Date createTime;
+
+    private Date updateTime;
+    //显示用 添加时间和修改时间
+    private String strCreateTime;
+    private String strUpdateTime;
 
     public Integer getId() {
         return id;
@@ -125,13 +129,6 @@ public class LoanCoverUserVO extends BaseVO implements Serializable{
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
 
     public Integer getCreateUserId() {
         return createUserId;
@@ -149,13 +146,7 @@ public class LoanCoverUserVO extends BaseVO implements Serializable{
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
 
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public Integer getUpdateUserId() {
         return updateUserId;
@@ -171,5 +162,37 @@ public class LoanCoverUserVO extends BaseVO implements Serializable{
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getStrCreateTime() {
+        return strCreateTime;
+    }
+
+    public void setStrCreateTime(String strCreateTime) {
+        this.strCreateTime = strCreateTime;
+    }
+
+    public String getStrUpdateTime() {
+        return strUpdateTime;
+    }
+
+    public void setStrUpdateTime(String strUpdateTime) {
+        this.strUpdateTime = strUpdateTime;
     }
 }

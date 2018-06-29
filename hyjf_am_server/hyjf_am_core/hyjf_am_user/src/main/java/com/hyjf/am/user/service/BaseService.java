@@ -3,8 +3,7 @@
  */
 package com.hyjf.am.user.service;
 
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.*;
 
 import java.text.ParseException;
 import java.util.List;
@@ -39,4 +38,32 @@ public interface BaseService {
      * @return
      */
     List<User> findAllUser() throws ParseException;
+
+    /**
+     * 根据用户Id查询用户CA认证相关信息
+     * @param userId
+     * @return
+     */
+    CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
+
+    /**
+     * 根据用户Id查询用户CA认证相关信息
+     * @param userId
+     * @return
+     */
+    CertificateAuthority selectCAInfoByUserId(Integer userId);
+
+    /**
+     * 获取推荐人姓名查找用户
+     * @param userId
+     * @return
+     */
+    SpreadsUser selectSpreadsUsersByUserId(int userId);
+
+    /**
+     * 获取开户信息
+     * @param example
+     * @return
+     */
+    BankOpenAccount selectByExample(BankOpenAccountExample example);
 }

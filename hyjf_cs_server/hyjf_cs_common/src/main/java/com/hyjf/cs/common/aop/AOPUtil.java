@@ -26,8 +26,8 @@ public class AOPUtil {
 	    if (arguments != null && arguments.length > 0) {
 	        for (Object argument : arguments) {
 	            if (argument != null
-	            	&& !argument.getClass().getSimpleName().equals("RequestFacade") 
-	        		&& !argument.getClass().getSimpleName().equals("ResponseFacade") ) {
+	            	&& !"RequestFacade".equals(argument.getClass().getSimpleName())
+	        		&& !"ResponseFacade".equals(argument.getClass().getSimpleName())) {
 	                sb.append("参数类型(" + argument.getClass().getSimpleName() + ")");
 	                sb.append("参数值(" + argument.toString() + ")");
 	            }

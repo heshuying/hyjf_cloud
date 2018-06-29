@@ -9,6 +9,8 @@ import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
 import com.hyjf.am.user.service.LoanCoverUserManagerService;
 import io.swagger.models.auth.In;
+import com.thoughtworks.xstream.mapper.Mapper;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,7 +49,7 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
      */
     @Override
     public List<LoanSubjectCertificateAuthority> getRecordList(LoanCoverUserRequest lsca, int limitStart,
-                                                               int limitEnd, int createStart, int createEnd) {
+                                                               int limitEnd, Date createStart, Date createEnd) {
         LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
         example.setOrderByClause(" id desc");
         if (limitStart != -1) {
@@ -63,8 +67,8 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
         if (StringUtils.isNotEmpty(lsca.getIdNo())) {
             criteria.andIdNoEqualTo(lsca.getIdNo());
         }
-        if (createStart != 0 || createEnd != 0) {
-          //  criteria.andCreateTimeBetween(createStart, createEnd);
+        if (createStart != null || createEnd != null) {
+            criteria.andCreateTimeBetween(createStart, createEnd);
         }
         if (lsca.getIdType() != null) {
             criteria.andIdTypeEqualTo(lsca.getIdType());
@@ -73,17 +77,17 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
             criteria.andCustomerIdEqualTo(lsca.getCustomerId());
         }
         if (StringUtils.isNotEmpty(lsca.getCode())) {
-            if (lsca.getCode().equals("2001")) {
+            if ("2001".equals(lsca.getCode())) {
                 List list = new ArrayList();
                 list.add("2001");
                 list.add("2002");
                 list.add("2003");
                 criteria.andCodeIn(list);
             }
-            if (lsca.getCode().equals("2002")) {
+            if ("2002".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo("");
             }
-            if (lsca.getCode().equals("1000")) {
+            if ("1000".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo(lsca.getCode());
             }
 
@@ -100,7 +104,8 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
      * @return
      */
     @Override
-    public int countLoanSubjectCertificateAuthority (LoanCoverUserRequest lsca,int createStart, int createEnd){
+    public int countLoanSubjectCertificateAuthority (LoanCoverUserRequest lsca, Date createStart, Date createEnd){
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
 
         LoanSubjectCertificateAuthorityExample.Criteria criteria = example.createCriteria();
@@ -114,8 +119,8 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
         if (StringUtils.isNotEmpty(lsca.getIdNo())) {
             criteria.andIdNoEqualTo(lsca.getIdNo());
         }
-        if (createStart != 0 || createEnd != 0) {
-//            criteria.andCreateTimeBetween(createStart, createEnd);
+        if (createStart!=null||createEnd!=null) {
+           criteria.andCreateTimeBetween(createStart, createEnd);
         }
         if (lsca.getIdType() != null) {
             criteria.andIdTypeEqualTo(lsca.getIdType());
@@ -124,17 +129,17 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
             criteria.andCustomerIdEqualTo(lsca.getCustomerId());
         }
         if (StringUtils.isNotEmpty(lsca.getCode())) {
-            if (lsca.getCode().equals("2001")) {
+            if ("2001".equals(lsca.getCode())) {
                 List list = new ArrayList();
                 list.add("2001");
                 list.add("2002");
                 list.add("2003");
                 criteria.andCodeIn(list);
             }
-            if (lsca.getCode().equals("2002")) {
+            if ("2002".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo("");
             }
-            if (lsca.getCode().equals("1000")) {
+            if ("1000".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo(lsca.getCode());
             }
 
@@ -155,7 +160,7 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
         BeanUtils.copyProperties(request, loanSubjectCertificateAuthority);
         int intInsertFlg = loanSubjectCertificateAuthorityMapper.insertSelective(loanSubjectCertificateAuthority);
         if(intInsertFlg> 0){
-            logger.info("==================用户表变更保存成功!======");
+            logger.info("==================借款主体CA认证记录表保存成功!======");
         }else{
             throw new RuntimeException("============借款主体CA认证记录表插入失败!========");
         }

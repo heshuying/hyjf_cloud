@@ -31,8 +31,8 @@ public class RedisUtils {
     /**
      * 构建redis连接池
      * 
-     * @param ip
-     * @param port
+     * @param
+     * @param
      * @return JedisPool
      */
     public static JedisPool getPool() {
@@ -532,7 +532,7 @@ public class RedisUtils {
      * 
      * redis链表右侧尾部出栈，入临时队列，如果没有值则阻塞
      * @author renxingchen
-     * @param key
+     * @param
      * @return
      */
     public static String brpoplpush(String source, String destination, int timeout) {

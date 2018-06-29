@@ -16,4 +16,14 @@ public interface BorrowTenderCpnClient {
      * @return
      */
     BorrowTenderCpnVO getCouponTenderInfo(String couponTenderNid);
+
+    /**
+     * 获取用户优惠券投资信息
+     * @param userId
+     * @param borrowNid
+     * @param logOrdId
+     * @param couponGrantId
+     * @return
+     */
+    BorrowTenderCpnVO getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId);
 }

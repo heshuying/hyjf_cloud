@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
@@ -21,4 +22,11 @@ public interface CouponCustomizeMapper {
      * @Date 2018/6/19 17:12
      */
     List<CouponCustomize> getCouponUser(Map<String,Object> paraMap);
+
+    /**
+     * 获取优惠券投资信息
+     * @param paraMap
+     * @return
+     */
+    BorrowTenderCpn getCouponTenderByTender(Map<String,Object> paraMap);
 }

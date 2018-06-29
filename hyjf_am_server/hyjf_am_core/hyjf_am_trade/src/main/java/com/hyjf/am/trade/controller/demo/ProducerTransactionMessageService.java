@@ -14,7 +14,13 @@ public interface ProducerTransactionMessageService {
      * 保存
      * @param message
      */
-    void save(ProducerTransactionMessage message);
+    void insert(ProducerTransactionMessage message);
+
+    /**
+     * 更新
+     * @param message
+     */
+    void update(ProducerTransactionMessage message);
 
     /**
      * 根据特定条件查询

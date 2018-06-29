@@ -1,38 +1,23 @@
 package com.hyjf.admin.controller.user;
 
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.UserauthService;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author 董泽杉
@@ -52,7 +37,7 @@ public class UserauthController extends BaseController {
 	 * 权限维护画面初始化
 	 *
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "授权状态", notes = "授权状态集合")
@@ -84,7 +69,7 @@ public class UserauthController extends BaseController {
 	/**
 	 * 自动投资解约
 	 *
-	 * @param userId
+	 * @param
 	 */
 	@ApiOperation(value = "授权状态", notes = "自动投资解约")
 	@RequestMapping(value = "/userinvescancel")
@@ -95,7 +80,7 @@ public class UserauthController extends BaseController {
 		// 返回结果
 		JSONObject result = new JSONObject();
 		logger.info("自动投资解约开始，用户：{}", userid);
-		if (userauthService.canCancelAuth(userid).getRtn().equals("00")) {
+		if ("00".equals(userauthService.canCancelAuth(userid).getRtn())) {
 			result.put("success", "99");
 			result.put("msg", "当前用户存在持有中计划，不能解约！");
 			return result;
@@ -118,7 +103,7 @@ public class UserauthController extends BaseController {
 	/**
 	 * 自动债转解约
 	 *
-	 * @param userId
+	 * @param
 	 */
 	@ApiOperation(value = "授权状态", notes = "自动债转解约")
 	@RequestMapping(value = "/usercreditcancel")
@@ -131,7 +116,7 @@ public class UserauthController extends BaseController {
 		// 返回结果
 		JSONObject result = new JSONObject();
 		logger.info("自动债转授权开始，用户：{}", userid);
-		if (userauthService.canCancelAuth(userid).getRtn().equals("00")) {
+		if ("00".equals(userauthService.canCancelAuth(userid).getRtn())) {
 			result.put("success", "99");
 			result.put("msg", "当前用户存在持有中计划，不能解约！");
 			return result;

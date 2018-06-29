@@ -16,4 +16,12 @@ public interface AccountCustomizeMapper {
      * @return
      */
     int updateAccountAfterRepay(Account account);
+
+
+    /**
+     * 投资成功后修改Account表
+     * @param accountBean
+     * @return
+     */
+    Integer updateOfTender(Account accountBean);
 }

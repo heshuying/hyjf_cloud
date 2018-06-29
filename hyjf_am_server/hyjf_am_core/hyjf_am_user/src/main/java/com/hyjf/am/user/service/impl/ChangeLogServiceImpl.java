@@ -25,6 +25,7 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
      * 
      * @return
      */
+    @Override
     public List<UserChangeLog> getRecordList(ChangeLogCustomize userChangeLog, int limitStart, int limitEnd) {
         UserChangeLogExample example = new UserChangeLogExample();
         example.setOrderByClause(" change_time desc ");
@@ -60,6 +61,7 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
      * @param userChangeLog
      * @return
      */
+    @Override
     public List<ChangeLogCustomize> getChangeLogList(ChangeLogCustomize userChangeLog) {
         List<ChangeLogCustomize> changeLogs = changeLogCustomizeMapper.queryChangeLogList(userChangeLog);
         return changeLogs;
@@ -73,6 +75,7 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
      * @param limitEnd
      * @return
      */
+    @Override
     public List<ChangeLogCustomize> getUserRecordList(ChangeLogCustomize userChangeLog, int limitStart, int limitEnd) {
         if (limitStart != -1) {
             userChangeLog.setLimitStart(limitStart);
@@ -85,7 +88,7 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
     /**
      * 获取用户信息修改记录数
      * 
-     * @param form
+     * @param
      * @return
      */
 

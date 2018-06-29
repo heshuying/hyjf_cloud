@@ -7,7 +7,6 @@ import com.hyjf.admin.client.EvalationClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.EvalationResponse;
 import com.hyjf.am.response.user.UserEvalationResultResponse;
-import com.hyjf.am.response.user.UserManagerDetailResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
@@ -33,6 +32,7 @@ public class EvalationClientImpl implements EvalationClient {
      * @param request
      * @return
      */
+    @Override
     public List<EvalationVO> selectUserEvalationResultList(EvalationRequest request) {
         EvalationResponse response = restTemplate.
                 postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request, EvalationResponse.class).

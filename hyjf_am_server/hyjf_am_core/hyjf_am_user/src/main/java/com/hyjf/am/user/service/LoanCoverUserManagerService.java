@@ -6,6 +6,7 @@ package com.hyjf.am.user.service;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public interface LoanCoverUserManagerService {
      * @return
      */
     List<LoanSubjectCertificateAuthority> getRecordList(LoanCoverUserRequest lsca, int limitStart,
-                                                        int limitEnd, int createStart, int createEnd);
+                                                        int limitEnd, Date createStart, Date createEnd);
     /**
      * 根据条件获取记录数
      * @param lsca
@@ -34,7 +35,7 @@ public interface LoanCoverUserManagerService {
      * @param createEnd
      * @return
      */
-    int countLoanSubjectCertificateAuthority (LoanCoverUserRequest lsca,int createStart, int createEnd);
+    int countLoanSubjectCertificateAuthority (LoanCoverUserRequest lsca, Date createStart, Date createEnd);
 
     /**
      * 保存借款盖章用户

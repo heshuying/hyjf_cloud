@@ -1,14 +1,5 @@
 package com.hyjf.am.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
@@ -23,6 +14,14 @@ import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -235,7 +234,7 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
     public List<AccountRecharge> getTodayRecharge(Integer userId) {
         String txTime = GetOrderIdUtils.getTxTime();// 当前时间
         Date date = new Date();
-        Date date2 = new Date(new Date().getTime()-24*60*60*1000);
+        Date date2 = new Date(System.currentTimeMillis()-24*60*60*1000);
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
         String formatTime = format.format(date);

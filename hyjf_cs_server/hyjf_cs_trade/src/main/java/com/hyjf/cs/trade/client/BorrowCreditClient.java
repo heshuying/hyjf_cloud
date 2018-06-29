@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface BorrowCreditClient {
      * @return
      */
     Integer updateBorrowCredit(BorrowCreditVO borrowCreditVO);
+
+    List<BorrowCreditVO> getBorrowCreditList(BorrowCreditRequest request1);
 }

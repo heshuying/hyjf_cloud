@@ -2,10 +2,12 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
+import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 标的相关
@@ -124,4 +127,24 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 		}
 		return false;
 	}
+
+	/**
+	 * 获取还款方式
+	 */
+	@Override
+	public BorrowStyleVO getBorrowStyle(String borrowStyle) {
+		String url = "http://AM-TRADE/am-trade/borrow/getBorrowStyle/"+borrowStyle;
+		BorrowStyleResponse response=restTemplate.getForEntity(url,BorrowStyleResponse.class).getBody();
+		if(response!=null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
+		String url = "http://AM-TRADE/am-trade/hjhPlan/selectUserHjhInvistDetail";
+		return null;
+	}
+
 }

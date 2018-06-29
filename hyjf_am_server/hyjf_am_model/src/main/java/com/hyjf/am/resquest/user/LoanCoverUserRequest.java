@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.resquest.user;
 
+import java.util.Date;
+
 /**
  * @author Administrator
  * @version LoanCoverUserRequest, v0.1 2018/6/26 17:25
@@ -29,13 +31,13 @@ public class LoanCoverUserRequest {
 
     private String remark;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private Integer updateUserId;
 
@@ -139,15 +141,7 @@ public class LoanCoverUserRequest {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getCreateUserId() {
+   public Integer getCreateUserId() {
         return createUserId;
     }
 
@@ -161,14 +155,6 @@ public class LoanCoverUserRequest {
 
     public void setCreateUserName(String createUserName) {
         this.createUserName = createUserName == null ? null : createUserName.trim();
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
     }
 
     public Integer getUpdateUserId() {
@@ -209,5 +195,21 @@ public class LoanCoverUserRequest {
 
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

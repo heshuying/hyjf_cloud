@@ -57,10 +57,12 @@ public class UserWithdrawRequestBean extends BaseBean {
         this.payAllianceCode = payAllianceCode;
     }
 
+    @Override
     public String getAccountId() {
         return accountId;
     }
 
+    @Override
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }

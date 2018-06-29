@@ -5,16 +5,14 @@ import com.hyjf.am.trade.dao.mapper.auto.CouponRealTenderMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponTenderMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.CouponCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
-import com.hyjf.am.trade.dao.model.auto.CouponRealTender;
-import com.hyjf.am.trade.dao.model.auto.CouponTender;
-import com.hyjf.am.trade.dao.model.auto.CouponUser;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
 import com.hyjf.am.vo.trade.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.CouponTenderVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,5 +89,25 @@ public class CouponServiceImpl implements CouponService {
 		CouponUser cu = new CouponUser();
 		BeanUtils.copyProperties(couponUser,cu);
 		couponUserMapper.updateByPrimaryKeySelective(cu);
+	}
+
+	/**
+	 * 获取优惠券投资
+	 *
+	 * @param userId
+	 * @param borrowNid
+	 * @param logOrdId borrowTender表
+	 * @param couponGrantId
+	 * @return
+	 */
+	@Override
+	public BorrowTenderCpn getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId) {
+		Map<String,Object> paraMap = new HashedMap();
+		paraMap.put("userId",userId);
+		paraMap.put("borrowNid",borrowNid);
+		paraMap.put("logOrdId",logOrdId);
+		paraMap.put("couponGrantId",couponGrantId);
+		BorrowTenderCpn cpn = couponCustomizeMapper.getCouponTenderByTender(paraMap);
+		return cpn;
 	}
 }

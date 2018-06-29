@@ -95,9 +95,11 @@ public class UserLeaveBatchServiceImpl implements UserLeaveBatchService {
                             if (userUpdateParamList.size() == 1) {
                                 UserUpdateParamCustomize userParam = userUpdateParamList.get(0);
                                 if (userParam.getCuttype() != null) {
-                                    if (userParam.getCuttype().equals("1")) {// 线上
+                                    // 线上
+                                    if ("1".equals(userParam.getCuttype())) {
                                         attribute = 1;
-                                    } else if (userParam.getCuttype().equals("2")) {// 线下
+                                    } else if ("2".equals(userParam.getCuttype())) {
+                                        // 线下
                                         attribute = 1;
                                     }
                                 } else {

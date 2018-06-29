@@ -4,10 +4,12 @@ import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 债转投资异常
@@ -38,4 +40,8 @@ public interface BankCreditTenderClient {
 	List<CreditTenderLogVO> getCreditTenderLogs(String logOrderId, Integer userId);
 
 	List<BorrowCreditVO> getBorrowCreditList(String creditNid, int sellerUserId, String tenderOrderId);
+
+	List<CreditTenderVO> getCreditTenderList(CreditTenderRequest request);
+
+    List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String,Object> params);
 }

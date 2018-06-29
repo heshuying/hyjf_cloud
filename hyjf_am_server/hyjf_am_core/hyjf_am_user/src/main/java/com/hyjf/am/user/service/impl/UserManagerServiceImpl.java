@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.resquest.user.UserChangeLogRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
@@ -20,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +27,7 @@ import java.util.Map;
  *          后台管理系统 ：会员中心->会员管理 接口实现
  */
 @Service
-public class UserManagerServiceImpl implements UserManagerService {
+public class UserManagerServiceImpl extends BaseServiceImpl implements UserManagerService {
 
     @Autowired
     public UserManagerCustomizeMapper userManagerCustomizeMapper;
@@ -490,21 +487,8 @@ public class UserManagerServiceImpl implements UserManagerService {
         }
         return null;
     }
-    /**
-     * 获取推荐人姓名查找用户
-     * @param userId
-     * @return
-     */
-    @Override
-    public SpreadsUser selectSpreadsUsersByUserId(int userId){
-        SpreadsUserExample example = new SpreadsUserExample();
-        example.createCriteria().andUserIdEqualTo(userId);
-        List<SpreadsUser> spreadUsersList = spreadsUserMapper.selectByExample(example);
-        if (spreadUsersList != null && spreadUsersList.size() > 0) {
-            return spreadUsersList.get(0);
-        }
-        return null;
-    }
+
+
     /**
      * 根据用户id获取推荐信息
      * @param userId

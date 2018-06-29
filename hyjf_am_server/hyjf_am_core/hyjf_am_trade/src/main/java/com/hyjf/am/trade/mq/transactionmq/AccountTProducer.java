@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
-import java.util.Date;
-
+import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
 import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.common.message.Message;
@@ -15,6 +14,8 @@ import com.hyjf.am.trade.controller.demo.ProducerTransactionMessageService;
 import com.hyjf.am.trade.controller.demo.TransactionService;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
 import com.hyjf.common.exception.MQException;
+
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -73,6 +74,6 @@ public class AccountTProducer extends TransactionProducer {
 		message.setBody(new String(msg.getBody()));
 		message.setCreateTime(new Date());
 		message.setUpdateTime(new Date());
-		producerTransactionMessageService.save(message);
+		producerTransactionMessageService.insert(message);
 	}
 }
