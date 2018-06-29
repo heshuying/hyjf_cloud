@@ -59,18 +59,25 @@ public class SynBalanceServiceImpl implements SynBalanceService {
             return null;
         }
         BankCallBean bean = new BankCallBean();
-        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-        bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_DETAILS_QUERY);// 消息类型
+        // 接口版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
+        // 消息类型
+        bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_DETAILS_QUERY);
         bean.setTxDate(GetOrderIdUtils.getTxDate());
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
         bean.setChannel(BankCallConstant.CHANNEL_PC);
-        bean.setAccountId(accountId);// 电子账号
-        bean.setStartDate(startDate);// 起始日期
-        bean.setEndDate(endDate);// 结束日期
-        bean.setType(type);// 交易种类 0-所有交易 1-转入交易 2-转出交易 9-指定交易类型
+        // 电子账号
+        bean.setAccountId(accountId);
+        // 起始日期
+        bean.setStartDate(startDate);
+        // 结束日期
+        bean.setEndDate(endDate);
+        // 交易种类 0-所有交易 1-转入交易 2-转出交易 9-指定交易类型
+        bean.setType(type);
         if ("9".equals(type)) {
-            bean.setTranType(transType);// 交易类型
+            // 交易类型
+            bean.setTranType(transType);
         }
         // 翻页标识  空：首次查询；1：翻页查询；
         if (StringUtils.isNotEmpty(pageNum)&&!"1".equals(pageNum)) {
@@ -84,7 +91,8 @@ public class SynBalanceServiceImpl implements SynBalanceService {
         bean.setTraceNo(traceNo);
         // 操作者ID
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间
+        // 订单时间
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         bean.setLogRemark("资金交易明细查询");
         bean.setLogUserId(String.valueOf(userId));
         // 调用接口

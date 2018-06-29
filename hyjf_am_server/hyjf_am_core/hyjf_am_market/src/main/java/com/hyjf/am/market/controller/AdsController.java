@@ -26,49 +26,48 @@ import java.util.Map;
  */
 
 @RestController
-    @RequestMapping("/am-market/ads")
-    public class AdsController {
-        private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
+@RequestMapping("/am-market/ads")
+public class AdsController {
+	private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
 
-        @Autowired
-        private AdsService adsService;
+	@Autowired
+	private AdsService adsService;
 
+	@RequestMapping("/findAdsById/{activityId}")
+	public AdsResponse findActivityById(@PathVariable Integer activityId) {
+		AdsResponse response = new AdsResponse();
+		Ads ads = adsService.findActivityById(activityId);
+		if (null != ads) {
+			AdsVO adsVO = new AdsVO();
+			BeanUtils.copyProperties(ads, adsVO);
+			response.setResult(adsVO);
+		}
+		return response;
+	}
 
-        @RequestMapping("/findAdsById/{activityId}")
-        public AdsResponse findActivityById(@PathVariable Integer activityId){
-            AdsResponse response = new AdsResponse();
-            Ads ads = adsService.findActivityById(activityId);
-            if(null!=ads){
-                AdsVO adsVO = new AdsVO();
-                BeanUtils.copyProperties(ads,adsVO);
-                response.setResult(adsVO);
-            }
-            return response;
-        }
+	/**
+	 * batch 批量检测到期活动
+	 */
+	@RequestMapping("/batch/update")
+	public void updateActivityEndStatus() {
+		logger.info("批量更新到期活动...");
+		adsService.updateActivityEndStatus();
+	}
 
-    /**
-     * batch 批量检测到期活动
-     */
-    @RequestMapping("/batch/update")
-    public void updateActivityEndStatus(){
-        logger.info("批量更新到期活动...");
-        adsService.updateActivityEndStatus();
-    }
-
-    @RequestMapping("/searchBanner")
-    public AppAdsCustomizeResponse searchBanner(@RequestBody  AdsRequest adsRequest){
-        Map<String, Object> ads = new HashMap<>();
-        ads.put("limitStart", adsRequest.getLimitStart());
-        ads.put("limitEnd", adsRequest.getLimitEnd());
-        ads.put("host", adsRequest.getHost());
-        ads.put("code", adsRequest.getCode());
-        AppAdsCustomizeResponse response = new AppAdsCustomizeResponse();
-        AppAdsCustomize appAdsCustomize = adsService.searchBanner(ads);
-        if(null!=appAdsCustomize){
-            AppAdsCustomizeVO appAdsCustomizeVO = new AppAdsCustomizeVO();
-            BeanUtils.copyProperties(appAdsCustomize,appAdsCustomizeVO);
-            response.setResult(appAdsCustomizeVO);
-        }
-        return  response;
-    }
+	@RequestMapping("/searchBanner")
+	public AppAdsCustomizeResponse searchBanner(@RequestBody AdsRequest adsRequest) {
+		Map<String, Object> ads = new HashMap<>();
+		ads.put("limitStart", adsRequest.getLimitStart());
+		ads.put("limitEnd", adsRequest.getLimitEnd());
+		ads.put("host", adsRequest.getHost());
+		ads.put("code", adsRequest.getCode());
+		AppAdsCustomizeResponse response = new AppAdsCustomizeResponse();
+		AppAdsCustomize appAdsCustomize = adsService.searchBanner(ads);
+		if (null != appAdsCustomize) {
+			AppAdsCustomizeVO appAdsCustomizeVO = new AppAdsCustomizeVO();
+			BeanUtils.copyProperties(appAdsCustomize, appAdsCustomizeVO);
+			response.setResult(appAdsCustomizeVO);
+		}
+		return response;
+	}
 }
