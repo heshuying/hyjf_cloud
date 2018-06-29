@@ -9,6 +9,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -25,10 +26,13 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    RechargeClient rechargeClient;
+    public RechargeClient rechargeClient;
 
     @Autowired
-    AmUserClient amUserClient;
+    public AmUserClient amUserClient;
+
+    @Autowired
+    public AmTradeClient amTradeClient;
 
     /**
      * @param token
