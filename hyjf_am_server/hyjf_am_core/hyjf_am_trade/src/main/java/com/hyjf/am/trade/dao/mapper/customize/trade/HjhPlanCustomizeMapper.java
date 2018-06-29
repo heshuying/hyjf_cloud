@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 
 import java.util.Map;
 
@@ -25,4 +26,11 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     int updateByDebtPlanId(Map<String,Object> planUpdate);
+
+    /**
+     * 更新还款后复投的开放额度
+     * @param hjhPlan
+     * @return
+     */
+    int updateRepayPlanAccount(HjhPlan hjhPlan);
 }

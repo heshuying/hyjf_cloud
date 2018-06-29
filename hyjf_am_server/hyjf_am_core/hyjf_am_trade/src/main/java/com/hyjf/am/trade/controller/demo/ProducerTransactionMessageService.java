@@ -1,7 +1,9 @@
 package com.hyjf.am.trade.controller.demo;
 
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
+import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 
 /**
  * @author xiasq
@@ -26,5 +28,5 @@ public interface ProducerTransactionMessageService {
     /**
      * 事务回查
      */
-    void callBackQuery() throws MQClientException, InterruptedException;
+    void callBackQuery() throws MQClientException, InterruptedException, RemotingException, MQBrokerException;
 }

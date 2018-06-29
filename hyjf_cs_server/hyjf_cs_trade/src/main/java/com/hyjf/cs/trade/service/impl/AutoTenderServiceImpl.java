@@ -3,12 +3,10 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
-import com.hyjf.cs.trade.controller.batch.AutoTenderController;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.cs.trade.service.AutoTenderService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 /**
  * 自动投资
@@ -19,6 +17,6 @@ import org.springframework.stereotype.Service;
 public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoTenderService {
     @Override
     public void AutoTender() {
-        logger.info("com.hyjf.cs.trade.service.impl.AutoTenderServiceImpl.AutoTender");
+        //logger.info("com.hyjf.cs.trade.service.impl.AutoTenderServiceImpl.AutoTender");
     }
 }

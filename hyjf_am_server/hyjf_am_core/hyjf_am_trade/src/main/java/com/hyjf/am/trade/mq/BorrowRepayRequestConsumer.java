@@ -5,6 +5,7 @@ package com.hyjf.am.trade.mq;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -171,7 +172,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        			MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
 
 				try {
-					mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, JSON.toJSONBytes(mailMessage)));
+					mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}
