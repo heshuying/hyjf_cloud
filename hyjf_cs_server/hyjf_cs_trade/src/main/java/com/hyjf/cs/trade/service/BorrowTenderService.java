@@ -38,4 +38,14 @@ public interface BorrowTenderService extends BaseTradeService{
      * @return
      */
     WebResult<Map<String,Object>> getBorrowTenderResult(WebViewUserVO userVO, String logOrdId, String borrowNid);
+
+    /**
+     * 查询投资成功的结果
+     * @param userVO
+     * @param logOrdId
+     * @param borrowNid
+     * @param couponGrantId
+     * @return
+     */
+    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId);
 }

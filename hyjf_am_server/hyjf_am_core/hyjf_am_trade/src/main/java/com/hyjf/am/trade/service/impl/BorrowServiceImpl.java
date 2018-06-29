@@ -508,7 +508,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         List<BorrowTenderTmp> list = borrowTenderTmpMapper.selectByExample(borrowTenderTmpExample);
         if (list != null && list.size() == 1) {
             BorrowTenderTmp borrowTenderTmp = list.get(0);
-            // TODO: 2018/6/28 修改结果
+            borrowTenderTmp.setRetCode(tenderRetMsg.getRespCode());
+            borrowTenderTmp.setRetMsg(tenderRetMsg.getRetMsg());
             borrowTenderTmpMapper.updateByPrimaryKeySelective(borrowTenderTmp);
         }
     }
@@ -532,11 +533,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         List<BorrowTenderTmp> list = borrowTenderTmpMapper.selectByExample(borrowTenderTmpExample);
         if (list != null && list.size() == 1) {
             BorrowTenderTmp borrowTenderTmp = list.get(0);
-            // TODO: 2018/6/28 返回错误码  一会改了
-            result = borrowTenderTmp.getAddIp();
+            result = borrowTenderTmp.getRetMsg();
         }
         return result;
     }
-
 
 }

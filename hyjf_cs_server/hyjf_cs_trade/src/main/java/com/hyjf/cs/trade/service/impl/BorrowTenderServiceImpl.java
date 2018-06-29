@@ -3,14 +3,13 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.borrow.TenderBgVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -19,7 +18,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
-import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
+import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.client.*;
@@ -42,6 +41,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +84,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     @Autowired
     private AmConfigClient amConfigClient;
+
+    @Autowired
+    private BorrowTenderClient borrowTenderClient;
+
+    @Autowired
+    private BorrowTenderCpnClient borrowTenderCpnClient;
 
 
     /**
@@ -455,7 +461,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
 
         bean.convert();
-        String borrowId = bean.getProductId();// 借款Id
+        // 借款Id
+        String borrowId = bean.getProductId();
 
         BorrowVO borrow = borrowClient.selectBorrowByNid(borrowId);
         if (borrow == null) {
@@ -484,6 +491,47 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         Map<String, Object> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);
+        return result;
+    }
+
+    /**
+     * 查询投资成功的结果
+     *
+     * @param userVO
+     * @param logOrdId
+     * @param borrowNid
+     * @param couponGrantId
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId) {
+        Map<String, Object> data = new HashedMap();
+        BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        // 查看tmp表
+        BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
+        borrowTenderRequest.setBorrowNid(borrowNid);
+        borrowTenderRequest.setTenderNid(logOrdId);
+        borrowTenderRequest.setTenderUserId(userVO.getUserId());
+        data.put("borrowNid",borrow.getBorrowNid());
+        BorrowTenderVO borrowTender = borrowTenderClient.selectBorrowTender(borrowTenderRequest);
+        if(borrowTender!=null){
+            // 本金收益  历史回报
+            data.put("income",borrowTender.getRecoverAccountWait());
+            // 本金
+            data.put("account",borrowTender.getAccount());
+
+            // 查询优惠券信息
+            CouponUserVO couponUser = couponClient.getCouponUser(couponGrantId, userVO.getUserId());
+            // 查询优惠券的投资
+            BorrowTenderCpnVO borrowTenderCpn = borrowTenderCpnClient.getCouponTenderByTender(userVO.getUserId(),borrowNid,borrowTender.getNid(),couponGrantId);
+            // 优惠券收益
+            data.put("couponQuota",borrowTenderCpn.getAccount());
+            data.put("couponType",couponUser.getCouponType());
+            data.put("couponAll",borrowTenderCpn.getRecoverAccountAll());
+            data.put("couponInterest",borrowTenderCpn.getRecoverAccountInterestWait());
+        }
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setData(data);
         return result;
     }
 
@@ -521,7 +569,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         redisTender(userId, borrowNid, txAmount);
         // 操作数据库表
         this.borrowTender(borrow, bean);
-
 
         logger.info("用户:" + userId + "***投资成功: " + txAmount);
         logger.info("异步调用优惠劵ID:" + couponGrantId);

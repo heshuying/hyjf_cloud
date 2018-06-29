@@ -1,10 +1,12 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
 import com.hyjf.am.vo.trade.CouponTenderVO;
 import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -48,6 +50,19 @@ public class CouponController {
         }catch (Exception e ) {
             return 0;
         }
+    }
+
+    @ApiOperation(value = "获取优惠券投资信息")
+    @GetMapping("/getCouponTenderByTender/{userId}/{borrowNid}/{logOrdId}/{couponGrantId}")
+    public BorrowTenderCpnResponse getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId) {
+        BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
+        BorrowTenderCpn cpn = couponService.getCouponTenderByTender(userId,borrowNid,logOrdId,couponGrantId);
+        if(null != cpn){
+            BorrowTenderCpnVO borrowTenderCpnVO = new BorrowTenderCpnVO();
+            BeanUtils.copyProperties(cpn,borrowTenderCpnVO);
+            response.setResult(borrowTenderCpnVO);
+        }
+        return response;
     }
 
 }

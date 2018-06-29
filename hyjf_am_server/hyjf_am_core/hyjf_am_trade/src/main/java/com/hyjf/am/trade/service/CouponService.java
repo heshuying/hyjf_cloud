@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.vo.trade.CouponTenderVO;
 
@@ -27,4 +28,14 @@ public interface CouponService {
      * @param couponTender
      */
     void updateCouponTender(CouponTenderVO couponTender);
+
+    /**
+     * 获取优惠券投资
+     * @param userId
+     * @param borrowNid
+     * @param logOrdId
+     * @param couponGrantId
+     * @return
+     */
+    BorrowTenderCpn getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId);
 }

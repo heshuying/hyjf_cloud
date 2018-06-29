@@ -83,4 +83,16 @@ public class BorrowTenderController extends BaseTradeController {
         return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
     }
 
+    @ApiOperation(value = "web端散标投资获取投资成功结果", notes = "web端散标投资获取投资成功结果")
+    @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "token", required = true) String token,
+                                                                      @RequestParam String logOrdId,
+                                                                      @RequestParam Integer couponGrantId,
+                                                                      @RequestParam String borrowNid,
+                                                               HttpServletRequest request) {
+        logger.info("web端散标投资获取投资成功结果，logOrdId{}",logOrdId);
+        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        return  borrowTenderService.getBorrowTenderResultSuccess(userVO,logOrdId,borrowNid,couponGrantId);
+    }
+
 }
