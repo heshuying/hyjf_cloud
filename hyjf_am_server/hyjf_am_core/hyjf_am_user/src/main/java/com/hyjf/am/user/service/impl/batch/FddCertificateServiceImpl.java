@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -51,7 +52,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             for (User user : usersList) {
                 FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
                 fddCertificateAuthorityVO.setUserId( user.getUserId());
-                fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, JSON.toJSONBytes(fddCertificateAuthorityVO)));
+                fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
             }
             // 处理结束时间
             String endTime = GetDate.dateToString(new Date());

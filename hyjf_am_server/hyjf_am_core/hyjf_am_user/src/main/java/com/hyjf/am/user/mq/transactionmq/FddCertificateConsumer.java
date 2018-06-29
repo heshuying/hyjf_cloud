@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -98,7 +99,7 @@ public class FddCertificateConsumer extends Consumer {
                     Map<String, String> map = Maps.newHashMap();
                     map.put("userId", String.valueOf(userId));
                     //crm投资推送
-                    crmBankOpenMessageProducer.messageSend(new Producer.MassageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, JSON.toJSONBytes(map)));
+                    crmBankOpenMessageProducer.messageSend(new Producer.MassageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
                     logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
                 } catch (Exception e) {
