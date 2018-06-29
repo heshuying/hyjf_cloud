@@ -40,23 +40,22 @@ public class ApiOrganizationStructureController extends BaseUserController {
     /**
      * @Author: 孙沛凯
      * @Desc :集团组织机构查询
-     * @Param: * @param OrganizationStructureRequestBean
+     * @Param: * @param instCode 机构编号
      * @Date: 9:40 2018/6/27
      * @Return: * @Return List<OrganizationStructureVO>
      */
     @ApiOperation(value = "集团组织机构查询", notes = "集团组织机构查询")
-    @PostMapping(value = "/syncCompanyInfo", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/sync_company_info", produces = "application/json; charset=utf-8")
     public ApiResult<List<OrganizationStructureVO>> queryInfo(@RequestBody @Valid OrganizationStructureRequestBean bean){
         ApiResult<List<OrganizationStructureVO>> result = new ApiResult<>();
-        log.info("queryInfo::::::::::::::bean::::::{}", JSON.toJSONString(bean));
-        //校验签名
+
         List<OrganizationStructureVO> resultBean = apiGroupQueryService.queryInfo(bean);
         if (null != resultBean) {
             result.setData(resultBean);
-
         } else {
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_INSTCODE.getMsg());//机构编号错误
+            // 机构编号错误
+            result.setStatusDesc(MsgEnum.ERR_INSTCODE.getMsg());
         }
         return result;
     }

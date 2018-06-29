@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,11 +28,15 @@ public class BatchUserPortraitQueryController {
     @Autowired
     private BatchUserPortraitQueryService batchUserPortraitQueryService;
 
-    @RequestMapping("/searchUserPortraitList/{userIds}")
+    /**
+     * 查询用户画像所需要的投资相关参数
+     * @param userIds 需要查询的userId的list
+     * @return 返回与UserPortrait相同参数
+     * */
+    @RequestMapping("/search_user_portrait_list/{userIds}")
     public BatchUserPortraitQueryResponse searchUserPortraitList(@PathVariable List<Integer> userIds){
         BatchUserPortraitQueryResponse response = new BatchUserPortraitQueryResponse();
-        logger.info("员工画像.....searchUserPortraitList:::::::userId===={}",userIds);
-
+        logger.info("员工画像.....searchUserPortraitList:::::::userIds===={}",userIds);
 
         List<BatchUserPortraitQueryVO> list = batchUserPortraitQueryService.selectInfoForUserPortrait(userIds);
         if(!CollectionUtils.isEmpty(list)){

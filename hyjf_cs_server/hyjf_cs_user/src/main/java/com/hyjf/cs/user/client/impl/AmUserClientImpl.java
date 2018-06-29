@@ -749,7 +749,10 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER//am-user/batch/updateAccountMobileSynch";
 		return restTemplate.postForEntity(url,accountMobileSynchRequest,boolean.class).getBody();
 	}
-
+	/**
+	 * 集团组织结构查询
+	 * @return List<OrganizationStructureVO> 组织结构list
+	 * */
 	@Override
 	public List<OrganizationStructureVO> searchGroupInfo() {
 		String url = "http://AM-USER//am-user/group/queryGroupInfo";
@@ -759,19 +762,26 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	/**
+	 * 查询需要更新用户画像的userInfo
+	 * @return userInfo
+	 * */
 	@Override
 	public List<UserInfoVO> searchUserInfo() {
-		String url = "http://AM-USER/userBatch/portrait/searchUserInfoList";
+		String url = "http://AM-USER/user_batch/portrait/search_user_info_list";
 		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
 		}
 		return null;
 	}
+	/**
+	 * 保存用户画像
+	 * @param batchUserPortraitQueryRequest 从am-trade查询到的保存画像所需的信息
+	 * */
 	@Override
 	public void saveUserPortrait(BatchUserPortraitQueryRequest batchUserPortraitQueryRequest) {
-		String url = "http://AM-USER/userBatch/portrait/saveUserPortrait";
+		String url = "http://AM-USER/user_batch/portrait/save_user_portrait";
 		restTemplate.postForEntity(url,batchUserPortraitQueryRequest,String.class);
 	}
 }

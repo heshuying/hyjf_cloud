@@ -174,7 +174,7 @@ public interface AmUserClient {
 	 * */
 	List<UserInfoVO> searchUserInfo();
 	/**
-	 * 保存用户画像信息
+	 * 保存用户画像信息 --用户画像定时任务用
 	 * */
 	void saveUserPortrait(BatchUserPortraitQueryRequest batchUserPortraitQueryRequest);
 
