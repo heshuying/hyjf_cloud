@@ -6,6 +6,8 @@ package com.hyjf.cs.user.service.batch.Impl;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
+import com.hyjf.am.resquest.user.UserInfoRequest;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -15,6 +17,7 @@ import com.hyjf.cs.user.service.batch.UserPortraitBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -37,7 +40,6 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
     @Override
     public void userPortraitBatch() {
         logger.info("用户画像(每日)定时任务开始....");
-
         List<UserInfoVO> userInfoVOList = amUserClient.searchUserInfo();
         logger.info(JSON.toJSONString(userInfoVOList));
         String userId = "";
@@ -49,7 +51,15 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
             logger.info("组装的userid为::::::{}",userId);
         }
 
+
+
         List<BatchUserPortraitQueryVO> batchUserPortraitQueryVOList = amTradeClient.searchInfoForUserPortrait(userId);
         logger.info(JSON.toJSONString(batchUserPortraitQueryVOList));
+
+        BatchUserPortraitQueryRequest request = new BatchUserPortraitQueryRequest();
+        request.setBatchUserPortraitQueryVOList(batchUserPortraitQueryVOList);
+
+        amUserClient.saveUserPortrait(request);
+
     }
 }

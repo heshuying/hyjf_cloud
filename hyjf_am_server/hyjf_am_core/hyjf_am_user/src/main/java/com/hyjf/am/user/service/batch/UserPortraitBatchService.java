@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.batch;
 
+import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 
 import java.util.List;
@@ -13,5 +14,5 @@ import java.util.List;
  */
 public interface UserPortraitBatchService {
     List<UserInfo> searchUserInfoList();
-    void updateUserPortraitInfo();
+    void saveUserPortrait(BatchUserPortraitQueryRequest request);
 }

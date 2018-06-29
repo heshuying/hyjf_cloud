@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -172,5 +173,10 @@ public interface AmUserClient {
 	 * 获取需要更新用户画像的userInfo --用户画像定时任务用
 	 * */
 	List<UserInfoVO> searchUserInfo();
+	/**
+	 * 保存用户画像信息
+	 * */
+	void saveUserPortrait(BatchUserPortraitQueryRequest batchUserPortraitQueryRequest);
+
 
 }

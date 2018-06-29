@@ -5,6 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -768,5 +769,9 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public void saveUserPortrait(BatchUserPortraitQueryRequest batchUserPortraitQueryRequest) {
+		String url = "http://AM-USER/userBatch/portrait/saveUserPortrait";
+		restTemplate.postForEntity(url,batchUserPortraitQueryRequest,String.class);
+	}
 }

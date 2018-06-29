@@ -53,6 +53,9 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 }
                 //计划累计年化投资金额
                 BigDecimal planSum = batchUserPortraitQueryCustomizeMapper.getPlanSum(userId);
+                if (planSum == null) {
+                    planSum = new BigDecimal("0.00");
+                }
                 //累计充值金额
                 BigDecimal rechargeSum = batchUserPortraitQueryCustomizeMapper.getRechargeSum(userId);
                 if (rechargeSum == null) {
@@ -60,6 +63,9 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 }
                 //累计提现金额
                 BigDecimal withdrawSum = batchUserPortraitQueryCustomizeMapper.getWithdrawSum(userId);
+                if (withdrawSum == null) {
+                    withdrawSum = new BigDecimal("0.00");
+                }
                 //交易笔数
                 int tradeNumber = batchUserPortraitQueryCustomizeMapper.getTradeNumber(userId);
 
