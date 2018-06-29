@@ -31,7 +31,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.trade.bean.fdd.fddgeneratecontract.FddGenerateContractBean;
+import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;

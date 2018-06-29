@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.eve.downloadFile;
+package com.hyjf.batch.job.downloadfile;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.Job;

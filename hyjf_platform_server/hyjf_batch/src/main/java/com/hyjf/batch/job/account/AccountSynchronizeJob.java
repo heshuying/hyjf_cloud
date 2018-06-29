@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.synchronizeMeaage.account;
+package com.hyjf.batch.job.account;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.Job;
