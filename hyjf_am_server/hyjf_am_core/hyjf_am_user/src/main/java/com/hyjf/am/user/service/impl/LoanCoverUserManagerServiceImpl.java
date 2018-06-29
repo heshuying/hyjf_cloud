@@ -73,17 +73,17 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
             criteria.andCustomerIdEqualTo(lsca.getCustomerId());
         }
         if (StringUtils.isNotEmpty(lsca.getCode())) {
-            if (lsca.getCode().equals("2001")) {
+            if ("2001".equals(lsca.getCode())) {
                 List list = new ArrayList();
                 list.add("2001");
                 list.add("2002");
                 list.add("2003");
                 criteria.andCodeIn(list);
             }
-            if (lsca.getCode().equals("2002")) {
+            if ("2002".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo("");
             }
-            if (lsca.getCode().equals("1000")) {
+            if ("1000".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo(lsca.getCode());
             }
 
@@ -124,17 +124,17 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
             criteria.andCustomerIdEqualTo(lsca.getCustomerId());
         }
         if (StringUtils.isNotEmpty(lsca.getCode())) {
-            if (lsca.getCode().equals("2001")) {
+            if ("2001".equals(lsca.getCode())) {
                 List list = new ArrayList();
                 list.add("2001");
                 list.add("2002");
                 list.add("2003");
                 criteria.andCodeIn(list);
             }
-            if (lsca.getCode().equals("2002")) {
+            if ("2002".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo("");
             }
-            if (lsca.getCode().equals("1000")) {
+            if ("1000".equals(lsca.getCode())) {
                 criteria.andCodeEqualTo(lsca.getCode());
             }
 

@@ -40,8 +40,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional(rollbackFor = Exception.class)
     public void updateAmount(int userId) {
         Account account = accountService.getAccount(userId);
-        if (account == null)
+        if (account == null) {
             throw new RuntimeException("找不到用户账户信息，userId is : " + userId);
+        }
         account.setBankBalance(new BigDecimal(1000000));
         accountService.updateOfRTBLoansTender(account);
     }

@@ -59,6 +59,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         return style.get(0);
     }
 
+    @Override
     public BorrowConfig getBorrowConfigByConfigCd(String configCd) {
         BorrowConfig borrowConfig = this.borrowConfigMapper.selectByPrimaryKey(configCd);
         return borrowConfig;
@@ -174,7 +175,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         map.put("account", tenderRequest.getAccount() + "");
         map.put("status", "0");
         map.put("nid", tenderRequest.getOrderId());
-        map.put("addtime", (new Date().getTime() / 1000) + "");
+        map.put("addtime", (System.currentTimeMillis() / 1000) + "");
         map.put("addip", tenderRequest.getIp());
         String array = JSON.toJSONString(map);
         info.setTmpArray(array);

@@ -3,7 +3,7 @@ package com.hyjf.am.user.service;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 
-public interface BankOpenService {
+public interface BankOpenService extends BaseService {
 	
 	/**
 	 * 保存用户的初始开户记录
@@ -31,10 +31,7 @@ public interface BankOpenService {
     boolean updateUserAccount(Integer userId,String trueName,  String orderId, String accountId, String idNo,Integer bankAccountEsb,String mobile);
 
 
-
 	UserInfo findUserInfoByCradId(String cardNo);
-
-	BankOpenAccount selectByExample(BankOpenAccountExample example);
 
 	/**
 	 * 根据用户Id,银行卡号检索用户银行卡信息
@@ -44,13 +41,6 @@ public interface BankOpenService {
 	BankCard selectBankCardByUserId(Integer userId);
 
 	BankCard getBankCardByCardNo(Integer userId, String cardNo);
-	/**
-	 * 根据用户ID查询企业用户信息
-	 * @param userId
-	 * @return
-	 */
-	CorpOpenAccountRecord getCorpOpenAccountRecord(Integer userId);
-
 	/**
 	 * 开户成功后保存用户银行卡信息
 	 * @param request

@@ -92,7 +92,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         Integer couponGrantId = request.getCouponGrantId();
         CouponUserVO couponUser = couponClient.getCouponUser(couponGrantId, userId);
         //汇计划只支持按天和按月
-        if(!borrowStyle.equals("endday")){
+        if (!"endday".equals(borrowStyle)) {
             borrowStyle = "end";
         }
         // 优惠券类别

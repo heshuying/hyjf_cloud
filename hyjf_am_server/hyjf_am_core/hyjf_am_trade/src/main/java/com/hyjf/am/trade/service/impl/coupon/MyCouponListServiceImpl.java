@@ -1,18 +1,14 @@
 package com.hyjf.am.trade.service.impl.coupon;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.MyCouponListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.service.BorrowInfoService;
 import com.hyjf.am.trade.service.BorrowProjectTypeService;
 import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import org.springframework.stereotype.Service;
@@ -146,7 +142,7 @@ public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon
                 }
             } else {
                 if (type == 1) {
-                    if (bestCoupon.getProjectExpirationLength() != borrow.getBorrowPeriod()) {
+                    if (!bestCoupon.getProjectExpirationLength().equals(borrow.getBorrowPeriod())) {
                         continue;
                     }
                 } else if (type == 3) {
@@ -298,7 +294,7 @@ public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon
                 }
             } else {
                 if (type == 1) {
-                    if (bestCoupon.getProjectExpirationLength() != borrow.getBorrowPeriod()) {
+                    if (!bestCoupon.getProjectExpirationLength().equals(borrow.getBorrowPeriod())) {
                         continue;
                     }
                 } else if (type == 3) {

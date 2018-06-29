@@ -16,15 +16,19 @@ public class TenderAuthRequestBean extends BaseBean{
     private String transactionUrl;//返回交易页面链接
     private String forgotPwdUrl; // 忘记交易密码链接
     
+    @Override
     public String getChannel() {
         return channel;
     }
+    @Override
     public void setChannel(String channel) {
         this.channel = channel;
     }
+    @Override
     public String getAccountId() {
         return accountId;
     }
+    @Override
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
@@ -58,9 +62,11 @@ public class TenderAuthRequestBean extends BaseBean{
     public void setDirectConsume(String directConsume) {
         this.directConsume = directConsume;
     }
+    @Override
     public String getRetUrl() {
         return retUrl;
     }
+    @Override
     public void setRetUrl(String retUrl) {
         this.retUrl = retUrl;
     }
@@ -76,10 +82,12 @@ public class TenderAuthRequestBean extends BaseBean{
     public void setTransactionUrl(String transactionUrl) {
         this.transactionUrl = transactionUrl;
     }
-	public String getForgotPwdUrl() {
+	@Override
+    public String getForgotPwdUrl() {
 		return forgotPwdUrl;
 	}
-	public void setForgotPwdUrl(String forgotPwdUrl) {
+	@Override
+    public void setForgotPwdUrl(String forgotPwdUrl) {
 		this.forgotPwdUrl = forgotPwdUrl;
 	}
     

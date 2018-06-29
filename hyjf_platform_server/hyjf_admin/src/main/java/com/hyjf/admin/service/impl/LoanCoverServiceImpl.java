@@ -76,7 +76,7 @@ public class LoanCoverServiceImpl implements LoanCoverService {
         JSONObject result = new JSONObject();
         if(StringUtils.isNotBlank(mapParam.get("id").toString())){
             LoanCoverUserVO loanCoverUserVO = loanCoverClient.selectIsExistsRecordById(mapParam.get("id").toString());
-            if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&&loanCoverUserVO.getStatus().equals("success")) {
+            if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&& "success".equals(loanCoverUserVO.getStatus())) {
                 if (!loanCoverUserVO.getMobile().equals(mapParam.get("mobile"))) {
                     DzqzCallBean bean = new DzqzCallBean();
                     bean.setUserId(0);

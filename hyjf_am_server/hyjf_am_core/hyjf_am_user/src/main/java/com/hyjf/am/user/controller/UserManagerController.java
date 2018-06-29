@@ -15,7 +15,6 @@ import com.hyjf.am.user.service.UserManagerService;
 import com.hyjf.am.user.service.callcenter.CallCenterBankService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -465,8 +464,8 @@ public class UserManagerController {
         String whereFlag = "0";
         for (Map.Entry<String, Object> entry : user.entrySet()) {
             // key!=whereFlag,limitStart,limitEnd时
-            if (!(entry.getKey().equals("whereFlag") || entry.getKey().equals("limitStart")
-                    || entry.getKey().equals("limitEnd"))) {
+            if (!("whereFlag".equals(entry.getKey()) || "limitStart".equals(entry.getKey())
+                    || "limitEnd".equals(entry.getKey()))) {
                 if (entry.getValue() != null) {
                     // 有limit外的检索条件
                     whereFlag = "1";

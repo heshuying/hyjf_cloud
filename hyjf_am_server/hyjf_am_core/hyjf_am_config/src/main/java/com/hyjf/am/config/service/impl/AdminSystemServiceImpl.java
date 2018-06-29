@@ -1,15 +1,14 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -99,7 +98,7 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 						menuTree.setPath("");
 					}
 					
-					if(menuTree.getMenuPuuid().equals("0")) {//如果为主菜单 页面输出puuid不能为0 替换为a
+					if("0".equals(menuTree.getMenuPuuid())) {//如果为主菜单 页面输出puuid不能为0 替换为a
 						menuTree.setMenuPuuid("a");
 					}//else {判断子菜单url为空时传入主页
 //						if(menuTree.getPath()==null||menuTree.getPath().equals("")) {

@@ -227,7 +227,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     // 成功后
                     break;
                 } else {

@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.resquest.user.AccountRecordRequest;
-import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.user.dao.mapper.customize.BankOpenRecordCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
 import com.hyjf.am.user.service.BankOpenRecordManagerService;
@@ -13,7 +11,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +53,8 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      *
      * @return
      */
-    public List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,String> mapParam,int limitStart, int limitEnd){
+    @Override
+    public List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,String> mapParam, int limitStart, int limitEnd){
         // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
             mapParam.put("limitStart", String.valueOf(limitStart));

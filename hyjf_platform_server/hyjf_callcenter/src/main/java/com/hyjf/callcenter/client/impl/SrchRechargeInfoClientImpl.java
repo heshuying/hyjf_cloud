@@ -31,6 +31,7 @@ public class SrchRechargeInfoClientImpl implements SrchRechargeInfoClient {
      * @return List<CallCenterRechargeVO>
      * @author wangjun
      */
+    @Override
     public List<CallCenterRechargeVO> queryRechargeList(CallCenterBaseRequest callCenterBaseRequest){
         CallCenterRechargeResponse callCenterRechargeResponse = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/callcenter/queryRechargeList", callCenterBaseRequest, CallCenterRechargeResponse.class)
