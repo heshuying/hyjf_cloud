@@ -1,28 +1,21 @@
 package com.hyjf.am.user.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UtmMapper;
 import com.hyjf.am.user.dao.mapper.auto.UtmPlatMapper;
 import com.hyjf.am.user.dao.mapper.customize.AdminPreRegistCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.PreRegist;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.Utm;
-import com.hyjf.am.user.dao.model.auto.UtmExample;
-import com.hyjf.am.user.dao.model.auto.UtmPlat;
-import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
 import com.hyjf.am.user.service.PreRegistService;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -41,7 +34,7 @@ public class PreRegistServiceImpl implements PreRegistService {
     /**
      * 获取预注册条数
      * 
-     * @param form
+     * @param
      * @return
      * @author Administrator
      */
@@ -57,7 +50,8 @@ public class PreRegistServiceImpl implements PreRegistService {
 	 * 
 	 * @return
 	 */
-	public List<AdminPreRegistListCustomize> getRecordList(Map<String, Object> preRegistUserMap, int limitStart, int limitEnd) {
+	@Override
+    public List<AdminPreRegistListCustomize> getRecordList(Map<String, Object> preRegistUserMap, int limitStart, int limitEnd) {
 		// 封装查询条件
 		if (limitStart == 0 || limitStart > 0) {
 		    preRegistUserMap.put("limitStart", limitStart);

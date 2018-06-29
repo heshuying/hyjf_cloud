@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.user.service;
 
-import com.hyjf.am.resquest.user.UserChangeLogRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
@@ -17,7 +15,7 @@ import java.util.Map;
  * @version UserManagerService, v0.1 2018/6/20 9:47
  *          后台管理系统：会员中心->会员管理
  */
-public interface UserManagerService {
+public interface UserManagerService extends BaseService{
 
     /**
      * 根据筛选条件查找会员列表
@@ -188,7 +186,6 @@ public interface UserManagerService {
      */
     User selectUserByRecommendName(String recommendName);
 
-    SpreadsUser selectSpreadsUsersByUserId(int userId);
     /**
      * 根据用户id获取推荐信息
      * @param userId

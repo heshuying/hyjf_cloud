@@ -749,7 +749,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             routeCode = "2";// 路由代码
             bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
         }
-        if (routeCode.equals("2")) {
+        if ("2".equals(routeCode)) {
             bean.setRouteCode(routeCode);
             LogAcqResBean logAcq = new LogAcqResBean();
             logAcq.setPayAllianceCode(payAllianceCode);

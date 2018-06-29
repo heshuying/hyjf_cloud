@@ -66,7 +66,7 @@ public class LoginController extends BaseController {
 		adminSystemRequest.setUsername(username);
 		adminSystemRequest.setPassword(password);
 		AdminSystemResponse prs = loginService.getUserInfo(adminSystemRequest);
-		if(prs.getMessage().equals("00")) {
+		if("00".equals(prs.getMessage())) {
 			info.put("status", "99");
 			info.put("msg", prs.getMessage());
 			return info;

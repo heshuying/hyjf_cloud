@@ -35,6 +35,7 @@ public class CouponClientImpl implements CouponClient {
      * @return List<CallCenterCouponUserVO>
      * @author wangjun
      */
+    @Override
     public List<CallCenterCouponUserVO> selectCouponUserList(CallCenterBaseRequest callCenterBaseRequest){
         CallCenterCouponUserResponse callCenterCouponUserResponse = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/callcenter/getUserCouponInfoList", callCenterBaseRequest,
@@ -51,6 +52,7 @@ public class CouponClientImpl implements CouponClient {
      * @return List<CallCenterCouponTenderVO>
      * @author wangjun
      */
+    @Override
     public List<CallCenterCouponTenderVO> selectCouponTenderList(CallCenterBaseRequest callCenterBaseRequest){
         CallCenterCouponTenderResponse callCenterCouponTenderResponse = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/callcenter/getUserCouponTenderList", callCenterBaseRequest,
@@ -67,6 +69,7 @@ public class CouponClientImpl implements CouponClient {
      * @return List<CallCenterCouponBackMoneyVO>
      * @author wangjun
      */
+    @Override
     public List<CallCenterCouponBackMoneyVO> selectCouponBackMoneyList(CallCenterBaseRequest callCenterBaseRequest){
         CallCenterCouponBackMoneyResponse callCenterCouponBackMoneyResponse = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/callcenter/getUserCouponBackMoneyList", callCenterBaseRequest,
@@ -83,6 +86,7 @@ public class CouponClientImpl implements CouponClient {
      * @return String
      * @author wangjun
      */
+    @Override
     public String getCouponContent(String couponCode){
         return restTemplate
                 .getForEntity("http://AM-USER/am-user/callcenter/getVipLevel/"+ couponCode,

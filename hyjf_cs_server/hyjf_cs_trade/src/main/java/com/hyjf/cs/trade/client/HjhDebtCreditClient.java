@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 
 import java.util.List;
@@ -26,4 +27,11 @@ public interface HjhDebtCreditClient {
      * @return
      */
     List<HjhDebtCreditVO> selectHjhDebtCreditListByOrderIdNid(String accedeOrderId,String borrowNid);
+
+    /**
+     *
+     * @param assignNid
+     * @return
+     */
+    List<HjhDebtCreditTenderVO> selectHjhCreditTenderListByAssignOrderId(String assignNid);
 }

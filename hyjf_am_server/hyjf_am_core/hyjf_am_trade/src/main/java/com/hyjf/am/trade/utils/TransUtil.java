@@ -13,7 +13,6 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -187,7 +186,7 @@ public class TransUtil {
      * @return
      */
     public static Integer getPeriod(int period, String paymentStyle) {
-        if (!paymentStyle.equals("endday")) {
+        if (!"endday".equals(paymentStyle)) {
             return period * 30;
         } else {
             return period;

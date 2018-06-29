@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.demo;
+package com.hyjf.am.trade.controller.transactiondemo;
 
 import com.hyjf.common.exception.MQException;
 

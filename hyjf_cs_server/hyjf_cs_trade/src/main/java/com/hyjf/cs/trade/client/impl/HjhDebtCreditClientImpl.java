@@ -4,7 +4,10 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.HjhDebtCreditResponse;
+import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.HjhDebtCreditClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +52,20 @@ public class HjhDebtCreditClientImpl implements HjhDebtCreditClient {
                 "http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhDebtCreditListByOrderIdNid/" + accedeOrderId + "/" + borrowNid,
                 HjhDebtCreditResponse.class).getBody();
         if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 汇计划债转协议下载
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditTenderVO> selectHjhCreditTenderListByAssignOrderId(String assignOrderId) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhCreditTenderListByAssignOrderId/"+assignOrderId;
+        HjhDebtCreditTenderResponse response = restTemplate.getForEntity(url,HjhDebtCreditTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
             return response.getResultList();
         }
         return null;

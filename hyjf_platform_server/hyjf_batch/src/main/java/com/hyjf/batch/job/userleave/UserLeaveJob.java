@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.userLeave;
+package com.hyjf.batch.job.userleave;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.Job;

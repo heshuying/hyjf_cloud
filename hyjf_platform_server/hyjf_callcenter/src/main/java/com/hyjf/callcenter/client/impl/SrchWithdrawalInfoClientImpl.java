@@ -31,6 +31,7 @@ public class SrchWithdrawalInfoClientImpl implements SrchWithdrawalInfoClient {
      * @return List<CallCenterWithdrawVO>
      * @author wangjun
      */
+    @Override
     public List<CallCenterWithdrawVO> getWithdrawRecordList(CallCenterBaseRequest callCenterBaseRequest){
         CallCenterWithdrawResponse callCenterWithdrawResponse = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/callcenter/getWithdrawRecordList", callCenterBaseRequest, CallCenterWithdrawResponse.class)

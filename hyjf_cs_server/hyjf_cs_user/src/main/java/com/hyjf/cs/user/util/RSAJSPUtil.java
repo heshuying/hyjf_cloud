@@ -128,10 +128,11 @@ public class RSAJSPUtil {
 			byte[] raw = new byte[outputSize * blocksSize];
 			int i = 0;
 			while (data.length - i * blockSize > 0) {
-				if (data.length - i * blockSize > blockSize)
+				if (data.length - i * blockSize > blockSize) {
 					cipher.doFinal(data, i * blockSize, blockSize, raw, i * outputSize);
-				else
-					cipher.doFinal(data, i * blockSize, data.length - i * blockSize, raw, i * outputSize);
+				} else {
+                    cipher.doFinal(data, i * blockSize, data.length - i * blockSize, raw, i * outputSize);
+                }
 				// 这里面doUpdate方法不可用，查看源代码后发现每次doUpdate后并没有什么实际动作除了把byte[]放到
 				// ByteArrayOutputStream中，而最后doFinal的时候才将所有的byte[]进行加密，可是到了此时加密块大小很可能已经超出了
 				// OutputSize所以只好用dofinal方法。
@@ -147,7 +148,7 @@ public class RSAJSPUtil {
 	public static byte[] decrypt(PrivateKey pk, byte[] raw) throws Exception {
 		try {
 			Cipher cipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			cipher.init(cipher.DECRYPT_MODE, pk);
+			cipher.init(Cipher.DECRYPT_MODE, pk);
 			int blockSize = cipher.getBlockSize();
 			ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
 			int j = 0;
@@ -165,7 +166,7 @@ public class RSAJSPUtil {
 	/** * 16进制 To byte[] * @param hexString * @return byte[] */
 
 	public static byte[] hexStringToBytes(String hexString) {
-		if (hexString == null || hexString.equals("")) {
+		if (hexString == null || "".equals(hexString)) {
 			return null;
 		}
 
@@ -228,8 +229,7 @@ public class RSAJSPUtil {
 	/**
 	 * 获取公钥
 	 * 
-	 * @param fileName
-	 *            公钥存放路径
+	 * @param公钥存放路径
 	 * @return
 	 */
 	public static String getPunlicKeys() {
@@ -240,7 +240,7 @@ public class RSAJSPUtil {
 	/**
 	 * 读取文件内容
 	 * 
-	 * @param fileName
+	 * @param
 	 * @return
 	 */
 	public static String readToString(String filePath) {

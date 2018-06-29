@@ -91,7 +91,7 @@ public abstract class TransactionProducer {
 		}
 	}
 
-	protected TransactionMQProducer getTransactionMQProducer() throws MQClientException {
+	public TransactionMQProducer getTransactionMQProducer() throws MQClientException {
 		return producer;
 	}
 

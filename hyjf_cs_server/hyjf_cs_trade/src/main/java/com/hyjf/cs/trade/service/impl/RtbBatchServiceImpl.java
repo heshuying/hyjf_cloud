@@ -102,8 +102,9 @@ public class RtbBatchServiceImpl implements RtbBatchService {
 		logger.info("公司红包账户： ｛｝", merrpAccount);
 		// 查询商户子账户余额
 		BankOpenAccountVO bankOpenAccountVO = bankOpenClient.selectByAccountId(merrpAccount);
-		if (bankOpenAccountVO == null)
-			throw new RuntimeException("公司红包账户未开户...");
+		if (bankOpenAccountVO == null) {
+            throw new RuntimeException("公司红包账户未开户...");
+        }
 
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 版本号

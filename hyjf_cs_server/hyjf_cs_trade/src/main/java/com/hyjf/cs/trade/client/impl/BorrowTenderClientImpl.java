@@ -9,12 +9,11 @@ import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BorrowTenderClient;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Service
 public class BorrowTenderClientImpl implements BorrowTenderClient {

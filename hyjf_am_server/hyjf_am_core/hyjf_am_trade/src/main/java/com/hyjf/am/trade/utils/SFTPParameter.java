@@ -38,17 +38,19 @@ public class SFTPParameter {
     public Boolean isConnected = false;
 
     public int checkInterval() {
-        if (0 == this.conFTPTryInterval)
+        if (0 == this.conFTPTryInterval) {
             return CON_FTP_TRYINTERVAL_DEFAULT * 1000;
-        else
+        } else {
             return this.conFTPTryInterval * 1000;
+        }
     }
 
     public int checkCount() {
-        if (this.conFTPTryCount <= 0)
+        if (this.conFTPTryCount <= 0) {
             return CON_FTP_TRYCOUNT_DEFAULT;
-        else
+        } else {
             return this.conFTPTryCount;
+        }
     }
 
     public void release() throws JSchException {

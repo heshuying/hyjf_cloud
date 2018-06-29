@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.controller.demo.ProducerTransactionMessageService;
-import com.hyjf.am.trade.controller.demo.TransactionService;
+import com.hyjf.am.trade.service.ProducerTransactionMessageService;
+import com.hyjf.am.trade.controller.transactiondemo.TransactionService;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
 import com.hyjf.common.exception.MQException;
 
@@ -73,6 +73,6 @@ public class AccountTProducer extends TransactionProducer {
 		message.setBody(new String(msg.getBody()));
 		message.setCreateTime(new Date());
 		message.setUpdateTime(new Date());
-		producerTransactionMessageService.save(message);
+		producerTransactionMessageService.insert(message);
 	}
 }

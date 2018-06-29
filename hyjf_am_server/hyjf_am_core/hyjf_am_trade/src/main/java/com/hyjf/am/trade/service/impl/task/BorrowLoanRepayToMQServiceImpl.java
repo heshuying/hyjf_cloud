@@ -91,34 +91,34 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 				
 				Integer status = apicron.getStatus();
 				// 放、还款请求
-				if(status == CustomConstants.BANK_BATCH_STATUS_SENDING || status == CustomConstants.BANK_BATCH_STATUS_SEND_FAIL){
-					if(TASK_REPAY_TYPE == apicron.getApiType()){
+				if(status.equals(CustomConstants.BANK_BATCH_STATUS_SENDING) || status.equals(CustomConstants.BANK_BATCH_STATUS_SEND_FAIL)){
+					if(TASK_REPAY_TYPE.equals(apicron.getApiType())){
 						_log.info("发起还款消息通知:还款项目编号:[" + apicron.getBorrowNid() + ",还款期数:[第" + apicron.getPeriodNow() + "],计划编号:[" + (StringUtils.isEmpty(apicron.getPlanNid()) ? "" : apicron.getPlanNid()));
 						// 还款请求
 						
 						sendMessage(MQConstant.BORROW_REPAY_REQUEST_TOPIC, apicron);
                         repayRequestCount++;
                         _log.info("发起还款请求总数:[" + repayRequestCount + "].");
-                    }else if(TASK_LOAN_TYPE == apicron.getApiType() && StringUtils.isBlank(apicron.getPlanNid())){//直投放款请求
+                    }else if(TASK_LOAN_TYPE.equals(apicron.getApiType()) && StringUtils.isBlank(apicron.getPlanNid())){//直投放款请求
                     	_log.info("------------------标的:" + apicron.getBorrowNid() + ",发送实时放款请求~------------------------");
                     	sendMessage(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, apicron);
-                    }else if(TASK_LOAN_TYPE == apicron.getApiType() && StringUtils.isNotBlank(apicron.getPlanNid())){//计划放款请求
+                    }else if(TASK_LOAN_TYPE.equals(apicron.getApiType()) && StringUtils.isNotBlank(apicron.getPlanNid())){//计划放款请求
                     	_log.info("------------------标的:" + apicron.getBorrowNid() + ",发送实时放款请求~------------------------");
                     	sendMessage(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, apicron);
                     }
-				}else if(status == CustomConstants.BANK_BATCH_STATUS_SENDED || status == CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS
-						|| status == CustomConstants.BANK_BATCH_STATUS_PART_FAIL){
+				}else if(status.equals(CustomConstants.BANK_BATCH_STATUS_SENDED) || status.equals(CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS)
+						|| status.equals(CustomConstants.BANK_BATCH_STATUS_PART_FAIL)){
 					// 放、还款任务
-					if(TASK_REPAY_TYPE == apicron.getApiType() && StringUtils.isBlank(apicron.getPlanNid())){
+					if(TASK_REPAY_TYPE.equals(apicron.getApiType()) && StringUtils.isBlank(apicron.getPlanNid())){
 						// 直投类还款
 						sendMessage(MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC, apicron);
-					}else if(TASK_REPAY_TYPE == apicron.getApiType() && StringUtils.isNotBlank(apicron.getPlanNid())){
+					}else if(TASK_REPAY_TYPE.equals(apicron.getApiType()) && StringUtils.isNotBlank(apicron.getPlanNid())){
 						// 计划类还款
 						sendMessage(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC, apicron);
 					}
-				}else if(status == CustomConstants.BANK_BATCH_STATUS_FAIL){
+				}else if(status.equals(CustomConstants.BANK_BATCH_STATUS_FAIL)){
 					//放款部分成功或放款失败异常处理最终版
-					if (TASK_LOAN_TYPE == apicron.getApiType()) {
+					if (TASK_LOAN_TYPE.equals(apicron.getApiType())) {
 						//直投类异常修复
 						boolean flag = updateBatchFailLoan(apicron);
 						if (flag) {

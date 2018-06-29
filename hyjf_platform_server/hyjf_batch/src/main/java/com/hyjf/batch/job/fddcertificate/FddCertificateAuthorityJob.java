@@ -4,6 +4,7 @@
 package com.hyjf.batch.job.fddcertificate;
 
 import com.hyjf.batch.job.BaseJob;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
  * @version FddCertificateAuthorityJob, v0.1 2018/6/26 13:51
  * 法大大电子签章批量做CA认证
  */
+@DisallowConcurrentExecution
 public class FddCertificateAuthorityJob  extends BaseJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(FddCertificateAuthorityJob.class);
@@ -22,7 +24,7 @@ public class FddCertificateAuthorityJob  extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponExpiredJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("", String.class);
+        restTemplate.getForEntity("http://AM-USER/am-user/batch/fddCertificate", String.class);
         logger.info("CouponExpiredJob execute end...");
     }
 }
