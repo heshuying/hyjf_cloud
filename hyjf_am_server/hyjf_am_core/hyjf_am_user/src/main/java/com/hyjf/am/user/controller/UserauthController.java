@@ -29,7 +29,9 @@ import com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize;
 import com.hyjf.am.user.service.UserauthService;
 import com.hyjf.am.vo.user.AdminUserAuthListVO;
 import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
+import com.hyjf.am.vo.user.MspApplyVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author DongZeShan
@@ -55,7 +57,7 @@ public class UserauthController {
 			List<AdminUserAuthListCustomize> recordList = this.userauthService.getRecordList(authUser,
 					paginator.getOffset(), paginator.getLimit());
 			AdminUserAuthListResponse aualr = new AdminUserAuthListResponse();
-			List<AdminUserAuthListVO> avo = null;
+			List<AdminUserAuthListVO> avo = CommonUtils.convertBeanList(recordList,AdminUserAuthListVO.class);
 			if (recordList != null) {
 				BeanUtils.copyProperties(recordList, avo);
 				aualr.setResultList(avo);

@@ -23,7 +23,9 @@ public class ChangeLogRequest extends BaseVO {
 	 * 翻页机能用的隐藏变量
 	 */
 	private int paginatorPage = 1;
+    private String startTime;
 
+    private String endTime;
 
 
 	public int getPaginatorPage() {
@@ -70,7 +72,6 @@ public class ChangeLogRequest extends BaseVO {
 	    
 	    private String idCard;
 
-	    private static final long serialVersionUID = 1L;
 
 	    public Integer getId() {
 	        return id;
@@ -217,6 +218,22 @@ public class ChangeLogRequest extends BaseVO {
 		public void setIdCard(String idCard) {
 			this.idCard = idCard;
 				
+		}
+
+		public String getStartTime() {
+			return startTime;
+		}
+
+		public void setStartTime(String startTime) {
+			this.startTime = startTime;
+		}
+
+		public String getEndTime() {
+			return endTime;
+		}
+
+		public void setEndTime(String endTime) {
+			this.endTime = endTime;
 		}
 
 
