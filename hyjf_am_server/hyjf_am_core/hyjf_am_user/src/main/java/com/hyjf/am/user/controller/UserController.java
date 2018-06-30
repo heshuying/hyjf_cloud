@@ -566,4 +566,10 @@ public class UserController {
 	}
 
 
+	@GetMapping("/getCustomerIDByUserID/{userId}/{code}")
+	public String getCustomerIDByUserID(@PathVariable Integer userId,@PathVariable String code){
+		return userService.getCustomerIDByUserID(userId,code);
+	}
+
+
 }

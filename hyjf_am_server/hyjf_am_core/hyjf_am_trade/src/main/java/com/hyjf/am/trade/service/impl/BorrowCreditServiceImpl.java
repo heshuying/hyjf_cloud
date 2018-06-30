@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
@@ -60,6 +61,19 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         }
         return null;
     }
+
+    /**
+     * 获取债转信息
+     */
+	@Override
+	public List<BorrowCredit> getBorrowCreditList(BorrowCreditRequest request1) {
+		 // 获取债转信息
+        BorrowCreditExample borrowCreditExample = new BorrowCreditExample();
+        BorrowCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andCreditNidEqualTo(Integer.parseInt(request1.getCreditNid())).andBidNidEqualTo(request1.getBidNid()).andTenderNidEqualTo(request1.getTenderNid());
+        List<BorrowCredit> borrowCredit = this.borrowCreditMapper.selectByExample(borrowCreditExample);
+		return borrowCredit;
+	}
 
 
 }

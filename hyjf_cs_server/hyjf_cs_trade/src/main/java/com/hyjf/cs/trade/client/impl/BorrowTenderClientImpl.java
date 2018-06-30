@@ -63,4 +63,14 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 		String url = "http://AM-TRADE/am-trade/borrowTender/updateTenderAgreement";
 		return restTemplate.postForEntity(url,tenderAgreement,Integer.class).getBody();
 	}
+
+	@Override
+	public List<BorrowTenderVO> getBorrowTenderListByNid(String nid) {
+    	String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderListByNid/"+nid;
+    	BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+    	if (Validator.isNotNull(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
 }

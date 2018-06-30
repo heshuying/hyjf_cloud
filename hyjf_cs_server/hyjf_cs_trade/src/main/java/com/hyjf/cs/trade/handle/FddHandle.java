@@ -2,11 +2,13 @@ package com.hyjf.cs.trade.handle;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
@@ -74,6 +76,8 @@ public class FddHandle {
 	private HjhDebtCreditClient hjhDebtCreditClient;
 	@Autowired
 	private HjhDebtCreditTenderClient hjhDebtCreditTenderClient;
+
+	private HjhAccedeClient hjhAccedeClient;
 
 	@Value("${hyjf.pay.fdd.nofify.url}")
 	private String HYJF_PAY_FDD_NOTIFY_URL;
@@ -1215,14 +1219,251 @@ public class FddHandle {
 				resultMap.put("usersInfoCredit", usersInfoCredit);
 			}
 
-			//String phpWebHost = PropUtils.getSystem("hyjf.web.host.php");
-			/*if (org.apache.commons.lang.StringUtils.isNotEmpty(phpWebHost)) {
+			String phpWebHost = "";
+			//PropUtils.getSystem("hyjf.web.host.php");
+			//TODO 在老系統中找不到對應的資源文件,後面解決
+			if (org.apache.commons.lang.StringUtils.isNotEmpty(phpWebHost)) {
 				resultMap.put("phpWebHost", phpWebHost);
 			} else {
 				resultMap.put("phpWebHost", "http://site.hyjf.com");
-			}*/
+			}
 		}
 		return resultMap;
 	}
 
+
+	/**
+	 * 自动签署结果异步返回处理
+	 * @param bean
+	 */
+	public void updateAutoSignData(DzqzCallBean bean) {
+
+		//协议类型
+		Integer transType = bean.getTransType();
+
+		//居间服务协议签署处理
+		//合同编号
+		String contract_id = bean.getContract_id();
+		logger.info("--------------------合同编号：" + contract_id + "，开始处理自动签署异步处理-------");
+		//投资人
+		Integer userId = null;
+
+		String borrowNid = null;
+
+		//机构编号
+		String instCode = null;
+
+		// 出让人用户ID
+		Integer creditUserId = null;
+		// 借款人CA认证客户编号
+		String borrowerCustomerID = null;
+
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType){//居间服务协议
+			List<BorrowTenderVO> tenderList = this.borrowTenderClient.getBorrowTenderListByNid(contract_id);
+			if (tenderList != null && tenderList.size() > 0) {
+				BorrowTenderVO borrowTender = tenderList.get(0);
+				userId = borrowTender.getUserId(); //投资人
+				borrowNid = borrowTender.getBorrowNid();//标的号
+				BorrowVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+				instCode = borrow.getInstCode();//机构编号
+				//判断是否为企业借款
+				boolean result = this.isCompanyUser(borrow);
+				if (result){
+
+					// 获取CA认证客户编号
+					if(org.apache.commons.lang.StringUtils.isNotBlank(borrow.getPlanNid())){//计划标的
+						Integer borrowUserId = borrow.getUserId();
+						borrowerCustomerID = getCustomerIDByUserID(borrowUserId);
+						if(org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)){
+							logger.info("企业借款获取CA认证客户编号失败,用户ID" + borrowUserId);
+						}
+					}else{
+						// 借款主体为企业借款
+						BorrowUserVO borrowUsers=this.borrowUserClient.getBorrowUser(borrowNid);
+						if (borrowUsers == null){
+							logger.info("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:["+borrowNid+"]");
+						}
+						borrowerCustomerID = this.getCACustomerID(borrowUsers);
+						if(org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)){
+							logger.info("企业借款获取CA认证客户编号失败,企业名称:["+borrowUsers.getUsername()+"],社会统一信用代码:["+borrowUsers.getSocialCreditCode()+"].");
+						}
+					}
+
+				}else{
+					if(org.apache.commons.lang.StringUtils.isNotBlank(borrow.getPlanNid())){//计划标的
+						Integer borrowUserId = borrow.getUserId();
+						borrowerCustomerID = getCustomerIDByUserID(borrowUserId);
+						if(org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)){
+							logger.info("个人借款获取CA认证客户编号失败,用户ID" + borrowUserId);
+						}
+					}else {
+						// 借款主体为个人借款
+						BorrowManinfoVO borrowManinfo=this.borrowManinfoClient.getBorrowManinfo(borrowNid);
+						if (borrowManinfo == null) {
+							logger.info("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
+						}
+						// 获取CA认证客户编号
+						borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
+						if (org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)) {
+							logger.info("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:[" + borrowManinfo.getCardNo() + "].");
+						}
+					}
+				}
+			}
+		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType){//计划加入协议
+			List<HjhAccedeVO> hjhAccedes=this.hjhAccedeClient.getHjhAccedeListByAccedeOrderId(contract_id);
+			if(hjhAccedes != null && hjhAccedes.size() > 0){
+				HjhAccedeVO hjhAccede = hjhAccedes.get(0);
+				userId = hjhAccede.getUserId();
+				instCode = hjhAccede.getPlanNid();
+			}
+		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType){//债转服务协议
+			List<CreditTenderVO> creditTenderList=this.bankCreditTenderClient.selectCreditTender(contract_id);
+			if (creditTenderList != null && creditTenderList.size() > 0) {
+				CreditTenderVO creditTender = creditTenderList.get(0);
+				userId = creditTender.getUserId();// 承接人
+				borrowNid = creditTender.getBidNid();// 原标的号
+				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				instCode = borrow.getInstCode();// 机构编号
+				creditUserId = creditTender.getCreditUserId();// 出让人
+				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
+			}
+		}else if(FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType){// 计划债转服务协议
+			List<HjhDebtCreditTenderVO> hjhCreditTenderList = this.hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(contract_id);
+			//hyjf_hjh_debt_credit_tender
+			if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0) {
+				HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
+				userId = hjhCreditTender.getUserId();// 承接人
+				borrowNid = hjhCreditTender.getBorrowNid();// 标的号
+				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				instCode = borrow.getInstCode();// 机构编号
+				creditUserId = hjhCreditTender.getCreditUserId();// 出让人
+				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
+			}
+		}
+
+
+		//通过三方的客户编号查询法大大签署结果，如果都成功的话，开始更新下载地址，并重置状态
+		String tenderCustomerID = getCustomerIDByUserID(userId);
+		if (tenderCustomerID == null) {
+			throw new RuntimeException("用户：" + userId + ",未进行CA认证，无法获取客户编号！");
+		}
+
+
+		//平台客户编号
+		String platFromCustomerId = FDD_HYJF_CUSTOMERID;
+
+		//查询投资人/承接人是否为企业用户
+		boolean isTenderCompany = false;
+		UserVO users = this.amUserClient.findUserById(userId);
+		Integer userType = users.getUserType();
+		if (userType == 1){
+			isTenderCompany = true;
+		}
+
+		//查询出让人是否为企业用户
+		boolean isCreditCompany = false;
+		if(creditUserId != null){
+			UserVO creditUsers = this.amUserClient.findUserById(creditUserId);
+			Integer creditUserType = creditUsers.getUserType();
+			if (creditUserType == 1){
+				isCreditCompany = true;
+			}
+		}
+		//调用查询接口并保存返回数据
+		//查询投资人签署结果
+		DzqzCallBean callBean = querySignResult(contract_id, tenderCustomerID, userId);
+		if (callBean != null) {
+			String sign_status = callBean.getSign_status();
+			if (!"1".equals(sign_status)) {
+				logger.info("--------------------合同编号：" + contract_id + "，甲方签署失败-------");
+				return;
+			}
+			logger.info("--------------------合同编号：" + contract_id + "，甲方签署完成-------");
+		} else {
+			throw new RuntimeException("用户：" + userId + ",查询签署结果异常！");
+		}
+
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType || FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType){
+
+			// 查询借款人签署结果
+			DzqzCallBean borrowCallBean = querySignResult(contract_id, borrowerCustomerID, 123);
+			if (borrowCallBean != null) {
+				String sign_status = borrowCallBean.getSign_status();
+				if (!"1".equals(sign_status)) {
+					logger.info("--------------------合同编号：" + contract_id + "，乙方签署失败-------");
+					return;
+				}
+				logger.info("--------------------合同编号：" + contract_id + "，乙方签署完成-------");
+			} else {
+				throw new RuntimeException("查询签署结果异常！");
+			}
+		}
+
+		if ( FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType){
+			logger.info("--------------------合同编号：" + contract_id + "，签署完成，开始更新-------");
+			updateSaveSignInfo(callBean, contract_id, borrowNid, transType, instCode,isTenderCompany,isCreditCompany);
+		}else{
+			//查询平台签署结果
+			DzqzCallBean platerCallBean = querySignResult(contract_id, platFromCustomerId, userId);
+			if (platerCallBean != null) {
+				String sign_status = platerCallBean.getSign_status();
+				if (!"1".equals(sign_status)) {
+					logger.info("--------------------合同编号：" + contract_id + "，平台签署失败-------");
+					return;
+				} else {
+					logger.info("--------------------合同编号：" + contract_id + "，签署完成，开始更新-------");
+					//三方均签署成功，更新数据库
+					updateSaveSignInfo(platerCallBean, contract_id, borrowNid, transType, instCode,isTenderCompany,false);
+				}
+				logger.info("--------------------合同编号：" + contract_id + "，平台签署完成-------");
+			} else {
+				throw new RuntimeException("接入平台,查询签署结果异常！");
+			}
+		}
+
+
+	}
+
+	/**
+	 * 查询签署结果
+	 *  @param contract_id      合同编号
+	 * @param tenderCustomerID 客户编号
+	 * @param userId
+	 */
+	private DzqzCallBean querySignResult(String contract_id, String tenderCustomerID, Integer userId) {
+		DzqzCallBean bean = new DzqzCallBean();
+		bean.setTxCode(DzqzConstant.FDD_QUERY_SIGNSTATUS);
+		bean.setCustomer_id(tenderCustomerID);
+		bean.setContract_id(contract_id);
+		bean.setUserId(userId);
+		DzqzCallBean callBean = DzqzCallUtil.callApiBg(bean);
+		return callBean;
+	}
+
+	/**
+	 *  判断是否为企业借款
+	 * @param borrow
+	 * @return
+	 */
+	private boolean isCompanyUser(BorrowVO borrow) {
+		String planNid = borrow.getPlanNid();
+		if(org.apache.commons.lang.StringUtils.isNotBlank(planNid)){//计划标的
+			Integer userId = borrow.getUserId();
+			UserVO users=this.amUserClient.findUserById(userId);
+			Integer userType = users.getUserType();
+			if(1 == userType){
+				return true;
+			}
+		}else{
+			String companyOrPersonal = borrow.getCompanyOrPersonal();
+			if("1".equals(companyOrPersonal)){
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

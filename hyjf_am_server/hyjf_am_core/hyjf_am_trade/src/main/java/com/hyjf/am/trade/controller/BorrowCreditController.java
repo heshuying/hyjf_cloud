@@ -5,13 +5,17 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
 import com.hyjf.am.response.trade.BorrowCreditResponse;
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.service.BorrowCreditService;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,4 +73,15 @@ public class BorrowCreditController {
     }
 
 
+    @PostMapping("/getBorrowCreditList")
+    public BorrowCreditResponse getBorrowCreditList(@RequestBody BorrowCreditRequest request1) {
+    	BorrowCreditResponse response = new BorrowCreditResponse();
+    	List<BorrowCredit> borrowCredits =borrowCreditService.getBorrowCreditList(request1);
+    	if(CollectionUtils.isNotEmpty(borrowCredits)) {
+    		response.setResultList(CommonUtils.convertBeanList(borrowCredits, BorrowCreditVO.class));
+    	}
+    	return response;
+    }
+
+    
 }

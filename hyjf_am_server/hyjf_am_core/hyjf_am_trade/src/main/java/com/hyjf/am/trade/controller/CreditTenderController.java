@@ -4,16 +4,24 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.CreditTenderResponse;
+import com.hyjf.am.response.trade.TenderToCreditDetailCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author jun 20180621
@@ -54,4 +62,37 @@ public class CreditTenderController {
            }
             return ret;
     }
+
+
+    @PostMapping("/getCreditTenderList")
+    public CreditTenderResponse getCreditTenderList(@RequestBody CreditTenderRequest request){
+        CreditTenderResponse response = new CreditTenderResponse();
+        List<CreditTender> creditTenders= bankCreditTenderService.getCreditTenderList(request);
+        if (CollectionUtils.isNotEmpty(creditTenders)){
+            response.setResultList(CommonUtils.convertBeanList(creditTenders,CreditTenderVO.class));
+        }
+        return response;
+    }
+    
+    
+    @PostMapping("/selectWebCreditTenderDetailForContract")
+    public TenderToCreditDetailCustomizeResponse selectWebCreditTenderDetailForContract(@RequestBody Map<String, Object> params) {
+    	TenderToCreditDetailCustomizeResponse response = new TenderToCreditDetailCustomizeResponse(); 
+    	List<TenderToCreditDetailCustomize> tenderToCreditDetailList =bankCreditTenderService.selectWebCreditTenderDetailForContract(params);
+    	if (CollectionUtils.isNotEmpty(tenderToCreditDetailList)){
+            response.setResultList(CommonUtils.convertBeanList(tenderToCreditDetailList,TenderToCreditDetailCustomizeVO.class));
+        }
+    	return response;
+    }
+
+    @PostMapping("/selectHJHWebCreditTenderDetail")
+    public TenderToCreditDetailCustomizeResponse selectHJHWebCreditTenderDetail(@RequestBody Map<String, Object> params){
+        TenderToCreditDetailCustomizeResponse response = new TenderToCreditDetailCustomizeResponse();
+        List<TenderToCreditDetailCustomize> tenderToCreditDetailList =bankCreditTenderService.selectHJHWebCreditTenderDetail(params);
+        if (CollectionUtils.isNotEmpty(tenderToCreditDetailList)){
+            response.setResultList(CommonUtils.convertBeanList(tenderToCreditDetailList,TenderToCreditDetailCustomizeVO.class));
+        }
+        return response;
+    }
+
 }

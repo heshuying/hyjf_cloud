@@ -3,9 +3,13 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditMapper;
+import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.HjhDebtCreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,8 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
 
     @Autowired
     HjhDebtCreditMapper hjhDebtCreditMapper;
+    @Autowired
+    HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
 
     /**
      * 判断是否存在债转未承接的项目
@@ -47,5 +53,26 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         HjhDebtCreditExample example = new HjhDebtCreditExample();
         example.createCriteria().andPlanOrderIdEqualTo(accedeOrderId).andBorrowNidEqualTo(borrowNid).andCreditStatusNotEqualTo(3);
         return this.hjhDebtCreditMapper.selectByExample(example);
+    }
+
+
+    @Override
+    public List<HjhDebtCreditTender> selectHjhCreditTenderListByAssignOrderId(String assignOrderId) {
+        HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
+        HjhDebtCreditTenderExample.Criteria cra = example.createCriteria();
+        cra.andAssignOrderIdEqualTo(assignOrderId);
+        List<HjhDebtCreditTender> hjhCreditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(example);
+        return hjhCreditTenderList;
+    }
+
+    @Override
+    public List<HjhDebtCredit> getHjhDebtCreditList(HjhDebtCreditRequest request) {
+        HjhDebtCreditExample borrowCreditExample = new HjhDebtCreditExample();
+        HjhDebtCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andBorrowNidEqualTo(request.getBorrowNid());
+        borrowCreditCra.andCreditNidEqualTo(request.getCreditNid());
+        borrowCreditCra.andInvestOrderIdEqualTo(request.getInvestOrderId());//??
+        List<HjhDebtCredit> borrowCredit = this.hjhDebtCreditMapper.selectByExample(borrowCreditExample);
+        return borrowCredit;
     }
 }

@@ -67,8 +67,12 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.5</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>
