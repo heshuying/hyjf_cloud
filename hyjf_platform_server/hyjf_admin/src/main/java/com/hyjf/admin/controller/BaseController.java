@@ -24,6 +24,7 @@ public class BaseController {
 	//redis存有用户信息的key
 	public static final String USER="user";
 	public static final String STATUS="status";
+	public static final String MSG="msg";
 	public static final String SUCCESS="00";
 	public static final String FAIL="99";
 	//取得session中用户信息
@@ -43,13 +44,17 @@ public class BaseController {
 	public JSONObject success() {
 		JSONObject info = new JSONObject();
 		info.put(STATUS, SUCCESS);
-		info.put(STATUS, "成功");
+		info.put(MSG, "成功");
 		return info;
 	}
 	public JSONObject  fail(String failmsg) {
 		JSONObject info = new JSONObject();
+		if(failmsg.equals("")) {
+			info.put(MSG, "失败");
+		}else {
+			info.put(MSG, failmsg);
+		}
 		info.put(STATUS, FAIL);
-		info.put(STATUS, failmsg);
 		return info;
 	}
 }

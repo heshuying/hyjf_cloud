@@ -8,8 +8,8 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.service.HjhAccedeService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,12 +59,12 @@ public class HjhAccedeController {
         return response;
     }
 
-    @GetMapping("/getHjhAccedeListByAccedeOrderId/{accedeOrderId}")
+    @GetMapping("/getHjhAccedeByAccedeOrderId/{accedeOrderId}")
     public HjhAccedeResponse getHjhAccedeListByAccedeOrderId(@PathVariable String accedeOrderId){
         HjhAccedeResponse response = new HjhAccedeResponse();
-        List<HjhAccede> hjhAccedes=hjhAccedeService.getHjhAccedeListByAccedeOrderId(accedeOrderId);
-        if (CollectionUtils.isNotEmpty(hjhAccedes)){
-            response.setResultList(CommonUtils.convertBeanList(hjhAccedes,HjhAccedeVO.class));
+        HjhAccede hjhAccede=hjhAccedeService.getHjhAccedeByAccedeOrderId(accedeOrderId);
+        if (Validator.isNotNull(hjhAccede)){
+            response.setResult(CommonUtils.convertBean(hjhAccede,HjhAccedeVO.class));
         }
         return response;
     }

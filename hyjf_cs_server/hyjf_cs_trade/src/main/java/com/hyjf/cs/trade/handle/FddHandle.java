@@ -3,9 +3,11 @@ package com.hyjf.cs.trade.handle;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
+import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -17,7 +19,13 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.file.FavFTPUtil;
+import com.hyjf.common.file.FileUtil;
+import com.hyjf.common.file.SFTPParameter;
+import com.hyjf.common.pdf.ImageUtil;
+import com.hyjf.common.pdf.PDFToImage;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
@@ -26,24 +34,26 @@ import com.hyjf.cs.trade.bean.fdd.FddDessenesitizationBean;
 import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.mq.FddProducer;
+import com.hyjf.cs.trade.mq.MailProducer;
 import com.hyjf.cs.trade.mq.Producer;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 法大大 handle
@@ -55,6 +65,12 @@ import java.util.Map;
 public class FddHandle {
 
 	private static final Logger logger = LoggerFactory.getLogger(FddHandle.class);
+	/** 用户ID */
+	private static final String VAL_USERID = "userId";
+	/** 用户名 */
+	private static final String VAL_NAME = "val_name";
+	/** 性别 */
+	private static final String VAL_SEX = "val_sex";
 
 	@Autowired
 	private AmBorrowClient amBorrowClient;
@@ -76,18 +92,35 @@ public class FddHandle {
 	private HjhDebtCreditClient hjhDebtCreditClient;
 	@Autowired
 	private HjhDebtCreditTenderClient hjhDebtCreditTenderClient;
-
+	@Autowired
 	private HjhAccedeClient hjhAccedeClient;
+	@Autowired
+	private TenderAgreementClient tenderAgreementClient;
+	@Autowired
+	private BorrowRecoverClient borrowRecoverClient;
 
 	@Value("${hyjf.pay.fdd.nofify.url}")
 	private String HYJF_PAY_FDD_NOTIFY_URL;
-
 	@Value("${hyjf.fdd.customerid}")
 	private String FDD_HYJF_CUSTOMERID;
+	@Value("${hyjf.ftp.ip}")
+	private String HYJF_FTP_IP;
+	@Value("${hyjf.ftp.port}")
+	private String HYJF_FTP_PORT;
+	@Value("${hyjf.ftp.basepath.img}")
+	private String HYJF_FTP_BASEPATH_IMG;
+	@Value("${hyjf.ftp.basepath.pdf}")
+	private String HYJF_FTP_BASEPATH_PDF;
+	@Value("${hyjf.ftp.username}")
+	private String HYJF_FTP_USERNAME;
+	@Value("${hyjf.ftp.password}")
+	private String HYJF_FTP_PASSWORD;
 
 	@Autowired
 	private FddProducer fddProducer;
-	
+	@Autowired
+	private MailProducer mailProducer;
+
 	/**
 	 * 散标投资
 	 * 
@@ -1311,9 +1344,8 @@ public class FddHandle {
 				}
 			}
 		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType){//计划加入协议
-			List<HjhAccedeVO> hjhAccedes=this.hjhAccedeClient.getHjhAccedeListByAccedeOrderId(contract_id);
-			if(hjhAccedes != null && hjhAccedes.size() > 0){
-				HjhAccedeVO hjhAccede = hjhAccedes.get(0);
+			HjhAccedeVO hjhAccede=this.hjhAccedeClient.getHjhAccedeByAccedeOrderId(contract_id);
+			if(Validator.isNotNull(hjhAccede)){
 				userId = hjhAccede.getUserId();
 				instCode = hjhAccede.getPlanNid();
 			}
@@ -1465,5 +1497,645 @@ public class FddHandle {
 		}
 
 		return false;
+	}
+
+	/**
+	 *  下载并脱敏处理
+	 * @param savePath        文件保存地址
+	 * @param tenderAgreementID 签署数据
+	 * @param transType 协议类型
+	 * @param download_url 协议下载地址
+	 * @param creditCompany
+	 */
+	public void downPDFAndDesensitization(String savePath, String tenderAgreementID, String transType, String ftpPath, String download_url, boolean tenderCompany, boolean creditCompany) {
+		String fileName = null;
+		String fileType = null;
+		if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
+			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_TENDER;
+			fileType = "9.png";
+		}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT || Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_CREDIT;
+			fileType = "2.png";
+		}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_PLAN){
+			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_PLAN;
+			fileType = "6.png";
+		}
+		try {
+			String downFileName =fileName+".pdf";
+			FileUtil.downLoadFromUrl(download_url,downFileName,savePath);
+
+			savePath = savePath + "/";
+			//获取文件路径
+			String filePath = savePath + fileName + ".pdf";
+			//上传PDF文件
+			this.uplodTmImage(filePath,ftpPath,0);
+			//开始脱敏文件
+			//获取文件页数
+			PDDocument pdDocument = PDFToImage.pdfInfo(filePath);
+			int pages = pdDocument.getNumberOfPages();
+
+			//是否企业用户
+			boolean isCompanyUser = false;
+			TenderAgreementVO tenderAgrementInfo = this.tenderAgreementClient.getTenderAgreementInfo(tenderAgreementID);
+			String borrowNid = tenderAgrementInfo.getBorrowNid();
+			if(StringUtils.isNotBlank(borrowNid)){
+				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				String planNid = borrow.getPlanNid();
+				if(StringUtils.isNotBlank(planNid)){//计划标的
+					Integer borrowUserId = borrow.getUserId();
+					UserVO users=this.amUserClient.findUserById(borrowUserId);
+					Integer userType = users.getUserType();
+					if(1 == userType){
+						isCompanyUser = true;
+					}
+				}else{
+					if("1".equals(borrow.getCompanyOrPersonal())){
+						isCompanyUser = true;
+					}
+				}
+			}
+
+			//拼接URL
+			List jointPathList = new ArrayList();
+			String imageSavePath = savePath + fileName;
+			//转换成图片
+			PDFToImage.pdf2img(filePath, imageSavePath, PDFToImage.IMG_TYPE_PNG);
+			//签章待脱敏图片地址
+			String imageFilePath = imageSavePath +"/"+  fileName + fileType;
+			//真实姓名待脱敏图片地址
+			String trueImageFilePath = imageSavePath +"/"+  fileName + "0.png";
+			logger.info("---------------待脱敏图片地址：" + imageFilePath);
+			File tmfile = new File(imageFilePath);
+			String upParentDir = tmfile.getParent();
+			logger.info("---------------脱敏图片上级目录：" + upParentDir);
+			//图片脱敏并存储
+			if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(transType)){
+
+				tmConduct(imageSavePath,imageFilePath,fileName,isCompanyUser,trueImageFilePath,jointPathList,pages,
+						Integer.valueOf(transType),tenderCompany,creditCompany);
+
+			}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+					Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+
+				tmConduct(imageSavePath,imageFilePath,fileName,isCompanyUser,trueImageFilePath,jointPathList,pages,
+						Integer.valueOf(transType),tenderCompany,creditCompany);
+
+			}else{
+				for (int i = 0; i < pages; i++) {
+					jointPathList.add(imageSavePath + "/" + fileName + i + ".png");
+				}
+			}
+			//拼接后的PDf路径
+			String tmpdfPath  = imageSavePath + "/" + fileName +"_tm.pdf";
+			//拼接脱敏图片
+			jointPDFimage(jointPathList,imageSavePath + "/pdfimage.png");
+			//重新拼接为PDF文件
+			replaceImageToPdf(jointPathList,tmpdfPath);
+
+			boolean uploadPDF = uplodTmImage(tmpdfPath, ftpPath, 0);
+			if(uploadPDF){
+				boolean upResult = uplodTmImage(imageSavePath + "/pdfimage.png",ftpPath,1);
+				if(upResult){
+					this.updateTenderAgreementImageURL(tenderAgreementID,ftpPath+"pdfimage.png",ftpPath + fileName +"_tm.pdf");
+
+					// 发送邮件
+					if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
+						BorrowRecoverVO recover = this.borrowRecoverClient.selectBorrowRecoverByTenderNid(tenderAgreementID);
+						if (recover != null && StringUtils.isBlank(recover.getAccedeOrderId())){
+							this.sendMail(recover);
+						}
+					}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_PLAN){
+						HjhAccedeVO hjhAccede = this.hjhAccedeClient.getHjhAccedeByAccedeOrderId(tenderAgrementInfo.getTenderNid());
+						this.sendPlanMail(hjhAccede);
+					}
+				}else{
+					logger.info("----------脱敏图片上传失败-----------");
+				}
+			}else{
+				logger.info("----------脱敏PDF上传失败-----------");
+			}
+
+		} catch (Exception e) {
+			logger.info("------------脱敏协议错误，错误信息" + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 发送邮件(计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资成功)
+	 * @param hjhAccede
+	 */
+	private void sendPlanMail(HjhAccedeVO hjhAccede) {
+
+		logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资--------------------------开始");
+		try {
+			Map<String, Object> contents = new HashMap<String, Object>();
+			//1基本信息
+			Map<String ,Object> params=new HashMap<String ,Object>();
+			params.put("accedeOrderId", hjhAccede.getAccedeOrderId());
+			int userId = hjhAccede.getUserId();
+			params.put("userId", userId);
+			UserInfoVO userInfo=this.amUserClient.findUsersInfoById(Integer.valueOf(hjhAccede.getUserId()));
+			contents.put("userInfo", userInfo);
+			contents.put("username", hjhAccede.getUserName());
+			UserHjhInvistDetailCustomizeVO userHjhInvistDetailCustomize = this.selectUserHjhInvistDetail(params);
+			contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
+			Map<String, String> msg = new HashMap<String, String>();
+			msg.put(VAL_USERID, String.valueOf(userId));
+			// 向每个投资人发送邮件
+			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
+				UserVO users=this.amUserClient.findUserById(userId);
+				if (users == null || Validator.isNull(users.getEmail()) || users.getIsSmtp()==1) {
+					logger.info("=============cwyang eamil is users == null===========");
+					return;
+				}
+				String email = users.getEmail();
+				if (org.apache.commons.lang3.StringUtils.isBlank(email) || users.getIsSmtp()==1) {
+					logger.info("=============cwyang eamil users.getIsSmtp()==1===========");
+					return;
+				}
+				logger.info("=============cwyang eamil is " + email);
+				msg.put(VAL_NAME, users.getUsername());
+				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(Integer.valueOf(userId));
+				if (Validator.isNotNull(usersInfo) && Validator.isNotNull(usersInfo.getSex())) {
+					if (usersInfo.getSex() % 2 == 0) {
+						msg.put(VAL_SEX, "女士");
+					} else {
+						msg.put(VAL_SEX, "先生");
+					}
+				}
+				String fileName = hjhAccede.getAccedeOrderId()+".pdf";
+				//String filePath = CustomConstants.HYJF_MAKEPDF_TEMPPATH + "/fdd/";
+				//String filePath = PropUtils.getSystem(CustomConstants.HYJF_MAKEPDF_TEMPPATH) + "/" + "BorrowLoans_" + GetDate.getMillis() + StringPool.FORWARD_SLASH;
+				String filePath = "/pdf_tem/pdf/" + hjhAccede.getPlanNid();
+				TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+				List<TenderAgreementVO> tenderAgreementsNid=this.tenderAgreementClient.selectTenderAgreementByNid(hjhAccede.getAccedeOrderId());
+				/***************************下载法大大协议******************************************/
+				//下载法大大协议--投资服务协议
+				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+					tenderAgreement = tenderAgreementsNid.get(0);
+					logger.info("sendMail", "***************************下载法大大协议--投资orderId:"+hjhAccede.getAccedeOrderId());
+					logger.info("sendMail", "***************************下载法大大协议--投资pdfUrl:"+tenderAgreement.getImgUrl());
+					if(tenderAgreement!=null){
+						String pdfUrl = tenderAgreement.getDownloadUrl();
+						if(StringUtils.isNotBlank(pdfUrl)){
+							logger.info("sendMail", "***************************下载法大大协议--pdfUrl:"+pdfUrl);
+							//FileUtil.getRemoteFile(pdfUrl, filePath + fileName);
+							FileUtil.downLoadFromUrl(pdfUrl,fileName,filePath);
+						}
+					}
+				}
+				String[] emails = { email };
+				//先用EMAILPARAM_TPL_LOANS测试，后期改成EMAITPL_EMAIL_LOCK_REPAY
+				logger.info("sendMail***************************下载法大大协议--投资filePath:"+filePath + fileName);
+				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
+						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+				// 发送邮件
+				mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+
+
+				logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资--------------------------结束!");
+			}
+		} catch (Exception e) {
+			logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资成功-----发送邮件失败");
+		}
+
+	}
+
+
+	/**
+	 * 发送邮件(投资成功)居间服务协议
+	 * @param borrowRecover
+	 */
+	private void sendMail(BorrowRecoverVO borrowRecover) {
+
+		int userId = borrowRecover.getUserId();
+		String orderId = borrowRecover.getNid();
+		Map<String, String> msg = new HashMap<String, String>();
+		msg.put(VAL_USERID, String.valueOf(userId));
+		try {
+			// 向每个投资人发送邮件
+			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
+				UserVO users = this.amUserClient.findUserById(userId);
+				if (users == null || Validator.isNull(users.getEmail())) {
+					return;
+				}
+				String email = users.getEmail();
+				if (org.apache.commons.lang3.StringUtils.isBlank(email) || users.getIsSmtp()==1) {
+					return;
+				}
+				logger.info("开始发送邮件。投资订单号:" + orderId);
+				msg.put(VAL_NAME, users.getUsername());
+				UserInfoVO usersInfo =this.amUserClient.findUsersInfoById(Integer.valueOf(userId));
+				if (Validator.isNotNull(usersInfo) && Validator.isNotNull(usersInfo.getSex())) {
+					if (usersInfo.getSex() % 2 == 0) {
+						msg.put(VAL_SEX, "女士");
+					} else {
+						msg.put(VAL_SEX, "先生");
+					}
+				}
+
+
+				String fileName = "";
+				//String filePath = PropUtils.getSystem(CustomConstants.HYJF_MAKEPDF_TEMPPATH) + "BorrowLoans_" + GetDate.getMillis() + StringPool.FORWARD_SLASH;
+				String  filePath = "/pdf_tem/pdf/" + orderId;
+				TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+				List<TenderAgreementVO> tenderAgreementsNid=this.tenderAgreementClient.selectTenderAgreementByNid(orderId);
+				/***************************下载法大大协议******************************************/
+				//下载法大大协议--居间
+				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+					tenderAgreement = tenderAgreementsNid.get(0);
+					logger.info("sendMail***************************下载法大大协议--投资orderId:"+orderId);
+					logger.info("sendMail***************************下载法大大协议--投资pdfUrl:"+tenderAgreement.getImgUrl());
+					if(tenderAgreement!=null){
+						File file= createFaddPDFImgFile(tenderAgreement,filePath);
+						fileName =  file.getName();
+					}
+				}
+				String[] emails = { email };
+				logger.info("sendMail***************************下载法大大协议--汇盈金服互联网金融服务平台居间服务协议filePath:"+filePath + fileName);
+				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇盈金服互联网金融服务平台居间服务协议", null, new String[] { filePath +"/" + fileName }, emails, CustomConstants.EMAILPARAM_TPL_LOANS,
+						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+				// 发送邮件
+				mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+
+				// 更新BorrowRecover邮件发送状态
+				borrowRecover.setSendmail(1);
+				this.borrowRecoverClient.updateBorrowRecover(borrowRecover);
+
+				logger.info("结束发送邮件。投资订单号:" + orderId);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+
+
+	}
+
+	/**
+	 * 下载法大大协议
+	 * @param tenderAgreement
+	 * @param savePath
+	 * 返回 0:下载成功；1:下载失败；2:没有生成法大大合同记录
+	 */
+	private File createFaddPDFImgFile(TenderAgreementVO tenderAgreement, String savePath) {
+
+		SFTPParameter para = new SFTPParameter() ;
+		String ftpIP = HYJF_FTP_IP;
+		String port = HYJF_FTP_PORT;
+		String basePathImage = HYJF_FTP_BASEPATH_IMG;
+		String basePathPdf = HYJF_FTP_BASEPATH_PDF;
+		String password = HYJF_FTP_PASSWORD;
+		String username = HYJF_FTP_USERNAME;
+		para.hostName = ftpIP;//ftp服务器地址
+		para.userName = username;//ftp服务器用户名
+		para.passWord = password;//ftp服务器密码
+		para.port = Integer.valueOf(port);//ftp服务器端口
+		para.downloadPath =basePathImage;//ftp服务器文件目录
+		para.savePath = savePath;
+		para.fileName=tenderAgreement.getTenderNid();
+		String imgUrl = tenderAgreement.getImgUrl();
+		String pdfUrl = tenderAgreement.getPdfUrl();
+		if(StringUtils.isNotBlank(pdfUrl)){
+			imgUrl = pdfUrl;
+		}else if(StringUtils.isNotBlank(imgUrl)){
+			imgUrl = tenderAgreement.getImgUrl();
+		}else{
+			return null;
+		}
+		String imagepath = imgUrl.substring(0,imgUrl.lastIndexOf("/"));
+		String imagename = imgUrl.substring(imgUrl.lastIndexOf("/")+1);
+		para.downloadPath =basePathImage+ "/" +imagepath;//ftp服务器文件目录
+		System.out.println("downloadPath___下载图片_______________________:"+para.downloadPath);
+		para.sftpKeyFile = imagename;
+		if(StringUtils.isNotBlank(pdfUrl)){
+			para.downloadPath =  basePathPdf+ "/" +imagepath;//ftp服务器文件目录
+			System.out.println("downloadPDFPath___下载PDF_______________________:"+para.downloadPath + "/" + imagename);
+		}
+		return  FavFTPUtil.downloadDirectory(para);
+	}
+
+	private void updateTenderAgreementImageURL(String tenderAgreementID, String iamgeurl, String tmpdfPath) {
+		TenderAgreementRequest request = new TenderAgreementRequest();
+		request.setTenderAgreementID(tenderAgreementID);
+		request.setImgUrl(iamgeurl);
+		request.setPdfUrl(tmpdfPath);
+		this.tenderAgreementClient.updateTenderAgreement(request);
+	}
+
+
+	/**
+	 *
+	 * @param imagePathList
+	 * 转换图片列表
+	 * @param pdfSavePath
+	 * PDF存储地址
+	 * @return
+	 */
+	private boolean replaceImageToPdf(List imagePathList,String pdfSavePath){
+
+		try{
+			FileUtil.imageTOpdf(imagePathList,pdfSavePath);
+		}catch (Exception e){
+			logger.info("-----------------脱敏图片转换成pdf失败--------");
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 *
+	 * @param jointPathList
+	 * @return
+	 */
+	private boolean jointPDFimage(List jointPathList,String imageSavePath) throws Exception {
+
+		String[] files = new String[jointPathList.size()];
+		for (int i = 0; i < jointPathList.size(); i++) {
+			files[i] = (String) jointPathList.get(i);
+		}
+		FileUtil.mergeImage(files,2,imageSavePath);
+
+		return true;
+	}
+
+	/**
+	 * 脱敏处理
+	 * @param imageSavePath
+	 * 图片保存路径
+	 * @param imageFilePath
+	 * 签章待脱敏图片路径
+	 * @param fileName
+	 * 图片名称
+	 * @param isCompanyUser
+	 * 是否企业户
+	 * @param trueImageFilePath
+	 * 协议内容待脱敏图片路径
+	 * @param jointPathList
+	 * 脱敏后拼接图片列表
+	 * @param pages
+	 * pdf页数
+	 * @param pdfType
+	 * @param creditCompany
+	 */
+	private void tmConduct(String imageSavePath, String imageFilePath, String fileName, boolean isCompanyUser,
+						   String trueImageFilePath, List jointPathList, int pages, int pdfType, boolean isTenderConmpany, boolean creditCompany){
+		//出让人、借款人真实姓名脱敏图片
+		String borrowTrueNametmImage = "/image/companyname.png";
+		//出让人、借款人签章图片
+		String borrowSigntmImage = "/image/companyname.png";
+		//出让人、借款人身份证号码图片
+		String borrowCardNoImage = "/image/cardno.png";
+
+		//承接人、投资人真实姓名脱敏图片
+		String tenderTrueNametmImage = "/image/companyname.png";
+		//承接人、投资人签章图片
+		String tenderSigntmImage = "/image/companyname.png";
+		//承接人、投资人身份证号码图片
+		String tenderCardNoImage = "/image/cardno.png";
+
+		if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			if(creditCompany){//出让人为企业
+				borrowTrueNametmImage = "/image/companyname.png";
+				borrowSigntmImage = "/image/seal.png";
+				borrowCardNoImage = borrowTrueNametmImage;
+			}
+			if(isTenderConmpany){//承接人为企业
+				tenderTrueNametmImage = "/image/companyname.png";
+				tenderSigntmImage = "/image/seal.png";
+				tenderCardNoImage = tenderTrueNametmImage;
+			}
+
+		}else{
+			if(isCompanyUser){
+				borrowTrueNametmImage = "/image/companyname.png";
+				borrowSigntmImage = "/image/seal.png";
+				borrowCardNoImage = borrowTrueNametmImage;
+			}
+			if(isTenderConmpany){
+				tenderTrueNametmImage = "/image/companyname.png";
+				tenderSigntmImage = "/image/seal.png";
+				tenderCardNoImage = tenderTrueNametmImage;
+			}
+		}
+		String tmName_sign = "";
+		String tmName_content = "tm_0";
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
+			tmName_sign = "tm_9";
+		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			tmName_sign = "tm_2";
+		}
+		String output = imageSavePath;
+		String source = imageFilePath;    //签章源图片路径
+		String path = this.getClass().getResource("/").getFile().toString();
+		File file = new File(path);
+		String fileParent = file.getParent();
+		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
+		String tenderSignIcon = fileParent + tenderSigntmImage; //投资人。承接人签章覆盖图片路径
+		String signimageName = fileName + tmName_sign;  //签章脱敏后图片名称
+		String imageType = "png";  //图片类型jpg,jpeg,png,gif
+		Integer degree = null; //水印旋转角度-45，null表示不旋转
+		//转让人/借款人 脱敏签章(个人显示第一个字，企业全部脱敏)
+		int index_x = 0;
+		int index_y = 0;
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
+			index_x = 440;
+			index_y = 1120;
+			if(isCompanyUser){
+				index_x = 380;
+				index_y = 1000;
+			}
+		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			index_x = 430;
+			index_y = 1100;
+			if(creditCompany){
+				index_x = 410;
+				index_y = 1100;
+			}
+		}
+		ImageUtil.markImageByMoreIcon(signIcon, source, output, signimageName, imageType, degree, index_x, index_y);
+
+		//受让人/投资人 脱敏签章（个人显示第一个字，企业全部脱敏）
+		source = output + "/" + signimageName + ".png";
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
+			index_x = 440;
+			index_y = 920;
+			if(isTenderConmpany){
+				index_x = 380;
+				index_y = 920;
+			}
+		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			index_x = 430;
+			index_y = 1300;
+			if(isTenderConmpany){
+				index_x = 368;
+				index_y = 1190;
+			}
+		}
+		ImageUtil.markImageByMoreIcon(tenderSignIcon, source, output, signimageName, imageType, degree, index_x, index_y);
+
+		//脱敏转让人/借款人 真实姓名（个人显示第一个字，其他脱敏，企业全部脱敏）
+		String trueImageName = fileName + tmName_content;//真实姓名脱敏后图片
+		String trueSource = trueImageFilePath;//待脱敏图片路径
+		String icon = fileParent + borrowTrueNametmImage;  //覆盖图片路径
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
+			index_x = 374;
+			index_y = 600;
+			if(isCompanyUser){
+				index_x = 354;
+				index_y = 600;
+			}
+		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			index_x = 390;
+			index_y = 450;
+			if(creditCompany){
+				index_x = 370;
+				index_y = 450;
+			}
+		}
+		ImageUtil.markImageByMoreIcon(icon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
+
+		trueSource = output + "/" + trueImageName + ".png";
+
+		String cardnoIcon = fileParent + borrowCardNoImage;
+
+		//脱敏转让人/借款人 证件号码（个人显示前3后4，企业全部脱敏）
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
+			index_x = 340;
+			index_y = 650;
+			if(isCompanyUser){
+				index_x = 300;
+				index_y = 650;
+			}
+		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			index_x = 340;
+			index_y = 505;
+			if(creditCompany){
+				index_x = 300;
+				index_y = 505;
+			}
+		}
+		ImageUtil.markImageByMoreIcon(cardnoIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
+
+		String tenderTrueNameIcon = fileParent + tenderTrueNametmImage;
+		//脱敏受让人/投资人 真实姓名（个人显示第一个，企业全部脱敏）
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
+			index_x = 378;
+			index_y = 450;
+			if(isTenderConmpany){
+				index_x = 348;
+				index_y = 450;
+			}
+		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			index_x = 385;
+			index_y = 605;
+			if(isTenderConmpany){
+				index_x = 365;
+				index_y = 605;
+			}
+		}
+		ImageUtil.markImageByMoreIcon(tenderTrueNameIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
+
+		cardnoIcon = fileParent + tenderCardNoImage;
+		//脱敏受让人/投资人 证件号码
+		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
+			index_x = 330;
+			index_y = 500;
+			if(isTenderConmpany){
+				index_x = 294;
+				index_y = 500;
+			}
+		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			index_x = 333;
+			index_y = 660;
+			if(isTenderConmpany){
+				index_x = 295;
+				index_y = 660;
+			}
+		}
+		ImageUtil.markImageByMoreIcon(cardnoIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
+
+
+		//获取拼接图片列表
+		jointPathList.add(imageSavePath + "/" + trueImageName + ".png");
+		for (int i = 0; i < pages-2; i++) {
+			jointPathList.add(imageSavePath + "/" + fileName + (i+1) + ".png");
+		}
+		jointPathList.add(imageSavePath + "/" + signimageName + ".png");
+		FileUtil.deltree(imageFilePath);
+		FileUtil.deltree(trueImageFilePath);
+	}
+
+
+	/**
+	 * 上传脱敏文件
+	 * @param upParentDir
+	 * @param type
+	 * 是否删除上传目录 0：否 1：是
+	 * @return
+	 */
+	private boolean uplodTmImage(String upParentDir, String saveDir, int type) {
+
+
+		String ftpIP = HYJF_FTP_IP;
+		String port = HYJF_FTP_PORT;
+		String basePathImage = HYJF_FTP_BASEPATH_IMG;
+		if(type == 0){//上传pdf
+			basePathImage = HYJF_FTP_BASEPATH_PDF;
+		}
+		String password = HYJF_FTP_PASSWORD;
+		String username = HYJF_FTP_USERNAME;
+		try {
+			logger.info("----------待上传目录：" + upParentDir);
+			File paraentDir = new File(upParentDir);
+			String upParaFile = paraentDir.getParent();
+			if(paraentDir.isDirectory()){
+
+				logger.info("----------待删除目录：" + upParaFile);
+				File[] files = paraentDir.listFiles();
+				for (File file : files) {
+					String fileName = file.getName();
+					logger.info("--------循环目录，开始上传文件：" + fileName);
+					FileInputStream in = new FileInputStream(file);
+					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
+							basePathImage, saveDir, fileName, in);
+					if (!flag){
+						throw new RuntimeException("上传失败!fileName:" + fileName);
+					}
+				}
+			}else{
+				String fileName = paraentDir.getName();
+				logger.info("--------开始上传文件：" + fileName);
+				FileInputStream in = new FileInputStream(paraentDir);
+				boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
+						basePathImage, saveDir, fileName, in);
+				if (!flag){
+					throw new RuntimeException("上传失败!fileName:" + fileName);
+				}
+			}
+			if(type == 1){
+				//删除原目录
+				FileUtil.deltree(upParaFile);
+			}
+
+		}catch (Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			return false;
+		}
+		return  true;
+
 	}
 }
