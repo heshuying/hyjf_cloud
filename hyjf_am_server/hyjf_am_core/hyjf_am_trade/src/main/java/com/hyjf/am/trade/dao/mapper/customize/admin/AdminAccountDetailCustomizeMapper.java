@@ -21,4 +21,11 @@ public interface AdminAccountDetailCustomizeMapper {
      * @return
      */
     List<AdminAccountDetailCustomize> queryAccountDetails(Map<String,Object> mapParam);
+
+    /**
+     * 查询总数
+     * @param mapParam
+     * @return
+     */
+    int queryAccountDetailCount(Map<String,Object> mapParam);
 }

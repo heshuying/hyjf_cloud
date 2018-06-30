@@ -30,4 +30,10 @@ public class AccountDetailServiceImpl implements AccountDetailService {
         List<AdminAccountDetailCustomize> listAccountDetail = adminAccountDetailCustomizeMapper.queryAccountDetails(mapParam);
         return listAccountDetail;
     }
+    @Override
+    public int countAccountDetail(Map<String,Object> mapParam){
+        int intCount = adminAccountDetailCustomizeMapper.queryAccountDetailCount(mapParam);
+        return intCount;
+    }
+
 }
