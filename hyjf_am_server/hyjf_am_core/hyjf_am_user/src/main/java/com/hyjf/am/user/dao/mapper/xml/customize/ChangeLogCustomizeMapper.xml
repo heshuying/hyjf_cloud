@@ -58,7 +58,7 @@
 	<select id="queryChangeLogCount" resultType="java.lang.Integer"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
 		SELECT COUNT(1)
-		from hyjf_users_change_log l
+		from ht_user_change_log l
 		
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
@@ -67,8 +67,8 @@
 	<select id="queryChangeLogList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
 		SELECT id, user_id, username, real_name, mobile, idcard, `role`, `attribute`, recommend_user, is51, 
-               `status`, change_userid, change_user, change_type, FROM_UNIXTIME(change_time, '%Y-%m-%d %H:%i:%S') as change_time, remark
-		,borrower_type from hyjf_users_change_log l
+               `status`, change_userid, update_user_id as change_userid,update_user as change_user, FROM_UNIXTIME(change_time, '%Y-%m-%d %H:%i:%S') as change_time, remark
+		,borrower_type from ht_user_change_log l
 		
 		WHERE 1=1 
 		<include refid="where-all-page-condition"/>
