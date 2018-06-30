@@ -549,9 +549,6 @@ public class UserCenterController {
             if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
                 request.setLimit((Integer)mapParam.get("limit"));
             }
-            /*if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                request.setLimitEnd((Integer)mapParam.get("limitEnd"));
-            }*/
         }
         return request;
     }
