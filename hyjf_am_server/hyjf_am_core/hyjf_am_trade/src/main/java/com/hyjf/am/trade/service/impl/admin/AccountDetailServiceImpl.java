@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountDetailCustomizeM
 import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.service.admin.AccountDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author nxl
  * @version AccountDetailServiceImpl, v0.1 2018/6/29 13:58
  */
+@Service
 public class AccountDetailServiceImpl implements AccountDetailService {
     @Autowired
     private AdminAccountDetailCustomizeMapper adminAccountDetailCustomizeMapper;
