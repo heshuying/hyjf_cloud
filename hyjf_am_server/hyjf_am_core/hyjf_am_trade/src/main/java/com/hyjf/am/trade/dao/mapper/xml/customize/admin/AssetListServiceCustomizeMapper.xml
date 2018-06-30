@@ -159,4 +159,37 @@
 		FROM ht_hjh_plan_asset hpa 
 		Where hpa.asset_id = #{assetId} AND hpa.inst_code = #{instCode}
 	</select>
+
+	<!-- 	<sql id="Where_Detail_Clause">
+            <where>
+                资产编号
+                <if test="assetIdSrch != null and assetIdSrch != ''">
+                    AND hpa.asset_id=#{assetIdSrch}
+                </if>
+                资产来源
+                <if test="instCodeSrch != null and instCodeSrch != ''">
+                    AND hpa.inst_code=#{instCodeSrch}
+                </if>
+            </where>
+        </sql> -->
+
+	<select id="countAssetList" resultType="java.lang.Integer"
+			parameterType="com.hyjf.am.resquest.admin.AssetListRequest">
+		SELECT
+		COUNT(1)
+		FROM ht_hjh_plan_asset hpa
+		LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id
+		<include refid="Where_Clause"/>
+	</select>
+
+	<select id="getSumAccount" resultType="java.math.BigDecimal"
+			parameterType="com.hyjf.am.resquest.admin.AssetListRequest">
+		SELECT
+		SUM(hpa.account)
+		FROM
+		ht_hjh_plan_asset hpa
+		LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id
+		<include refid="Where_Clause"/>
+	</select>
+
 </mapper>
