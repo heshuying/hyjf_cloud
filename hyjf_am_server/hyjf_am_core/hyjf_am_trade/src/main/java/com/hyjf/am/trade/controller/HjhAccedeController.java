@@ -4,12 +4,16 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.service.HjhAccedeService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,6 +69,25 @@ public class HjhAccedeController {
         HjhAccede hjhAccede=hjhAccedeService.getHjhAccedeByAccedeOrderId(accedeOrderId);
         if (Validator.isNotNull(hjhAccede)){
             response.setResult(CommonUtils.convertBean(hjhAccede,HjhAccedeVO.class));
+        }
+        return response;
+    }
+
+    @GetMapping("/countAccede/{planNid}")
+    public HjhAccedeResponse selectByAssignNidAndUserId(@PathVariable String planNid) {
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        int count = hjhAccedeService.countAccede(planNid);
+        response.setAccedeCount(count);
+        return response;
+    }
+
+    @GetMapping("/getPlanDetail/{planNid}")
+    public HjhPlanDetailResponse getPlanDetail(@PathVariable String planNid) {
+        HjhPlanDetailResponse response = new HjhPlanDetailResponse();
+        List<PlanDetailCustomize> list = hjhAccedeService.getPlanDetail(planNid);
+        if (CollectionUtils.isNotEmpty(list)){
+            List<PlanDetailCustomizeVO> result = CommonUtils.convertBeanList(list,PlanDetailCustomizeVO.class);
+            response.setResultList(result);
         }
         return response;
     }

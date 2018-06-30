@@ -6,12 +6,15 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
+import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
@@ -23,10 +26,12 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
+import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.WebProjectListService;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -92,6 +98,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     @Autowired
     private AmProjectClient amProjectClient;
+
+    @Autowired
+    private HjhAccedeClient hjhAccedeClient;
+
 
     /**
      * 获取Web端项目列表
@@ -177,7 +187,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             other.put("riskFlag", userVO != null ? userVO.getIsEvaluationFlag() : null);
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
-        if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
+        if (detailCsVO.getIsNew() == 0 || detailCsVO.getType().equals("13")) {
             // TODO: 2018/6/23  getProjectDetail(modelAndView, detailCsVO,userId);     待确认是否还有老标后再处理
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
@@ -291,7 +301,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         /**
          * 融通宝收益叠加
          */
-        if ("13".equals(borrow.getType())) {
+        if (borrow.getType().equals("13")) {
             borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
         }
 
@@ -335,7 +345,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         borrow.setBorrowInterest(borrowInterest.toString());
 
         // TODO: 2018/6/25 汇资产项目后期处理
-        if ("9".equals(borrow.getType())) {// 如果项目为汇资产项目
+        if (borrow.getType().equals("9")) {// 如果项目为汇资产项目
 //            // 添加相应的项目详情信息
 //            other.put("projectDeatil", borrow);
 //            // 4查询相应的汇资产的首页信息
@@ -1150,11 +1160,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 项目为非汇资产项目
             else {
                 // 4查询非汇资产项目的项目信息
-                if ("1".equals(comOrPer)) {
+                if (comOrPer.equals("1")) {
                     // 查询相应的企业项目详情
                     ProjectCompanyDetailVO borrowInfo = borrowUserClient.searchProjectCompanyDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
-                } else if ("2".equals(comOrPer)) {
+                } else if (comOrPer.equals("2")) {
                     // 查询相应的汇直投个人项目详情
                     WebProjectPersonDetailVO borrowInfo = borrowUserClient.searchProjectPersonDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
@@ -1313,7 +1323,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("balance", account.getBankBalance().toString());
                 // 风险测评改造 mod by liuyang 20180111 start
                 // 风险测评标识
-                // JSONObject jsonObject = CommonSoaUtils.getUserEvalationResultByUserId(userId + "");
                 result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
                 // 风险测评改造 mod by liuyang 20180111 end
             } else {
@@ -1376,6 +1385,213 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         page.setTotal(count);
         webResult.setPage(page);
+        return webResult;
+    }
+
+    @Override
+    public WebResult getPlanDetail(Map<String,String> map,String userId) {
+        Map<String,Object> result = new HashMap<>();
+        WebResult webResult = new WebResult();
+        // 获取计划编号(列表画面传递-计划编号)
+        String planNid = map.get("planNid");
+        // 阀值
+        Integer threshold = 1000 ;
+        result.put("threshold", threshold);
+        // 缴费授权
+        //update by jijun 2018/04/09 合规接口改造一期
+        result.put("paymentAuthStatus", "");
+
+        //加入总人数
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", planNid);
+        HjhAccedeRequest request = new HjhAccedeRequest();
+        request.setPlanNid(planNid);
+        int joinPeopleNum = hjhAccedeClient.countPlanAccedeRecordTotal(request);
+        result.put("joinPeopleNum", String.valueOf(joinPeopleNum));
+
+        // 根据项目标号获取相应的计划信息
+        PlanDetailCustomizeVO planDetail = hjhAccedeClient.getPlanDetail(planNid);
+
+        // 线上异常处理 如果为空的话直接返回
+        if(planDetail==null){
+            logger.error("未查询到对应的计划，计划编号为:"+planNid);
+
+
+        }
+        // 最小投资金额(起投金额)-->计算最后一笔投资
+        if (planDetail.getDebtMinInvestment() != null) {
+            result.put("debtMinInvestment", new BigDecimal(planDetail.getDebtMinInvestment()).intValue());
+        }
+        // 开放额度剩余金额(取小数两位)
+        if (planDetail.getAvailableInvestAccount() != null) {
+
+            // 开放额度< 0 显示 0.00
+            if(new BigDecimal(planDetail.getAvailableInvestAccount()).compareTo(BigDecimal.ZERO) == -1){
+                // 画面有地方用 planDetail.availableInvestAccount
+                planDetail.setAvailableInvestAccount("0.00");
+                // 画面也有地方有 availableInvestAccount
+                result.put("availableInvestAccount",new BigDecimal(0.00));
+            } else {
+                result.put("availableInvestAccount", new BigDecimal(planDetail.getAvailableInvestAccount()));
+            }
+        }
+        if (Validator.isNotNull(planDetail)) {
+            //系统当前时间戳
+            result.put("nowTime", GetDate.getNowTime10());
+
+            /** 汇添金优惠券使用开始 pcc */
+            DecimalFormat df = null;
+            df = CustomConstants.DF_FOR_VIEW;
+            /** 计算最优优惠券开始 pccvip isThereCoupon 1是有最优优惠券，0无最有优惠券 */
+            UserCouponConfigCustomizeVo couponConfig = null;
+            //获取用户优惠券总张数
+            int recordTotal=0;
+            //可用优惠券张数
+            int availableCouponListCount=0;
+            if(StringUtils.isNotBlank(userId)){
+                /** 获取用户是否是vip 开始 pccvip 1是vip 0不是vip */
+               /* UsersInfo usersInfo = planService.getUsersInfoByUserId(loginUser.getUserId());
+                if (usersInfo.getVipId() != null && usersInfo.getVipId() != 0) {
+                    result.put("ifVip", 1);
+                    String returl = HOST_URL + VIPManageDefine.REQUEST_MAPPING + "/" + VIPManageDefine.INIT_ACTION + ".do";
+                    result.put("returl", returl);
+                } else {
+                    result.put("ifVip", 0);
+                    String returl = HOST_URL + ApplyDefine.REQUEST_MAPPING + ApplyDefine.INIT + ".do";
+                    result.put("returl", returl);
+
+                }*/
+                /** 获取用户是否是vip 结束 pccvip */
+            }
+            /*优惠券模块开始 */ // TODO: 2018/6/28 优惠券后期处理
+            /*couponConfig = planService.getUserOptimalCoupon(couponId, planNid, loginUser.getUserId(), null, "0");
+            recordTotal = planService.countCouponUsers(0, loginUser.getUserId());
+            availableCouponListCount = planService.getUserCouponAvailableCount(planNid, loginUser.getUserId(), "0", "0");
+            *//** 获取用户优惠券总张数开始 pccvip *//*
+            result.put("recordTotal", recordTotal);
+            *//** 获取用户优惠券总张数结束 pccvip *//*
+            *//** 可用优惠券张数开始 pccvip *//*
+            result.put("couponAvailableCount", availableCouponListCount);
+            *//** 可用优惠券张数结束 pccvip *//*
+            BigDecimal couponInterest = BigDecimal.ZERO;
+            result.put("interest", BigDecimal.ZERO);
+            if (couponConfig != null) {
+                result.put("isThereCoupon", 1);
+
+                couponInterest = planService.getCouponInterest(couponConfig.getUserCouponId(), planNid, "0");
+                couponConfig.setCouponInterest(df.format(couponInterest));
+                if(couponConfig!=null && couponConfig.getCouponType()==3){
+                    result.put("interest", df.format(couponInterest.subtract(couponConfig.getCouponQuota())));
+                }else{
+                    result.put("interest", df.format(couponInterest));
+                }
+
+            } else {
+                result.put("isThereCoupon", 0);
+            }*/
+
+            /*优惠券模块结束 */
+
+            result.put("couponConfig", couponConfig);
+            /** 计算最优优惠券结束 */
+            /** 汇添金优惠券使用结束 pcc */
+
+            // 计划详情头部(结束)
+            result.put("planDetail", planDetail);
+            // 获取计划介绍
+            String planIntroduce = planDetail.getPlanConcept();
+            if (Validator.isNotNull(planIntroduce)) {
+                result.put("planIntroduce", planIntroduce);
+            }
+            // 获取计划原理
+            String planPrinciple = planDetail.getPlanPrinciple();
+            if (Validator.isNotNull(planPrinciple)) {
+                result.put("planPrinciple", planPrinciple);
+
+            }
+            // 获取风控保障措施
+            String safeguardMeasures = planDetail.getSafeguardMeasures();
+            if (Validator.isNotNull(safeguardMeasures)) {
+                result.put("safeguardMeasures", safeguardMeasures);
+
+            }
+            // 获取风险保证金措施
+            String marginMeasures = planDetail.getMarginMeasures();
+            if (Validator.isNotNull(marginMeasures)) {
+                result.put("marginMeasures", marginMeasures);
+
+            }
+            // 获取常见问题
+            String normalQuestions = planDetail.getNormalQuestions();
+            if (Validator.isNotNull(normalQuestions)) {
+                result.put("normalQuestions", normalQuestions);
+
+            }
+            // 获取各种标志位
+            String investFlag = "0";
+            UserVO userVO = null;
+            if (StringUtils.isNotBlank(userId)){
+                userVO = amUserClient.findUserById(Integer.valueOf(userId));
+            }
+            if (userVO != null) {
+                // 用户是否加入过项目
+                request.setUserId(userId);
+
+                int count = this.hjhAccedeClient.countPlanAccedeRecordTotal(request);
+                if (count > 0) {
+                    investFlag = "1";
+                }else{
+                    investFlag = "0";//是否投资过该项目 0未投资 1已投资
+                }
+                result.put("investFlag", investFlag);
+                // 用户是否开户
+                if (userVO.getBankOpenAccount() != null) {
+                    result.put("openFlag", 1);
+                } else {
+                    result.put("openFlag", 0);
+                }
+                // 用户是否设置交易密码
+                if(userVO.getIsSetPassword() == 1){
+                    result.put("setPwdFlag", "1");
+                }else{
+                    result.put("setPwdFlag", "0");
+                }
+                // 用户是否被禁用：0 未禁用 1禁用
+                if(userVO.getStatus() == 1){
+                    result.put("forbiddenFlag", "1");
+                }else{
+                    result.put("forbiddenFlag", "0");
+                }
+                // 用户是否完成风险测评标识
+                result.put("riskFlag", userVO.getIsEvaluationFlag());
+                result.put("loginFlag", 1);
+
+
+                // 获取用户账户余额
+                AccountVO account = accountClient.getAccountByUserId(Integer.valueOf(userId));
+                if (Validator.isNotNull(account)) {
+                    String userBalance = account.getBankBalance().toString();
+                    result.put("userBalance", userBalance);
+                }
+                // 用户是否完成自动授权标识
+                HjhUserAuthVO hjhUserAuth =amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+                if (Validator.isNotNull(hjhUserAuth)) {
+                    String autoInvesFlag = hjhUserAuth.getAutoInvesStatus().toString();
+                    result.put("autoInvesFlag", autoInvesFlag);
+                } else {
+                    result.put("autoInvesFlag", "0");//自动投标授权状态 0: 未授权    1:已授权
+                }
+            } else {
+                //状态位用于判断tab的是否可见
+                result.put("loginFlag", "0");//登录状态 0未登陆 1已登录
+                result.put("openFlag", "0"); //开户状态 0未开户 1已开户
+                result.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+                result.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
+                result.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
+                result.put("forbiddenFlag", "0");//是否禁用 0未禁用 1已禁用
+            }
+        }
+        webResult.setData(result);
         return webResult;
     }
 

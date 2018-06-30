@@ -11,4 +11,15 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
  * @version HjhDebtCreditResponse, v0.1 2018/6/27 14:40
  */
 public class HjhDebtCreditResponse extends Response<HjhDebtCreditVO> {
+
+    private Integer tenderCount;
+
+
+    public Integer getTenderCount() {
+        return tenderCount;
+    }
+
+    public void setTenderCount(Integer tenderCount) {
+        this.tenderCount = tenderCount;
+    }
 }

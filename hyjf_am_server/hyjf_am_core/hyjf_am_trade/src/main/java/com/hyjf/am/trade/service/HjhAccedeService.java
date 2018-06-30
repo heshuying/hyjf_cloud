@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 
 import java.util.List;
 
@@ -31,4 +32,15 @@ public interface HjhAccedeService {
      * @return
      */
     HjhAccede getHjhAccedeByAccedeOrderId(String accedeOrderId);
+
+
+    /**
+     * 计算加入总数
+     * @author zhangyk
+     * @date 2018/6/27 19:10
+     */
+    public int countAccede(String planNid);
+
+    List<PlanDetailCustomize> getPlanDetail(String planNid);
+
 }

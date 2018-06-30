@@ -2,15 +2,9 @@ package com.hyjf.am.trade.controller;
 
 
 import com.hyjf.am.response.trade.BorrowCarinfoResponse;
-import com.hyjf.am.response.trade.BorrowHousesResponse;
-import com.hyjf.am.response.trade.WebCarinfoResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowCarinfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowHouses;
 import com.hyjf.am.trade.service.BorrowCarinfoService;
-import com.hyjf.am.trade.service.BorrowHousesService;
-import com.hyjf.am.vo.trade.WebCarinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

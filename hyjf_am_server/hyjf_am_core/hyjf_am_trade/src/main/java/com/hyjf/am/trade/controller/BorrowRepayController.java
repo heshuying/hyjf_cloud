@@ -9,6 +9,7 @@ import com.hyjf.am.trade.service.BorrowRepayService;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,5 +48,17 @@ public class BorrowRepayController {
     @RequestMapping("/updateBorrowRepay")
     public Integer updateBorrowRepay(@RequestBody @Valid BorrowRepayVO borrowRepayVO) {
         return this.borrowRepayService.updateBorrowRepay(borrowRepayVO);
+    }
+
+
+    @GetMapping("getBorrowRepayListByBorrowNid/{borrowNid}")
+    public BorrowRepayResponse getBorrowRepayListByBorrowNid(@PathVariable String borrowNid) {
+        BorrowRepayResponse response = new BorrowRepayResponse();
+        List<BorrowRepay> borrowRepays = borrowRepayService.getBorrowRepayList(borrowNid);
+        if (CollectionUtils.isNotEmpty(borrowRepays)) {
+            List<BorrowRepayVO> borrowRepayVOS = CommonUtils.convertBeanList(borrowRepays, BorrowRepayVO.class);
+            response.setResultList(borrowRepayVOS);
+        }
+        return response;
     }
 }

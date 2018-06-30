@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;

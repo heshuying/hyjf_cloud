@@ -61,7 +61,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CorpOpenAccountRecordVO selectCorpOpenAccountRecordByUserId(Integer userId) {
 		CorpOpenAccountRecordResponse response = restTemplate
-				.getForEntity(urlBase + "bankopen/getCorpOpenAccountRecord/" + userId, CorpOpenAccountRecordResponse.class).getBody();
+				.getForEntity(urlBase + "corpOpenAccountRecord/findByUserId/" + userId, CorpOpenAccountRecordResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

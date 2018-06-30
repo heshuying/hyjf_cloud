@@ -51,4 +51,17 @@ public class BorrowRepayServiceImpl implements BorrowRepayService {
         boolean result =  this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) >0 ? true:false;
         return result?1:0;
     }
+
+    /**
+     * 根据borrowNid查询还款信息
+     * @author zhangyk
+     * @date 2018/6/30 14:05
+     */
+    @Override
+    public List<BorrowRepay> getBorrowRepayList(String borrowNid) {
+        BorrowRepayExample example = new BorrowRepayExample();
+        BorrowRepayExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        return this.borrowRepayMapper.selectByExample(example);
+    }
 }

@@ -3,24 +3,19 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.trade.BorrowRepayResponse;
+import com.hyjf.am.response.trade.HjhAppCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.service.HjhDebtCreditService;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,5 +82,20 @@ public class HjhDebtCreditController {
         }
         return response;
     }
+
+    /**
+     * 根据债转编号查询债转信息
+     * @author zhangyk
+     * @date 2018/6/30 11:19
+     */
+    @GetMapping("/selectCreditDetailBycreditNid/{creditNid}")
+    public HjhAppCreditResponse selectCreditDetailBycreditNid(@PathVariable String creditNid){
+        HjhAppCreditResponse response =  new HjhAppCreditResponse();
+        AppCreditDetailCustomizeVO appCreditDetailCustomizeVO = hjhDebtCreditService.selectCreditDetailByCreditNid(creditNid);
+        response.setResult(appCreditDetailCustomizeVO);
+        return response;
+    }
+
+
 
 }

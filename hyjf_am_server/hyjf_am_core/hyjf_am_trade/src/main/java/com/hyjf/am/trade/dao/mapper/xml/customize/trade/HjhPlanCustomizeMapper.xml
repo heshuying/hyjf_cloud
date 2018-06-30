@@ -88,4 +88,13 @@
 		WHERE hha.accede_order_id = #{accedeOrderId} and hha.user_id =#{userId}
 	</select>
 
+	<!--还款/终止未完全承接的债权时,减扣计划的开放额度-->
+	<update id="updateRepayPlanAccount" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan">
+		update hyjf_hjh_plan
+		set
+		available_invest_account = IFNULL(available_invest_account,0) - #{availableInvestAccount,jdbcType=DECIMAL}
+		where
+		plan_nid = #{planNid,jdbcType=VARCHAR}
+	</update>
+
 </mapper>

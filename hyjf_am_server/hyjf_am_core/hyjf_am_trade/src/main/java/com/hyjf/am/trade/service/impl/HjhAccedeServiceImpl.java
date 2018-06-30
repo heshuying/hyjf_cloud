@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.impl;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.service.HjhAccedeService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
 		return true;
     }
 
+
     /**
      *
      * @param accedeOrderId
@@ -74,4 +76,25 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
         }
         return null;
     }
+
+    /**
+     * 计算加入总数
+     * @author zhangyk
+     * @date 2018/6/27 19:10
+     */
+    @Override
+    public int countAccede(String planNid) {
+        HjhAccedeExample example = new HjhAccedeExample();
+        HjhAccedeExample.Criteria criteria = example.createCriteria();
+        criteria.andPlanNidEqualTo(planNid);
+        int count = hjhAccedeMapper.countByExample(example);
+        return count;
+    }
+
+    @Override
+    public List<PlanDetailCustomize> getPlanDetail(String planNid) {
+        return null;
+    }
+
+
 }

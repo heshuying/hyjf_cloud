@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 
 import java.util.List;
 
@@ -22,4 +23,11 @@ public interface HjhDebtCreditService {
     List<HjhDebtCreditTender> selectHjhCreditTenderListByAssignOrderId(String assignOrderId);
 
     List<HjhDebtCredit> getHjhDebtCreditList(HjhDebtCreditRequest request);
+
+    /**
+     *  根据债转编号查询债转信息
+     * @author zhangyk
+     * @date 2018/6/30 11:22
+     */
+    AppCreditDetailCustomizeVO selectCreditDetailByCreditNid(String creditNid);
 }
