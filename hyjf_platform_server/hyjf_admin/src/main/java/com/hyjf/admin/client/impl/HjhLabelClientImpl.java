@@ -8,10 +8,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
+import com.hyjf.am.response.Response;
 import com.hyjf.admin.client.HjhLabelClient;
+import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
@@ -23,6 +26,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 public class HjhLabelClientImpl implements HjhLabelClient{
 	@Autowired
 	private RestTemplate restTemplate;
+	
 	@Override
 	public List<BorrowProjectTypeVO> findBorrowProjectTypeList() {
 		// 复用
@@ -33,6 +37,7 @@ public class HjhLabelClientImpl implements HjhLabelClient{
         }
 		return null;
 	}
+	
 	@Override
 	public List<BorrowStyleVO> findBorrowStyleList() {
 		// 复用
@@ -41,6 +46,16 @@ public class HjhLabelClientImpl implements HjhLabelClient{
         if (response != null) {
             return response.getResultList();
         }
+		return null;
+	}
+	
+	@Override
+	public List<HjhLabelCustomizeVO> findHjhLabelList(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }			
 		return null;
 	}
 }

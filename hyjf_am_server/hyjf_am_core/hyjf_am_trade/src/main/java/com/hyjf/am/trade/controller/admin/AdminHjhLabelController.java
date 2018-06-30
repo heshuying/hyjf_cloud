@@ -5,17 +5,26 @@ package com.hyjf.am.trade.controller.admin;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.trade.service.admin.AdminHjhLabelService;
+import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-
+import com.hyjf.common.paginator.Paginator;
+import org.springframework.util.CollectionUtils;
+import com.hyjf.am.response.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -63,5 +72,25 @@ public class AdminHjhLabelController {
 	    	 response.setRtn(returnCode);
 	    }
 	    return response;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :查询标签配置列表
+	 */
+	@RequestMapping(value = "/selectHjhLabelList",method = RequestMethod.POST)
+	public HjhLabelCustomizeResponse selectHjhLabelList(@RequestBody @Valid HjhLabelRequest request){
+		HjhLabelCustomizeResponse response = new HjhLabelCustomizeResponse();
+		Integer count = adminHjhLabelService.countRecordTotal(request);
+		Paginator paginator = new Paginator(request.getPaginatorPage(), count,request.getLimit());
+		List<HjhLabelCustomizeVO> list = adminHjhLabelService.selectHjhLabelList(request,paginator.getOffset(), paginator.getLimit());
+        if(count > 0){
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+                response.setCount(count);
+                response.setRtn(Response.SUCCESS);//代表成功
+            }
+        }
+        return response;
 	}
 }

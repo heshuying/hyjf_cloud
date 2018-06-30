@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.client.HjhLabelClient;
 import com.hyjf.admin.service.HjhLabelService;
+import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
@@ -33,5 +35,11 @@ public class HjhLabelServiceImpl implements HjhLabelService{
 	public List<BorrowStyleVO> getBorrowStyleList() {
 		List<BorrowStyleVO> borrowStyleList = hjhLabelClient.findBorrowStyleList();
 		return borrowStyleList;
+	}
+
+	@Override
+	public List<HjhLabelCustomizeVO> getHjhLabelList(HjhLabelRequest request) {
+		List<HjhLabelCustomizeVO> list = hjhLabelClient.findHjhLabelList(request);
+		return list;
 	}
 }

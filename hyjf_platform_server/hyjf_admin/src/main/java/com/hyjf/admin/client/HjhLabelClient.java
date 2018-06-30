@@ -5,6 +5,8 @@ package com.hyjf.admin.client;
 
 import java.util.List;
 
+import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
@@ -16,14 +18,21 @@ public interface HjhLabelClient {
 	
     /**
      * 项目类型
-     * @param request
+     * @param 
      * @return
      */
     List<BorrowProjectTypeVO> findBorrowProjectTypeList();
     /**
      * 还款方式
-     * @param request
+     * @param 
      * @return
      */
     List<BorrowStyleVO> findBorrowStyleList();
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    List<HjhLabelCustomizeVO> findHjhLabelList(HjhLabelRequest request);
 }

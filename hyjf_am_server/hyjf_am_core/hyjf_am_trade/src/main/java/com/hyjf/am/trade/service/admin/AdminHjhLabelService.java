@@ -5,6 +5,8 @@ package com.hyjf.am.trade.service.admin;
 
 import java.util.List;
 
+import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
@@ -16,11 +18,21 @@ public interface AdminHjhLabelService {
    /**
 	 * 还款方式
 	 * @return
-	 */
-	List<BorrowStyleVO> selectBorrowStyleList();
+	*/
+   List<BorrowStyleVO> selectBorrowStyleList();
    /**
 	 * 项目类型
 	 * @return
-	 */
-	List<BorrowProjectTypeVO> selectBorrowProjectByBorrow();
+	*/
+   List<BorrowProjectTypeVO> selectBorrowProjectByBorrow();
+   /**
+	 * 集合总数
+	 * @return
+	*/
+   Integer countRecordTotal(HjhLabelRequest request);
+   /**
+	 * 标签配置列表
+	 * @return
+	*/
+   List<HjhLabelCustomizeVO> selectHjhLabelList(HjhLabelRequest request, int limitStart, int limitEnd);
 }

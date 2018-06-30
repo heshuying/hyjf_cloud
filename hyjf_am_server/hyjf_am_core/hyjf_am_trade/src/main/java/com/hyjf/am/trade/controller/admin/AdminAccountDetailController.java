@@ -6,7 +6,6 @@ package com.hyjf.am.trade.controller.admin;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
-import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
 import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.service.UserService;
@@ -97,10 +96,10 @@ public class AdminAccountDetailController {
     }
 
     //查询出20170120还款后,交易明细有问题的用户ID
-    @RequestMapping(value = "/accountDetailList", method = RequestMethod.POST)
+/*    @RequestMapping(value = "/accountDetailList", method = RequestMethod.POST)
     public AdminAccountDetailDataRepairResponse accountdetailDataRepair(){
         AdminAccountDetailDataRepairResponse repairResponse = new AdminAccountDetailDataRepairResponse();
 
         return repairResponse;
-    }
+    }*/
 }
