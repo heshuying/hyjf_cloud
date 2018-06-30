@@ -155,5 +155,12 @@ public interface AmUserClient {
 	 */
 	String getCustomerIDByUserID(Integer userId, String code);
 
+	/**
+	 * 获取渠道信息
+	 * @param utmId
+	 * @return
+	 */
+	UtmPlatVO selectUtmPlatByUtmId(Integer utmId);
+
 	
 }

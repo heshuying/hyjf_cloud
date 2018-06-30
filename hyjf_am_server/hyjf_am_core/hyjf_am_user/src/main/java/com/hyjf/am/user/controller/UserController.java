@@ -571,5 +571,20 @@ public class UserController {
 		return userService.getCustomerIDByUserID(userId,code);
 	}
 
-
+	/**
+	 *  根据userId检索渠道是否存在
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/selectUtmPlatByUtmId/{userId}")
+	public UtmPlatResponse selectUtmPlatByUserId(Integer userId){
+		UtmPlat utmPlat = userService.selectUtmPlatByUserId(userId);
+		UtmPlatResponse response = new UtmPlatResponse();
+		if(null!= utmPlat){
+			UtmPlatVO utmPlatVO = new UtmPlatVO();
+			BeanUtils.copyProperties(utmPlat,utmPlatVO);
+			response.setResult(utmPlatVO);
+		}
+		return response;
+	}
 }

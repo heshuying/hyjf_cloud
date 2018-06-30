@@ -3,11 +3,13 @@
  */
 package com.hyjf.cs.trade.controller.web.tender.credit;
 
+import com.hyjf.am.resquest.trade.MyCreditListRequest;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.service.MyCreditListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Description  债转
@@ -18,16 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/web/credit")
 public class CreditController {
+
+    @Autowired
+    private MyCreditListService creditListService;
+
     /**
      * 首页 > 账户中心 > 资产管理 > 我要转让列表
      * @param
      * @return
      */
-    @ApiOperation(value = "可转让列表", notes = "首页 > 账户中心 > 资产管理 > 可转让列表")
+    @ApiOperation(value = "我要债转列表页 获取参数", notes = "首页 > 账户中心 > 资产管理 > 可转让列表")
     @PostMapping(value = "/creditList", produces = "application/json; charset=utf-8")
-    public Object getCredittList(){
-        // @RequestBody @Valid CreditListRequest request
-        /*WebResult result =  webProjectListService.searchCreditList(request);*/
-        return null;
+    public WebResult getCreditList(@RequestBody MyCreditListRequest request,
+            @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result =  creditListService.getCreditList(request,userId);
+        return result;
     }
 }

@@ -341,7 +341,22 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.getForEntity(url, String.class).getBody();
 	}
 
+	/**
+	 * 获取渠道信息
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	@Override
+	public UtmPlatVO selectUtmPlatByUtmId(Integer utmId) {
+		UtmPlatResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUtmId/" + utmId,UtmPlatResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 
-	
 
 }

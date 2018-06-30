@@ -22,6 +22,7 @@ import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.statistics.AccountWebListVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
@@ -33,6 +34,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -886,6 +888,27 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	public List<TenderToCreditDetailCustomize> selectHJHWebCreditTenderDetail(Map<String, Object> params) {
 		//查汇计划债转详情
 		return tenderCreditCustomizeMapper.selectHJHWebCreditTenderDetail(params);
+	}
+
+	/**
+	 * 获取我要转让页面的金额
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public CreditPageVO selectCreditPageMoneyTotal(Integer userId) {
+		Map<String, Object> params = new HashedMap();
+		params.put("userId",userId);
+		BigDecimal canCreditMoney = tenderCreditCustomizeMapper.selectCanCreditMoneyTotal(params);
+		BigDecimal inCreditMoney = tenderCreditCustomizeMapper.selectInCreditMoneyTotal(params);
+		BigDecimal creditSuccessMoney = tenderCreditCustomizeMapper.selectCreditSuccessMoneyTotal(params);
+
+		CreditPageVO result = new CreditPageVO();
+		result.setCanCreditMoney(canCreditMoney);
+		result.setCreditSuccessMoney(creditSuccessMoney);
+		result.setInCreditMoney(inCreditMoney);
+		return result;
 	}
 
 

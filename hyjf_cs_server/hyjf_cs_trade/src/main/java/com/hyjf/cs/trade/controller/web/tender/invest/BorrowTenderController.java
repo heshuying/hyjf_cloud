@@ -85,8 +85,7 @@ public class BorrowTenderController extends BaseTradeController {
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "token", required = true) String token,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
-                                                                       @RequestParam String borrowNid,
-                                                                       HttpServletRequest request) {
+                                                                       @RequestParam String borrowNid) {
         logger.info("web端散标投资获取投资成功结果，logOrdId{}", logOrdId);
         WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
         return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);

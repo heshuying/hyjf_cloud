@@ -12,6 +12,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
+import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 
 /**
@@ -44,4 +45,11 @@ public interface BankCreditTenderService {
 	List<TenderToCreditDetailCustomize> selectWebCreditTenderDetailForContract(Map<String, Object> params);
 
     List<TenderToCreditDetailCustomize> selectHJHWebCreditTenderDetail(Map<String,Object> params);
+
+    /**
+     * 获取我要转让页面的金额
+     * @param userId
+     * @return
+     */
+    CreditPageVO selectCreditPageMoneyTotal(Integer userId);
 }

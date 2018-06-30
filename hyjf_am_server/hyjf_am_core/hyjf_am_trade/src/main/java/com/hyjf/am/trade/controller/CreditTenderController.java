@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.CreaditPageResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
 import com.hyjf.am.response.trade.TenderToCreditDetailCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
@@ -10,6 +11,7 @@ import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.service.BankCreditTenderService;
+import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
@@ -94,5 +96,22 @@ public class CreditTenderController {
         }
         return response;
     }
+
+    /**
+     * 获取我要转让页面的金额
+     * @param userId
+     * @return
+     */
+    @GetMapping("/select_credit_page_money_total/{userId}")
+    public CreaditPageResponse selectCreditPageMoneyTotal(@PathVariable Integer userId) {
+        CreaditPageResponse response = new CreaditPageResponse();
+
+        CreditPageVO page = bankCreditTenderService.selectCreditPageMoneyTotal(userId);
+        if (page != null) {
+            response.setResult(page);
+        }
+        return response;
+    }
+
 
 }
