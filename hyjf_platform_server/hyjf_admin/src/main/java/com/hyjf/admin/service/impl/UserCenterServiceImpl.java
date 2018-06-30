@@ -778,4 +778,22 @@ public class UserCenterServiceImpl implements UserCenterService {
     }
 */
 
+    /**
+     * 获取推荐人信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public SpreadsUserVO selectSpreadsUsersByUserId(String userId){
+        return userCenterClient.selectSpreadsUsersByUserId(userId);
+    }
+    /**
+     * 根据推荐人姓名查找用户
+     * @param recommendName
+     * @return
+     */
+    @Override
+    public UserVO selectUserByRecommendName(String recommendName){
+        return userCenterClient.selectUserByRecommendName(recommendName);
+    }
 }

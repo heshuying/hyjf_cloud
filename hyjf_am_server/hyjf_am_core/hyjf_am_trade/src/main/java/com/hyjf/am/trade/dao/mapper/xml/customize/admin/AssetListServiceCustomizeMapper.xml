@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.AssetListServiceCustomizeMapper">
-
 	<resultMap id="resultMap" type="com.hyjf.am.vo.admin.AssetListCustomizeVO">
 		<result column="asset_id" property="assetId" jdbcType="VARCHAR" />
 		<result column="inst_code" property="instCode" jdbcType="VARCHAR" />
@@ -24,7 +23,7 @@
 		<result column="label_name" property="labelName" jdbcType="VARCHAR" />
 		<result column="bank_open_account" property="bankOpenAccount" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="queryAssetList" resultMap="resultMap" parameterType="com.hyjf.am.resquest.admin.AssetListRequest">
+	<select id="queryAssetList" resultMap="resultMap" parameterType="Map">
 		SELECT
 			hpa.asset_id,
 			hpa.inst_code,
@@ -54,17 +53,16 @@
 	   		<include refid="Where_Clause" />
 			ORDER BY
 			hpa.verify_status, hpa.recieve_time DESC
-			<if test="limitStart != null and limitStart >= 0">
-				LIMIT #{limitStart} , #{limitEnd}
+ 			 <if test="limitStart != null and limitEnd !=null" >
+				LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 			</if>
 	</select>
-	
-		<sql id="Where_Clause">
+	<sql id="Where_Clause">
 		<where>
 			<!-- 资产编号 -->
-			<if test="assetIdSrch != null and assetIdSrch != ''">
-				AND hpa.asset_id LIKE CONCAT('%', #{assetIdSrch}, '%')
-			</if>
+ 			<if test="assetIdSrch != null and assetIdSrch != ''">
+				AND hpa.asset_id =#{assetIdSrch}
+			</if> 
 			<!-- 资产来源 -->
 			<if test="instCodeSrch != null and instCodeSrch != ''">
 				AND hpa.inst_code=#{instCodeSrch}
@@ -111,8 +109,6 @@
 			</if>
 		</where>
 	</sql>
-	
-	
 	<resultMap id="selectAssetDetailMap" type="com.hyjf.am.vo.admin.AssetDetailCustomizeVO">
 		<result column="asset_id" property="assetId" jdbcType="VARCHAR"/>
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
@@ -136,7 +132,7 @@
 		<result column="litigation" property="litigation" jdbcType="VARCHAR"/>
 		<result column="credit_level" property="creditLevel" jdbcType="VARCHAR"/>
 	</resultMap>
-	<select id="selectAssetDetail" resultMap="selectAssetDetailMap">
+	<select id="selectAssetDetail" resultMap="selectAssetDetailMap" parameterType="Map">
 		SELECT
 			CONCAT(substr(hpa.truename, 1, 1),'**') truename,
 			hpa.sex,
@@ -157,39 +153,36 @@
 			hpa.litigation,
 			hpa.credit_level
 		FROM ht_hjh_plan_asset hpa 
-		Where hpa.asset_id = #{assetId} AND hpa.inst_code = #{instCode}
+		<include refid="Where_Clause" />
 	</select>
-
-	<!-- 	<sql id="Where_Detail_Clause">
-            <where>
-                资产编号
-                <if test="assetIdSrch != null and assetIdSrch != ''">
-                    AND hpa.asset_id=#{assetIdSrch}
-                </if>
-                资产来源
-                <if test="instCodeSrch != null and instCodeSrch != ''">
-                    AND hpa.inst_code=#{instCodeSrch}
-                </if>
-            </where>
-        </sql> -->
-
-	<select id="countAssetList" resultType="java.lang.Integer"
-			parameterType="com.hyjf.am.resquest.admin.AssetListRequest">
+	
+<!-- 	<sql id="Where_Detail_Clause">
+		<where>
+			资产编号
+			<if test="assetIdSrch != null and assetIdSrch != ''">
+				AND hpa.asset_id=#{assetIdSrch}
+			</if>
+			资产来源
+			<if test="instCodeSrch != null and instCodeSrch != ''">
+				AND hpa.inst_code=#{instCodeSrch}
+			</if>
+		</where>
+	</sql> -->
+	
+	<select id="countAssetList" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.AssetListRequest">
 		SELECT
-		COUNT(1)
-		FROM ht_hjh_plan_asset hpa
+		  COUNT(1)
+		FROM ht_hjh_plan_asset hpa 
 		LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id
-		<include refid="Where_Clause"/>
+		<include refid="Where_Clause" />
 	</select>
-
-	<select id="getSumAccount" resultType="java.math.BigDecimal"
-			parameterType="com.hyjf.am.resquest.admin.AssetListRequest">
-		SELECT
-		SUM(hpa.account)
-		FROM
-		ht_hjh_plan_asset hpa
-		LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id
-		<include refid="Where_Clause"/>
+	
+	<select id="getSumAccount" resultType="java.math.BigDecimal" parameterType="com.hyjf.am.resquest.admin.AssetListRequest">
+		  SELECT
+		    SUM(hpa.account)
+		  FROM
+			ht_hjh_plan_asset hpa 
+		  LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id
+		<include refid="Where_Clause" />
 	</select>
-
 </mapper>

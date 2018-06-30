@@ -7,9 +7,9 @@ import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.service.HjhAccedeService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +65,13 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
      * @return
      */
     @Override
-    public List<HjhAccede> getHjhAccedeListByAccedeOrderId(String accedeOrderId) {
+    public HjhAccede getHjhAccedeByAccedeOrderId(String accedeOrderId) {
         HjhAccedeExample example = new HjhAccedeExample();
         example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
         List<HjhAccede> hjhAccedes = this.hjhAccedeMapper.selectByExample(example);
-        return hjhAccedes;
+        if (CollectionUtils.isNotEmpty(hjhAccedes)){
+            return hjhAccedes.get(0);
+        }
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.TenderAgreementRequest;
 import com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreementExample;
@@ -28,5 +29,25 @@ public class TenderAgreementServiceImpl implements TenderAgreementService {
             return tenderAgreements;
         }
         return null;
+    }
+
+    @Override
+    public TenderAgreement getTenderAgreementInfo(String tenderAgreementID) {
+        TenderAgreement tenderAgreement = this.tenderAgreementMapper.selectByPrimaryKey(Integer.valueOf(tenderAgreementID));
+        return tenderAgreement;
+    }
+
+    @Override
+    public boolean updateTenderAgreement(TenderAgreementRequest request) {
+        TenderAgreement tenderAgreement = this.tenderAgreementMapper.selectByPrimaryKey(Integer.valueOf(request.getTenderAgreementID()));
+        tenderAgreement.setImgUrl(request.getImgUrl());
+        tenderAgreement.setPdfUrl(request.getPdfUrl());
+        tenderAgreement.setStatus(3);//下载成功
+        int count=this.tenderAgreementMapper.updateByPrimaryKey(tenderAgreement);
+        if (count>0){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

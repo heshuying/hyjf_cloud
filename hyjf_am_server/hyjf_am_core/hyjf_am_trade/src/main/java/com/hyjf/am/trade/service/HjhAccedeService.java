@@ -30,5 +30,5 @@ public interface HjhAccedeService {
      * @param accedeOrderId
      * @return
      */
-    List<HjhAccede> getHjhAccedeListByAccedeOrderId(String accedeOrderId);
+    HjhAccede getHjhAccedeByAccedeOrderId(String accedeOrderId);
 }
