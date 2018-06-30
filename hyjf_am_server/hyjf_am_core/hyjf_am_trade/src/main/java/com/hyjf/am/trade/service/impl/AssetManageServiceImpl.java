@@ -2,7 +2,10 @@ package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.dao.model.auto.TenderAgreementExample;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.service.AssetManageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,9 @@ import java.util.Map;
 public class AssetManageServiceImpl implements AssetManageService {
     @Autowired
     private AssetManageCustomizeMapper assetManageCustomizeMapper;
+    @Autowired
+    private TenderAgreementMapper tenderAgreementMapper;
+
     @Override
     public List<CurrentHoldObligatoryRightListCustomize> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request) {
         Map<String, Object> params=createParame(request);
@@ -78,6 +84,13 @@ public class AssetManageServiceImpl implements AssetManageService {
     public int countRepayMentPlanTotal(AssetManageBeanRequest request) {
         Map<String, Object> params=createParame(request);
         return assetManageCustomizeMapper.countRepayMentPlanTotal(params);
+    }
+
+    @Override
+    public List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid) {
+        TenderAgreementExample example = new TenderAgreementExample();
+        example.createCriteria().andTenderNidEqualTo(tenderNid).andStatusNotEqualTo(2);
+        return this.tenderAgreementMapper.selectByExample(example);
     }
 
     private Map<String,Object> createParame(AssetManageBeanRequest request) {

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
-import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
+import java.util.Date;
+
 import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.common.message.Message;
@@ -10,12 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.controller.demo.ProducerTransactionMessageService;
-import com.hyjf.am.trade.controller.demo.TransactionService;
+import com.hyjf.am.trade.controller.transactiondemo.TransactionService;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
+import com.hyjf.am.trade.service.ProducerTransactionMessageService;
 import com.hyjf.common.exception.MQException;
-
-import java.util.Date;
 
 /**
  * @author xiasq

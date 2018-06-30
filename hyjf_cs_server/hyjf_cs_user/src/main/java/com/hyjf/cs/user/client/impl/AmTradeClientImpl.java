@@ -66,7 +66,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(String userIds) {
-        String url = "http://AM-TRADE/am-trade/batch/searchUserPortraitList/" + userIds;
+        String url = "http://AM-TRADE/am-trade/batch/search_user_portrait_list/" + userIds;
         BatchUserPortraitQueryResponse response = restTemplate.getForEntity(url, BatchUserPortraitQueryResponse.class).getBody();
         if(response != null){
             return response.getResultList();

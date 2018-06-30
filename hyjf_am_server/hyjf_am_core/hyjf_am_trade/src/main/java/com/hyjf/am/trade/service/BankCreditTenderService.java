@@ -4,12 +4,14 @@
 package com.hyjf.am.trade.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 
 /**
@@ -37,4 +39,9 @@ public interface BankCreditTenderService {
 
 	List<BorrowCredit> getBorrowCreditList(BorrowCreditRequest request);
 
+    List<CreditTender> getCreditTenderList(CreditTenderRequest request);
+
+	List<TenderToCreditDetailCustomize> selectWebCreditTenderDetailForContract(Map<String, Object> params);
+
+    List<TenderToCreditDetailCustomize> selectHJHWebCreditTenderDetail(Map<String,Object> params);
 }

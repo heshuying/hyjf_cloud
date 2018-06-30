@@ -12,5 +12,8 @@ import java.util.List;
  * @version: BatchUserPortraitQueryService, v0.1 2018/6/28 11:13
  */
 public interface BatchUserPortraitQueryService {
+    /**
+     * 查询用户画像所需要的投资相关参数
+     * */
     List<BatchUserPortraitQueryVO> selectInfoForUserPortrait(List<Integer> userIds);
 }

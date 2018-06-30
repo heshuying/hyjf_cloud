@@ -88,7 +88,8 @@ public class SynBalanceController extends BaseTradeController {
         }
 
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
-        UserVO user = synBalanceService.getUsers(bankOpenAccount.getUserId());//用户ID
+        //用户ID
+        UserVO user = synBalanceService.getUsers(bankOpenAccount.getUserId());
         if(user == null){
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000007);
             logger.info("-------------------未找到用户--------------------");

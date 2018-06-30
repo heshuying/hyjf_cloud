@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
@@ -32,5 +33,12 @@ public interface BorrowCreditService {
      * @date 2018/6/26 11:54
      */
     BorrowCreditDetailVO getBorrowCreditDetail(String creditNid);
+
+    /**
+     * 获取投资债转信息
+     * @param request1
+     * @return
+     */
+	List<BorrowCredit> getBorrowCreditList(BorrowCreditRequest request1);
 
 }

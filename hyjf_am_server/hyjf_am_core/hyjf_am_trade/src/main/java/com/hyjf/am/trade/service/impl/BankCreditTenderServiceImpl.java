@@ -10,7 +10,9 @@ import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.TenderCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.mq.AccountWebListProducer;
 import com.hyjf.am.trade.mq.AppMessageProducer;
 import com.hyjf.am.trade.mq.Producer;
@@ -79,7 +81,9 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	private AccountWebListProducer accountWebListProducer;
 	@Autowired
 	private AppMessageProducer appMsProcesser;
-
+	@Autowired
+	private TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
+	
 	/**
 	 * 获取债转投资异常记录数据
 	 * @return
@@ -859,6 +863,29 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		BorrowCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
 		borrowCreditCra.andCreditNidEqualTo(Integer.parseInt(creditNid)).andCreditUserIdEqualTo(sellerUserId).andTenderNidEqualTo(tenderOrderId);
 		return this.borrowCreditMapper.selectByExample(borrowCreditExample);
+	}
+
+
+	@Override
+	public List<CreditTender> getCreditTenderList(CreditTenderRequest request) {
+		CreditTenderExample creditTenderExample = new CreditTenderExample();
+		CreditTenderExample.Criteria cra = creditTenderExample.createCriteria();
+		cra.andAssignNidEqualTo(request.getAssignNid())
+				.andBidNidEqualTo(request.getBidNid())
+				.andCreditNidEqualTo(request.getCreditNid())
+				.andCreditTenderNidEqualTo(request.getCreditTenderNid());
+		return this.creditTenderMapper.selectByExample(creditTenderExample);
+	}
+
+	@Override
+	public List<TenderToCreditDetailCustomize> selectWebCreditTenderDetailForContract(Map<String, Object> params) {
+		return this.tenderCreditCustomizeMapper.selectWebCreditTenderDetailForContract(params);
+	}
+
+	@Override
+	public List<TenderToCreditDetailCustomize> selectHJHWebCreditTenderDetail(Map<String, Object> params) {
+		//查汇计划债转详情
+		return tenderCreditCustomizeMapper.selectHJHWebCreditTenderDetail(params);
 	}
 
 

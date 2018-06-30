@@ -31,16 +31,16 @@ import java.util.List;
  * @version ApiAssetPushController, v0.1 2018/6/11 17:52
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/api")
 public class ApiAssetPushController extends BaseTradeController {
 
-    Logger _log = LoggerFactory.getLogger(ApiAssetPushController.class);
+    Logger logger = LoggerFactory.getLogger(ApiAssetPushController.class);
 
     @Autowired
     private ApiAssetPushService pushService;
 
     @PostMapping("/push")
-    public PushResultBean push(@RequestBody PushRequestBean pushRequestBean, HttpServletRequest request, HttpServletResponse response) {
+    public PushResultBean push(@RequestBody PushRequestBean pushRequestBean) {
 
         PushResultBean resultBean = new PushResultBean();
         resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
@@ -50,28 +50,28 @@ public class ApiAssetPushController extends BaseTradeController {
         List<PushBean> reqData = pushRequestBean.getReqData();
         if (Validator.isNull(reqData) || Validator.isNull(pushRequestBean.getInstCode())
                 || Validator.isNull(pushRequestBean.getAssetType()) || Validator.isNull(pushRequestBean.getChkValue())) {
-            _log.info("------请求参数非法-------" + pushRequestBean);
+            logger.info("------请求参数非法-------" + pushRequestBean);
             return resultBean;
         }
 
         // 验签
         if (SignUtil.verifyRequestSign(pushRequestBean, "/push")) {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
-            _log.info("-------------------验签失败！--------------------");
+            logger.info("-------------------验签失败！--------------------");
             resultBean.setStatusDesc("验签失败！");
             return resultBean;
         }
 
-        _log.info(pushRequestBean.getInstCode() + " 开始推送资产 ");
+        logger.info(pushRequestBean.getInstCode() + " 开始推送资产 ");
 
         if (CustomConstants.INST_CODE_HYJF.equals(pushRequestBean.getInstCode())) {
-            _log.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------平台不能推送资产");
+            logger.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------平台不能推送资产");
             return resultBean;
         }
 
         resultBean = pushService.assetPush(pushRequestBean);
 
-        _log.info(pushRequestBean.getInstCode() + " 结束推送资产");
+        logger.info(pushRequestBean.getInstCode() + " 结束推送资产");
 
         return resultBean;
     }

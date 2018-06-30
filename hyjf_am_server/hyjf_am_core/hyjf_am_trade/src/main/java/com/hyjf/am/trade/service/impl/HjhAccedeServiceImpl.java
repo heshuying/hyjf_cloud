@@ -58,4 +58,17 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
 		}
 		return true;
     }
+
+    /**
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public List<HjhAccede> getHjhAccedeListByAccedeOrderId(String accedeOrderId) {
+        HjhAccedeExample example = new HjhAccedeExample();
+        example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
+        List<HjhAccede> hjhAccedes = this.hjhAccedeMapper.selectByExample(example);
+        return hjhAccedes;
+    }
 }

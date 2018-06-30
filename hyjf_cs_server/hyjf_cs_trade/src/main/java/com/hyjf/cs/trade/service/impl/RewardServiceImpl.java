@@ -19,8 +19,6 @@ import java.util.Map;
  */
 @Service
 public class RewardServiceImpl extends BaseTradeServiceImpl implements RewardService {
-    @Autowired
-    AmTradeClient amTradeClient;
 
     /**
      * 奖励列表请求校验
@@ -41,7 +39,7 @@ public class RewardServiceImpl extends BaseTradeServiceImpl implements RewardSer
     }
 
     /**
-     * 我的邀请列表
+     * 我的奖励列表
      */
     @Override
     public List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId, Integer limitStart, Integer limitEnd){
@@ -50,5 +48,17 @@ public class RewardServiceImpl extends BaseTradeServiceImpl implements RewardSer
         requestBean.setLimitStart(limitStart);
         requestBean.setLimitEnd(limitEnd);
         return amTradeClient.selectMyRewardList(requestBean);
+    }
+
+    /**
+     * 我的奖励列表总记录数
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer selectMyRewardCount(String userId){
+        MyInviteListRequest requestBean = new MyInviteListRequest();
+        requestBean.setUserId(userId);
+        return amTradeClient.selectMyRewardCount(requestBean);
     }
 }

@@ -191,6 +191,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return null;
 	}
 
+    /**
+     * 我的奖励列表总记录数
+     */
+    @Override
+    public int selectMyRewardCount(MyInviteListRequest requestBean) {
+        int count = restTemplate
+                .postForEntity(urlBase + "reward/myRewardTotal", requestBean, Integer.class).getBody();
+        return count;
+    }
+
 	/**
 	 * 统计总的奖励金额
 	 * @param requestBean

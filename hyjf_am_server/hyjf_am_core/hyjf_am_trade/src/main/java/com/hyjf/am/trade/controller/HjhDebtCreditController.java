@@ -6,21 +6,23 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.AccountListResponse;
 import com.hyjf.am.response.trade.BorrowRepayResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditResponse;
+import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.service.HjhDebtCreditService;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -64,5 +66,26 @@ public class HjhDebtCreditController {
         return response;
     }
 
+
+    @GetMapping("/selectHjhCreditTenderListByAssignOrderId/{assignOrderId}")
+    public HjhDebtCreditTenderResponse selectHjhCreditTenderListByAssignOrderId(@PathVariable String assignOrderId){
+        HjhDebtCreditTenderResponse response = new HjhDebtCreditTenderResponse();
+        List<HjhDebtCreditTender> hjhDebtCreditTenders =hjhDebtCreditService.selectHjhCreditTenderListByAssignOrderId(assignOrderId);
+        if (CollectionUtils.isNotEmpty(hjhDebtCreditTenders)){
+            response.setResultList(CommonUtils.convertBeanList(hjhDebtCreditTenders,HjhDebtCreditTenderVO.class));
+        }
+        return response;
+    }
+
+
+    @PostMapping("/getHjhDebtCreditList")
+    public HjhDebtCreditResponse getHjhDebtCreditList(@RequestBody HjhDebtCreditRequest request){
+        HjhDebtCreditResponse response=new HjhDebtCreditResponse();
+        List<HjhDebtCredit> borrowCredits=hjhDebtCreditService.getHjhDebtCreditList(request);
+        if (CollectionUtils.isNotEmpty(borrowCredits)){
+            response.setResultList(CommonUtils.convertBeanList(borrowCredits,HjhDebtCreditVO.class));
+        }
+        return response;
+    }
 
 }

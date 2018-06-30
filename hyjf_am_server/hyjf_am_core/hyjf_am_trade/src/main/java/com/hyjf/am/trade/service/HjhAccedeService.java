@@ -24,4 +24,11 @@ public interface HjhAccedeService {
      * @return
      */
 	public boolean canCancelAuth(int userId);
+
+    /**
+     * 
+     * @param accedeOrderId
+     * @return
+     */
+    List<HjhAccede> getHjhAccedeListByAccedeOrderId(String accedeOrderId);
 }

@@ -3,7 +3,9 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 
 import java.util.List;
 
@@ -16,4 +18,8 @@ public interface HjhDebtCreditService {
     List<HjhDebtCredit> selectHjhDebtCreditListByAccedeOrderId(String accedeOrderId);
 
     List<HjhDebtCredit> selectHjhDebtCreditListByOrderIdNid(String accedeOrderId,String borrowNid);
+
+    List<HjhDebtCreditTender> selectHjhCreditTenderListByAssignOrderId(String assignOrderId);
+
+    List<HjhDebtCredit> getHjhDebtCreditList(HjhDebtCreditRequest request);
 }

@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountWithdrawMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -23,6 +22,7 @@ import java.util.List;
 /**
  * @author: sunpeikai
  * @version: BatchUserPortraitQueryServiceImpl, v0.1 2018/6/28 11:14
+ * 查询用户画像所需要的投资相关参数
  */
 @Service
 public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implements BatchUserPortraitQueryService {
@@ -33,6 +33,11 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
 
     @Autowired
     private AccountWithdrawMapper accountWithdrawMapper;
+    /**
+     * 查询用户画像所需要的投资相关参数
+     * @param userIds 需要查询的userId的list
+     * @return 结构与UserPortrait相同的封装对象list
+     * */
     @Override
     public List<BatchUserPortraitQueryVO> selectInfoForUserPortrait(List<Integer> userIds) {
         log.info("BatchUserPortraitQueryServiceImpl............userIds=========={}",userIds);
@@ -40,11 +45,9 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
 
         for(Integer userId:userIds){
             if(userId != null){ // userId有值
-                log.info("BatchUserPortraitQueryServiceImpl............userId=========={}",userId);
                 BatchUserPortraitQueryVO batchUserPortraitQueryVO = new BatchUserPortraitQueryVO();
                 // 累计收益
                 BigDecimal interestSum =  batchUserPortraitQueryCustomizeMapper.getInterestSum(userId);
-                log.info("BatchUserPortraitQueryServiceImpl............interestSum=========={}",interestSum);
 
                 //散标累计年化投资金额
                 BigDecimal investSum = batchUserPortraitQueryCustomizeMapper.getInvestSum(userId);
@@ -53,6 +56,9 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 }
                 //计划累计年化投资金额
                 BigDecimal planSum = batchUserPortraitQueryCustomizeMapper.getPlanSum(userId);
+                if (planSum == null) {
+                    planSum = new BigDecimal("0.00");
+                }
                 //累计充值金额
                 BigDecimal rechargeSum = batchUserPortraitQueryCustomizeMapper.getRechargeSum(userId);
                 if (rechargeSum == null) {
@@ -60,6 +66,9 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 }
                 //累计提现金额
                 BigDecimal withdrawSum = batchUserPortraitQueryCustomizeMapper.getWithdrawSum(userId);
+                if (withdrawSum == null) {
+                    withdrawSum = new BigDecimal("0.00");
+                }
                 //交易笔数
                 int tradeNumber = batchUserPortraitQueryCustomizeMapper.getTradeNumber(userId);
 
@@ -78,7 +87,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                     batchUserPortraitQueryVO.setInvestProcess(null);
                 }
 
-
+                // 最后提现时间
                 AccountWithdrawExample accountWithdrawExample = new AccountWithdrawExample();
                 accountWithdrawExample.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo(2);
                 accountWithdrawExample.setOrderByClause("create_time desc");
@@ -90,7 +99,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                     int addTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(createTime);
                     batchUserPortraitQueryVO.setLastWithdrawTime(addTime);
                 }
-
+                // 最后充值时间
                 AccountRechargeExample accountRechargeExample1 = new AccountRechargeExample();
                 accountRechargeExample1.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo(2);
                 accountRechargeExample1.setOrderByClause("create_time desc");
@@ -102,7 +111,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                     int addTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(createTime);
                     batchUserPortraitQueryVO.setLastRechargeTime(addTime);
                 }
-
+                // 组装参数
                 batchUserPortraitQueryVO.setUserId(userId);
                 batchUserPortraitQueryVO.setInterestSum(interestSum);
                 batchUserPortraitQueryVO.setInvestSum(investSum.add(planSum));

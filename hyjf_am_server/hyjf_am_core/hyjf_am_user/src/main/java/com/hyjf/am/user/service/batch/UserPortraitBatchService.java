@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.batch;
 
+import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 
 import java.util.List;
@@ -12,6 +13,12 @@ import java.util.List;
  * @version: UserPortraitBatchService, v0.1 2018/6/27 16:57
  */
 public interface UserPortraitBatchService {
+    /**
+     * 查询需要更新用户画像的userInfo的list
+     * */
     List<UserInfo> searchUserInfoList();
-    void updateUserPortraitInfo();
+    /**
+     * 保存用户画像
+     * */
+    void saveUserPortrait(BatchUserPortraitQueryRequest request);
 }

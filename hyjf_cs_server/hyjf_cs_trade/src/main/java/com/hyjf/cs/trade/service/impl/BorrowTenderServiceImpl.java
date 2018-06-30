@@ -212,7 +212,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 投资金额不能为0元
         if (("0".equals(account) && cuc == null)
-                        || ("0".equals(account) && cuc != null && cuc.getCouponType() == 2)) {
+                || ("0".equals(account) && cuc != null && cuc.getCouponType() == 2)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
         }
         // 投资金额是否为整数
@@ -421,10 +421,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * 散标投资异步处理
      *
      * @param bean
+     * @param couponGrantId
      * @return
      */
     @Override
-    public BankCallResult borrowTenderBgReturn(BankCallBean bean) {
+    public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
+        logger.info("开始调用投资异步方法");
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());// 用户Userid
         String respCode = bean.getRetCode();// 投资结果返回码
         Integer platForm = bean.getLogClient();

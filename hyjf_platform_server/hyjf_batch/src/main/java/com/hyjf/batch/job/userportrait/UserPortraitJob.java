@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.userportrait;
+package com.hyjf.batch.job.userPortrait;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -19,7 +19,7 @@ public class UserPortraitJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("UserPortraitJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-USER/cs-user/batch/userPortraitBatch", String.class);
+        restTemplate.getForEntity("http://CS-USER/cs-user/batch/user_portrait_batch", String.class);
         logger.info("UserPortraitJob execute end...");
     }
 }

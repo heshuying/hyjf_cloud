@@ -9,6 +9,7 @@ import com.hyjf.am.trade.service.HjhAccedeService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 
 /**
  * @author PC-LIUSHOUYI
@@ -48,13 +50,25 @@ public class HjhAccedeController {
      */
     @GetMapping("/canCancelAuth/{userId}")
     public HjhAccedeResponse selectByAssignNidAndUserId(@PathVariable Integer userId) {
-    	HjhAccedeResponse response = new HjhAccedeResponse();
-    	if(hjhAccedeService.canCancelAuth(userId)) {
-    		response.setRtn(HjhAccedeResponse.SUCCESS);
-    	}else {
-    		response.setRtn(HjhAccedeResponse.FAIL);
-    	}
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        if(hjhAccedeService.canCancelAuth(userId)) {
+            response.setRtn(HjhAccedeResponse.SUCCESS);
+        }else {
+            response.setRtn(HjhAccedeResponse.FAIL);
+        }
         return response;
     }
+
+    @GetMapping("/getHjhAccedeListByAccedeOrderId/{accedeOrderId}")
+    public HjhAccedeResponse getHjhAccedeListByAccedeOrderId(@PathVariable String accedeOrderId){
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        List<HjhAccede> hjhAccedes=hjhAccedeService.getHjhAccedeListByAccedeOrderId(accedeOrderId);
+        if (CollectionUtils.isNotEmpty(hjhAccedes)){
+            response.setResultList(CommonUtils.convertBeanList(hjhAccedes,HjhAccedeVO.class));
+        }
+        return response;
+    }
+
+
 
 }
