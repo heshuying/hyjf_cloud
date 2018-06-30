@@ -46,6 +46,7 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="invest_type" property="investType" jdbcType="TINYINT" />
     <result column="tender_type" property="tenderType" jdbcType="TINYINT" />
+    <result column="tender_from" property="tenderFrom" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -115,7 +116,7 @@
     client, invite_user_name, invite_user_id, invite_region_id, invite_region_name, invite_branch_id, 
     invite_branch_name, invite_department_id, invite_department_name, tender_user_attribute, 
     invite_user_attribute, order_date, loan_order_date, loan_ordid, remark, invest_type, 
-    tender_type, create_time
+    tender_type, tender_from, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderExample" >
     select
@@ -170,7 +171,7 @@
       tender_user_attribute, invite_user_attribute, 
       order_date, loan_order_date, loan_ordid, 
       remark, invest_type, tender_type, 
-      create_time)
+      tender_from, create_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{borrowNid,jdbcType=VARCHAR}, 
       #{nid,jdbcType=VARCHAR}, #{accedeOrderId,jdbcType=VARCHAR}, #{authCode,jdbcType=VARCHAR}, 
@@ -187,7 +188,7 @@
       #{tenderUserAttribute,jdbcType=INTEGER}, #{inviteUserAttribute,jdbcType=INTEGER}, 
       #{orderDate,jdbcType=VARCHAR}, #{loanOrderDate,jdbcType=VARCHAR}, #{loanOrdid,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{investType,jdbcType=TINYINT}, #{tenderType,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{tenderFrom,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTender" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -324,6 +325,9 @@
       <if test="tenderType != null" >
         tender_type,
       </if>
+      <if test="tenderFrom != null" >
+        tender_from,
+      </if>
       <if test="createTime != null" >
         create_time,
       </if>
@@ -457,6 +461,9 @@
       </if>
       <if test="tenderType != null" >
         #{tenderType,jdbcType=TINYINT},
+      </if>
+      <if test="tenderFrom != null" >
+        #{tenderFrom,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -604,6 +611,9 @@
       <if test="record.tenderType != null" >
         tender_type = #{record.tenderType,jdbcType=TINYINT},
       </if>
+      <if test="record.tenderFrom != null" >
+        tender_from = #{record.tenderFrom,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -658,6 +668,7 @@
       remark = #{record.remark,jdbcType=VARCHAR},
       invest_type = #{record.investType,jdbcType=TINYINT},
       tender_type = #{record.tenderType,jdbcType=TINYINT},
+      tender_from = #{record.tenderFrom,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -795,6 +806,9 @@
       <if test="tenderType != null" >
         tender_type = #{tenderType,jdbcType=TINYINT},
       </if>
+      <if test="tenderFrom != null" >
+        tender_from = #{tenderFrom,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -846,6 +860,7 @@
       remark = #{remark,jdbcType=VARCHAR},
       invest_type = #{investType,jdbcType=TINYINT},
       tender_type = #{tenderType,jdbcType=TINYINT},
+      tender_from = #{tenderFrom,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

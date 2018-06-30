@@ -93,6 +93,8 @@ public class BorrowTender implements Serializable {
 
     private Integer tenderType;
 
+    private String tenderFrom;
+
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
@@ -447,6 +449,14 @@ public class BorrowTender implements Serializable {
 
     public void setTenderType(Integer tenderType) {
         this.tenderType = tenderType;
+    }
+
+    public String getTenderFrom() {
+        return tenderFrom;
+    }
+
+    public void setTenderFrom(String tenderFrom) {
+        this.tenderFrom = tenderFrom == null ? null : tenderFrom.trim();
     }
 
     public Date getCreateTime() {
