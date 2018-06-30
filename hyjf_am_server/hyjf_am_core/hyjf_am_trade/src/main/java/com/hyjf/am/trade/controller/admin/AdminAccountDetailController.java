@@ -6,14 +6,12 @@ package com.hyjf.am.trade.controller.admin;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
-import com.hyjf.am.response.user.EvalationResponse;
+import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
 import com.hyjf.am.resquest.admin.AccountDetailRequest;
-import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.service.UserService;
 import com.hyjf.am.trade.service.admin.AccountDetailService;
 import com.hyjf.am.vo.admin.AccountDetailVO;
-import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -78,6 +76,9 @@ public class AdminAccountDetailController {
      */
     private Map<String, Object> paramSet(AccountDetailRequest userRequest) {
         Map<String, Object> mapParam = new HashMap<String, Object>();
+        //
+        mapParam.put("userId",userRequest.getUserId());
+        //
         mapParam.put("userName", userRequest.getUsername());
         mapParam.put("referrerName", userRequest.getReferrerName());
         mapParam.put("nid", userRequest.getNid());
@@ -95,4 +96,11 @@ public class AdminAccountDetailController {
         return mapParam;
     }
 
+    //查询出20170120还款后,交易明细有问题的用户ID
+    @RequestMapping(value = "/accountDetailList", method = RequestMethod.POST)
+    public AdminAccountDetailDataRepairResponse accountdetailDataRepair(){
+        AdminAccountDetailDataRepairResponse repairResponse = new AdminAccountDetailDataRepairResponse();
+
+        return repairResponse;
+    }
 }

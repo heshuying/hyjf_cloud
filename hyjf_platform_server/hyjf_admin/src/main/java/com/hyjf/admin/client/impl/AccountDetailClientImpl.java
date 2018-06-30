@@ -5,8 +5,11 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AccountDetailClient;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.user.RegistRecordResponse;
+import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.vo.admin.AccountDetailVO;
 import com.hyjf.am.vo.user.RegistRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,18 +26,18 @@ public class AccountDetailClientImpl implements AccountDetailClient {
     @Autowired
     private RestTemplate restTemplate;
     /**
-     * 查找注册记录列表
+     * 查找资金明细列表
      *
      * @param request
      * @return
      */
     @Override
-    public List<RegistRecordVO> findRegistRecordList(RegistRcordRequest request) {
-        RegistRecordResponse response = restTemplate
-                .postForEntity("http://AM-USER/am-user/registRecord/registRecordList", request, RegistRecordResponse.class)
+    public AccountDetailResponse findAccountDetailList(AccountDetailRequest request) {
+        AccountDetailResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/adminAccountDetail/accountDetailList", request, AccountDetailResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }

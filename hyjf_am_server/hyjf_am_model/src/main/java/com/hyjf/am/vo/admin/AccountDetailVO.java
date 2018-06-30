@@ -21,10 +21,11 @@ public class AccountDetailVO extends BaseVO implements Serializable {
     private String tradeTypeSearch; // 交易类型
     private String typeSearch;
     private Integer limitStart;
-
     private Integer limitEnd;
 
     private String remarkSrch;// 备注查询
+    //推荐人id
+    private String referrerId;
 
     /**
      * account_list 主键
@@ -379,5 +380,11 @@ public class AccountDetailVO extends BaseVO implements Serializable {
         this.remarkSrch = remarkSrch;
     }
 
+    public String getReferrerId() {
+        return referrerId;
+    }
 
+    public void setReferrerId(String referrerId) {
+        this.referrerId = referrerId;
+    }
 }
