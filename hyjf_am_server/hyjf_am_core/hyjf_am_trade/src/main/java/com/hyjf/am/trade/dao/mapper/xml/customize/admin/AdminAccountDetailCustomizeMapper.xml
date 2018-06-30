@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper
-	namespace="com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountDetailCustomizeMapper">
+<mapper  namespace="com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountDetailCustomizeMapper">
 	<resultMap id="AccountDetailMapResult" type="com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailCustomize">
 		<result column="id" property="id" />
 		<result column="user_id" property="userId" /> <!-- 用户id -->
@@ -31,7 +30,8 @@
 	<select id="queryAccountDetails" resultMap="AccountDetailMapResult" parameterType="java.util.Map">
 		SELECT
 		l.id,
-		l.user_id.username,
+		l.user_id.userId AS userId,
+-- 		l.user_id.username,
 -- 		u2.username AS 'referrer_name',
 		l.nid,
 		CASE l.type
@@ -74,9 +74,67 @@
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 		ORDER BY l.create_time DESC, l.id DESC
-		<if test="limitStart >= 0" >
-			LIMIT #{limitStart} , #{limitEnd}
+		<if test="limitStart > 0 and limitEnd > 0" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
-
+	<select id="queryAccountDetailCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT COUNT(1)
+		FROM ht_account_list l
+		LEFT JOIN ht_account_trade t ON l.trade= t.`value`
+		WHERE 1=1
+		<include refid="where-all-page-condition"/>
+	</select>
+	<sql id="where-all-page-condition">
+		<if test="userId != null and userId != 0">
+			AND l.user_id = #{userId}
+		</if>
+		<!--<if test="referrerName != null and referrerName != ''">
+			AND u2.username = #{referrerName}
+		</if>-->
+		<if test="tradeTypeSearch != null and tradeTypeSearch != ''">
+			AND t.id = #{tradeTypeSearch}
+		</if>
+		<!--<if test="username != null and username != ''">
+			AND u.username = #{username}
+		</if>-->
+		<if test="nid != null and nid != ''">
+			AND l.nid = #{nid}
+		</if>
+		<if test="typeSearch != null and typeSearch != ''">
+			AND l.type = #{typeSearch}
+		</if>
+		<if test="isBank != null and isBank != ''">
+			AND l.is_bank = #{isBank}
+		</if>
+		<if test="checkStatus != null and checkStatus != ''">
+			AND l.check_status = #{checkStatus}
+		</if>
+		<if test="tradeStatus != null and tradeStatus != ''">
+			AND l.trade_status = #{tradeStatus}
+		</if>
+		<if test="accountId != null and accountId != ''">
+			AND l.account_id = #{accountId}
+		</if>
+		<if test="seqNo != null and seqNo != ''">
+			AND l.seq_no = #{seqNo}
+		</if>
+		<if test="balance != null">
+			AND l.balance = #{balance}
+		</if>
+		<if test="frost != null">
+			AND l.frost = #{frost}
+		</if>
+		<if test="remarkSrch != null and remarkSrch != ''">
+			AND l.remark = #{remarkSrch}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND FROM_UNIXTIME(l.create_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'
+			),'%Y-%m-%d %H:%i:%s')
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND FROM_UNIXTIME(l.create_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'
+			),'%Y-%m-%d %H:%i:%s')
+		</if>
+	</sql>
 </mapper>

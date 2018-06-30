@@ -165,4 +165,11 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	String getCustomerIDByUserID(Integer userId, String code);
+
+	/**
+	 * 根据userId查询渠道
+	 * @param userId
+	 * @return
+	 */
+    UtmPlat selectUtmPlatByUserId(Integer userId);
 }

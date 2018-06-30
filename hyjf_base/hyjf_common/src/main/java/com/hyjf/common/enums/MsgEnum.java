@@ -326,6 +326,12 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TENDER_HANDING("EAM000216","投资处理中"),
 	ERR_AMT_TENDER_MONEY_LESS("EAM000213","可投剩余金额为{}元"),
 
+
+
+	// 债转
+	ERR_ALLOW_CHANNEL_ATTORN("1","用户所处渠道不允许债转"),
+
+
 	ERR_SUCCESS("0", ""),
 	// 枚举终结
 	ERR_ENUM("", "");

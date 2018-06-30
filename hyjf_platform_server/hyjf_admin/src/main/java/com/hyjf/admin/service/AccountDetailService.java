@@ -3,7 +3,10 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.admin.AccountDetailResponse;
+import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.vo.admin.AccountDetailVO;
 import com.hyjf.am.vo.user.RegistRecordVO;
 
 import java.util.List;
@@ -14,11 +17,11 @@ import java.util.List;
  */
 public interface AccountDetailService {
     /**
-     * 查找注册记录列表
+     * 查找资金明细列表
      *
      * @param request
      * @return
      */
-    List<RegistRecordVO> findRegistRecordList(RegistRcordRequest request);
+    AccountDetailResponse findAccountDetailList(AccountDetailRequest request);
 
 }

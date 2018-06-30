@@ -539,26 +539,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @param couponGrantId
      */
     private void userBorrowTender(BorrowVO borrow, BankCallBean bean, String couponGrantId) {
-        int nowTime = GetDate.getNowTime10();
-        String ip = bean.getLogIp();// 操作ip
-        int client = bean.getLogClient() != 0 ? bean.getLogClient() : 0;// 操作平台
-        String accountId = bean.getAccountId();// 获取投资用户的投资客户号
-        Integer userId = Integer.parseInt(bean.getLogUserId());// 投资人id
-        String txAmount = bean.getTxAmount();// 借款金额
-        String orderId = bean.getOrderId();// 订单id
-        String orderDate = bean.getLogOrderDate(); // 订单日期
-        String retCode = bean.getRetCode();// 投资结果返回码
-        String authCode = bean.getAuthCode();// 投资结果授权码
-        String borrowNid = borrow.getBorrowNid();// 项目编号
-        String borrowStyle = borrow.getBorrowStyle();// 项目的还款方式
-        int projectType = borrow.getProjectType();// 项目类型
-        BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate()); // 服务费率
-        Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
-        Integer borrowId = borrow.getId();// 借款项目主键
-        BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
+        Integer userId = Integer.parseInt(bean.getLogUserId());
+        // 借款金额
+        String txAmount = bean.getTxAmount();
+        // 项目编号
+        String borrowNid = borrow.getBorrowNid();
         // 检查redis是否已经执行了
-        boolean checkTender = RedisUtils.tranactionSet(RedisConstants.TENDER_ORDERID + orderId, 20);
-        if (!checkTender) {//同步/异步 优先执行完毕
+        boolean checkTender = RedisUtils.tranactionSet(RedisConstants.TENDER_ORDERID + bean.getLogOrderId(), 20);
+        //同步/异步 优先执行完毕
+        if (!checkTender) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_HANDING);
         }
         // redis扣减

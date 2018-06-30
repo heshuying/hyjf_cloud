@@ -8,10 +8,12 @@ import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.TenderCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.mq.AccountWebListProducer;
 import com.hyjf.am.trade.mq.AppMessageProducer;
@@ -22,7 +24,9 @@ import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.statistics.AccountWebListVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -33,6 +37,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -886,6 +891,61 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	public List<TenderToCreditDetailCustomize> selectHJHWebCreditTenderDetail(Map<String, Object> params) {
 		//查汇计划债转详情
 		return tenderCreditCustomizeMapper.selectHJHWebCreditTenderDetail(params);
+	}
+
+	/**
+	 * 获取我要转让页面的金额
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public CreditPageVO selectCreditPageMoneyTotal(Integer userId) {
+		Map<String, Object> params = new HashedMap();
+		params.put("userId",userId);
+		BigDecimal canCreditMoney = tenderCreditCustomizeMapper.selectCanCreditMoneyTotal(params);
+		BigDecimal inCreditMoney = tenderCreditCustomizeMapper.selectInCreditMoneyTotal(params);
+		BigDecimal creditSuccessMoney = tenderCreditCustomizeMapper.selectCreditSuccessMoneyTotal(params);
+
+		CreditPageVO result = new CreditPageVO();
+		result.setCanCreditMoney(canCreditMoney);
+		result.setCreditSuccessMoney(creditSuccessMoney);
+		result.setInCreditMoney(inCreditMoney);
+		return result;
+	}
+
+	/**
+	 * 查询我可转让列表数量
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public int searchCreditListCount(MyCreditListQueryRequest request) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", request.getUserId());
+		int total = tenderCreditCustomizeMapper.countTenderToCredit(params);
+		return total;
+	}
+
+	/**
+	 * 查询我可转让列表数量
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<TenderCreditCustomize> searchCreditList(MyCreditListQueryRequest request) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", request.getUserId());
+		params.put("tenderTimeSort", request.getTenderTimeSort());
+		params.put("creditAccountSort", request.getCreditAccountSort());
+		params.put("tenderPeriodSort", request.getTenderPeriodSort());
+		params.put("remainDaysSort", request.getRemainDaysSort());
+		params.put("limitStart", request.getLimitStart());
+		params.put("limitEnd", request.getLimitEnd());
+		List<TenderCreditCustomize> list = tenderCreditCustomizeMapper.selectTenderToCreditList(params);
+		return list;
 	}
 
 

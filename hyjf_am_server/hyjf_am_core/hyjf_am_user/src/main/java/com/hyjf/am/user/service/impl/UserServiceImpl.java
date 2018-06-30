@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
@@ -52,6 +53,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private CertificateAuthorityMapper certificateAuthorityMapper;
 	@Autowired
 	private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
+	@Autowired
+	private UtmPlatCustomizeMapper utmPlatCustomizeMapper;
+
+
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -1101,6 +1106,17 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			customerID = certificateAuthority.getCustomerId();
 		}
 		return customerID;
+	}
+
+	/**
+	 * 根据userId查询渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmPlat selectUtmPlatByUserId(Integer userId) {
+		return utmPlatCustomizeMapper.selectUtmPlatByUserId(userId);
 	}
 
 }
