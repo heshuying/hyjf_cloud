@@ -32,7 +32,7 @@ import io.swagger.annotations.Api;
 @Api(value = "根据条件查询资产列表")
 @RestController
 @RequestMapping("/am-trade/assetList")
-public class AssetListController {
+public class AdminAssetListController {
 	
 	@Autowired
 	AssetListService assetListService;

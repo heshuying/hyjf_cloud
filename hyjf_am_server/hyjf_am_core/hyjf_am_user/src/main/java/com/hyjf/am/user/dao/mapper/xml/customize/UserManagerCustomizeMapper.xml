@@ -467,4 +467,29 @@
             ),'%Y-%m-%d %H:%i:%s')
         </if>
     </sql>
+
+    <!--根据用户id获取土建人信息-->
+    <resultMap id="UserRecommendPOMap" type="com.hyjf.am.user.dao.model.customize.UserRecommendCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
+        <result column="true_name" property="trueName" jdbcType="VARCHAR" />
+        <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="searchUserRecommend" resultMap="UserRecommendPOMap" parameterType="java.lang.Integer">
+        SELECT
+        hydu.user_id,
+        hydu.username AS user_name,
+        hydurefer.username AS recommend_name,
+        hyui.truename AS true_name,
+        hyui.idcard AS id_card
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_userid
+        LEFT JOIN ht_user_info hyui ON hyui.user_id = hydu.user_id
+        WHERE
+        hydu.user_id =#{userId,jdbcType=INTEGER}
+    </select>
 </mapper>
