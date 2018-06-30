@@ -1,5 +1,8 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.trade.CreditListResponse;
+import com.hyjf.am.response.trade.MyCreditListQueryResponse;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.apache.commons.collections.map.HashedMap;
@@ -26,4 +29,18 @@ public interface CreditClient {
      * @return
      */
     CreditPageVO selectCreditPageMoneyTotal(Integer userId);
+
+    /**
+     * 查询可债转列表数量
+     * @param request
+     * @return
+     */
+    MyCreditListQueryResponse countMyCreditList(MyCreditListQueryRequest request);
+
+    /**
+     * 查询可债转列表数量
+     * @param request
+     * @return
+     */
+    MyCreditListQueryResponse searchMyCreditList(MyCreditListQueryRequest request);
 }

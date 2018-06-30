@@ -8,12 +8,15 @@ import java.util.Map;
 
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 
 /**
  * 银行债转异常处理
@@ -52,4 +55,18 @@ public interface BankCreditTenderService {
      * @return
      */
     CreditPageVO selectCreditPageMoneyTotal(Integer userId);
+
+    /**
+     * 查询我可转让列表数量
+     * @param request
+     * @return
+     */
+    int searchCreditListCount(MyCreditListQueryRequest request);
+
+    /**
+     * 查询我可转让列表数量
+     * @param request
+     * @return
+     */
+    List<TenderCreditCustomize> searchCreditList(MyCreditListQueryRequest request);
 }

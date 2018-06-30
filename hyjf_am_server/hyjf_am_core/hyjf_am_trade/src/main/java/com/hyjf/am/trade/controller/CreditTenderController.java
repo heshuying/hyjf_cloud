@@ -3,16 +3,17 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.CreaditPageResponse;
-import com.hyjf.am.response.trade.CreditTenderResponse;
-import com.hyjf.am.response.trade.TenderToCreditDetailCustomizeResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +50,6 @@ public class CreditTenderController {
         }
         return response;
     }
-
-    
-    
-    
 
     @PostMapping("/updateTenderCreditInfo")
     public boolean updateTenderCreditInfo(@RequestBody CreditTenderRequest request){
@@ -109,6 +107,35 @@ public class CreditTenderController {
         CreditPageVO page = bankCreditTenderService.selectCreditPageMoneyTotal(userId);
         if (page != null) {
             response.setResult(page);
+        }
+        return response;
+    }
+
+    /**
+     * 查询我可转让列表数量
+     * @param request
+     * @return
+     */
+    @RequestMapping("/countMyCreditList")
+    public MyCreditListQueryResponse searchCreditListCount(@RequestBody @Valid MyCreditListQueryRequest request){
+        MyCreditListQueryResponse response = new MyCreditListQueryResponse();
+        Integer count = bankCreditTenderService.searchCreditListCount(request);
+        response.setCount(count);
+        return response;
+    }
+
+
+    /**
+     * 查询我可转让列表
+     * @param request
+     * @return
+     */
+    @RequestMapping("/seachMyCreditList")
+    public MyCreditListQueryResponse searchCreditList(@RequestBody @Valid MyCreditListQueryRequest request){
+        MyCreditListQueryResponse response = new MyCreditListQueryResponse();
+        List<TenderCreditCustomize> list = bankCreditTenderService.searchCreditList(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,TenderCreditCustomizeVO.class));
         }
         return response;
     }

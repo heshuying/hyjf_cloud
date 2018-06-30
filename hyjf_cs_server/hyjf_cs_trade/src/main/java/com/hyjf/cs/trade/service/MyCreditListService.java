@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.resquest.trade.CreditListRequest;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -20,5 +21,13 @@ public interface MyCreditListService extends BaseTradeService{
      * @param userId
      * @return
      */
-    WebResult getCreditList(MyCreditListRequest request, Integer userId);
+    WebResult getCreditListData(MyCreditListRequest request, Integer userId);
+
+    /**
+     * 我要债转列表页 获取列表
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult getCreditList(MyCreditListQueryRequest request, Integer userId);
 }

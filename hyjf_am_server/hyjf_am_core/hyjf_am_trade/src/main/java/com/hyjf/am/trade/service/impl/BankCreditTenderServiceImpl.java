@@ -8,10 +8,12 @@ import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.TenderCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.mq.AccountWebListProducer;
 import com.hyjf.am.trade.mq.AppMessageProducer;
@@ -24,6 +26,7 @@ import com.hyjf.am.vo.statistics.AccountWebListVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -909,6 +912,40 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		result.setCreditSuccessMoney(creditSuccessMoney);
 		result.setInCreditMoney(inCreditMoney);
 		return result;
+	}
+
+	/**
+	 * 查询我可转让列表数量
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public int searchCreditListCount(MyCreditListQueryRequest request) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", request.getUserId());
+		int total = tenderCreditCustomizeMapper.countTenderToCredit(params);
+		return total;
+	}
+
+	/**
+	 * 查询我可转让列表数量
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<TenderCreditCustomize> searchCreditList(MyCreditListQueryRequest request) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", request.getUserId());
+		params.put("tenderTimeSort", request.getTenderTimeSort());
+		params.put("creditAccountSort", request.getCreditAccountSort());
+		params.put("tenderPeriodSort", request.getTenderPeriodSort());
+		params.put("remainDaysSort", request.getRemainDaysSort());
+		params.put("limitStart", request.getLimitStart());
+		params.put("limitEnd", request.getLimitEnd());
+		List<TenderCreditCustomize> list = tenderCreditCustomizeMapper.selectTenderToCreditList(params);
+		return list;
 	}
 
 

@@ -3,7 +3,10 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.CreaditPageResponse;
+import com.hyjf.am.response.trade.CreditListResponse;
+import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.trade.client.AccountClient;
@@ -56,5 +59,29 @@ public class CreditClientImpl implements CreditClient {
             return response.getResult();
         }
         return null;
+    }
+
+    /**
+     * 查询可债转列表数量
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public MyCreditListQueryResponse countMyCreditList(MyCreditListQueryRequest request) {
+        MyCreditListQueryResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/creditTender/countMyCreditList",request,MyCreditListQueryResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 查询可债转列表数量
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public MyCreditListQueryResponse searchMyCreditList(MyCreditListQueryRequest request) {
+        MyCreditListQueryResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/creditTender/seachMyCreditList",request,MyCreditListQueryResponse.class).getBody();
+        return response;
     }
 }
