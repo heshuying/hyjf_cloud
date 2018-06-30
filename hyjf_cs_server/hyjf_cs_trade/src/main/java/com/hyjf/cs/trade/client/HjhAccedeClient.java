@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface HjhAccedeClient {
 
-    List<HjhAccedeVO> getHjhAccedeListByAccedeOrderId(String contract_id);
+    HjhAccedeVO getHjhAccedeByAccedeOrderId(String contract_id);
 }
