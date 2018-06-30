@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.controller.assetcenter;
+package com.hyjf.admin.controller.finance;
 
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
