@@ -7,7 +7,7 @@ import com.hyjf.am.vo.admin.AccountDetailVO;
 import com.hyjf.am.vo.user.BankCardVO;
 
 /**
- * @author hesy
+ * @author nxl
  */
 public class AccountDetailResponse extends AdminResponse<AccountDetailVO> {
 }

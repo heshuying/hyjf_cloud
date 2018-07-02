@@ -18,15 +18,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class InterceptorConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		InterceptorRegistration addIn= registry.addInterceptor(new AdminInterceptor());
+		/*InterceptorRegistration addIn= registry.addInterceptor(new AdminInterceptor());
 		//所有都拦截
-		addIn.addPathPatterns("/**");
+		addIn.addPathPatterns("*");
 		//不拦截的请求
 		addIn.excludePathPatterns(
 				"/hyjf-admin/login/login",
 				"/swagger-ui.html",
-				"/swagger-resources/**",
-				"/v2/**"
-		);
+				"/swagger-resources*",
+				"/v2*"
+		);*/
 	}
 }
