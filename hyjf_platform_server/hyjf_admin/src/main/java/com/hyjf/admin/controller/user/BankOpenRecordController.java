@@ -30,7 +30,7 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/bankOpenRecord")
 public class BankOpenRecordController {
     @Autowired
-    public BankOpenRecordService bankOpenRecordService;
+    private BankOpenRecordService bankOpenRecordService;
 
 
     @ApiOperation(value = "开户记录", notes = "开户记录页面初始化")

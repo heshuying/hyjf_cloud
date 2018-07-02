@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.task;
+package com.hyjf.am.trade.controller.batch;
 
 import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
@@ -10,7 +10,6 @@ import com.hyjf.am.vo.trade.CouponRepayMonitorVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,24 +39,26 @@ public class CouponRepayMonitorController {
 
 
     @PostMapping("/insertCouponRepayMonitor")
-    public int insertCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO ) {
-        int result = 0;
+    public CouponRepayMonitorResponse insertCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO ) {
+        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
         if (couponRepayMonitorVO != null) {
             CouponRepayMonitor couponRepayMonitor = new CouponRepayMonitor();
             BeanUtils.copyProperties(couponRepayMonitorVO,couponRepayMonitor);
-            result = couponRepayMonitorService.insertCouponRepayMonitor(couponRepayMonitor);
+            int insertFlag = couponRepayMonitorService.insertCouponRepayMonitor(couponRepayMonitor);
+            response.setInsertFlag(insertFlag);
         }
-        return result;
+        return response;
     }
 
     @PostMapping("/updateCouponRepayMonitor")
-    public int updateCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO) {
-        int result = 0;
+    public CouponRepayMonitorResponse updateCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO) {
+        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
         if (couponRepayMonitorVO != null) {
             CouponRepayMonitor couponRepayMonitor = new CouponRepayMonitor();
             BeanUtils.copyProperties(couponRepayMonitorVO,couponRepayMonitor);
-            result = couponRepayMonitorService.updateCouponRepayMonitor(couponRepayMonitor);
+            int updateFlag = couponRepayMonitorService.updateCouponRepayMonitor(couponRepayMonitor);
+            response.getUpdateFlag();
         }
-        return result;
+        return response;
     }
 }

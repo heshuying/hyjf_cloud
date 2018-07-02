@@ -58,17 +58,9 @@ public interface AmTradeClient {
      */
     CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
 
-    /**
-     *
-     * @param currentRecover
-     * @param userId
-     * @param count
-     */
-    void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, String userId, String couponUserCode, String ip, int count);
 
     int selectMyRewardCount(MyInviteListRequest requestBean);
 
     BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean);
 
-    void updateRepayDataRecover(CouponRecoverCustomizeVO currentRecover,BorrowTenderCpnVO borrowTenderCpn, String borrowNid, String couponUserCode,String userId,String borrowStyle,int periodNow);
 }

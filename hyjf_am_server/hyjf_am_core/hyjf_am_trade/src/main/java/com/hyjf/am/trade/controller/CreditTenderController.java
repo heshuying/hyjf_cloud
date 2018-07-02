@@ -11,10 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.trade.service.BankCreditTenderService;
-import com.hyjf.am.vo.trade.CreditPageVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
@@ -116,7 +113,7 @@ public class CreditTenderController {
      * @param request
      * @return
      */
-    @RequestMapping("/countMyCreditList")
+    @PostMapping("/countMyCreditList")
     public MyCreditListQueryResponse searchCreditListCount(@RequestBody @Valid MyCreditListQueryRequest request){
         MyCreditListQueryResponse response = new MyCreditListQueryResponse();
         Integer count = bankCreditTenderService.searchCreditListCount(request);
@@ -130,12 +127,42 @@ public class CreditTenderController {
      * @param request
      * @return
      */
-    @RequestMapping("/seachMyCreditList")
+    @PostMapping("/seachMyCreditList")
     public MyCreditListQueryResponse searchCreditList(@RequestBody @Valid MyCreditListQueryRequest request){
         MyCreditListQueryResponse response = new MyCreditListQueryResponse();
         List<TenderCreditCustomize> list = bankCreditTenderService.searchCreditList(request);
         if (CollectionUtils.isNotEmpty(list)){
             response.setResultList(CommonUtils.convertBeanList(list,TenderCreditCustomizeVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 查询债转详情
+     *
+     * @return
+     */
+    @GetMapping("/selectTenderToCreditDetail/{userId}/{borrowNid }/{tenderNid}")
+    public MyCreditListQueryResponse selectTenderToCreditDetail(@PathVariable Integer userId, @PathVariable String borrowNid, @PathVariable String tenderNid) {
+        MyCreditListQueryResponse response = new MyCreditListQueryResponse();
+        TenderCreditCustomize bean = bankCreditTenderService.selectTenderToCreditDetail(userId, borrowNid, tenderNid);
+        if (bean != null) {
+            response.setResult(CommonUtils.convertBean(bean, TenderCreditCustomizeVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 债转详细预计服务费计算
+     *
+     * @return
+     */
+    @GetMapping("/selectExpectCreditFee/{borrowNid }/{tenderNid}")
+    public ExpectCreditFeeResponse selectExpectCreditFee(@PathVariable String borrowNid, @PathVariable String tenderNid) {
+        ExpectCreditFeeResponse response = new ExpectCreditFeeResponse();
+        ExpectCreditFeeVO bean = bankCreditTenderService.selectExpectCreditFee(borrowNid, tenderNid);
+        if (bean != null) {
+            response.setResult(bean);
         }
         return response;
     }

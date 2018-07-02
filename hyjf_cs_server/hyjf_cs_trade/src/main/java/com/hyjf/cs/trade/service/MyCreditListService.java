@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 
 import java.util.Map;
 
@@ -30,4 +31,12 @@ public interface MyCreditListService extends BaseTradeService{
      * @return
      */
     WebResult getCreditList(MyCreditListQueryRequest request, Integer userId);
+
+    /**
+     * 用户中心查询投资可债转详情
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult tenderToCreditDetail(CreditDetailsRequestBean request, Integer userId);
 }

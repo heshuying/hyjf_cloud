@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.resquest.market;
 
-import java.util.List;
 
 /**
  * @author yaoy
@@ -50,6 +49,10 @@ public class ActivityListRequest {
     private String urlBackground;
 
     private String description;
+
+    private int createTime;
+
+    private int updateTime;
 
     private int limit;
 
@@ -222,5 +225,21 @@ public class ActivityListRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(int createTime) {
+        this.createTime = createTime;
+    }
+
+    public int getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(int updateTime) {
+        this.updateTime = updateTime;
     }
 }

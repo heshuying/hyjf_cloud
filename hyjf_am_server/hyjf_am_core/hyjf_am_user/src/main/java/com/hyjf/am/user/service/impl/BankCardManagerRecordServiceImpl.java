@@ -25,7 +25,7 @@ import java.util.Map;
 public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordService {
 
     @Autowired
-    public BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
+    private BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
 
     private static Logger logger = LoggerFactory.getLogger(BankCardManagerRecordServiceImpl.class);
 
