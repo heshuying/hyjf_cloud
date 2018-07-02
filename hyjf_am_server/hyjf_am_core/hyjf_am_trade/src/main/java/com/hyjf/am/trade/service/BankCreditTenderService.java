@@ -16,6 +16,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
 import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 
 /**
@@ -69,4 +70,28 @@ public interface BankCreditTenderService {
      * @return
      */
     List<TenderCreditCustomize> searchCreditList(MyCreditListQueryRequest request);
+
+    /**
+     * 查询债转详情
+     * @param userId
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    TenderCreditCustomize selectTenderToCreditDetail(Integer userId, String borrowNid, String tenderNid);
+
+    /**
+     * 债转详细预计服务费计算
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
+
+    /**
+     * 投资人当天是否可以债转
+     * @param userId
+     * @return
+     */
+    Integer tenderAbleToCredit(Integer userId);
 }

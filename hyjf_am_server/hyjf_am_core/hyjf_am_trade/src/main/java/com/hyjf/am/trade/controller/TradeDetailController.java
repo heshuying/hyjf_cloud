@@ -1,30 +1,24 @@
 package com.hyjf.am.trade.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import java.util.List;
 
-import com.hyjf.am.response.trade.AssetManageResponse;
-import com.hyjf.am.response.trade.TenderDetailResponse;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-
-import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserRechargeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserTradeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserWithdrawListCustomize;
-import com.hyjf.am.trade.service.TradeDetailService;
-
-import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.TenderDetailResponse;
+import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.trade.WebUserRechargeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.WebUserTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.WebUserWithdrawListCustomize;
+import com.hyjf.am.trade.service.TradeDetailService;
+import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author pangchengchao
@@ -32,8 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("am-trade/tradedetail")
-public class TradeDetailController {
-    private static Logger logger = LoggerFactory.getLogger(AssetManageController.class);
+public class TradeDetailController extends BaseController{
     @Autowired
     private TradeDetailService tradeDetailService;
 

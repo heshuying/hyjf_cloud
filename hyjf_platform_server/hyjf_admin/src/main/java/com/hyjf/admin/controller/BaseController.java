@@ -3,12 +3,14 @@
  */
 package com.hyjf.admin.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 
 import io.swagger.annotations.Api;
@@ -27,6 +29,14 @@ public class BaseController {
 	public static final String MSG="msg";
 	public static final String SUCCESS="00";
 	public static final String FAIL="99";
+	//返回集合
+	public static final String LIST="list";
+	
+	public static final String CURR="currPage";
+	public static final String PAGE="pageSize";
+	public static final String TRCORD="recordTotal";
+	
+	
 	//取得session中用户信息
 	public AdminSystemVO getUser(HttpServletRequest request) {
 		AdminSystemVO ar=null;
@@ -41,12 +51,31 @@ public class BaseController {
 	public void removeUser(HttpServletRequest request) {
 		request.getSession().removeAttribute(USER);
 	}
+	//返回成功
 	public JSONObject success() {
 		JSONObject info = new JSONObject();
 		info.put(STATUS, SUCCESS);
 		info.put(MSG, "成功");
 		return info;
 	}
+	//返回成功带总数的成功
+	public JSONObject success(String recordTotal) {
+		JSONObject info = new JSONObject();
+		info.put(STATUS, SUCCESS);
+		info.put(MSG, "成功");
+		info.put(TRCORD, recordTotal);
+		return info;
+	}
+	//返回成功带总数带集合的
+	public JSONObject success(String recordTotal,List<?> List) {
+		JSONObject info = new JSONObject();
+		info.put(STATUS, SUCCESS);
+		info.put(MSG, "成功");
+		info.put(TRCORD, recordTotal);
+		info.put(LIST, List);
+		return info;
+	}
+	//返回失败
 	public JSONObject  fail(String failmsg) {
 		JSONObject info = new JSONObject();
 		if(failmsg.equals("")) {
@@ -56,5 +85,15 @@ public class BaseController {
 		}
 		info.put(STATUS, FAIL);
 		return info;
+	}
+	//获取页数
+	public String  getCurrPage(Map<String, String> map) {
+
+		return map.get(CURR);
+	}
+	//获取条数
+	public String  getPageSize(Map<String, String> map) {
+
+		return map.get(PAGE);
 	}
 }

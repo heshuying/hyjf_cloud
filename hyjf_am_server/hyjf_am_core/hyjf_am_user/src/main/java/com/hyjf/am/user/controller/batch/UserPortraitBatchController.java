@@ -5,6 +5,7 @@ package com.hyjf.am.user.controller.batch;
 
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.batch.UserPortraitBatchService;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -28,8 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/user_batch/portrait")
-public class UserPortraitBatchController {
-    private static final Logger logger = LoggerFactory.getLogger(UserLeaveBatchController.class);
+public class UserPortraitBatchController extends BaseController {
 
     @Autowired
     private UserPortraitBatchService userPortraitBatchService;

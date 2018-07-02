@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/am-trade/batch")
-public class BatchUserPortraitQueryController {
+public class BatchUserPortraitQueryController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired

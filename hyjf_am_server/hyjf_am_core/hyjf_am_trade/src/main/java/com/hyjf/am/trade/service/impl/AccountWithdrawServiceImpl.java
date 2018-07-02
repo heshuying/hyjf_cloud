@@ -28,7 +28,7 @@ import java.util.List;
  * @version AccountWithdrawServiceImpl, v0.1 2018/6/11 13:47
  */
 @Service
-public class AccountWithdrawServiceImpl implements AccountWithdrawService {
+public class AccountWithdrawServiceImpl extends BaseServiceImpl implements AccountWithdrawService {
 
     // add by nxl 添加体现状态
     // 体现状态：初始值
@@ -40,21 +40,6 @@ public class AccountWithdrawServiceImpl implements AccountWithdrawService {
     // 提现状态:成功
     private static final int WITHDRAW_STATUS_SUCCESS = 2;
 
-    @Autowired
-    private AccountWithdrawMapper accountWithdrawMapper;
-
-    @Autowired
-    private AccountMapper accountMapper;
-    @Autowired
-    private AccountListMapper accountListMapper;
-    @Autowired
-    private AccountRechargeMapper accountRechargeMapper;
-
-    @Autowired
-    private BorrowCustomizeMapper borrowCustomizeMapper;
-
-    @Autowired
-    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
     @Override
     public void insertAccountWithdrawLog(AccountWithdraw accountWithdraw) {

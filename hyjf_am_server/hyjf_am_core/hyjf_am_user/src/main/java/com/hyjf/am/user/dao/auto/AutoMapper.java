@@ -202,5 +202,8 @@ public class AutoMapper {
 
     @Autowired
     protected VipUserUpgradeMapper vipUserUpgradeMapper;
+
+    @Autowired
+    protected UserLogMapper usersLogMapper;
 }
 

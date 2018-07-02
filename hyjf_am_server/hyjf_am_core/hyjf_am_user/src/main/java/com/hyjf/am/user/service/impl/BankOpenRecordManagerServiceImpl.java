@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerService {
     @Autowired
-    public BankOpenRecordCustomizeMapper bankOpenRecordCustomizeMapper;
+    private BankOpenRecordCustomizeMapper bankOpenRecordCustomizeMapper;
     /**
      * 查找江西银行开户记录
      *

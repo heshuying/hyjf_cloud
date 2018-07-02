@@ -3,24 +3,13 @@
  */
 package com.hyjf.am.user.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.LoanCoverUserResponse;
-import com.hyjf.am.response.user.UserPortraitResponse;
-import com.hyjf.am.resquest.user.LoanCoverUserRequest;
-import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.UserPortrait;
-import com.hyjf.am.user.service.LoanCoverUserManagerService;
-import com.hyjf.am.user.service.UserPortraitManagerService;
-import com.hyjf.am.vo.user.LoanCoverUserVO;
-import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.collections.map.HashedMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -29,10 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.UserPortraitResponse;
+import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.resquest.user.UserPortraitRequest;
+import com.hyjf.am.user.dao.model.auto.UserPortrait;
+import com.hyjf.am.user.service.LoanCoverUserManagerService;
+import com.hyjf.am.user.service.UserPortraitManagerService;
+import com.hyjf.am.vo.user.UserPortraitVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author nxl
@@ -42,13 +37,11 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/am-user/userPortraitManage")
-public class UserPortraitManagerController {
+public class UserPortraitManagerController extends BaseController{
     @Autowired
     private LoanCoverUserManagerService loanCoverUserManagerService;
     @Autowired
     private UserPortraitManagerService userPortraitManagerService;
-
-    private static Logger logger = LoggerFactory.getLogger(UserPortraitManagerController.class);
 
     /**
      * 根据筛选条件查找(用户管理列表显示)
@@ -79,7 +72,7 @@ public class UserPortraitManagerController {
                 List<UserPortraitVO> userVoList = CommonUtils.convertBeanList(listUserPortrait, UserPortraitVO.class);
                 response.setResultList(userVoList);
                 response.setCount(registCount);
-                response.setRtn(Response.SUCCESS);//代表成功
+                response.setRtn(Response.SUCCESS);
             }
         }
         return response;
@@ -110,7 +103,7 @@ public class UserPortraitManagerController {
                 response.setResult(loanCoverUserVO);
                 status = Response.SUCCESS;
             }
-            response.setRtn(status);//代表成功
+            response.setRtn(status);
             return response;
         }
         return null;

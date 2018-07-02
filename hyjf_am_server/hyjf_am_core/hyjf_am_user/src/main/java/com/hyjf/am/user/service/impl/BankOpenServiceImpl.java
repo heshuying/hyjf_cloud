@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
@@ -213,7 +214,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
          */
         try {
             appChannelStatisticsDetailProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG, JSON.toJSONBytes(userId)));
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(userId)));
         } catch (MQException e) {
             logger.error("开户统计app渠道失败....", e);
         }

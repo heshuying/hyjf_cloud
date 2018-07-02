@@ -3,22 +3,23 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.HjhDebtCreditResponse;
-import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
-import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
-import com.hyjf.am.trade.service.HjhDebtCreditService;
-import com.hyjf.am.trade.service.HjhDebtCreditTenderService;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.trade.service.HjhDebtCreditTenderService;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.common.util.CommonUtils;
+
+import io.swagger.annotations.Api;
 
 /**
  * @author jijun
@@ -28,7 +29,7 @@ import java.util.List;
 @Api(value = "汇计划债转投资")
 @RestController
 @RequestMapping("/am-trade/hjhDebtCreditTender")
-public class HjhDebtCreditTenderController {
+public class HjhDebtCreditTenderController extends BaseController{
 
     @Autowired
     HjhDebtCreditTenderService hjhDebtCreditTenderService;

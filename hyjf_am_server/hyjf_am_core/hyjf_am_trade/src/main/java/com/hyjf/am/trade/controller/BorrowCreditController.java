@@ -27,11 +27,10 @@ import java.util.List;
  * @author PC-LIUSHOUYI
  * @version BorrowCreditController, v0.1 2018/6/24 10:48
  */
-
 @Api(value = "债转信息")
 @RestController
 @RequestMapping("/am-trade/borrowCredit")
-public class BorrowCreditController {
+public class BorrowCreditController extends BaseController{
 
     @Autowired
     BorrowCreditService borrowCreditService;

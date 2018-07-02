@@ -3,26 +3,19 @@ package com.hyjf.am.trade.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hyjf.am.response.trade.AccountRechargeResponse;
-import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
-import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.AccountRechargeResponse;
 import com.hyjf.am.response.trade.AccountWithdrawResponse;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.trade.service.AccountWithdrawService;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.common.util.CommonUtils;
 
@@ -32,8 +25,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("/am-trade/accountWithdraw")
-public class AccountWithdrawController {
-    private static Logger logger = LoggerFactory.getLogger(AccountWithdrawController.class);
+public class AccountWithdrawController extends BaseController {
 
     @Autowired
     private AccountWithdrawService accountWithdrawService;

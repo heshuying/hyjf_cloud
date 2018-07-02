@@ -29,7 +29,7 @@ import java.util.List;
 @Api(value = "汇计划加入明细表")
 @RestController
 @RequestMapping("/am-trade/hjhDebtCredit")
-public class HjhDebtCreditController {
+public class HjhDebtCreditController extends BaseController{
 
     @Autowired
     HjhDebtCreditService hjhDebtCreditService;

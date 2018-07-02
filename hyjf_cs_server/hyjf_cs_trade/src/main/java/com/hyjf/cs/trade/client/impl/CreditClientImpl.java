@@ -1,13 +1,12 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.CreaditPageResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.MyCreditListQueryResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.vo.trade.CreditPageVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.trade.client.AccountClient;
 import com.hyjf.cs.trade.client.CreditClient;
@@ -74,7 +73,7 @@ public class CreditClientImpl implements CreditClient {
     }
 
     /**
-     * 查询可债转列表数量
+     * 查询可债转列表
      *
      * @param request
      * @return
@@ -83,5 +82,56 @@ public class CreditClientImpl implements CreditClient {
     public MyCreditListQueryResponse searchMyCreditList(MyCreditListQueryRequest request) {
         MyCreditListQueryResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/creditTender/seachMyCreditList",request,MyCreditListQueryResponse.class).getBody();
         return response;
+    }
+
+    /**
+     * 查询债转详情
+     *
+     * @param userId
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    @Override
+    public TenderCreditCustomizeVO selectTenderToCreditDetail(Integer userId, String borrowNid, String tenderNid) {
+        String url = "http://AM-TRADE/am-trade/creditTender/selectTenderToCreditDetail/" + userId + "/" + borrowNid + "/" + tenderNid;
+        MyCreditListQueryResponse response = restTemplate.getForEntity(url, MyCreditListQueryResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 债转详细预计服务费计算
+     *
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    @Override
+    public ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid) {
+        String url = "http://AM-TRADE/am-trade/creditTender/selectExpectCreditFee/" + borrowNid + "/" + tenderNid ;
+        ExpectCreditFeeResponse response = restTemplate.getForEntity(url, ExpectCreditFeeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 验证投资人当天是否可以债转
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer tenderAbleToCredit(Integer userId) {
+        String url = "http://AM-TRADE/am-trade/creditTender/get_tender_credit_count/" + userId ;
+        Integer response = restTemplate.getForEntity(url, Integer.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
     }
 }

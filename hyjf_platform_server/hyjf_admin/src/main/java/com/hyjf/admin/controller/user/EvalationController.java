@@ -31,7 +31,7 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/evaluation")
 public class EvalationController {
     @Autowired
-    public EvalationService evalationService;
+    private EvalationService evalationService;
 
     @ApiOperation(value = "用户测评", notes = "用户测评列表显示")
     @PostMapping(value = "/evalationRecord")

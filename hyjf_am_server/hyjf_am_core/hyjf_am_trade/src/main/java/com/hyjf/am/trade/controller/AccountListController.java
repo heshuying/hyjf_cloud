@@ -23,8 +23,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/am-trade/accountList")
-public class AccountListController {
-    private static final Logger logger = LoggerFactory.getLogger(AccountListController.class);
+public class AccountListController extends BaseController {
     @Autowired
     private AccountListService accountListService;
 

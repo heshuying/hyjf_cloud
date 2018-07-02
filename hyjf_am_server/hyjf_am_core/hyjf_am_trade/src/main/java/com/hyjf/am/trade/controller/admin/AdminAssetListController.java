@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.AssetListService;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
@@ -32,7 +32,7 @@ import io.swagger.annotations.Api;
 @Api(value = "根据条件查询资产列表")
 @RestController
 @RequestMapping("/am-trade/assetList")
-public class AdminAssetListController {
+public class AdminAssetListController extends BaseController {
 	
 	@Autowired
 	AssetListService assetListService;
@@ -46,7 +46,8 @@ public class AdminAssetListController {
 		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
 		Integer registCount = assetListService.getRecordCount(request);
         Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
-		String returnCode = "00";//代表成功
+		//代表成功
+		String returnCode = "00";
 		List<AssetListCustomizeVO> assetList = assetListService.findAssetList(mapParam,paginator.getOffset(), paginator.getLimit());
 		if(registCount>0){
 			if(null!=assetList&&assetList.size()>0){

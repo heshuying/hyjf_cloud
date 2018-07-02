@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-user/invite")
-public class MyInviteController {
+public class MyInviteController extends BaseController{
     @Autowired
     MyInviteService myInviteService;
 
