@@ -291,18 +291,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="msg_id" jdbcType="VARCHAR" property="msgId" />
-    <result column="body" jdbcType="VARCHAR" property="body" />
-    <result column="message_status" jdbcType="TINYINT" property="messageStatus" />
-    <result column="retry_times" jdbcType="INTEGER" property="retryTimes" />
-    <result column="topic" jdbcType="VARCHAR" property="topic" />
-    <result column="tags" jdbcType="VARCHAR" property="tags" />
-    <result column="keys" jdbcType="VARCHAR" property="keys" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">

@@ -92,6 +92,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	            
 			} catch (Exception e) {
 				logger.error(e.getMessage());
+				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
 	        Integer repayUserId = borrowApicron.getUserId();// 还款用户userId
 			String borrowNid = borrowApicron.getBorrowNid();// 项目编号
@@ -172,7 +173,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        			MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
 
 				try {
-					mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+					mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}

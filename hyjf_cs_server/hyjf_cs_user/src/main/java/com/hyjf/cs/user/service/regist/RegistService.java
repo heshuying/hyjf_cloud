@@ -39,14 +39,7 @@ public interface RegistService extends BaseUserService {
      */
     UserVO apiRegister(RegisterRequest registerRequest, String ipAddr);
 
-    /**
-     * 检查活动是否有效
-     * @param activityId
-     * @return
-     */
-    boolean checkActivityIfAvailable(Integer activityId);
-
-    int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+    abstract boolean checkActivityIfAvailable(Integer activityId);
 
     int countUserByRecommendName(String recommend);
 

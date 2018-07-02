@@ -23,7 +23,10 @@ import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.statistics.AccountWebListVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditPageVO;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -49,7 +52,7 @@ import java.util.*;
 
 /**
  * 银行债转异常处理
- * @author jun
+ * @author jijun
  * @since 20180620
  */
 @Service
@@ -692,7 +695,6 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 						creditRepay.setDelayInterest(BigDecimal.ZERO);
 						creditRepay.setLateDays(0);
 						creditRepay.setLateInterest(BigDecimal.ZERO);
-						creditRepay.setUniqueNid(creditTender.getAssignNid() + "_1");// 唯一nid
 						creditRepay.setManageFee(perManage);// 管理费
 						creditRepay.setAuthCode(authCode);// 授权码
 						creditRepayMapper.insertSelective(creditRepay);
@@ -781,7 +783,6 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 										creditRepay.setAddIp(creditTender.getAddIp());// ip
 										creditRepay.setClient(0);// 客户端
 										creditRepay.setManageFee(BigDecimal.ZERO);// 管理费
-										creditRepay.setUniqueNid(creditTender.getAssignNid() + "_" + String.valueOf(i));// 唯一nid
 										creditRepay.setAuthCode(authCode);// 授权码
 										creditRepay.setAdvanceStatus(0);
 										creditRepay.setChargeDays(0);

@@ -31,7 +31,7 @@ public class RepayManageController extends BaseController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/repayList")
+    @RequestMapping(value = "/repaylist")
     public RepayListResponse repayList(@RequestBody @Valid RepayListRequest requestBean) {
         RepayListResponse responseBean = new RepayListResponse();
         List<RepayListCustomizeVO> resultList = repayManageService.selectRepayList(requestBean);
@@ -45,7 +45,7 @@ public class RepayManageController extends BaseController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/repayCount")
+    @RequestMapping(value = "/repaycount")
     public Integer repayCount(@RequestBody @Valid RepayListRequest requestBean) {
         RepayListResponse responseBean = new RepayListResponse();
         Integer result = repayManageService.selectRepayCount(requestBean);
@@ -57,7 +57,7 @@ public class RepayManageController extends BaseController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/orgRepayList")
+    @RequestMapping(value = "/orgrepaylist")
     public RepayListResponse orgRepayList(@RequestBody @Valid RepayListRequest requestBean) {
         RepayListResponse responseBean = new RepayListResponse();
         List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayList(requestBean);
@@ -71,7 +71,7 @@ public class RepayManageController extends BaseController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/orgRepayCount")
+    @RequestMapping(value = "/orgrepaycount")
     public Integer orgRepayCount(@RequestBody @Valid RepayListRequest requestBean) {
         RepayListResponse responseBean = new RepayListResponse();
         Integer result = repayManageService.selectOrgRepayCount(requestBean);
@@ -83,7 +83,7 @@ public class RepayManageController extends BaseController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/orgRepayedList")
+    @RequestMapping(value = "/orgrepayedlist")
     public RepayListResponse orgRepayedList(@RequestBody @Valid RepayListRequest requestBean) {
         RepayListResponse responseBean = new RepayListResponse();
         List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayedList(requestBean);
@@ -97,7 +97,7 @@ public class RepayManageController extends BaseController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/orgRepayedCount")
+    @RequestMapping(value = "/orgrepayedcount")
     public Integer orgRepayedCount(@RequestBody @Valid RepayListRequest requestBean) {
         RepayListResponse responseBean = new RepayListResponse();
         Integer result = repayManageService.selectOrgRepayedCount(requestBean);

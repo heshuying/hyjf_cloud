@@ -5,7 +5,6 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -47,7 +46,12 @@ public interface AmUserClient {
 
 	void updateUserAuthInves(BankRequest bean);
 
-	int updateUserById(UserVO user);
+	/**
+	 * 更新用户表
+	 * @param user
+	 * @return
+	 */
+	Integer updateUserById(UserVO user);
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 

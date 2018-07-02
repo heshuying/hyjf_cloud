@@ -22,24 +22,9 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
  * @version AssetPushServiceImpl, v0.1 2018/6/12 10:07
  */
 @Service
-public class AssetPushServiceImpl implements AssetPushService {
+public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushService {
 
     private Logger _log = LoggerFactory.getLogger(AssetPushServiceImpl.class);
-
-    @Autowired
-    private HjhAssetBorrowtypeMapper hjhAssetBorrowTypeMapper;
-
-    @Autowired
-    private BorrowProjectTypeMapper borrowProjectTypeMapper;
-
-    @Autowired
-    private BorrowProjectRepayMapper borrowProjectRepayMapper;
-
-    @Autowired
-    private StzhWhiteListMapper sTZHWhiteListMapper;
-
-    @Autowired
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
 
     @Override
     public HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType) {

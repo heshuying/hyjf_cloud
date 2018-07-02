@@ -40,13 +40,10 @@ public class WebLoginController extends BaseUserController {
 
 
     /**
+     * 登录
      * @param user
      * @param request
-     * @Author: zhangqingqing
-     * @Desc :登录
-     * @Param: * @param loginUserName
-     * @Date: 16:39 2018/5/30
-     * @Return:
+     * @return
      */
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
@@ -59,6 +56,7 @@ public class WebLoginController extends BaseUserController {
         WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
         if (userVO != null) {
             logger.info("web端登录成功 userId is :{}", userVO.getUserId());
+
             result.setData(userVO);
         } else {
             logger.error("web端登录失败...");
@@ -73,12 +71,13 @@ public class WebLoginController extends BaseUserController {
      * @Desc : 退出登录
      * @Param: * @param token
      * @Date: 16:29 2018/6/5
-     * @Return:
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "logout")
-    public WebResult<String> loginout(@RequestHeader(value = "token") String token){
-        WebResult<String> result = new WebResult<>();
+    public WebResult<Object> loginout(@RequestHeader(value = "token") String token){
+        WebResult<Object> result = new WebResult<>();
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/user/logout");
         // 退出到首页
         result.setData("index");
         try {
@@ -87,6 +86,7 @@ public class WebLoginController extends BaseUserController {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("退出失败");
         }
+        result.setData(ret);
         return result;
     }
 
