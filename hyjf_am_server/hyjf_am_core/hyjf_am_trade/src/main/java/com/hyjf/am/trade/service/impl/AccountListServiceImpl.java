@@ -23,12 +23,7 @@ import java.util.List;
  * @date 2018/06/16
  */
 @Service
-public class AccountListServiceImpl implements AccountListService {
-	@Autowired
-	private AccountListMapper accountListMapper;
-
-	@Autowired
-	private BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
+public class AccountListServiceImpl extends BaseServiceImpl implements AccountListService {
 
 	@Override
 	public int addAccountList(AccountList accountList) {
