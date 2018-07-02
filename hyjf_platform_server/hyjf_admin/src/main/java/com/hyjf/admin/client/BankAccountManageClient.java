@@ -5,6 +5,8 @@ package com.hyjf.admin.client;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 import java.util.List;
 
@@ -26,4 +28,33 @@ public interface BankAccountManageClient {
      * @return
      */
     List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest);
+    /**
+     * 资金明细（列表）
+     * @param bankAccountManageRequest
+     * @return
+     */
+    List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest);
+
+    /**
+     * 获取用户账户信息
+     * @param userId
+     * @return
+     */
+    BankOpenAccountVO getBankOpenAccount(Integer userId);
+
+    /**
+     * 更新用户账户信息
+     * @param accountVO
+     * @return
+     */
+    Integer updateAccount(AccountVO accountVO);
+
+    /**
+     * 手动银行对账
+     * @param userId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    String updateAccountCheck(Integer userId, String startTime, String endTime);
 }

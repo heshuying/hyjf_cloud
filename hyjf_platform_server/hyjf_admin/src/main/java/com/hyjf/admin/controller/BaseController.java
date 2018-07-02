@@ -5,6 +5,8 @@ package com.hyjf.admin.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -20,6 +22,7 @@ import io.swagger.annotations.Api;
 @Api(value = "admin基类")
 @RestController
 public class BaseController {
+	public static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	//redis存有用户信息的key
 	public static final String user="user";
 	//取得session中用户信息
