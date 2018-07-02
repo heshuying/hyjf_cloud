@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper">
-   <resultMap id="repayWaitListResultMap" type="com.hyjf.am.vo.trade.repay.RepayWaitListCustomizeVO" >
+   <resultMap id="repayListResultMap" type="com.hyjf.am.vo.trade.repay.RepayListCustomizeVO" >
 	   <id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 	   <result column="project_type" property="projectType" jdbcType="VARCHAR" />
 	   <result column="project_type_name" property="projectTypeName" jdbcType="VARCHAR" />
@@ -32,7 +32,7 @@
 	   <result column="batch_service_fee" property="serviceFee" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="selectRepayWaitList" resultMap="repayWaitListResultMap" parameterType="java.util.Map">
+    <select id="selectRepayList" resultMap="repayListResultMap" parameterType="java.util.Map">
 		SELECT
 		hbap.suc_amount,
 		hbap.batch_service_fee,
@@ -145,7 +145,7 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
     </select>
-	<select id="selectRepayWaitCount" resultType="java.lang.Integer" parameterType="Map">
+	<select id="selectRepayCount" resultType="java.lang.Integer" parameterType="Map">
 		SELECT
 		COUNT(hydb.borrow_nid) AS total
 		FROM
@@ -202,7 +202,7 @@
 		</if>
 	</sql>
 
-	<select id="selectOrgRepayWaitList" resultMap="repayWaitListResultMap" parameterType="Map">
+	<select id="selectOrgRepayList" resultMap="repayListResultMap" parameterType="Map">
 		SELECT
 		hydb.borrow_nid,
 		hbi.`name` AS borrow_name,
@@ -323,7 +323,7 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
-	<select id="selectOrgRepayWaitCount" resultType="java.lang.Integer" parameterType="Map">
+	<select id="selectOrgRepayCount" resultType="java.lang.Integer" parameterType="Map">
 		SELECT
 		COUNT(hydb.borrow_nid) AS total
 		FROM
