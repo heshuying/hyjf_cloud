@@ -11,7 +11,7 @@ import java.util.List;
  * @version AssetManageService, v0.1 2018/6/24 14:49
  */
 
-public interface AssetManageService {
+public interface AssetManageService  extends BaseService {
     List<CurrentHoldObligatoryRightListCustomize> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request);
 
     int selectCurrentHoldObligatoryRightListTotal(AssetManageBeanRequest request);
