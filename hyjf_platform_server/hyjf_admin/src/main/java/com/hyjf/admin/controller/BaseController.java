@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +67,7 @@ public class BaseController {
 		return info;
 	}
 	//返回成功带总数带集合的
-	public JSONObject success(String recordTotal,Object List) {
+	public JSONObject success(String recordTotal,List<?> List) {
 		JSONObject info = new JSONObject();
 		info.put(STATUS, SUCCESS);
 		info.put(MSG, "成功");
