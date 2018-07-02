@@ -240,7 +240,7 @@
             <columnOverride column="education" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_smscode" domainObjectName="SmsCode">
+        <table tableName="ht_smscode" domainObjectName="Smsode">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -253,7 +253,7 @@
 
         <table tableName="ht_spreads_user" domainObjectName="SpreadsUser">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
+        </table>C
 
         <table tableName="ht_spreads_user_log" domainObjectName="SpreadsUserLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
@@ -272,7 +272,6 @@
             <columnOverride column="send_sms" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_inst_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="account_esb" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="investFlag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="user_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="payment_auth_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_set_password" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -284,10 +283,7 @@
         </table>
 
         <table tableName="ht_user_alias" domainObjectName="UserAlias">
-        </table>
-
-        <table tableName="ht_user_portrait" domainObjectName="UserPortrait">
-            <columnOverride column="invest_age" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_bind_email_log" domainObjectName="UserBindEmailLog">
@@ -300,8 +296,8 @@
             <columnOverride column="attribute" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is51" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="change_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="borrower_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="update_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_user_contact" domainObjectName="UserContact">
@@ -323,6 +319,7 @@
         </table>
 
         <table tableName="ht_user_info" domainObjectName="UserInfo">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="truename_isApprove" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -337,11 +334,17 @@
         </table>
 
         <table tableName="ht_user_login_log" domainObjectName="UserLoginLog">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_plat" domainObjectName="UserPlat">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="ptype" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_user_portrait" domainObjectName="UserPortrait">
+            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="invest_age" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_utm" domainObjectName="Utm">
@@ -351,9 +354,9 @@
 
         <table tableName="ht_utm_plat" domainObjectName="UtmPlat">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="source_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="attorn_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="source_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_utm_reg" domainObjectName="UtmReg">
@@ -387,10 +390,12 @@
 
         <table tableName="ht_vip_user_tender" domainObjectName="VipUserTender">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_vip_user_upgrade" domainObjectName="VipUserUpgrade">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_account" domainObjectName="Account">
@@ -447,6 +452,7 @@
         <table tableName="ht_aleve_log" domainObjectName="AleveLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="upd_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_bank_credit_end" domainObjectName="BankCreditEnd">
@@ -637,23 +643,23 @@
 
         <table tableName="ht_borrow_repay" domainObjectName="BorrowRepay">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="advance_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_money_source" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_sms_reminder" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="auto_repay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="advance_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_repay_plan" domainObjectName="BorrowRepayPlan">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="repay_money_source" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_sms_reminder" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="auto_repay" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="advance_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="repay_money_source" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="repay_sms_reminder" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_send_type" domainObjectName="BorrowSendType">
@@ -761,7 +767,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="expiration_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="expiration_length" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="add_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="add_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="coupon_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="project_expiration_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="project_expiration_length" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -770,7 +776,7 @@
             <columnOverride column="tender_quota_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_time_config" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_coupon_operation_history" domainObjectName="CouponOperationHistory">
@@ -795,12 +801,13 @@
 
         <table tableName="ht_coupon_repay_monitor" domainObjectName="CouponRepayMonitor">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_coupon_tender" domainObjectName="CouponTender">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="attribute" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_coupon_user" domainObjectName="CouponUser">
@@ -838,6 +845,7 @@
         <table tableName="ht_debt_accede_commission" domainObjectName="DebtAccedeCommission">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="is51" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_debt_account_list" domainObjectName="DebtAccountList">
@@ -863,17 +871,11 @@
         <table tableName="ht_debt_borrow" domainObjectName="DebtBorrow">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="guarantee_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="project_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="borrow_interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="borrow_taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="bank_input_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="booking_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="borrow_plan_selected" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="cash_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="other_web_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="borrow_full_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="borrow_part_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="cancel_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_advance_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="repay_advance_step" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -898,11 +900,12 @@
             <columnOverride column="borrow_taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="bank_input_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="booking_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="borrow_part_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="borrow_plan_selected" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_debt_car_info" domainObjectName="DebtCarInfo">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_safe" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_debt_commission_config" domainObjectName="DebtCommissionConfig">
@@ -1104,6 +1107,7 @@
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="commission_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="credit_complete_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="match_dates" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1206,6 +1210,7 @@
             <columnOverride column="lock_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_month" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="plan_invest_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="min_invest_counts" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1322,6 +1327,11 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <table tableName="ht_producer_transaction_message" domainObjectName="ProducerTransactionMessage">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="message_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
         <table tableName="ht_product" domainObjectName="Product">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="is_tender" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1330,6 +1340,7 @@
 
         <table tableName="ht_product_error_log" domainObjectName="ProductErrorLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_sms" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_product_info" domainObjectName="ProductInfo">
@@ -1427,14 +1438,13 @@
         <table tableName="ht_tender_commission" domainObjectName="TenderCommission">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="tender_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="check_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_transfer_exception_log" domainObjectName="TransferExceptionLog">
             <generatedKey column="uuid" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_user_transfer" domainObjectName="UserTransfer">
@@ -1639,6 +1649,12 @@
             <columnOverride column="isindex" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <table tableName="ht_message_push_tag" domainObjectName="MessagePushTag">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_login" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
         <table tableName="ht_message_push_template" domainObjectName="MessagePushTemplate">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="template_action" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1743,12 +1759,7 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        
-         <table tableName="ht_message_push_tag" domainObjectName="MessagePushTag">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="is_login" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
+
 
         <!-- 分布式事务本地消息表 -->
         <table tableName="ht_producer_transaction_message" domainObjectName="ProducerTransactionMessage">

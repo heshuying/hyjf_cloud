@@ -1436,52 +1436,52 @@ public class HjhPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsEqualTo(Byte value) {
+        public Criteria andMinInvestCountsEqualTo(Integer value) {
             addCriterion("min_invest_counts =", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsNotEqualTo(Byte value) {
+        public Criteria andMinInvestCountsNotEqualTo(Integer value) {
             addCriterion("min_invest_counts <>", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsGreaterThan(Byte value) {
+        public Criteria andMinInvestCountsGreaterThan(Integer value) {
             addCriterion("min_invest_counts >", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsGreaterThanOrEqualTo(Byte value) {
+        public Criteria andMinInvestCountsGreaterThanOrEqualTo(Integer value) {
             addCriterion("min_invest_counts >=", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsLessThan(Byte value) {
+        public Criteria andMinInvestCountsLessThan(Integer value) {
             addCriterion("min_invest_counts <", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsLessThanOrEqualTo(Byte value) {
+        public Criteria andMinInvestCountsLessThanOrEqualTo(Integer value) {
             addCriterion("min_invest_counts <=", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsIn(List<Byte> values) {
+        public Criteria andMinInvestCountsIn(List<Integer> values) {
             addCriterion("min_invest_counts in", values, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsNotIn(List<Byte> values) {
+        public Criteria andMinInvestCountsNotIn(List<Integer> values) {
             addCriterion("min_invest_counts not in", values, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsBetween(Byte value1, Byte value2) {
+        public Criteria andMinInvestCountsBetween(Integer value1, Integer value2) {
             addCriterion("min_invest_counts between", value1, value2, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsNotBetween(Byte value1, Byte value2) {
+        public Criteria andMinInvestCountsNotBetween(Integer value1, Integer value2) {
             addCriterion("min_invest_counts not between", value1, value2, "minInvestCounts");
             return (Criteria) this;
         }

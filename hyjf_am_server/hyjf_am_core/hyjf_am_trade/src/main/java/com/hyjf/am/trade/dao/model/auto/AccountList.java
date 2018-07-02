@@ -41,12 +41,6 @@ public class AccountList implements Serializable {
 
     private String ip;
 
-    private Boolean isUpdate;
-
-    private Boolean baseUpdate;
-
-    private BigDecimal interest;
-
     private Integer web;
 
     private BigDecimal planBalance;
@@ -241,30 +235,6 @@ public class AccountList implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip == null ? null : ip.trim();
-    }
-
-    public Boolean getIsUpdate() {
-        return isUpdate;
-    }
-
-    public void setIsUpdate(Boolean isUpdate) {
-        this.isUpdate = isUpdate;
-    }
-
-    public Boolean getBaseUpdate() {
-        return baseUpdate;
-    }
-
-    public void setBaseUpdate(Boolean baseUpdate) {
-        this.baseUpdate = baseUpdate;
-    }
-
-    public BigDecimal getInterest() {
-        return interest;
-    }
-
-    public void setInterest(BigDecimal interest) {
-        this.interest = interest;
     }
 
     public Integer getWeb() {
