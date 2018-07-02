@@ -8,23 +8,21 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.AdminHjhLabelService;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.paginator.Paginator;
-import org.springframework.util.CollectionUtils;
-import com.hyjf.am.response.Response;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -35,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "标签配置列表")
 @RestController
 @RequestMapping("/am-trade/hjhLabel")
-public class AdminHjhLabelController {
+public class AdminHjhLabelController extends BaseController {
 	
 	@Autowired
 	AdminHjhLabelService adminHjhLabelService;
@@ -48,7 +46,8 @@ public class AdminHjhLabelController {
 	@GetMapping("/selectBorrowStyleList")
 	public BorrowStyleResponse selectBorrowStyleList(){
 		BorrowStyleResponse response = new BorrowStyleResponse();
-		String returnCode = "00";//代表成功
+		//代表成功
+		String returnCode = "00";
 	    List<BorrowStyleVO> borrowStyleList = adminHjhLabelService.selectBorrowStyleList();
 	    if (null!=borrowStyleList && borrowStyleList.size()>0) {
 	    	 response.setResultList(borrowStyleList); 

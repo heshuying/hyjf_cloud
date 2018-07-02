@@ -22,7 +22,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
  */
 @RestController
 @RequestMapping("/am-trade/account")
-public class AccountController {
+public class AccountController extends BaseController {
 
     @Autowired
     private AccountService accountService;

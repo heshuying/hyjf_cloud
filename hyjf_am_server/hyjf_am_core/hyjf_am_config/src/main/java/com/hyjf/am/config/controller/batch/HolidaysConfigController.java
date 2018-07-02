@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.config.controller.batch;
 
+import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
 import com.hyjf.am.config.service.HolidaysConfigService;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-config/holidaysConfig")
-public class HolidaysConfigController {
+public class HolidaysConfigController extends BaseConfigController {
 
     @Autowired
     private HolidaysConfigService holidaysConfigService;

@@ -3,18 +3,10 @@
  */
 package com.hyjf.am.trade.controller.callcenter;
 
-import com.hyjf.am.response.callcenter.*;
-import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
-import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
-import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
-import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
-import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
-import com.hyjf.am.trade.dao.model.customize.callcenter.*;
-import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
-import com.hyjf.am.vo.callcenter.*;
-import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.hyjf.am.response.callcenter.*;
+import com.hyjf.am.resquest.callcenter.*;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.customize.callcenter.*;
+import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
+import com.hyjf.am.vo.callcenter.*;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author wangjun
@@ -31,11 +28,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/callcenter")
-public class CallCenterTradeController {
+public class CallCenterTradeController extends BaseController {
     @Autowired
     CallCenterTradeService callCenterTradeService;
-
-    private static final Logger logger = LoggerFactory.getLogger(CallCenterTradeController.class);
 
     /**
      * 查询还款明细（直投产品，含承接的债权）

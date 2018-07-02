@@ -3,16 +3,16 @@
  */
 package com.hyjf.am.trade.controller.batch.hjh.autoendcredit;
 
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.service.HjhAutoEndCreditService;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+import com.hyjf.am.trade.service.HjhAutoEndCreditService;
 
 /**
  * 汇计划自动结束前一天未完全承接完成的债转
@@ -22,10 +22,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/hjhAutoEndCredit")
-public class HjhAutoEndCreditController {
-
-    private static final Logger logger = LoggerFactory.getLogger(HjhAutoEndCreditController.class);
-
+public class HjhAutoEndCreditController extends BaseController {
+    
     @Autowired
     private HjhAutoEndCreditService hjhAutoEndCreditService;
 

@@ -1,13 +1,10 @@
 package com.hyjf.am.config.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.SmsConfig;
 import com.hyjf.am.config.service.SmsConfigService;
 import com.hyjf.am.response.config.SmsConfigResponse;
@@ -20,9 +17,7 @@ import com.hyjf.am.vo.config.SmsConfigVO;
 
 @RestController
 @RequestMapping("/am-config/smsConfig")
-public class SmsConfigController {
-	private Logger logger = LoggerFactory.getLogger(SmsConfigController.class);
-
+public class SmsConfigController extends BaseConfigController{
 	@Autowired
 	private SmsConfigService smsConfigService;
 

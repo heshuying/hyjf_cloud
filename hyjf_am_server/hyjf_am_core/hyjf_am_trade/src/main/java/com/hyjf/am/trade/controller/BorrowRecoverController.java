@@ -38,9 +38,7 @@ import java.util.Map;
 @Api(value = "借款信息")
 @RestController
 @RequestMapping("/am-trade/borrowRecover")
-public class BorrowRecoverController {
-
-
+public class BorrowRecoverController extends BaseController{
 
 	@Autowired
 	BorrowRecoverService borrowRecoverService;

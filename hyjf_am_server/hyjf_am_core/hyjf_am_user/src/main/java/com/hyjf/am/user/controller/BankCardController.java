@@ -18,7 +18,7 @@ import com.hyjf.common.util.CommonUtils;
 
 @RestController
 @RequestMapping("/am-user/bankCard")
-public class BankCardController {
+public class BankCardController extends BaseController{
 
 	@Autowired
 	private BankCardService bankCardService;

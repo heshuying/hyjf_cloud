@@ -3,22 +3,19 @@
  */
 package com.hyjf.am.user.controller;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.GroupInfoResponse;
-import com.hyjf.am.user.dao.model.auto.ROaDepartment;
-import com.hyjf.am.user.dao.model.auto.ROaDepartmentExample;
-import com.hyjf.am.user.service.GroupInfoService;
-import com.hyjf.am.vo.user.OrganizationStructureVO;
-import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.GroupInfoResponse;
+import com.hyjf.am.user.dao.model.auto.ROaDepartment;
+import com.hyjf.am.user.service.GroupInfoService;
+import com.hyjf.am.vo.user.OrganizationStructureVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * 集团组织机构查询服务类
@@ -27,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-user/group")
-public class GroupInfoController {
+public class GroupInfoController extends BaseController{
 
     @Autowired
     private GroupInfoService groupInfoService;

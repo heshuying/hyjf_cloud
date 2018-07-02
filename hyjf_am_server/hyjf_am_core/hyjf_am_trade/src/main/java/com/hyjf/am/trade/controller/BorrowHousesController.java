@@ -1,27 +1,27 @@
 package com.hyjf.am.trade.controller;
 
 
-import com.hyjf.am.response.trade.BorrowHousesResponse;
-import com.hyjf.am.trade.dao.model.auto.BorrowHouses;
-import com.hyjf.am.trade.service.BorrowHousesService;
-import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
-import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.response.trade.BorrowHousesResponse;
+import com.hyjf.am.trade.dao.model.auto.BorrowHouses;
+import com.hyjf.am.trade.service.BorrowHousesService;
+import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
+import com.hyjf.common.util.CommonUtils;
 
+/**
+ * @author xiasq
+ * @version BorrowHousesController, v0.1 2018/6/24 10:48
+ */
 @RestController
 @RequestMapping("/am-trade/borrow")
-public class BorrowHousesController {
-
-    private static final Logger logger = LoggerFactory.getLogger(BorrowHousesController.class);
-
+public class BorrowHousesController extends BaseController{
 
     @Autowired
     private BorrowHousesService borrowHousesService;

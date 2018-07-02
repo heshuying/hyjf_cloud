@@ -4,14 +4,9 @@
 package com.hyjf.am.trade.controller.batch;
 
 
-import com.hyjf.am.response.trade.BatchCouponTimeoutCommonResponse;
-import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
-import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
-import com.hyjf.am.trade.service.task.CouponRepaySerivce;
-import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
-import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
-import com.hyjf.common.util.CommonUtils;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.List;
+import com.hyjf.am.response.trade.BatchCouponTimeoutCommonResponse;
+import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
+import com.hyjf.am.trade.service.task.CouponRepaySerivce;
+import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
+import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 
 
 /**
@@ -29,7 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/couponRepay")
-public class CouponRepayInterestController {
+public class CouponRepayInterestController extends BaseController {
 
     @Autowired
     private CouponRepaySerivce couponRepaySerivce;

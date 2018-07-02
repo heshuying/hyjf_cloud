@@ -3,17 +3,16 @@
  */
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
-import com.hyjf.am.config.service.SmsNoticeConfigService;
-import com.hyjf.am.response.config.SmsNoticeConfigResponse;
-import com.hyjf.am.vo.config.SmsNoticeConfigVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
+import com.hyjf.am.config.service.SmsNoticeConfigService;
+import com.hyjf.am.response.config.SmsNoticeConfigResponse;
+import com.hyjf.am.vo.config.SmsNoticeConfigVO;
 
 /**
  * @author fuqiang
@@ -21,10 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/am-config/smsNoticeConfig")
-public class SmsNoticeConfigController {
-
-    Logger logger = LoggerFactory.getLogger(SmsNoticeConfigController.class);
-
+public class SmsNoticeConfigController extends BaseConfigController{
+    
     @Autowired
     private SmsNoticeConfigService smsNoticeConfigService;
 

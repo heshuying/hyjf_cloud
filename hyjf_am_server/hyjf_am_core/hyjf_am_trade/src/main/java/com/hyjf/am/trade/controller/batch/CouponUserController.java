@@ -3,20 +3,20 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
-import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.trade.dao.model.auto.CouponUser;
-import com.hyjf.am.trade.service.CouponUserService;
-import com.hyjf.am.vo.trade.CouponUserVO;
-import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.response.trade.CouponUserResponse;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.CouponUser;
+import com.hyjf.am.trade.service.CouponUserService;
+import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author yaoy
@@ -24,9 +24,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/couponUser")
-public class CouponUserController {
+public class CouponUserController extends BaseController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CouponUserController.class);
     @Autowired
     private CouponUserService couponUserService;
 
