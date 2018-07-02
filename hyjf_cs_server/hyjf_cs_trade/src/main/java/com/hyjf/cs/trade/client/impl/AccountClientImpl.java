@@ -17,7 +17,7 @@ public class AccountClientImpl implements AccountClient {
 
     @Override
     public AccountVO getAccountByUserId(Integer userId) {
-        AccountResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/account//getAccountByUserId/" + userId ,AccountResponse.class).getBody();
+        AccountResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/account/getAccountByUserId/" + userId ,AccountResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
