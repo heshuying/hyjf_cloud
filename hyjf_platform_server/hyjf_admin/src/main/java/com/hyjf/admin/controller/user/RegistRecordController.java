@@ -31,7 +31,7 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/registRecord")
 public class RegistRecordController {
     @Autowired
-    public RegistRecordService registRecordService;
+    private RegistRecordService registRecordService;
 
     @ApiOperation(value = "注册记录", notes = "注册记录页面初始化")
 //    @RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})

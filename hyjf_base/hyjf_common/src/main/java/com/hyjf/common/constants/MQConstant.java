@@ -1,7 +1,5 @@
 package com.hyjf.common.constants;
 
-import java.util.UUID;
-
 /**
  * @author xiasq
  * @version MQConstant, v0.1 2018/5/4 13:45
@@ -152,4 +150,28 @@ public interface MQConstant {
 
 	String AUTO_CORRECTION_GROUP = "AUTO_CORRECTION_GROUP";
 	String AUTO_CORRECTION_TOPIC = "AUTO_CORRECTION_TOPIC";
+
+	/**
+	 * 新PC渠道统计
+	 */
+	String PC_CHANNEL_STATISTICS_GROUP = "PC_CHANNEL_STATISTICS_GROUP";
+	String PC_CHANNEL_STATISTICS_TOPIC = "PC_CHANNEL_STATISTICS_TOPIC";
+
+	/**
+	 * app渠道统计
+	 */
+	String APP_CHANNEL_STATISTICS_GROUP = "APP_CHANNEL_STATISTICS_GROUP";
+	String APP_CHANNEL_STATISTICS_TOPIC = "APP_CHANNEL_STATISTICS_TOPIC";
+
+	/**
+	 * 投之家日报表
+	 */
+	String STATISTICS_TZJ_GROUP = "STATISTICS_TZJ_GROUP";
+	String STATISTICS_TZJ_TOPIC = "STATISTICS_TZJ_TOPIC";
+
+	/**
+	 * 投之家渠道报表
+	 */
+	String STATISTICS_TZJ_UTM_GROUP = "STATISTICS_TZJ_UTM_GROUP";
+	String STATISTICS_TZJ_UTM_TOPIC = "STATISTICS_TZJ_UTM_TOPIC";
 }

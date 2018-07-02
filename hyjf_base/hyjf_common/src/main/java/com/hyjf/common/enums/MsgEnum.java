@@ -330,13 +330,16 @@ public enum MsgEnum implements MsgCode {
 
 	// 债转
 	ERR_ALLOW_CHANNEL_ATTORN("1","用户所处渠道不允许债转"),
+	ERROR_CREDIT_PARAM("1","转让失败,无法获取借款和投资编号"),
+	ERROR_CREDIT_NOT_EXIST("1","获取债转数据为空"),
+	ERROR_CREDIT_DATA_ERROR("1","债转数据错误"),
 
 
 	ERR_SUCCESS("0", ""),
 	// 枚举终结
 	ERR_ENUM("", "");
 
-	private String msg;
+    private String msg;
 	private String code;
 
 	private MsgEnum(String code, String msg) {

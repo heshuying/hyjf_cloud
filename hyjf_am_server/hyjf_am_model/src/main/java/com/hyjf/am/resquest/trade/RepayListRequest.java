@@ -9,6 +9,8 @@ import com.hyjf.am.vo.BaseVO;
  */
 public class RepayListRequest extends BaseVO {
     String userId;
+    String status;
+    String repayStatus;
     String startDate;
     String endDate;
     String repayTimeOrder;
@@ -79,5 +81,21 @@ public class RepayListRequest extends BaseVO {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(String repayStatus) {
+        this.repayStatus = repayStatus;
     }
 }

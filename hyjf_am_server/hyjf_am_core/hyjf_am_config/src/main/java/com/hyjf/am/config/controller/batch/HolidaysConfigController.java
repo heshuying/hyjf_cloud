@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.config.controller.task;
+package com.hyjf.am.config.controller.batch;
 
 import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
 import com.hyjf.am.config.service.HolidaysConfigService;
