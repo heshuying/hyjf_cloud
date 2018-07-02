@@ -13,7 +13,7 @@ public class DynamicDataSourceContextHolder {
 	private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceContextHolder.class);
 	
 
-	// 列举数据源的key
+	/** 列举数据源的key */
 	public enum DbType {
 		WRITE, READ1, READ2
 	}

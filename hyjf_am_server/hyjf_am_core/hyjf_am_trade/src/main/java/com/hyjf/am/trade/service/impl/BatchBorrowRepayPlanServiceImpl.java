@@ -47,11 +47,13 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * @author dxj
  * @version BatchBorrowRepayPlanServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
+@Service
 public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BatchBorrowRepayPlanServiceImpl.class);

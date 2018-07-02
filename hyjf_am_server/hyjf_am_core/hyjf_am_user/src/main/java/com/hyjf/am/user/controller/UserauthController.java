@@ -54,7 +54,7 @@ public class UserauthController extends BaseController{
 			if (recordList != null) {
 				BeanUtils.copyProperties(recordList, avo);
 				aualr.setResultList(avo);
-				aualr.setRecordTotal(recordTotal);
+				aualr.setRecordTotal(String.valueOf(recordTotal));
 				aualr.setRtn(Response.SUCCESS);
 			}
 			return aualr;
