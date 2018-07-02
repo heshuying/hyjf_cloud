@@ -1,11 +1,11 @@
-package com.hyjf.common.pdf;   
-  
+package com.hyjf.common.pdf;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
 import java.io.BufferedWriter;
 import java.io.StringWriter;
 import java.util.Map;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;   
   
 public class HtmlGenerator {   
        
