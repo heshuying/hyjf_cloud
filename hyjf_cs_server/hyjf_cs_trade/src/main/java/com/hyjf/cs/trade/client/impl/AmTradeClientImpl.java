@@ -45,7 +45,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<CouponRecoverCustomizeVO> selectCouponInterestWaitToday(long timeStart, long timeEnd) {
-        String url = urlBase + "batch/selectCouponInterestWaitToday/" + timeStart + "/" + timeEnd;
+        String url = urlBase + "couponRepay/selectCouponInterestWaitToday/" + timeStart + "/" + timeEnd;
         CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url, CouponRecoverCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -61,7 +61,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal selectCouponInterestReceivedToday(long timeStart, long timeEnd) {
-        String url = urlBase + "batch/selectCouponInterestReceivedToday/" + timeStart + "/" + timeEnd;
+        String url = urlBase + "couponRepay/selectCouponInterestReceivedToday/" + timeStart + "/" + timeEnd;
         BigDecimal interest = restTemplate.getForEntity(url, BigDecimal.class).getBody();
         if (interest != null) {
             return interest;

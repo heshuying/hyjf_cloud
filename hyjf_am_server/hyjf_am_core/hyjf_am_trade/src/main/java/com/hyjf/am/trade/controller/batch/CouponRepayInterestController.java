@@ -28,7 +28,7 @@ import java.util.List;
  * @version CouponRepayInterestController, v0.1 2018/6/21 18:00
  */
 @RestController
-@RequestMapping("/am-trade/batch")
+@RequestMapping("/am-trade/couponRepay")
 public class CouponRepayInterestController {
 
     @Autowired
