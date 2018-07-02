@@ -1122,6 +1122,27 @@ public class GetDate extends PropertyEditorSupport {
    
    /**
     * 
+    * 获取某一天的开始时间
+    * @author hsy
+    * @param date
+    * @return
+    */
+   public static int getDayStart10(Date date){
+       String dayStartString = date_sdf.format(date) + " 00:00:00";
+       SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       Date date2 = null;
+       try{
+           date2 = d.parse(dayStartString);
+       } catch (ParseException e) {
+           e.printStackTrace();
+       }
+       
+       return (int)(date2.getTime()/1000);
+       
+   }
+   
+   /**
+    * 
     * 获取某一天的结束时间
     * @author hsy
     * @param date（2017-07-10）
