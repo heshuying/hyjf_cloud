@@ -3,12 +3,12 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
-import com.hyjf.am.trade.service.task.AleveLogFileService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.service.task.AleveLogFileService;
 
 /**
  * @author wangjun
@@ -16,15 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/am-trade/batch")
-public class DownloadFileController {
-    private static final Logger logger = LoggerFactory.getLogger(DownloadFileController.class);
+public class DownloadFileController extends BaseController {
 
-    @Autowired
-    AleveLogFileService aleveLogFileService;
+	@Autowired
+	AleveLogFileService aleveLogFileService;
 
-    @RequestMapping("/downloadFiles")
-    public void downloadFiles(){
-        logger.info("存款业务红包流水全明细数据文件下载任务 开始...");
-        aleveLogFileService.downloadFiles();
-    }
+	@RequestMapping("/downloadFiles")
+	public void downloadFiles() {
+		logger.info("存款业务红包流水全明细数据文件下载任务 开始...");
+		aleveLogFileService.downloadFiles();
+	}
 }

@@ -2753,52 +2753,52 @@ public class HjhAccedeExample {
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesEqualTo(Byte value) {
+        public Criteria andMatchDatesEqualTo(Integer value) {
             addCriterion("match_dates =", value, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesNotEqualTo(Byte value) {
+        public Criteria andMatchDatesNotEqualTo(Integer value) {
             addCriterion("match_dates <>", value, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesGreaterThan(Byte value) {
+        public Criteria andMatchDatesGreaterThan(Integer value) {
             addCriterion("match_dates >", value, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesGreaterThanOrEqualTo(Byte value) {
+        public Criteria andMatchDatesGreaterThanOrEqualTo(Integer value) {
             addCriterion("match_dates >=", value, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesLessThan(Byte value) {
+        public Criteria andMatchDatesLessThan(Integer value) {
             addCriterion("match_dates <", value, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesLessThanOrEqualTo(Byte value) {
+        public Criteria andMatchDatesLessThanOrEqualTo(Integer value) {
             addCriterion("match_dates <=", value, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesIn(List<Byte> values) {
+        public Criteria andMatchDatesIn(List<Integer> values) {
             addCriterion("match_dates in", values, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesNotIn(List<Byte> values) {
+        public Criteria andMatchDatesNotIn(List<Integer> values) {
             addCriterion("match_dates not in", values, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesBetween(Byte value1, Byte value2) {
+        public Criteria andMatchDatesBetween(Integer value1, Integer value2) {
             addCriterion("match_dates between", value1, value2, "matchDates");
             return (Criteria) this;
         }
 
-        public Criteria andMatchDatesNotBetween(Byte value1, Byte value2) {
+        public Criteria andMatchDatesNotBetween(Integer value1, Integer value2) {
             addCriterion("match_dates not between", value1, value2, "matchDates");
             return (Criteria) this;
         }

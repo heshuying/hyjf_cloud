@@ -49,8 +49,6 @@ public class TenderCommission implements Serializable {
 
     private String accountId;
 
-    private Integer checkStatus;
-
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
@@ -229,14 +227,6 @@ public class TenderCommission implements Serializable {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId == null ? null : accountId.trim();
-    }
-
-    public Integer getCheckStatus() {
-        return checkStatus;
-    }
-
-    public void setCheckStatus(Integer checkStatus) {
-        this.checkStatus = checkStatus;
     }
 
     public Date getUpdateTime() {

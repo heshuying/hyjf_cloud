@@ -496,63 +496,63 @@ public class PoundageExceptionExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterIsNull() {
-            addCriterion("updater is null");
+        public Criteria andUpdateUserIdIsNull() {
+            addCriterion("update_user_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterIsNotNull() {
-            addCriterion("updater is not null");
+        public Criteria andUpdateUserIdIsNotNull() {
+            addCriterion("update_user_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterEqualTo(Integer value) {
-            addCriterion("updater =", value, "updater");
+        public Criteria andUpdateUserIdEqualTo(Integer value) {
+            addCriterion("update_user_id =", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterNotEqualTo(Integer value) {
-            addCriterion("updater <>", value, "updater");
+        public Criteria andUpdateUserIdNotEqualTo(Integer value) {
+            addCriterion("update_user_id <>", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterGreaterThan(Integer value) {
-            addCriterion("updater >", value, "updater");
+        public Criteria andUpdateUserIdGreaterThan(Integer value) {
+            addCriterion("update_user_id >", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterGreaterThanOrEqualTo(Integer value) {
-            addCriterion("updater >=", value, "updater");
+        public Criteria andUpdateUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("update_user_id >=", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterLessThan(Integer value) {
-            addCriterion("updater <", value, "updater");
+        public Criteria andUpdateUserIdLessThan(Integer value) {
+            addCriterion("update_user_id <", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterLessThanOrEqualTo(Integer value) {
-            addCriterion("updater <=", value, "updater");
+        public Criteria andUpdateUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("update_user_id <=", value, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterIn(List<Integer> values) {
-            addCriterion("updater in", values, "updater");
+        public Criteria andUpdateUserIdIn(List<Integer> values) {
+            addCriterion("update_user_id in", values, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterNotIn(List<Integer> values) {
-            addCriterion("updater not in", values, "updater");
+        public Criteria andUpdateUserIdNotIn(List<Integer> values) {
+            addCriterion("update_user_id not in", values, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterBetween(Integer value1, Integer value2) {
-            addCriterion("updater between", value1, value2, "updater");
+        public Criteria andUpdateUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("update_user_id between", value1, value2, "updateUserId");
             return (Criteria) this;
         }
 
-        public Criteria andUpdaterNotBetween(Integer value1, Integer value2) {
-            addCriterion("updater not between", value1, value2, "updater");
+        public Criteria andUpdateUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("update_user_id not between", value1, value2, "updateUserId");
             return (Criteria) this;
         }
 

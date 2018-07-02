@@ -3,17 +3,19 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
-import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
-import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
-import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
-import com.hyjf.am.vo.trade.CouponRepayMonitorVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
+import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
+import com.hyjf.am.vo.trade.CouponRepayMonitorVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author yaoy
@@ -21,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/couponRepayMonitor")
-public class CouponRepayMonitorController {
+public class CouponRepayMonitorController extends BaseController {
 
     @Autowired
     private CouponRepayMonitorService couponRepayMonitorService;

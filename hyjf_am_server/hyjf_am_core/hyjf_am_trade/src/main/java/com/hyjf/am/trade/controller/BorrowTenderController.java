@@ -20,9 +20,13 @@ import springfox.documentation.service.ApiListing;
 
 import java.util.List;
 
+/**
+ * @author xiasq
+ * @version BorrowTenderController, v0.1 2018/6/23 11:42
+ */
 @RestController
 @RequestMapping("/am-trade/borrowTender")
-public class BorrowTenderController {
+public class BorrowTenderController extends BaseController{
 
     @Autowired
     private BorrowTenderService borrowTenderService;

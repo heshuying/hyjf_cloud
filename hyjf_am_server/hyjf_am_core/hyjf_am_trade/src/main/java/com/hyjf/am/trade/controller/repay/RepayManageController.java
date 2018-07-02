@@ -1,16 +1,19 @@
 package com.hyjf.am.trade.controller.repay;
 
-import com.hyjf.am.response.trade.RepayListResponse;
-import com.hyjf.am.resquest.trade.RepayListRequest;
-import com.hyjf.am.trade.service.repay.RepayManageService;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.hyjf.am.response.trade.RepayListResponse;
+import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.service.repay.RepayManageService;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
 /**
  * 还款管理
@@ -19,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/repay")
-public class RepayManageController {
+public class RepayManageController extends BaseController {
     @Autowired
     RepayManageService repayManageService;
 

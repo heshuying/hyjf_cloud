@@ -204,4 +204,26 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         webResult.setData(creditResultBean);
         return webResult;
     }
+
+    /**
+     * 用户中心验证投资人当天是否可以债转
+     *
+     * @param request
+     * @param userId
+     * @return
+     */
+    @Override
+    public WebResult tenderAbleToCredit(CreditDetailsRequestBean request, Integer userId) {
+        WebResult webResult = new WebResult();
+        if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
+            // 转让失败,无法获取借款和投资编号
+            throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
+        }
+
+        Integer creditedNum = creditClient.tenderAbleToCredit(userId);
+        Map<String,Object> data = new HashedMap();
+        data.put("creditedNum",creditedNum);
+        webResult.setData(data);
+        return webResult;
+    }
 }

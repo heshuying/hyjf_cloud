@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.batch;
 
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.batch.FddCertificateService;
 import com.hyjf.common.exception.MQException;
 import org.slf4j.Logger;
@@ -19,10 +20,7 @@ import java.text.ParseException;
  */
 @RestController
 @RequestMapping("/am-user/batch")
-public class FddCertificateController {
-    private static final Logger logger = LoggerFactory.getLogger(FddCertificateController.class);
-
-
+public class FddCertificateController extends BaseController {
     @Autowired
     FddCertificateService fddCertificateService;
 

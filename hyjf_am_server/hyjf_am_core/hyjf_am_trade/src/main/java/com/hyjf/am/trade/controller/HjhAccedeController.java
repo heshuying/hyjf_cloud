@@ -30,7 +30,7 @@ import java.util.List;
 @Api(value = "汇计划加入明细表")
 @RestController
 @RequestMapping("/am-trade/hjhAccede")
-public class HjhAccedeController {
+public class HjhAccedeController extends BaseController{
 
     @Autowired
     HjhAccedeService hjhAccedeService;

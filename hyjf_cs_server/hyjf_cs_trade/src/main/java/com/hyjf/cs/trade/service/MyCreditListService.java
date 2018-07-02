@@ -39,4 +39,12 @@ public interface MyCreditListService extends BaseTradeService{
      * @return
      */
     WebResult tenderToCreditDetail(CreditDetailsRequestBean request, Integer userId);
+
+    /**
+     * 用户中心验证投资人当天是否可以债转
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult tenderAbleToCredit(CreditDetailsRequestBean request, Integer userId);
 }

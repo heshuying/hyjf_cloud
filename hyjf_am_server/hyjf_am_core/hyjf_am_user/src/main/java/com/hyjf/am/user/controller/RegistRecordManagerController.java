@@ -33,10 +33,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/am-user/registRecord")
-public class RegistRecordManagerController {
+public class RegistRecordManagerController extends BaseController{
     @Autowired
     private RegistRecordManagerService registRecordService;
-    private static Logger logger = LoggerFactory.getLogger(RegistRecordManagerController.class);
 
     /**
      * 根据筛选条件查找(用户管理列表显示)
@@ -57,7 +56,7 @@ public class RegistRecordManagerController {
                 List<RegistRecordVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, RegistRecordVO.class);
                 response.setResultList(userVoList);
                 response.setCount(registCount);
-                response.setRtn(Response.SUCCESS);//代表成功
+                response.setRtn(Response.SUCCESS);
             }
         }
         return response;

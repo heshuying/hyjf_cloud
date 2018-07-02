@@ -61,4 +61,12 @@ public class CreditController {
         WebResult result =  creditListService.tenderToCreditDetail(request,userId);
         return result;
     }
+
+    @ApiOperation(value = "用户中心验证投资人当天是否可以债转", notes = "用户中心验证投资人当天是否可以债转")
+    @PostMapping(value = "/tender_able_to_credit", produces = "application/json; charset=utf-8")
+    public WebResult tenderAbleToCredit(@RequestBody CreditDetailsRequestBean request,
+                                          @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result =  creditListService.tenderAbleToCredit(request,userId);
+        return result;
+    }
 }

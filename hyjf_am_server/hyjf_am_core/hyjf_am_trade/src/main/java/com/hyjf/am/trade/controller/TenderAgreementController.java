@@ -1,30 +1,22 @@
 package com.hyjf.am.trade.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.AssetManageResponse;
-import com.hyjf.am.response.trade.TenderAgreementResponse;
-import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.resquest.trade.TenderAgreementRequest;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
-import com.hyjf.am.trade.dao.model.customize.trade.CurrentHoldObligatoryRightListCustomize;
-import com.hyjf.am.trade.service.AssetManageService;
-import com.hyjf.am.trade.service.TenderAgreementService;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.validator.Validator;
-import io.swagger.annotations.Api;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.hyjf.am.response.trade.AssetManageResponse;
+import com.hyjf.am.response.trade.TenderAgreementResponse;
+import com.hyjf.am.resquest.trade.TenderAgreementRequest;
+import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.service.TenderAgreementService;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
+
+import io.swagger.annotations.Api;
 
 /**
  * @author pangchengchao
@@ -33,8 +25,7 @@ import java.util.List;
 @Api(value = "法大大协议信息")
 @RestController
 @RequestMapping("/am-trade/tenderagreement")
-public class TenderAgreementController {
-    private static Logger logger = LoggerFactory.getLogger(TenderAgreementController.class);
+public class TenderAgreementController extends BaseController{
 
     @Autowired
     private TenderAgreementService tenderAgreementService;

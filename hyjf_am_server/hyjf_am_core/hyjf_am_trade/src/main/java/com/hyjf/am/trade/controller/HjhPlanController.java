@@ -34,7 +34,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/am-trade/hjhPlan")
-public class HjhPlanController {
+public class HjhPlanController extends BaseController{
 
     @Autowired
     private HjhPlanService hjhPlanService;

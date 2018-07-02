@@ -1142,5 +1142,24 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		return result;
 	}
 
+	/**
+	 * 投资人当天是否可以债转
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public Integer tenderAbleToCredit(Integer userId) {
+		// 获取当前时间
+		Integer nowTime = GetDate.getNowTime10();
+		// 获取当前时间的日期
+		String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("nowDate", nowDate);
+		params.put("userId", userId);
+		Integer creditedNum = tenderCreditCustomizeMapper.tenderAbleToCredit(params);
+		return creditedNum;
+	}
+
 
 }

@@ -3,9 +3,17 @@
  */
 package com.hyjf.am.trade.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
@@ -13,16 +21,8 @@ import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize
 import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
+import io.swagger.annotations.Api;
 
 /**
  * @author jun 20180621
@@ -30,9 +30,7 @@ import java.util.Map;
 @Api(value = "债转投资")
 @RestController
 @RequestMapping("/am-trade/creditTender")
-public class CreditTenderController {
-
-    private static Logger logger = LoggerFactory.getLogger(CreditTenderController.class);
+public class CreditTenderController extends BaseController{
 
     @Autowired
     BankCreditTenderService bankCreditTenderService;
@@ -142,7 +140,7 @@ public class CreditTenderController {
      *
      * @return
      */
-    @GetMapping("/selectTenderToCreditDetail/{userId}/{borrowNid }/{tenderNid}")
+    @GetMapping("/selectTenderToCreditDetail/{userId}/{borrowNid}/{tenderNid}")
     public MyCreditListQueryResponse selectTenderToCreditDetail(@PathVariable Integer userId, @PathVariable String borrowNid, @PathVariable String tenderNid) {
         MyCreditListQueryResponse response = new MyCreditListQueryResponse();
         TenderCreditCustomize bean = bankCreditTenderService.selectTenderToCreditDetail(userId, borrowNid, tenderNid);
@@ -157,7 +155,7 @@ public class CreditTenderController {
      *
      * @return
      */
-    @GetMapping("/selectExpectCreditFee/{borrowNid }/{tenderNid}")
+    @GetMapping("/selectExpectCreditFee/{borrowNid}/{tenderNid}")
     public ExpectCreditFeeResponse selectExpectCreditFee(@PathVariable String borrowNid, @PathVariable String tenderNid) {
         ExpectCreditFeeResponse response = new ExpectCreditFeeResponse();
         ExpectCreditFeeVO bean = bankCreditTenderService.selectExpectCreditFee(borrowNid, tenderNid);
@@ -165,6 +163,17 @@ public class CreditTenderController {
             response.setResult(bean);
         }
         return response;
+    }
+
+    /**
+     * 投资人当天是否可以债转
+     * @param userId
+     * @return
+     */
+    @GetMapping("/get_tender_credit_count/{userId}")
+    public Integer tenderAbleToCredit(@PathVariable Integer userId) {
+        Integer result = bankCreditTenderService.tenderAbleToCredit(userId);
+        return result;
     }
 
 

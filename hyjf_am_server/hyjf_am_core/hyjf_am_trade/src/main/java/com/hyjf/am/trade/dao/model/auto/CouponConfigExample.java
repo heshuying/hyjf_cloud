@@ -746,63 +746,63 @@ public class CouponConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgIsNull() {
-            addCriterion("add_flg is null");
+        public Criteria andAddFlagIsNull() {
+            addCriterion("add_flag is null");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgIsNotNull() {
-            addCriterion("add_flg is not null");
+        public Criteria andAddFlagIsNotNull() {
+            addCriterion("add_flag is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgEqualTo(Integer value) {
-            addCriterion("add_flg =", value, "addFlg");
+        public Criteria andAddFlagEqualTo(Integer value) {
+            addCriterion("add_flag =", value, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgNotEqualTo(Integer value) {
-            addCriterion("add_flg <>", value, "addFlg");
+        public Criteria andAddFlagNotEqualTo(Integer value) {
+            addCriterion("add_flag <>", value, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgGreaterThan(Integer value) {
-            addCriterion("add_flg >", value, "addFlg");
+        public Criteria andAddFlagGreaterThan(Integer value) {
+            addCriterion("add_flag >", value, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgGreaterThanOrEqualTo(Integer value) {
-            addCriterion("add_flg >=", value, "addFlg");
+        public Criteria andAddFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("add_flag >=", value, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgLessThan(Integer value) {
-            addCriterion("add_flg <", value, "addFlg");
+        public Criteria andAddFlagLessThan(Integer value) {
+            addCriterion("add_flag <", value, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgLessThanOrEqualTo(Integer value) {
-            addCriterion("add_flg <=", value, "addFlg");
+        public Criteria andAddFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("add_flag <=", value, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgIn(List<Integer> values) {
-            addCriterion("add_flg in", values, "addFlg");
+        public Criteria andAddFlagIn(List<Integer> values) {
+            addCriterion("add_flag in", values, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgNotIn(List<Integer> values) {
-            addCriterion("add_flg not in", values, "addFlg");
+        public Criteria andAddFlagNotIn(List<Integer> values) {
+            addCriterion("add_flag not in", values, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgBetween(Integer value1, Integer value2) {
-            addCriterion("add_flg between", value1, value2, "addFlg");
+        public Criteria andAddFlagBetween(Integer value1, Integer value2) {
+            addCriterion("add_flag between", value1, value2, "addFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAddFlgNotBetween(Integer value1, Integer value2) {
-            addCriterion("add_flg not between", value1, value2, "addFlg");
+        public Criteria andAddFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("add_flag not between", value1, value2, "addFlag");
             return (Criteria) this;
         }
 
@@ -1876,63 +1876,63 @@ public class CouponConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIsNull() {
-            addCriterion("del_flg is null");
+        public Criteria andDelFlagIsNull() {
+            addCriterion("del_flag is null");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIsNotNull() {
-            addCriterion("del_flg is not null");
+        public Criteria andDelFlagIsNotNull() {
+            addCriterion("del_flag is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgEqualTo(Integer value) {
-            addCriterion("del_flg =", value, "delFlg");
+        public Criteria andDelFlagEqualTo(Integer value) {
+            addCriterion("del_flag =", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotEqualTo(Integer value) {
-            addCriterion("del_flg <>", value, "delFlg");
+        public Criteria andDelFlagNotEqualTo(Integer value) {
+            addCriterion("del_flag <>", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThan(Integer value) {
-            addCriterion("del_flg >", value, "delFlg");
+        public Criteria andDelFlagGreaterThan(Integer value) {
+            addCriterion("del_flag >", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgGreaterThanOrEqualTo(Integer value) {
-            addCriterion("del_flg >=", value, "delFlg");
+        public Criteria andDelFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("del_flag >=", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThan(Integer value) {
-            addCriterion("del_flg <", value, "delFlg");
+        public Criteria andDelFlagLessThan(Integer value) {
+            addCriterion("del_flag <", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgLessThanOrEqualTo(Integer value) {
-            addCriterion("del_flg <=", value, "delFlg");
+        public Criteria andDelFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("del_flag <=", value, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgIn(List<Integer> values) {
-            addCriterion("del_flg in", values, "delFlg");
+        public Criteria andDelFlagIn(List<Integer> values) {
+            addCriterion("del_flag in", values, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotIn(List<Integer> values) {
-            addCriterion("del_flg not in", values, "delFlg");
+        public Criteria andDelFlagNotIn(List<Integer> values) {
+            addCriterion("del_flag not in", values, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgBetween(Integer value1, Integer value2) {
-            addCriterion("del_flg between", value1, value2, "delFlg");
+        public Criteria andDelFlagBetween(Integer value1, Integer value2) {
+            addCriterion("del_flag between", value1, value2, "delFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDelFlgNotBetween(Integer value1, Integer value2) {
-            addCriterion("del_flg not between", value1, value2, "delFlg");
+        public Criteria andDelFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("del_flag not between", value1, value2, "delFlag");
             return (Criteria) this;
         }
 

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class SubCommissionListConfig implements Serializable {
     private Integer id;
@@ -27,13 +28,15 @@ public class SubCommissionListConfig implements Serializable {
 
     private String createUserName;
 
-    private String createTime;
-
     private Integer updateUserId;
 
     private String updateUserName;
 
     private String cooperateNum;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -133,14 +136,6 @@ public class SubCommissionListConfig implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime == null ? null : createTime.trim();
-    }
-
     public Integer getUpdateUserId() {
         return updateUserId;
     }
@@ -163,5 +158,21 @@ public class SubCommissionListConfig implements Serializable {
 
     public void setCooperateNum(String cooperateNum) {
         this.cooperateNum = cooperateNum == null ? null : cooperateNum.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -3,16 +3,16 @@
  */
 package com.hyjf.am.trade.controller.batch.hjh.autocredit;
 
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.service.task.HjhAutoCreditService;
-import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.service.task.HjhAutoCreditService;
+import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
 
 /**
  * 汇计划自动清算
@@ -22,9 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/hjhAutoCredit")
-public class HjhAutoCreditContoller {
-    private static final Logger logger = LoggerFactory.getLogger(HjhAutoCreditContoller.class);
-
+public class HjhAutoCreditContoller  extends BaseController {
     @Autowired
     private HjhAutoCreditService hjhAutoCreditService;
 

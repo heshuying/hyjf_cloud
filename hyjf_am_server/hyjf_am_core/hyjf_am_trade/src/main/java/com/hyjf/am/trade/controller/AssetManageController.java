@@ -1,26 +1,24 @@
 package com.hyjf.am.trade.controller;
 
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.AssetManageResponse;
-import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.service.AssetManageService;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author pangchengchao
@@ -28,8 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/assetmanage")
-public class AssetManageController {
-    private static Logger logger = LoggerFactory.getLogger(AssetManageController.class);
+public class AssetManageController extends BaseController {
     @Autowired
     private AssetManageService assetManageService;
     /**

@@ -1,23 +1,18 @@
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountTrade;
-import com.hyjf.am.trade.service.AccountService;
-import com.hyjf.am.trade.service.AccountTradeService;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.trade.dao.model.auto.AccountTrade;
+import com.hyjf.am.trade.service.AccountTradeService;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author pangchengchao
@@ -25,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("am-trade/accounttrade")
-public class AccountTradeController {
+public class AccountTradeController extends BaseController {
 
     @Autowired
     private AccountTradeService accountTradeService;

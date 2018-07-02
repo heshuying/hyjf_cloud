@@ -585,52 +585,52 @@ public class ProductErrorLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsEqualTo(Boolean value) {
+        public Criteria andIsSmsEqualTo(Integer value) {
             addCriterion("is_sms =", value, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsNotEqualTo(Boolean value) {
+        public Criteria andIsSmsNotEqualTo(Integer value) {
             addCriterion("is_sms <>", value, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsGreaterThan(Boolean value) {
+        public Criteria andIsSmsGreaterThan(Integer value) {
             addCriterion("is_sms >", value, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsSmsGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_sms >=", value, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsLessThan(Boolean value) {
+        public Criteria andIsSmsLessThan(Integer value) {
             addCriterion("is_sms <", value, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsSmsLessThanOrEqualTo(Integer value) {
             addCriterion("is_sms <=", value, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsIn(List<Boolean> values) {
+        public Criteria andIsSmsIn(List<Integer> values) {
             addCriterion("is_sms in", values, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsNotIn(List<Boolean> values) {
+        public Criteria andIsSmsNotIn(List<Integer> values) {
             addCriterion("is_sms not in", values, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsSmsBetween(Integer value1, Integer value2) {
             addCriterion("is_sms between", value1, value2, "isSms");
             return (Criteria) this;
         }
 
-        public Criteria andIsSmsNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsSmsNotBetween(Integer value1, Integer value2) {
             addCriterion("is_sms not between", value1, value2, "isSms");
             return (Criteria) this;
         }

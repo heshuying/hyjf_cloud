@@ -1,7 +1,5 @@
 package com.hyjf.am.trade.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +18,15 @@ import com.hyjf.am.trade.service.RechargeService;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * @author xiasq
+ * @version RechargeController, v0.1 2018/6/13 11:15
+ */
 @RestController
 @RequestMapping("am-trade/trade")
-public class RechargeController {
-    private static Logger logger = LoggerFactory.getLogger(RechargeController.class);
+public class RechargeController extends BaseController{
 
     @Autowired
     private RechargeService rechargeService;

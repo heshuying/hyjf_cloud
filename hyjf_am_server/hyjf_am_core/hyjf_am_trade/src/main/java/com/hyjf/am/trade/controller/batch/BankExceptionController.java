@@ -1,10 +1,17 @@
 package com.hyjf.am.trade.controller.batch;
 
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.BatchBorrowTenderCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
 import com.hyjf.am.trade.service.*;
@@ -16,21 +23,18 @@ import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.common.util.CommonUtils;
+
 import io.swagger.annotations.Api;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+/**
+ *
+ * @author xiasq
+ * @version BankExceptionController, v0.1 2018/6/28 9:29
+ */
 @Api(value = "江西银行充值掉单异常处理定时任务")
 @RestController
 @RequestMapping("/am-trade/bankException")
-public class BankExceptionController {
-
-    private static final Logger logger = LoggerFactory.getLogger(BankExceptionController.class);
+public class BankExceptionController extends BaseController {
 
     @Autowired
     private BankRechargeService bankRechargeService;
