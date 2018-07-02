@@ -36,11 +36,11 @@ public class CustomizeMapper extends AutoMapper {
     @Autowired
     protected AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
-/*    @Autowired
+    @Autowired
     protected EmployeeCustomizeMapper employeeCustomizeMapper;
 
     @Autowired
-    protected RUserCustomizeMapper rUserCustomizeMapper;*/
+    protected RUserCustomizeMapper rUserCustomizeMapper;
 
 
     @Autowired
