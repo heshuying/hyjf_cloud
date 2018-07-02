@@ -142,13 +142,4 @@ public class AssetManageClientImpl implements AssetManageClient {
         return null;
     }
 
-	@Override
-	public List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid) {
-		String url = "http://AM-TRADE/am-trade/assetmanage/getTenderAgreementListByTenderNidAndStatusNot2/"+tenderNid;
-		TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
-		if(Validator.isNotNull(response)) {
-			return response.getResultList();
-		}
-		return null;
-	}
 }

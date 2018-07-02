@@ -21,4 +21,6 @@ public interface TenderAgreementClient {
     void updateTenderAgreement(TenderAgreementRequest request);
 
     List<TenderAgreementVO> selectTenderAgreementByNid(String orderId);
+
+    List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String contract_id);
 }
