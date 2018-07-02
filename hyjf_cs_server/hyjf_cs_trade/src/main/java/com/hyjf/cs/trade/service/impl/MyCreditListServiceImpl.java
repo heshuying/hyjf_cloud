@@ -11,21 +11,29 @@ import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CreditPageVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
 import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeCsVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
+import com.hyjf.cs.trade.bean.CreditResultBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.cs.trade.service.MyCreditListService;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +64,12 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
     @Autowired
     private AccountClient accountClient;
+
+    @Autowired
+    private BorrowClient borrowClient;
+
+    @Autowired
+    AmBorrowRepayPlanClient amBorrowRepayPlanClient;
 
 
     /**
@@ -126,6 +140,68 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             webResult.setData(result);
         }
         webResult.setPage(page);
+        return webResult;
+    }
+
+    /**
+     * 用户中心查询投资可债转详情
+     *
+     * @param request
+     * @param userId
+     * @return
+     */
+    @Override
+    public WebResult tenderToCreditDetail(CreditDetailsRequestBean request, Integer userId) {
+        CreditResultBean creditResultBean = new CreditResultBean();
+        WebResult webResult = new WebResult();
+        UserVO user = amUserClient.findUserById(userId);
+        creditResultBean.setMobile(user.getMobile());
+        Integer nowTime = GetDate.getNowTime10();
+        if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
+            // 转让失败,无法获取借款和投资编号
+            throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
+        }
+        TenderCreditCustomizeVO tenderToCreditDetail = creditClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
+                request.getTenderNid());
+        if(tenderToCreditDetail==null){
+            // 获取债转数据为空
+            throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
+        }
+        int lastdays = 0;
+        String borrowNid = tenderToCreditDetail.getBorrowNid();
+        // 根据borrowNid判断是否分期
+        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        String borrowStyle = borrow.getBorrowStyle();
+        if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
+            try {
+                lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime),
+                        GetDate.getDateTimeMyTimeInMillis(Integer.parseInt(tenderToCreditDetail.getRecoverTime())));
+            } catch (Exception e) {
+                // 债转数据错误
+                throw  new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
+            }
+        }
+
+        // 等额本息和等额本金和先息后本
+        if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
+            List<BorrowRepayPlanVO> list = this.amBorrowRepayPlanClient.selectBorrowRepayPlan(borrowNid, borrow.getBorrowPeriod());
+            if (list != null && list.size() > 0) {
+                try {
+                    lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(list.get(0).getRepayTime()));
+                } catch (Exception e) {
+                    // 债转数据错误
+                    throw  new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
+                }
+            }
+        }
+
+        // 债转详细预计服务费计算
+        ExpectCreditFeeVO resultMap = creditClient.selectExpectCreditFee(request.getBorrowNid(), request.getTenderNid());
+        tenderToCreditDetail.setLastDays(lastdays + "");
+        creditResultBean.setData(tenderToCreditDetail);
+        creditResultBean.setCalData(resultMap);
+
+        webResult.setData(creditResultBean);
         return webResult;
     }
 }
