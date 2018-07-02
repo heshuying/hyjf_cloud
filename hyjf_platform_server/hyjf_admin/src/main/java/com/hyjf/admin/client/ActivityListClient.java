@@ -40,4 +40,11 @@ public interface ActivityListClient {
      * @return
      */
     int updateActivity(ActivityListRequest request);
+
+    /**
+     * 删除活动配置信息
+     * @param id
+     * @return
+     */
+    int deleteActivity(int id);
 }
