@@ -866,6 +866,66 @@ public class HjhPlanExample {
             return (Criteria) this;
         }
 
+        public Criteria andPlanDisplayStatusIsNull() {
+            addCriterion("plan_display_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusIsNotNull() {
+            addCriterion("plan_display_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusEqualTo(Integer value) {
+            addCriterion("plan_display_status =", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusNotEqualTo(Integer value) {
+            addCriterion("plan_display_status <>", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusGreaterThan(Integer value) {
+            addCriterion("plan_display_status >", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("plan_display_status >=", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusLessThan(Integer value) {
+            addCriterion("plan_display_status <", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("plan_display_status <=", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusIn(List<Integer> values) {
+            addCriterion("plan_display_status in", values, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusNotIn(List<Integer> values) {
+            addCriterion("plan_display_status not in", values, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusBetween(Integer value1, Integer value2) {
+            addCriterion("plan_display_status between", value1, value2, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("plan_display_status not between", value1, value2, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andAddTimeIsNull() {
             addCriterion("add_time is null");
             return (Criteria) this;

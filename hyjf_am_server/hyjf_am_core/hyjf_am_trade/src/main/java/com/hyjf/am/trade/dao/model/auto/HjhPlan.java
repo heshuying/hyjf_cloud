@@ -29,6 +29,8 @@ public class HjhPlan implements Serializable {
 
     private Integer planInvestStatus;
 
+    private Integer planDisplayStatus;
+
     private Integer addTime;
 
     private String borrowStyle;
@@ -155,6 +157,14 @@ public class HjhPlan implements Serializable {
 
     public void setPlanInvestStatus(Integer planInvestStatus) {
         this.planInvestStatus = planInvestStatus;
+    }
+
+    public Integer getPlanDisplayStatus() {
+        return planDisplayStatus;
+    }
+
+    public void setPlanDisplayStatus(Integer planDisplayStatus) {
+        this.planDisplayStatus = planDisplayStatus;
     }
 
     public Integer getAddTime() {

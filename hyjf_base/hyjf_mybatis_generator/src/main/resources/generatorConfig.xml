@@ -253,7 +253,7 @@
 
         <table tableName="ht_spreads_user" domainObjectName="SpreadsUser">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>C
+        </table>
 
         <table tableName="ht_spreads_user_log" domainObjectName="SpreadsUserLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
@@ -1170,6 +1170,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="assign_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="tender_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_hjh_debt_credit_tender_log" domainObjectName="HjhDebtCreditTenderLog">
@@ -1212,6 +1213,7 @@
             <columnOverride column="plan_invest_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="min_invest_counts" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="plan_display_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_hjh_plan_asset" domainObjectName="HjhPlanAsset">
