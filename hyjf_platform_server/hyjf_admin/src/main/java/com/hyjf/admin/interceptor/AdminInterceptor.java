@@ -27,7 +27,14 @@ import com.hyjf.common.cache.RedisUtils;
 public class AdminInterceptor implements HandlerInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(AdminInterceptor.class);
 
-	// 判断用户是否登陆
+	/**
+	 * 判断用户是否登陆
+	 * @param request
+	 * @param response
+	 * @param handler
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
