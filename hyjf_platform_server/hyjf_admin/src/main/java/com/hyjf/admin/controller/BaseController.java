@@ -87,22 +87,12 @@ public class BaseController {
 		return info;
 	}
 	//获取页数
-	public String  getCurrPageString(Map<String, String> map) {
-
-		return map.get(CURR) ;
-	}
-	//获取条数
-	public String  getPageSizeString(Map<String, String> map) {
-
-		return map.get(PAGE) ;
-	}
-	//获取页数
-	public String  getCurrPage(Map<String, Object> map) {
+	public String  getCurrPage(Map<String, ?> map) {
 
 		return String.valueOf(map.get(CURR)) ;
 	}
 	//获取条数
-	public String  getPageSize(Map<String, Object> map) {
+	public String  getPageSize(Map<String, ?> map) {
 
 		return String.valueOf(map.get(PAGE)) ;
 	}
