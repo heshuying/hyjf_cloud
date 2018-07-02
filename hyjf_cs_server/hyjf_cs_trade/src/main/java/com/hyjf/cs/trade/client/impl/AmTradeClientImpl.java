@@ -109,28 +109,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-    /**
-     * 收支明细不存在时掉单处理
-     * @param currentRecover
-     * @param bankOpenAccountInfo
-     * @param userId
-     * @param couponUserCode
-     * @param ip
-     * @param count
-     */
-    @Override
-    public void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, String userId, String couponUserCode, String ip, int count) {
-        String url = urlBase + "batch/repayDataRecover";
-        RepayDataRecoverRequest request = new RepayDataRecoverRequest();
-        request.setCouponRecoverCustomizeVO(currentRecover);
-        request.setBankOpenAccountVO(bankOpenAccountInfo);
-        request.setUserId(userId);
-        request.setCouponUserCode(couponUserCode);
-        request.setIp(ip);
-        request.setCount(count);
 
-        restTemplate.postForEntity(url, request, Object.class);
-    }
 	/**
 	 * 统计总的优惠券数
 	 * @param requestBean
@@ -180,24 +159,5 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return result;
 	}
 
-    /**
-     * 收支明细存在时掉单处理
-     * @param borrowTenderCpn
-     * @param borrowNid
-     * @param couponUserCode
-     */
-    @Override
-    public void updateRepayDataRecover(CouponRecoverCustomizeVO currentRecover,BorrowTenderCpnVO borrowTenderCpn, String borrowNid, String couponUserCode,String userId,String borrowStyle,int periodNow) {
-        String url = urlBase + "batch/updateRepayDataRecover";
-        RepayDataRecoverRequest request = new RepayDataRecoverRequest();
-        request.setCouponRecoverCustomizeVO(currentRecover);
-        request.setBorrowTenderCpnVO(borrowTenderCpn);
-        request.setCouponUserCode(couponUserCode);
-        request.setBorrowNid(borrowNid);
-        request.setUserId(userId);
-        request.setBorrowStyle(borrowStyle);
-        request.setPeriodNow(periodNow);
 
-        restTemplate.postForEntity(url,request,Object.class);
-    }
 }
