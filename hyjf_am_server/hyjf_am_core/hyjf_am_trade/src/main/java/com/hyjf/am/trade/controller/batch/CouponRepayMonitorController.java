@@ -20,7 +20,7 @@ import java.util.List;
  * @version CouponRepayMonitorController, v0.1 2018/6/22 9:34
  */
 @RestController
-@RequestMapping("/am-trade/batch")
+@RequestMapping("/am-trade/couponRepayMonitor")
 public class CouponRepayMonitorController {
 
     @Autowired
