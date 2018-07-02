@@ -23,7 +23,7 @@ public class CouponRepayStatisticJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponRepayStatisticJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/batch/coupon/couponRepayStatistic", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/batch/repayStatistic/couponRepayStatistic", String.class);
         logger.info("CouponRepayStatisticJob execute end...");
     }
 }
