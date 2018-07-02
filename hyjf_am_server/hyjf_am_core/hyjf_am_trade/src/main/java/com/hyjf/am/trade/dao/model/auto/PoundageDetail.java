@@ -29,7 +29,7 @@ public class PoundageDetail implements Serializable {
 
     private Integer ledgerId;
 
-    private Date addTime;
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -129,11 +129,11 @@ public class PoundageDetail implements Serializable {
         this.ledgerId = ledgerId;
     }
 
-    public Date getAddTime() {
-        return addTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

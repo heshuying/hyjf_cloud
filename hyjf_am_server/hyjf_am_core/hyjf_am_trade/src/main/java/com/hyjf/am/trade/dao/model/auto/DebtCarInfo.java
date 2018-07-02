@@ -24,7 +24,7 @@ public class DebtCarInfo implements Serializable {
 
     private Integer buytime;
 
-    private Byte isSafe;
+    private Integer isSafe;
 
     private BigDecimal price;
 
@@ -116,11 +116,11 @@ public class DebtCarInfo implements Serializable {
         this.buytime = buytime;
     }
 
-    public Byte getIsSafe() {
+    public Integer getIsSafe() {
         return isSafe;
     }
 
-    public void setIsSafe(Byte isSafe) {
+    public void setIsSafe(Integer isSafe) {
         this.isSafe = isSafe;
     }
 

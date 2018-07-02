@@ -1,37 +1,37 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ProducerTransactionMessageMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="msg_id" property="msgId" jdbcType="VARCHAR" />
-    <result column="body" property="body" jdbcType="VARCHAR" />
-    <result column="message_status" property="messageStatus" jdbcType="TINYINT" />
-    <result column="retry_times" property="retryTimes" jdbcType="INTEGER" />
-    <result column="topic" property="topic" jdbcType="VARCHAR" />
-    <result column="tags" property="tags" jdbcType="VARCHAR" />
-    <result column="keys" property="keys" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ProducerTransactionMessageMapper">
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="msg_id" jdbcType="VARCHAR" property="msgId" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="message_status" jdbcType="TINYINT" property="messageStatus" />
+    <result column="retry_times" jdbcType="INTEGER" property="retryTimes" />
+    <result column="topic" jdbcType="VARCHAR" property="topic" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="keys" jdbcType="VARCHAR" property="keys" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -42,25 +42,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -71,45 +71,45 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     id, msg_id, body, message_status, retry_times, topic, tags, `keys`, create_time, 
     update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" >
+  <select id="selectByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" resultMap="BaseResultMap">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     from ht_producer_transaction_message
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
-    <if test="limitStart >= 0" >
+    <if test="limitStart &gt;= 0">
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from ht_producer_transaction_message
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from ht_producer_transaction_message
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample">
     delete from ht_producer_transaction_message
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage" >
-    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_producer_transaction_message (msg_id, body, message_status, 
@@ -121,115 +121,115 @@
       #{keys,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage" >
-    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_producer_transaction_message
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="msgId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="msgId != null">
         msg_id,
       </if>
-      <if test="body != null" >
+      <if test="body != null">
         body,
       </if>
-      <if test="messageStatus != null" >
+      <if test="messageStatus != null">
         message_status,
       </if>
-      <if test="retryTimes != null" >
+      <if test="retryTimes != null">
         retry_times,
       </if>
-      <if test="topic != null" >
+      <if test="topic != null">
         topic,
       </if>
-      <if test="tags != null" >
+      <if test="tags != null">
         tags,
       </if>
-      <if test="keys != null" >
+      <if test="keys != null">
         `keys`,
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         create_time,
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         update_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="msgId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="msgId != null">
         #{msgId,jdbcType=VARCHAR},
       </if>
-      <if test="body != null" >
+      <if test="body != null">
         #{body,jdbcType=VARCHAR},
       </if>
-      <if test="messageStatus != null" >
+      <if test="messageStatus != null">
         #{messageStatus,jdbcType=TINYINT},
       </if>
-      <if test="retryTimes != null" >
+      <if test="retryTimes != null">
         #{retryTimes,jdbcType=INTEGER},
       </if>
-      <if test="topic != null" >
+      <if test="topic != null">
         #{topic,jdbcType=VARCHAR},
       </if>
-      <if test="tags != null" >
+      <if test="tags != null">
         #{tags,jdbcType=VARCHAR},
       </if>
-      <if test="keys != null" >
+      <if test="keys != null">
         #{keys,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" resultType="java.lang.Integer">
     select count(*) from ht_producer_transaction_message
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update ht_producer_transaction_message
-    <set >
-      <if test="record.id != null" >
+    <set>
+      <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.msgId != null" >
+      <if test="record.msgId != null">
         msg_id = #{record.msgId,jdbcType=VARCHAR},
       </if>
-      <if test="record.body != null" >
+      <if test="record.body != null">
         body = #{record.body,jdbcType=VARCHAR},
       </if>
-      <if test="record.messageStatus != null" >
+      <if test="record.messageStatus != null">
         message_status = #{record.messageStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.retryTimes != null" >
+      <if test="record.retryTimes != null">
         retry_times = #{record.retryTimes,jdbcType=INTEGER},
       </if>
-      <if test="record.topic != null" >
+      <if test="record.topic != null">
         topic = #{record.topic,jdbcType=VARCHAR},
       </if>
-      <if test="record.tags != null" >
+      <if test="record.tags != null">
         tags = #{record.tags,jdbcType=VARCHAR},
       </if>
-      <if test="record.keys != null" >
+      <if test="record.keys != null">
         `keys` = #{record.keys,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
+      <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updateTime != null" >
+      <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update ht_producer_transaction_message
     set id = #{record.id,jdbcType=BIGINT},
       msg_id = #{record.msgId,jdbcType=VARCHAR},
@@ -241,44 +241,334 @@
       `keys` = #{record.keys,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
     update ht_producer_transaction_message
-    <set >
-      <if test="msgId != null" >
+    <set>
+      <if test="msgId != null">
         msg_id = #{msgId,jdbcType=VARCHAR},
       </if>
-      <if test="body != null" >
+      <if test="body != null">
         body = #{body,jdbcType=VARCHAR},
       </if>
-      <if test="messageStatus != null" >
+      <if test="messageStatus != null">
         message_status = #{messageStatus,jdbcType=TINYINT},
       </if>
-      <if test="retryTimes != null" >
+      <if test="retryTimes != null">
         retry_times = #{retryTimes,jdbcType=INTEGER},
       </if>
-      <if test="topic != null" >
+      <if test="topic != null">
         topic = #{topic,jdbcType=VARCHAR},
       </if>
-      <if test="tags != null" >
+      <if test="tags != null">
         tags = #{tags,jdbcType=VARCHAR},
       </if>
-      <if test="keys != null" >
+      <if test="keys != null">
         `keys` = #{keys,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    update ht_producer_transaction_message
+    set msg_id = #{msgId,jdbcType=VARCHAR},
+      body = #{body,jdbcType=VARCHAR},
+      message_status = #{messageStatus,jdbcType=TINYINT},
+      retry_times = #{retryTimes,jdbcType=INTEGER},
+      topic = #{topic,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      `keys` = #{keys,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="msg_id" jdbcType="VARCHAR" property="msgId" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="message_status" jdbcType="TINYINT" property="messageStatus" />
+    <result column="retry_times" jdbcType="INTEGER" property="retryTimes" />
+    <result column="topic" jdbcType="VARCHAR" property="topic" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="keys" jdbcType="VARCHAR" property="keys" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, msg_id, body, message_status, retry_times, topic, tags, `keys`, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_producer_transaction_message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart &gt;= 0">
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ht_producer_transaction_message
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ht_producer_transaction_message
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample">
+    delete from ht_producer_transaction_message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_producer_transaction_message (msg_id, body, message_status, 
+      retry_times, topic, tags, 
+      `keys`, create_time, update_time
+      )
+    values (#{msgId,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR}, #{messageStatus,jdbcType=TINYINT}, 
+      #{retryTimes,jdbcType=INTEGER}, #{topic,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, 
+      #{keys,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_producer_transaction_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="msgId != null">
+        msg_id,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="messageStatus != null">
+        message_status,
+      </if>
+      <if test="retryTimes != null">
+        retry_times,
+      </if>
+      <if test="topic != null">
+        topic,
+      </if>
+      <if test="tags != null">
+        tags,
+      </if>
+      <if test="keys != null">
+        `keys`,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="msgId != null">
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="messageStatus != null">
+        #{messageStatus,jdbcType=TINYINT},
+      </if>
+      <if test="retryTimes != null">
+        #{retryTimes,jdbcType=INTEGER},
+      </if>
+      <if test="topic != null">
+        #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null">
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="keys != null">
+        #{keys,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" resultType="java.lang.Integer">
+    select count(*) from ht_producer_transaction_message
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ht_producer_transaction_message
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.msgId != null">
+        msg_id = #{record.msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.body != null">
+        body = #{record.body,jdbcType=VARCHAR},
+      </if>
+      <if test="record.messageStatus != null">
+        message_status = #{record.messageStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.retryTimes != null">
+        retry_times = #{record.retryTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.topic != null">
+        topic = #{record.topic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tags != null">
+        tags = #{record.tags,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keys != null">
+        `keys` = #{record.keys,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ht_producer_transaction_message
+    set id = #{record.id,jdbcType=BIGINT},
+      msg_id = #{record.msgId,jdbcType=VARCHAR},
+      body = #{record.body,jdbcType=VARCHAR},
+      message_status = #{record.messageStatus,jdbcType=TINYINT},
+      retry_times = #{record.retryTimes,jdbcType=INTEGER},
+      topic = #{record.topic,jdbcType=VARCHAR},
+      tags = #{record.tags,jdbcType=VARCHAR},
+      `keys` = #{record.keys,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
+    update ht_producer_transaction_message
+    <set>
+      <if test="msgId != null">
+        msg_id = #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="messageStatus != null">
+        message_status = #{messageStatus,jdbcType=TINYINT},
+      </if>
+      <if test="retryTimes != null">
+        retry_times = #{retryTimes,jdbcType=INTEGER},
+      </if>
+      <if test="topic != null">
+        topic = #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null">
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="keys != null">
+        `keys` = #{keys,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage">
     update ht_producer_transaction_message
     set msg_id = #{msgId,jdbcType=VARCHAR},
       body = #{body,jdbcType=VARCHAR},

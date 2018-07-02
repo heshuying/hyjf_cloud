@@ -14,8 +14,8 @@
     <result column="tx_time" property="txTime" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="add_time" property="addTime" jdbcType="INTEGER" />
-    <result column="creater" property="creater" jdbcType="INTEGER" />
-    <result column="updater" property="updater" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -79,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, ledger_id, amount, quantity, poundage_time, nid, seq_no, tx_date, tx_time, 
-    `status`, add_time, creater, updater, create_time, update_time
+    `status`, add_time, create_user_id, update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageExample" >
     select
@@ -121,14 +121,14 @@
     insert into ht_poundage (user_id, ledger_id, amount, 
       quantity, poundage_time, nid, 
       seq_no, tx_date, tx_time, 
-      `status`, add_time, creater, 
-      updater, create_time, update_time
+      `status`, add_time, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{userId,jdbcType=INTEGER}, #{ledgerId,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, 
       #{quantity,jdbcType=INTEGER}, #{poundageTime,jdbcType=VARCHAR}, #{nid,jdbcType=VARCHAR}, 
       #{seqNo,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
-      #{status,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{creater,jdbcType=INTEGER}, 
-      #{updater,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{status,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Poundage" >
@@ -170,11 +170,11 @@
       <if test="addTime != null" >
         add_time,
       </if>
-      <if test="creater != null" >
-        creater,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updater != null" >
-        updater,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -217,11 +217,11 @@
       <if test="addTime != null" >
         #{addTime,jdbcType=INTEGER},
       </if>
-      <if test="creater != null" >
-        #{creater,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updater != null" >
-        #{updater,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -276,11 +276,11 @@
       <if test="record.addTime != null" >
         add_time = #{record.addTime,jdbcType=INTEGER},
       </if>
-      <if test="record.creater != null" >
-        creater = #{record.creater,jdbcType=INTEGER},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updater != null" >
-        updater = #{record.updater,jdbcType=INTEGER},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -307,8 +307,8 @@
       tx_time = #{record.txTime,jdbcType=INTEGER},
       `status` = #{record.status,jdbcType=TINYINT},
       add_time = #{record.addTime,jdbcType=INTEGER},
-      creater = #{record.creater,jdbcType=INTEGER},
-      updater = #{record.updater,jdbcType=INTEGER},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -351,11 +351,11 @@
       <if test="addTime != null" >
         add_time = #{addTime,jdbcType=INTEGER},
       </if>
-      <if test="creater != null" >
-        creater = #{creater,jdbcType=INTEGER},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updater != null" >
-        updater = #{updater,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -379,8 +379,8 @@
       tx_time = #{txTime,jdbcType=INTEGER},
       `status` = #{status,jdbcType=TINYINT},
       add_time = #{addTime,jdbcType=INTEGER},
-      creater = #{creater,jdbcType=INTEGER},
-      updater = #{updater,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
