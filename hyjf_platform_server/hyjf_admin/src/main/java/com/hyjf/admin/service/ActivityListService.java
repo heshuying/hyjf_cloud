@@ -6,6 +6,8 @@ package com.hyjf.admin.service;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -41,4 +43,19 @@ public interface ActivityListService {
      * @return
      */
     int updateActivity(Map<String, String> map);
+
+    /**
+     * 资料上传
+     * @param request
+     * @param response
+     * @return
+     */
+    String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+    /**
+     * 删除活动配置信息
+     * @param id
+     * @return
+     */
+    int deleteActivity(int id);
 }

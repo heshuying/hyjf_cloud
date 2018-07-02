@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -215,7 +216,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         //推送mq
                                         this.appChannelStatisticsDetailProducer.messageSend(
                                                 new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG,JSON.toJSONBytes(params)));
+                                                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                                     }else{
 
                                         UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);
@@ -316,7 +317,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
         bean.setTenderType(1);
         try {
             fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_TOPIC,
-                    MQConstant.FDD_GENERATE_CONTRACT_TAG,JSON.toJSONBytes(bean)));
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("法大大发送消息失败...", e);
