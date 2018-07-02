@@ -562,7 +562,7 @@ public class FddHandle {
     private void updateSaveSignInfo(DzqzCallBean platerCallBean, String contract_id, String borrowNid, Integer transType, String instCode, boolean isTenderCompany, boolean isCreditCompany) {
         String download_url = platerCallBean.getDownload_url();
         String viewpdf_url = platerCallBean.getViewpdf_url();
-        List<TenderAgreementVO> agreements = this.assetManageClient.getTenderAgreementListByTenderNidAndStatusNot2(contract_id);
+        List<TenderAgreementVO> agreements = this.tenderAgreementClient.getTenderAgreementListByTenderNidAndStatusNot2(contract_id);
         if (agreements != null && agreements.size() > 0) {
         	TenderAgreementVO tenderAgreement = agreements.get(0);
         	int nowTime = GetDate.getNowTime10();

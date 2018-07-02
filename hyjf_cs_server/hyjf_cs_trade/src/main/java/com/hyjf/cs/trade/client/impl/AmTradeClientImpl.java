@@ -42,39 +42,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     private RestTemplate restTemplate;
 
     /**
-     * 根据借款编号,还款期数,还款方式取得融通宝待还款金额
-     *
-     * @param borrowNid
-     * @param borrowStyle
-     * @param periodNow
-     * @return
-     */
-    @Override
-    public BigDecimal selectRtbRepayAmount(String borrowNid, String borrowStyle, Integer periodNow) {
-        String url = urlBase + "batch/rtb/getRepayAmount/" + borrowNid + "/" + borrowStyle + "/"
-                + periodNow;
-        BigDecimal rtbRepayAmount = restTemplate.getForEntity(url, BigDecimal.class).getBody();
-        return rtbRepayAmount;
-    }
-
-    /**
-     * 融通宝还款加息
-     *
-     * @param borrowApicronVO
-     */
-    @Override
-    public void rtbIncreaseReapy(BorrowApicronVO borrowApicronVO, String account, String companyAccount) {
-        String url = urlBase + "batch/rtb/increaseInterestRepay";
-
-        RtbIncreaseRepayRequest repayRequest = new RtbIncreaseRepayRequest();
-        repayRequest.setBorrowApicronVO(borrowApicronVO);
-        repayRequest.setAccount(account);
-        repayRequest.setCompanyAccount(companyAccount);
-
-        restTemplate.postForEntity(url, repayRequest, Object.class);
-    }
-
-    /**
      * 统计加息券每日待收收益
      *
      * @param
