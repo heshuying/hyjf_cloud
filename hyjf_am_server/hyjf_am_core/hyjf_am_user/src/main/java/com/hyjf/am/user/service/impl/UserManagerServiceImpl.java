@@ -30,22 +30,22 @@ import java.util.Map;
 public class UserManagerServiceImpl extends BaseServiceImpl implements UserManagerService {
 
     @Autowired
-    public UserManagerCustomizeMapper userManagerCustomizeMapper;
+    private UserManagerCustomizeMapper userManagerCustomizeMapper;
     @Autowired
-    public CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
+    private CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
     @Autowired
-    public BindUserMapper bindUserMapper;
+    private BindUserMapper bindUserMapper;
     @Autowired
-    public CertificateAuthorityMapper certificateAuthorityMapper;
+    private CertificateAuthorityMapper certificateAuthorityMapper;
     @Autowired
-    public UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    public UserInfoMapper userInfoMapper;
+    private UserInfoMapper userInfoMapper;
     @Autowired
-    public BankOpenAccountMapper bankOpenAccountMapper;
+    private BankOpenAccountMapper bankOpenAccountMapper;
 
     @Autowired
-    public SpreadsUserMapper  spreadsUserMapper;
+    private SpreadsUserMapper  spreadsUserMapper;
 
     private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
 

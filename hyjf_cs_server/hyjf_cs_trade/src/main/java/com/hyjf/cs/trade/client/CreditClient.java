@@ -4,6 +4,8 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.vo.trade.CreditPageVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.apache.commons.collections.map.HashedMap;
 
@@ -38,9 +40,26 @@ public interface CreditClient {
     MyCreditListQueryResponse countMyCreditList(MyCreditListQueryRequest request);
 
     /**
-     * 查询可债转列表数量
+     * 查询可债转列表
      * @param request
      * @return
      */
     MyCreditListQueryResponse searchMyCreditList(MyCreditListQueryRequest request);
+
+    /**
+     * 查询债转详情
+     * @param userId
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    TenderCreditCustomizeVO selectTenderToCreditDetail(Integer userId, String borrowNid, String tenderNid);
+
+    /**
+     * 债转详细预计服务费计算
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
 }

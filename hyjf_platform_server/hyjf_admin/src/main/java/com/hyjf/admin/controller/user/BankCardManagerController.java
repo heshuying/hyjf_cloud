@@ -34,7 +34,7 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/bankcardManager")
 public class BankCardManagerController {
     @Autowired
-    public BankCardManagerService bankCardManagerService;
+    private BankCardManagerService bankCardManagerService;
 
     @ApiOperation(value = "銀行卡管理", notes = "銀行卡管理页面初始化")
     /*@RequestMapping(value = "/usersInit", method = {RequestMethod.GET, RequestMethod.POST})*/

@@ -32,9 +32,9 @@ import java.util.Map;
 public class UserPortraitManagerServiceImpl implements UserPortraitManagerService {
 
     @Autowired
-    public UserPortraitManagerMapper userPortraitManagerMapper;
+    private UserPortraitManagerMapper userPortraitManagerMapper;
     @Autowired
-    public UserPortraitMapper userPortraitMapper;
+    private UserPortraitMapper userPortraitMapper;
 
     private static Logger logger = LoggerFactory.getLogger(UserPortraitManagerServiceImpl.class);
 

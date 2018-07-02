@@ -1,11 +1,13 @@
 package com.hyjf.am.vo.trade.repay;
 
+import com.hyjf.am.vo.BaseVO;
+
 /**
  * 用户待还款列表
  * @author hesy
- * @version RepayWaitListCustomizeVO, v0.1 2018/6/27 15:46
+ * @version RepayListCustomizeVO, v0.1 2018/6/27 15:46
  */
-public class RepayWaitListCustomizeVO {
+public class RepayListCustomizeVO extends BaseVO {
 
     // 项目类型标识
     private String projectType;
