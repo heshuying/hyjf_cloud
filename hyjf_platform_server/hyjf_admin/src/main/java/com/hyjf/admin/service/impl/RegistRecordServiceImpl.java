@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class RegistRecordServiceImpl implements RegistRecordService {
     @Autowired
-    public RegistRecordClient registRecordClient;
+    private RegistRecordClient registRecordClient;
     /**
      * 查找注册记录列表
      *

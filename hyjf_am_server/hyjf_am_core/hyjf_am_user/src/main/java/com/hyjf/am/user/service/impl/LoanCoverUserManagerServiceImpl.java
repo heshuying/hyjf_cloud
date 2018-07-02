@@ -32,7 +32,7 @@ import java.util.List;
 public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerService {
 
     @Autowired
-    public LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
+    private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
 
     private static Logger logger = LoggerFactory.getLogger(LoanCoverUserManagerServiceImpl.class);
 

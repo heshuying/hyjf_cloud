@@ -27,7 +27,7 @@ import java.util.Map;
 public class RegistRecordManagerServiceImpl implements RegistRecordManagerService {
 
     @Autowired
-    public RegistRecordCustomizeMapper registRecordCustomizeMapper;
+    private RegistRecordCustomizeMapper registRecordCustomizeMapper;
 
     private static Logger logger = LoggerFactory.getLogger(RegistRecordManagerServiceImpl.class);
 
