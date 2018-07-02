@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.task;
+package com.hyjf.am.trade.controller.batch;
 
 import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
@@ -10,7 +10,6 @@ import com.hyjf.am.vo.trade.CouponRepayMonitorVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 

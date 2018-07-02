@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.task.hjh.autocredit;
+package com.hyjf.am.trade.controller.batch.hjh.autocredit;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
