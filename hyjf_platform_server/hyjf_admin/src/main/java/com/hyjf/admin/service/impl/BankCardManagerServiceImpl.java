@@ -21,7 +21,7 @@ import java.util.List;
 public class BankCardManagerServiceImpl implements BankCardManagerService {
 
     @Autowired
-    public BankCardManagerClient bankCardManagerClient;
+    private BankCardManagerClient bankCardManagerClient;
 
 
     /**
