@@ -18,7 +18,7 @@ public class UserLoginInfo {
     // 是否允许使用
     private Boolean isAllowed;
     // 是否完成风险测评
-    private Boolean isRiskTested;
+    private String isRiskTested;
     // 是否投资授权
     private Boolean isAutoInves;
     // 是否债转授权
@@ -63,11 +63,11 @@ public class UserLoginInfo {
         isAllowed = allowed;
     }
 
-    public Boolean getRiskTested() {
+    public String getRiskTested() {
         return isRiskTested;
     }
 
-    public void setRiskTested(Boolean riskTested) {
+    public void setRiskTested(String riskTested) {
         isRiskTested = riskTested;
     }
 

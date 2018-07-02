@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
@@ -25,7 +24,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -35,9 +33,8 @@ import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.AppProjectListService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayPlanService;
+import com.hyjf.cs.trade.util.ProjectConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.netflix.discovery.converters.Auto;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -47,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -68,18 +64,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
     private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
-    /**
-     * 加入条件
-     */
-    private final String PLAN_ADD_CONDITION = "{0}元起，以{1}元的倍数递增";
-    /**
-     * 计息时间
-     */
-    private final String PLAN_ON_ACCRUAL = "计划进入锁定期后开始计息";
-    /**
-     * 汇计划类型简称
-     */
-    private final String PLAN_TYPE_NAME = "HJH";
+
 
     @Autowired
     private WebProjectListClient webProjectListClient;
@@ -139,7 +124,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     @Override
     public AppResult searchAppProjectList(ProjectListRequest request) {
         // TODO: 2018/6/20   参数验证
-        CheckUtil.check("HZT".equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
+        CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
@@ -185,8 +170,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         AppResult appResult = new AppResult();
         JSONObject jsonObject = new JSONObject();
         JSONObject userValidation = new JSONObject();
-        String borrowNid = param.get("borrowId");
-        String type = param.get("borrowType");
+        String borrowNid = param.get(ProjectConstant.PARAM_BORROW_NID);
+        String type = param.get(ProjectConstant.PARAM_BORROW_TYPE);
         CheckUtil.check(StringUtils.isNotBlank(borrowNid), MsgEnum.ERR_PARAM_NUM);
         boolean isLogined = false;
         boolean isOpened = false;
@@ -245,7 +230,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 2.根据项目标号获取相应的项目信息
         AppBorrowProjectInfoBeanVO borrowProjectInfoBean = new AppBorrowProjectInfoBeanVO();
         Map<String, Object> map = new HashMap<>();
-        map.put("borrowNid", borrowNid);
+        map.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
         ProjectCustomeDetailVO borrow = webProjectListClient.searchProjectDetail(map);
         // 还款信息
         BorrowRepayVO borrowRepay = null;
@@ -280,7 +265,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
 
-            if ("endday".equals(borrow.getBorrowStyle())) {
+            if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle())) {
                 borrowProjectInfoBean.setBorrowPeriodUnit("天");
             } else {
                 borrowProjectInfoBean.setBorrowPeriodUnit("月");
@@ -296,7 +281,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 borrowProjectInfoBean.setTag("");
             }
             borrowProjectInfoBean.setRepayStyle(borrow.getRepayStyle());
-            jsonObject.put("projectInfo", borrowProjectInfoBean);
+            jsonObject.put(ProjectConstant.RES_PROJECT_INFO, borrowProjectInfoBean);
 
             //借款人企业信息
             BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
@@ -304,42 +289,42 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             BorrowManinfoVO borrowManinfo = borrowManinfoClient.getBorrowManinfo(borrowNid);
 
             //基础信息
-            List<BorrowMsgBean> baseTableData = null;
+            List<BorrowDetailBean> baseTableData = null;
             //项目介绍
-            List<BorrowMsgBean> intrTableData = null;
+            List<BorrowDetailBean> intrTableData = null;
             //信用状况
-            List<BorrowMsgBean> credTableData = null;
+            List<BorrowDetailBean> credTableData = null;
             //审核信息
-            List<BorrowMsgBean> reviewTableData = null;
+            List<BorrowDetailBean> reviewTableData = null;
             //其他信息
-            List<BorrowMsgBean> otherTableData = null;
+            List<BorrowDetailBean> otherTableData = null;
             //借款类型
             int borrowType = Integer.parseInt(borrow.getComOrPer());
 
             if (borrowType == 1 && borrowUsers != null) {
                 //基础信息
-                baseTableData = packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel());
+                baseTableData = ProjectConstant.packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel());
                 //信用状况
-                credTableData = packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel());
+                credTableData = ProjectConstant.packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel());
                 //审核信息
-                reviewTableData = packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel());
+                reviewTableData = ProjectConstant.packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel());
                 //其他信息
-                otherTableData = packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
+                otherTableData = ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
             } else {
                 if (borrowManinfo != null) {
                     //基础信息
-                    baseTableData = packDetail(borrowManinfo, 1, borrowType, borrow.getBorrowLevel());
+                    baseTableData = ProjectConstant.packDetail(borrowManinfo, 1, borrowType, borrow.getBorrowLevel());
                     //信用状况
-                    credTableData = packDetail(borrowManinfo, 4, borrowType, borrow.getBorrowLevel());
+                    credTableData = ProjectConstant.packDetail(borrowManinfo, 4, borrowType, borrow.getBorrowLevel());
                     //审核信息
-                    reviewTableData = packDetail(borrowManinfo, 5, borrowType, borrow.getBorrowLevel());
+                    reviewTableData = ProjectConstant.packDetail(borrowManinfo, 5, borrowType, borrow.getBorrowLevel());
                     //其他信息
-                    otherTableData = packDetail(borrowManinfo, 6, borrowType, borrow.getBorrowLevel());
+                    otherTableData = ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrow.getBorrowLevel());
                 }
             }
 
             //项目介绍
-            intrTableData = packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
+            intrTableData = ProjectConstant.packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
             // TODO: 2018/6/29 由于生成实体不全 暂时不处理  zyk
             // 风控信息
            /* AppRiskControlCustomize riskControl = projectService.selectRiskControl(borrowNid);
@@ -355,24 +340,24 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             if (userId != null) {
                 projectDetailList = dealDetail(projectDetailList, intrTableData, "intrTableData", null);
             } else {
-                projectDetailList = dealDetail(projectDetailList, new ArrayList<BorrowMsgBean>(), "intrTableData", null);
+                projectDetailList = dealDetail(projectDetailList, new ArrayList<BorrowDetailBean>(), "intrTableData", null);
             }
             projectDetailList = dealDetail(projectDetailList, credTableData, "credTableData", null);
             projectDetailList = dealDetail(projectDetailList, reviewTableData, "reviewTableData", null);
             // 信批需求新增(放款后才显示)
             if (Integer.parseInt(borrow.getStatus()) >= 4 && borrowRepay != null) {
                 //其他信息
-                String updateTime = getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
+                String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
                 projectDetailList = dealDetail(projectDetailList, otherTableData, "otherTableData", updateTime);
             }
-            jsonObject.put("projectDetail", projectDetailList);
+            jsonObject.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetailList);
 
             //处理借款信息
-            List<AppBorrowRepayPlanBean> repayPlanList = new ArrayList<>();
-            if ("end".equals(borrow.getBorrowStyle()) || "endday".equals(borrow.getBorrowStyle())) {
+            List<BorrowRepayPlanBean> repayPlanList = new ArrayList<>();
+            if (CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle())) {
                 List<BorrowRepayPlanCsVO> repayPlanLists = repayPlanService.getRepayPlan(borrowNid);
                 BorrowRepayPlanCsVO borrowRepayPlan = repayPlanLists.get(0);
-                AppBorrowRepayPlanBean borrowRepayPlanBean = new AppBorrowRepayPlanBean();
+                BorrowRepayPlanBean borrowRepayPlanBean = new BorrowRepayPlanBean();
                 if (borrowRepayPlan.getRepayTime().equals("-")) {
                     borrowRepayPlanBean.setTime("-");
                 } else {
@@ -387,7 +372,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     BorrowRepayPlanCsVO borrowRepayPlan = null;
                     for (int i = 0; i < repayPlanLists.size(); i++) {
                         borrowRepayPlan = repayPlanLists.get(i);
-                        AppBorrowRepayPlanBean borrowRepayPlanBean = new AppBorrowRepayPlanBean();
+                        BorrowRepayPlanBean borrowRepayPlanBean = new BorrowRepayPlanBean();
                         if (borrowRepayPlan.getRepayTime().equals("-")) {
                             borrowRepayPlanBean.setTime("-");
                         } else {
@@ -424,8 +409,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                         //待承接本金 = 0
                         if (null != deptcredit.getCreditCapitalWait() && deptcredit.getCreditCapitalWait().intValue() == 0) {
                             Map<String, Object> mapParam = new HashMap<String, Object>();
-                            mapParam.put("userId", userId);
-                            mapParam.put("borrowNid", borrowNid);
+                            mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
+                            mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
                             int intCount = hjhDebtCreditClient.countCreditTenderByBorrowNidAndUserId(mapParam);
                             if (intCount > 0 || count > 0) {
                                 viewableFlag = true;
@@ -490,35 +475,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     }
 
 
-    /**
-     * 计算更新时间
-     *
-     * @param timeLoan
-     * @param timeRepay
-     * @return
-     */
-    public static String getUpdateTime(Integer timeLoan, Integer timeRepay) {
-        if (timeLoan == null) {
-            return "";
-        }
 
-        Integer timeCurr = GetDate.getNowTime10();
-        if (timeRepay != null && timeCurr > timeRepay) {
-            timeCurr = timeRepay;
-        }
-
-        Integer timeDiff = timeCurr - timeLoan;
-        Integer timeDiffMonth = timeDiff / (60 * 60 * 24 * 31);
-
-        Calendar timeLoanCal = Calendar.getInstance();
-        timeLoanCal.setTimeInMillis(timeLoan * 1000L);
-
-        if (timeDiffMonth >= 1) {
-            timeLoanCal.add(Calendar.MONTH, timeDiffMonth);
-        }
-
-        return GetDate.formatDate(timeLoanCal);
-    }
 
     /**
      * 处理对象数据
@@ -528,7 +485,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @param keys              参数含义
      * @return
      */
-    private List<BorrowProjectDetailBean> dealDetail(List<BorrowProjectDetailBean> projectDetailList, List<BorrowMsgBean> tableData, String keys, String updateTime) {
+    private List<BorrowProjectDetailBean> dealDetail(List<BorrowProjectDetailBean> projectDetailList, List<BorrowDetailBean> tableData, String keys, String updateTime) {
         if (tableData != null && tableData.size() > 0) {
             BorrowProjectDetailBean projectDetailBean = new BorrowProjectDetailBean();
             if ("baseTableData".equals(keys)) {
@@ -1155,7 +1112,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         if (appCreditDetailCustomizeVO != null) {
             List<Object> projectDetail = new ArrayList<>();
 
-            resultMap.put("projectInfo", createTenderCreditDetail(appCreditDetailCustomizeVO));
+            resultMap.put(ProjectConstant.RES_PROJECT_INFO, createTenderCreditDetail(appCreditDetailCustomizeVO));
             String borrowNid = appCreditDetailCustomizeVO.getBidNid();
 
             List<BorrowRepayVO> borrowRepayVOList = amBorrowRepayClient.getBorrowRepayList(borrowNid);
@@ -1242,7 +1199,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 信批需求新增(放款后才显示)
             if(borrow.getStatus() >=4 && borrowRepay != null){
                 //其他信息
-                String updateTime = getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
+                String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
                 otherTableDataJson.put("title", "其他信息（更新于" + updateTime + "）");
                 otherTableDataJson.put("msg", otherTableData);
             }
@@ -1252,7 +1209,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             projectDetail.add(credTableDataJson);
             projectDetail.add(reviewTableDataJson);
             projectDetail.add(otherTableDataJson);
-            resultMap.put("projectDetail",projectDetail);
+            resultMap.put(ProjectConstant.RES_PROJECT_DETAIL,projectDetail);
             // 查询相应的还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             resultMap.put("repayPlan", repayPlanList);
@@ -1265,8 +1222,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             result.setRiskControl(riskControl);*/
 
         }else{
-            resultMap.put("projectInfo",new AppTransferDetailBean());
-            resultMap.put("projectDetail",new ArrayList<Object>());
+            resultMap.put(ProjectConstant.RES_PROJECT_INFO,new AppTransferDetailBean());
+            resultMap.put(ProjectConstant.RES_PROJECT_DETAIL,new ArrayList<Object>());
             resultMap.put("repayPlan",new ArrayList<BorrowRepayPlanCsVO>());
         }
         appResult.setData(resultMap);
@@ -1440,7 +1397,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     public AppResult getAppPlanDetail(Map<String, String> param, String token) {
         AppResult appResult = new AppResult();
         Map<String, Object> resultMap = new HashMap<>();
-        String planId = param.get("planId");
+        String planId = param.get(ProjectConstant.PARAM_APP_PLAN_NID);
         CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
 
 
@@ -1511,14 +1468,27 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus() ? 1 : 0);
 
             try {
-                if (userVO.getIsEvaluationFlag() == 1) {
-                    userLoginInfo.setRiskTested(Boolean.TRUE);
+
+                if(userVO.getIsEvaluationFlag()==1 && null != userVO.getEvaluationExpiredTime()){
+                //测评到期日
+                Long lCreate = userVO.getEvaluationExpiredTime().getTime();
+                //当前日期
+                Long lNow = System.currentTimeMillis();
+                if (lCreate <= lNow) {
+                    //已过期需要重新评测
+                    userLoginInfo.setRiskTested("2");
                 } else {
-                    userLoginInfo.setRiskTested(Boolean.FALSE);
+                    //未到一年有效期
+                    userLoginInfo.setRiskTested("1");
                 }
+            }else{
+                userLoginInfo.setRiskTested("0");
+            }
+
+
             } catch (Exception e) {
                 logger.error("查询用户是否完成风险测评标识出错....", e);
-                userLoginInfo.setRiskTested(Boolean.FALSE);
+                userLoginInfo.setRiskTested("0");
             }
 
             try {
@@ -1554,7 +1524,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     private void setPlanInfo(Map<String, Object> resultMap, PlanDetailCustomizeVO customize) {
 
         ProjectInfo projectInfo = new ProjectInfo();
-        projectInfo.setType(PLAN_TYPE_NAME);
+        projectInfo.setType(ProjectConstant.PLAN_TYPE_NAME);
         // 计划开放额度
         String openAccount = customize.getAvailableInvestAccount();
         projectInfo.setAccount(CommonUtils.formatAmount(openAccount));
@@ -1587,11 +1557,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         projectInfo.setPlanProgressStatus("4");
         projectInfo.setPlanName(customize.getPlanName());
         // 计息时间
-        projectInfo.setOnAccrual(PLAN_ON_ACCRUAL);
+        projectInfo.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
         projectInfo.setRepayStyle(customize.getBorrowStyleName());
 
         Map<String, Object> projectDetail = new HashMap<>();
-        projectDetail.put("addCondition", MessageFormat.format(PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),
+        projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),
                 customize.getDebtInvestmentIncrement()));
 
         // 数据库保存的p标签取出，避免影响前端排版
@@ -1606,8 +1576,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         }
         projectDetail.put("planInfo", planInfo);
 
-        resultMap.put("projectInfo", projectDetail);
-        resultMap.put("projectDetail", projectDetail);
+        resultMap.put(ProjectConstant.RES_PROJECT_INFO, projectInfo);
+        resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetail);
     }
 
 

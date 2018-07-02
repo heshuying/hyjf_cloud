@@ -32,7 +32,7 @@ public class BorrowProjectDetailBean implements Serializable {
 	 */
 	private String title;
 	
-	private List<BorrowMsgBean> msg;
+	private List<BorrowDetailBean> msg;
 
 	public String getId() {
 		return id;
@@ -50,11 +50,11 @@ public class BorrowProjectDetailBean implements Serializable {
 		this.title = title;
 	}
 
-	public List<BorrowMsgBean> getMsg() {
+	public List<BorrowDetailBean> getMsg() {
 		return msg;
 	}
 
-	public void setMsg(List<BorrowMsgBean> msg) {
+	public void setMsg(List<BorrowDetailBean> msg) {
 		this.msg = msg;
 	}
 
