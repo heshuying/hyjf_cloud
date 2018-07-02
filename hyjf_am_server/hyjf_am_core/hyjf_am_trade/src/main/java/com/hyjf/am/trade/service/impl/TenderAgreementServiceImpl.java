@@ -50,4 +50,11 @@ public class TenderAgreementServiceImpl implements TenderAgreementService {
             return false;
         }
     }
+
+    @Override
+    public List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid) {
+        TenderAgreementExample example = new TenderAgreementExample();
+        example.createCriteria().andTenderNidEqualTo(tenderNid).andStatusNotEqualTo(2);
+        return this.tenderAgreementMapper.selectByExample(example);
+    }
 }

@@ -32,5 +32,4 @@ public interface AssetManageService  extends BaseService {
 
     int countRepayMentPlanTotal(AssetManageBeanRequest request);
 
-    List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 }

@@ -82,5 +82,14 @@ public class TenderAgreementController {
         return response;
     }
 
+    @GetMapping("/getTenderAgreementListByTenderNidAndStatusNot2/{tenderNid}")
+    public TenderAgreementResponse getTenderAgreementListByTenderNidAndStatusNot2(@PathVariable String tenderNid){
+        TenderAgreementResponse response = new TenderAgreementResponse();
+        List<TenderAgreement> agreements = this.tenderAgreementService.getTenderAgreementListByTenderNidAndStatusNot2(tenderNid);
+        if (CollectionUtils.isNotEmpty(agreements)){
+            response.setResultList(CommonUtils.convertBeanList(agreements,TenderAgreementVO.class));
+        }
+        return response;
+    }
 
 }

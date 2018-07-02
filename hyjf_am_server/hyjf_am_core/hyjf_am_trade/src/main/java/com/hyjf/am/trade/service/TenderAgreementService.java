@@ -16,4 +16,6 @@ public interface TenderAgreementService {
     TenderAgreement getTenderAgreementInfo(String tenderAgreementID);
 
     boolean updateTenderAgreement(TenderAgreementRequest request);
+
+    List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 }
