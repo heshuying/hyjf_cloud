@@ -79,4 +79,8 @@ public class CommonConstant {
     // hyjf inst_code机构编号
     public static final String HYJF_INST_CODE = "10000000";
 
+    /** 注册成功跳转页面 */
+    public static final String REGIST_RESULT_SUCCESS = "/user/regist/result/success";
+
+
 }

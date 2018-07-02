@@ -9,7 +9,6 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -209,12 +208,12 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 根据userId修改
+	 * 根据user修改
 	 * @param user
 	 * @return
 	 */
 	@Override
-	public int updateUserById(UserVO user) {
+	public Integer updateUserById(UserVO user) {
 		if(user == null || user.getUserId() == null){
 			return 0;
 		}

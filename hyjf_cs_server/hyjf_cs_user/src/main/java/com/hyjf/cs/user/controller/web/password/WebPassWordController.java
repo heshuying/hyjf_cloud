@@ -7,7 +7,9 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -51,7 +53,6 @@ public class WebPassWordController {
         String newPW = passwordRequest.getNewPassword();
         String pwSure = passwordRequest.getPwSure();
         passWordService.checkParam(userVO,oldPW,newPW,pwSure);
-        passWordService.updatePassWd(userVO,newPW);
         return result;
     }
 
@@ -153,5 +154,56 @@ public class WebPassWordController {
         }
         return result;
     }
+
+    /**
+     * 检查密码格式
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/check-password", produces = "application/json; charset=utf-8")
+    public boolean checkParam(@RequestHeader(value = "userId") Integer userId,Map<String,String> param)  {
+        UserVO userVO = passWordService.getUsersById(userId);
+        String name = param.get("name");
+        if (StringUtils.isNotBlank(name)) {
+            if (name.equals("oldpass")) {
+                String password = param.get("oldpass");
+                password = MD5Utils.MD5(MD5Utils.MD5(password) + userVO.getSalt());
+                CheckUtil.check(password.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
+                return true;
+            } else if (name.equals("password")) {
+                String password = param.get("password");
+                passWordService.checkPassword(password);
+                return true;
+            } else if (name.equals("repassword")) {
+                String passwrod = param.get("password");
+                String passwrod2 = param.get("repassword");
+                passWordService.checkPassword(passwrod2);
+                if (!passwrod.equals(passwrod2)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (name.equals("rlName")) {
+                String rlName = param.get("rlName");
+                if (rlName.length() < 2 || rlName.length() > 4) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (name.equals("rlPhone")) {
+                String rlPhone = param.get("rlPhone");
+                if (rlPhone.length() != 11 || !Validator.isMobile(rlPhone)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 
 }
