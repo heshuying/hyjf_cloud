@@ -29,7 +29,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/am-trade/batchHjhBorrowRepay")
-public class BatchHjhBorrowRepayController {
+public class BatchHjhBorrowRepayController extends BaseController {
 
     @Autowired
     BatchHjhBorrowRepayService batchHjhBorrowRepayService;

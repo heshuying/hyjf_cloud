@@ -6,10 +6,11 @@ package com.hyjf.am.trade.service.impl;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.service.HjhAccedeService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,4 +59,42 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
 		}
 		return true;
     }
+
+
+    /**
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public HjhAccede getHjhAccedeByAccedeOrderId(String accedeOrderId) {
+        HjhAccedeExample example = new HjhAccedeExample();
+        example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
+        List<HjhAccede> hjhAccedes = this.hjhAccedeMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(hjhAccedes)){
+            return hjhAccedes.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 计算加入总数
+     * @author zhangyk
+     * @date 2018/6/27 19:10
+     */
+    @Override
+    public int countAccede(String planNid) {
+        HjhAccedeExample example = new HjhAccedeExample();
+        HjhAccedeExample.Criteria criteria = example.createCriteria();
+        criteria.andPlanNidEqualTo(planNid);
+        int count = hjhAccedeMapper.countByExample(example);
+        return count;
+    }
+
+    @Override
+    public List<PlanDetailCustomize> getPlanDetail(String planNid) {
+        return null;
+    }
+
+
 }

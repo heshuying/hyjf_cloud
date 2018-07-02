@@ -4,13 +4,20 @@
 package com.hyjf.am.trade.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
+import com.hyjf.am.vo.trade.CreditPageVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 
 /**
  * 银行债转异常处理
@@ -37,4 +44,54 @@ public interface BankCreditTenderService {
 
 	List<BorrowCredit> getBorrowCreditList(BorrowCreditRequest request);
 
+    List<CreditTender> getCreditTenderList(CreditTenderRequest request);
+
+	List<TenderToCreditDetailCustomize> selectWebCreditTenderDetailForContract(Map<String, Object> params);
+
+    List<TenderToCreditDetailCustomize> selectHJHWebCreditTenderDetail(Map<String,Object> params);
+
+    /**
+     * 获取我要转让页面的金额
+     * @param userId
+     * @return
+     */
+    CreditPageVO selectCreditPageMoneyTotal(Integer userId);
+
+    /**
+     * 查询我可转让列表数量
+     * @param request
+     * @return
+     */
+    int searchCreditListCount(MyCreditListQueryRequest request);
+
+    /**
+     * 查询我可转让列表数量
+     * @param request
+     * @return
+     */
+    List<TenderCreditCustomize> searchCreditList(MyCreditListQueryRequest request);
+
+    /**
+     * 查询债转详情
+     * @param userId
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    TenderCreditCustomize selectTenderToCreditDetail(Integer userId, String borrowNid, String tenderNid);
+
+    /**
+     * 债转详细预计服务费计算
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
+
+    /**
+     * 投资人当天是否可以债转
+     * @param userId
+     * @return
+     */
+    Integer tenderAbleToCredit(Integer userId);
 }

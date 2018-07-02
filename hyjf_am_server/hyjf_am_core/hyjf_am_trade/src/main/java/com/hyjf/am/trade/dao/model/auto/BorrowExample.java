@@ -256,6 +256,136 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
+        public Criteria andUserIdIsNull() {
+            addCriterion("user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdIsNotNull() {
+            addCriterion("user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdEqualTo(Integer value) {
+            addCriterion("user_id =", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdNotEqualTo(Integer value) {
+            addCriterion("user_id <>", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdGreaterThan(Integer value) {
+            addCriterion("user_id >", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("user_id >=", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdLessThan(Integer value) {
+            addCriterion("user_id <", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("user_id <=", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdIn(List<Integer> values) {
+            addCriterion("user_id in", values, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdNotIn(List<Integer> values) {
+            addCriterion("user_id not in", values, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("user_id between", value1, value2, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("user_id not between", value1, value2, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameIsNull() {
+            addCriterion("borrow_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameIsNotNull() {
+            addCriterion("borrow_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameEqualTo(String value) {
+            addCriterion("borrow_user_name =", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameNotEqualTo(String value) {
+            addCriterion("borrow_user_name <>", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameGreaterThan(String value) {
+            addCriterion("borrow_user_name >", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("borrow_user_name >=", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameLessThan(String value) {
+            addCriterion("borrow_user_name <", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameLessThanOrEqualTo(String value) {
+            addCriterion("borrow_user_name <=", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameLike(String value) {
+            addCriterion("borrow_user_name like", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameNotLike(String value) {
+            addCriterion("borrow_user_name not like", value, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameIn(List<String> values) {
+            addCriterion("borrow_user_name in", values, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameNotIn(List<String> values) {
+            addCriterion("borrow_user_name not in", values, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameBetween(String value1, String value2) {
+            addCriterion("borrow_user_name between", value1, value2, "borrowUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowUserNameNotBetween(String value1, String value2) {
+            addCriterion("borrow_user_name not between", value1, value2, "borrowUserName");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusIsNull() {
             addCriterion("`status` is null");
             return (Criteria) this;

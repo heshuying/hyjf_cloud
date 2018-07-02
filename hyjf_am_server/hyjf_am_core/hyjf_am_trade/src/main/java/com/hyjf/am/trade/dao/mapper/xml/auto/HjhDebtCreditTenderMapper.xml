@@ -39,6 +39,7 @@
     <result column="assign_repay_yes_time" property="assignRepayYesTime" jdbcType="INTEGER" />
     <result column="assign_repay_period" property="assignRepayPeriod" jdbcType="INTEGER" />
     <result column="assign_type" property="assignType" jdbcType="TINYINT" />
+    <result column="tender_type" property="tenderType" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="assign_service_apr" property="assignServiceApr" jdbcType="DECIMAL" />
     <result column="assign_service_fee" property="assignServiceFee" jdbcType="DECIMAL" />
@@ -117,7 +118,7 @@
     assign_interest_advance, assign_price, assign_pay, repay_account_yes, repay_capital_yes, 
     repay_interest_yes, repay_account_wait, repay_capital_wait, repay_interest_wait, 
     assign_repay_end_time, assign_repay_last_time, assign_repay_next_time, assign_repay_yes_time, 
-    assign_repay_period, assign_type, `status`, assign_service_apr, assign_service_fee, 
+    assign_repay_period, assign_type, tender_type, `status`, assign_service_apr, assign_service_fee, 
     client, del_flag, create_user_id, create_user_name, update_user_id, update_user_name, 
     create_time, update_time
   </sql>
@@ -171,11 +172,11 @@
       repay_capital_wait, repay_interest_wait, assign_repay_end_time, 
       assign_repay_last_time, assign_repay_next_time, 
       assign_repay_yes_time, assign_repay_period, 
-      assign_type, `status`, assign_service_apr, 
-      assign_service_fee, client, del_flag, 
-      create_user_id, create_user_name, update_user_id, 
-      update_user_name, create_time, update_time
-      )
+      assign_type, tender_type, `status`, 
+      assign_service_apr, assign_service_fee, client, 
+      del_flag, create_user_id, create_user_name, 
+      update_user_id, update_user_name, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{creditUserId,jdbcType=INTEGER}, 
       #{creditUserName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{repayPeriod,jdbcType=INTEGER}, 
       #{creditNid,jdbcType=VARCHAR}, #{investOrderId,jdbcType=VARCHAR}, #{sellOrderId,jdbcType=VARCHAR}, 
@@ -189,11 +190,11 @@
       #{repayCapitalWait,jdbcType=DECIMAL}, #{repayInterestWait,jdbcType=DECIMAL}, #{assignRepayEndTime,jdbcType=INTEGER}, 
       #{assignRepayLastTime,jdbcType=INTEGER}, #{assignRepayNextTime,jdbcType=INTEGER}, 
       #{assignRepayYesTime,jdbcType=INTEGER}, #{assignRepayPeriod,jdbcType=INTEGER}, 
-      #{assignType,jdbcType=TINYINT}, #{status,jdbcType=INTEGER}, #{assignServiceApr,jdbcType=DECIMAL}, 
-      #{assignServiceFee,jdbcType=DECIMAL}, #{client,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{assignType,jdbcType=TINYINT}, #{tenderType,jdbcType=TINYINT}, #{status,jdbcType=INTEGER}, 
+      #{assignServiceApr,jdbcType=DECIMAL}, #{assignServiceFee,jdbcType=DECIMAL}, #{client,jdbcType=INTEGER}, 
+      #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -308,6 +309,9 @@
       </if>
       <if test="assignType != null" >
         assign_type,
+      </if>
+      <if test="tenderType != null" >
+        tender_type,
       </if>
       <if test="status != null" >
         `status`,
@@ -451,6 +455,9 @@
       </if>
       <if test="assignType != null" >
         #{assignType,jdbcType=TINYINT},
+      </if>
+      <if test="tenderType != null" >
+        #{tenderType,jdbcType=TINYINT},
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
@@ -607,6 +614,9 @@
       <if test="record.assignType != null" >
         assign_type = #{record.assignType,jdbcType=TINYINT},
       </if>
+      <if test="record.tenderType != null" >
+        tender_type = #{record.tenderType,jdbcType=TINYINT},
+      </if>
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=INTEGER},
       </if>
@@ -684,6 +694,7 @@
       assign_repay_yes_time = #{record.assignRepayYesTime,jdbcType=INTEGER},
       assign_repay_period = #{record.assignRepayPeriod,jdbcType=INTEGER},
       assign_type = #{record.assignType,jdbcType=TINYINT},
+      tender_type = #{record.tenderType,jdbcType=TINYINT},
       `status` = #{record.status,jdbcType=INTEGER},
       assign_service_apr = #{record.assignServiceApr,jdbcType=DECIMAL},
       assign_service_fee = #{record.assignServiceFee,jdbcType=DECIMAL},
@@ -810,6 +821,9 @@
       <if test="assignType != null" >
         assign_type = #{assignType,jdbcType=TINYINT},
       </if>
+      <if test="tenderType != null" >
+        tender_type = #{tenderType,jdbcType=TINYINT},
+      </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=INTEGER},
       </if>
@@ -884,6 +898,7 @@
       assign_repay_yes_time = #{assignRepayYesTime,jdbcType=INTEGER},
       assign_repay_period = #{assignRepayPeriod,jdbcType=INTEGER},
       assign_type = #{assignType,jdbcType=TINYINT},
+      tender_type = #{tenderType,jdbcType=TINYINT},
       `status` = #{status,jdbcType=INTEGER},
       assign_service_apr = #{assignServiceApr,jdbcType=DECIMAL},
       assign_service_fee = #{assignServiceFee,jdbcType=DECIMAL},

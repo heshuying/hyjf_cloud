@@ -29,4 +29,12 @@ public interface AmBorrowRepayClient {
      * @return
      */
     Integer updateBorrowRepay(BorrowRepayVO borrowRepayVO);
+
+
+    /**
+     * 根据borrowNid 获取还款信息
+     * @author zhangyk
+     * @date 2018/6/30 14:01
+     */
+    List<BorrowRepayVO> getBorrowRepayList(String borrowNid);
 }

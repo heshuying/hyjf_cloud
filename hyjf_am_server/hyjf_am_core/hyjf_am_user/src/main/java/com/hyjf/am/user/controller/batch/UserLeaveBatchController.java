@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.batch;
 
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.batch.UserLeaveBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/userBatch/leave")
-public class UserLeaveBatchController {
-    private static final Logger logger = LoggerFactory.getLogger(UserLeaveBatchController.class);
+public class UserLeaveBatchController extends BaseController {
 
     @Autowired
     private UserLeaveBatchService userLeaveBatchService;

@@ -7,7 +7,7 @@
     <result column="week" property="week" jdbcType="VARCHAR" />
     <result column="interest_wait_total" property="interestWaitTotal" jdbcType="DECIMAL" />
     <result column="interest_yes_total" property="interestYesTotal" jdbcType="DECIMAL" />
-    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -117,7 +117,7 @@
       update_user_id, create_time, update_time
       )
     values (#{day,jdbcType=VARCHAR}, #{week,jdbcType=VARCHAR}, #{interestWaitTotal,jdbcType=DECIMAL}, 
-      #{interestYesTotal,jdbcType=DECIMAL}, #{delFlag,jdbcType=BIT}, #{createUserId,jdbcType=INTEGER}, 
+      #{interestYesTotal,jdbcType=DECIMAL}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -169,7 +169,7 @@
         #{interestYesTotal,jdbcType=DECIMAL},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=BIT},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -210,7 +210,7 @@
         interest_yes_total = #{record.interestYesTotal,jdbcType=DECIMAL},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=BIT},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -236,7 +236,7 @@
       week = #{record.week,jdbcType=VARCHAR},
       interest_wait_total = #{record.interestWaitTotal,jdbcType=DECIMAL},
       interest_yes_total = #{record.interestYesTotal,jdbcType=DECIMAL},
-      del_flag = #{record.delFlag,jdbcType=BIT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -261,7 +261,7 @@
         interest_yes_total = #{interestYesTotal,jdbcType=DECIMAL},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=BIT},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -284,7 +284,7 @@
       week = #{week,jdbcType=VARCHAR},
       interest_wait_total = #{interestWaitTotal,jdbcType=DECIMAL},
       interest_yes_total = #{interestYesTotal,jdbcType=DECIMAL},
-      del_flag = #{delFlag,jdbcType=BIT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

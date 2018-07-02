@@ -69,7 +69,7 @@ public class AssetListController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
-		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.hjhInstConfigList();
+		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
 		jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 		// 2.产品类型(可复用)
 /*		List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());

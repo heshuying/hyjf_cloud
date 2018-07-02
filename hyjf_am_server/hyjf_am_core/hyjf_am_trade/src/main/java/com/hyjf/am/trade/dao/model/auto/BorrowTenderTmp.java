@@ -83,6 +83,8 @@ public class BorrowTenderTmp implements Serializable {
 
     private Integer isBankTender;
 
+    private String tenderFrom;
+
     private String retCode;
 
     private String retMsg;
@@ -401,6 +403,14 @@ public class BorrowTenderTmp implements Serializable {
 
     public void setIsBankTender(Integer isBankTender) {
         this.isBankTender = isBankTender;
+    }
+
+    public String getTenderFrom() {
+        return tenderFrom;
+    }
+
+    public void setTenderFrom(String tenderFrom) {
+        this.tenderFrom = tenderFrom == null ? null : tenderFrom.trim();
     }
 
     public String getRetCode() {

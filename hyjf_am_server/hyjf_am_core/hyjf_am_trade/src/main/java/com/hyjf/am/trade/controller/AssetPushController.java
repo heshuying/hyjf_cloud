@@ -26,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/assetPush")
-public class AssetPushController {
+public class AssetPushController extends BaseController {
 
     @Autowired
     private AssetPushService assetPushService;

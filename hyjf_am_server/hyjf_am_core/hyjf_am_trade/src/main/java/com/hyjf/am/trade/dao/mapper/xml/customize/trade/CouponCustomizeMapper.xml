@@ -133,6 +133,37 @@
 			bt.user_id = #{userId} AND bt.borrow_nid=#{borrowNid}  AND crt.real_tender_id=#{logOrdId} AND ct.coupon_grant_id=#{couponGrantId}
 	</select>
 
-
+	<select id="selectCouponConfigByGrantId" resultMap="BaseResultMap" parameterType="java.util.Map">
+	    SELECT
+			cc.coupon_code,
+			cc.coupon_type,
+			cc.coupon_system,
+			cc.coupon_quota,
+			cc.project_expiration_type,
+			cc.project_expiration_length,
+			cc.project_expiration_length_min,
+			cc.project_expiration_length_max,
+			cc.project_type,
+			cc.tender_quota_type,
+			cc.tender_quota,
+			cc.tender_quota_min,
+			cc.tender_quota_max,
+			cu.coupon_user_code,
+			cu.end_time,
+			cu.used_flag,
+			cu.update_time,
+			cc.add_flg add_flg,
+			cc.coupon_profit_time coupon_profit_time,
+			cc.repay_time_config repayTimeConfig,
+			cc.coupon_profit_time couponProfitTime
+		FROM
+			ht_coupon_user cu
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+			cu.id = #{couponGrantId}
+		AND cu.user_id=#{userId}
+		AND cu.del_flag = 0
+		AND cc.del_flg = 0
+	</select>
 
 </mapper>

@@ -16,12 +16,12 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.common.util.CommonUtils;
 
 /**
- * @author ${yaoy}
+ * @author $yaoy
  * @version BorrowApicronController, v0.1 2018/6/14 16:44
  */
 @RestController
 @RequestMapping("/am-trade/borrowApicron")
-public class BorrowApicronController {
+public class BorrowApicronController extends BaseController {
 
 	@Autowired
 	private BorrowApicronService borrowApicronService;

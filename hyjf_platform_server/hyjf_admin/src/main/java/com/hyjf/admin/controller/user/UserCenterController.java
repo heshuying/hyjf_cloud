@@ -37,7 +37,7 @@ import java.util.Map;
 public class UserCenterController {
 
     //public static final String PERMISSIONS = "userslist";
-    public static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
+    private static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
     @Autowired
     private UserCenterService userCenterService;
 
@@ -549,9 +549,6 @@ public class UserCenterController {
             if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
                 request.setLimit((Integer)mapParam.get("limit"));
             }
-            /*if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                request.setLimitEnd((Integer)mapParam.get("limitEnd"));
-            }*/
         }
         return request;
     }

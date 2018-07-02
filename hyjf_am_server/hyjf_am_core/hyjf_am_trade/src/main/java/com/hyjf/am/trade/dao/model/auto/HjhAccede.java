@@ -89,7 +89,7 @@ public class HjhAccede implements Serializable {
 
     private Integer investCounts;
 
-    private Byte matchDates;
+    private Integer matchDates;
 
     private BigDecimal lqdServiceFee;
 
@@ -447,11 +447,11 @@ public class HjhAccede implements Serializable {
         this.investCounts = investCounts;
     }
 
-    public Byte getMatchDates() {
+    public Integer getMatchDates() {
         return matchDates;
     }
 
-    public void setMatchDates(Byte matchDates) {
+    public void setMatchDates(Integer matchDates) {
         this.matchDates = matchDates;
     }
 

@@ -11,7 +11,7 @@
     <result column="act_month" property="actMonth" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -118,7 +118,7 @@
       )
     values (#{userId,jdbcType=INTEGER}, #{totalInterest,jdbcType=DECIMAL}, #{reward,jdbcType=DECIMAL}, 
       #{status,jdbcType=TINYINT}, #{giveTime,jdbcType=INTEGER}, #{actMonth,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}
+      #{remark,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProductRewardList" >
@@ -181,7 +181,7 @@
         #{orderId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -222,7 +222,7 @@
         order_id = #{record.orderId,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -240,7 +240,7 @@
       act_month = #{record.actMonth,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       order_id = #{record.orderId,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -273,7 +273,7 @@
         order_id = #{orderId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -288,7 +288,7 @@
       act_month = #{actMonth,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       order_id = #{orderId,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class PoundageLedger implements Serializable {
     private Integer id;
@@ -34,13 +35,13 @@ public class PoundageLedger implements Serializable {
 
     private String explan;
 
-    private Integer createTime;
-
     private Integer createre;
 
-    private Integer updateTime;
-
     private Integer updater;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -164,14 +165,6 @@ public class PoundageLedger implements Serializable {
         this.explan = explan == null ? null : explan.trim();
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getCreatere() {
         return createre;
     }
@@ -180,19 +173,27 @@ public class PoundageLedger implements Serializable {
         this.createre = createre;
     }
 
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getUpdater() {
         return updater;
     }
 
     public void setUpdater(Integer updater) {
         this.updater = updater;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

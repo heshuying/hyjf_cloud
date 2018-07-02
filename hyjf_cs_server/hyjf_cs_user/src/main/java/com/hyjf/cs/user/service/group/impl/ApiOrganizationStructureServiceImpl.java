@@ -31,6 +31,10 @@ public class ApiOrganizationStructureServiceImpl extends BaseUserServiceImpl imp
     @Autowired
     AmUserClient amUserClient;
 
+    /**
+     * 查询集团组织结构
+     * @param bean 主要是instCode 机构编号
+     * */
     @Override
     public List<OrganizationStructureVO> queryInfo(OrganizationStructureRequestBean bean) {
         //校验参数

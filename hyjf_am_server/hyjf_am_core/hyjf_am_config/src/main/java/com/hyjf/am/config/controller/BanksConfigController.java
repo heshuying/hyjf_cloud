@@ -21,9 +21,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+/**
+ * @author xiasq
+ * @version BanksConfigController, v0.1 2018/6/22 14:28
+ */
 @RestController
 @RequestMapping("/am-config/config")
-public class BanksConfigController {
+public class BanksConfigController extends BaseConfigController{
 
     @Autowired
     private BankConfigService bankConfigService;
@@ -103,7 +107,8 @@ public class BanksConfigController {
         if(null!=listBankConfig&&listBankConfig.size()>0){
             List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
             response.setResultList(listBanksConfig);
-            response.setRtn(Response.SUCCESS);//代表成功
+            //代表成功
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }

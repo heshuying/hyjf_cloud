@@ -2,8 +2,6 @@ package com.hyjf.am.user.controller;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +20,7 @@ import com.hyjf.am.user.service.SmsService;
 
 @RestController
 @RequestMapping("/am-user/smsCode")
-public class SmsCodeController {
-	private static Logger logger = LoggerFactory.getLogger(SmsCodeController.class);
+public class SmsCodeController extends BaseController{
 
 	@Autowired
 	private SmsService smsService;

@@ -11,7 +11,7 @@ import java.util.List;
  * @author pangchengchao
  * @version TradeDetailService, v0.1 2018/6/27 15:45
  */
-public interface TradeDetailService {
+public interface TradeDetailService  extends BaseService {
     List<WebUserTradeListCustomize> searchUserTradeList(TradeDetailBeanRequest request);
 
     int countUserTradeRecordTotal(TradeDetailBeanRequest request);

@@ -39,13 +39,13 @@ import java.util.Map;
 public class ActivityListController {
     private static final Logger logger = LoggerFactory.getLogger(ActivityListController.class);
 
-    @Value("http://cdn.huiyingdai.com/")
+    @Value("${http://cdn.huiyingdai.com/}")
     private String fileDomainUrl;
 
     @Autowired
     private ActivityListService activityListService;
 
-    @ApiOperation(value = "页面初始化", notes = "活动列表")
+    @ApiOperation(value = "活动列表", notes = "页面初始化")
     @PostMapping("/activityListInit")
     public JSONObject activityListInit() {
         JSONObject jsonObject = new JSONObject();
@@ -140,7 +140,7 @@ public class ActivityListController {
         return forBack;
     }
 
-    @ApiOperation(value = "添加活动信息", notes = "活动列表")
+    @ApiOperation(value = "活动列表", notes = "添加活动配置")
     @PostMapping("/insertAction")
     public JSONObject insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
@@ -154,7 +154,7 @@ public class ActivityListController {
         return jsonObject;
     }
 
-    @ApiOperation(value = "获取活动修改初始信息", notes = "活动列表")
+    @ApiOperation(value = "活动列表", notes = "获取活动修改初始信息")
     @PostMapping("/initUpdateActivity")
     public JSONObject initUpdateActivity(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject();
@@ -165,8 +165,8 @@ public class ActivityListController {
         return jsonObject;
     }
 
-    @ApiOperation(value = "修改活动信息",notes = "活动列表")
-    @PostMapping("/updateActivity")
+    @ApiOperation(value = "活动列表",notes = "修改活动信息")
+    @PostMapping("/updateAction")
     public JSONObject updateActivity(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         //1代表插入成功， 0为失败
@@ -179,10 +179,33 @@ public class ActivityListController {
         return jsonObject;
     }
 
-    @ApiOperation(value = "资料上传",notes = "活动列表")
+    @ApiOperation(value = "活动列表",notes = "资料上传")
     @PostMapping("/uploadFile")
-    public JSONObject uploadFile() {
-        // TODO: 2018/6/27
-        return null;
+    public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = new JSONObject();
+        String file = null;
+        try {
+            file = activityListService.uploadFile(request,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("资料上传失败");
+        }
+        jsonObject.put("file",file);
+        return jsonObject;
     }
+
+    @ApiOperation(value = "活动列表",notes = "删除配置信息")
+    @PostMapping("/deleteAction")
+    public JSONObject deleteRecordAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
+        JSONObject jsonObject = new JSONObject();
+        int id = Integer.parseInt(map.get("id").toString());
+        int deleteFlag = activityListService.deleteActivity(id);
+        if (deleteFlag == 1) {
+            jsonObject.put("deleteFlag", "success");
+        } else {
+            jsonObject.put("deleteFlag", "fail");
+        }
+        return jsonObject;
+    }
+
 }

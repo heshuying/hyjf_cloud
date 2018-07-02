@@ -1,28 +1,22 @@
 package com.hyjf.am.trade.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.AssetManageResponse;
-import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
-import com.hyjf.am.trade.dao.model.customize.trade.CurrentHoldObligatoryRightListCustomize;
-import com.hyjf.am.trade.service.AssetManageService;
-import com.hyjf.am.trade.service.TenderAgreementService;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.hyjf.am.response.trade.AssetManageResponse;
+import com.hyjf.am.response.trade.TenderAgreementResponse;
+import com.hyjf.am.resquest.trade.TenderAgreementRequest;
+import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.service.TenderAgreementService;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
+
+import io.swagger.annotations.Api;
 
 /**
  * @author pangchengchao
@@ -31,8 +25,7 @@ import java.util.List;
 @Api(value = "法大大协议信息")
 @RestController
 @RequestMapping("/am-trade/tenderagreement")
-public class TenderAgreementController {
-    private static Logger logger = LoggerFactory.getLogger(TenderAgreementController.class);
+public class TenderAgreementController extends BaseController{
 
     @Autowired
     private TenderAgreementService tenderAgreementService;
@@ -53,4 +46,41 @@ public class TenderAgreementController {
         }
         return response;
     }
+
+
+    @GetMapping("/getTenderAgreementInfo/{tenderAgreementID}")
+    public TenderAgreementResponse getTenderAgreementInfo(@PathVariable String tenderAgreementID){
+        TenderAgreementResponse response = new TenderAgreementResponse();
+        TenderAgreement tenderAgreement=tenderAgreementService.getTenderAgreementInfo(tenderAgreementID);
+        if (Validator.isNotNull(tenderAgreement)){
+            response.setResult(CommonUtils.convertBean(tenderAgreement,TenderAgreementVO.class));
+        }
+        return response;
+    }
+
+    @PostMapping("/updateTenderAgreement")
+    public boolean updateTenderAgreement(@RequestBody TenderAgreementRequest request){
+        return tenderAgreementService.updateTenderAgreement(request);
+    }
+
+    @GetMapping("/selectTenderAgreementByTenderNid/{tenderNid}")
+    public TenderAgreementResponse selectTenderAgreementByTenderNid(@PathVariable String tenderNid){
+        TenderAgreementResponse response = new TenderAgreementResponse();
+        List<TenderAgreement> tenderAgreements=tenderAgreementService.selectTenderAgreementByNid(tenderNid);
+        if (CollectionUtils.isNotEmpty(tenderAgreements)){
+            response.setResultList(CommonUtils.convertBeanList(tenderAgreements,TenderAgreementVO.class));
+        }
+        return response;
+    }
+
+    @GetMapping("/getTenderAgreementListByTenderNidAndStatusNot2/{tenderNid}")
+    public TenderAgreementResponse getTenderAgreementListByTenderNidAndStatusNot2(@PathVariable String tenderNid){
+        TenderAgreementResponse response = new TenderAgreementResponse();
+        List<TenderAgreement> agreements = this.tenderAgreementService.getTenderAgreementListByTenderNidAndStatusNot2(tenderNid);
+        if (CollectionUtils.isNotEmpty(agreements)){
+            response.setResultList(CommonUtils.convertBeanList(agreements,TenderAgreementVO.class));
+        }
+        return response;
+    }
+
 }

@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class ProductInfo implements Serializable {
     private Integer id;
@@ -20,11 +21,11 @@ public class ProductInfo implements Serializable {
 
     private BigDecimal investAmount;
 
-    private Integer createTime;
-
     private String dataDate;
 
     private String dataMonth;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -92,14 +93,6 @@ public class ProductInfo implements Serializable {
         this.investAmount = investAmount;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public String getDataDate() {
         return dataDate;
     }
@@ -114,5 +107,13 @@ public class ProductInfo implements Serializable {
 
     public void setDataMonth(String dataMonth) {
         this.dataMonth = dataMonth == null ? null : dataMonth.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

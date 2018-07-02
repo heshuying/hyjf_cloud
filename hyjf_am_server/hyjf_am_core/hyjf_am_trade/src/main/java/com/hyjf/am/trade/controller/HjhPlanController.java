@@ -4,27 +4,29 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.HjhLabelResponse;
+import com.hyjf.am.response.trade.UserHjhInvistDetailCustomizeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.HjhPlanService;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -32,7 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/hjhPlan")
-public class HjhPlanController {
+public class HjhPlanController extends BaseController{
 
     @Autowired
     private HjhPlanService hjhPlanService;
@@ -101,5 +103,15 @@ public class HjhPlanController {
         return hjhPlanService.insertHJHPlanAccede(planAccede,useraccount);
     }
 
+
+    @PostMapping("/selectUserHjhInvistDetail")
+    public UserHjhInvistDetailCustomizeResponse selectUserHjhInvistDetail(@RequestBody Map<String, Object> params){
+        UserHjhInvistDetailCustomizeResponse response = new UserHjhInvistDetailCustomizeResponse();
+        UserHjhInvistDetailCustomize userHjhInvistDetailCustomize = hjhPlanService.selectUserHjhInvistDetail(params);
+        if (Validator.isNotNull(userHjhInvistDetailCustomize)){
+            response.setResult(CommonUtils.convertBean(userHjhInvistDetailCustomize,UserHjhInvistDetailCustomizeVO.class));
+        }
+        return response;
+    }
 
 }

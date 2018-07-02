@@ -220,6 +220,8 @@
         <result column="asset_type" property="assetType" jdbcType="TINYINT" />
         <!-- 原始状态  -->
         <result column="status_orginal" property="statusOrginal" />
+        <!--标的审核状态-->
+        <result column="project_status" property="projectStatus"></result>
 
     </resultMap>
     <!--Web端获取项目列表-->
@@ -295,6 +297,7 @@
         hydb.borrow_nid,
         hydbpt.borrow_project_type AS project_type,
         hydbpt.borrow_cd AS type,
+        hydbpt.reverify_status AS project_status,
         hydbpt.borrow_name AS type_name,
         hydb.`name` AS borrow_name,
         IFNULL(hydb.project_name,hydb.borrow_nid) as project_name,

@@ -11,4 +11,12 @@ public interface BatchHjhAccedeCustomizeMapper {
 	 * @return
 	 */
     int updateOfPlanLoansTender(HjhAccede accede);
+
+    /**
+     * 
+     * 更新待收收益
+     * @param hjhAccede
+     * @return
+     */
+    int updateInterest(HjhAccede hjhAccede);
 }

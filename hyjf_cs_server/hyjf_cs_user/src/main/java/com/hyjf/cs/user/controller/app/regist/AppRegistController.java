@@ -7,9 +7,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.DES;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -38,7 +39,7 @@ public class AppRegistController extends BaseUserController {
     private RegistService registService;
 
     @Autowired
-    private AmUserClient amUserClient;
+    private SystemConfig systemConfig;
 
     /**
      * 注册
@@ -53,16 +54,25 @@ public class AppRegistController extends BaseUserController {
         logger.info("app端注册接口, register is :{}", JSONObject.toJSONString(register));
         AppResult<WebViewUserVO> result = new AppResult<>();
         String mobilephone = DES.decodeValue(key, register.getMobile());
-        String smsCode = DES.decodeValue(key,register.getSmsCode());
+        String smsCode = DES.decodeValue(key,register.getVerificationCode());
         String pwd = DES.decodeValue(key, register.getPassword());
         String reffer = DES.decodeValue(key, register.getReffer());
+        //检查版本
+        String version = register.getVersion();
+        if(version.length()>=5){
+            version = version.substring(0, 5);
+        }
+        CheckUtil.check(version.compareTo("1.4.0")>0,MsgEnum.STATUS_CE000014);
         register = new RegisterRequest();
         register.setMobile(mobilephone);
         register.setPassword(pwd);
         register.setReffer(reffer);
-        register.setSmsCode(smsCode);
+        register.setVerificationCode(smsCode);
         registService.checkParam(register);
         WebViewUserVO userVO = registService.register(register, GetCilentIP.getIpAddr(request));
+        if (!registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
+
+        }
         result.setData(userVO);
         if (userVO != null) {
             logger.info("app端注册成功, userId is :{}", userVO.getUserId());

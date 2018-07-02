@@ -41,6 +41,7 @@
     <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
     <result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
     <result column="is_bank_tender" property="isBankTender" jdbcType="INTEGER" />
+    <result column="tender_from" property="tenderFrom" jdbcType="VARCHAR" />
     <result column="ret_code" property="retCode" jdbcType="VARCHAR" />
     <result column="ret_msg" property="retMsg" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -111,7 +112,7 @@
     recover_late_fee, loan_amount, loan_fee, add_ip, client, invite_user_name, invite_user_id, 
     invite_region_id, invite_region_name, invite_branch_id, invite_branch_name, invite_department_id, 
     invite_department_name, tender_user_attribute, invite_user_attribute, order_date, 
-    coupon_grant_id, is_bank_tender, ret_code, ret_msg, create_time
+    coupon_grant_id, is_bank_tender, tender_from, ret_code, ret_msg, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample" >
     select
@@ -164,8 +165,8 @@
       invite_branch_name, invite_department_id, invite_department_name, 
       tender_user_attribute, invite_user_attribute, 
       order_date, coupon_grant_id, is_bank_tender, 
-      ret_code, ret_msg, create_time
-      )
+      tender_from, ret_code, ret_msg, 
+      create_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{borrowNid,jdbcType=VARCHAR}, 
       #{nid,jdbcType=VARCHAR}, #{account,jdbcType=DECIMAL}, #{recoverFullStatus,jdbcType=TINYINT}, 
@@ -180,8 +181,8 @@
       #{inviteBranchName,jdbcType=VARCHAR}, #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
       #{tenderUserAttribute,jdbcType=INTEGER}, #{inviteUserAttribute,jdbcType=INTEGER}, 
       #{orderDate,jdbcType=VARCHAR}, #{couponGrantId,jdbcType=INTEGER}, #{isBankTender,jdbcType=INTEGER}, 
-      #{retCode,jdbcType=VARCHAR}, #{retMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{tenderFrom,jdbcType=VARCHAR}, #{retCode,jdbcType=VARCHAR}, #{retMsg,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -302,6 +303,9 @@
       </if>
       <if test="isBankTender != null" >
         is_bank_tender,
+      </if>
+      <if test="tenderFrom != null" >
+        tender_from,
       </if>
       <if test="retCode != null" >
         ret_code,
@@ -427,6 +431,9 @@
       </if>
       <if test="isBankTender != null" >
         #{isBankTender,jdbcType=INTEGER},
+      </if>
+      <if test="tenderFrom != null" >
+        #{tenderFrom,jdbcType=VARCHAR},
       </if>
       <if test="retCode != null" >
         #{retCode,jdbcType=VARCHAR},
@@ -565,6 +572,9 @@
       <if test="record.isBankTender != null" >
         is_bank_tender = #{record.isBankTender,jdbcType=INTEGER},
       </if>
+      <if test="record.tenderFrom != null" >
+        tender_from = #{record.tenderFrom,jdbcType=VARCHAR},
+      </if>
       <if test="record.retCode != null" >
         ret_code = #{record.retCode,jdbcType=VARCHAR},
       </if>
@@ -620,6 +630,7 @@
       order_date = #{record.orderDate,jdbcType=VARCHAR},
       coupon_grant_id = #{record.couponGrantId,jdbcType=INTEGER},
       is_bank_tender = #{record.isBankTender,jdbcType=INTEGER},
+      tender_from = #{record.tenderFrom,jdbcType=VARCHAR},
       ret_code = #{record.retCode,jdbcType=VARCHAR},
       ret_msg = #{record.retMsg,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
@@ -744,6 +755,9 @@
       <if test="isBankTender != null" >
         is_bank_tender = #{isBankTender,jdbcType=INTEGER},
       </if>
+      <if test="tenderFrom != null" >
+        tender_from = #{tenderFrom,jdbcType=VARCHAR},
+      </if>
       <if test="retCode != null" >
         ret_code = #{retCode,jdbcType=VARCHAR},
       </if>
@@ -796,6 +810,7 @@
       order_date = #{orderDate,jdbcType=VARCHAR},
       coupon_grant_id = #{couponGrantId,jdbcType=INTEGER},
       is_bank_tender = #{isBankTender,jdbcType=INTEGER},
+      tender_from = #{tenderFrom,jdbcType=VARCHAR},
       ret_code = #{retCode,jdbcType=VARCHAR},
       ret_msg = #{retMsg,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}

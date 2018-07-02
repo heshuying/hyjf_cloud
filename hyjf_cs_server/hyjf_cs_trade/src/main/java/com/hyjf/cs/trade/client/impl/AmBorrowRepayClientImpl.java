@@ -43,4 +43,19 @@ public class AmBorrowRepayClientImpl implements AmBorrowRepayClient {
         }
         return result;
     }
+
+
+
+    @Override
+    public List<BorrowRepayVO> getBorrowRepayList(String borrowNid) {
+        BorrowRepayResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrowRepay/getBorrowRepayListByBorrowNid/" + borrowNid  ,
+                BorrowRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
 }

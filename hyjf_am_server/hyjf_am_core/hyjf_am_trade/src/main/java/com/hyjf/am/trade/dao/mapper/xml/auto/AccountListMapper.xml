@@ -20,9 +20,6 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
-    <result column="is_update" property="isUpdate" jdbcType="BIT" />
-    <result column="base_update" property="baseUpdate" jdbcType="BIT" />
-    <result column="interest" property="interest" jdbcType="DECIMAL" />
     <result column="web" property="web" jdbcType="TINYINT" />
     <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
     <result column="is_bank" property="isBank" jdbcType="TINYINT" />
@@ -109,12 +106,11 @@
   </sql>
   <sql id="Base_Column_List" >
     id, nid, accede_order_id, is_show, user_id, amount, `type`, trade, trade_code, total, 
-    balance, frost, plan_frost, await, repay, remark, `operator`, ip, is_update, base_update, 
-    interest, web, plan_balance, is_bank, account_id, tx_date, tx_time, seq_no, bank_seq_no, 
-    check_status, trade_status, bank_total, bank_balance, bank_frost, bank_wait_repay, 
-    bank_wait_capital, bank_wait_interest, bank_interest_sum, bank_invest_sum, bank_await, 
-    bank_await_capital, bank_await_interest, check_date, check_balance, account_date, 
-    create_time
+    balance, frost, plan_frost, await, repay, remark, `operator`, ip, web, plan_balance, 
+    is_bank, account_id, tx_date, tx_time, seq_no, bank_seq_no, check_status, trade_status, 
+    bank_total, bank_balance, bank_frost, bank_wait_repay, bank_wait_capital, bank_wait_interest, 
+    bank_interest_sum, bank_invest_sum, bank_await, bank_await_capital, bank_await_interest, 
+    check_date, check_balance, account_date, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountListExample" >
     select
@@ -158,8 +154,7 @@
       trade, trade_code, total, 
       balance, frost, plan_frost, 
       await, repay, remark, 
-      `operator`, ip, is_update, 
-      base_update, interest, web, 
+      `operator`, ip, web, 
       plan_balance, is_bank, account_id, 
       tx_date, tx_time, seq_no, 
       bank_seq_no, check_status, trade_status, 
@@ -174,8 +169,7 @@
       #{trade,jdbcType=VARCHAR}, #{tradeCode,jdbcType=VARCHAR}, #{total,jdbcType=DECIMAL}, 
       #{balance,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, 
       #{await,jdbcType=DECIMAL}, #{repay,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
-      #{operator,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{isUpdate,jdbcType=BIT}, 
-      #{baseUpdate,jdbcType=BIT}, #{interest,jdbcType=DECIMAL}, #{web,jdbcType=TINYINT}, 
+      #{operator,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{web,jdbcType=TINYINT}, 
       #{planBalance,jdbcType=DECIMAL}, #{isBank,jdbcType=TINYINT}, #{accountId,jdbcType=VARCHAR}, 
       #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=VARCHAR}, 
       #{bankSeqNo,jdbcType=VARCHAR}, #{checkStatus,jdbcType=TINYINT}, #{tradeStatus,jdbcType=TINYINT}, 
@@ -242,15 +236,6 @@
       </if>
       <if test="ip != null" >
         ip,
-      </if>
-      <if test="isUpdate != null" >
-        is_update,
-      </if>
-      <if test="baseUpdate != null" >
-        base_update,
-      </if>
-      <if test="interest != null" >
-        interest,
       </if>
       <if test="web != null" >
         web,
@@ -379,15 +364,6 @@
       </if>
       <if test="ip != null" >
         #{ip,jdbcType=VARCHAR},
-      </if>
-      <if test="isUpdate != null" >
-        #{isUpdate,jdbcType=BIT},
-      </if>
-      <if test="baseUpdate != null" >
-        #{baseUpdate,jdbcType=BIT},
-      </if>
-      <if test="interest != null" >
-        #{interest,jdbcType=DECIMAL},
       </if>
       <if test="web != null" >
         #{web,jdbcType=TINYINT},
@@ -529,15 +505,6 @@
       <if test="record.ip != null" >
         ip = #{record.ip,jdbcType=VARCHAR},
       </if>
-      <if test="record.isUpdate != null" >
-        is_update = #{record.isUpdate,jdbcType=BIT},
-      </if>
-      <if test="record.baseUpdate != null" >
-        base_update = #{record.baseUpdate,jdbcType=BIT},
-      </if>
-      <if test="record.interest != null" >
-        interest = #{record.interest,jdbcType=DECIMAL},
-      </if>
       <if test="record.web != null" >
         web = #{record.web,jdbcType=TINYINT},
       </if>
@@ -638,9 +605,6 @@
       remark = #{record.remark,jdbcType=VARCHAR},
       `operator` = #{record.operator,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
-      is_update = #{record.isUpdate,jdbcType=BIT},
-      base_update = #{record.baseUpdate,jdbcType=BIT},
-      interest = #{record.interest,jdbcType=DECIMAL},
       web = #{record.web,jdbcType=TINYINT},
       plan_balance = #{record.planBalance,jdbcType=DECIMAL},
       is_bank = #{record.isBank,jdbcType=TINYINT},
@@ -723,15 +687,6 @@
       </if>
       <if test="ip != null" >
         ip = #{ip,jdbcType=VARCHAR},
-      </if>
-      <if test="isUpdate != null" >
-        is_update = #{isUpdate,jdbcType=BIT},
-      </if>
-      <if test="baseUpdate != null" >
-        base_update = #{baseUpdate,jdbcType=BIT},
-      </if>
-      <if test="interest != null" >
-        interest = #{interest,jdbcType=DECIMAL},
       </if>
       <if test="web != null" >
         web = #{web,jdbcType=TINYINT},
@@ -830,9 +785,6 @@
       remark = #{remark,jdbcType=VARCHAR},
       `operator` = #{operator,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
-      is_update = #{isUpdate,jdbcType=BIT},
-      base_update = #{baseUpdate,jdbcType=BIT},
-      interest = #{interest,jdbcType=DECIMAL},
       web = #{web,jdbcType=TINYINT},
       plan_balance = #{planBalance,jdbcType=DECIMAL},
       is_bank = #{isBank,jdbcType=TINYINT},

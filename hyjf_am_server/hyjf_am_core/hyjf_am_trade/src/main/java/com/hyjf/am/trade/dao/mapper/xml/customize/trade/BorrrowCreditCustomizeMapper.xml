@@ -80,4 +80,48 @@
     </select>
 
 
+
+    <select id="getAppCreditDetailByCreditNid" resultType="com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO" parameterType="java.util.Map">
+        SELECT
+        <!-- 项目编号 -->
+        hbc.credit_nid AS creditNid,
+        <!-- 画面表示的项目编号 -->
+        CONCAT('HZR',hbc.credit_nid ) AS creditNidPage,
+        <!-- 项目期限 -->
+        CONCAT(hbc.credit_term ,'天') AS borrowPeriod,
+        <!-- 项目期限 -->
+        hbc.credit_term AS creditTerm,
+        <!-- 债权已 持有天数 -->
+        hbc.credit_term_hold creditTermHold,
+        <!-- 债转状态 -->
+        hbc.credit_status AS status,
+        <!-- 债转本金 -->
+        hbc.credit_capital AS creditCapital,
+        <!-- 项目剩余 可投资金额 -->
+        (hbc.credit_capital - hbc.credit_capital_assigned) AS investAccount,
+        <!-- 折价比率 -->
+        hbc.credit_discount AS creditDiscount,
+        <!-- 还款方式 -->
+        hydbs.name AS repayStyle,
+        <!-- 原项目 -->
+        hbc.bid_nid AS bidNid,
+        <!-- 原表年化利率 -->
+        hbc.bid_apr AS bidApr,
+        <!-- 转让时间 -->
+        FROM_UNIXTIME(hbc.add_time,'%Y-%m-%d %H:%i:%s') AS creditTime,
+        <!-- 截止时间 -->
+        FROM_UNIXTIME(hbc.end_time,'%Y-%m-%d %H:%i:%s') AS endTime,
+        <!-- 成功时间 -->
+        FROM_UNIXTIME(hbc.assign_time,'%Y-%m-%d %H:%i:%s') AS assignTime,
+        <!-- 投资进度 -->
+        truncate(hbc.credit_capital_assigned/hbc.credit_capital*100,2) AS borrowSchedule
+        FROM
+        ht_borrow_credit hbc
+        LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
+        LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hb.borrow_style
+        WHERE
+        hbc.credit_nid = #{creditNid}
+    </select>
+
+
 </mapper>

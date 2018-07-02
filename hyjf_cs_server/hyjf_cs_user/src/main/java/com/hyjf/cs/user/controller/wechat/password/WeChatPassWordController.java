@@ -53,18 +53,6 @@ public class WeChatPassWordController {
 
     /**
      * @author fengping
-     * 微信端获取短信验证码
-     * @param
-     * @return
-     */
-    @PostMapping(value = "sendVerificationCode", produces = "application/json; charset=utf-8")
-    public WeChatResult sendVerificationCode(@RequestBody SendSmsVO sendSmsVo) {
-         passWordService.sendCode(sendSmsVo);
-         return null;
-    }
-
-    /**
-     * @author fengping
      * 微信端验证短信验证码
      * @param
      * @return

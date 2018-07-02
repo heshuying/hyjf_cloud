@@ -28,9 +28,9 @@ import java.util.Map;
 public class EvaluationManagerServiceImpl implements EvaluationManagerService {
 
     @Autowired
-    public EvaluationManagerCustomizeMapper evaluationManagerCustomizeMapper;
+    private EvaluationManagerCustomizeMapper evaluationManagerCustomizeMapper;
     @Autowired
-    public  UserEvalationResultMapper userEvalationResultMapper;
+    private  UserEvalationResultMapper userEvalationResultMapper;
 
     private static Logger logger = LoggerFactory.getLogger(EvaluationManagerServiceImpl.class);
 

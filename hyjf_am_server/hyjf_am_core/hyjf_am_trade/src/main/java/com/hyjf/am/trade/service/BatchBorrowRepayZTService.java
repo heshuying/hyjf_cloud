@@ -20,4 +20,6 @@ public interface BatchBorrowRepayZTService {
 
 	BankCallBean batchQuery(BorrowApicron apicron);
 
+	boolean updateBatchDetailsQuery(BorrowApicron apicron);
+
 }

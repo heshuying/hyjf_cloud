@@ -12,7 +12,12 @@ import java.util.List;
 /**
  * @author: sunpeikai
  * @version: ApiOrganizationStructureService, v0.1 2018/6/27 9:38
+ * 集团组织结构查询
  */
 public interface ApiOrganizationStructureService extends BaseUserService {
+    /**
+     * 查询集团组织结构
+     * @param groupQueryRequestBean 主要是instCode 机构编号
+     * */
     List<OrganizationStructureVO> queryInfo(OrganizationStructureRequestBean groupQueryRequestBean);
 }

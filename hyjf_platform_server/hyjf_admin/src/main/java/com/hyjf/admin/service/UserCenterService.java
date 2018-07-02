@@ -141,10 +141,17 @@ public interface UserCenterService {
      * @return
      */
     List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request);
-//    /**
-//     * 根据用户id查找推荐人信息
-//     * @param userId
-//     * @return
-//     */
-//    UserRecommendCustomizeVO selectUserRecommendUserId(String userId);
+    /**
+     * 根据用户id查找推荐人信息
+     * @param userId
+     * @return
+     */
+    SpreadsUserVO selectSpreadsUsersByUserId(String userId);
+
+    /**
+     * 根据推荐人姓名查找用户
+     * @param recommendName
+     * @return
+     */
+    UserVO selectUserByRecommendName(String recommendName);
 }

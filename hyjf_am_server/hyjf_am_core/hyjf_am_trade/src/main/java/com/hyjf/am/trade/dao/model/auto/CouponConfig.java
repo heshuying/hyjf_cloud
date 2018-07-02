@@ -25,7 +25,7 @@ public class CouponConfig implements Serializable {
 
     private Short expirationLengthDay;
 
-    private Integer addFlg;
+    private Integer addFlag;
 
     private String couponSystem;
 
@@ -61,7 +61,7 @@ public class CouponConfig implements Serializable {
 
     private Integer repayTimeConfig;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private Integer createUserId;
 
@@ -153,12 +153,12 @@ public class CouponConfig implements Serializable {
         this.expirationLengthDay = expirationLengthDay;
     }
 
-    public Integer getAddFlg() {
-        return addFlg;
+    public Integer getAddFlag() {
+        return addFlag;
     }
 
-    public void setAddFlg(Integer addFlg) {
-        this.addFlg = addFlg;
+    public void setAddFlag(Integer addFlag) {
+        this.addFlag = addFlag;
     }
 
     public String getCouponSystem() {
@@ -297,12 +297,12 @@ public class CouponConfig implements Serializable {
         this.repayTimeConfig = repayTimeConfig;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public Integer getCreateUserId() {

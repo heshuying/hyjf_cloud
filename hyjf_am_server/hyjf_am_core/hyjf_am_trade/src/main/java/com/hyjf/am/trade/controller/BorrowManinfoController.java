@@ -1,8 +1,6 @@
 package com.hyjf.am.trade.controller;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +12,13 @@ import com.hyjf.am.trade.service.BorrowManinfoService;
 import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
 import com.hyjf.common.util.CommonUtils;
 
+/**
+ * @author xiasq
+ * @version BorrowManinfoController, v0.1 2018/6/24 10:48
+ */
 @RestController
 @RequestMapping("/am-trade/borrow")
-public class BorrowManinfoController {
-
-    private static final Logger logger = LoggerFactory.getLogger(BorrowUserController.class);
-
+public class BorrowManinfoController extends BaseController{
 
     @Autowired
     private BorrowManinfoService borrowManinfoService;

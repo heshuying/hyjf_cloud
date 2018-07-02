@@ -258,6 +258,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         checkPassword(newPassword);
     }
 
+    @Override
     public void checkPassword(String password){
         CheckUtil.check(password.length()>=6 || password.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
         boolean hasNumber = false;

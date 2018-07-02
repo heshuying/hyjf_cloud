@@ -28,11 +28,11 @@ import com.hyjf.common.paginator.Paginator;
 
 /**
  * 用户信息修改Controller
- * @author
+ * @author dongzeshan
  */
  @RestController
  @RequestMapping("/am-user/changelog")
-public class ChangeLogController {
+public class ChangeLogController extends BaseController{
 
 	@Autowired
 	private ChangeLogService changeLogService;
@@ -43,7 +43,6 @@ public class ChangeLogController {
 	 * @param form
 	 * @return
 	 */
-	// 查询授权明细
 	@PostMapping("/init")
 	public ChangeLogResponse userauthlist(
 			@RequestBody @Valid ChangeLogRequest changeLogRequest) {

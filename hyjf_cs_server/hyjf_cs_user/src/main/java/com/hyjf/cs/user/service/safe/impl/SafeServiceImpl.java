@@ -15,10 +15,12 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -27,6 +29,7 @@ import com.hyjf.cs.user.mq.Producer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
+import com.hyjf.cs.user.util.SecretUtil;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,7 +37,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import sun.misc.BASE64Decoder;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +56,7 @@ import java.util.UUID;
  * @version SafeServiceImpl, v0.1 2018/6/11 15:55
  */
 @Service
-public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService  {
+public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService {
 
     private static final Logger logger = LoggerFactory.getLogger(SafeServiceImpl.class);
 
@@ -62,20 +71,22 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
     /**
      * 修改登陆密码
+     *
      * @param userId
      * @param oldPW
      * @param newPW
      * @return
      */
     @Override
-    public JSONObject updatePassWd(Integer userId, String oldPW, String newPW){
-        logger.info("UserService.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}",userId,oldPW,newPW);
+    public JSONObject updatePassWd(Integer userId, String oldPW, String newPW) {
+        logger.info("UserService.updatePassWd run...userId is :{}, oldPW is :{}, newPW is :{}", userId, oldPW, newPW);
         return amUserClient.updatePassWd(userId, oldPW, newPW);
     }
 
 
     /**
      * 获取用户对象
+     *
      * @param userId
      * @return
      */
@@ -86,15 +97,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc :账户设置信息查询
-     * @Param: * @param token
-     * @Date: 16:47 2018/5/30
-     * @Return: String
+     * 账户设置信息查询
+     *
+     * @param webViewUserVO
+     * @return
      */
     @Override
-    public Map<String,Object> safeInit(WebViewUserVO webViewUserVO) {
-        Map<String,Object> resultMap = new HashMap<>();
+    public Map<String, Object> safeInit(WebViewUserVO webViewUserVO) {
+        Map<String, Object> resultMap = new HashMap<>();
         UserVO user = amUserClient.findUserById(webViewUserVO.getUserId());
         // 用户角色
         UserInfoVO userInfo = this.amUserClient.findUsersInfoById(user.getUserId());
@@ -111,7 +121,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
-            resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() -2) + "@" + emails[1]);
+            resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);
         }
 
         UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
@@ -122,12 +132,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("isSetPassword", user.getIsSetPassword());
         resultMap.put("lastTime", userLogin.getLastTime());
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
-        resultMap.put("usersContract",usersContactVO);
-        
+        resultMap.put("usersContract", usersContactVO);
+
         // 紧急联系人类型 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
-		resultMap.put("userRelation", result);
-		
+        resultMap.put("userRelation", result);
+
         BankOpenAccountVO bankOpenAccount = amUserClient.selectById(user.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);
@@ -136,9 +146,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(user.getUserId());
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-            Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(),1,1).getTime();
+            Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-            Long lNow = GetDate.countDate(new Date(), 5,1).getTime();
+            Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
             if (lCreate <= lNow) {
                 //已过期需要重新评测 2是已过期
                 resultMap.put("ifEvaluation", 2);
@@ -146,12 +156,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
                 // ifEvaluation是否已经调查表示 1是已调查，0是未调查
                 resultMap.put("ifEvaluation", 1);
                 // userEvalationResult 测评结果
-                resultMap.put("userEvalationResult",userEvalationResult);
+                resultMap.put("userEvalationResult", userEvalationResult);
             }
         } else {
             resultMap.put("ifEvaluation", 0);
         }
-        HjhUserAuthVO hjhUserAuth=amUserClient.getHjhUserAuthByUserId(user.getUserId());
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(user.getUserId());
         resultMap.put("hjhUserAuth", getUserAuthState(hjhUserAuth));
 
         // 获得是否授权
@@ -160,43 +170,44 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
         String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
-        if(StringUtils.isNotEmpty(user.getIconUrl())){
+        if (StringUtils.isNotEmpty(user.getIconUrl())) {
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
         }
-        resultMap.put("inviteLink", systemConfig.getWebHost()+"/user/regist?from="+user.getUserId());
+        resultMap.put("inviteLink", systemConfig.getWebHost() + "/user/regist?from=" + user.getUserId());
         return resultMap;
     }
 
     /**
      * 获得用户授权状态信息
      * 自动投标状态          缴费授权状态      还款授权状态
+     *
      * @param auth
      * @return
      */
     public HjhUserAuthVO getUserAuthState(HjhUserAuthVO auth) {
         // 缴费授权
-        int paymentAuth = valdateAuthState(auth.getAutoPaymentStatus(),auth.getAutoPaymentEndTime());
+        int paymentAuth = valdateAuthState(auth.getAutoPaymentStatus(), auth.getAutoPaymentEndTime());
         auth.setAutoPaymentStatus(paymentAuth);
         // 还款授权
-        int repayAuth = valdateAuthState(auth.getAutoRepayStatus(),auth.getAutoRepayEndTime());
+        int repayAuth = valdateAuthState(auth.getAutoRepayStatus(), auth.getAutoRepayEndTime());
         auth.setAutoRepayStatus(repayAuth);
         // 自动投资授权
-        int invesAuth = valdateAuthState(auth.getAutoInvesStatus(),auth.getAutoBidEndTime());
+        int invesAuth = valdateAuthState(auth.getAutoInvesStatus(), auth.getAutoBidEndTime());
         auth.setAutoInvesStatus(invesAuth);
         return auth;
     }
 
     /**
+     * @param endTime
      * @Author: zhangqingqing
      * @Desc :检查是否授权  0未授权  1已授权
      * @Param: * @param status
-     * @param endTime
      * @Date: 16:47 2018/5/30
      * @Return: int
      */
     private int valdateAuthState(Integer status, String endTime) {
-        String nowTime = GetDate.date2Str(new Date(),GetDate.yyyyMMdd);
-        if(endTime==null || status==null){
+        String nowTime = GetDate.date2Str(new Date(), GetDate.yyyyMMdd);
+        if (endTime == null || status == null) {
             return 0;
         }
         if (status - 0 == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
@@ -207,6 +218,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
     /**
      * 绑定邮箱发送激活邮件
+     *
      * @param userId
      * @param email
      * @return
@@ -239,10 +251,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
             replaceMap.put("username_name", user.getUsername());
         }
 
-        MailMessage mailMessage = new MailMessage(null, replaceMap, "绑定邮箱激活", null, null, new String[] {email},
+        MailMessage mailMessage = new MailMessage(null, replaceMap, "绑定邮箱激活", null, null, new String[]{email},
                 CustomConstants.EMAILPARAM_TPL_BINDEMAIL, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
         // 发送邮件
-        mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+        mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
 
         return true;
     }
@@ -262,7 +274,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
         // 邮箱地址使用校验
         boolean isExist = amUserClient.checkEmailUsed(email);
-        if(isExist) {
+        if (isExist) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_USED);
         }
 
@@ -270,6 +282,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
     /**
      * 绑定邮箱激活条件校验
+     *
      * @param
      * @param
      * @param
@@ -282,13 +295,13 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
 
         // 校验激活是否用户本人
-        if(!bindEmailVO.getKey().equals(String.valueOf(user.getUserId()))){
+        if (!bindEmailVO.getKey().equals(String.valueOf(user.getUserId()))) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
         // 激活邮件存在性校验
         BindEmailLogVO log = amUserClient.getBindEmailLog(Integer.parseInt(bindEmailVO.getKey()));
-        if(log == null) {
+        if (log == null) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE_NOT_EXIST);
         }
 
@@ -298,13 +311,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
 
         // 激活校验
-        if(!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(log.getEmailActiveCode())) {
+        if (!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(log.getEmailActiveCode())) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE);
         }
     }
 
     /**
      * 绑定邮箱更新
+     *
      * @param userId
      * @param email
      * @return
@@ -359,43 +373,163 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
     /**
      * 获取紧急联系人信息
+     *
      * @author hesy
      */
     @Override
-	public ContractSetResultBean queryContractInfo(Integer userId) {
-    	ContractSetResultBean resultBean = new ContractSetResultBean();
+    public ContractSetResultBean queryContractInfo(Integer userId) {
+        ContractSetResultBean resultBean = new ContractSetResultBean();
 
-    	// 获取紧急联系人关系信息
-    	Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
-    	if(relationMap == null || relationMap.isEmpty()) {
-    		throw new ReturnMessageException(MsgEnum.ERR_CONTACT_RELATIONSHIP_NOT_EXIST);
-    	}
+        // 获取紧急联系人关系信息
+        Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+        if (relationMap == null || relationMap.isEmpty()) {
+            throw new ReturnMessageException(MsgEnum.ERR_CONTACT_RELATIONSHIP_NOT_EXIST);
+        }
 
-    	resultBean.setRelationMap(relationMap);
+        resultBean.setRelationMap(relationMap);
 
-    	// 获取当前紧急联系人信息
-    	UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
-    	if(usersContactVO != null) {
-    		resultBean.setData(usersContactVO);
+        // 获取当前紧急联系人信息
+        UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
+        if (usersContactVO != null) {
+            resultBean.setData(usersContactVO);
 
-    		for(Entry<String, String> entry :  relationMap.entrySet()) {
-    			if(usersContactVO.getRelation() != null && entry.getKey().equals(String.valueOf(usersContactVO.getRelation()))) {
-    				resultBean.setCheckRelationId(entry.getKey());
-    				resultBean.setCheckRelationName(entry.getValue());
-    				break;
-    			}
-    		}
-    	}
+            for (Entry<String, String> entry : relationMap.entrySet()) {
+                if (usersContactVO.getRelation() != null && entry.getKey().equals(String.valueOf(usersContactVO.getRelation()))) {
+                    resultBean.setCheckRelationId(entry.getKey());
+                    resultBean.setCheckRelationName(entry.getValue());
+                    break;
+                }
+            }
+        }
 
-    	return resultBean;
+        return resultBean;
 
     }
 
+    @Override
+    public boolean updateSmsConfig(Integer userId, String smsKey, Integer smsValue, UserVO user) {
+        if (smsKey.equals("rechargeSms")) {
+            //充值成功短信
+            user.setRechargeSms(smsValue);
+        }
+        if (smsKey.equals("withdrawSms")) {
+            //提现成功短信
+            user.setWithdrawSms(smsValue);
+        }
+        if (smsKey.equals("investSms")) {
+            //投资成功短信
+            user.setInvestSms(smsValue);
+        }
+        if (smsKey.equals("recieveSms")) {
+            //回收成功短信
+            user.setRecieveSms(smsValue);
+        }
+        amUserClient.updateUserById(user);
+        return true;
+    }
 
+    @Override
+    public String uploadAvatar(UserVO user, Integer userId, String image) throws IOException {
+        BASE64Decoder decoder = new BASE64Decoder();
+        // 将字符串格式的image转为二进制流（biye[])的decodedBytes
+        byte[] decodedBytes = decoder.decodeBuffer(image);
 
+        String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
+        // 实际物理路径前缀2
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        // 如果文件夹(前缀+后缀)不存在,则新建文件夹
+        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+        File logoSaveFile = new File(logoRealPathDir);
+        if (!logoSaveFile.exists()) {
+            logoSaveFile.mkdirs();
+        }
+        // 生成图片文件名
+        String fileRealName = String.valueOf(System.currentTimeMillis());
+        fileRealName = "appIconImg_" + userId + fileRealName + ".png";
+        // 指定图片要存放的位置
+        String imgFilePath = logoSaveFile + "/" + fileRealName;
+        // 新建一个文件输出器，并为它指定输出位置imgFilePath
+        FileOutputStream out = new FileOutputStream(imgFilePath);
+        // 利用文件输出器将二进制格式decodedBytes输出
+        out.write(decodedBytes);
+        out.close(); // 关闭文件输出器
+        // 保存到数据库的路径=上传文件的CDNURL+图片的文件名
+        String iconUrl = fileRealName;
+        user.setIconUrl(iconUrl);
+        // 保存到数据库
+        amUserClient.updateUserById(user);
+        return imgFilePath;
+    }
+
+    @Override
+    public MultipartFile checkParam(MultipartHttpServletRequest multipartRequest, String key, String token) {
+        CheckUtil.check(token != null && null != key, MsgEnum.STATUS_CE000001);
+        // 版本号
+        String version = multipartRequest.getParameter("version");
+        // 网络状态
+        String netStatus = multipartRequest.getParameter("netStatus");
+        // 平台
+        String platform = multipartRequest.getParameter("platform");
+        // 随机字符串
+        String randomString = multipartRequest.getParameter("randomString");
+        // Order
+        String order = multipartRequest.getParameter("order");
+        // 获得第1张图片（根据前台的name名称得到上传的文件）
+        MultipartFile iconImg = multipartRequest.getFile("iconImg");
+
+        CheckUtil.check(StringUtils.isNotBlank(version) && StringUtils.isNotBlank(netStatus) && StringUtils.isNotBlank(platform) && StringUtils.isNotBlank(randomString) && StringUtils.isNotBlank(order), MsgEnum.STATUS_CE000001);
+        CheckUtil.check(SecretUtil.checkOrder(key, token, randomString, order), MsgEnum.STATUS_CE000001);
+        // 业务逻辑
+        CheckUtil.check(Validator.isNotNull(iconImg), MsgEnum.ERR_OBJECT_REQUIRED, "上传图片");
+        return iconImg;
+    }
+
+    @Override
+    public String updateAvatar(String token, MultipartFile iconImg) throws Exception {
+        // 单位字节
+        Long allowFileLength = 5000000L;
+        UserVO userVO = this.getUsers(token);
+        // 取得用户ID
+        Integer userId = userVO.getUserId();
+        CheckUtil.check(null != userId, MsgEnum.STATUS_CE000006);
+        // 从配置文件获取上传文件的各个URL
+        // 上传文件的CDNURL
+        // String fileDomainUrl =
+        // UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
+        // 实际物理路径前缀1
+        String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
+        // 实际物理路径前缀2
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        // 如果文件夹(前缀+后缀)不存在,则新建文件夹
+        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+        File logoSaveFile = new File(logoRealPathDir);
+        if (!logoSaveFile.exists()) {
+            logoSaveFile.mkdirs();
+        }
+        // 生成图片文件名
+        String fileRealName = String.valueOf(System.currentTimeMillis());
+        fileRealName = "appIconImg_" + userId + fileRealName + UploadFileUtils.getSuffix(iconImg.getOriginalFilename());
+        // 上传至服务器
+        String returnMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, iconImg.getInputStream(), allowFileLength);
+        if (!returnMessage.equals("上传文件成功！")) {
+            throw new CheckException(returnMessage);
+        }
+        // 保存到数据库的路径=上传文件的CDNURL+图片的文件名
+        String iconUrl = fileRealName;
+        // 保存到数据库
+        userVO.setIconUrl(iconUrl);
+        // 保存到数据库
+        amUserClient.updateUserById(userVO);
+        // 测试环境要加 + request.getContextPath().replace("//", "");
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getDomainAppUrl());
+        imghost = imghost.substring(0, imghost.length() - 1);
+        iconUrl = imghost + fileUploadTempPath + fileRealName;
+        return iconUrl;
+    }
 
     /**
      * 更新用户信息
+     *
      * @param requestBean
      * @return
      */

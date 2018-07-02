@@ -26,4 +26,11 @@ public interface BorrowRepayService {
      * @return
      */
     Integer updateBorrowRepay(BorrowRepayVO borrowRepayVO);
+
+    /**
+     * 根据borrowNid查询还款信息
+     * @author zhangyk
+     * @date 2018/6/30 14:08
+     */
+    public List<BorrowRepay> getBorrowRepayList(String borrowNid) ;
 }

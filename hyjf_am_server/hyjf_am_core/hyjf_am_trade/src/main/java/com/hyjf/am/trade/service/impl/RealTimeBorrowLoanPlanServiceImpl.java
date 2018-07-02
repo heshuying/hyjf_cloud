@@ -1520,7 +1520,7 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 		accountList.setRemark(borrowNid);
 //		accountList.setIsUpdate(0);
 //		accountList.setBaseUpdate(0);
-		accountList.setInterest(BigDecimal.ZERO); // 利息
+//		accountList.setInterest(BigDecimal.ZERO); // 利息
 		accountList.setWeb(0); // PC
 		accountList.setPlanFrost(accountTender.getPlanFrost());
 		accountList.setPlanBalance(accountTender.getPlanBalance());

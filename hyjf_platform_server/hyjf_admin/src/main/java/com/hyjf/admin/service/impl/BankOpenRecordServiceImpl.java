@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class BankOpenRecordServiceImpl implements BankOpenRecordService {
     @Autowired
-    public BankOpenRecordClient bankOpenRecordClient;
+    private BankOpenRecordClient bankOpenRecordClient;
 
     /**
      * 查找汇付银行开户记录列表

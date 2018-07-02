@@ -2566,6 +2566,76 @@ public class BorrowTenderTmpExample {
             return (Criteria) this;
         }
 
+        public Criteria andTenderFromIsNull() {
+            addCriterion("tender_from is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromIsNotNull() {
+            addCriterion("tender_from is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromEqualTo(String value) {
+            addCriterion("tender_from =", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromNotEqualTo(String value) {
+            addCriterion("tender_from <>", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromGreaterThan(String value) {
+            addCriterion("tender_from >", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromGreaterThanOrEqualTo(String value) {
+            addCriterion("tender_from >=", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromLessThan(String value) {
+            addCriterion("tender_from <", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromLessThanOrEqualTo(String value) {
+            addCriterion("tender_from <=", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromLike(String value) {
+            addCriterion("tender_from like", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromNotLike(String value) {
+            addCriterion("tender_from not like", value, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromIn(List<String> values) {
+            addCriterion("tender_from in", values, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromNotIn(List<String> values) {
+            addCriterion("tender_from not in", values, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromBetween(String value1, String value2) {
+            addCriterion("tender_from between", value1, value2, "tenderFrom");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderFromNotBetween(String value1, String value2) {
+            addCriterion("tender_from not between", value1, value2, "tenderFrom");
+            return (Criteria) this;
+        }
+
         public Criteria andRetCodeIsNull() {
             addCriterion("ret_code is null");
             return (Criteria) this;

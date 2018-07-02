@@ -55,7 +55,7 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
             result.setTradeList(new ArrayList<WebUserTradeListCustomizeVO>());
         }
         result.setPage(page);
-        return null;
+        return result;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
             result.setRechargeList(new ArrayList<WebUserRechargeListCustomizeVO>());
         }
         result.setPage(page);
-        return null;
+        return result;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
             result.setWithdrawList(new ArrayList<WebUserWithdrawListCustomizeVO>());
         }
         result.setPage(page);
-        return null;
+        return result;
     }
 }
 

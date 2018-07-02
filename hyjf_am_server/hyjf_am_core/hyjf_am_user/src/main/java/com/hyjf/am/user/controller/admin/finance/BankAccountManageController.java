@@ -6,6 +6,7 @@ package com.hyjf.am.user.controller.admin.finance;
 import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.customize.admin.finance.BankAccountManageCustomize;
 import com.hyjf.am.user.service.admin.finance.BankAccountManageService;
@@ -31,7 +32,7 @@ import java.util.List;
 @Api(value = "银行账户管理")
 @RestController
 @RequestMapping("/am-user/bankAccountManage")
-public class BankAccountManageController {
+public class BankAccountManageController extends BaseController {
 
     @Autowired
     BankAccountManageService bankAccountManageService;

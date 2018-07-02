@@ -1,31 +1,20 @@
 package com.hyjf.am.trade.service.impl;
 
-import java.util.List;
-
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author xiasq
  * @version AccountServiceImpl, v0.1 2018/4/25 10:41
  */
 @Service
-public class AccountServiceImpl implements AccountService {
-	@Autowired
-	private AccountMapper accountMapper;
-	@Autowired
-	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-	@Autowired
-	private BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
+public class AccountServiceImpl extends BaseServiceImpl implements AccountService {
 
 	@Override
 	public void insert(Account account) {
@@ -59,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
 	public Integer updateOfPlanRepayAccount(AccountVO accountVO) {
 		Account account = new Account();
 		BeanUtils.copyProperties(accountVO,account);
-		boolean result =  this.batchHjhBorrowRepayCustomizeMapper.updateOfPlanRepayAccount(account) >0 ? true:false;
+		boolean result =  batchHjhBorrowRepayCustomizeMapper.updateOfPlanRepayAccount(account) >0 ? true:false;
 		return result?1:0;
 	}
 

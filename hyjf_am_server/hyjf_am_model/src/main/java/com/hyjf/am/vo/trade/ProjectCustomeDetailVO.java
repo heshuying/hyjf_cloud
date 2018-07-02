@@ -149,6 +149,8 @@ public class ProjectCustomeDetailVO  extends BaseVO {
     // 标的原始状态
     private Integer statusOrginal;
 
+    private Integer projectStatus;
+
     public ProjectCustomeDetailVO() {
         super();
     }
@@ -647,5 +649,13 @@ public class ProjectCustomeDetailVO  extends BaseVO {
 
     public void setStatusOrginal(Integer statusOrginal) {
         this.statusOrginal = statusOrginal;
+    }
+
+    public Integer getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(Integer projectStatus) {
+        this.projectStatus = projectStatus;
     }
 }

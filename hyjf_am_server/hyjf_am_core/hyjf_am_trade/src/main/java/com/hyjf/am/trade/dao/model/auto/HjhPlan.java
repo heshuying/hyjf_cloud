@@ -29,6 +29,8 @@ public class HjhPlan implements Serializable {
 
     private Integer planInvestStatus;
 
+    private Integer planDisplayStatus;
+
     private Integer addTime;
 
     private String borrowStyle;
@@ -47,7 +49,7 @@ public class HjhPlan implements Serializable {
 
     private BigDecimal planRepayCapital;
 
-    private Byte minInvestCounts;
+    private Integer minInvestCounts;
 
     private Integer delFlag;
 
@@ -157,6 +159,14 @@ public class HjhPlan implements Serializable {
         this.planInvestStatus = planInvestStatus;
     }
 
+    public Integer getPlanDisplayStatus() {
+        return planDisplayStatus;
+    }
+
+    public void setPlanDisplayStatus(Integer planDisplayStatus) {
+        this.planDisplayStatus = planDisplayStatus;
+    }
+
     public Integer getAddTime() {
         return addTime;
     }
@@ -229,11 +239,11 @@ public class HjhPlan implements Serializable {
         this.planRepayCapital = planRepayCapital;
     }
 
-    public Byte getMinInvestCounts() {
+    public Integer getMinInvestCounts() {
         return minInvestCounts;
     }
 
-    public void setMinInvestCounts(Byte minInvestCounts) {
+    public void setMinInvestCounts(Integer minInvestCounts) {
         this.minInvestCounts = minInvestCounts;
     }
 

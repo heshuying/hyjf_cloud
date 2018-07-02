@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -114,6 +115,16 @@ public class HjhPlanServiceImpl implements HjhPlanService {
             this.insertHJHPlanAccoutList(request,userAccount);
         }
         return 1;
+    }
+
+    /**
+     * 获取汇计划投资详情
+     * @param params
+     * @return
+     */
+    @Override
+    public UserHjhInvistDetailCustomize selectUserHjhInvistDetail(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.selectUserHjhInvistDetail(params);
     }
 
     /**

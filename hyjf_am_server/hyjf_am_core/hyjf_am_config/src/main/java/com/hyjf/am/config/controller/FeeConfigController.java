@@ -15,9 +15,13 @@ import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.common.util.CommonUtils;
 
+/**
+ * @author xiasq
+ * @version FeeConfigController, v0.1 2018/6/22 14:28
+ */
 @RestController
 @RequestMapping("/am-config/feeConfig")
-public class FeeConfigController {
+public class FeeConfigController extends BaseConfigController{
 
     @Autowired
     private FeeConfigService feeConfigService;

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "江西银行同步线下充值信息")
 @RestController
 @RequestMapping("/am-trade/synBalance")
-public class SynBalanceController {
+public class SynBalanceController extends BaseController{
     @Autowired
     private SynBalanceService synBalanceService;
     /**

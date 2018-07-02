@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "优惠券相关")
 @RestController
 @RequestMapping("/am-trade/coupon")
-public class CouponController {
+public class CouponController extends BaseController{
 
     @Autowired
     CouponService couponService;

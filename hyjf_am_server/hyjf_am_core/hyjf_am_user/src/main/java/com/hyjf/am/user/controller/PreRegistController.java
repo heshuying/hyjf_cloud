@@ -16,14 +16,16 @@ import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
 import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
 import com.hyjf.am.user.service.PreRegistService;
 import com.hyjf.am.vo.user.AdminPreRegistListVO;
+import com.hyjf.am.vo.user.AdminUserAuthListVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 /**
  * admin预注册记录
  * @author dongzeeshan
  */
 @RestController
 @RequestMapping("/am-user/preregist")
-public class PreRegistController{
+public class PreRegistController extends BaseController{
 
 	@Autowired
 	private PreRegistService preRegistService;
@@ -66,12 +68,12 @@ public class PreRegistController{
 		registUser.put("preRegTimeEnd", StringUtils.isNotBlank(adminPreRegistListRequest.getPreRegTimeEnd())?adminPreRegistListRequest.getPreRegTimeEnd():null);
 		AdminPreRegistListResponse aprlr=new AdminPreRegistListResponse();
 		int recordTotal = this.preRegistService.countRecordTotal(registUser);
-		List<AdminPreRegistListVO> avo = null;
+
 		if (recordTotal > 0) {
 			Paginator paginator = new Paginator(adminPreRegistListRequest.getPaginatorPage(), recordTotal);
 			List<AdminPreRegistListCustomize> recordList = this.preRegistService.getRecordList(registUser, paginator.getOffset(), paginator.getLimit());
 			if (recordList != null) {
-				BeanUtils.copyProperties(recordList, avo);
+				List<AdminPreRegistListVO> avo = CommonUtils.convertBeanList(recordList,AdminPreRegistListVO.class);
 				aprlr.setResultList(avo);
 				aprlr.setRecordTotal(recordTotal);
 				aprlr.setRtn(Response.SUCCESS);
