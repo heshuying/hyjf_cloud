@@ -4,6 +4,7 @@
 package com.hyjf.batch.job.coupon;
 
 import com.hyjf.batch.job.BaseJob;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -15,13 +16,14 @@ import org.slf4j.LoggerFactory;
  * @version CouponExpiredSmsJob, v0.1 2018/6/22 11:20
  * 优惠券过期短信提醒
  */
+@DisallowConcurrentExecution
 public class CouponExpiredSmsJob extends BaseJob implements Job{
 
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredSmsJob.class);
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponExpiredSmsJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/batch/coupon/expiredSms", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/batch/couponExpiredSms/expiredSms", String.class);
         logger.info("CouponExpiredSmsJob execute end...");
     }
 }

@@ -9,6 +9,10 @@ public class Borrow implements Serializable {
 
     private String borrowNid;
 
+    private Integer userId;
+
+    private String borrowUserName;
+
     private Integer status;
 
     private BigDecimal account;
@@ -149,6 +153,22 @@ public class Borrow implements Serializable {
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getBorrowUserName() {
+        return borrowUserName;
+    }
+
+    public void setBorrowUserName(String borrowUserName) {
+        this.borrowUserName = borrowUserName == null ? null : borrowUserName.trim();
     }
 
     public Integer getStatus() {

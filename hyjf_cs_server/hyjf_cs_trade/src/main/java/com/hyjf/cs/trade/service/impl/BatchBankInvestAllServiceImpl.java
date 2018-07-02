@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -161,7 +162,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							//压入消息队列
 							try {
 								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG,JSON.toJSONBytes(params)));
+										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 							} catch (MQException e) {
 								e.printStackTrace();
 								logger.error("渠道统计用户累计投资推送消息队列失败！！！");

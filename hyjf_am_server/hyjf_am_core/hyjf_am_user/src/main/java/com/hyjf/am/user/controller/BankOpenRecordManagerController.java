@@ -3,6 +3,18 @@
  */
 package com.hyjf.am.user.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
@@ -13,18 +25,6 @@ import com.hyjf.am.user.service.BankOpenRecordManagerService;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -34,10 +34,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/am-user/bankOpenAccountRecord")
-public class BankOpenRecordManagerController {
+public class BankOpenRecordManagerController extends BaseController{
     @Autowired
     private BankOpenRecordManagerService bankOpenRecordService;
-    private static Logger logger = LoggerFactory.getLogger(BankOpenRecordManagerController.class);
 
     /**
      * 根据筛选条件查找(查找江西銀行開戶記錄)

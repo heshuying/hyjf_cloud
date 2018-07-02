@@ -17,7 +17,7 @@ public class PoundageException implements Serializable {
 
     private Integer ledgerStatus;
 
-    private Integer updater;
+    private Integer updateUserId;
 
     private Date createTime;
 
@@ -73,12 +73,12 @@ public class PoundageException implements Serializable {
         this.ledgerStatus = ledgerStatus;
     }
 
-    public Integer getUpdater() {
-        return updater;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdater(Integer updater) {
-        this.updater = updater;
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

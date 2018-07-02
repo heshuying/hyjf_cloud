@@ -21,10 +21,9 @@ import java.util.Map;
  * @version TradeDetailServiceImpl, v0.1 2018/6/27 15:45
  */
 @Service
-public class TradeDetailServiceImpl implements TradeDetailService {
+public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDetailService {
 
-    @Autowired
-    protected UserTradeDetailCustomizeMapper userTradeDetailCustomizeMapper;
+
     @Override
     public List<WebUserTradeListCustomize> searchUserTradeList(TradeDetailBeanRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();

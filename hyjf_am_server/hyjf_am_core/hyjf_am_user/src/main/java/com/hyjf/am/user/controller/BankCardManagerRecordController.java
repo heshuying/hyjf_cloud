@@ -3,6 +3,18 @@
  */
 package com.hyjf.am.user.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCardManagerResponse;
@@ -13,18 +25,6 @@ import com.hyjf.am.user.service.BankCardManagerRecordService;
 import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -34,10 +34,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/am-user/bankCardManager")
-public class BankCardManagerRecordController {
+public class BankCardManagerRecordController extends BaseController{
     @Autowired
     private BankCardManagerRecordService bankCardManagerServiceService;
-    private static Logger logger = LoggerFactory.getLogger(BankCardManagerRecordController.class);
 
     /**
      * 根据筛选条件查找(汇付银行卡管理列表显示)

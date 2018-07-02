@@ -9,15 +9,9 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
@@ -30,6 +24,7 @@ import com.hyjf.am.user.service.UserauthService;
 import com.hyjf.am.vo.user.AdminUserAuthListVO;
 import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author DongZeShan
@@ -37,13 +32,13 @@ import com.hyjf.common.paginator.Paginator;
  */
 @RestController
 @RequestMapping("/am-user/userauth")
-public class UserauthController {
+public class UserauthController extends BaseController{
 	@Autowired
 	private UserauthService userauthService;
 
-	private static Logger logger = LoggerFactory.getLogger(UserauthController.class);
-
-	// 查询授权明细
+	/**
+	 * 查询授权明细
+ 	 */
 	@PostMapping("/userauthlist")
 	public AdminUserAuthListResponse userauthlist(
 			@RequestBody @Valid AdminUserAuthListRequest adminUserAuthListRequest) {
@@ -55,11 +50,11 @@ public class UserauthController {
 			List<AdminUserAuthListCustomize> recordList = this.userauthService.getRecordList(authUser,
 					paginator.getOffset(), paginator.getLimit());
 			AdminUserAuthListResponse aualr = new AdminUserAuthListResponse();
-			List<AdminUserAuthListVO> avo = null;
+			List<AdminUserAuthListVO> avo = CommonUtils.convertBeanList(recordList,AdminUserAuthListVO.class);
 			if (recordList != null) {
 				BeanUtils.copyProperties(recordList, avo);
 				aualr.setResultList(avo);
-				aualr.setRecordTotal(recordTotal);
+				aualr.setRecordTotal(String.valueOf(recordTotal));
 				aualr.setRtn(Response.SUCCESS);
 			}
 			return aualr;
@@ -133,7 +128,7 @@ public class UserauthController {
 		result.setRtn(AdminUserAuthListResponse.SUCCESS);
 		return result;
 	}
-	// 查询授权明细
+
 	@PostMapping("/userauthloglist")
 	public AdminUserAuthLogListResponse userauthloglist(
 			@RequestBody @Valid AdminUserAuthLogListRequest form) {

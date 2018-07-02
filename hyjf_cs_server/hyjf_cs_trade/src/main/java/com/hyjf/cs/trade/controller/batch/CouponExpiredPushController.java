@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 优惠券过期发送push消息定时任务
  */
 @RestController
-@RequestMapping("batch/coupon")
+@RequestMapping("batch/couponExpiredPush")
 public class CouponExpiredPushController {
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredPushController.class);
 

@@ -24,7 +24,6 @@ public class RepayPlanServiceImpl implements RepayPlanService {
     @Autowired
     private BorrowClient borrowClient;
 
-
     @Override
     public List<BorrowRepayPlanCsVO> getRepayPlan(String borrowNid) {
         BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);

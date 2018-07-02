@@ -69,7 +69,7 @@ public class AssetListController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
-		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.hjhInstConfigList();
+		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
 		jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 		// 2.产品类型(可复用)
 /*		List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());
@@ -223,7 +223,7 @@ public class AssetListController extends BaseController {
 	 */
 	@ApiOperation(value = "资产列表", notes = "资产列表页面查询详情")
 	@PostMapping(value = "/detailAction")
-	/*public static final String DETAIL_ACTION = "/{instCode}/{assetId}/detailAction";*/
+    /*public static final String DETAIL_ACTION = "/{instCode}/{assetId}/detailAction";*/
 	@ResponseBody
 	public JSONObject searchUserDetail(HttpServletRequest request, @RequestBody Map<String, Object> map) {
 		JSONObject jsonObject = new JSONObject();
@@ -268,7 +268,7 @@ public class AssetListController extends BaseController {
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
 		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
+		
 		if (assetList != null && assetList.size() > 0) {
 
 			int sheetCount = 1;
@@ -331,4 +331,3 @@ public class AssetListController extends BaseController {
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
 	}
 }
-

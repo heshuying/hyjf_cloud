@@ -7,13 +7,13 @@
     <result column="interest_rate" property="interestRate" jdbcType="DECIMAL" />
     <result column="pupper" property="pupper" jdbcType="DECIMAL" />
     <result column="plower" property="plower" jdbcType="DECIMAL" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="allpupper" property="allpupper" jdbcType="DECIMAL" />
     <result column="is_tender" property="isTender" jdbcType="TINYINT" />
     <result column="is_redeem" property="isRedeem" jdbcType="TINYINT" />
     <result column="error_remark" property="errorRemark" jdbcType="VARCHAR" />
     <result column="pnumber_new" property="pnumberNew" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -74,8 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, pnumber, interest_rate, pupper, plower, create_time, total, allpupper, is_tender, 
-    is_redeem, error_remark, pnumber_new
+    id, pnumber, interest_rate, pupper, plower, total, allpupper, is_tender, is_redeem, 
+    error_remark, pnumber_new, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ProductExample" >
     select
@@ -115,13 +115,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_product (pnumber, interest_rate, pupper, 
-      plower, create_time, total, 
-      allpupper, is_tender, is_redeem, 
-      error_remark, pnumber_new)
+      plower, total, allpupper, 
+      is_tender, is_redeem, error_remark, 
+      pnumber_new, create_time)
     values (#{pnumber,jdbcType=VARCHAR}, #{interestRate,jdbcType=DECIMAL}, #{pupper,jdbcType=DECIMAL}, 
-      #{plower,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{total,jdbcType=DECIMAL}, 
-      #{allpupper,jdbcType=DECIMAL}, #{isTender,jdbcType=TINYINT}, #{isRedeem,jdbcType=TINYINT}, 
-      #{errorRemark,jdbcType=VARCHAR}, #{pnumberNew,jdbcType=VARCHAR})
+      #{plower,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{allpupper,jdbcType=DECIMAL}, 
+      #{isTender,jdbcType=TINYINT}, #{isRedeem,jdbcType=TINYINT}, #{errorRemark,jdbcType=VARCHAR}, 
+      #{pnumberNew,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Product" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -141,9 +141,6 @@
       <if test="plower != null" >
         plower,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="total != null" >
         total,
       </if>
@@ -162,6 +159,9 @@
       <if test="pnumberNew != null" >
         pnumber_new,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="pnumber != null" >
@@ -175,9 +175,6 @@
       </if>
       <if test="plower != null" >
         #{plower,jdbcType=DECIMAL},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="total != null" >
         #{total,jdbcType=DECIMAL},
@@ -196,6 +193,9 @@
       </if>
       <if test="pnumberNew != null" >
         #{pnumberNew,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -223,9 +223,6 @@
       <if test="record.plower != null" >
         plower = #{record.plower,jdbcType=DECIMAL},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.total != null" >
         total = #{record.total,jdbcType=DECIMAL},
       </if>
@@ -244,6 +241,9 @@
       <if test="record.pnumberNew != null" >
         pnumber_new = #{record.pnumberNew,jdbcType=VARCHAR},
       </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -256,13 +256,13 @@
       interest_rate = #{record.interestRate,jdbcType=DECIMAL},
       pupper = #{record.pupper,jdbcType=DECIMAL},
       plower = #{record.plower,jdbcType=DECIMAL},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       total = #{record.total,jdbcType=DECIMAL},
       allpupper = #{record.allpupper,jdbcType=DECIMAL},
       is_tender = #{record.isTender,jdbcType=TINYINT},
       is_redeem = #{record.isRedeem,jdbcType=TINYINT},
       error_remark = #{record.errorRemark,jdbcType=VARCHAR},
-      pnumber_new = #{record.pnumberNew,jdbcType=VARCHAR}
+      pnumber_new = #{record.pnumberNew,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -282,9 +282,6 @@
       <if test="plower != null" >
         plower = #{plower,jdbcType=DECIMAL},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="total != null" >
         total = #{total,jdbcType=DECIMAL},
       </if>
@@ -303,6 +300,9 @@
       <if test="pnumberNew != null" >
         pnumber_new = #{pnumberNew,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -312,13 +312,13 @@
       interest_rate = #{interestRate,jdbcType=DECIMAL},
       pupper = #{pupper,jdbcType=DECIMAL},
       plower = #{plower,jdbcType=DECIMAL},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       total = #{total,jdbcType=DECIMAL},
       allpupper = #{allpupper,jdbcType=DECIMAL},
       is_tender = #{isTender,jdbcType=TINYINT},
       is_redeem = #{isRedeem,jdbcType=TINYINT},
       error_remark = #{errorRemark,jdbcType=VARCHAR},
-      pnumber_new = #{pnumberNew,jdbcType=VARCHAR}
+      pnumber_new = #{pnumberNew,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

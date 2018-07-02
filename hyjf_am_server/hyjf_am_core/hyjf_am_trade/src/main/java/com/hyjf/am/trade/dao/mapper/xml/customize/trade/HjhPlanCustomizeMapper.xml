@@ -26,4 +26,75 @@
 		plan_nid=#{planId}
 	</update>
 
+	<resultMap id="userHjhInvistDetailMap" type="com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize">
+		<id column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<result column="plan_name" property="planName" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="expect_apr" property="planApr" jdbcType="VARCHAR" />
+		<result column="lock_period" property="planPeriod" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="accede_account" property="accedeAccount" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="quit_time" property="quitTime" jdbcType="VARCHAR" />
+		<result column="last_payment_time" property="lastPaymentTime" jdbcType="VARCHAR" />
+		<result column="acctual_payment_time" property="acctualPaymentTime" jdbcType="VARCHAR" />
+		<result column="count_interest_time" property="countInterestTime" jdbcType="VARCHAR" />
+
+		<result column="wait_total" property="waitTotal" jdbcType="VARCHAR" />
+		<result column="wait_interest" property="waitInterest" jdbcType="VARCHAR" />
+		<result column="received_total" property="receivedTotal" jdbcType="VARCHAR" />
+		<result column="received_interest" property="receivedInterest" jdbcType="VARCHAR" />
+		<result column="all_total" property="allTotal" jdbcType="VARCHAR" />
+		<result column="all_interest" property="allInterest" jdbcType="VARCHAR" />
+		<result column="should_pay_total" property="shouldPayTotal" jdbcType="VARCHAR" />
+		<result column="repay_method" property="repayMethod" jdbcType="VARCHAR" />
+		<result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="repay_actual_time" property="repayActualTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectUserHjhInvistDetail" resultMap="userHjhInvistDetailMap" parameterType="Map">
+		SELECT
+		hhp.plan_nid plan_nid,
+		hhp.plan_name plan_name,
+		hha.accede_order_id accede_order_id,
+		CONCAT(hhp.expect_apr, '%') expect_apr,
+		CASE
+		WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
+		ELSE CONCAT(hhp.lock_period,'个月')
+		END AS lock_period,
+		hha.user_id user_id,
+		hha.accede_account accede_account,
+		FROM_UNIXTIME( hha.add_time, '%Y-%m-%d %H:%i' ) AS add_time,
+		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'待确认') AS quit_time,
+		IFNULL(FROM_UNIXTIME( IF(hha.last_payment_time=0,NULL,hha.last_payment_time), '%Y-%m-%d' ),'待确认') AS last_payment_time,
+		IFNULL(FROM_UNIXTIME( IF(hha.acctual_payment_time=0,NULL,hha.acctual_payment_time), '%Y-%m-%d' ),'待确认') AS acctual_payment_time,
+		IFNULL(FROM_UNIXTIME( IF(hha.count_interest_time=0,NULL,hha.count_interest_time), '%Y-%m-%d' ),'待确认') AS count_interest_time,
+		hha.wait_total wait_total,
+		hha.wait_interest wait_interest,
+		hha.received_total received_total,
+		hha.received_interest received_interest,
+		(hha.wait_total + hha.received_total) all_total,
+		(hha.wait_interest + hha.received_interest) all_interest,
+
+		SUBSTRING(FORMAT(hha.should_pay_total,4),1,LENGTH(FORMAT(hha.should_pay_total,4))-2) AS should_pay_total,
+
+		(SELECT hbs.NAME FROM huiyingdai_borrow_style hbs where hbs.nid = hhp.borrow_style limit 1 ) repay_method,
+		hha.order_status order_status,
+		<!-- 新加实际退出时间 -->
+		FROM_UNIXTIME(hhr.repay_actual_time, '%Y-%m-%d') AS repay_actual_time
+		FROM hyjf_hjh_accede hha
+		LEFT JOIN hyjf_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
+		LEFT JOIN hyjf_hjh_repay hhr ON hhr.accede_order_id = hha.accede_order_id
+		WHERE hha.accede_order_id = #{accedeOrderId} and hha.user_id =#{userId}
+	</select>
+
+	<!--还款/终止未完全承接的债权时,减扣计划的开放额度-->
+	<update id="updateRepayPlanAccount" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan">
+		update hyjf_hjh_plan
+		set
+		available_invest_account = IFNULL(available_invest_account,0) - #{availableInvestAccount,jdbcType=DECIMAL}
+		where
+		plan_nid = #{planNid,jdbcType=VARCHAR}
+	</update>
+
 </mapper>

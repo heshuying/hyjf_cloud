@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/am-trade/projectlist")
-public class ProjectListController {
+public class ProjectListController extends BaseController{
 
     @Autowired
    private ProjectListService projectListService;

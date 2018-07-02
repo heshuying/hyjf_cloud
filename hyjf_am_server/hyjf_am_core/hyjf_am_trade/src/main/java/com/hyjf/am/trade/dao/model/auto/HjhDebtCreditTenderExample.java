@@ -2476,6 +2476,66 @@ public class HjhDebtCreditTenderExample {
             return (Criteria) this;
         }
 
+        public Criteria andTenderTypeIsNull() {
+            addCriterion("tender_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeIsNotNull() {
+            addCriterion("tender_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeEqualTo(Integer value) {
+            addCriterion("tender_type =", value, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeNotEqualTo(Integer value) {
+            addCriterion("tender_type <>", value, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeGreaterThan(Integer value) {
+            addCriterion("tender_type >", value, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("tender_type >=", value, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeLessThan(Integer value) {
+            addCriterion("tender_type <", value, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("tender_type <=", value, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeIn(List<Integer> values) {
+            addCriterion("tender_type in", values, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeNotIn(List<Integer> values) {
+            addCriterion("tender_type not in", values, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeBetween(Integer value1, Integer value2) {
+            addCriterion("tender_type between", value1, value2, "tenderType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("tender_type not between", value1, value2, "tenderType");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusIsNull() {
             addCriterion("`status` is null");
             return (Criteria) this;

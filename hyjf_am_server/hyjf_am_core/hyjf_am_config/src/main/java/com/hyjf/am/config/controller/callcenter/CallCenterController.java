@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.config.controller.BaseConfigController;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("/am-config/callcenter")
-public class CallCenterController {
+public class CallCenterController extends BaseConfigController {
 	
     @Autowired
     CallCenterService callCenterService;

@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.coupon;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.coupon.MyCouponListService;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/coupon")
-public class MyCouponListController {
+public class MyCouponListController extends BaseController {
     @Autowired
     MyCouponListService myCouponListService;
 

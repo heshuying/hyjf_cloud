@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
@@ -154,6 +153,13 @@ public interface AmUserClient {
 	 * @return
 	 */
 	String getCustomerIDByUserID(Integer userId, String code);
+
+	/**
+	 * 获取渠道信息
+	 * @param utmId
+	 * @return
+	 */
+	UtmPlatVO selectUtmPlatByUtmId(Integer utmId);
 
 	
 }

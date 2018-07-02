@@ -18,6 +18,7 @@ public interface BorrowTenderClient {
 	public int saveTenderAgreement(TenderAgreementVO info);
 
 	public int updateTenderAgreement(TenderAgreementVO tenderAgreement);
-    
-    
+
+
+    List<BorrowTenderVO> getBorrowTenderListByNid(String nid);
 }

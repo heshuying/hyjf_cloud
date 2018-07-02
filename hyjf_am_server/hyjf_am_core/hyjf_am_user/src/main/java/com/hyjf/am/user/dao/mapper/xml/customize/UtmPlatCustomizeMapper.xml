@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper">
+    <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UtmPlat">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="source_id" property="sourceId" jdbcType="INTEGER"/>
+        <result column="source_name" property="sourceName" jdbcType="VARCHAR"/>
+        <result column="source_type" property="sourceType" jdbcType="TINYINT"/>
+        <result column="del_flag" property="delFlag" jdbcType="TINYINT"/>
+        <result column="attorn_flag" property="attornFlag" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_group_cd" property="createGroupCd" jdbcType="VARCHAR"/>
+        <result column="update_group_cd" property="updateGroupCd" jdbcType="INTEGER"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 根据userId查询用户所在渠道信息 暂时只用attorn_flag，如果有需要，可以扩展,用户只会在2张表中存在一条，所以可以这样写
+    union all
+		SELECT a.id,a.attorn_flag
+		  	FROM ht_utm_plat a, ht_app_channel_statistics_detail b
+			WHERE a.source_id = b.source_id
+			  AND b.user_id = #{userId} ) as t
+			  -->
+    <select id="selectUtmPlatByUserId" parameterType="int" resultMap="BaseResultMap">
+		select t.id,
+			   t.attorn_flag
+		 from (SELECT a.id,a.attorn_flag
+		  	FROM ht_utm_plat a, ht_utm b, ht_utm_reg c
+			WHERE a.source_id = b.source_id
+			  AND b.utm_id = c.utm_id
+			  AND c.user_id = #{userId}
+			limit 1
+	</select>
+
+</mapper>

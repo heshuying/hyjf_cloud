@@ -14,10 +14,11 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
     <result column="cooperate_num" property="cooperateNum" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -79,8 +80,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, truename, username, role_name, user_type, bank_open_account, account, 
-    `status`, remark, create_user_id, create_user_name, create_time, update_user_id, 
-    update_user_name, cooperate_num
+    `status`, remark, create_user_id, create_user_name, update_user_id, update_user_name, 
+    cooperate_num, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.SubCommissionListConfigExample" >
     select
@@ -122,15 +123,15 @@
     insert into ht_sub_commission_list_config (user_id, truename, username, 
       role_name, user_type, bank_open_account, 
       account, `status`, remark, 
-      create_user_id, create_user_name, create_time, 
-      update_user_id, update_user_name, cooperate_num
-      )
+      create_user_id, create_user_name, update_user_id, 
+      update_user_name, cooperate_num, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{truename,jdbcType=CHAR}, #{username,jdbcType=CHAR}, 
       #{roleName,jdbcType=CHAR}, #{userType,jdbcType=CHAR}, #{bankOpenAccount,jdbcType=CHAR}, 
       #{account,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
-      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{cooperateNum,jdbcType=VARCHAR}
-      )
+      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateUserName,jdbcType=VARCHAR}, #{cooperateNum,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -171,9 +172,6 @@
       <if test="createUserName != null" >
         create_user_name,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
       <if test="updateUserId != null" >
         update_user_id,
       </if>
@@ -182,6 +180,12 @@
       </if>
       <if test="cooperateNum != null" >
         cooperate_num,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -218,9 +222,6 @@
       <if test="createUserName != null" >
         #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=VARCHAR},
-      </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
       </if>
@@ -229,6 +230,12 @@
       </if>
       <if test="cooperateNum != null" >
         #{cooperateNum,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -277,9 +284,6 @@
       <if test="record.createUserName != null" >
         create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=VARCHAR},
-      </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
@@ -288,6 +292,12 @@
       </if>
       <if test="record.cooperateNum != null" >
         cooperate_num = #{record.cooperateNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -308,10 +318,11 @@
       remark = #{record.remark,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=VARCHAR},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-      cooperate_num = #{record.cooperateNum,jdbcType=VARCHAR}
+      cooperate_num = #{record.cooperateNum,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -352,9 +363,6 @@
       <if test="createUserName != null" >
         create_user_name = #{createUserName,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=VARCHAR},
-      </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
@@ -363,6 +371,12 @@
       </if>
       <if test="cooperateNum != null" >
         cooperate_num = #{cooperateNum,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -380,10 +394,11 @@
       remark = #{remark,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=VARCHAR},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      cooperate_num = #{cooperateNum,jdbcType=VARCHAR}
+      cooperate_num = #{cooperateNum,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

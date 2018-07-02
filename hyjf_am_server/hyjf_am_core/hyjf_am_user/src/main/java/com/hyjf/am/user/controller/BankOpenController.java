@@ -1,5 +1,11 @@
 package com.hyjf.am.user.controller;
 
+import javax.validation.Valid;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
@@ -14,20 +20,10 @@ import com.hyjf.am.user.service.BankOpenService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/am-user/bankopen")
-public class BankOpenController {
-	
-	private static Logger logger = LoggerFactory.getLogger(BankOpenController.class);
-	
+public class BankOpenController extends BaseController{
 
 	@Autowired
 	private BankOpenService bankOpenService;

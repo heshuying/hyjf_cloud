@@ -6,7 +6,6 @@ package com.hyjf.am.user.service.impl.batch;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.batch.UserPortraitBatchService;
@@ -20,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -42,7 +39,9 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
     @Autowired
     private BankCardMapper bankCardMapper;
-
+    /**
+     * 查询需要更新用户画像的userInfo的list
+     * */
     @Override
     public List<UserInfo> searchUserInfoList() {
         Calendar cal = Calendar.getInstance();
@@ -59,7 +58,9 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
         List<UserInfo> userInfoList = userInfoMapper.selectByExample(example);
         return userInfoList;
     }
-
+    /**
+     * 保存用户画像
+     * */
     @Override
     public void saveUserPortrait(BatchUserPortraitQueryRequest request) {
         List<BatchUserPortraitQueryVO> userPortraitQueryVOList = request.getBatchUserPortraitQueryVOList();
@@ -105,7 +106,6 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                     if (StringUtils.isNotBlank(userInfo.getIdcard())) {
                         try {
                             String idcard = userInfo.getIdcard();
-                            log.info("userId::::{},idcard======={}",userId,idcard);
                             SimpleDateFormat sdf = GetDate.date_sdf;
 
                             Boolean isIdCard = IdCard15To18.isValid(idcard);
@@ -154,22 +154,21 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                     userPortrait.setMobile(user.getMobile());
                 }
             }
-            log.info("userPortrait::::::::::=========={}",userPortrait.toString());
 
             // 更新用户画像表信息
             int count = 0;
-            log.info("更新用户id ：{}", userPortrait.getUserId());
+            log.info("userId:{}，保存用户画像", userPortrait.getUserId());
             count = updateInformation(userPortrait);
-            log.info("更新条数 ：{}", count);
             if (count <= 0) {
                 count = insertInformation(userPortrait);
-                log.info("插入条数 ：{}", count);
             }
         }
 
 
     }
-
+    /**
+     * 将BatchUserPortraitQueryVO值  赋值给  UserPortrait
+     * */
     private void convertBean(BatchUserPortraitQueryVO userPortraitQueryVO, UserPortrait userPortrait) {
         // 用户id
         userPortrait.setUserId(userPortraitQueryVO.getUserId());
@@ -195,17 +194,31 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
         if (userPortraitQueryVO.getLastRechargeTime() != null) {
             userPortrait.setLastRechargeTime(userPortraitQueryVO.getLastRechargeTime());
         }
+        // 投龄
+        if(userPortraitQueryVO.getInvestAge() != null){
+            userPortrait.setInvestAge(userPortraitQueryVO.getInvestAge());
+        }else{
+            userPortrait.setInvestAge(0);
+        }
+        // 同时投资平台数
+        if(userPortraitQueryVO.getInvestPlatform() != null){
+            userPortrait.setInvestPlatform(userPortraitQueryVO.getInvestPlatform());
+        }else{
+            userPortrait.setInvestPlatform(0);
+        }
     }
-
+    /**
+     * 更新用户画像
+     * */
     private int updateInformation(UserPortrait userPortrait) {
         int count = userPortraitMapper.updateByPrimaryKeySelective(userPortrait);
         return count;
     }
-
-
+    /**
+     * 插入用户画像
+     * */
     private int insertInformation(UserPortrait userPortrait) {
         int count = userPortraitMapper.insert(userPortrait);
         return count;
     }
-
 }

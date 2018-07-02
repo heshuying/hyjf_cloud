@@ -34,6 +34,9 @@ public class IdCard15To18 {
      * Math.pow(2,  i - 1) % 11
      */
     final static int[] WI = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+    /**
+     * 身份证前4位对应的城市名称
+     * */
     static Map<String,String> city = new HashMap<>();
 
     /**
@@ -121,7 +124,7 @@ public class IdCard15To18 {
     }
     /**
      * 方法描述: 校验身份证号码是否有效
-     * @param
+     * @param id 身份证号码
      * @return
      * */
     public final static boolean isValid(String id){
@@ -130,24 +133,28 @@ public class IdCard15To18 {
         }
 
         int len = id.length();
-        if (len != 15 && len != 18) {
+        if (len != 15 && len != 18){
             return false;
         }
 
         //校验区位码
-        if (!validCityCode(id.substring(0, 2))) {
+        if (!validCityCode(id.substring(0, 2))){
             return false;
         }
         //校验生日
-        if (!validDate(id)) {
+        if (!validDate(id)){
             return false;
         }
-        if (len == 15) {
+        if (len == 15){
             return true;
         }
         //校验位数
         return validParityBit(id);
     }
+    /**
+     * 校验身份证位数
+     * @param id 身份证号码
+     * */
     private static boolean validParityBit(String id){
         char[] cs = id.toUpperCase().toCharArray();
         int power = 0;
@@ -167,7 +174,10 @@ public class IdCard15To18 {
         }
         return VERIFYCODE[power % 11] == cs[cs.length - 1];
     }
-
+    /**
+     * 校验身份证生日
+     * @param id 身份证号码
+     * */
     private static boolean validDate(String id){
         try{
             String birth = id.length() == 15 ? "19" + id.substring(6, 12) : id.substring(6, 14);
@@ -180,7 +190,10 @@ public class IdCard15To18 {
         }
         return true;
     }
-
+    /**
+     * 校验身份证城市码
+     * @param cityCode 身份证前4位
+     * */
     private static boolean validCityCode(String cityCode){
         for (String code : CITY_CODE){
             if (code.equals(cityCode)) {
@@ -189,17 +202,20 @@ public class IdCard15To18 {
         }
         return false;
     }
+    /**
+     * 根据身份证前4位获取对应的城市名称
+     * @param code 身份证前4位
+     * @return area 身份证前4位对应的城市名称
+     * */
     public static String getCityFromCode(String code){
-        // 从city.properties文件中载入城市数据
+        // 如果map中没有数据，就从city.properties文件中载入一次
         if(city != null && city.size() == 0){
             try {
-                System.out.println("初始化城市数据from[city.properties]");
                 Properties properties = new Properties();
                 InputStream inputStream = IdCard15To18.class.getClassLoader().getResourceAsStream("city.properties");
                 properties.load(inputStream);
                 String json = properties.toString();
                 String area = json.substring(1, json.length() -1);
-                System.out.println(area);
                 if(area != null && !"".equals(area)){
                     String[] text = area.split(";");
                     for(String str:text){
@@ -219,7 +235,6 @@ public class IdCard15To18 {
         String area = null;
         try {
             area = city.get(code);
-            System.out.println("area==========" + area);
         }catch (Exception e){
             area = "";
         }

@@ -113,4 +113,3 @@ public class AssetListClientImpl implements AssetListClient {
 		return null;
 	}
 }
-

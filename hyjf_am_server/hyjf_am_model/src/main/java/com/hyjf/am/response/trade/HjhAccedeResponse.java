@@ -11,4 +11,14 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
  * @version HjhAccedeResponse, v0.1 2018/6/25 10:05
  */
 public class HjhAccedeResponse extends Response<HjhAccedeVO> {
+
+    private Integer accedeCount;
+
+    public Integer getAccedeCount() {
+        return accedeCount;
+    }
+
+    public void setAccedeCount(Integer accedeCount) {
+        this.accedeCount = accedeCount;
+    }
 }

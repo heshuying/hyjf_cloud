@@ -62,5 +62,13 @@ public interface WebProjectListService extends BaseTradeService{
     public WebResult searchPlanList(ProjectListRequest request);
 
 
+    /**
+     * 计划详情
+     * @author zhangyk
+     * @date 2018/6/27 18:59
+     */
+    public WebResult getPlanDetail(Map<String,String> map,String userId);
+
+
 
 }

@@ -21,7 +21,7 @@ import java.util.List;
 public class EvalationServiceImpl implements EvalationService {
 
     @Autowired
-    public EvalationClient evalationClient;
+    private EvalationClient evalationClient;
     /**
      * 查找用户测评数据
      * @return

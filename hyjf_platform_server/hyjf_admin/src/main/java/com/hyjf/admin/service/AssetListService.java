@@ -16,7 +16,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
  */
 public interface AssetListService {
 	// 资金来源
-	List<HjhInstConfigVO>  hjhInstConfigList();
+	List<HjhInstConfigVO>  getHjhInstConfigList();
 	// 产品类型
 	List<HjhAssetTypeVO> hjhAssetTypeList(String instCodeSrch);
 	// param原相关查询
@@ -30,4 +30,3 @@ public interface AssetListService {
 	// 列总计
 	BigDecimal sumAccount(AssetListRequest request);
 }
-

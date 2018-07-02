@@ -37,10 +37,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/am-user/loanCoverUser")
-public class LoanCoverUserManagerController {
+public class LoanCoverUserManagerController extends BaseController{
     @Autowired
     private LoanCoverUserManagerService loanCoverUserManagerService;
-    private static Logger logger = LoggerFactory.getLogger(LoanCoverUserManagerController.class);
 
     /**
      * 根据筛选条件查找(用户管理列表显示)
@@ -104,7 +103,8 @@ public class LoanCoverUserManagerController {
                 List<LoanCoverUserVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, LoanCoverUserVO.class);
                 response.setResultList(userVoList);
                 response.setCount(registCount);
-                response.setRtn(Response.SUCCESS);//代表成功
+                //代表成功
+                response.setRtn(Response.SUCCESS);
             }
         }
         return response;
@@ -133,7 +133,8 @@ public class LoanCoverUserManagerController {
             response.setResult(loanCoverUserVO);
             status = Response.SUCCESS;
         }
-        response.setRtn(status);//代表成功
+        //代表成功
+        response.setRtn(status);
         return response;
 
     }
@@ -151,7 +152,7 @@ public class LoanCoverUserManagerController {
             response.setResult(loanCoverUserVO);
             status = Response.SUCCESS;
         }
-        response.setRtn(status);//代表成功
+        response.setRtn(status);
         return response;
     }
     /**

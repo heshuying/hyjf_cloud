@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 
 import java.util.Map;
 
@@ -33,4 +34,11 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     int updateRepayPlanAccount(HjhPlan hjhPlan);
+
+    /**
+     * 获取汇计划投资详情
+     * @param params
+     * @return
+     */
+    UserHjhInvistDetailCustomize selectUserHjhInvistDetail(Map<String,Object> params);
 }

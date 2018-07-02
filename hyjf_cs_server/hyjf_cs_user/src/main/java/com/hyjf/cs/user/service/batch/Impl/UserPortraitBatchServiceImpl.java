@@ -3,11 +3,7 @@
  */
 package com.hyjf.cs.user.service.batch.Impl;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
-import com.hyjf.am.resquest.user.UserInfoRequest;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -17,10 +13,8 @@ import com.hyjf.cs.user.service.batch.UserPortraitBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -37,29 +31,32 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
     private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
+    /**
+     * 用户画像定时任务
+     * */
     @Override
     public void userPortraitBatch() {
         logger.info("用户画像(每日)定时任务开始....");
+        // 查询出需要更新用户画像的用户信息
         List<UserInfoVO> userInfoVOList = amUserClient.searchUserInfo();
-        logger.info(JSON.toJSONString(userInfoVOList));
         String userId = "";
+        // list不为空就进行更新
         if(!CollectionUtils.isEmpty(userInfoVOList)){
+            // 组装userId，去am-trade查询用户画像的相关信息
             for(UserInfoVO userInfoVO:userInfoVOList){
                 userId += userInfoVO.getUserId() + ",";
             }
+            // 去掉最后的,
             userId = userId.substring(0,userId.lastIndexOf(","));
-            logger.info("组装的userid为::::::{}",userId);
+            // 去am-trade查询用户画像的相关信息
+            List<BatchUserPortraitQueryVO> batchUserPortraitQueryVOList = amTradeClient.searchInfoForUserPortrait(userId);
+            // 如果信息不为空，就去am-user更新用户画像
+            if(!CollectionUtils.isEmpty(batchUserPortraitQueryVOList)){
+                BatchUserPortraitQueryRequest request = new BatchUserPortraitQueryRequest();
+                request.setBatchUserPortraitQueryVOList(batchUserPortraitQueryVOList);
+                // 保存用户画像
+                amUserClient.saveUserPortrait(request);
+            }
         }
-
-
-
-        List<BatchUserPortraitQueryVO> batchUserPortraitQueryVOList = amTradeClient.searchInfoForUserPortrait(userId);
-        logger.info(JSON.toJSONString(batchUserPortraitQueryVOList));
-
-        BatchUserPortraitQueryRequest request = new BatchUserPortraitQueryRequest();
-        request.setBatchUserPortraitQueryVOList(batchUserPortraitQueryVOList);
-
-        amUserClient.saveUserPortrait(request);
-
     }
 }

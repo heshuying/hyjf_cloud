@@ -16,7 +16,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
  */
 public interface AssetListClient {
     /**
-     * 资产来源lb
+     * 资产来源
      * @param request
      * @return
      */
@@ -49,18 +49,17 @@ public interface AssetListClient {
      * @return
      */
     AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest);
-
+    
     /**
      * 总计
      * @param request
      * @return
      */
     Integer getRecordCount(AssetListRequest request);
-
+    
     /**列总数
      * @param request
      * @return
      */
     BigDecimal sumAccount(AssetListRequest request);
 }
-

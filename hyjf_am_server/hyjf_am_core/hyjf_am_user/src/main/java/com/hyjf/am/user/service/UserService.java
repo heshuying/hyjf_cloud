@@ -157,4 +157,19 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	List<LoanSubjectCertificateAuthority> getLoanSubjectCertificateAuthorityList(LoanSubjectCertificateAuthorityRequest request);
+
+	/**
+	 * 通过userID获得CA认证的客户ID
+	 * @param userId
+	 * @param code
+	 * @return
+	 */
+	String getCustomerIDByUserID(Integer userId, String code);
+
+	/**
+	 * 根据userId查询渠道
+	 * @param userId
+	 * @return
+	 */
+    UtmPlat selectUtmPlatByUserId(Integer userId);
 }

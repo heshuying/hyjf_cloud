@@ -22,7 +22,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
  */
 @RestController
 @RequestMapping("/am-trade/account")
-public class AccountController {
+public class AccountController extends BaseController {
 
     @Autowired
     private AccountService accountService;
@@ -40,14 +40,15 @@ public class AccountController {
     }
 
     @PostMapping("/updateOfRTBLoansTender")
-    public int updateOfRTBLoansTender(@RequestBody AccountVO accountVO) {
-        int result = 0;
+    public AccountResponse updateOfRTBLoansTender(@RequestBody AccountVO accountVO) {
+        AccountResponse response = new AccountResponse();
         if (accountVO != null) {
             Account account = new Account();
             BeanUtils.copyProperties(accountVO,account);
-            result = accountService.updateOfRTBLoansTender(account);
+            int updateFlag = accountService.updateOfRTBLoansTender(account);
+            response.setUpdateFlag(updateFlag);
         }
-        return result;
+        return response;
     }
 
     @PostMapping("/updateOfPlanRepayAccount")

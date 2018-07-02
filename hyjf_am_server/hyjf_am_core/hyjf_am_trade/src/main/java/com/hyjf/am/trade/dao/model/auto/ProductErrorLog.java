@@ -18,7 +18,7 @@ public class ProductErrorLog implements Serializable {
 
     private String date;
 
-    private Boolean isSms;
+    private Integer isSms;
 
     private static final long serialVersionUID = 1L;
 
@@ -78,11 +78,11 @@ public class ProductErrorLog implements Serializable {
         this.date = date == null ? null : date.trim();
     }
 
-    public Boolean getIsSms() {
+    public Integer getIsSms() {
         return isSms;
     }
 
-    public void setIsSms(Boolean isSms) {
+    public void setIsSms(Integer isSms) {
         this.isSms = isSms;
     }
 }

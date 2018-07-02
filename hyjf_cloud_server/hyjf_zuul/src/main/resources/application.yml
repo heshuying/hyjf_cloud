@@ -23,3 +23,8 @@ ignore:
     web: /smsCode/send,/user/register,/user/login
     wechat: /smsCode/send,/user/register,/user/login
     api: /smsCode/send,/user/register,/user/login
+
+
+hyjf:
+  domain:
+    name: hyjf.com,huiyingdai.com

@@ -8,6 +8,7 @@ import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterAccountHuifuCustomize;
 import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
@@ -34,10 +35,9 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/am-user/callcenter")
-public class CallCenterBankController {
+public class CallCenterBankController extends BaseController{
     @Autowired
     CallCenterBankService callCenterBankService;
-    private static final Logger logger = LoggerFactory.getLogger(CallCenterBankController.class);
 
     @RequestMapping("/getTiedCardForBank/{userId}")
     public BankCardResponse getTiedCardOfAccountBank(@PathVariable Integer userId){

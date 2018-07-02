@@ -7,19 +7,15 @@ import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.response.trade.MyRewardListResponse;
-import com.hyjf.am.response.user.MyInviteListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.trade.RepayDataRecoverRequest;
-import com.hyjf.am.resquest.trade.RtbIncreaseRepayRequest;
 import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,39 +38,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     private RestTemplate restTemplate;
 
     /**
-     * 根据借款编号,还款期数,还款方式取得融通宝待还款金额
-     *
-     * @param borrowNid
-     * @param borrowStyle
-     * @param periodNow
-     * @return
-     */
-    @Override
-    public BigDecimal selectRtbRepayAmount(String borrowNid, String borrowStyle, Integer periodNow) {
-        String url = urlBase + "batch/rtb/getRepayAmount/" + borrowNid + "/" + borrowStyle + "/"
-                + periodNow;
-        BigDecimal rtbRepayAmount = restTemplate.getForEntity(url, BigDecimal.class).getBody();
-        return rtbRepayAmount;
-    }
-
-    /**
-     * 融通宝还款加息
-     *
-     * @param borrowApicronVO
-     */
-    @Override
-    public void rtbIncreaseReapy(BorrowApicronVO borrowApicronVO, String account, String companyAccount) {
-        String url = urlBase + "batch/rtb/increaseInterestRepay";
-
-        RtbIncreaseRepayRequest repayRequest = new RtbIncreaseRepayRequest();
-        repayRequest.setBorrowApicronVO(borrowApicronVO);
-        repayRequest.setAccount(account);
-        repayRequest.setCompanyAccount(companyAccount);
-
-        restTemplate.postForEntity(url, repayRequest, Object.class);
-    }
-
-    /**
      * 统计加息券每日待收收益
      *
      * @param
@@ -82,7 +45,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<CouponRecoverCustomizeVO> selectCouponInterestWaitToday(long timeStart, long timeEnd) {
-        String url = urlBase + "batch/selectCouponInterestWaitToday/" + timeStart + "/" + timeEnd;
+        String url = urlBase + "couponRepay/selectCouponInterestWaitToday/" + timeStart + "/" + timeEnd;
         CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url, CouponRecoverCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -98,7 +61,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal selectCouponInterestReceivedToday(long timeStart, long timeEnd) {
-        String url = urlBase + "batch/selectCouponInterestReceivedToday/" + timeStart + "/" + timeEnd;
+        String url = urlBase + "couponRepay/selectCouponInterestReceivedToday/" + timeStart + "/" + timeEnd;
         BigDecimal interest = restTemplate.getForEntity(url, BigDecimal.class).getBody();
         if (interest != null) {
             return interest;
@@ -142,28 +105,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-    /**
-     * 收支明细不存在时掉单处理
-     * @param currentRecover
-     * @param bankOpenAccountInfo
-     * @param userId
-     * @param couponUserCode
-     * @param ip
-     * @param count
-     */
-    @Override
-    public void repayDataRecover(CouponRecoverCustomizeVO currentRecover, BankOpenAccountVO bankOpenAccountInfo, String userId, String couponUserCode, String ip, int count) {
-        String url = urlBase + "batch/repayDataRecover";
-        RepayDataRecoverRequest request = new RepayDataRecoverRequest();
-        request.setCouponRecoverCustomizeVO(currentRecover);
-        request.setBankOpenAccountVO(bankOpenAccountInfo);
-        request.setUserId(userId);
-        request.setCouponUserCode(couponUserCode);
-        request.setIp(ip);
-        request.setCount(count);
 
-        restTemplate.postForEntity(url, request, Object.class);
-    }
 	/**
 	 * 统计总的优惠券数
 	 * @param requestBean
@@ -213,24 +155,5 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return result;
 	}
 
-    /**
-     * 收支明细存在时掉单处理
-     * @param borrowTenderCpn
-     * @param borrowNid
-     * @param couponUserCode
-     */
-    @Override
-    public void updateRepayDataRecover(CouponRecoverCustomizeVO currentRecover,BorrowTenderCpnVO borrowTenderCpn, String borrowNid, String couponUserCode,String userId,String borrowStyle,int periodNow) {
-        String url = urlBase + "batch/updateRepayDataRecover";
-        RepayDataRecoverRequest request = new RepayDataRecoverRequest();
-        request.setCouponRecoverCustomizeVO(currentRecover);
-        request.setBorrowTenderCpnVO(borrowTenderCpn);
-        request.setCouponUserCode(couponUserCode);
-        request.setBorrowNid(borrowNid);
-        request.setUserId(userId);
-        request.setBorrowStyle(borrowStyle);
-        request.setPeriodNow(periodNow);
 
-        restTemplate.postForEntity(url,request,Object.class);
-    }
 }

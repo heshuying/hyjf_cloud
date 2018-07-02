@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/reward")
-public class MyRewardController {
+public class MyRewardController extends BaseController{
     @Autowired
     MyRewardService myRewardService;
 

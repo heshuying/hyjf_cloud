@@ -99,7 +99,6 @@ public class WebProjectListController extends BaseTradeController {
 
     /**
      * 散标专区债权转让详情
-     * @param request
      * @return
      */
     @ApiOperation(value = "散标专区债权转让详情", notes = "散标专区债权转让详情")
@@ -132,6 +131,19 @@ public class WebProjectListController extends BaseTradeController {
     @PostMapping(value = "/searchPlanList", produces = "application/json; charset=utf-8")
     public Object getPlanList(@RequestBody @Valid ProjectListRequest request){
         WebResult result =  webProjectListService.searchPlanList(request);
+        return result;
+    }
+
+
+    /**
+     * 计划详情
+     * @author zhangyk
+     * @date 2018/6/27 18:53
+     */
+    @ApiOperation(value = "计划专区计划详情", notes = "计划专区计划详情")
+    @PostMapping(value = "/getPlanDetail", produces = "application/json; charset=utf-8")
+    public Object getPlanDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
+        WebResult result =  webProjectListService.getPlanDetail(map,userId);
         return result;
     }
 

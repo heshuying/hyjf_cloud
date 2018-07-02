@@ -26,7 +26,7 @@ public class AssetListServiceImpl implements AssetListService {
 	public AssetListClient assetListClient;
 
 	@Override
-	public List<HjhInstConfigVO> hjhInstConfigList() {
+	public List<HjhInstConfigVO> getHjhInstConfigList() {
 		List<HjhInstConfigVO> hjhInstConfigList = assetListClient.findHjhInstConfigList();
 		return hjhInstConfigList;
 	}
@@ -67,4 +67,3 @@ public class AssetListServiceImpl implements AssetListService {
 		return sum;
 	}
 }
-

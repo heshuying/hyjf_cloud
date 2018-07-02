@@ -15,8 +15,6 @@ public class Product implements Serializable {
 
     private BigDecimal plower;
 
-    private Date createTime;
-
     private BigDecimal total;
 
     private BigDecimal allpupper;
@@ -28,6 +26,8 @@ public class Product implements Serializable {
     private String errorRemark;
 
     private String pnumberNew;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -69,14 +69,6 @@ public class Product implements Serializable {
 
     public void setPlower(BigDecimal plower) {
         this.plower = plower;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public BigDecimal getTotal() {
@@ -125,5 +117,13 @@ public class Product implements Serializable {
 
     public void setPnumberNew(String pnumberNew) {
         this.pnumberNew = pnumberNew == null ? null : pnumberNew.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

@@ -1,16 +1,19 @@
 package com.hyjf.am.trade.controller.repay;
 
-import com.hyjf.am.response.trade.MyCouponListResponse;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.trade.service.coupon.MyCouponListService;
-import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.hyjf.am.response.trade.RepayListResponse;
+import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.service.repay.RepayManageService;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
 /**
  * 还款管理
@@ -19,25 +22,86 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/repay")
-public class RepayManageController {
+public class RepayManageController extends BaseController {
     @Autowired
-    MyCouponListService myCouponListService;
+    RepayManageService repayManageService;
 
     /**
-     * 查询我的优惠券列表
-     * @auther: hesy
-     * @date: 2018/6/23
+     * 检索还款列表
+     * @param requestBean
+     * @return
      */
-    @RequestMapping(value = "/myCouponList")
-    public MyCouponListResponse myCouponList(@RequestBody @Valid MyCouponListRequest requestBean) {
-        MyCouponListResponse responseBean = new MyCouponListResponse();
-
-        List<MyCouponListCustomizeVO> resultList = myCouponListService.selectUserCouponList(requestBean.getUserId(),requestBean.getUsedFlag(),requestBean.getLimitStart(),requestBean.getLimitEnd());
+    @RequestMapping(value = "/repayList")
+    public RepayListResponse repayList(@RequestBody @Valid RepayListRequest requestBean) {
+        RepayListResponse responseBean = new RepayListResponse();
+        List<RepayListCustomizeVO> resultList = repayManageService.selectRepayList(requestBean);
         responseBean.setResultList(resultList);
 
         return responseBean;
     }
 
+    /**
+     * 统计还款总记录数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/repayCount")
+    public Integer repayCount(@RequestBody @Valid RepayListRequest requestBean) {
+        RepayListResponse responseBean = new RepayListResponse();
+        Integer result = repayManageService.selectRepayCount(requestBean);
+        return result;
+    }
 
+    /**
+     * 检索垫付机构待还款列表
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/orgRepayList")
+    public RepayListResponse orgRepayList(@RequestBody @Valid RepayListRequest requestBean) {
+        RepayListResponse responseBean = new RepayListResponse();
+        List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayList(requestBean);
+        responseBean.setResultList(resultList);
+
+        return responseBean;
+    }
+
+    /**
+     * 统计垫付机构待还款总记录数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/orgRepayCount")
+    public Integer orgRepayCount(@RequestBody @Valid RepayListRequest requestBean) {
+        RepayListResponse responseBean = new RepayListResponse();
+        Integer result = repayManageService.selectOrgRepayCount(requestBean);
+        return result;
+    }
+
+    /**
+     * 检索垫付机构已还款列表
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/orgRepayedList")
+    public RepayListResponse orgRepayedList(@RequestBody @Valid RepayListRequest requestBean) {
+        RepayListResponse responseBean = new RepayListResponse();
+        List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayedList(requestBean);
+        responseBean.setResultList(resultList);
+
+        return responseBean;
+    }
+
+    /**
+     * 统计垫付机构已还款总记录数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/orgRepayedCount")
+    public Integer orgRepayedCount(@RequestBody @Valid RepayListRequest requestBean) {
+        RepayListResponse responseBean = new RepayListResponse();
+        Integer result = repayManageService.selectOrgRepayedCount(requestBean);
+        return result;
+    }
 
 }
