@@ -155,4 +155,50 @@
 		id = #{id,jdbcType=INTEGER}
 	</update>
 
+	<!--add 汇计划三期 计划订单投资笔数累加 liubin 20180515 start;
+ add 汇计划三期 计划订单投资笔数累加 liubin 20180515 end;
+ add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start;-->
+	<!--add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end-->
+	<update id="updateHjhAccedeForHjhProcess" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
+		update hyjf_hjh_accede
+		<set>
+			<if test="alreadyInvest != null">
+				already_invest = IFNULL(already_invest,0) + #{alreadyInvest,jdbcType=DECIMAL},
+			</if>
+			<if test="availableInvestAccount != null">
+				available_invest_account = IFNULL(available_invest_account,0) +
+				#{availableInvestAccount,jdbcType=DECIMAL},
+			</if>
+			<if test="frostAccount != null">
+				frost_account = IFNULL(frost_account,0) +
+				#{frostAccount,jdbcType=DECIMAL},
+			</if>
+			<if test="waitTotal != null">
+				wait_total = IFNULL(wait_total,0) + #{waitTotal,jdbcType=DECIMAL},
+			</if>
+			<if test="waitInterest != null">
+				wait_interest = IFNULL(wait_interest,0) + #{waitInterest,jdbcType=DECIMAL},
+			</if>
+			<if test="waitCaptical != null">
+				wait_captical = IFNULL(wait_captical,0) + #{waitCaptical,jdbcType=DECIMAL},
+			</if>
+
+			<if test="investCounts != null">
+				invest_counts = invest_counts + #{investCounts,jdbcType=INTEGER},
+			</if>
+
+			<if test="lqdServiceFee != null">
+				lqd_service_fee = lqd_service_fee + #{lqdServiceFee,jdbcType=DECIMAL},
+			</if>
+
+			<if test="updateUser != null">
+				update_user = #{updateUser,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=INTEGER}
+			</if>
+		</set>
+		where
+		id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>
