@@ -62,4 +62,11 @@ public interface CreditClient {
      * @return
      */
     ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
+
+    /**
+     * 验证投资人当天是否可以债转
+     * @param userId
+     * @return
+     */
+    Integer tenderAbleToCredit(Integer userId);
 }

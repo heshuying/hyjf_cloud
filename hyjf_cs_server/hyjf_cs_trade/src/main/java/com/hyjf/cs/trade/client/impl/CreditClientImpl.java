@@ -118,4 +118,20 @@ public class CreditClientImpl implements CreditClient {
         }
         return null;
     }
+
+    /**
+     * 验证投资人当天是否可以债转
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer tenderAbleToCredit(Integer userId) {
+        String url = "http://AM-TRADE/am-trade/creditTender/get_tender_credit_count/" + userId ;
+        Integer response = restTemplate.getForEntity(url, Integer.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 }

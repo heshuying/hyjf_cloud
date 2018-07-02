@@ -87,4 +87,11 @@ public interface BankCreditTenderService {
      * @return
      */
     ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
+
+    /**
+     * 投资人当天是否可以债转
+     * @param userId
+     * @return
+     */
+    Integer tenderAbleToCredit(Integer userId);
 }

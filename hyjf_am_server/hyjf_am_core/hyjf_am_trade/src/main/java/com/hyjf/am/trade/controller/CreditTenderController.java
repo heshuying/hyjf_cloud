@@ -142,7 +142,7 @@ public class CreditTenderController {
      *
      * @return
      */
-    @GetMapping("/selectTenderToCreditDetail/{userId}/{borrowNid }/{tenderNid}")
+    @GetMapping("/selectTenderToCreditDetail/{userId}/{borrowNid}/{tenderNid}")
     public MyCreditListQueryResponse selectTenderToCreditDetail(@PathVariable Integer userId, @PathVariable String borrowNid, @PathVariable String tenderNid) {
         MyCreditListQueryResponse response = new MyCreditListQueryResponse();
         TenderCreditCustomize bean = bankCreditTenderService.selectTenderToCreditDetail(userId, borrowNid, tenderNid);
@@ -157,7 +157,7 @@ public class CreditTenderController {
      *
      * @return
      */
-    @GetMapping("/selectExpectCreditFee/{borrowNid }/{tenderNid}")
+    @GetMapping("/selectExpectCreditFee/{borrowNid}/{tenderNid}")
     public ExpectCreditFeeResponse selectExpectCreditFee(@PathVariable String borrowNid, @PathVariable String tenderNid) {
         ExpectCreditFeeResponse response = new ExpectCreditFeeResponse();
         ExpectCreditFeeVO bean = bankCreditTenderService.selectExpectCreditFee(borrowNid, tenderNid);
@@ -165,6 +165,17 @@ public class CreditTenderController {
             response.setResult(bean);
         }
         return response;
+    }
+
+    /**
+     * 投资人当天是否可以债转
+     * @param userId
+     * @return
+     */
+    @GetMapping("/get_tender_credit_count/{userId}")
+    public Integer tenderAbleToCredit(@PathVariable Integer userId) {
+        Integer result = bankCreditTenderService.tenderAbleToCredit(userId);
+        return result;
     }
 
 
