@@ -1,9 +1,10 @@
 package com.hyjf.am.resquest.trade;
 
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
-public class TradeDetailBeanRequest extends BaseVO {
+public class TradeDetailBeanRequest extends BasePage {
     // 用户id
     public String userId;
     // 投资开始值
