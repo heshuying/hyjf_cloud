@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -37,13 +36,12 @@ public class UserAuthExceptionController extends BaseController {
     /**
      * 自动投资债转授权异常list查询
      * @auth 孙沛凯
-     * @param requestMap 筛选条件请求参数
+     * @param request 筛选条件请求参数
      * @return JSONObject 拼装的返回参数
      */
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
-    public JSONObject userAuthException(@RequestBody Map<String,Object> requestMap){
-        AdminUserAuthListRequest request = setParam(requestMap);
+    public JSONObject userAuthException(@RequestBody AdminUserAuthListRequest request){
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
             String recordTotal = response.getRecordTotal();
@@ -72,53 +70,5 @@ public class UserAuthExceptionController extends BaseController {
             return fail("查询失败");
         }
     }
-    /**
-     * 请求参数map转成bean
-     * @auth 孙沛凯
-     * @param requestMap 待转换的map
-     * @return 转换完成的bean
-     */
-    private AdminUserAuthListRequest setParam(Map<String,Object> requestMap){
-        AdminUserAuthListRequest request = new AdminUserAuthListRequest();
-        if(null != requestMap && requestMap.size() > 0){
-            // 用户名
-            if (requestMap.containsKey("userName")) {
-                request.setUserName(requestMap.get("userName").toString());
-            }
-            // 推荐人
-            if (requestMap.containsKey("recommendName")) {
-                request.setRecommendName(requestMap.get("recommendName").toString());
-            }
-            // 自动投标授权状态
-            if (requestMap.containsKey("autoInvesStatus")) {
-                request.setAutoInvesStatus(requestMap.get("autoInvesStatus").toString());
-            }
-            // 自动债转授权状态
-            if (requestMap.containsKey("autoCreditStatus")) {
-                request.setAutoCreditStatus(requestMap.get("autoCreditStatus").toString());
-            }
-            // 授权时间开始时间
-            if (requestMap.containsKey("invesAddTimeStart")) {
-                request.setInvesAddTimeStart(requestMap.get("invesAddTimeStart").toString());
-            }
-            // 授权时间结束时间
-            if (requestMap.containsKey("invesAddTimeEnd")) {
-                request.setInvesAddTimeEnd(requestMap.get("invesAddTimeEnd").toString());
-            }
-            // 签约到期日开始时间
-            if (requestMap.containsKey("investEndTimeStart")) {
-                request.setInvestEndTimeStart(requestMap.get("investEndTimeStart").toString());
-            }
-            // 签约到期日结束时间
-            if (requestMap.containsKey("investEndTimeEnd")) {
-                request.setInvestEndTimeEnd(requestMap.get("investEndTimeEnd").toString());
-            }
-            // 当前第几页(翻页机能)
-            if(requestMap.containsKey("paginatorPage")){
-                request.setPaginatorPage(Integer.valueOf(requestMap.get("paginatorPage").toString()));
-            }
 
-        }
-        return request;
-    }
 }
