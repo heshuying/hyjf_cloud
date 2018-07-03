@@ -76,4 +76,10 @@ public class BorrowRegistClientImpl implements BorrowRegistClient {
         }
         return null;
     }
+
+    @Override
+    public String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest){
+        String url = "http://AM-TRADE/am-trade/borrow_regist/sum_borrow_regist_account";
+        return restTemplate.postForEntity(url,borrowRegistListRequest,String.class).getBody();
+    }
 }

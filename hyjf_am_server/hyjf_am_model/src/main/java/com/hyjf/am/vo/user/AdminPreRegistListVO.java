@@ -13,10 +13,11 @@ package com.hyjf.am.vo.user;
 
 import java.io.Serializable;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
 /**
- * @author 朱晓东
+ * @author dongzeshan
  */
 
 public class AdminPreRegistListVO extends BaseVO implements Serializable {

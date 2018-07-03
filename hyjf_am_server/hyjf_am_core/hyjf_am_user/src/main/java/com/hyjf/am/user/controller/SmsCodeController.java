@@ -59,4 +59,23 @@ public class SmsCodeController extends BaseController{
 				updateStatus);
 		return result;
 	}
+
+	/**
+	 * 只校验验证码  不修改状态
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/only_check")
+	public int onlyCheckMobileCode(@RequestBody @Valid SmsCodeRequest request) {
+		logger.info("onlyCheckMobileCode...param is :{}", JSONObject.toJSONString(request));
+		String mobile = request.getMobile();
+		String verificationCode = request.getVerificationCode();
+		String verificationType = request.getVerificationType();
+		String platform = request.getPlatform();
+		Integer status = request.getStatus();
+		Integer updateStatus = request.getUpdateStatus();
+		int result = smsService.checkMobileCode(mobile, verificationCode, verificationType, platform, status,
+				updateStatus);
+		return result;
+	}
 }

@@ -10,14 +10,12 @@ import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
-import com.hyjf.am.vo.trade.CreditPageVO;
-import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 
 /**
  * 银行债转异常处理
@@ -94,4 +92,18 @@ public interface BankCreditTenderService {
      * @return
      */
     Integer tenderAbleToCredit(Integer userId);
+
+    /**
+     * 查询债转还款列表
+     * @param tenderNid
+     * @return
+     */
+    List<CreditRepay> selectCreditRepayList(String tenderNid);
+
+    /**
+     * 我要债转
+     * @param request
+     * @return
+     */
+    Integer saveCreditTender(BorrowCreditVO request);
 }

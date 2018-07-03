@@ -103,6 +103,16 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
     }
 
+    /**
+     * 统计总额
+     * @param borrowRegistListRequest
+     * @return
+     */
+    @Override
+    public String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest){
+        return borrowRegistCustomizeMapper.sumBorrowRegistAccount(borrowRegistListRequest);
+    }
+
     @Override
     public StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId) {
         StzhWhiteListExample example = new StzhWhiteListExample();

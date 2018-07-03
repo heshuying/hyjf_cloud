@@ -15,6 +15,8 @@ public class HjhLabelRequest implements Serializable {
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
+	// 标签ID
+	private Integer labelIdSrch;
     // 标签名称
     private String labelNameSrch;
 	// 资产来源
@@ -107,5 +109,11 @@ public class HjhLabelRequest implements Serializable {
 	}
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+	public Integer getLabelIdSrch() {
+		return labelIdSrch;
+	}
+	public void setLabelIdSrch(Integer labelIdSrch) {
+		this.labelIdSrch = labelIdSrch;
 	}
 }

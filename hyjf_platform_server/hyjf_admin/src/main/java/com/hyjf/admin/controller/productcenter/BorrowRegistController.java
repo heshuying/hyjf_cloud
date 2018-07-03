@@ -38,7 +38,7 @@ public class BorrowRegistController extends BaseController {
     @Autowired
     AdminCommonService adminCommonService;
 
-    @ApiOperation(value = "标的备案初始化",notes = "标的备案初始化",httpMethod = "post")
+    @ApiOperation(value = "标的备案初始化",notes = "标的备案初始化")
     @PostMapping("/init")
     @ResponseBody
     public JSONObject init(HttpServletRequest request){
@@ -58,7 +58,7 @@ public class BorrowRegistController extends BaseController {
         return jsonObject;
     }
 
-    @ApiOperation(value = "获取标的备案列表",notes = "获取标的备案列表",httpMethod = "post")
+    @ApiOperation(value = "获取标的备案列表",notes = "获取标的备案列表")
     @PostMapping("/get_regist_list")
     @ResponseBody
     public JSONObject getRegistList(HttpServletRequest request,@ApiParam(name = "borrowRegistListRequest", value = "查询条件")
@@ -67,14 +67,16 @@ public class BorrowRegistController extends BaseController {
         Integer count = borrowRegistService.getRegistCount(borrowRegistListRequest);
         if(count > 0){
             List <BorrowRegistCustomizeVO> list = borrowRegistService.selectBorrowRegistList(borrowRegistListRequest);
+            String sumAccount = borrowRegistService.sumBorrowRegistAccount(borrowRegistListRequest);
             jsonObject = this.success(String.valueOf(count),list);
+            jsonObject.put("sumAccount",sumAccount);
         }else {
             jsonObject = this.fail("未查询到相应数据！");
         }
         return jsonObject;
     }
 
-    @ApiOperation(value = "标的备案",notes = "标的备案",httpMethod = "post")
+    @ApiOperation(value = "标的备案",notes = "标的备案")
     @GetMapping("/debt_regist/{borrowNid}")
     @ResponseBody
     public JSONObject init(@RequestHeader(value = "token", required = false) String token,@PathVariable String borrowNid){

@@ -4,9 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
-import com.hyjf.am.vo.trade.CreditPageVO;
-import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.trade.client.AccountClient;
 import com.hyjf.cs.trade.client.CreditClient;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -134,4 +133,31 @@ public class CreditClientImpl implements CreditClient {
         }
         return null;
     }
+
+    /**
+     * 根据投资订单号检索已债转还款信息
+     *
+     * @param tenderId
+     * @return
+     */
+    @Override
+    public List<CreditRepayVO> selectCreditRepayList(Integer tenderId) {
+        CreditRepayResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/creditTender/select_credit_repay_list/" + tenderId , CreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入债转  我要债转
+     *
+     * @param borrowCredit
+     */
+    @Override
+    public Integer insertCredit(BorrowCreditVO borrowCredit) {
+        String url = "http://AM-TRADE/am-trade/creditTender/save_credit_tender";
+        return restTemplate.postForEntity(url, borrowCredit, Integer.class).getBody();
+    }
+
 }

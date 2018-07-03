@@ -59,7 +59,7 @@ public class ChangeLogController extends BaseController {
 		clr.setRealName(map.get("realName"));
 		clr.setMobile(map.get("mobile"));
 		clr.setRecommendUser(map.get("recommendUser"));
-		clr.setPageSize(Integer.valueOf(map.get("pageSize")) );
+		//clr.setPageSize(Integer.valueOf(map.get("pageSize")) );
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
 		ChangeLogResponse rqes=changeLogService.getChangeLogList(clr);

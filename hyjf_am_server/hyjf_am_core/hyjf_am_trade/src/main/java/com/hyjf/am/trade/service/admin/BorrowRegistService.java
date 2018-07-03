@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
@@ -43,6 +42,13 @@ public interface BorrowRegistService {
      * @return
      */
     List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest);
+
+    /**
+     * 统计总额
+     * @param borrowRegistListRequest
+     * @return
+     */
+    String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
 
     /**
      * 获取受托支付电子账户列表
