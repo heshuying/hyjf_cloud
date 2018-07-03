@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.validator.Validator;
@@ -23,11 +24,10 @@ public class AnRongCallUtils implements Serializable {
 	private static Logger log = LoggerFactory.getLogger(AnRongCallUtils.class);
     private static final long serialVersionUID = -7729847094997019720L;
 
-	/** THIS_CLASS */
-	private static final String THIS_CLASS = AnRongCallUtils.class.getName();
-
 	/** 接口路径(后台) */
 	private static final String REQUEST_MAPPING_CALLAPIBG = "/callApiBg.json";
+	@Value("${hyjf.anrong.payUrl}")
+	private static String payurl;
 
 
 	/**
@@ -38,16 +38,12 @@ public class AnRongCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static String callApiBg(AnRongBean bean) {
-
-		String methodName = "callApiBg";
 		log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean) + "]");
 		String ret = null;
 		try {
 			// bean转换成参数
 			bean.convert();
-			// 取出调用安融的url todo
-			//String payurl = PropUtils.getSystem(AnRongConstant.PARM_PAY_URL);
-			String payurl = "";
+
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}

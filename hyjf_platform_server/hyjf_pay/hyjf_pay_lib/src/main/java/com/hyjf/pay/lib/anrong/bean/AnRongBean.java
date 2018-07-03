@@ -2,6 +2,8 @@ package com.hyjf.pay.lib.anrong.bean;
 
 import java.io.Serializable;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.hyjf.common.util.CreateUUID;
 import com.hyjf.common.util.GetOrderIdUtils;
 
@@ -18,7 +20,10 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
 	public AnRongBean() {
 		super();
 	}
-
+	@Value("${hyjf.anrong.member}")
+	private static String members;
+	@Value("${hyjf.anrong.sign}")
+	private static String signs;
 	public AnRongBean(Integer userId , String customerName, String paperNumber,String bizType,String loanType) {
 		super();
 		//设置共通参数
@@ -28,11 +33,10 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
 	}
 
 	private void setBankCallCommon(String customerName, String paperNumber,String bizType,String loanType,String userid) {
-		// 获取共通信息 todo
-	    //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
-	    String member = "";
-	    //String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
-	    String sign = "";
+		// 获取共通信息 
+	    String member = members;
+	    String sign = signs;
+
 	    this.member = member;
 	    this.sign = sign;
 	    this.customerName = customerName;
@@ -453,11 +457,9 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
     public void setSystemParm(String loanId, String userId) {
         this.loanId = loanId;
         setBankCallLog(Integer.parseInt(userId));
-        // 获取共通信息 todo
-        //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
-        String member = "";
-        //String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
-        String sign = "";
+        // 获取共通信息 
+        String member = members;
+        String sign = signs;
         this.member = member;
         this.sign = sign;
     }
@@ -466,11 +468,8 @@ public class AnRongBean extends AnRongApiBean implements Serializable {
         /** 格式为：年月日+去除【-】的uuid */
         this.loanId = GetOrderIdUtils.getTxDate()+CreateUUID.createUUID().replaceAll("-", "");
         setBankCallLog(Integer.parseInt(userId));
-        // 获取共通信息 todo
-        //String member = PropUtils.getSystem(AnRongConstant.PARM_MEMBER_CODE);
-        String member = "";
-        //String sign = PropUtils.getSystem(AnRongConstant.PARM_SIGN_CODE);
-        String sign = "";
+        String member = members;
+        String sign = signs;
         this.member = member;
         this.sign = sign;
     }
