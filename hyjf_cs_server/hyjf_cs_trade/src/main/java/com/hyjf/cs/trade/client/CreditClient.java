@@ -3,12 +3,11 @@ package com.hyjf.cs.trade.client;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
-import com.hyjf.am.vo.trade.CreditPageVO;
-import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.apache.commons.collections.map.HashedMap;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,4 +68,17 @@ public interface CreditClient {
      * @return
      */
     Integer tenderAbleToCredit(Integer userId);
+
+    /**
+     * 根据投资订单号检索已债转还款信息
+     * @param tenderId
+     * @return
+     */
+    List<CreditRepayVO> selectCreditRepayList(Integer tenderId);
+
+    /**
+     * 插入债转  我要债转
+     * @param borrowCredit
+     */
+    Integer insertCredit(BorrowCreditVO borrowCredit);
 }

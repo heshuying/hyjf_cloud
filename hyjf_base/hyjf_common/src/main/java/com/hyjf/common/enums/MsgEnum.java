@@ -333,13 +333,18 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_PARAM("1","转让失败,无法获取借款和投资编号"),
 	ERROR_CREDIT_NOT_EXIST("1","获取债转数据为空"),
 	ERROR_CREDIT_DATA_ERROR("1","债转数据错误"),
+	ERROR_CREDIT_THREE("1","今天的转让次数已满3次,请明天再试"),
+	ERROR_CREDIT_CREDIT_DISCOUNT_NULL("1","折让率不能为空"),
+	ERROR_CREDIT_DISCOUNT_ERROR("1","折让率范围错误"),
+	ERROR_CREDIT_DISCOUNT_FORMAT_ERROR("1","折让率格式错误"),
+
 
 
 	ERR_SUCCESS("0", ""),
 	// 枚举终结
 	ERR_ENUM("", "");
 
-    private String msg;
+	private String msg;
 	private String code;
 
 	private MsgEnum(String code, String msg) {
