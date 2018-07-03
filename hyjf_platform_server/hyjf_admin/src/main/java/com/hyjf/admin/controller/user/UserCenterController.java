@@ -448,7 +448,6 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-//    @RequestMapping(value = "serchCompanyInfo")
     @PostMapping(value = "/serchCompanyInfo")
     @ApiOperation(value = "会员管理", notes = "查询企业开户信息")
     public JSONObject serchCompanyInfo(@RequestBody Map<String, String> map) {
