@@ -55,7 +55,7 @@ public class HjhPlanServiceImpl implements HjhPlanService {
     public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
         HjhInstConfigExample example = new HjhInstConfigExample();
         HjhInstConfigExample.Criteria cra = example.createCriteria();
-        if (StringUtils.isNotEmpty(instCode)) {
+        if (StringUtils.isNotEmpty(instCode)&&!"-1".equals(instCode)) {
             cra.andInstCodeEqualTo(instCode);
         }
         cra.andDelFlagEqualTo(0);

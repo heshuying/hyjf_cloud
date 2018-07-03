@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.apache.commons.lang.StringUtils;
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhRegionMapper;
@@ -21,6 +22,7 @@ import com.hyjf.common.util.CommonUtils;
  * @author libin
  * @version AdminAllocationEngineServiceImpl.java, v0.1 2018年7月3日 下午2:02:58
  */
+@Service
 public class AdminAllocationEngineServiceImpl implements AdminAllocationEngineService{
 
     @Autowired
