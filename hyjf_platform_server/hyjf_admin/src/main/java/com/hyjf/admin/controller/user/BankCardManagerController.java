@@ -5,12 +5,8 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.BankCardManagerService;
-import com.hyjf.admin.service.BankOpenRecordService;
-import com.hyjf.am.resquest.user.AccountRecordRequest;
-import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.cache.CacheUtil;
 import io.swagger.annotations.Api;
