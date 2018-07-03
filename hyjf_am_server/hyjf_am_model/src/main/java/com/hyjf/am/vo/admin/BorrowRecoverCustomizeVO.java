@@ -86,7 +86,7 @@ public class BorrowRecoverCustomizeVO extends BaseVO {
     /**
      * 放款时间
      */
-    private String addtime;
+    private String createTime;
 
     /**
      * 借款人用户ID
@@ -560,24 +560,14 @@ public class BorrowRecoverCustomizeVO extends BaseVO {
         this.timeRecover = timeRecover;
     }
 
-    /**
-     * addtime
-     *
-     * @return the addtime
-     */
-
-    public String getAddtime() {
-        return addtime;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    /**
-     * @param addtime
-     *            the addtime to set
-     */
-
-    public void setAddtime(String addtime) {
-        this.addtime = addtime;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
+
 
     /**
      * limitStart

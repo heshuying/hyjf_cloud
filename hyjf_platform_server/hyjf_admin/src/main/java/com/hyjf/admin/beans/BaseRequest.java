@@ -12,24 +12,24 @@ import io.swagger.annotations.ApiModelProperty;
 public class BaseRequest {
 
     @ApiModelProperty(value = "页数")
-    private String currPage;
+    private int currPage;
 
     @ApiModelProperty(value = "每页多少条")
-    private String pageSize;
+    private int pageSize;
 
-	public String getCurrPage() {
+	public int getCurrPage() {
 		return currPage;
 	}
 
-	public void setCurrPage(String currPage) {
+	public void setCurrPage(int currPage) {
 		this.currPage = currPage;
 	}
 
-	public String getPageSize() {
+	public int getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(String pageSize) {
+	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
 

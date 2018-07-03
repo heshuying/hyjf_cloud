@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author dongzeshan
  */
 
-public class AdminPreRegistListRequest extends BaseRequest implements Serializable {
+public class PreRegistRequestBean extends BaseRequest implements Serializable {
     
     /**
 	 * aprlr.setMobile(map.get("mobile"));

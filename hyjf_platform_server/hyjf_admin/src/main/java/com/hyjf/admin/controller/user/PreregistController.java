@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.PreRegistRequestBean;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -59,7 +60,7 @@ public class PreregistController extends BaseController {
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public BaseResult<ListResult<AdminPreRegistListVO>> init(HttpServletRequest request,
-			@RequestBody AdminPreRegistListRequest adminPreRegistListRequest) {
+			@RequestBody PreRegistRequestBean adminPreRegistListRequest) {
 		 BaseResult<ListResult<AdminPreRegistListVO>> rs=new BaseResult<ListResult<AdminPreRegistListVO>>();
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
 		aprlr.setMobile(adminPreRegistListRequest.getMobile());
@@ -74,6 +75,11 @@ public class PreregistController extends BaseController {
 		 */
 		AdminPreRegistListResponse prs = preregistService.getRecordList(aprlr);
 		
+		if(prs==null) {
+			rs.setStatus(FAIL);
+			rs.setStatusDesc(FAIL_DESC);
+			return rs;
+		}
 		if (prs.getRtn().equals("99")) {
 			rs.setStatus(FAIL);
 			rs.setStatusDesc(prs.getMessage());
@@ -107,7 +113,12 @@ public class PreregistController extends BaseController {
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
 		aprlr.setId(id);
 		AdminPreRegistListResponse prs = preregistService.getPreRegist(aprlr);
-		if (prs.getRtn().equals("99")) {
+		if(prs==null) {
+			result.setStatus(FAIL);
+			result.setStatusDesc(FAIL_DESC);
+			return result;
+		}
+		if (prs!=null&&prs.getRtn().equals("99")) {
 			result.setStatus(FAIL);
 			result.setStatusDesc(prs.getMessage());
 			return result;
@@ -130,11 +141,16 @@ public class PreregistController extends BaseController {
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	public BaseResult getUserPermission(HttpServletRequest request,
-			@RequestBody AdminPreRegistListRequest adminPreRegistListRequest) {
+			@RequestBody PreRegistRequestBean adminPreRegistListRequest) {
 		BaseResult result=new BaseResult<>();
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
 		BeanUtils.copyProperties(adminPreRegistListRequest, aprlr);
 		AdminPreRegistListResponse prs = preregistService.savePreRegist(aprlr);
+		if(prs==null) {
+			result.setStatus(FAIL);
+			result.setStatusDesc(FAIL_DESC);
+			return result;
+		}
 		if (prs.getRtn().equals("99")) {
 			result.setStatus(FAIL);
 			result.setStatusDesc(prs.getMessage());
