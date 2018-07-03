@@ -67,11 +67,11 @@ public interface BaseUserService extends BaseService{
 
 	/**
 	 * 设置token
-	 * @param userVO
+	 * @param
 	 * @param webViewUserVO
 	 * @return
 	 */
-	WebViewUserVO setToken(UserVO userVO,WebViewUserVO webViewUserVO);
+	WebViewUserVO setToken(WebViewUserVO webViewUserVO);
 
 	UserInfoVO getUserInfo(int userId);
 
