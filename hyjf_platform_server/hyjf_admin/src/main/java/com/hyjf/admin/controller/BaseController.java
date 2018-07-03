@@ -33,6 +33,7 @@ public class BaseController {
 	public static final String SUCCESS="00";
 	public static final String SUCCESS_DESC = "成功";
 	public static final String FAIL="99";
+	public static final String FAIL_DESC = "失败";
 	//返回集合
 	public static final String LIST="list";
 	
