@@ -14,6 +14,10 @@ public class BorrowRecoverRequest extends BaseVO {
      */
     private String borrowNidSrch;
     /**
+     * 借款名称 检索条件
+     */
+    private String borrowNameSrch;
+ /**
      * 资产来源 检索条件
      */
     private String instCodeSrch;
@@ -291,5 +295,13 @@ public class BorrowRecoverRequest extends BaseVO {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getBorrowNameSrch() {
+        return borrowNameSrch;
+    }
+
+    public void setBorrowNameSrch(String borrowNameSrch) {
+        this.borrowNameSrch = borrowNameSrch;
     }
 }
