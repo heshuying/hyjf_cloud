@@ -13,6 +13,7 @@ import com.hyjf.admin.client.HjhLabelClient;
 import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -57,5 +58,51 @@ public class HjhLabelClientImpl implements HjhLabelClient{
             return response.getResultList();
         }			
 		return null;
+	}
+
+	@Override
+	public List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListById", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListLabelName", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
+		restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhLabel/insertHjhLabelRecord", request,
+				Object.class);
+	}
+
+	@Override
+	public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhLabel/updateHjhLabelRecord";
+		Integer updateFlag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (updateFlag > 0) {
+            return updateFlag;
+        }
+		return 0;
+	}
+
+	@Override
+	public int updateAllocationRecord(HjhLabelInfoRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhLabel/updateAllocationRecord";
+		Integer updateFlag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (updateFlag > 0) {
+            return updateFlag;
+        }
+		return 0;
 	}
 }

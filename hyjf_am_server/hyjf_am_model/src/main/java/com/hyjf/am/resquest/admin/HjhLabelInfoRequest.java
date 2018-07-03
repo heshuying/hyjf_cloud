@@ -1,19 +1,18 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.admin;
+package com.hyjf.am.resquest.admin;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.hyjf.am.vo.BaseVO;
-
 /**
  * @author libin
- * @version HjhLabelCustomizeVO.java, v0.1 2018年6月30日 下午2:20:50
+ * 用于接Info画面传值
+ * @version HjhLabelInfoRequest.java, v0.1 2018年7月2日 下午3:34:05
  */
-public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
+public class HjhLabelInfoRequest implements Serializable{
 
 	/**
 	 * serialVersionUID
@@ -21,8 +20,6 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
-    
-    private String labelisUsed;
 
     private String labelName;
 
@@ -74,19 +71,15 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 
     private Integer createUserId;
 
-    private Integer createTime;
-
     private Integer updateUserId;
 
-    private Integer updateTime;
-
-    private Integer delFlg;
-    
     private Integer delFlag;
-    
-    private String pushTimeStartString;
 
-    private String pushTimeEndString;
+    private Date createTime;
+
+    private Date updateTime;
+    
+    private Integer userId;
 
 	public Integer getId() {
 		return id;
@@ -95,6 +88,7 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getLabelName() {
 		return labelName;
 	}
@@ -295,36 +289,12 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 		this.createUserId = createUserId;
 	}
 
-	public Integer getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Integer createTime) {
-		this.createTime = createTime;
-	}
-
 	public Integer getUpdateUserId() {
 		return updateUserId;
 	}
 
 	public void setUpdateUserId(Integer updateUserId) {
 		this.updateUserId = updateUserId;
-	}
-
-	public Integer getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Integer updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public Integer getDelFlg() {
-		return delFlg;
-	}
-
-	public void setDelFlg(Integer delFlg) {
-		this.delFlg = delFlg;
 	}
 
 	public Integer getDelFlag() {
@@ -335,27 +305,27 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 		this.delFlag = delFlag;
 	}
 
-	public String getLabelisUsed() {
-		return labelisUsed;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setLabelisUsed(String labelisUsed) {
-		this.labelisUsed = labelisUsed;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
-	public String getPushTimeStartString() {
-		return pushTimeStartString;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-	public void setPushTimeStartString(String pushTimeStartString) {
-		this.pushTimeStartString = pushTimeStartString;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
-	public String getPushTimeEndString() {
-		return pushTimeEndString;
+	public Integer getUserId() {
+		return userId;
 	}
 
-	public void setPushTimeEndString(String pushTimeEndString) {
-		this.pushTimeEndString = pushTimeEndString;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 }

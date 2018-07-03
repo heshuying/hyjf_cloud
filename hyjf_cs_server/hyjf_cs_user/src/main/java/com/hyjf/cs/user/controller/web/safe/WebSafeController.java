@@ -7,8 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -55,25 +53,22 @@ public class WebSafeController extends BaseUserController {
     /**
      * 账户设置查询
      *
-     * @param token
+     * @param userId
      * @return
      */
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
     @PostMapping(value = "/accountSet")
-    public WebResult<Object> accountSet(@RequestHeader(value = "token", required = false) String token) {
-        WebResult<Object> apiResult = new WebResult<>();
-        WebViewUserVO webViewUserVO = safeService.getUsersByToken(token);
-        if (null == webViewUserVO) {
-            apiResult.setStatusInfo(MsgEnum.ERR_USER_NOT_LOGIN);
-        } else {
-            Map<String, Object> result = safeService.safeInit(webViewUserVO);
-            if (null == result) {
-                apiResult.setStatus(ApiResult.FAIL);
-                apiResult.setStatusDesc("账户设置查询失败");
-            }
-            apiResult.setData(result);
+    public WebResult<Object> accountSet(@RequestHeader(value = "userId", required = false) Integer userId) {
+        logger.info("Web端账户设置查询, param is :{}",userId);
+        WebResult<Object> response = new WebResult<>();
+        UserVO user = safeService.getUsersById(userId);
+        Map<String, Object> result = safeService.safeInit(user);
+        if (null == result) {
+            response.setStatus(ApiResult.FAIL);
+            response.setStatusDesc("账户设置查询失败");
         }
-        return apiResult;
+        response.setData(result);
+        return response;
     }
 
     /**
@@ -269,7 +264,7 @@ public class WebSafeController extends BaseUserController {
      * @param userId
      * @return
      */
-    @ApiOperation(value = "头像上传页面初始化",notes = "头像上传页面初始化")
+    @ApiOperation(value = "头像上传页面初始化", notes = "头像上传页面初始化")
     @GetMapping(value = "/avatar/init")
     public WebResult uploadAvatarInitAction(@RequestHeader(value = "userId") Integer userId) {
         WebResult<Object> result = new WebResult<>();
@@ -289,8 +284,8 @@ public class WebSafeController extends BaseUserController {
      * @param
      * @return
      */
-    @ApiOperation(value = "上传头像",notes = "上传头像")
-    @ApiImplicitParam(name = "param" ,value = "{image:String}",dataType = "Map")
+    @ApiOperation(value = "上传头像", notes = "上传头像")
+    @ApiImplicitParam(name = "param", value = "{image:String}", dataType = "Map")
     @PostMapping(value = "/avatar", produces = "application/json; charset=utf-8")
     public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
         WebResult<Object> result = new WebResult<>();

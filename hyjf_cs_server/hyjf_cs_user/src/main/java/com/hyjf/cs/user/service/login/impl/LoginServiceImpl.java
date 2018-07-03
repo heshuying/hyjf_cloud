@@ -82,7 +82,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             RedisUtils.del(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
             webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
             // 2. 缓存
-            webViewUserVO = setToken( userVO, webViewUserVO);
+            webViewUserVO = setToken(webViewUserVO);
 
             // 3. todo pangchengchao登录时自动同步线下充值记录
         } else {
