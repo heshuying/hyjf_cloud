@@ -83,6 +83,8 @@ public class PreregistController extends BaseController {
 		lrs.setCount(prs.getRecordTotal());
 		lrs.setList(prs.getResultList());
 		rs.setData(lrs);
+		rs.setStatus(SUCCESS);
+		rs.setStatusDesc(SUCCESS_DESC);
 		return rs;
 	}
 
@@ -126,6 +128,7 @@ public class PreregistController extends BaseController {
 	@ApiOperation(value = "编辑页保存", notes = "编辑页保存")
 	@PostMapping(value = "/savepreregistlist")
 	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	public BaseResult getUserPermission(HttpServletRequest request,
 			@RequestBody AdminPreRegistListRequest adminPreRegistListRequest) {
 		BaseResult result=new BaseResult<>();

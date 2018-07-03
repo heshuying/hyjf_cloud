@@ -31,6 +31,7 @@ public class BaseController {
 	public static final String STATUS="status";
 	public static final String MSG="msg";
 	public static final String SUCCESS="00";
+	public static final String SUCCESS_DESC = "成功";
 	public static final String FAIL="99";
 	//返回集合
 	public static final String LIST="list";
