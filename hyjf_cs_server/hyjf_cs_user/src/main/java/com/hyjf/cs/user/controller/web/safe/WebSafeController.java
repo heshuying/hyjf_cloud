@@ -62,7 +62,7 @@ public class WebSafeController extends BaseUserController {
     @PostMapping(value = "/accountSet")
     public WebResult<Object> accountSet(@RequestHeader(value = "token", required = false) String token) {
         WebResult<Object> apiResult = new WebResult<>();
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO webViewUserVO = safeService.getUsersByToken(token);
         if (null == webViewUserVO) {
             apiResult.setStatusInfo(MsgEnum.ERR_USER_NOT_LOGIN);
         } else {
@@ -87,7 +87,7 @@ public class WebSafeController extends BaseUserController {
     public WebResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         WebResult<UserVO> result = new WebResult<UserVO>();
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO user = safeService.getUsersByToken(token);
         UserVO userVO = safeService.queryUserByUserId(user.getUserId());
         result.setData(userVO);
 
@@ -103,21 +103,27 @@ public class WebSafeController extends BaseUserController {
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
-    public WebResult<UserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
+    public WebResult<WebViewUserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
         logger.info("用户通知设置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
-        WebResult<UserVO> result = new WebResult<UserVO>();
+        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO user = safeService.getUsersByToken(token);
 
         UserNoticeSetRequest noticeSetRequest = new UserNoticeSetRequest();
         BeanUtils.copyProperties(userNoticeSetVO, noticeSetRequest);
         noticeSetRequest.setUserId(user.getUserId());
         int ret = safeService.updateUserNoticeSet(noticeSetRequest);
-
         if (ret <= 0) {
             logger.error("保存用户通知设置失败");
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("保存用户通知设置失败");
+            return result;
+        }
+
+        WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
+        if (null != webUser) {
+            webUser = safeService.setToken(webUser);
+            result.setData(webUser);
         }
 
         return result;
@@ -136,7 +142,7 @@ public class WebSafeController extends BaseUserController {
     public WebResult<Object> sendEmailActive(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO user = safeService.getUsersByToken(token);
         safeService.checkForEmailSend(paraMap.get("email"), user.getUserId());
 
         try {
@@ -162,12 +168,17 @@ public class WebSafeController extends BaseUserController {
         logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO user = safeService.getUsersByToken(token);
 
         safeService.checkForEmailBind(bindEmailVO, user);
 
         try {
             safeService.updateEmail(user.getUserId(), bindEmailVO.getEmail());
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
+            if (null != webUser) {
+                webUser = safeService.setToken(webUser);
+                result.setData(webUser);
+            }
         } catch (MQException e) {
             logger.error("邮箱激活失败", e);
             result.setStatus(ApiResult.FAIL);
@@ -188,7 +199,7 @@ public class WebSafeController extends BaseUserController {
     public ContractSetResultBean contractInit(@RequestHeader(value = "token", required = true) String token) {
         logger.info("加载紧急联系人信息开始...");
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO user = safeService.getUsersByToken(token);
 
         return safeService.queryContractInfo(user.getUserId());
     }
@@ -204,11 +215,16 @@ public class WebSafeController extends BaseUserController {
     @ApiImplicitParam(name = "param", value = "{relationId:int,rlName:string,rlPhone:string}", dataType = "Map")
     public WebResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> param) {
         WebResult<Object> result = new WebResult<Object>();
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO user = safeService.getUsersByToken(token);
         safeService.checkForContractSave(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
 
         try {
             safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
+            if (null != webUser) {
+                webUser = safeService.setToken(webUser);
+                result.setData(webUser);
+            }
         } catch (MQException e) {
             logger.error("紧急联系人保存失败", e);
             result.setStatus(ApiResult.FAIL);
@@ -241,7 +257,7 @@ public class WebSafeController extends BaseUserController {
          */
         WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
         if (null != webUser) {
-            webUser = safeService.setToken(user, webUser);
+            webUser = safeService.setToken(webUser);
             result.setData(webUser);
         }
         return result;
@@ -285,7 +301,7 @@ public class WebSafeController extends BaseUserController {
             String imgFilePath = safeService.uploadAvatar(user, userId, image);
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
             if (null != webUser) {
-                webUser = safeService.setToken(user, webUser);
+                webUser = safeService.setToken(webUser);
                 result.setData(webUser);
             }
             Map<String, String> map = new HashMap<>();

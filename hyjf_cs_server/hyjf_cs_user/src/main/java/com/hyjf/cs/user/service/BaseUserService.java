@@ -71,7 +71,7 @@ public interface BaseUserService extends BaseService{
 	 * @param webViewUserVO
 	 * @return
 	 */
-	WebViewUserVO setToken(UserVO userVO,WebViewUserVO webViewUserVO);
+	WebViewUserVO setToken(WebViewUserVO webViewUserVO);
 
 	UserInfoVO getUserInfo(int userId);
 

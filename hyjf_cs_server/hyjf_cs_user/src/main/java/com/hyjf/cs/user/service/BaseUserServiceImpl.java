@@ -463,9 +463,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 
 	@Override
-	public WebViewUserVO setToken(UserVO userVO, WebViewUserVO webViewUserVO){
-		String token = generatorToken(userVO.getUserId(), userVO.getUsername());
-		BeanUtils.copyProperties(userVO, webViewUserVO);
+	public WebViewUserVO setToken(WebViewUserVO webViewUserVO){
+		String token = generatorToken(webViewUserVO.getUserId(), webViewUserVO.getUsername());
 		webViewUserVO.setToken(token);
 		RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
 		return webViewUserVO;
