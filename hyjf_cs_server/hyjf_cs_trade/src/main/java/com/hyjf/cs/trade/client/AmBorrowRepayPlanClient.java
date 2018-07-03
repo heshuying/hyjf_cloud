@@ -27,4 +27,12 @@ public interface AmBorrowRepayPlanClient {
      * @return
      */
     Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO);
+
+    /**
+     * 根据borrowNid和borrowPeriod查询
+     * @param bidNid
+     * @param borrowPeriod
+     * @return
+     */
+    List<BorrowRepayPlanVO> getBorrowRepayPlansByPeriod(String bidNid, Integer borrowPeriod);
 }

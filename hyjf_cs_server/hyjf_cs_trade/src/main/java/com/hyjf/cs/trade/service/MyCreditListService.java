@@ -1,13 +1,10 @@
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
-import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
-
-import java.util.Map;
+import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 
 /**
  * @Description  债转列表
@@ -47,4 +44,20 @@ public interface MyCreditListService extends BaseTradeService{
      * @return
      */
     WebResult tenderAbleToCredit(CreditDetailsRequestBean request, Integer userId);
+
+    /**
+     * 检查是否可债转
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult checkCanCredit(CreditDetailsRequestBean request, Integer userId);
+
+    /**
+     * 债转提交保存
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId);
 }
