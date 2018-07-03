@@ -76,4 +76,12 @@ public interface MyCreditListService extends BaseTradeService{
      * @return
      */
     WebResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId);
+
+    /**
+     * 短信验证码校验
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult checkCode(TenderBorrowCreditCustomize request, Integer userId);
 }

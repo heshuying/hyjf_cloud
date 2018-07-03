@@ -23,4 +23,15 @@ public interface SmsService {
      */
     int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
                               Integer searchStatus, Integer updateStatus);
+    /**
+     * 只检查短信验证码对不对
+     * @param mobile
+     * @param verificationCode
+     * @param verificationType
+     * @param platform
+     * @param status
+     * @param updateStatus
+     * @return
+     */
+    int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus);
 }

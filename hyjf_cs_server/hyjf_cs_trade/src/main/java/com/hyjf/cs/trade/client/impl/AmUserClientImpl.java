@@ -8,6 +8,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -356,6 +357,64 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 只校验验证码  不修改状态
+	 *
+	 * @param mobile
+	 * @param code
+	 * @param verificationType
+	 * @param platform
+	 * @param ckcodeYiyan
+	 * @param ckcodeYiyan1
+	 * @return
+	 */
+	@Override
+	public int onlyCheckMobileCode(String mobile, String code, String verificationType, Integer platform, Integer ckcodeYiyan, Integer ckcodeYiyan1) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(code);
+		request.setVerificationType(verificationType);
+		request.setPlatform(platform+"");
+		request.setStatus(ckcodeYiyan);
+		request.setUpdateStatus(ckcodeYiyan1);
+
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/only_check/", request, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
+	/**
+	 * 校验验证码是否正确  并修改状态
+	 *
+	 * @param mobile
+	 * @param telcode
+	 * @param paramTplZhuce
+	 * @param platform
+	 * @param ckcodeYiyan
+	 * @param ckcodeYiyan1
+	 * @return
+	 */
+	@Override
+	public int checkMobileCode(String mobile, String telcode, String paramTplZhuce, Integer platform, Integer ckcodeYiyan, Integer ckcodeYiyan1) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(telcode);
+		request.setVerificationType(paramTplZhuce);
+		request.setPlatform(platform+"");
+		request.setStatus(ckcodeYiyan);
+		request.setUpdateStatus(ckcodeYiyan1);
+
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", request, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
 	}
 
 
