@@ -60,4 +60,20 @@ public interface MyCreditListService extends BaseTradeService{
      * @return
      */
     WebResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId);
+
+    /**
+     * 用户中心查询 债转详细预计服务费计算
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult getExpectCreditFee(TenderBorrowCreditCustomize request, Integer userId);
+
+    /**
+     * 发送短信验证码（ajax请求） 短信验证码数据保存
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId);
 }

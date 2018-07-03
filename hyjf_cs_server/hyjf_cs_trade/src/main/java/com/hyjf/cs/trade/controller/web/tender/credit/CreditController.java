@@ -41,8 +41,6 @@ public class CreditController {
         return result;
     }
 
-
-
     /**
      * 首页 > 账户中心 > 资产管理 > 我要转让列表
      * @param
@@ -88,6 +86,24 @@ public class CreditController {
         WebResult result =  creditListService.saveTenderToCredit(request,userId);
         return result;
     }
+
+    @ApiOperation(value = " 用户中心查询 债转详细预计服务费计算", notes = " 用户中心查询 债转详细预计服务费计算")
+    @PostMapping(value = "/except_credit_fee", produces = "application/json; charset=utf-8")
+    public WebResult getExpectCreditFee(@RequestBody TenderBorrowCreditCustomize request,
+                                        @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result = creditListService.getExpectCreditFee(request,userId);
+        return result;
+    }
+
+    @ApiOperation(value = "发送短信验证码（ajax请求） 短信验证码数据保存", notes = "发送短信验证码（ajax请求） 短信验证码数据保存")
+    @PostMapping(value = "/send_code", produces = "application/json; charset=utf-8")
+    public WebResult sendCode(@RequestBody TenderBorrowCreditCustomize request,
+                                        @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result = creditListService.sendCreditCode(request,userId);
+        return result;
+    }
+
+
 
 
 }

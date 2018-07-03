@@ -342,6 +342,8 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_DISCOUNT_ERROR("1","折让率范围错误"),
 	ERROR_CREDIT_DISCOUNT_FORMAT_ERROR("1","折让率格式错误"),
 
+	ERROR_SMS_SEND("1","发送验证码失败，请稍后再试"),
+
 
 
 	ERR_SUCCESS("0", ""),
