@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper">
 
-    <update id="updateFirstUtmReg" parameterType="map" >
+	<update id="updateFirstUtmReg" parameterType="map" >
 	    UPDATE ht_utm_reg
 		SET invest_amount = #{accountDecimal,jdbcType=DECIMAL},
 		invest_project_type = #{projectType},
@@ -11,5 +11,43 @@
 		WHERE
 			id = #{id,jdbcType=BIGINT}
   	</update>
+
+	<resultMap id="UtmBaseResultMap" type="com.hyjf.am.vo.admin.UtmVo" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="source_id" property="sourceId" jdbcType="INTEGER" />
+		<result column="source_name" property="sourceName" jdbcType="VARCHAR" />
+		<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+		<result column="attorn_flag" property="attornFlag" jdbcType="TINYINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="create_group_cd" property="createGroupCd" jdbcType="VARCHAR" />
+		<result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="update_group_cd" property="updateGroupCd" jdbcType="VARCHAR" />
+		<result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+		<result column="source_type" property="sourceType" jdbcType="TINYINT" />
+	</resultMap>
+
+	<select id="getCountByParam" resultType="java.lang.Integer" parameterType="map" >
+		SELECT COUNT(id) FROM ht_utm_plat
+		<include refid="Where_Clause" />
+	</select>
+	<select id="getByPageList" resultMap="UtmBaseResultMap" parameterType="map" >
+		SELECT * FROM ht_utm_plat
+		<include refid="Where_Clause" />
+	</select>
+	<sql id="Where_Clause">
+		<where>
+			AND 1=1
+			<if test="sourceType != null" >
+				and source_type =  ${sourceType}
+			</if>
+			<if test="limitStart >= 0" >
+				limit #{limitStart} , #{limitEnd}
+			</if>
+		</where>
+	</sql>
+
+
 
 </mapper>
