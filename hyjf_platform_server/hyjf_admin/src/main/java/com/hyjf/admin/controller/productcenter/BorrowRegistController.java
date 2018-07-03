@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.productcenter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRegistService;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
@@ -34,6 +35,9 @@ public class BorrowRegistController extends BaseController {
     @Autowired
     BorrowRegistService borrowRegistService;
 
+    @Autowired
+    AdminCommonService adminCommonService;
+
     @ApiOperation(value = "标的备案初始化",notes = "标的备案初始化",httpMethod = "post")
     @PostMapping("/init")
     @ResponseBody
@@ -42,10 +46,10 @@ public class BorrowRegistController extends BaseController {
         List<BorrowProjectTypeVO> borrowProjectTypeList = borrowRegistService.selectBorrowProjectList();
 
         //还款方式
-        List<BorrowStyleVO> borrowStyleList = borrowRegistService.selectBorrowStyleList();
+        List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
 
         //备案状态
-        Map<String, String> borrowRegistStatusList = borrowRegistService.getParamNameMap(CustomConstants.REGIST_STATUS);
+        Map<String, String> borrowRegistStatusList = adminCommonService.getParamNameMap(CustomConstants.REGIST_STATUS);
 
         JSONObject jsonObject = this.success();
         jsonObject.put("borrowProjectTypeList", borrowProjectTypeList);
