@@ -1162,5 +1162,48 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		return creditedNum;
 	}
 
+	/**
+	 * 查询债转还款列表
+	 *
+	 * @param tenderNid
+	 * @return
+	 */
+	@Override
+	public List<CreditRepay> selectCreditRepayList(String tenderNid) {
+		CreditRepayExample example = new CreditRepayExample();
+		CreditRepayExample.Criteria cra = example.createCriteria();
+		cra.andCreditTenderNidEqualTo(tenderNid);
+		cra.andStatusEqualTo(0);
+		return this.creditRepayMapper.selectByExample(example);
+	}
+
+	/**
+	 * 我要债转
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public Integer saveCreditTender(BorrowCreditVO request) {
+		BorrowCredit borrowCredit = CommonUtils.convertBean(request, BorrowCredit.class);
+		boolean insertResultFlag = this.borrowCreditMapper.insertSelective(borrowCredit) > 0 ? true : false;
+		if (insertResultFlag) {
+			// 获取borrow_recover数据
+			BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+			BorrowRecoverExample.Criteria borrowRecoverCra = borrowRecoverExample.createCriteria();
+			borrowRecoverCra.andBorrowNidEqualTo(request.getBidNid()).andNidEqualTo(request.getTenderNid());
+			List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
+			BorrowRecover borrowRecover = borrowRecoverList.get(0);
+			// 还款表更新债转时间
+			borrowRecover.setCreditTime(request.getAddTime());
+			boolean isUpdateFlag = this.borrowRecoverMapper.updateByPrimaryKey(borrowRecover) > 0 ? true : false;
+			if (!isUpdateFlag) {
+				throw new RuntimeException("更新huiyingdai_borrow_recover表数据失败~!");
+			}
+			return 1;
+		}
+		return 0;
+	}
+
 
 }

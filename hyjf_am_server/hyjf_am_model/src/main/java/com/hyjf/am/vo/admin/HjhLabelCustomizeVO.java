@@ -22,7 +22,7 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 	
 	private Integer id;
     
-    private Integer engineId;
+    private String labelisUsed;
 
     private String labelName;
 
@@ -83,6 +83,10 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
     private Integer delFlg;
     
     private Integer delFlag;
+    
+    private String pushTimeStartString;
+
+    private String pushTimeEndString;
 
 	public Integer getId() {
 		return id;
@@ -91,15 +95,6 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public Integer getEngineId() {
-		return engineId;
-	}
-
-	public void setEngineId(Integer engineId) {
-		this.engineId = engineId;
-	}
-
 	public String getLabelName() {
 		return labelName;
 	}
@@ -338,5 +333,29 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 
 	public void setDelFlag(Integer delFlag) {
 		this.delFlag = delFlag;
+	}
+
+	public String getLabelisUsed() {
+		return labelisUsed;
+	}
+
+	public void setLabelisUsed(String labelisUsed) {
+		this.labelisUsed = labelisUsed;
+	}
+
+	public String getPushTimeStartString() {
+		return pushTimeStartString;
+	}
+
+	public void setPushTimeStartString(String pushTimeStartString) {
+		this.pushTimeStartString = pushTimeStartString;
+	}
+
+	public String getPushTimeEndString() {
+		return pushTimeEndString;
+	}
+
+	public void setPushTimeEndString(String pushTimeEndString) {
+		this.pushTimeEndString = pushTimeEndString;
 	}
 }
