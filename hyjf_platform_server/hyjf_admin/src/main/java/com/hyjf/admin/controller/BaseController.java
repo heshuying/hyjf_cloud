@@ -25,7 +25,7 @@ import io.swagger.annotations.Api;
 @Api(value = "admin基类")
 @RestController
 public class BaseController {
-	public static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	//redis存有用户信息的key
 	public static final String USER="user";
 	public static final String STATUS="status";
