@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.user.dao.model.customize.VipDetailListCustomize;
 import com.hyjf.am.user.dao.model.customize.VipManageListCustomize;
 
 import java.util.List;
@@ -14,4 +15,8 @@ public interface VipManagementService {
     int countRecord(Map<String, Object> mapParam);
 
     List<VipManageListCustomize> selectUserList(Map<String, Object> mapParam, int offset, int limit);
+
+    List<VipDetailListCustomize> searchDetailList(Map<String, Object> mapParam, int offset, int limit);
+
+    int countDetailRecord(Map<String, Object> mapParam);
 }

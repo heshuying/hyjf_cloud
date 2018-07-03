@@ -3,7 +3,9 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.am.vo.admin.VipManageVO;
 
 import java.util.List;
@@ -14,4 +16,6 @@ import java.util.List;
  */
 public interface VipManageClient {
     List<VipManageVO> searchList(VipManageRequest vipManageRequest);
+
+    List<VipDetailListVO> searchDetailList(VipDetailListRequest detailListRequest);
 }

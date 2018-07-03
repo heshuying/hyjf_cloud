@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.VipManageClient;
 import com.hyjf.admin.service.VipManageService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.am.vo.admin.VipManageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,5 +56,17 @@ public class VipManageServiceImpl implements VipManageService {
         jsonObject.put("record", vipManageVOS);
         jsonObject.put("status", status);
         return jsonObject;
+    }
+
+    /**
+     * 查询vip详情信息
+     * @param detailListRequest
+     * @return
+     */
+    @Override
+    public List<VipDetailListVO> searchDetailList(VipDetailListRequest detailListRequest) {
+        Map<String, Object> mapParam = new HashMap<>();
+        List<VipDetailListVO> vipDetailListVOS = vipManageClient.searchDetailList(detailListRequest);
+        return vipDetailListVOS;
     }
 }

@@ -6,7 +6,10 @@ package com.hyjf.admin.controller.vip;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.service.VipManageService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.am.vo.admin.VipManageVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -20,6 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,14 +46,14 @@ public class VipManageController {
     @Autowired
     private VipManageService vipManageService;
 
-    @ApiOperation(value = "vip管理",notes = "vip管理页面初始化")
+    @ApiOperation(value = "vip管理", notes = "vip管理页面初始化")
     @PostMapping("/init")
     public JSONObject vipManageInit() {
         JSONObject jsonObject = vipManageService.initVipManage();
         return jsonObject;
     }
 
-    @ApiOperation(value = "vip管理",notes = "vip管理列表查询")
+    @ApiOperation(value = "vip管理", notes = "vip管理列表查询")
     @PostMapping("/vipManageList")
     public JSONObject searchUser(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject();
@@ -58,14 +62,32 @@ public class VipManageController {
         return jsonObject;
     }
 
+    @ApiOperation(value = "vip管理", notes = "vip详情页面")
+    @PostMapping("/vipdetailInit")
+    public JSONObject vipDetailInit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
+        JSONObject jsonObject = new JSONObject();
+        String userId = map.get("userId").toString();
+        VipDetailListRequest detailListRequest = new VipDetailListRequest();
+        detailListRequest.setUserId(userId);
+        String status = Response.SUCCESS;
+        List<VipDetailListVO> vipDetailList = vipManageService.searchDetailList(detailListRequest);
+        if (CollectionUtils.isEmpty(vipDetailList)) {
+            status = Response.FAIL;
+        }
+        jsonObject.put("record", vipDetailList);
+        jsonObject.put("status", status);
+        return jsonObject;
+    }
+
 
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
+     * <p>
+     * //     * @param request
+     * //     * @param response
      *
-//     * @param request
-//     * @param response
      * @throws Exception
      */
    /* @RequestMapping("/exportvips")
@@ -209,8 +231,6 @@ public class VipManageController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }*/
-
-
     private VipManageRequest setParamRequest(Map<String, Object> map) {
         VipManageRequest request = new VipManageRequest();
         if (null != map && map.size() > 0) {
@@ -247,8 +267,8 @@ public class VipManageController {
             if (map.containsKey("is51")) {
                 request.setIs51(map.get("is51").toString());
             }
-            if (map.containsKey("limit")&& StringUtils.isNotBlank(map.get("limit").toString())) {
-                request.setLimit((Integer)map.get("limit"));
+            if (map.containsKey("limit") && StringUtils.isNotBlank(map.get("limit").toString())) {
+                request.setLimit((Integer) map.get("limit"));
             }
         }
         return request;

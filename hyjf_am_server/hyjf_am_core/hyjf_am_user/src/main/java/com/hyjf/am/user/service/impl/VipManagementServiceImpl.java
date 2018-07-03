@@ -3,9 +3,12 @@
  */
 package com.hyjf.am.user.service.impl;
 
+import com.hyjf.am.user.dao.mapper.customize.VipDetailListCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.VipManageCustomizeMapper;
+import com.hyjf.am.user.dao.model.customize.VipDetailListCustomize;
 import com.hyjf.am.user.dao.model.customize.VipManageListCustomize;
 import com.hyjf.am.user.service.VipManagementService;
+import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.common.cache.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,8 @@ public class VipManagementServiceImpl implements VipManagementService {
 
     @Autowired
     private VipManageCustomizeMapper vipManageCustomizeMapper;
+    @Autowired
+    private VipDetailListCustomizeMapper vipDetailListCustomizeMapper;
 
     /**
      * 根据条件查询列表总数
@@ -72,5 +77,40 @@ public class VipManagementServiceImpl implements VipManagementService {
             }
         }
         return manageList;
+    }
+
+    /**
+     * 根据vip用户id查询用户详情列表
+     * @param mapParam
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @Override
+    public List<VipDetailListCustomize> searchDetailList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", limitStart);
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", limitEnd);
+        }
+        List<VipDetailListCustomize> detailListCustomizes = vipDetailListCustomizeMapper.selectRecordList(mapParam);
+        if (!CollectionUtils.isEmpty(detailListCustomizes)) {
+            return detailListCustomizes;
+        }
+        return null;
+    }
+
+    /**
+     * 查询vip用户详情条数
+     * @param mapParam
+     * @return
+     */
+    @Override
+    public int countDetailRecord(Map<String, Object> mapParam) {
+        Integer detailRecord = vipDetailListCustomizeMapper.countRecordTotal(mapParam);
+        int detailCount = detailRecord.intValue();
+        return detailCount;
     }
 }
