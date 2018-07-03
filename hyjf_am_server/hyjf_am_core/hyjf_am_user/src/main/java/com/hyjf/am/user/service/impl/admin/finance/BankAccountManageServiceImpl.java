@@ -5,6 +5,8 @@ package com.hyjf.am.user.service.impl.admin.finance;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.user.dao.mapper.customize.admin.finance.BankAccountManageCustomizeMapper;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.customize.admin.finance.BankAccountManageCustomize;
 import com.hyjf.am.user.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -56,6 +58,18 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         }
         List<BankAccountManageCustomize> accountInfos = this.bankAccountManageCustomizeMapper.queryAccountInfos(bankAccountManageRequest);
         return accountInfos;
+    }
+
+    @Override
+    public BankOpenAccount getBankOpenAccount(Integer userId) {
+        BankOpenAccountExample accountExample = new BankOpenAccountExample();
+        BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+        crt.andUserIdEqualTo(userId);
+        List<BankOpenAccount> bankAccounts = this.bankOpenAccountMapper.selectByExample(accountExample);
+        if (bankAccounts != null && bankAccounts.size() == 1) {
+            return bankAccounts.get(0);
+        }
+        return null;
     }
 
     private boolean checkFormAllBlank(BankAccountManageRequest bankAccountManageRequest) {

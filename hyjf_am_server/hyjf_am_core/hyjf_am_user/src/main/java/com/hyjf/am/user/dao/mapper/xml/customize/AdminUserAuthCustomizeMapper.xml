@@ -47,7 +47,7 @@
   
   <sql id="Where_Clause">
     <where>
-      hydua.`del_flg` = 0
+      hydua.`del_flag` = 0
       <if test="userName != null and userName !='' ">
         AND hydua.user_name LIKE CONCAT('%', #{userName}, '%')
       </if>
@@ -86,7 +86,7 @@
 
   <sql id="Where_Clause_Log">
     <where>
-      hydual.`del_flg` = 0
+      hydual.`del_flag` = 0
       <if test="userName != null and userName !='' ">
         AND hydual.user_name LIKE CONCAT('%', #{userName}, '%')
       </if>
@@ -130,7 +130,7 @@
     FROM
     ht_hjh_user_auth hydua
     LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydua.user_id
-    LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_userid
+    LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.user_id
     LEFT JOIN ht_user hydur1 ON hydur1.user_id= hydua.user_id
     <include refid="Where_Clause" />
     ORDER BY hydua.auto_create_time DESC
@@ -144,8 +144,8 @@
     COUNT(hydua.user_id)
     FROM
     ht_hjh_user_auth hydua
-    LEFT JOIN ht_spreads_users hydsu ON hydsu.user_id = hydua.user_id
-    LEFT JOIN ht_users hydur ON hydur.user_id = hydsu.spreads_userid
+    LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydua.user_id
+    LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.user_id
     <include refid="Where_Clause" />
   </select>
 
@@ -227,7 +227,7 @@
     FROM
       ht_hjh_user_auth hydual
     LEFT JOIN ht_bank_open_account bank ON bank.user_id = hydual.user_id
-    LEFT JOIN ht_users hydur ON hydur.user_id = hydual.user_id
+    LEFT JOIN ht_user hydur ON hydur.user_id = hydual.user_id
     <include refid="Where_Clause_Pay" />
     ORDER BY bank.create_time DESC
     <if test="limitStart != null and limitEnd !=null" >

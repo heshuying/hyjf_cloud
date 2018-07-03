@@ -80,4 +80,11 @@ public interface PassWordService extends BaseUserService {
      * @param transPasswordRequestBean
      */
     Map<String,Object> apiSetPassword(ThirdPartyTransPasswordRequestBean transPasswordRequestBean,String bankDetailUrl,String txCode);
+
+    /**
+     * 检查密码格式
+     * @param password
+     */
+    void checkPassword(String password);
+
 }

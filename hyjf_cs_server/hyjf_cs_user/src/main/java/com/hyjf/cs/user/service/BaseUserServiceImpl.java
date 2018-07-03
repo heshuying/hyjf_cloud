@@ -1,31 +1,34 @@
 package com.hyjf.cs.user.service;
 
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.cs.user.bean.*;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.Instant;
+import java.util.Map;
+
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
 
 	Logger logger = LoggerFactory.getLogger(BaseUserServiceImpl.class);
@@ -163,7 +166,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 * @return
 	 */
 	@Override
-	public int updateUserByUserId(UserVO userVO) {
+	public Integer updateUserByUserId(UserVO userVO) {
 		return amUserClient.updateUserById(userVO);
 	}
 
@@ -455,6 +458,128 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public UserInfoVO getUserInfo(int userId) {
 		UserInfoVO userInfo = amUserClient.findUserInfoById(userId);
 		return userInfo;
+	}
+
+
+	@Override
+	public WebViewUserVO setToken(WebViewUserVO webViewUserVO){
+		String token = generatorToken(webViewUserVO.getUserId(), webViewUserVO.getUsername());
+		webViewUserVO.setToken(token);
+		RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+		return webViewUserVO;
+	}
+
+	/**
+	 * jwt生成token
+	 *
+	 * @param userId
+	 * @param username
+	 * @return
+	 */
+	private String generatorToken(int userId, String username) {
+		Map map = ImmutableMap.of("userId", String.valueOf(userId), "username", username, "ts",
+				String.valueOf(Instant.now().getEpochSecond()));
+		String token = JwtHelper.genToken(map);
+		return token;
+	}
+
+	@Override
+	public WebViewUserVO getWebViewUserByUserId(Integer userId) {
+		UserVO user = this.getUsersById(userId);
+		WebViewUserVO result = new WebViewUserVO();
+		result.setUserId(user.getUserId());
+		result.setUsername(user.getUsername());
+		if (StringUtils.isNotBlank(user.getMobile())) {
+			result.setMobile(user.getMobile());
+		}
+		if (StringUtils.isNotBlank(user.getIconUrl())) {
+			String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+			// http://cdn.huiyingdai.com/
+			imghost = imghost.substring(0, imghost.length() - 1);
+			String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+			if(StringUtils.isNotEmpty(user.getIconUrl())){
+				result.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
+			}
+		}
+		if (StringUtils.isNotBlank(user.getEmail())) {
+			result.setEmail(user.getEmail());
+		}
+		if (user.getOpenAccount() != null) {
+			if (user.getOpenAccount().intValue() == 1) {
+				result.setOpenAccount(true);
+			} else {
+				result.setOpenAccount(false);
+			}
+		}
+		if (user.getBankOpenAccount() != null) {
+			if (user.getBankOpenAccount() == 1) {
+				result.setBankOpenAccount(true);
+			} else {
+				result.setBankOpenAccount(false);
+			}
+		}
+		result.setRechargeSms(user.getRechargeSms());
+		result.setWithdrawSms(user.getWithdrawSms());
+		result.setInvestSms(user.getInvestSms());
+		result.setRecieveSms(user.getRecieveSms());
+		result.setIsSetPassword(user.getIsSetPassword());
+		try {
+			if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
+				//测评到期日
+				Long lCreate = user.getEvaluationExpiredTime().getTime();
+				//当前日期
+				Long lNow = System.currentTimeMillis();
+				if (lCreate <= lNow) {
+					//已过期需要重新评测
+					result.setIsEvaluationFlag(2);
+					result.setEvaluationExpiredTime(user.getEvaluationExpiredTime());
+				} else {
+					//未到一年有效期
+					result.setIsEvaluationFlag(1);
+					result.setEvaluationExpiredTime(user.getEvaluationExpiredTime());
+				}
+			}else{
+				result.setIsEvaluationFlag(0);
+			}
+			// 用户是否完成风险测评标识 end
+		} catch (Exception e) {
+			result.setIsEvaluationFlag(0);
+		}
+		result.setIsSmtp(user.getIsSmtp());
+		result.setUserType(user.getUserType());
+		UserInfoVO userInfoVO = this.getUserInfo(userId);
+		if (userInfoVO != null && userInfoVO.getSex() != null) {
+			result.setSex(userInfoVO.getSex());
+			if (StringUtils.isNotBlank(userInfoVO.getNickname())) {
+				result.setNickname(userInfoVO.getNickname());
+			}
+			if (StringUtils.isNotBlank(userInfoVO.getTruename())) {
+				result.setTruename(userInfoVO.getTruename());
+			}
+			if (StringUtils.isNotBlank(userInfoVO.getIdcard())) {
+				result.setIdcard(userInfoVO.getIdcard());
+			}
+			result.setBorrowerType(userInfoVO.getBorrowerType());
+		}
+		result.setRoleId(userInfoVO.getRoleId() + "");
+
+		AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(userId);
+		if (chinapnr != null) {
+			result.setChinapnrUsrid(chinapnr.getChinapnrUsrid());
+			result.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
+		}
+		BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(userId);
+		if (bankOpenAccount != null && StringUtils.isNotEmpty(bankOpenAccount.getAccount())) {
+			if (result.isBankOpenAccount()) {
+				result.setBankAccount(bankOpenAccount.getAccount());
+			}
+		}
+		// 用户紧急联系人
+		UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
+		if (usersContactVO != null) {
+			result.setUsersContact(usersContactVO);
+		}
+		return result;
 	}
 
 

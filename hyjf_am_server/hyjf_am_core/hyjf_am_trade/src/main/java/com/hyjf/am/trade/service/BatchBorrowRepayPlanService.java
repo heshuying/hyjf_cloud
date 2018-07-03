@@ -21,4 +21,10 @@ public interface BatchBorrowRepayPlanService {
 
 	BankCallBean batchQuery(BorrowApicron apicron);
 
+	boolean updateBatchDetailsQuery(BorrowApicron apicron);
+
+	void updateQuitRepayInfo(String accedeOrderId);
+
+    void updateLockRepayInfo(String accedeOrderId);
+
 }

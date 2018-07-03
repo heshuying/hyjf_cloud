@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhLabelCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.HjhLabelCustomizeVO" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="labelisUsed" property="labelisUsed" />
+	    <result column="label_name" property="labelName" jdbcType="VARCHAR" />
+	    <result column="label_term_start" property="labelTermStart" jdbcType="INTEGER" />
+	    <result column="label_term_end" property="labelTermEnd" jdbcType="INTEGER" />
+	    <result column="label_term_type" property="labelTermType" jdbcType="VARCHAR" />
+	    <result column="label_apr_start" property="labelAprStart" jdbcType="DECIMAL" />
+	    <result column="label_apr_end" property="labelAprEnd" jdbcType="DECIMAL" />
+	    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+	    <result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
+	    <result column="label_payment_account_start" property="labelPaymentAccountStart" jdbcType="DECIMAL" />
+	    <result column="label_payment_account_end" property="labelPaymentAccountEnd" jdbcType="DECIMAL" />
+	    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+	    <result column="inst_name" property="instName" jdbcType="VARCHAR" />
+	    <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+	    <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />
+	    <result column="project_type" property="projectType" jdbcType="TINYINT" />
+	    <result column="project_type_name" property="projectTypeName" jdbcType="VARCHAR" />
+	    <result column="is_credit" property="isCredit" jdbcType="TINYINT" />
+	    <result column="is_late" property="isLate" jdbcType="TINYINT" />
+	    <result column="credit_sum_max" property="creditSumMax" jdbcType="INTEGER" />
+	    <result column="push_time_start" property="pushTimeStart" jdbcType="TIME" />
+	    <result column="push_time_end" property="pushTimeEnd" jdbcType="TIME" />
+	    <result column="remaining_days_start" property="remainingDaysStart" jdbcType="INTEGER" />
+	    <result column="remaining_days_end" property="remainingDaysEnd" jdbcType="INTEGER" />
+	    <result column="label_state" property="labelState" jdbcType="TINYINT" />
+	    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+	    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+	    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+	    <result column="del_flag" property="delFlg" jdbcType="TINYINT" />
+	 </resultMap>
+	<select id="selectHjhLabelListById" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT
+		la.id, la.label_name, la.label_term_start, la.label_term_end, la.label_term_type, la.label_apr_start, 
+	    la.label_apr_end, la.borrow_style, la.borrow_style_name, la.label_payment_account_start, la.label_payment_account_end, 
+	    la.inst_code, la.inst_name, la.asset_type, la.asset_type_name, la.project_type, la.project_type_name, 
+	    la.is_credit, is_late, la.credit_sum_max, la.push_time_start, la.push_time_end, la.remaining_days_start, 
+	    la.remaining_days_end, la.label_state, la.create_user_id, la.create_time, la.update_user_id, la.update_time, 
+	    la.del_flag,
+	    en.id AS labelisUsed
+		FROM
+		ht_hjh_label la
+		LEFT JOIN
+		ht_hjh_allocation_engine en ON la.id = en.label_id
+		<include refid="Where_Clause" />
+	</select>
+	<sql id="Where_Clause">
+		<where>
+			<!-- 标签id -->
+			<if test="labelIdSrch != null and labelIdSrch != ''">
+				AND la.id = #{labelIdSrch}
+			</if>
+		</where>
+	</sql>
+</mapper>

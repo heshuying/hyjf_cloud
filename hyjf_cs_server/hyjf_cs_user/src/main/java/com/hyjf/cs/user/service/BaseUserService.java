@@ -57,7 +57,7 @@ public interface BaseUserService extends BaseService{
 
 	boolean checkIsOpen(Integer userId);
 
-	int updateUserByUserId(UserVO userVO);
+	Integer updateUserByUserId(UserVO userVO);
 
 	BankCallBean callSendCode(Integer userId, String mobile, String txCode, String client, String cardNo);
 
@@ -65,5 +65,20 @@ public interface BaseUserService extends BaseService{
 
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
+	/**
+	 * 设置token
+	 * @param
+	 * @param webViewUserVO
+	 * @return
+	 */
+	WebViewUserVO setToken(WebViewUserVO webViewUserVO);
+
 	UserInfoVO getUserInfo(int userId);
+
+	/**
+	 * 登录
+	 * @param userId
+	 * @return
+	 */
+	WebViewUserVO getWebViewUserByUserId(Integer userId);
 }

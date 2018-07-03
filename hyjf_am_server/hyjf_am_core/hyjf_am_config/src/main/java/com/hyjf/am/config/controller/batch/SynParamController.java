@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.config.controller.batch;
 
+import com.hyjf.am.config.controller.BaseConfigController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import com.hyjf.am.vo.BaseVO;
  */
 @RestController
 @RequestMapping("/am-config/sync")
-public class SynParamController {
+public class SynParamController extends BaseConfigController {
 	
     @Autowired
     private SynParamService synParamService;

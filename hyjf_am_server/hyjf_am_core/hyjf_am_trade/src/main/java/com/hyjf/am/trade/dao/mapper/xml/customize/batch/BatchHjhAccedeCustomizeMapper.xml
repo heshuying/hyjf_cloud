@@ -11,5 +11,16 @@
 		id = #{id,jdbcType=INTEGER}
 	</update>
 	
+	<!-- 更新待收收益  -->
+	<update id="updateInterest" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
+		update hyjf_hjh_accede
+		set
+		wait_total = IFNULL(wait_total,0) + #{waitTotal,jdbcType=DECIMAL},
+		wait_captical = IFNULL(wait_captical,0) + #{waitCaptical,jdbcType=DECIMAL},
+		wait_interest = IFNULL(wait_interest,0) + #{waitInterest,jdbcType=DECIMAL}
+		where
+		id = #{id,jdbcType=INTEGER}
+	</update>
+	
 	
 </mapper>

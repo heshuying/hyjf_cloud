@@ -8,7 +8,7 @@
     <result column="ledger_id" property="ledgerId" jdbcType="INTEGER" />
     <result column="payee_name" property="payeeName" jdbcType="VARCHAR" />
     <result column="ledger_status" property="ledgerStatus" jdbcType="TINYINT" />
-    <result column="updater" property="updater" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -71,8 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, ledger_amount, poundage_id, ledger_id, payee_name, ledger_status, updater, create_time, 
-    update_time
+    id, ledger_amount, poundage_id, ledger_id, payee_name, ledger_status, update_user_id, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageExceptionExample" >
     select
@@ -112,10 +112,10 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_poundage_exception (ledger_amount, poundage_id, ledger_id, 
-      payee_name, ledger_status, updater, 
+      payee_name, ledger_status, update_user_id, 
       create_time, update_time)
     values (#{ledgerAmount,jdbcType=DECIMAL}, #{poundageId,jdbcType=INTEGER}, #{ledgerId,jdbcType=INTEGER}, 
-      #{payeeName,jdbcType=VARCHAR}, #{ledgerStatus,jdbcType=TINYINT}, #{updater,jdbcType=INTEGER}, 
+      #{payeeName,jdbcType=VARCHAR}, #{ledgerStatus,jdbcType=TINYINT}, #{updateUserId,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.PoundageException" >
@@ -139,8 +139,8 @@
       <if test="ledgerStatus != null" >
         ledger_status,
       </if>
-      <if test="updater != null" >
-        updater,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -165,8 +165,8 @@
       <if test="ledgerStatus != null" >
         #{ledgerStatus,jdbcType=TINYINT},
       </if>
-      <if test="updater != null" >
-        #{updater,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -203,8 +203,8 @@
       <if test="record.ledgerStatus != null" >
         ledger_status = #{record.ledgerStatus,jdbcType=TINYINT},
       </if>
-      <if test="record.updater != null" >
-        updater = #{record.updater,jdbcType=INTEGER},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -225,7 +225,7 @@
       ledger_id = #{record.ledgerId,jdbcType=INTEGER},
       payee_name = #{record.payeeName,jdbcType=VARCHAR},
       ledger_status = #{record.ledgerStatus,jdbcType=TINYINT},
-      updater = #{record.updater,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -250,8 +250,8 @@
       <if test="ledgerStatus != null" >
         ledger_status = #{ledgerStatus,jdbcType=TINYINT},
       </if>
-      <if test="updater != null" >
-        updater = #{updater,jdbcType=INTEGER},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -269,7 +269,7 @@
       ledger_id = #{ledgerId,jdbcType=INTEGER},
       payee_name = #{payeeName,jdbcType=VARCHAR},
       ledger_status = #{ledgerStatus,jdbcType=TINYINT},
-      updater = #{updater,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

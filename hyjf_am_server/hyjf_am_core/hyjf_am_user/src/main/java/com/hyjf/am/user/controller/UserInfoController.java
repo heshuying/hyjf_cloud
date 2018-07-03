@@ -35,7 +35,7 @@ import com.hyjf.common.util.CommonUtils;
 
 @RestController
 @RequestMapping("/am-user/userInfo")
-public class UserInfoController {
+public class UserInfoController extends BaseController{
 
 	@Autowired
 	private UserInfoService userInfoService;

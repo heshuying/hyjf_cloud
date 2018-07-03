@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.admin;
 
 import java.util.List;
 
+import com.hyjf.am.trade.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "根据机构编号检索产品类型")
 @RestController
 @RequestMapping("/am-trade/hjhAssetType")
-public class HjhAssetTypeController {
+public class HjhAssetTypeController extends BaseController {
 	
 	@Autowired
 	HjhAssetTypeService hjhAssetTypeService;
@@ -37,7 +38,8 @@ public class HjhAssetTypeController {
 	@GetMapping("/selectAssetTypeAll/{instCodeSrch}")
 	public HjhAssetTypeResponse selectAssetTypeAll(@PathVariable(value = "instCodeSrch") String instCodeSrch) {
 		HjhAssetTypeResponse response = new HjhAssetTypeResponse();
-		String returnCode = "00";//代表成功
+		//代表成功
+		String returnCode = "00";
 		List<HjhAssetType> hjhAssetTypeList = hjhAssetTypeService.selectAssetTypeAll(instCodeSrch);
         if (null!=hjhAssetTypeList&&hjhAssetTypeList.size()>0) {
             List<HjhAssetTypeVO> hjhAssetTypeVO = CommonUtils.convertBeanList(hjhAssetTypeList,HjhAssetTypeVO.class);

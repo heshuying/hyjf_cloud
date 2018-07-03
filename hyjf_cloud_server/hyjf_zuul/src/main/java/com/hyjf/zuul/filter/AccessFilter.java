@@ -84,17 +84,17 @@ public class AccessFilter extends ZuulFilter {
 				ctx.addZuulRequestHeader("initKey", signValue.getInitKey());
 			}
 			if (StringUtils.isNotBlank(appIgnoreUrls) && !appIgnoreUrls.contains(requestUri)) {
-				setUserIdByToken(request, ctx);
+				ctx = setUserIdByToken(request, ctx);
 			}
 			prefix = "/app";
 		} else if (requestUrl.contains("web")) {
 			if (StringUtils.isNotBlank(webIgnoreUrls) && !webIgnoreUrls.contains(requestUri)) {
-				setUserIdByToken(request, ctx);
+				ctx = setUserIdByToken(request, ctx);
 			}
 			prefix = "/web";
 		} else if (requestUrl.contains("wechat")) {
 			if (StringUtils.isNotBlank(wechatIgnoreUrls) && !wechatIgnoreUrls.contains(requestUri)) {
-				setUserIdByToken(request, ctx);
+				ctx = setUserIdByToken(request, ctx);
 			}
 			prefix = "/wechat";
 		} else if (requestUrl.contains("api")) {
@@ -108,21 +108,22 @@ public class AccessFilter extends ZuulFilter {
 		return null;
 	}
 
-	private void setUserIdByToken(HttpServletRequest request, RequestContext ctx) {
+	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx) {
 		String token = request.getHeader("token");
 		if (token == null) {
 			logger.error("token is empty...");
 			ctx.setResponseBody("token is empty");
-			return;
+			return ctx;
 		}
 		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
 		if (webViewUserVO == null) {
 			logger.error("user is not exist...");
 			ctx.setResponseBody("user is not exist");
-			return;
+			return ctx;
 		}
 		ctx.addZuulRequestHeader("userId", webViewUserVO.getUserId() + "");
 		logger.info(String.format("user token:%s userId:%s", token, webViewUserVO.getUserId()));
+		return ctx;
 	}
 
 }

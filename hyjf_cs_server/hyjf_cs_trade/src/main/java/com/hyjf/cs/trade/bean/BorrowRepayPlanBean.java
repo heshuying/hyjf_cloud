@@ -12,7 +12,7 @@ package com.hyjf.cs.trade.bean;
 
 import java.io.Serializable;
 
-public class AppBorrowRepayPlanBean implements Serializable {
+public class BorrowRepayPlanBean implements Serializable {
 
 	/** 序列化id */
 	private static final long serialVersionUID = -2913028255458205989L;

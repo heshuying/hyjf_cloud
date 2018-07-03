@@ -20,7 +20,7 @@ import com.hyjf.am.vo.config.MessagePushTagVO;
  */
 @RestController
 @RequestMapping("/am-config/messagePushTag")
-public class MessagePushTagController {
+public class MessagePushTagController extends BaseConfigController{
 
 	@Autowired
 	private MessagePushTagServcie messagePushTagServcie;

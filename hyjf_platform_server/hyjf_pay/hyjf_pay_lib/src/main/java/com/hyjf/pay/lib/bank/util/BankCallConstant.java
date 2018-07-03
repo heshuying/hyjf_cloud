@@ -125,6 +125,14 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String TRANS_TYPE_7938 = "7938";
 	/** 后台交易类型 线下充值 7939 */
 	public static final String TRANS_TYPE_7939 = "7939";
+	/** 后台交易类型 线下充值 7610 */
+	public static final String TRANS_TYPE_7610 = "7610";
+	/** 后台交易类型 线下充值 7611 */
+	public static final String TRANS_TYPE_7611 = "7611";
+	/** 后台交易类型 线下充值 7612 */
+	public static final String TRANS_TYPE_7612 = "7612";
+	/** 后台交易类型 线下充值 7613 */
+	public static final String TRANS_TYPE_7613 = "7613";
 
 	
 	/** 付息方式 */

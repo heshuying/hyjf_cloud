@@ -1,10 +1,12 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.HjhPlan;
-import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
-
 import java.util.Map;
+
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.HjhRepay;
+import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 
 /**
  * @Description 计划类
@@ -41,4 +43,18 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     UserHjhInvistDetailCustomize selectUserHjhInvistDetail(Map<String,Object> params);
+
+    /**
+     * 更新汇计划还款信息
+     * @param repayParam
+     * @return
+     */
+    int updateHjhRepayForHjhRepay(HjhRepay repayParam);
+
+    /**
+     * 更新汇计划投资明细金额
+     * @param hjhAccede
+     * @return
+     */
+    int updateHjhAccedeForHjhProcess(HjhAccede hjhAccede);
 }

@@ -22,24 +22,9 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
  * @version AssetPushServiceImpl, v0.1 2018/6/12 10:07
  */
 @Service
-public class AssetPushServiceImpl implements AssetPushService {
+public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushService {
 
     private Logger _log = LoggerFactory.getLogger(AssetPushServiceImpl.class);
-
-    @Autowired
-    private HjhAssetBorrowtypeMapper hjhAssetBorrowTypeMapper;
-
-    @Autowired
-    private BorrowProjectTypeMapper borrowProjectTypeMapper;
-
-    @Autowired
-    private BorrowProjectRepayMapper borrowProjectRepayMapper;
-
-    @Autowired
-    private StzhWhiteListMapper sTZHWhiteListMapper;
-
-    @Autowired
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
 
     @Override
     public HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType) {
@@ -47,7 +32,7 @@ public class AssetPushServiceImpl implements AssetPushService {
         HjhAssetBorrowtypeExample.Criteria crt = example.createCriteria();
         crt.andInstCodeEqualTo(instCode);
         crt.andAssetTypeEqualTo(assetType);
-        List<HjhAssetBorrowtype> list = hjhAssetBorrowTypeMapper.selectByExample(example);
+        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
         if(list.size() > 0){
             return list.get(0);
         }else{
@@ -87,7 +72,7 @@ public class AssetPushServiceImpl implements AssetPushService {
         crt.andInstcodeEqualTo(instCode);
         crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);
-        List<StzhWhiteList> list = this.sTZHWhiteListMapper.selectByExample(example);
+        List<StzhWhiteList> list = this.stzhWhiteListMapper.selectByExample(example);
         if(list.size() > 0){
             return list.get(0);
         }else{

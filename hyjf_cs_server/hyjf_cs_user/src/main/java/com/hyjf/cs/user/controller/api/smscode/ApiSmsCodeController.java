@@ -38,7 +38,7 @@ public class ApiSmsCodeController extends BaseUserController {
 	 * @throws MQException
 	 */
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
-	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string}", dataType = "Map")
+	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
 	public ApiResult sendSmsCode(@RequestBody Map<String,String> param,
 								 @RequestHeader(value = "token", required = false) String token,
 								 HttpServletRequest request)
@@ -46,8 +46,9 @@ public class ApiSmsCodeController extends BaseUserController {
 		logger.info("API端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
 		String validCodeType = param.get("validCodeType");
 		String mobile = param.get("mobile");
+		String platform = param.get("platform");
 		ApiResult resultBean = new ApiResult();
-		sendSmsCode.sendSmsCode(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
+		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}
 }

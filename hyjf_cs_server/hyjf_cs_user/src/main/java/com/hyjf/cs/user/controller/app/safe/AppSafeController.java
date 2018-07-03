@@ -4,17 +4,18 @@
 package com.hyjf.cs.user.controller.app.safe;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.validator.Validator;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.safe.SafeService;
-import com.hyjf.cs.user.util.SecretUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(value = "app端用户接口")
 @RestController
-@RequestMapping("/app/appUser")
+@RequestMapping("/app/user/appUser")
 public class AppSafeController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppSafeController.class);
@@ -34,73 +35,29 @@ public class AppSafeController extends BaseUserController {
     private SafeService safeService;
 
     /**
-     * 修改登陆密码
+     * 上传头像
      *
      * @param request
      * @param
+     * @param
      * @return
      */
-    @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @ResponseBody
-    @PostMapping(value = "/updatePasswordAction")
-    public JSONObject updatePasswordAction(HttpServletRequest request) {
-        logger.info("AppUserController.updatePasswordAction start.....");
+    @PostMapping(value = "/uploadAvatarAction", produces = "application/json; charset=utf-8")
+    public JSONObject uploadAvatarAction(@RequestHeader String key, @RequestHeader(value = "token") String token, HttpServletRequest request) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/updatePasswordAction");
-
-        // 版本号
-        String version = request.getParameter("version");
-        // 网络状态
-        String netStatus = request.getParameter("netStatus");
-        // 平台
-        String platform = request.getParameter("platform");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        // token
-        String token = request.getParameter("token");
-        // 随机字符串
-        String randomString = request.getParameter("randomString");
-        // Order
-        String order = request.getParameter("order");
-
-        // 新密码
-        String newPassword = request.getParameter("newPassword");
-        // 旧密码
-        String oldPassword = request.getParameter("oldPassword");
-
-        // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(token) || Validator.isNull(randomString) || Validator.isNull(order)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-
-        // 取得加密用的Key
-        String key = SecretUtil.getKey(sign);
-        if (Validator.isNull(key)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-
-        // 取得用户登录信息
-        Integer userId = SecretUtil.getUserId(sign);
-        String username = SecretUtil.getUserName(sign);
-        if (username != null || userId != null) {
-            try {
-                // 解密
-                oldPassword = DES.decodeValue(key, oldPassword);
-                newPassword = DES.decodeValue(key, oldPassword);
-                ret = safeService.updatePassWd(userId, oldPassword, newPassword);
-            } catch (Exception e) {
-                ret.put("status", "1");
-                ret.put("statusDesc", "修改密码失败");
-                return ret;
-            }
-        } else {
-            ret.put("status", "1");
-            ret.put("statusDesc", "用户信息不存在");
-            return ret;
+        ret.put("request", "/user/appUser/uploadAvatarAction");
+        // 转型为MultipartHttpRequest(重点的所在)
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+        MultipartFile iconImg = safeService.checkParam(multipartRequest, key, token);
+        try {
+            String iconUrl = safeService.updateAvatar(token, iconImg);
+            ret.put("iconUrl", iconUrl);
+            ret.put("status", "0");
+            ret.put("statusDesc", "头像上传成功");
+        } catch (Exception e) {
+            throw new CheckException(MsgEnum.STATUS_EV000002);
         }
         return ret;
     }

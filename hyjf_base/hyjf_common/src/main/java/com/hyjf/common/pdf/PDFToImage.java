@@ -18,13 +18,6 @@ public class PDFToImage {
     public final  static String  IMG_TYPE_JPG = "jpg";
     public final  static String  IMG_TYPE_PNG = "png";
 
-    public static void main(String[] args) {
-//        TestPDF app = new TestPDF();
-//        app.pdf2img("/Applications/work/Demo_Contract_Travel_img.pdf", "/Applications/work/Demo_Contract_Travel_img",IMG_TYPE_PNG);
-
-    }
-
-
     /**
      *
      * @param pdfPath pdf文件的路径
@@ -76,7 +69,7 @@ public class PDFToImage {
     public static  void pdfPage2Img(PDPage page,String saveFileName,String imgType) throws IOException {
         BufferedImage img_temp  = page.convertToImage();
         Iterator<ImageWriter> it = ImageIO.getImageWritersBySuffix(imgType);
-        ImageWriter writer = (ImageWriter) it.next();
+        ImageWriter writer = it.next();
         ImageOutputStream imageout = ImageIO.createImageOutputStream(new FileOutputStream(saveFileName));
         writer.setOutput(imageout);
         writer.write(new IIOImage(img_temp, null, null));

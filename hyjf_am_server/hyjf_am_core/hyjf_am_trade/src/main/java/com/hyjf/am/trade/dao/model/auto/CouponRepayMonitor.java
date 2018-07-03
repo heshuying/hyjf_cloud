@@ -15,7 +15,7 @@ public class CouponRepayMonitor implements Serializable {
 
     private BigDecimal interestYesTotal;
 
-    private Boolean delFlag;
+    private Integer delFlag;
 
     private Integer createUserId;
 
@@ -67,11 +67,11 @@ public class CouponRepayMonitor implements Serializable {
         this.interestYesTotal = interestYesTotal;
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Boolean delFlag) {
+    public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
 

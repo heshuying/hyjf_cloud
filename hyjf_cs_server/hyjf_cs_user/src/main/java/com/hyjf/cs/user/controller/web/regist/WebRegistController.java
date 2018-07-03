@@ -4,11 +4,9 @@
 package com.hyjf.cs.user.controller.web.regist;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.SmsCodeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.RandomValidateCode;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
@@ -21,7 +19,6 @@ import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,47 +73,6 @@ public class WebRegistController extends BaseUserController {
         return result;
     }
 
-
-    /**
-     * 短信验证码校验
-     *
-     * 用户注册数据提交（获取session数据并保存） 1.校验验证码
-     * 2.若验证码正确，则获取session数据，并将相应的注册数据写入数据库（三张表），跳转相应的注册成功界面
-     */
-    @ApiOperation(value = "短信验证码校验", notes = "短信验证码校验")
-    @PostMapping(value = "/checkcode", produces = "application/json; charset=utf-8")
-    public boolean checkcode(@RequestBody SmsCodeVO request) {
-        logger.info("Web端短信验证码校验接口,SmsCodeVO  is :{}",JSONObject.toJSONString(request));
-        JSONObject info = new JSONObject();
-        String validCodeType = request.getVerificationType();
-        if (StringUtils.isBlank(validCodeType)) {
-            return false;
-        }
-        if (!validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE) && !validCodeType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA) && !validCodeType.equals( CommonConstant.PARAM_TPL_YZYSJH)
-                && !validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-            return false;
-        }
-        // 手机号码(必须,数字,最大长度)
-        String mobile = request.getMobile();
-        if (!ValidatorCheckUtil.validateRequired(info, null, null, mobile)) {
-            return false;
-        } else if (!ValidatorCheckUtil.validateMobile(info, null, null, mobile, 11, false)) {
-            return false;
-        }
-        // 短信验证码
-        String code = request.getVerificationCode();
-        if (!ValidatorCheckUtil.validateRequired(info, null, null, code)) {
-            return false;
-        }
-        int cnt = this.registService.updateCheckMobileCode(mobile, code, validCodeType, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-        if (cnt > 0) {
-            logger.info("Web端短信验证码校验接口返回结果为：true");
-            return true;
-        } else {
-            logger.info("Web端短信验证码校验接口返回结果为：false");
-            return false;
-        }
-    }
 
     /**
      * @Author: zhangqingqing
@@ -177,12 +133,22 @@ public class WebRegistController extends BaseUserController {
     }
 
     /**
+     * 生成图片验证码
+     *
+     * @param request
+     * @param
+     */
+    @PostMapping(value = "getcaptcha", produces = "application/json; charset=utf-8")
+    public void randomCode(HttpServletRequest request) {
+
+    }
+
+    /**
      * 检查图片验证码
      *
      * @param request
      * @param
      */
-    @ResponseBody
     @PostMapping(value = "checkcaptcha", produces = "application/json; charset=utf-8")
     public boolean checkcaptcha(HttpServletRequest request) {
         RandomValidateCode randomValidateCode = new RandomValidateCode();

@@ -57,6 +57,28 @@ public class SystemConfig {
     @Value("${file.domain.app.url}")
     public String domainAppUrl;
 
+    @Value("${hyjf.activity.888.id}")
+    public Integer activity888Id;
+
+    @Value("${file.physical.path}")
+    public String physicalPath;
+
+    public String getPhysicalPath() {
+        return physicalPath;
+    }
+
+    public void setPhysicalPath(String physicalPath) {
+        this.physicalPath = physicalPath;
+    }
+
+    public Integer getActivity888Id() {
+        return activity888Id;
+    }
+
+    public void setActivity888Id(Integer activity888Id) {
+        this.activity888Id = activity888Id;
+    }
+
     public String getDomainAppUrl() {
         return domainAppUrl;
     }

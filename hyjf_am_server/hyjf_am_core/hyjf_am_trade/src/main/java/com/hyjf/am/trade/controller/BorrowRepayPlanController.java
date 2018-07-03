@@ -22,7 +22,7 @@ import java.util.List;
 @Api(value = "还款记录分期")
 @RestController
 @RequestMapping("/am-trade/borrowRepayPlan")
-public class BorrowRepayPlanController {
+public class BorrowRepayPlanController extends BaseController{
 
     @Autowired
     BorrowRepayPlanService borrowRepayPlanService;

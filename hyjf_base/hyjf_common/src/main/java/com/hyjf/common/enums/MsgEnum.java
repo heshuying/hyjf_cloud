@@ -73,7 +73,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_FMT_IDCARDNO("EFM000105", "身份证号格式错误"),//孙帅帅新加-----已修改
 	ERR_FMT_PASSWORD("EFM000106", "密码必须由数字和字母组成，如abc123"),
 	ERR_FMT_MONEY("EFM000107", "金额格式不正确"),
-
+	ERR_FMT_NICK("EFM000108","昵称2~16 位"),
 
 	// 用户相关错误信息ERR_USER_
 	ERR_USER_NOT_LOGIN("EUS000001", "用户未登录"),
@@ -119,6 +119,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TENDER_NEED_RISK_ASSESSMENT("EAM000219","根据监管要求，投资前必须进行风险测评"),
 	ERR_AMT_TENDER_INVESTMENT("EAM000220","抱歉，投资失败，请重试"),
 	ERR_AMT_TENDER_INVESTMENT_WITH_COUPON("EAM000221","优惠券投资失败"),//孙帅帅
+	ERR_AMT_TENDER_BORROW_NOT_EXIST("EAM000222","标的信息不存在"),
 
 
 	// 资金-充值相关错误信息ERR_AMT_RECHARGE_
@@ -295,6 +296,9 @@ public enum MsgEnum implements MsgCode {
 	STATUS_TP000002("TP000002","未设置过交易密码，请先设置交易密码"),
 	// ----------用户测评错误信息------------
 	STATUS_EV000001("EV000001","未找到对应测评结果"),
+
+	//----------上传用户头像错误信息-------------
+	STATUS_EV000002("EV000002","头像修改失败,请刷新重试！"),
 
 
 

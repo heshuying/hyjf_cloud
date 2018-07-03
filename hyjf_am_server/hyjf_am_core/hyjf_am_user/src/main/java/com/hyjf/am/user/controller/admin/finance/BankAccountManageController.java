@@ -4,14 +4,20 @@
 package com.hyjf.am.user.controller.admin.finance;
 
 import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.customize.admin.finance.BankAccountManageCustomize;
 import com.hyjf.am.user.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +32,7 @@ import java.util.List;
 @Api(value = "银行账户管理")
 @RestController
 @RequestMapping("/am-user/bankAccountManage")
-public class BankAccountManageController {
+public class BankAccountManageController extends BaseController {
 
     @Autowired
     BankAccountManageService bankAccountManageService;
@@ -54,6 +60,23 @@ public class BankAccountManageController {
         if (null!=bankAccountManageCustomizes&&bankAccountManageCustomizes.size()>0) {
             List<BankAccountManageCustomizeVO> bankAccountManageCustomizeVOS = CommonUtils.convertBeanList(bankAccountManageCustomizes,BankAccountManageCustomizeVO.class);
             response.setResultList(bankAccountManageCustomizeVOS);
+        }
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
+     * @Desc :查询列表数据
+     */
+    @ApiOperation(value = "银行账户管理查询列表")
+    @PostMapping("/getbankopenaccount")
+    public BankOpenAccountResponse getBankOpenAccount(@PathVariable Integer userId) {
+        BankOpenAccountResponse response = new BankOpenAccountResponse();
+        BankOpenAccount bankOpenAccount = bankAccountManageService.getBankOpenAccount(userId);
+        if (null!=bankOpenAccount) {
+            BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+            BeanUtils.copyProperties(bankOpenAccountVO,bankOpenAccount);
+            response.setResult(bankOpenAccountVO);
         }
         return response;
     }

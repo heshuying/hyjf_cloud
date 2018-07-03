@@ -25,7 +25,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("/am-user/preregist")
-public class PreRegistController{
+public class PreRegistController extends BaseController{
 
 	@Autowired
 	private PreRegistService preRegistService;

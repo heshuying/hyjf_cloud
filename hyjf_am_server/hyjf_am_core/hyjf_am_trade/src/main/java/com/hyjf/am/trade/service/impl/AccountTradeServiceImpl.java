@@ -14,9 +14,8 @@ import java.util.List;
  * @version AccountTradeServiceImpl, v0.1 2018/6/27 11:10
  */
 @Service
-public class AccountTradeServiceImpl implements AccountTradeService {
-    @Autowired
-    protected AccountTradeMapper accountTradeMapper;
+public class AccountTradeServiceImpl extends BaseServiceImpl implements AccountTradeService {
+
     @Override
     public List<AccountTrade> selectTradeTypes() {
         AccountTradeExample example = new AccountTradeExample();

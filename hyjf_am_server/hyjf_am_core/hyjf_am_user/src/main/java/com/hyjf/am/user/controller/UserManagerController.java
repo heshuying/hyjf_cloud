@@ -3,6 +3,21 @@
  */
 package com.hyjf.am.user.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -17,21 +32,6 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -41,12 +41,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/am-user/userManager")
-public class UserManagerController {
+public class UserManagerController extends BaseController{
     @Autowired
     private UserManagerService userManagerService;
     @Autowired
     private CallCenterBankService callCenterBankService;
-    private static Logger logger = LoggerFactory.getLogger(UserManagerController.class);
 
     /**
      * 根据筛选条件查找(用户管理列表显示)
@@ -291,7 +290,7 @@ public class UserManagerController {
     public UserResponse selectUserByUserId(@PathVariable int userId) {
         UserResponse response = new UserResponse();
         logger.info("---selectUserByUserId---  " + userId);
-        UserVO userVO = null;
+        UserVO userVO = new UserVO();
         User user = userManagerService.selectUserByUserId(userId);
         if (null != user) {
             BeanUtils.copyProperties(user, userVO);
@@ -544,8 +543,8 @@ public class UserManagerController {
         return response;
     }
 
-    @RequestMapping("/selectSpreadsUsersByUserId")
-    public SpreadsUserResponse selectSpreadsUsersByUserId(@Valid String userId){
+    @RequestMapping("/selectSpreadsUsersByUserId/{userId}")
+    public SpreadsUserResponse selectSpreadsUsersByUserId(@PathVariable String userId){
         SpreadsUserResponse response = new SpreadsUserResponse();
         String returnCode = Response.FAIL;
         if(StringUtils.isNotEmpty(userId)){

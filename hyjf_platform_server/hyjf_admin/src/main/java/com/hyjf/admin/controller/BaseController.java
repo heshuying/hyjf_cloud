@@ -3,10 +3,13 @@
  */
 package com.hyjf.admin.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
@@ -22,6 +25,7 @@ import io.swagger.annotations.Api;
 @Api(value = "admin基类")
 @RestController
 public class BaseController {
+	public static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	//redis存有用户信息的key
 	public static final String USER="user";
 	public static final String STATUS="status";
@@ -66,7 +70,7 @@ public class BaseController {
 		return info;
 	}
 	//返回成功带总数带集合的
-	public JSONObject success(String recordTotal,Object List) {
+	public JSONObject success(String recordTotal,List<?> List) {
 		JSONObject info = new JSONObject();
 		info.put(STATUS, SUCCESS);
 		info.put(MSG, "成功");
@@ -86,13 +90,13 @@ public class BaseController {
 		return info;
 	}
 	//获取页数
-	public String  getCurrPage(Map<String, String> map) {
+	public String  getCurrPage(Map<String, ?> map) {
 
-		return map.get(CURR);
+		return String.valueOf(map.get(CURR)) ;
 	}
 	//获取条数
-	public String  getPageSize(Map<String, String> map) {
+	public String  getPageSize(Map<String, ?> map) {
 
-		return map.get(PAGE);
+		return String.valueOf(map.get(PAGE)) ;
 	}
 }

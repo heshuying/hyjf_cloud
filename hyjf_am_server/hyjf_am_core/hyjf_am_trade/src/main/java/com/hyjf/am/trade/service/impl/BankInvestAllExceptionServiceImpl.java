@@ -259,8 +259,8 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 			return jsonMessage("此项目已经满标", "1");
 		}
 		// 判断用户投资金额是否为空
-		if (!(StringUtils.isNotEmpty(account) || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 3) || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 1 && cuc
-				.getAddFlg() == 1))) {
+		if (!(StringUtils.isNotEmpty(account) || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 3) ||
+				(StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 1))) {
 			return jsonMessage("请输入投资金额", "1");
 		}
 		// 还款金额是否数值

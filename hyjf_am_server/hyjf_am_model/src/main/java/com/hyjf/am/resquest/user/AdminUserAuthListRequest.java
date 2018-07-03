@@ -47,7 +47,7 @@ public class AdminUserAuthListRequest extends BaseVO {
 	 */
 	private String autoConsumeStatus;
 	/**
-	 * 自动投标授权状态
+	 * 自动债转授权状态
 	 */
 	private String autoCreditStatus;
 	/**

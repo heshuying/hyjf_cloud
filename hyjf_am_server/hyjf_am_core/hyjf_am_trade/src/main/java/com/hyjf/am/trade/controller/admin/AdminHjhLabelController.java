@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.trade.service.admin.AdminHjhLabelService;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
@@ -82,7 +83,14 @@ public class AdminHjhLabelController {
 	public HjhLabelCustomizeResponse selectHjhLabelList(@RequestBody @Valid HjhLabelRequest request){
 		HjhLabelCustomizeResponse response = new HjhLabelCustomizeResponse();
 		Integer count = adminHjhLabelService.countRecordTotal(request);
-		Paginator paginator = new Paginator(request.getPaginatorPage(), count,request.getLimit());
+		Paginator paginator;
+		if(request.getLimit() == 0){
+			// 前台传分页
+			paginator = new Paginator(request.getPaginatorPage(), count);
+		} else {
+			// 前台未传分页那默认10
+			paginator = new Paginator(request.getPaginatorPage(), count,request.getLimit());
+		}
 		List<HjhLabelCustomizeVO> list = adminHjhLabelService.selectHjhLabelList(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
             if (!CollectionUtils.isEmpty(list)) {
@@ -93,4 +101,67 @@ public class AdminHjhLabelController {
         }
         return response;
 	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :查询标签配置列表
+	 */
+	@RequestMapping(value = "/selectHjhLabelListById",method = RequestMethod.POST)
+	public HjhLabelCustomizeResponse selectHjhLabelListById(@RequestBody @Valid HjhLabelRequest request){
+		HjhLabelCustomizeResponse response = new HjhLabelCustomizeResponse();
+		List<HjhLabelCustomizeVO> list = adminHjhLabelService.selectHjhLabelListById(request);
+		if(list.size()> 0){
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+                response.setRtn(Response.SUCCESS);//代表成功
+            }
+		}
+		return response;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :查询标签配置列表
+	 */
+	@RequestMapping(value = "/selectHjhLabelListLabelName",method = RequestMethod.POST)
+	public HjhLabelCustomizeResponse selectHjhLabelListLabelName(@RequestBody @Valid HjhLabelRequest request){
+		HjhLabelCustomizeResponse response = new HjhLabelCustomizeResponse();
+		List<HjhLabelCustomizeVO> list = adminHjhLabelService.selectHjhLabelListLabelName(request);
+		if(list.size()> 0){
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+                response.setRtn(Response.SUCCESS);//代表成功
+            }
+		}	
+		return response;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :插入标签配置列表
+	 */
+	@RequestMapping("/insertHjhLabelRecord")
+	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
+		adminHjhLabelService.insertHjhLabelRecord(request);
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :更新标签配置列表
+	 */
+	 @RequestMapping("/updateHjhLabelRecord")
+	 public int updateHjhLabelRecord(@RequestBody HjhLabelInfoRequest request) {
+		 int update = adminHjhLabelService.updateHjhLabelRecord(request);
+		 return update;
+	 }
+	 
+	/**
+	 * @Author: libin
+	 * @Desc :更新标签配置列表
+	 */
+	 @RequestMapping("/updateAllocationRecord")
+	 public int updateAllocationRecord(@RequestBody HjhLabelInfoRequest request) {
+		 int update = adminHjhLabelService.updateAllocationRecord(request);
+		 return update;
+	 } 
 }

@@ -866,6 +866,66 @@ public class HjhPlanExample {
             return (Criteria) this;
         }
 
+        public Criteria andPlanDisplayStatusIsNull() {
+            addCriterion("plan_display_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusIsNotNull() {
+            addCriterion("plan_display_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusEqualTo(Integer value) {
+            addCriterion("plan_display_status =", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusNotEqualTo(Integer value) {
+            addCriterion("plan_display_status <>", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusGreaterThan(Integer value) {
+            addCriterion("plan_display_status >", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("plan_display_status >=", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusLessThan(Integer value) {
+            addCriterion("plan_display_status <", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("plan_display_status <=", value, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusIn(List<Integer> values) {
+            addCriterion("plan_display_status in", values, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusNotIn(List<Integer> values) {
+            addCriterion("plan_display_status not in", values, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusBetween(Integer value1, Integer value2) {
+            addCriterion("plan_display_status between", value1, value2, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanDisplayStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("plan_display_status not between", value1, value2, "planDisplayStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andAddTimeIsNull() {
             addCriterion("add_time is null");
             return (Criteria) this;
@@ -1436,52 +1496,52 @@ public class HjhPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsEqualTo(Byte value) {
+        public Criteria andMinInvestCountsEqualTo(Integer value) {
             addCriterion("min_invest_counts =", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsNotEqualTo(Byte value) {
+        public Criteria andMinInvestCountsNotEqualTo(Integer value) {
             addCriterion("min_invest_counts <>", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsGreaterThan(Byte value) {
+        public Criteria andMinInvestCountsGreaterThan(Integer value) {
             addCriterion("min_invest_counts >", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsGreaterThanOrEqualTo(Byte value) {
+        public Criteria andMinInvestCountsGreaterThanOrEqualTo(Integer value) {
             addCriterion("min_invest_counts >=", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsLessThan(Byte value) {
+        public Criteria andMinInvestCountsLessThan(Integer value) {
             addCriterion("min_invest_counts <", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsLessThanOrEqualTo(Byte value) {
+        public Criteria andMinInvestCountsLessThanOrEqualTo(Integer value) {
             addCriterion("min_invest_counts <=", value, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsIn(List<Byte> values) {
+        public Criteria andMinInvestCountsIn(List<Integer> values) {
             addCriterion("min_invest_counts in", values, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsNotIn(List<Byte> values) {
+        public Criteria andMinInvestCountsNotIn(List<Integer> values) {
             addCriterion("min_invest_counts not in", values, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsBetween(Byte value1, Byte value2) {
+        public Criteria andMinInvestCountsBetween(Integer value1, Integer value2) {
             addCriterion("min_invest_counts between", value1, value2, "minInvestCounts");
             return (Criteria) this;
         }
 
-        public Criteria andMinInvestCountsNotBetween(Byte value1, Byte value2) {
+        public Criteria andMinInvestCountsNotBetween(Integer value1, Integer value2) {
             addCriterion("min_invest_counts not between", value1, value2, "minInvestCounts");
             return (Criteria) this;
         }

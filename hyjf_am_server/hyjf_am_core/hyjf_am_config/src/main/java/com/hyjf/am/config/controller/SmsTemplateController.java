@@ -3,14 +3,8 @@
  */
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.SmsTemplate;
-import com.hyjf.am.config.service.SmsTemplateService;
-import com.hyjf.am.response.config.SmsTemplateResponse;
-import com.hyjf.am.resquest.config.SmsTemplateRequest;
-import com.hyjf.am.vo.config.SmsTemplateVO;
-import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -19,7 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.config.dao.model.auto.SmsTemplate;
+import com.hyjf.am.config.service.SmsTemplateService;
+import com.hyjf.am.response.config.SmsTemplateResponse;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.am.vo.config.SmsTemplateVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * 短信模板
@@ -29,9 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-config/smsTemplate")
-public class SmsTemplateController {
-
-    Logger logger = LoggerFactory.getLogger(SmsTemplateController.class);
+public class SmsTemplateController extends BaseConfigController{
 
     @Autowired
     private SmsTemplateService smsTemplateService;

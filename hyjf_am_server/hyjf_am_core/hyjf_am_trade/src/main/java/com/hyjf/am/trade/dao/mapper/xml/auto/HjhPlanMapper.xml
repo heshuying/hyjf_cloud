@@ -14,6 +14,7 @@
     <result column="available_invest_account" property="availableInvestAccount" jdbcType="DECIMAL" />
     <result column="repay_wait_all" property="repayWaitAll" jdbcType="DECIMAL" />
     <result column="plan_invest_status" property="planInvestStatus" jdbcType="TINYINT" />
+    <result column="plan_display_status" property="planDisplayStatus" jdbcType="TINYINT" />
     <result column="add_time" property="addTime" jdbcType="INTEGER" />
     <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
     <result column="coupon_config" property="couponConfig" jdbcType="VARCHAR" />
@@ -98,9 +99,9 @@
   <sql id="Base_Column_List" >
     id, plan_nid, plan_name, lock_period, is_month, expect_apr, min_investment, max_investment, 
     investment_increment, available_invest_account, repay_wait_all, plan_invest_status, 
-    add_time, borrow_style, coupon_config, join_total, plan_wait_captical, plan_wait_interest, 
-    repay_total, plan_repay_interest, plan_repay_capital, min_invest_counts, del_flag, 
-    create_user, update_user, create_time, update_time
+    plan_display_status, add_time, borrow_style, coupon_config, join_total, plan_wait_captical, 
+    plan_wait_interest, repay_total, plan_repay_interest, plan_repay_capital, min_invest_counts, 
+    del_flag, create_user, update_user, create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     plan_concept, plan_principle, safeguard_measures, margin_measures, normal_questions
@@ -166,25 +167,25 @@
     insert into ht_hjh_plan (plan_nid, plan_name, lock_period, 
       is_month, expect_apr, min_investment, 
       max_investment, investment_increment, available_invest_account, 
-      repay_wait_all, plan_invest_status, add_time, 
-      borrow_style, coupon_config, join_total, 
-      plan_wait_captical, plan_wait_interest, repay_total, 
-      plan_repay_interest, plan_repay_capital, min_invest_counts, 
-      del_flag, create_user, update_user, 
-      create_time, update_time, plan_concept, 
-      plan_principle, safeguard_measures, 
+      repay_wait_all, plan_invest_status, plan_display_status, 
+      add_time, borrow_style, coupon_config, 
+      join_total, plan_wait_captical, plan_wait_interest, 
+      repay_total, plan_repay_interest, plan_repay_capital, 
+      min_invest_counts, del_flag, create_user, 
+      update_user, create_time, update_time, 
+      plan_concept, plan_principle, safeguard_measures, 
       margin_measures, normal_questions
       )
     values (#{planNid,jdbcType=VARCHAR}, #{planName,jdbcType=VARCHAR}, #{lockPeriod,jdbcType=TINYINT}, 
       #{isMonth,jdbcType=TINYINT}, #{expectApr,jdbcType=DECIMAL}, #{minInvestment,jdbcType=DECIMAL}, 
       #{maxInvestment,jdbcType=DECIMAL}, #{investmentIncrement,jdbcType=DECIMAL}, #{availableInvestAccount,jdbcType=DECIMAL}, 
-      #{repayWaitAll,jdbcType=DECIMAL}, #{planInvestStatus,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, 
-      #{borrowStyle,jdbcType=VARCHAR}, #{couponConfig,jdbcType=VARCHAR}, #{joinTotal,jdbcType=DECIMAL}, 
-      #{planWaitCaptical,jdbcType=DECIMAL}, #{planWaitInterest,jdbcType=DECIMAL}, #{repayTotal,jdbcType=DECIMAL}, 
-      #{planRepayInterest,jdbcType=DECIMAL}, #{planRepayCapital,jdbcType=DECIMAL}, #{minInvestCounts,jdbcType=TINYINT}, 
-      #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{planConcept,jdbcType=LONGVARCHAR}, 
-      #{planPrinciple,jdbcType=LONGVARCHAR}, #{safeguardMeasures,jdbcType=LONGVARCHAR}, 
+      #{repayWaitAll,jdbcType=DECIMAL}, #{planInvestStatus,jdbcType=TINYINT}, #{planDisplayStatus,jdbcType=TINYINT}, 
+      #{addTime,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, #{couponConfig,jdbcType=VARCHAR}, 
+      #{joinTotal,jdbcType=DECIMAL}, #{planWaitCaptical,jdbcType=DECIMAL}, #{planWaitInterest,jdbcType=DECIMAL}, 
+      #{repayTotal,jdbcType=DECIMAL}, #{planRepayInterest,jdbcType=DECIMAL}, #{planRepayCapital,jdbcType=DECIMAL}, 
+      #{minInvestCounts,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=INTEGER}, 
+      #{updateUser,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{planConcept,jdbcType=LONGVARCHAR}, #{planPrinciple,jdbcType=LONGVARCHAR}, #{safeguardMeasures,jdbcType=LONGVARCHAR}, 
       #{marginMeasures,jdbcType=LONGVARCHAR}, #{normalQuestions,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -226,6 +227,9 @@
       </if>
       <if test="planInvestStatus != null" >
         plan_invest_status,
+      </if>
+      <if test="planDisplayStatus != null" >
+        plan_display_status,
       </if>
       <if test="addTime != null" >
         add_time,
@@ -321,6 +325,9 @@
       </if>
       <if test="planInvestStatus != null" >
         #{planInvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="planDisplayStatus != null" >
+        #{planDisplayStatus,jdbcType=TINYINT},
       </if>
       <if test="addTime != null" >
         #{addTime,jdbcType=INTEGER},
@@ -429,6 +436,9 @@
       <if test="record.planInvestStatus != null" >
         plan_invest_status = #{record.planInvestStatus,jdbcType=TINYINT},
       </if>
+      <if test="record.planDisplayStatus != null" >
+        plan_display_status = #{record.planDisplayStatus,jdbcType=TINYINT},
+      </if>
       <if test="record.addTime != null" >
         add_time = #{record.addTime,jdbcType=INTEGER},
       </if>
@@ -508,6 +518,7 @@
       available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
       repay_wait_all = #{record.repayWaitAll,jdbcType=DECIMAL},
       plan_invest_status = #{record.planInvestStatus,jdbcType=TINYINT},
+      plan_display_status = #{record.planDisplayStatus,jdbcType=TINYINT},
       add_time = #{record.addTime,jdbcType=INTEGER},
       borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
       coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
@@ -546,6 +557,7 @@
       available_invest_account = #{record.availableInvestAccount,jdbcType=DECIMAL},
       repay_wait_all = #{record.repayWaitAll,jdbcType=DECIMAL},
       plan_invest_status = #{record.planInvestStatus,jdbcType=TINYINT},
+      plan_display_status = #{record.planDisplayStatus,jdbcType=TINYINT},
       add_time = #{record.addTime,jdbcType=INTEGER},
       borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
       coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
@@ -600,6 +612,9 @@
       </if>
       <if test="planInvestStatus != null" >
         plan_invest_status = #{planInvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="planDisplayStatus != null" >
+        plan_display_status = #{planDisplayStatus,jdbcType=TINYINT},
       </if>
       <if test="addTime != null" >
         add_time = #{addTime,jdbcType=INTEGER},
@@ -677,6 +692,7 @@
       available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
       repay_wait_all = #{repayWaitAll,jdbcType=DECIMAL},
       plan_invest_status = #{planInvestStatus,jdbcType=TINYINT},
+      plan_display_status = #{planDisplayStatus,jdbcType=TINYINT},
       add_time = #{addTime,jdbcType=INTEGER},
       borrow_style = #{borrowStyle,jdbcType=VARCHAR},
       coupon_config = #{couponConfig,jdbcType=VARCHAR},
@@ -712,6 +728,7 @@
       available_invest_account = #{availableInvestAccount,jdbcType=DECIMAL},
       repay_wait_all = #{repayWaitAll,jdbcType=DECIMAL},
       plan_invest_status = #{planInvestStatus,jdbcType=TINYINT},
+      plan_display_status = #{planDisplayStatus,jdbcType=TINYINT},
       add_time = #{addTime,jdbcType=INTEGER},
       borrow_style = #{borrowStyle,jdbcType=VARCHAR},
       coupon_config = #{couponConfig,jdbcType=VARCHAR},

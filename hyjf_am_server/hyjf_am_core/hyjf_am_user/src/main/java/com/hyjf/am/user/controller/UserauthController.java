@@ -9,15 +9,16 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.AdminResponse;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
@@ -29,7 +30,6 @@ import com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize;
 import com.hyjf.am.user.service.UserauthService;
 import com.hyjf.am.vo.user.AdminUserAuthListVO;
 import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
-import com.hyjf.am.vo.user.MspApplyVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 
@@ -39,13 +39,15 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("/am-user/userauth")
-public class UserauthController {
+public class UserauthController extends BaseController{
 	@Autowired
 	private UserauthService userauthService;
 
-	private static Logger logger = LoggerFactory.getLogger(UserauthController.class);
 
-	// 查询授权明细
+
+	/**
+	 * 查询授权明细
+ 	 */
 	@PostMapping("/userauthlist")
 	public AdminUserAuthListResponse userauthlist(
 			@RequestBody @Valid AdminUserAuthListRequest adminUserAuthListRequest) {
@@ -61,7 +63,7 @@ public class UserauthController {
 			if (recordList != null) {
 				BeanUtils.copyProperties(recordList, avo);
 				aualr.setResultList(avo);
-				aualr.setRecordTotal(recordTotal);
+				aualr.setRecordTotal(String.valueOf(recordTotal));
 				aualr.setRtn(Response.SUCCESS);
 			}
 			return aualr;
@@ -92,6 +94,39 @@ public class UserauthController {
 		authUser.put("invesEndTimeStart", form.getInvestEndTimeStart());
 		authUser.put("invesEndTimeEnd", form.getInvestEndTimeEnd());
 		return authUser;
+	}
+
+	/**
+	 * 同步用户授权状态
+	 * @auth 孙沛凯
+	 * @param userId 用户id
+	 * @param type 1自动投资授权  2债转授权
+	 * @return
+	 */
+	@ApiOperation(value = "同步用户授权状态", notes = "同步用户授权状态")
+	@GetMapping(value = "/synuserauth/{userId}/{type}")
+	public JSONObject synUserAuth(@PathVariable Integer userId , @PathVariable Integer type){
+		JSONObject jsonObject = new JSONObject();
+		logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
+		BankCallBean retBean = userauthService.getUserAuthQuery(userId, String.valueOf(type));
+		logger.info(JSON.toJSONString(retBean));
+		try {
+			if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
+				this.userauthService.updateUserAuthState(userId, retBean);
+				jsonObject.put("status","00");
+				jsonObject.put("msg","查询成功");
+			} else {
+				String retCode = retBean != null ? retBean.getRetCode() : "";
+				jsonObject.put("status","1");
+				jsonObject.put("msg","错误");
+				jsonObject.put("retCode",retCode);
+			}
+		} catch (Exception e) {
+			logger.error("授权查询出错", e);
+			jsonObject.put("status","1");
+			jsonObject.put("msg",e.getMessage());
+		}
+		return jsonObject;
 	}
 
 	/**
@@ -135,7 +170,7 @@ public class UserauthController {
 		result.setRtn(AdminUserAuthListResponse.SUCCESS);
 		return result;
 	}
-	// 查询授权明细
+
 	@PostMapping("/userauthloglist")
 	public AdminUserAuthLogListResponse userauthloglist(
 			@RequestBody @Valid AdminUserAuthLogListRequest form) {

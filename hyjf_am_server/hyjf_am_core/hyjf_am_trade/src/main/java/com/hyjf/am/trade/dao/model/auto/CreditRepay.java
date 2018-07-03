@@ -63,8 +63,6 @@ public class CreditRepay implements Serializable {
 
     private BigDecimal manageFee;
 
-    private String uniqueNid;
-
     private String creditRepayOrderId;
 
     private String creditRepayOrderDate;
@@ -321,14 +319,6 @@ public class CreditRepay implements Serializable {
 
     public void setManageFee(BigDecimal manageFee) {
         this.manageFee = manageFee;
-    }
-
-    public String getUniqueNid() {
-        return uniqueNid;
-    }
-
-    public void setUniqueNid(String uniqueNid) {
-        this.uniqueNid = uniqueNid == null ? null : uniqueNid.trim();
     }
 
     public String getCreditRepayOrderId() {

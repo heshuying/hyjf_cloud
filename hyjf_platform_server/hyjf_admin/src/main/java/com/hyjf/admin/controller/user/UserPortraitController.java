@@ -1,25 +1,11 @@
 package com.hyjf.admin.controller.user;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.ExportExcel;
-import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.LoanCoverService;
-import com.hyjf.admin.service.UserPortraitService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.UserPortraitResponse;
-import com.hyjf.am.resquest.user.LoanCoverUserRequest;
-import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.user.LoanCoverUserVO;
-import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
-import com.hyjf.common.validator.Validator;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
+import java.net.URLEncoder;
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -30,11 +16,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.UserPortraitService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.UserPortraitResponse;
+import com.hyjf.am.vo.user.UserPortraitVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author nxl
@@ -125,7 +119,7 @@ public class UserPortraitController extends BaseController {
         return result;
     }
 
-    /*  *
+    /**
        * 导出功能
        *
        * @param request

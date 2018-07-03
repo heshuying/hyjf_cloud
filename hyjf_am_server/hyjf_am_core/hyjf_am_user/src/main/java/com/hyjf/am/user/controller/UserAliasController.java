@@ -3,20 +3,19 @@
  */
 package com.hyjf.am.user.controller;
 
-import com.hyjf.am.response.user.UserAliasResponse;
-import com.hyjf.am.user.dao.model.auto.UserAlias;
-import com.hyjf.am.user.service.UserAliasService;
-import com.hyjf.am.vo.user.UserAliasVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.hyjf.am.response.user.UserAliasResponse;
+import com.hyjf.am.user.dao.model.auto.UserAlias;
+import com.hyjf.am.user.service.UserAliasService;
+import com.hyjf.am.vo.user.UserAliasVO;
 
 /**
  * @author fuqiang
@@ -24,9 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-user/userAlias")
-public class UserAliasController {
-
-	private static Logger logger = LoggerFactory.getLogger(UserAliasController.class);
+public class UserAliasController extends BaseController{
 
 	@Autowired
 	private UserAliasService userAliasService;

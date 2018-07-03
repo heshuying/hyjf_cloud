@@ -9,28 +9,13 @@ import io.swagger.annotations.ApiModelProperty;
  * @author zhangqingqing
  * @version AppRegisterRequest, v0.1 2018/6/23 11:09
  */
-public class RegisterRequest {
-
-    @ApiModelProperty(value = "版本号app")
-    private String version;
-
-    @ApiModelProperty(value = "网络状态app")
-    private String netStatus;
-
-    @ApiModelProperty(value = "平台web.app.weChat.api")
-    private String platform;
-
-    @ApiModelProperty(value = "随机字符串app")
-    private String randomString ;
-
-    @ApiModelProperty(value = "Orderapp")
-    private String order;
+public class RegisterRequest extends AppBaseRequest {
 
     @ApiModelProperty(value = "手机号web.app.weChat.api")
     private String mobile ;
 
     @ApiModelProperty(value = "验证码web.app.weChat")
-    private String smsCode;
+    private String verificationCode;
 
     @ApiModelProperty(value = "登录密码web.app.weChat")
     private String password ;
@@ -59,46 +44,6 @@ public class RegisterRequest {
         this.utmId = utmId;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getNetStatus() {
-        return netStatus;
-    }
-
-    public void setNetStatus(String netStatus) {
-        this.netStatus = netStatus;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    public String getRandomString() {
-        return randomString;
-    }
-
-    public void setRandomString(String randomString) {
-        this.randomString = randomString;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
-    }
-
     public String getMobile() {
         return mobile;
     }
@@ -107,12 +52,12 @@ public class RegisterRequest {
         this.mobile = mobile;
     }
 
-    public String getSmsCode() {
-        return smsCode;
+    public String getVerificationCode() {
+        return verificationCode;
     }
 
-    public void setSmsCode(String smsCode) {
-        this.smsCode = smsCode;
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 
     public String getPassword() {
