@@ -292,10 +292,6 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <sql id="Base_Column_List">
-    id, msg_id, body, message_status, retry_times, topic, tags, `keys`, create_time, 
-    update_time
-  </sql>
   <select id="selectByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample" resultMap="BaseResultMap">
     select
     <if test="distinct">

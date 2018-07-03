@@ -4,7 +4,7 @@
 package com.hyjf.admin.controller.finance;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.ExportExcel;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountDetailService;
 import com.hyjf.admin.service.UserCenterService;
@@ -143,15 +143,19 @@ public class AccountDetailController extends BaseController {
         AdminAccountDetailDataRepairResponse adminAccountDetailDataRepairResponse = accountDetailService.queryAccountDetailErrorUserList();
         if (null != adminAccountDetailDataRepairResponse) {
             List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList = adminAccountDetailDataRepairResponse.getResultList();
-            Map<String, Object> mapReturn = getAccountId(adminAccountDetailDataRepairVOList);
-            if (null != mapReturn && mapReturn.size() > 0 && mapReturn.containsKey("userId") && mapReturn.containsKey("accountId")) {
-                Integer userId = Integer.parseInt(mapReturn.get("userId").toString());
-                Integer accountId = Integer.parseInt(mapReturn.get("accountId").toString());
-                strRepayDate = this.repayDataRepair(userId, accountId);
-                if (!StringUtils.isNotBlank(strRepayDate)) {
-                    jsonObject = this.success();
-                    return jsonObject;
+            List<Map<String, Object>> mapReturnList = getAccountId(adminAccountDetailDataRepairVOList);
+            if (null != mapReturnList&&mapReturnList.size()>0) {
+                // mapReturn && mapReturn.size() > 0 && mapReturn.containsKey("userId") && mapReturn.containsKey("accountId")
+                for(Map<String, Object>mapReturn:mapReturnList){
+                    Integer userId = Integer.parseInt(mapReturn.get("userId").toString());
+                    Integer accountId = Integer.parseInt(mapReturn.get("accountId").toString());
+                    strRepayDate = this.repayDataRepair(userId, accountId);
+                    if (!StringUtils.isNotBlank(strRepayDate)) {
+                        jsonObject = this.success();
+                        return jsonObject;
+                    }
                 }
+
             }
         }
         //代表失敗
@@ -269,10 +273,12 @@ public class AccountDetailController extends BaseController {
         return null;
     }
 
-    private Map<String, Object> getAccountId(List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList) {
-        Map<String, Object> mapReturn = new HashMap<String, Object>();
+    private List<Map<String, Object>> getAccountId(List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList) {
+        List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+
         if (adminAccountDetailDataRepairVOList != null && adminAccountDetailDataRepairVOList.size() > 0) {
             for (AdminAccountDetailDataRepairVO adminAccountDetailDataRepairCustomize : adminAccountDetailDataRepairVOList) {
+                Map<String, Object> mapReturn = new HashMap<String, Object>();
                 Integer userId = adminAccountDetailDataRepairCustomize.getUserId();
                 mapReturn.put("userId", userId);
                 // 查询交易明细最小的id
@@ -284,9 +290,10 @@ public class AccountDetailController extends BaseController {
                         mapReturn.put("accountId", accountListId);
                     }
                 }
+                listMap.add(mapReturn);
             }
         }
-        return mapReturn;
+        return listMap;
     }
 
     /**
