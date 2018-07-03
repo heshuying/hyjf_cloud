@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
+import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
@@ -176,5 +177,34 @@ public class CreditTenderController extends BaseController{
         return result;
     }
 
+    /**
+     * 获取债转还款列表
+     * @param tenderNid
+     * @return
+     */
+    @GetMapping("/select_credit_repay_list/{tenderNid}")
+    public CreditRepayResponse selectCreditRepayList( @PathVariable String tenderNid) {
+        CreditRepayResponse response = new CreditRepayResponse();
+        List<CreditRepay> list = bankCreditTenderService.selectCreditRepayList(tenderNid);
+        if (list != null) {
+            response.setResultList(CommonUtils.convertBeanList(list, CreditRepayVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 保存债转的数据
+     * @param request
+     * @return
+     */
+    @PostMapping("/save_credit_tender")
+    public Integer saveCreditTender(@RequestBody @Valid BorrowCreditVO request){
+        try{
+            bankCreditTenderService.saveCreditTender(request);
+            return 1;
+        }catch (Exception e){
+            return 0;
+        }
+    }
 
 }
