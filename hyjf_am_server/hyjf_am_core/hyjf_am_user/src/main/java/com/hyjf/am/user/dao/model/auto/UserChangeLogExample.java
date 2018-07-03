@@ -975,52 +975,52 @@ public class UserChangeLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeEqualTo(Boolean value) {
+        public Criteria andUpdateTypeEqualTo(Integer value) {
             addCriterion("update_type =", value, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeNotEqualTo(Boolean value) {
+        public Criteria andUpdateTypeNotEqualTo(Integer value) {
             addCriterion("update_type <>", value, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeGreaterThan(Boolean value) {
+        public Criteria andUpdateTypeGreaterThan(Integer value) {
             addCriterion("update_type >", value, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andUpdateTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("update_type >=", value, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeLessThan(Boolean value) {
+        public Criteria andUpdateTypeLessThan(Integer value) {
             addCriterion("update_type <", value, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeLessThanOrEqualTo(Boolean value) {
+        public Criteria andUpdateTypeLessThanOrEqualTo(Integer value) {
             addCriterion("update_type <=", value, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeIn(List<Boolean> values) {
+        public Criteria andUpdateTypeIn(List<Integer> values) {
             addCriterion("update_type in", values, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeNotIn(List<Boolean> values) {
+        public Criteria andUpdateTypeNotIn(List<Integer> values) {
             addCriterion("update_type not in", values, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeBetween(Boolean value1, Boolean value2) {
+        public Criteria andUpdateTypeBetween(Integer value1, Integer value2) {
             addCriterion("update_type between", value1, value2, "updateType");
             return (Criteria) this;
         }
 
-        public Criteria andUpdateTypeNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andUpdateTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("update_type not between", value1, value2, "updateType");
             return (Criteria) this;
         }

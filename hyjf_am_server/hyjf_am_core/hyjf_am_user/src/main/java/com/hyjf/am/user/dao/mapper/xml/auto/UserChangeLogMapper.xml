@@ -15,7 +15,7 @@
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="borrower_type" property="borrowerType" jdbcType="TINYINT" />
-    <result column="update_type" property="updateType" jdbcType="BIT" />
+    <result column="update_type" property="updateType" jdbcType="TINYINT" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -130,7 +130,7 @@
       #{mobile,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{role,jdbcType=TINYINT}, 
       #{attribute,jdbcType=TINYINT}, #{recommendUser,jdbcType=VARCHAR}, #{is51,jdbcType=TINYINT}, 
       #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{borrowerType,jdbcType=TINYINT}, 
-      #{updateType,jdbcType=BIT}, #{updateUserId,jdbcType=INTEGER}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateType,jdbcType=TINYINT}, #{updateUserId,jdbcType=INTEGER}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserChangeLog" >
@@ -226,7 +226,7 @@
         #{borrowerType,jdbcType=TINYINT},
       </if>
       <if test="updateType != null" >
-        #{updateType,jdbcType=BIT},
+        #{updateType,jdbcType=TINYINT},
       </if>
       <if test="updateUserId != null" >
         #{updateUserId,jdbcType=INTEGER},
@@ -288,7 +288,7 @@
         borrower_type = #{record.borrowerType,jdbcType=TINYINT},
       </if>
       <if test="record.updateType != null" >
-        update_type = #{record.updateType,jdbcType=BIT},
+        update_type = #{record.updateType,jdbcType=TINYINT},
       </if>
       <if test="record.updateUserId != null" >
         update_user_id = #{record.updateUserId,jdbcType=INTEGER},
@@ -319,7 +319,7 @@
       `status` = #{record.status,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR},
       borrower_type = #{record.borrowerType,jdbcType=TINYINT},
-      update_type = #{record.updateType,jdbcType=BIT},
+      update_type = #{record.updateType,jdbcType=TINYINT},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
@@ -367,7 +367,7 @@
         borrower_type = #{borrowerType,jdbcType=TINYINT},
       </if>
       <if test="updateType != null" >
-        update_type = #{updateType,jdbcType=BIT},
+        update_type = #{updateType,jdbcType=TINYINT},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
@@ -395,7 +395,7 @@
       `status` = #{status,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       borrower_type = #{borrowerType,jdbcType=TINYINT},
-      update_type = #{updateType,jdbcType=BIT},
+      update_type = #{updateType,jdbcType=TINYINT},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
