@@ -47,4 +47,19 @@ public class BorrowRepayPlanServiceImpl implements BorrowRepayPlanService {
         boolean result = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
         return result ?1:0;
     }
+
+    /**
+     * 根据还款期数和borrowNid查询
+     *
+     * @param borrowNid
+     * @param borrowPeriod
+     * @return
+     */
+    @Override
+    public List<BorrowRepayPlan> selectBorrowRepayPlanListByPeriod(String borrowNid, Integer borrowPeriod) {
+        BorrowRepayPlanExample example = new BorrowRepayPlanExample();
+        BorrowRepayPlanExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid).andRepayPeriodEqualTo(borrowPeriod);
+        return this.borrowRepayPlanMapper.selectByExample(example);
+    }
 }

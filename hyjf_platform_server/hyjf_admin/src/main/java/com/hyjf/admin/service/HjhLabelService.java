@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import java.util.List;
 
+import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -23,4 +24,19 @@ public interface HjhLabelService {
 	
 	// 标签配置列表
 	List<HjhLabelCustomizeVO> getHjhLabelList(HjhLabelRequest request);
+	
+	// 标签配置列表
+	List<HjhLabelCustomizeVO> getHjhLabelListById(HjhLabelRequest request);
+	
+	// 标签配置列表
+	List<HjhLabelCustomizeVO> getHjhLabelListByLabelName(HjhLabelRequest request);
+	
+	// 插入标签配置列表
+	void insertHjhLabelRecord(HjhLabelInfoRequest hjhLabelInfoRequest);
+	
+	// 更新标签配置列表
+	int updateHjhLabelRecord(HjhLabelInfoRequest hjhLabelInfoRequest);
+	
+	// 更新分配引擎表
+	int updateAllocationRecord(HjhLabelInfoRequest hjhLabelInfoRequest);
 }

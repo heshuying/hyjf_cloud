@@ -119,7 +119,7 @@ public class UserPortraitController extends BaseController {
         return result;
     }
 
-    /*  *
+    /**
        * 导出功能
        *
        * @param request

@@ -3,22 +3,21 @@
  */
 package com.hyjf.cs.user.controller.api.authquery;
 
-import javax.validation.Valid;
-
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.user.bean.AutoStateQueryRequest;
+import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
+import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.user.bean.AutoStateQueryRequest;
-import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
-import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
-
-import io.swagger.annotations.Api;
+import javax.validation.Valid;
 
 /**
  * @author zhangqingqing
@@ -40,8 +39,7 @@ public class AutoStateQueryController extends BaseUserController {
         if (null != resultBean) {
             result.setData(resultBean);
         } else {
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_USER_REGISTER.getMsg());
+            throw new CheckException(MsgEnum.STATUS_CE999999);
         }
         return result;
     }
