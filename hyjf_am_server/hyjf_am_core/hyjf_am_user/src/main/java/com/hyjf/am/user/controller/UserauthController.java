@@ -9,6 +9,13 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.AdminResponse;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +42,8 @@ import com.hyjf.common.util.CommonUtils;
 public class UserauthController extends BaseController{
 	@Autowired
 	private UserauthService userauthService;
+
+
 
 	/**
 	 * 查询授权明细
@@ -85,6 +94,39 @@ public class UserauthController extends BaseController{
 		authUser.put("invesEndTimeStart", form.getInvestEndTimeStart());
 		authUser.put("invesEndTimeEnd", form.getInvestEndTimeEnd());
 		return authUser;
+	}
+
+	/**
+	 * 同步用户授权状态
+	 * @auth 孙沛凯
+	 * @param userId 用户id
+	 * @param type 1自动投资授权  2债转授权
+	 * @return
+	 */
+	@ApiOperation(value = "同步用户授权状态", notes = "同步用户授权状态")
+	@GetMapping(value = "/synuserauth/{userId}/{type}")
+	public JSONObject synUserAuth(@PathVariable Integer userId , @PathVariable Integer type){
+		JSONObject jsonObject = new JSONObject();
+		logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
+		BankCallBean retBean = userauthService.getUserAuthQuery(userId, String.valueOf(type));
+		logger.info(JSON.toJSONString(retBean));
+		try {
+			if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
+				this.userauthService.updateUserAuthState(userId, retBean);
+				jsonObject.put("status","00");
+				jsonObject.put("msg","查询成功");
+			} else {
+				String retCode = retBean != null ? retBean.getRetCode() : "";
+				jsonObject.put("status","1");
+				jsonObject.put("msg","错误");
+				jsonObject.put("retCode",retCode);
+			}
+		} catch (Exception e) {
+			logger.error("授权查询出错", e);
+			jsonObject.put("status","1");
+			jsonObject.put("msg",e.getMessage());
+		}
+		return jsonObject;
 	}
 
 	/**

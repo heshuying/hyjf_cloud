@@ -57,18 +57,4 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     int updateHjhAccedeForHjhProcess(HjhAccede hjhAccede);
-
-    /**
-     * 更新汇计划投资明细金额
-     * @param hjhAccede
-     * @return
-     */
-    int updateHjhAccedeForHjhProcess(HjhAccede hjhAccede);
-
-    /**
-     * 更新汇计划还款信息
-     * @param repayParam
-     * @return
-     */
-    int updateHjhRepayForHjhRepay(HjhRepay repayParam);
 }

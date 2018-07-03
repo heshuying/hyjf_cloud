@@ -290,7 +290,7 @@ public class UserManagerController extends BaseController{
     public UserResponse selectUserByUserId(@PathVariable int userId) {
         UserResponse response = new UserResponse();
         logger.info("---selectUserByUserId---  " + userId);
-        UserVO userVO = null;
+        UserVO userVO = new UserVO();
         User user = userManagerService.selectUserByUserId(userId);
         if (null != user) {
             BeanUtils.copyProperties(user, userVO);
@@ -543,8 +543,8 @@ public class UserManagerController extends BaseController{
         return response;
     }
 
-    @RequestMapping("/selectSpreadsUsersByUserId")
-    public SpreadsUserResponse selectSpreadsUsersByUserId(@Valid String userId){
+    @RequestMapping("/selectSpreadsUsersByUserId/{userId}")
+    public SpreadsUserResponse selectSpreadsUsersByUserId(@PathVariable String userId){
         SpreadsUserResponse response = new SpreadsUserResponse();
         String returnCode = Response.FAIL;
         if(StringUtils.isNotEmpty(userId)){

@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.customize.admin.finance.BankAccountManageCustomize;
 import com.hyjf.am.user.service.BaseService;
 
@@ -27,4 +28,11 @@ public interface BankAccountManageService extends BaseService {
      * @return
      */
     List<BankAccountManageCustomize> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest);
+
+    /**
+     * 查询用户是否开户
+     * @param userId
+     * @return
+     */
+    BankOpenAccount getBankOpenAccount(Integer userId);
 }

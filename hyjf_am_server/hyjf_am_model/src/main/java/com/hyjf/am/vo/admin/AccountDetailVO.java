@@ -131,7 +131,8 @@ public class AccountDetailVO extends BaseVO implements Serializable {
      * 交易状态
      */
     private String tradeStatus;
-
+    //分页区分
+    private  boolean limitFlg =true ;
     public String getStartDate() {
         return startDate;
     }
@@ -386,5 +387,13 @@ public class AccountDetailVO extends BaseVO implements Serializable {
 
     public void setReferrerId(String referrerId) {
         this.referrerId = referrerId;
+    }
+
+    public boolean isLimitFlg() {
+        return limitFlg;
+    }
+
+    public void setLimitFlg(boolean limitFlg) {
+        this.limitFlg = limitFlg;
     }
 }

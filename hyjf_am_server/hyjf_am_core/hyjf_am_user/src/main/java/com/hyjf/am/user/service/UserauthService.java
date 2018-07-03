@@ -7,6 +7,7 @@ import com.hyjf.am.user.dao.model.customize.AdminUserAuthListCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserRePayAuthCustomize;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 public interface UserauthService {
 
@@ -17,6 +18,24 @@ public interface UserauthService {
 	 */
 	public List<AdminUserAuthListCustomize> getRecordList(Map<String, Object> bankCardUser, int limitStart,
 			int limitEnd);
+
+	/**
+	 * 调银行api拿用户数据(同步用户授权状态用)
+	 * @auth 孙沛凯
+	 * @param userId 用户id
+	 * @param type 1自动投资授权  2债转授权
+	 * @return
+	 */
+	BankCallBean getUserAuthQuery(Integer userId, String type);
+
+	/**
+	 * 更新用户授权状态
+	 * @auth 孙沛凯
+	 * @param userId 用户id
+	 * @param bankCallBean 更新的bean
+	 * @return
+	 */
+	void updateUserAuthState(Integer userId,BankCallBean bankCallBean);
 
 	/**
 	 * @param authUser

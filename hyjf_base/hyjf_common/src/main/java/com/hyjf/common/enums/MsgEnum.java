@@ -119,6 +119,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_TENDER_NEED_RISK_ASSESSMENT("EAM000219","根据监管要求，投资前必须进行风险测评"),
 	ERR_AMT_TENDER_INVESTMENT("EAM000220","抱歉，投资失败，请重试"),
 	ERR_AMT_TENDER_INVESTMENT_WITH_COUPON("EAM000221","优惠券投资失败"),//孙帅帅
+	ERR_AMT_TENDER_BORROW_NOT_EXIST("EAM000222","标的信息不存在"),
 
 
 	// 资金-充值相关错误信息ERR_AMT_RECHARGE_
