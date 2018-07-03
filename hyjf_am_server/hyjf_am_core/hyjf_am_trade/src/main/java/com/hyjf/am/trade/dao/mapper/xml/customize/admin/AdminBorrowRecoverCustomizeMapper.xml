@@ -104,7 +104,7 @@
 		<!-- 放款状态 -->
 		<result column="is_recover" property="isRecover" jdbcType="VARCHAR" />
 		<!-- 放款时间 -->
-		<result column="addtime" property="addtime" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<!-- 投资时间 -->
 		<result column="time_recover" property="timeRecover" jdbcType="VARCHAR" />
 		<!-- 放款订单号-->
@@ -142,7 +142,7 @@
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 		<include refid="Where_Clause" />
 		ORDER BY
-		bt.addtime DESC, br.id DESC
+		bt.create_time DESC, br.id DESC
 		<if test="limitStart >= 0" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>

@@ -2,6 +2,7 @@ package com.hyjf.pay.lib.anrong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.hyjf.common.http.HttpDealBank;
 import com.hyjf.pay.lib.anrong.bean.AnRongApiBean;
@@ -18,16 +19,16 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  */
 public class AnRongCallApiImpl implements AnRongCallApi{
     private static Logger log = LoggerFactory.getLogger(AnRongCallApiImpl.class);
-
-    private static final String THIS_CLASS = AnRongCallApiImpl.class.getName();
-    
+	@Value("${hyjf.anrong.req.queryUrl}")
+	private static String queryUrl;
+	@Value("${hyjf.anrong.req.sendUrl}")
+	private static String sendUrl;
     public AnRongCallApiImpl() {
     }
     
     @Override
     public String callAnRongApi(AnRongApiBean bean) {
      // 方法名
-        String methodName = "callAnRongApi";
         log.info("[调用安融API接口开始]");
         log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
         String result = null;
@@ -36,13 +37,9 @@ public class AnRongCallApiImpl implements AnRongCallApi{
             String HTTP_URL = "";
             // 获得接口URL
             if(AnRongParamConstant.TXCODE_QUERY.equals(bean.get(BankCallConstant.PARAM_TXCODE))){
-                // todo xiashquing 20180615
-                //HTTP_URL = PropUtils.getSystem(AnRongConstant.PARM_REQ_QUERY_URL);
-                HTTP_URL = "";
+                HTTP_URL = queryUrl;
             }else if (AnRongParamConstant.TXCODE_SEND_MESS.equals(bean.get(BankCallConstant.PARAM_TXCODE))){
-                // HTTP_URL = PropUtils.getSystem(AnRongConstant.PARM_REQ_SEND_URL);
-                // todo xiashquing 20180615
-                HTTP_URL = "";
+                HTTP_URL = sendUrl;
             }
             // 清除参数
             bean.getAllParams().remove(BankCallConstant.PARAM_TXCODE);

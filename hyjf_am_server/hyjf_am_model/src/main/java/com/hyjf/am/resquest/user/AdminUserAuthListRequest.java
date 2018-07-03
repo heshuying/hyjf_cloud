@@ -11,13 +11,13 @@
 
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 
 /**
  * @author wangqi
  */
 
-public class AdminUserAuthListRequest extends BaseVO {
+public class AdminUserAuthListRequest extends BasePage {
 	/**
 	 * 用戶id
 	 */

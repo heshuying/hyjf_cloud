@@ -4,4 +4,12 @@ spring:
     mongodb:
       uri: mongodb://testuser:e2VdOav40i@47.94.171.28:28001/admin
       database: mservice
-
+hyjf:
+  anrong:
+    payUrl: http://test.hyjf.com:8080/hyjf-pay/anrongcall
+    keypath: D:/HYJF/anrou_key/testServer_new.cer
+    member: 1096
+    sign: Rj2IpQsZvAaRM
+    req:
+      queryUrl:https://p2ptest.creditdata.cn:10000/p2p/remote/mspFqz.shtml
+      sendUrl:https://p2ptest.creditdata.cn:10000/p2p/remote/mspFqz.shtml

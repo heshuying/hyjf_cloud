@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
  * @author wangjun
  * @version BorrowRegistListRequest, v0.1 2018/6/29 14:19
  */
-public class BorrowRegistListRequest extends BaseVO implements Serializable {
+public class BorrowRegistListRequest extends BasePage implements Serializable {
 
     /**
      * 检索条件 借款编号

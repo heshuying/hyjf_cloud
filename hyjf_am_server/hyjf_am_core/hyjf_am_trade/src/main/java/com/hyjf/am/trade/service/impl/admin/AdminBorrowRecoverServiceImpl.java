@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRecoverCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRecoverCustomize;
 import com.hyjf.am.trade.service.admin.AdminBorrowRecoverService;
+import com.hyjf.common.cache.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,11 @@ public class AdminBorrowRecoverServiceImpl implements AdminBorrowRecoverService 
 
     @Override
     public List<AdminBorrowRecoverCustomize> selectBorrowRecoverList(BorrowRecoverRequest request) {
-        return this.borrowRecoverCustomizeMapper.selectBorrowRecoverList(request);
+        List<AdminBorrowRecoverCustomize> list=this.borrowRecoverCustomizeMapper.selectBorrowRecoverList(request);
+        for (AdminBorrowRecoverCustomize customize:list) {
+            customize.setIsRecover(CacheUtil.getParamName("LOAN_STATUS",customize.getIsRecover()));
+        }
+        return list;
     }
 
     @Override
