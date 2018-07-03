@@ -30,7 +30,7 @@ public class UserChangeLog implements Serializable {
 
     private Integer borrowerType;
 
-    private Boolean updateType;
+    private Integer updateType;
 
     private Integer updateUserId;
 
@@ -144,11 +144,11 @@ public class UserChangeLog implements Serializable {
         this.borrowerType = borrowerType;
     }
 
-    public Boolean getUpdateType() {
+    public Integer getUpdateType() {
         return updateType;
     }
 
-    public void setUpdateType(Boolean updateType) {
+    public void setUpdateType(Integer updateType) {
         this.updateType = updateType;
     }
 
