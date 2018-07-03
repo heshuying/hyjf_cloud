@@ -32,7 +32,7 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
         HjhAssetBorrowtypeExample.Criteria crt = example.createCriteria();
         crt.andInstCodeEqualTo(instCode);
         crt.andAssetTypeEqualTo(assetType);
-        List<HjhAssetBorrowtype> list = hjhAssetBorrowTypeMapper.selectByExample(example);
+        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
         if(list.size() > 0){
             return list.get(0);
         }else{
@@ -72,7 +72,7 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
         crt.andInstcodeEqualTo(instCode);
         crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);
-        List<StzhWhiteList> list = this.sTZHWhiteListMapper.selectByExample(example);
+        List<StzhWhiteList> list = this.stzhWhiteListMapper.selectByExample(example);
         if(list.size() > 0){
             return list.get(0);
         }else{
