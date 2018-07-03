@@ -19,4 +19,15 @@ public interface AllocationEngineService {
      */
     List<HjhRegionVO> getHjhRegionList(AllocationEngineRuquest form);
 
+    /**
+     * 根据入力的计划编号查询汇计划表
+     * @return
+     */
+    String getPlanNameByPlanNid(AllocationEngineRuquest form);
+    
+    /**
+     * info画面入力后插入计划专区表
+     * @return
+     */
+    int insertRecord(HjhRegionVO request);
 }

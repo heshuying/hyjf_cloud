@@ -30,4 +30,15 @@ public class AllocationEngineServiceImpl implements  AllocationEngineService{
 		return list;
 	}
 
+	@Override
+	public String getPlanNameByPlanNid(AllocationEngineRuquest form) {
+		String planName = allocationEngineClient.getPlanNameByPlanNid(form);
+		return planName;
+	}
+
+	@Override
+	public int insertRecord(HjhRegionVO request) {
+		int flg = allocationEngineClient.insertRecord(request);
+		return flg;
+	}
 }

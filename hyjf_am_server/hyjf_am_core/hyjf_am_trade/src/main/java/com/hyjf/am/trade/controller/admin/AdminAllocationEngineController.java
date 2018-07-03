@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.druid.util.StringUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhRegionResponse;
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
@@ -62,5 +63,31 @@ public class AdminAllocationEngineController {
             }
         }
 		return response;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :查询汇计划表
+	 */
+	@RequestMapping(value = "/selectPlanNameByPlanNid",method = RequestMethod.POST)
+	public HjhRegionResponse selectPlanNameByPlanNid(@RequestBody @Valid AllocationEngineRuquest request){
+		HjhRegionResponse response = new HjhRegionResponse();
+		String planName = adminAllocationEngineService.selectPlanNameByPlanNid(request);
+		if(StringUtils.isEmpty(planName)){
+			response.setMessage("根据输入计划编号未查到相关计划名称");
+		} else{
+			response.setPlanName(planName);
+		}
+		return response;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :插入计划专区表
+	 */
+	@RequestMapping("/insertRecord")
+	public int insertRecord(@RequestBody HjhRegionVO request) {
+		int flg = adminAllocationEngineService.insertRecord(request);
+		return flg;
 	}
 }

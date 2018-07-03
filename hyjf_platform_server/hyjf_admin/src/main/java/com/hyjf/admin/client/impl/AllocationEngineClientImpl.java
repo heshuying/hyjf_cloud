@@ -38,4 +38,20 @@ public class AllocationEngineClientImpl implements AllocationEngineClient{
 		return null;
 	}
 
+	@Override
+	public String getPlanNameByPlanNid(AllocationEngineRuquest form) {
+		HjhRegionResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/allocation/selectPlanNameByPlanNid", form, HjhRegionResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getPlanName();
+        }	
+		return null;
+	}
+
+	@Override
+	public int insertRecord(HjhRegionVO request) {
+		String url = "http://AM-TRADE/am-trade/allocation/insertRecord";
+		Integer Flag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+		return Flag;
+	}
 }
