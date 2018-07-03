@@ -33,6 +33,9 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 		this.chkValue = ApiSignUtil.encryptByRSA(super.getStatus());
 	}
 
+	public ApiResult() {
+	}
+
 	public ApiResult(String chkValue) {
 		this.chkValue = chkValue;
 	}
