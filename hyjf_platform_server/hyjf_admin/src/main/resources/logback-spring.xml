@@ -4,6 +4,7 @@
 
     <logger name="org.springframework.web" level="INFO"/>
     <logger name="org.springboot.sample" level="TRACE"/>
+    <logger name="springfox.documentation" level="ERROR"/>
 
     <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
     <springProfile name="test,dev">
@@ -11,7 +12,6 @@
         <logger name="org.springboot.sample" level="INFO"/>
         <logger name="com.hyjf" level="INFO"/>
     </springProfile>
-    <logger name="springfox.documentation.swagger.web" level="ERROR"/>
 
     <!-- 生产环境. -->
     <springProfile name="prod">
