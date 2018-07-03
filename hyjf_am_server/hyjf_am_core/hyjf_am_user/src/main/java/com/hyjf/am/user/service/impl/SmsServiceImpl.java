@@ -126,4 +126,43 @@ public class SmsServiceImpl implements SmsService {
 		}
 	}
 
+	/**
+	 * 只检查短信验证码对不对
+	 *
+	 * @param mobile
+	 * @param verificationCode
+	 * @param verificationType
+	 * @param platform
+	 * @param status
+	 * @param updateStatus
+	 * @return
+	 */
+	@Override
+	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus) {
+		int time = (int) (System.currentTimeMillis()/1000);
+		// 15分钟有效 900
+		int timeAfter = time - 900;
+		SmsCodeExample example = new SmsCodeExample();
+		SmsCodeExample.Criteria cra = example.createCriteria();
+		cra.andPosttimeGreaterThanOrEqualTo(timeAfter);
+		cra.andPosttimeLessThanOrEqualTo(time);
+		cra.andMobileEqualTo(mobile);
+		cra.andCheckcodeEqualTo(verificationCode);
+		List<Integer> statusAll = new ArrayList<Integer>();
+		statusAll.add(CommonConstant.CKCODE_NEW);
+		statusAll.add(status);
+		cra.andStatusIn(statusAll);
+		List<SmsCode> codeList = smsCodeMapper.selectByExample(example);
+		if (codeList != null && codeList.size() > 0) {
+			for (SmsCode smsCode : codeList) {
+				if (smsCode.getCheckfor().equals(MD5.toMD5Code(mobile + verificationCode + verificationType + platform))) {
+					return 1;
+				}
+			}
+			return 0;
+		} else {
+			return 0;
+		}
+	}
+
 }

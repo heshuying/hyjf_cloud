@@ -55,4 +55,9 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
     public JSONObject updateBorrowRegist(String borrowNid){
         return borrowRegistClient.updateBorrowRegist(borrowNid);
     }
+
+    @Override
+    public String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest){
+        return borrowRegistClient.sumBorrowRegistAccount(borrowRegistListRequest);
+    }
 }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
 /**
@@ -10,7 +11,7 @@ import com.hyjf.am.vo.BaseVO;
  * @Author sunss
  * @Date 2018/6/30 10:06
  */
-public class MyCreditListQueryRequest extends BaseVO {
+public class MyCreditListQueryRequest extends BasePage {
 
 
     private Integer userId;

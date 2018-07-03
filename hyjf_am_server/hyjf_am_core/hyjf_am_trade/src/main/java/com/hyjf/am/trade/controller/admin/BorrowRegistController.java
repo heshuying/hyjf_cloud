@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.admin.exception;
+package com.hyjf.am.trade.controller.admin;
 
 import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
@@ -13,7 +13,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
-import com.hyjf.am.trade.service.admin.exception.BorrowRegistService;
+import com.hyjf.am.trade.service.admin.BorrowRegistService;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -89,6 +89,15 @@ public class BorrowRegistController {
             response.setResultList(voList);
         }
         return response;
+    }
+
+    /**
+     * 统计页面值总和
+     * @return
+     */
+    @RequestMapping("/sum_borrow_regist_account")
+    public String sumBorrowRegistAccount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
+        return borrowRegistService.sumBorrowRegistAccount(borrowRegistListRequest);
     }
 
     /**

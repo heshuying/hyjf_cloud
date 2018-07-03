@@ -103,7 +103,13 @@ public class CreditController {
         return result;
     }
 
-
+    @ApiOperation(value = "短信验证码校验", notes = "短信验证码校验")
+    @PostMapping(value = "/check_code", produces = "application/json; charset=utf-8")
+    public WebResult checkCode(@RequestBody TenderBorrowCreditCustomize request,
+                              @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result = creditListService.checkCode(request,userId);
+        return result;
+    }
 
 
 }
