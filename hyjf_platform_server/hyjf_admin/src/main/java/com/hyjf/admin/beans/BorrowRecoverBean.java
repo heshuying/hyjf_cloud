@@ -1,7 +1,6 @@
 package com.hyjf.admin.beans;
 
 import com.hyjf.admin.Utils.Page;
-import com.hyjf.admin.common.result.WebResult;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
