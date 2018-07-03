@@ -7,11 +7,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
+import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhRegionMapper;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
 import com.hyjf.am.trade.dao.model.auto.HjhRegion;
 import com.hyjf.am.trade.dao.model.auto.HjhRegionExample;
 import com.hyjf.am.trade.service.admin.AdminAllocationEngineService;
@@ -27,6 +32,9 @@ public class AdminAllocationEngineServiceImpl implements AdminAllocationEngineSe
 
     @Autowired
     HjhRegionMapper hjhRegionMapper;
+    
+    @Autowired
+    HjhPlanMapper hjhPlanMapper;
 	
 	@Override
 	public Integer countHjhRegionRecordTotal(AllocationEngineRuquest request) {
@@ -107,4 +115,25 @@ public class AdminAllocationEngineServiceImpl implements AdminAllocationEngineSe
  		List<HjhRegionVO> volist = CommonUtils.convertBeanList(list, HjhRegionVO.class);
 		return volist;
 	}
+
+	@Override
+	public String selectPlanNameByPlanNid(AllocationEngineRuquest request) {
+        HjhPlanExample example = new HjhPlanExample();
+        HjhPlanExample.Criteria cra = example.createCriteria();
+        cra.andPlanNidEqualTo(request.getPlanNidSrch());
+        List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0).getPlanName();
+        }
+		return null;
+	}
+
+	@Override
+	public int insertRecord(HjhRegionVO request) {
+		HjhRegion hjhRegion = new HjhRegion();
+		BeanUtils.copyProperties(request, hjhRegion);
+		int flg = hjhRegionMapper.insertSelective(hjhRegion);
+		return flg;
+	}
+	
 }
