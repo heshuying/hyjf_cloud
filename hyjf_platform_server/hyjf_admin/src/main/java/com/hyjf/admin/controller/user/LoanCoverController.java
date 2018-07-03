@@ -1,7 +1,7 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.ExportExcel;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.LoanCoverService;
 import com.hyjf.am.response.Response;
