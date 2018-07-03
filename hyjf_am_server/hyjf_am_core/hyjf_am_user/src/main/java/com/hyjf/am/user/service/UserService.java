@@ -114,6 +114,8 @@ public interface UserService extends BaseService {
 
 	List<Evalation> getEvalationRecord();
 
+    Evalation getEvalationByEvalationType(String evalationType);
+
     int isCompAccount(Integer userId);
 
 
@@ -172,4 +174,6 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
     UtmPlat selectUtmPlatByUserId(Integer userId);
+
+    int saveUserEvaluation(UserEvalationResult userEvalationResult);
 }

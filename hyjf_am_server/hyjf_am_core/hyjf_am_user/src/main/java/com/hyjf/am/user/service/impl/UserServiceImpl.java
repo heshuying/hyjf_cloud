@@ -3,13 +3,12 @@ package com.hyjf.am.user.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
+import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.AccountProducer;
 import com.hyjf.am.user.mq.Producer;
-import com.hyjf.am.user.service.UserInfoService;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EvalationVO;
@@ -929,7 +928,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			// 更新用户信息
 			User user = userMapper.selectByPrimaryKey(userId);
 			if (user != null){
-				user.setIsEvaluationFlag(1);// 已测评
+				// 已测评
+				user.setIsEvaluationFlag(1);
 				// 更新用户是否测评标志位
 				this.userMapper.updateByPrimaryKey(user);
 			}
@@ -956,6 +956,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		example.createCriteria().andStatusEqualTo(0);
 		return evalationMapper.selectByExample(example);
 	}
+
+	/**
+	 * 根据evalationType获取评分标准列表
+	 * @return
+	 * @author Michael
+	 */
+	@Override
+	public Evalation getEvalationByEvalationType(String evalationType) {
+		EvalationExample example = new EvalationExample();
+		example.createCriteria().andEvalTypeEqualTo(evalationType).andStatusEqualTo(0);
+		List<Evalation> list=evalationMapper.selectByExample(example);
+		if(list!=null&&list.size()>0){
+			return list.get(0);
+		}
+		return null;
+	}
+
+
 
 	/**
 	 * 企业用户是否已开户
@@ -1117,6 +1135,20 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	@Override
 	public UtmPlat selectUtmPlatByUserId(Integer userId) {
 		return utmPlatCustomizeMapper.selectUtmPlatByUserId(userId);
+	}
+
+	@Override
+	public int saveUserEvaluation(UserEvalationResult userEvalationResult) {
+		int insertCount = userEvalationResultMapper.insertSelective(userEvalationResult);
+		if (insertCount > 0) {
+			User user = userMapper.selectByPrimaryKey(userEvalationResult.getUserId());
+			if (user != null) {
+				user.setIsEvaluationFlag(1);
+				user.setEvaluationExpiredTime(GetDate.countDate(GetDate.countDate(new Date(), 1, 1), 5, -1));
+				this.userMapper.updateByPrimaryKey(user);
+			}
+		}
+		return insertCount;
 	}
 
 }

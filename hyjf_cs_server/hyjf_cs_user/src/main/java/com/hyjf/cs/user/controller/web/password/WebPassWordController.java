@@ -4,9 +4,15 @@
 package com.hyjf.cs.user.controller.web.password;
 
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -14,6 +20,7 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.password.PassWordService;
+import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.PasswordRequest;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -45,15 +52,24 @@ public class WebPassWordController {
     SystemConfig systemConfig;
 
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
-    @PostMapping(value = "/updateLoginPassword", produces = "application/json; charset=utf-8")
-    public WebResult updateLoginPassWD(@RequestHeader(value = "token") String token,PasswordRequest passwordRequest){
-        UserVO userVO = passWordService.getUsers(token);
-        WebResult<String> result = new WebResult<>();
+    @PostMapping(value = "/login-password", produces = "application/json; charset=utf-8")
+    public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,PasswordRequest passwordRequest){
+        UserVO userVO = passWordService.getUsersById(userId);
+        WebResult<String> response = new WebResult<>();
         String oldPW = passwordRequest.getOldPassword();
         String newPW = passwordRequest.getNewPassword();
         String pwSure = passwordRequest.getPwSure();
         passWordService.checkParam(userVO,oldPW,newPW,pwSure);
-        return result;
+        int result = passWordService.updatePassword(userVO, newPW);
+       if(result>0){
+           WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId);
+           if (null != webUser) {
+               webUser = passWordService.setToken(webUser);
+               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+webUser.getMobile());
+               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+webUser.getUsername());
+           }
+       }
+        return response;
     }
 
     /**
@@ -61,8 +77,8 @@ public class WebPassWordController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @PostMapping(value = "/setTeaderPassword", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> setPassword(@RequestHeader(value = "token") String token) {
+    @PostMapping(value = "/transaction", produces = "application/json; charset=utf-8")
+    public  WebResult<Object> setTransaction(@RequestHeader(value = "token") String token) {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsers(token);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -76,8 +92,8 @@ public class WebPassWordController {
      * @return
      */
     @PostMapping(value = "/passwordBgreturn", produces = "application/json; charset=utf-8")
-    public WebResult<String> passwordBgreturn(@RequestBody BankCallBean bean) {
-        WebResult<String> result = new WebResult<String>();
+    public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
+        WebResult<Object> result = new WebResult<Object>();
         bean.convert();
         LogAcqResBean acqes = bean.getLogAcqResBean();
         int userId = acqes.getUserId();
@@ -88,6 +104,10 @@ public class WebPassWordController {
             try {
                 // 修改密码后保存相应的数据以及日志
                 passWordService.updateUserIsSetPassword(userId);
+                WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId);
+                if (null != webUser) {
+                    passWordService.setToken(webUser);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -146,9 +166,7 @@ public class WebPassWordController {
             logger.error("请求验证码接口发生异常", e);
         }
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
-            logger.error("请求验证码接口失败");
+            throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }else {
             result.setData(bankBean.getSrvAuthCode());
         }
@@ -160,8 +178,10 @@ public class WebPassWordController {
      * @param
      * @return
      */
+    @ApiOperation(value = "检查密码格式",notes = "检查密码格式")
+    @ApiImplicitParam(name = "param",value = "{name:String,oldpass:String}/{password:String}/{password:String,repassword:String}/{rlName:String}/{rlPhone:String}",dataType = "Map")
     @GetMapping(value = "/check-password", produces = "application/json; charset=utf-8")
-    public boolean checkParam(@RequestHeader(value = "userId") Integer userId,Map<String,String> param)  {
+    public boolean checkParam(@RequestHeader(value = "userId") Integer userId,@RequestBody Map<String,String> param)  {
         UserVO userVO = passWordService.getUsersById(userId);
         String name = param.get("name");
         if (StringUtils.isNotBlank(name)) {
@@ -205,5 +225,59 @@ public class WebPassWordController {
         }
     }
 
+    /**
+     * 验证手机号是否已注册
+     * @param
+     * @param
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "验证手机号是否已注册",notes = "验证手机号是否已注册")
+    @ApiImplicitParam(name = "param",value = "{mobile:String}",dataType = "Map")
+    @PostMapping(value = "checkPhone", produces = "application/json; charset=utf-8")
+    public boolean checkPhone(@RequestBody Map<String,String> param) {
+        String mobile = param.get("mobile");
+        if (StringUtils.isEmpty(mobile)) {
+            return false;
+        } else {
+            // 验证是否存在账号
+            return passWordService.existPhone(mobile);
+        }
+    }
+
+    /**
+     * 找回密码
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "找回密码",notes = "找回密码")
+    @PostMapping(value = "/recover", produces = "application/json; charset=utf-8")
+    public WebResult recover(@RequestBody PasswordRequest request) {
+        WebResult result = new WebResult();
+        // 密码1
+        String password1 = request.getNewPassword();
+        // 密码2
+        String password2 = request.getPwSure();
+        // 手机号
+        String mobile = request.getMobile();
+        // 短信验证码
+        String code = request.getVerificationCode();
+        CheckUtil.check(StringUtils.isNotBlank(password1),MsgEnum.ERR_OBJECT_REQUIRED,"密码");
+        password1 = RSAJSPUtil.rsaToPassword(password1);
+        password2 = RSAJSPUtil.rsaToPassword(password2);
+        CheckUtil.check(StringUtils.isNotBlank(password2)&&password1.equals(password2),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
+        CheckUtil.check(password1.length() >= 6 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
+        // 改变验证码状态
+        int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        // 再次验证验证码
+        CheckUtil.check(checkStatus==1,MsgEnum.STATUS_ZC000015);
+        UserVO user = passWordService.getUsersByMobile(mobile);
+        CheckUtil.check(null!=user,MsgEnum.STATUS_CE000006);
+        int cnt = passWordService.updatePassword(user, password1);
+        CheckUtil.check(cnt>0,MsgEnum.ERR_PASSWORD_MODIFY);
+        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+mobile);
+        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+user.getUsername());
+        return result;
+    }
 
 }

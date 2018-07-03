@@ -99,6 +99,13 @@ public interface UserManagerService extends BaseService{
     int countUserByMobile(int userId, String mobile);
 
     /**
+     * 统计手机号
+     * @param mobile
+     * @return
+     */
+    int countByMobile(String mobile);
+
+    /**
      * 校验推荐人
      *
      * @param userId

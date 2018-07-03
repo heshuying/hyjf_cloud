@@ -45,13 +45,13 @@ public class PandectController {
      */
     @ApiOperation(value = "账户总览", notes = "账户总览")
     @PostMapping(value = "/pandect")
-    public String pandect(@RequestHeader(value = "token") String token,Model model) {
-        WebResult<Map<String,Object>> result = new WebResult<>();
-        Map<String,Object> map = new HashMap<>();
-        UserVO user = pandectService.getUsers(token);
-        CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
-        map = pandectService.pandect(user);
-        result.setData(map);
+        public String pandect(@RequestHeader(value = "token") String token,Model model) {
+            WebResult<Map<String,Object>> result = new WebResult<>();
+            Map<String,Object> map = new HashMap<>();
+            UserVO user = pandectService.getUsers(token);
+            CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+            map = pandectService.pandect(user);
+            result.setData(map);
         model.addAttribute("datas",result);
         return "pandect";
     }

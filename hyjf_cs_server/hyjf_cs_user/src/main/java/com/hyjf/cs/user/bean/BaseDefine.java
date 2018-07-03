@@ -326,4 +326,5 @@ public class BaseDefine {
 
     //授权状态查询
     public static final String METHOD_BORROW_AUTH_STATE = "/server/authState/query";
+
 }

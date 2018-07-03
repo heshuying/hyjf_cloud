@@ -64,4 +64,19 @@ public interface AutoPlusService extends BaseUserService {
     void checkUserMessage(UserVO users, String lastSrvAuthCode, String smsCode);
 
     Map<String,Integer> userAutoStatus(Integer userId);
+
+    /**
+     * 查询授权状态
+     */
+    Map<String,String> getStatus(Integer userId);
+
+    /**
+     * 校验发送验证码接口参数
+     * @param user
+     * @param param
+     * @return
+     */
+    String checkSmsParam(UserVO user,Map<String,String> param);
+
+    String checkApiSmsParam(AutoPlusRequestBean autoPlusRequestBean);
 }
