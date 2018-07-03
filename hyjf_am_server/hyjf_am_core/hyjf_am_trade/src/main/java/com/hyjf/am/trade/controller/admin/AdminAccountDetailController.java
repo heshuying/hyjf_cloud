@@ -55,10 +55,10 @@ public class AdminAccountDetailController {
         String returnCode = Response.FAIL;
         Map<String, Object> mapParam = paramSet(request);
         int intCountAccountDetail = accountDetailService.countAccountDetail(mapParam);
-        Paginator paginator = new Paginator(request.getCurrPage(), intCountAccountDetail, request.getPageSize());
+        Paginator paginator = null; /*new Paginator(request.getCurrPage(), intCountAccountDetail, request.getPageSize());
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), intCountAccountDetail);
-        }
+        }*/
         mapParam.put("limitStart", paginator.getOffset());
         mapParam.put("limitEnd", paginator.getLimit());
         if (!request.isLimitFlg()) {

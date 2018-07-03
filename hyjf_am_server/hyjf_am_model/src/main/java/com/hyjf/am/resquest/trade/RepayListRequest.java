@@ -1,5 +1,6 @@
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
 /**
@@ -7,7 +8,7 @@ import com.hyjf.am.vo.BaseVO;
  * @author hesy
  * @version MyCouponListRequest, v0.1 2018/6/23 11:46
  */
-public class RepayListRequest extends BaseVO {
+public class RepayListRequest extends BasePage {
     String userId;
     String status;
     String repayStatus;
