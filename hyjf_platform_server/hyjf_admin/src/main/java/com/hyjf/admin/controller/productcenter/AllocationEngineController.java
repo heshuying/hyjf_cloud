@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "计划专区列表")
 @RestController
-@RequestMapping("/hyjf-admin/label")
+@RequestMapping("/hyjf-admin/allocation")
 public class AllocationEngineController extends BaseController{
 
 	@Autowired
@@ -50,7 +50,8 @@ public class AllocationEngineController extends BaseController{
     	List<HjhRegionVO> list = this.allocationEngineService.getHjhRegionList(form);
         if (null != list && list.size() > 0) {
             jsonObject.put("record", list);
-            success();
+            int count = list.size();
+            success(String.valueOf(count),list);
         } else {
         	fail("标签配置列表查询为空！");
         }

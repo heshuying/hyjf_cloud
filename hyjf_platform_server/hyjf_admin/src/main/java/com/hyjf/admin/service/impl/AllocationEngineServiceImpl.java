@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.client.AllocationEngineClient;
 import com.hyjf.admin.service.AllocationEngineService;
@@ -16,6 +17,7 @@ import com.hyjf.am.vo.admin.HjhRegionVO;
  * @author libin
  * @version AllocationEngineServiceImpl.java, v0.1 2018年7月3日 下午12:52:06
  */
+@Service
 public class AllocationEngineServiceImpl implements  AllocationEngineService{
 
 	@Autowired
