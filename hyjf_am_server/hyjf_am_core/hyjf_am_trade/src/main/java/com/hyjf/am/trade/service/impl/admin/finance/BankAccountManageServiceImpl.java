@@ -418,7 +418,8 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         // TODO int类型换成了boolean 类型、数据对应待调查
 //        accountList.setIsUpdate(0);
 //        accountList.setBaseUpdate(0);
-        accountList.setInterest(null);
+        // 新表是否删除？
+//        accountList.setInterest(null);
         accountList.setWeb(0);
         accountList.setTxDate(Integer.parseInt(synBalanceBean.getInpDate()));
         accountList.setTxTime(Integer.parseInt(synBalanceBean.getInpTime()));
