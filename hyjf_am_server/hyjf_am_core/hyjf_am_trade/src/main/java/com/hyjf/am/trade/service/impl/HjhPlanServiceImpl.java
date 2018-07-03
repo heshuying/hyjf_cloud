@@ -12,6 +12,7 @@ import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,9 @@ public class HjhPlanServiceImpl implements HjhPlanService {
     public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
         HjhInstConfigExample example = new HjhInstConfigExample();
         HjhInstConfigExample.Criteria cra = example.createCriteria();
-        cra.andInstCodeEqualTo(instCode);
+        if (StringUtils.isNotEmpty(instCode)) {
+            cra.andInstCodeEqualTo(instCode);
+        }
         cra.andDelFlagEqualTo(0);
         List<HjhInstConfig> list = this.hjhInstConfigMapper.selectByExample(example);
         return list;
