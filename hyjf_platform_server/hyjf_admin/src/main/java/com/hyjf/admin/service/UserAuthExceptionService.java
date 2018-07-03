@@ -15,17 +15,18 @@ import java.util.List;
  */
 public interface UserAuthExceptionService {
     /**
-     * 自动债转授权异常数据总条数
-     * @auth 孙沛凯
-     * @param request 自动债转授权异常的筛选条件
-     * @return 总条数
-     */
-    Integer getRecordCount(AdminUserAuthListRequest request);
-    /**
      * 自动债转授权异常list
      * @auth 孙沛凯
      * @param request 自动债转授权异常的筛选条件
      * @return list
      */
     AdminUserAuthListResponse selectUserAuthList(AdminUserAuthListRequest request);
+    /**
+     * 同步用户授权状态
+     * @auth 孙沛凯
+     * @param userId 用户id
+     * @param type 1自动投资授权  2债转授权
+     * @return
+     */
+    AdminUserAuthListResponse synUserAuth(Integer userId,Integer type);
 }

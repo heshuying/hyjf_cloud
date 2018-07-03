@@ -10,7 +10,6 @@ import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
 import com.hyjf.am.vo.user.AdminUserAuthListVO;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public class UserAuthExceptionController extends BaseController {
      */
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
-    public JSONObject userAuthException(@RequestBody(required = false) Map<String,Object> requestMap){
+    public JSONObject userAuthException(@RequestBody Map<String,Object> requestMap){
         AdminUserAuthListRequest request = setParam(requestMap);
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
@@ -65,11 +64,10 @@ public class UserAuthExceptionController extends BaseController {
     @PostMapping(value = "/syn_user_auth")
     public JSONObject synUserAuth(@RequestParam Integer userId , @RequestParam Integer type){
         logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
-        AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(null);
+        AdminUserAuthListResponse response = userAuthExceptionService.synUserAuth(userId, type);
+
         if(AdminResponse.isSuccess(response)){
-            String recordTotal = response.getRecordTotal();
-            List<AdminUserAuthListVO> resultList = response.getResultList();
-            return success(recordTotal,resultList);
+            return success();
         }else{
             return fail("查询失败");
         }

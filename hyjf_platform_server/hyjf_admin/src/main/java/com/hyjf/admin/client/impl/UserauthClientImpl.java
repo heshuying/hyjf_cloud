@@ -4,6 +4,7 @@
 package com.hyjf.admin.client.impl;
 
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +26,12 @@ public class UserauthClientImpl implements UserauthClient {
 
 	@Autowired
 	private RestTemplate restTemplate;
-
+	/**
+	 * am-user层查询自动投资债转异常列表
+	 * @auth 孙沛凯
+	 * @param
+	 * @return
+	 */
 	@Override
 	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest) {
 		AdminUserAuthListResponse response = restTemplate
@@ -33,6 +39,27 @@ public class UserauthClientImpl implements UserauthClient {
 	                .getBody();
 
 	        return response;
+	}
+	/**
+	 * 同步用户授权状态
+	 * @auth 孙沛凯
+	 * @param type 1自动投资授权  2债转授权
+	 * @return
+	 */
+	@Override
+	public JSONObject synUserAuth(Integer userId, Integer type) {
+		JSONObject jsonObject = restTemplate
+				.getForEntity("http://AM-USER/am-user/userauth/synuserauth/" + userId + "/" + type, JSONObject.class)
+				.getBody();
+
+		return jsonObject;
+	}
+
+	@Override
+	public String getBankRetMsg(String retCode) {
+		String retMsg = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/adminException/getBankRetMsg/" + retCode, String.class).getBody();
+		return retMsg;
 	}
 
 	@Override
