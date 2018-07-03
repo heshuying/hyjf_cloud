@@ -123,8 +123,8 @@ public class UserPortraitController extends BaseController {
        * 导出功能
        *
        * @param request
-       * @param modelAndView
-       * @param form*/
+       * @param form
+     * */
     @ApiOperation(value = "借款盖章用户", notes = "导出借款盖章用户")
     @PostMapping(value = "/exportLoancover")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
