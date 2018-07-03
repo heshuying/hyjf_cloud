@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.impl.admin;
 
-import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
@@ -15,13 +14,15 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.BorrowRegistService;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wangjun
@@ -89,6 +90,16 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
      */
     @Override
     public List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
+        List<BorrowRegistCustomize> list = borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
+        if(!CollectionUtils.isEmpty(list)){
+            //处理标的备案状态
+            Map<String, String> map = CacheUtil.getParamNameMap("REGIST_STATUS");
+            if(!CollectionUtils.isEmpty(map)){
+                for(BorrowRegistCustomize borrowRegistCustomize : list){
+                    borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(),null));
+                }
+            }
+        }
         return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
     }
 
