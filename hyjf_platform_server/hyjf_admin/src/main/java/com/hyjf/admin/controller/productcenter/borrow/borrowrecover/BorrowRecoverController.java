@@ -2,6 +2,7 @@ package com.hyjf.admin.controller.productcenter.borrow.borrowrecover;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowRecoverBean;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.WebResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
@@ -50,14 +51,14 @@ public class BorrowRecoverController extends BaseController {
      */
     @ApiOperation(value = "放款明细", notes = "放款明细页面查询初始化")
     @PostMapping(value = "/searchAction")
-    public WebResult<BorrowRecoverBean> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRecoverRequest form) {
+    public BaseResult<BorrowRecoverBean> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRecoverRequest form) {
         BorrowRecoverBean bean = borrowRecoverService.searchBorrowRecover(form);
         Map<String, String> map=CacheUtil.getParamNameMap("LOAN_STATUS");
         bean.setLoanStarusList(map);
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRecoverService.selectHjhInstConfigByInstCode("-1");
         bean.setHjhInstConfigList(hjhInstConfigList);
-        WebResult<BorrowRecoverBean>  result=new WebResult<BorrowRecoverBean> ();
+        BaseResult<BorrowRecoverBean> result=new BaseResult<BorrowRecoverBean> ();
         result.setData(bean);
         return result;
     }
@@ -193,7 +194,7 @@ public class BorrowRecoverController extends BaseController {
                     }
                     // 投资时间
                     else if (celLength == 18) {
-                        cell.setCellValue(record.getAddtime());
+                        cell.setCellValue(record.getCreateTime());
                     }
                     // 投资金额
                     else if (celLength == 19) {
