@@ -39,7 +39,6 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/preregist")
 public class PreregistController extends BaseController {
-	private static final Logger logger = LoggerFactory.getLogger(PreregistController.class);
 	//权限名称
 	private static final String PERMISSIONS = "preregist";
 	@Autowired
@@ -75,7 +74,7 @@ public class PreregistController extends BaseController {
 		if(prs==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (Response.isSuccess(prs)) {
+		if (!Response.isSuccess(prs)) {
 			return new AdminResult<>(FAIL, prs.getMessage());
 
 		}
@@ -105,7 +104,7 @@ public class PreregistController extends BaseController {
 		if(prs==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (Response.isSuccess(prs)) {
+		if (!Response.isSuccess(prs)) {
 			return new AdminResult<>(FAIL, prs.getMessage());
 
 		}
@@ -131,7 +130,7 @@ public class PreregistController extends BaseController {
 		if(prs==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (Response.isSuccess(prs)) {
+		if (!Response.isSuccess(prs)) {
 			return new AdminResult<>(FAIL, prs.getMessage());
 
 		}

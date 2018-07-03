@@ -21,4 +21,17 @@ public interface AllocationEngineClient {
      */
     List<HjhRegionVO> getHjhRegionList(AllocationEngineRuquest form);
 
+    /**
+     * 查询汇计划表
+     * @param request
+     * @return
+     */
+    String getPlanNameByPlanNid(AllocationEngineRuquest form);
+    
+    /**
+     * 插入计划专区表
+     * @param request
+     * @return
+     */
+    int insertRecord(HjhRegionVO request);
 }

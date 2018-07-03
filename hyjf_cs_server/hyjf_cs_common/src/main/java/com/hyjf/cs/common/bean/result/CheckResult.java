@@ -1,6 +1,7 @@
 package com.hyjf.cs.common.bean.result;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.common.constants.MsgCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,25 @@ public class CheckResult extends BaseResult{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public CheckResult() {
+	}
+
+	public CheckResult(Object data) {
+		super(data);
+	}
+
+	public CheckResult(Throwable e) {
+		super(e);
+	}
+
+	public CheckResult(String status, String statusDesc) {
+		super(status, statusDesc);
+	}
+
+	public CheckResult(MsgCode msgCode, Object... params) {
+		super(msgCode, params);
+	}
 
 	private Map<String, String> infoMap = new HashMap<String, String>();
 

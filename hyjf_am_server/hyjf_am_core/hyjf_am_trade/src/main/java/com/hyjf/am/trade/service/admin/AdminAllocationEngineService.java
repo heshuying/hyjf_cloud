@@ -23,4 +23,15 @@ public interface AdminAllocationEngineService {
 	 * @return
 	*/
    List<HjhRegionVO> selectHjhRegionList(AllocationEngineRuquest request, int limitStart, int limitEnd);
+   /**
+	 * 查询汇计划表
+	 * @return
+	*/
+   String selectPlanNameByPlanNid(AllocationEngineRuquest request);
+   
+   /**
+	 * 插入计划专区表
+	 * @return
+	*/
+   int insertRecord(HjhRegionVO request);
 }

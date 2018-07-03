@@ -12,6 +12,7 @@
 package com.hyjf.cs.common.bean.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
 
 import java.io.Serializable;
@@ -24,6 +25,25 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public WeChatResult() {
+	}
+
+	public WeChatResult(T data) {
+		super(data);
+	}
+
+	public WeChatResult(Throwable e) {
+		super(e);
+	}
+
+	public WeChatResult(String status, String statusDesc) {
+		super(status, statusDesc);
+	}
+
+	public WeChatResult(MsgCode msgCode, Object... params) {
+		super(msgCode, params);
+	}
 
 	public  WeChatResult  buildErrorResponse(MsgEnum msgEnum){
 		WeChatResult weChatResult = new WeChatResult();
