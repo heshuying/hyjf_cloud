@@ -6,7 +6,7 @@ import com.hyjf.am.vo.BaseVO;
  * @author pangchengchao
  * @version BorrowRecoverRequest, v0.1 2018/7/2 14:25
  */
-public class BorrowRecoverRequest{
+public class BorrowRecoverRequest {
     /**
      * 当前页码
      */
