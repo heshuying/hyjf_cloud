@@ -3,10 +3,12 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -15,9 +17,13 @@ import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
@@ -28,6 +34,8 @@ import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.CreditResultBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.mq.SmsProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.MyCreditListService;
 import org.apache.commons.collections.map.HashedMap;
@@ -82,6 +90,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
     @Autowired
     private BorrowRecoverClient borrowRecoverClient;
+
+    @Autowired
+    private SmsProducer smsProducer;
 
 
     /**
@@ -279,6 +290,61 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             insertTenderToCredit(userId, request);
         }catch (Exception e){
             result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
+        }
+        return result;
+    }
+
+    /**
+     * 用户中心查询 债转详细预计服务费计算
+     *
+     * @param request
+     * @param userId
+     * @return
+     */
+    @Override
+    public WebResult getExpectCreditFee(TenderBorrowCreditCustomize request, Integer userId) {
+        WebResult result = new WebResult();
+        // 当前日期
+        Integer nowTime = GetDate.getNowTime10();
+        // 查询borrow 和 BorrowRecover
+        BorrowVO borrow = borrowClient.selectBorrowByNid(request.getBorrowNid());
+        if (borrow == null) {
+            throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
+        }
+        BorrowRecoverVO recover = this.borrowRecoverClient.selectBorrowRecoverByTenderNid(request.getTenderNid());
+        if (recover == null) {
+            throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
+        }
+        // 债转计算
+        Map<String, BigDecimal> creditCreateMap = selectExpectCreditFeeForBigDecimal(borrow, recover,
+                request.getCreditDiscount(), nowTime);
+        result.setData(creditCreateMap);
+        return result;
+    }
+
+    /**
+     * 发送短信验证码（ajax请求） 短信验证码数据保存
+     *
+     * @param request
+     * @param userId
+     * @return
+     */
+    @Override
+    public WebResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId) {
+        UserVO user = amUserClient.findUserById(userId);
+        if(user.getMobile()==null){
+            throw new CheckException(MsgEnum.STATUS_ZC000001);
+        }
+        WebResult result = new WebResult();
+        String checkCode = GetCode.getRandomSMSCode(6);
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("val_code", checkCode);
+        SmsMessage smsMessage = new SmsMessage(userId, param, user.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
+                CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.CHANNEL_TYPE_NORMAL);
+        try{
+            smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+        }catch (Exception e){
+            throw new CheckException(MsgEnum.ERROR_SMS_SEND);
         }
         return result;
     }
