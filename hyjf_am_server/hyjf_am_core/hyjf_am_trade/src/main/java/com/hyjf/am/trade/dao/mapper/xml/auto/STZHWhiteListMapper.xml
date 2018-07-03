@@ -20,8 +20,8 @@
     <result column="instName" property="instname" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="TINYINT" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
-    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -86,7 +86,8 @@
   <sql id="Base_Column_List" >
     id, user_id, user_name, accountid, mobile, customer_name, st_user_id, st_user_name, 
     st_accountid, st_mobile, st_customer_name, approval_name, approval_time, remark, 
-    instCode, instName, `state`, del_flag, create_user, update_user, create_time, update_time
+    instCode, instName, `state`, del_flag, create_user_id, update_user_id, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample" >
     select
@@ -130,16 +131,16 @@
       st_user_name, st_accountid, st_mobile, 
       st_customer_name, approval_name, approval_time, 
       remark, instCode, instName, 
-      `state`, del_flag, create_user, 
-      update_user, create_time, update_time
+      `state`, del_flag, create_user_id, 
+      update_user_id, create_time, update_time
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{accountid,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{stUserId,jdbcType=INTEGER}, 
       #{stUserName,jdbcType=VARCHAR}, #{stAccountid,jdbcType=VARCHAR}, #{stMobile,jdbcType=VARCHAR}, 
       #{stCustomerName,jdbcType=VARCHAR}, #{approvalName,jdbcType=VARCHAR}, #{approvalTime,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{instcode,jdbcType=VARCHAR}, #{instname,jdbcType=VARCHAR}, 
-      #{state,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{state,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.StzhWhiteList" >
@@ -199,11 +200,11 @@
       <if test="delFlag != null" >
         del_flag,
       </if>
-      <if test="createUser != null" >
-        create_user,
+      <if test="createUserId != null" >
+        create_user_id,
       </if>
-      <if test="updateUser != null" >
-        update_user,
+      <if test="updateUserId != null" >
+        update_user_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -264,11 +265,11 @@
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
       </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -341,11 +342,11 @@
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
-      <if test="record.createUser != null" >
-        create_user = #{record.createUser,jdbcType=VARCHAR},
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
       </if>
-      <if test="record.updateUser != null" >
-        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -378,8 +379,8 @@
       instName = #{record.instname,jdbcType=VARCHAR},
       `state` = #{record.state,jdbcType=TINYINT},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -440,11 +441,11 @@
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
-      <if test="createUser != null" >
-        create_user = #{createUser,jdbcType=VARCHAR},
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=VARCHAR},
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -474,8 +475,8 @@
       instName = #{instname,jdbcType=VARCHAR},
       `state` = #{state,jdbcType=TINYINT},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_user = #{updateUser,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

@@ -35,9 +35,9 @@ public class PoundageLedger implements Serializable {
 
     private String explan;
 
-    private Integer createre;
+    private Integer createUserId;
 
-    private Integer updater;
+    private Integer updateUserId;
 
     private Date createTime;
 
@@ -165,20 +165,20 @@ public class PoundageLedger implements Serializable {
         this.explan = explan == null ? null : explan.trim();
     }
 
-    public Integer getCreatere() {
-        return createre;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setCreatere(Integer createre) {
-        this.createre = createre;
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public Integer getUpdater() {
-        return updater;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdater(Integer updater) {
-        this.updater = updater;
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {
