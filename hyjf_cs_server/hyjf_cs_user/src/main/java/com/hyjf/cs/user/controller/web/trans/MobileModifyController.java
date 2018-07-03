@@ -61,9 +61,9 @@ public class MobileModifyController extends BaseUserController {
     @ApiOperation(value = "手机号码修改（未开户）", notes = "手机号码修改（未开户）")
     @ApiImplicitParam(name = "paraMap",value = "{newMobile: string,smsCode: string}", dataType = "Map")
     @PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
-    public WebResult<UserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
+    public WebResult<WebViewUserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
-        WebResult<UserVO> result = new WebResult<UserVO>();
+        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
 
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         boolean checkRet = mobileModifyService.checkForMobileModify(paraMap.get("newMobile"), paraMap.get("smsCode"));
@@ -72,7 +72,15 @@ public class MobileModifyController extends BaseUserController {
             userVO.setUserId(user.getUserId());
             userVO.setMobile(paraMap.get("newMobile"));
             mobileModifyService.updateUserByUserId(userVO);
+
+            WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
+            if (null != webUser) {
+                webUser = mobileModifyService.setToken(webUser);
+                result.setData(webUser);
+            }
         }
+
+
 
         return result;
     }
@@ -85,9 +93,9 @@ public class MobileModifyController extends BaseUserController {
     @ApiOperation(value = "手机号码修改（已开户）", notes = "手机号码修改（已开户）")
     @ApiImplicitParam(name = "paraMap",value = "{newMobile:string,smsCode:string,srvAuthCode:string}", dataType = "Map")
     @PostMapping(value = "/mobileModifyOpened", produces = "application/json; charset=utf-8")
-    public WebResult<UserVO> mobileModifyOpened(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
+    public WebResult<WebViewUserVO> mobileModifyOpened(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
-        WebResult<UserVO> result = new WebResult<UserVO>();
+        WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
 
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         
@@ -121,6 +129,12 @@ public class MobileModifyController extends BaseUserController {
              userVO.setUserId(user.getUserId());
              userVO.setMobile(paraMap.get("newMobile"));
              mobileModifyService.updateUserByUserId(userVO);
+
+            WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
+            if (null != webUser) {
+                webUser = mobileModifyService.setToken(webUser);
+                result.setData(webUser);
+            }
         }
 
         return result;
