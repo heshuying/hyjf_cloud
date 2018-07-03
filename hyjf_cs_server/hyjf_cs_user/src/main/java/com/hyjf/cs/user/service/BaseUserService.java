@@ -67,7 +67,7 @@ public interface BaseUserService extends BaseService{
 
 	/**
 	 * 设置token
-	 * @param userVO
+	 * @param
 	 * @param webViewUserVO
 	 * @return
 	 */

@@ -99,13 +99,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     /**
      * 账户设置信息查询
      *
-     * @param webViewUserVO
+     * @param
      * @return
      */
     @Override
-    public Map<String, Object> safeInit(WebViewUserVO webViewUserVO) {
+    public Map<String, Object> safeInit(UserVO user) {
         Map<String, Object> resultMap = new HashMap<>();
-        UserVO user = amUserClient.findUserById(webViewUserVO.getUserId());
         // 用户角色
         UserInfoVO userInfo = this.amUserClient.findUsersInfoById(user.getUserId());
 
@@ -118,7 +117,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
-        }
+    }
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);
