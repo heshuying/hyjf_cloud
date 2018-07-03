@@ -28,9 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
  * 日志用AOP
  * @author liubin
  */
-@Aspect
-@Order(1)
-@Component
+//@Aspect
+//@Order(1)
+//@Component
 public class AOPHandler {
 
 	private	static final Logger logger = LoggerFactory.getLogger(AOPHandler.class);
