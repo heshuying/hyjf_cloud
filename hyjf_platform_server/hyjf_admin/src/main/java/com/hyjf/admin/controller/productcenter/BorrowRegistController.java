@@ -67,7 +67,9 @@ public class BorrowRegistController extends BaseController {
         Integer count = borrowRegistService.getRegistCount(borrowRegistListRequest);
         if(count > 0){
             List <BorrowRegistCustomizeVO> list = borrowRegistService.selectBorrowRegistList(borrowRegistListRequest);
+            String sumAccount = borrowRegistService.sumBorrowRegistAccount(borrowRegistListRequest);
             jsonObject = this.success(String.valueOf(count),list);
+            jsonObject.put("sumAccount",sumAccount);
         }else {
             jsonObject = this.fail("未查询到相应数据！");
         }

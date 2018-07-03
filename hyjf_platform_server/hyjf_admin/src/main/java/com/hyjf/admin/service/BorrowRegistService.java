@@ -56,4 +56,11 @@ public interface BorrowRegistService {
      * @return
      */
     JSONObject updateBorrowRegist(String borrowNid);
+
+    /**
+     * 统计总额
+     * @param borrowRegistListRequest
+     * @return
+     */
+    String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
 }

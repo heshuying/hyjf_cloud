@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl.admin.exception;
+package com.hyjf.am.trade.service.impl.admin;
 
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
@@ -12,7 +12,7 @@ import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowRegistCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
-import com.hyjf.am.trade.service.admin.exception.BorrowRegistService;
+import com.hyjf.am.trade.service.admin.BorrowRegistService;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -101,6 +101,16 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
             }
         }
         return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
+    }
+
+    /**
+     * 统计总额
+     * @param borrowRegistListRequest
+     * @return
+     */
+    @Override
+    public String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest){
+        return borrowRegistCustomizeMapper.sumBorrowRegistAccount(borrowRegistListRequest);
     }
 
     @Override
