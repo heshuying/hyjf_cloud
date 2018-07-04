@@ -5,10 +5,11 @@ package com.hyjf.am.user.service.impl;
 
 import com.hyjf.am.user.dao.mapper.customize.VipDetailListCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.VipManageCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.VipUpdateGradeListCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.VipDetailListCustomize;
 import com.hyjf.am.user.dao.model.customize.VipManageListCustomize;
+import com.hyjf.am.user.dao.model.customize.VipUpdateGradeListCustomize;
 import com.hyjf.am.user.service.VipManagementService;
-import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.common.cache.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,8 @@ public class VipManagementServiceImpl implements VipManagementService {
     private VipManageCustomizeMapper vipManageCustomizeMapper;
     @Autowired
     private VipDetailListCustomizeMapper vipDetailListCustomizeMapper;
+    @Autowired
+    private VipUpdateGradeListCustomizeMapper vipUpdateGradeListCustomizeMapper;
 
     /**
      * 根据条件查询列表总数
@@ -112,5 +115,40 @@ public class VipManagementServiceImpl implements VipManagementService {
         Integer detailRecord = vipDetailListCustomizeMapper.countRecordTotal(mapParam);
         int detailCount = detailRecord.intValue();
         return detailCount;
+    }
+
+    /**
+     * 查询vip用户升级详情条数
+     * @param mapParam
+     * @return
+     */
+    @Override
+    public int countUpdateGradeList(Map<String, Object> mapParam) {
+        Integer updateGradeRecord = vipUpdateGradeListCustomizeMapper.countRecordTotal(mapParam);
+        int count = updateGradeRecord.intValue();
+        return count;
+    }
+
+    /**
+     * 查询vip用户升级详情列表
+     * @param mapParam
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @Override
+    public List<VipUpdateGradeListCustomize> searchUpdaeGradeList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", limitStart);
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", limitEnd);
+        }
+        List<VipUpdateGradeListCustomize> vipUpdateGradeListCustomizes = vipUpdateGradeListCustomizeMapper.selectRecordList(mapParam);
+        if (!CollectionUtils.isEmpty(vipUpdateGradeListCustomizes)) {
+            return vipUpdateGradeListCustomizes;
+        }
+        return null;
     }
 }

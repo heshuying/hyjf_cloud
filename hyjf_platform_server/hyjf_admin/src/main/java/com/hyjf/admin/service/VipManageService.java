@@ -6,8 +6,10 @@ package com.hyjf.admin.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
+import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
 
 /**
  * @author yaoyong
@@ -29,4 +31,11 @@ public interface VipManageService {
      * @return
      */
     VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest);
+
+    /**
+     * 查询vip升级详情列表
+     * @param vgl
+     * @return
+     */
+    VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl);
 }
