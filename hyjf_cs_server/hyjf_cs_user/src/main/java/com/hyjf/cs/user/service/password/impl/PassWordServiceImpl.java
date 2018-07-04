@@ -275,6 +275,25 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         CheckUtil.check(m.matches(),MsgEnum.ERR_FMT_PASSWORD);
     }
 
+    @Override
+    public int updatePassword(UserVO userVO, String newPW) {
+        String codeSalt = userVO.getSalt();
+        newPW = MD5Utils.MD5(MD5Utils.MD5(newPW) + codeSalt);
+        userVO.setPassword(newPW);
+        int cnt = amUserClient.updateUserById(userVO);
+        return cnt;
+    }
+
+    @Override
+    public boolean existPhone(String mobile) {
+        int size = amUserClient.countByMobile(mobile);
+        if (size > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 微信修改密码发送短信验证码
      * @param sendSmsVO

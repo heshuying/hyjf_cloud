@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.web.financialadvisor;
+package com.hyjf.cs.user.controller.web.evaluation;
 
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.enums.MsgEnum;
@@ -9,7 +9,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.financialadvisor.FinancialAdvisorService;
+import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -23,16 +23,16 @@ import java.util.Map;
 
 /**
  * @author zhangqingqing
- * @version FinancialAdvisorController, v0.1 2018/6/15 19:09
+ * @version EvaluationController, v0.1 2018/6/15 19:09
  */
 @Api(value = "web端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")
-public class FinancialAdvisorController extends BaseUserController {
+public class WebEvaluationController extends BaseUserController {
 
     @Autowired
-    FinancialAdvisorService financialAdvisorService;
+    EvaluationService evaluationService;
 
     /**
      * 再测一次
@@ -46,11 +46,11 @@ public class FinancialAdvisorController extends BaseUserController {
     public Map<String, Object> questionnaireInit() {
         Map<String, Object> result = new HashMap<>();
         //测评问题
-        List<QuestionCustomizeVO> list = financialAdvisorService.getNewQuestionList();
+        List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
         result.put("questionList", list);
         result.put("listSize", list.size());
         //评分标准
-        List<EvalationVO> evalationList = financialAdvisorService.getEvalationRecord();
+        List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
         result.put("evalationList", evalationList);
         return result;
     }
@@ -69,14 +69,14 @@ public class FinancialAdvisorController extends BaseUserController {
         WebResult<Map<String, Object>> result = new WebResult<>();
         Map<String, Object> resultMap = new HashMap<>();
         CheckUtil.check(null != token, MsgEnum.ERR_USER_NOT_LOGIN);
-        UserVO user = this.financialAdvisorService.getUsers(token);
+        UserVO user = this.evaluationService.getUsers(token);
         // 用户ID
         Integer userId = user.getUserId();
         //userError 用户未登录
         CheckUtil.check(userId != null && userId != 0, MsgEnum.ERR_USER_NOT_LOGIN);
 
         //测评结果
-        UserEvalationResultVO userEvalationResult = financialAdvisorService.selectUserEvalationResultByUserId(userId);
+        UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         //已测评
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
@@ -86,10 +86,10 @@ public class FinancialAdvisorController extends BaseUserController {
             if (lCreate <= lNow) {
                 //已过期需要重新评测
                 //测评问题
-                List<QuestionCustomizeVO> list = financialAdvisorService.getNewQuestionList();
+                List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
                 resultMap.put("questionList", list);
                 //评分标准
-                List<EvalationVO> evalationList = financialAdvisorService.getEvalationRecord();
+                List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
                 resultMap.put("evalationList", evalationList);
             } else {
                 //测评结果
@@ -97,10 +97,10 @@ public class FinancialAdvisorController extends BaseUserController {
             }
         } else {
             //测评问题
-            List<QuestionCustomizeVO> list = financialAdvisorService.getNewQuestionList();
+            List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
             resultMap.put("questionList", list);
             //评分标准
-            List<EvalationVO> evalationList = financialAdvisorService.getEvalationRecord();
+            List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
             resultMap.put("evalationList", evalationList);
         }
         result.setData(resultMap);
@@ -125,7 +125,7 @@ public class FinancialAdvisorController extends BaseUserController {
         CheckUtil.check(userId != null && userId != 0, MsgEnum.ERR_USER_NOT_LOGIN);
         //用户答案
         String userAnswer = param.get("userAnswer");
-        Map<String, Object> returnMap = financialAdvisorService.answerAnalysisAndCoupon(userAnswer, userId);
+        Map<String, Object> returnMap = evaluationService.answerAnalysisAndCoupon(userAnswer, userId);
         //优惠券发放
         if (returnMap.get("sendCount") != null) {
             int sendCount = (int) returnMap.get("sendCount");
@@ -138,9 +138,9 @@ public class FinancialAdvisorController extends BaseUserController {
         /**
          * 调用重新登录接口
          */
-        WebViewUserVO webUser = financialAdvisorService.getWebViewUserByUserId(userId);
+        WebViewUserVO webUser = evaluationService.getWebViewUserByUserId(userId);
         if (null != webUser) {
-            financialAdvisorService.setToken(webUser);
+            evaluationService.setToken(webUser);
         }
         return result;
     }

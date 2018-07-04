@@ -226,6 +226,19 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 统计手机号
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public int countByMobile(String mobile){
+		int checkFlg = restTemplate.
+				getForEntity("http://AM-USER/am-user/userManager/countByMobile/"+ mobile, Integer.class).
+				getBody();
+		return checkFlg;
+	}
+
+	/**
 	 * 修改登陆密码
 	 * @param userId
 	 * @param oldPW
@@ -439,7 +452,15 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-
+	@Override
+	public EvalationVO getEvalationByEvalationType(String evalationType) {
+	EvalationResponse response = restTemplate
+			.getForEntity("http://AM-USER/am-user/user/getEvalationByEvalationType/" + evalationType, EvalationResponse.class).getBody();
+	if (response != null) {
+		return response.getResult();
+	}
+	return null;
+	}
 	@Override
 	public UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest) {
 		UserEvalationResultResponse response = restTemplate.postForEntity("http://AM-USER/am-user/user/insertUserEvalationResult",userEvalationRequest,UserEvalationResultResponse.class).getBody();
@@ -782,5 +803,12 @@ public class AmUserClientImpl implements AmUserClient {
 	public void saveUserPortrait(BatchUserPortraitQueryRequest batchUserPortraitQueryRequest) {
 		String url = "http://AM-USER/user_batch/portrait/save_user_portrait";
 		restTemplate.postForEntity(url,batchUserPortraitQueryRequest,String.class);
+	}
+
+	@Override
+	public int saveUserEvaluation(UserEvalationResultVO userEvalationResult) {
+		int count = restTemplate
+				.postForEntity("http://AM-USER//am-user/user/saveUserEvaluation", userEvalationResult, Integer.class).getBody();
+		return count;
 	}
 }

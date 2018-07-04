@@ -20,7 +20,7 @@ ignore:
     app:
       key: /server/getBestServerAction,
       user: /smsCode/send,/user/register,/user/login
-    web: /smsCode/send,/user/register,/user/login
+    web: /smsCode/send,/user/register,/user/login,/user/password/checkpassword
     wechat: /smsCode/send,/user/register,/user/login
     api: /smsCode/send,/user/register,/user/login
 

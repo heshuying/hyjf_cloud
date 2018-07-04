@@ -1,20 +1,5 @@
 package com.hyjf.am.user.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.Valid;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
@@ -27,6 +12,19 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author xiasq
@@ -463,6 +461,18 @@ public class UserController extends BaseController{
 		return response;
 	}
 
+	@RequestMapping("/getEvalationByEvalationType/{evalationType}")
+	public EvalationResponse getEvalationByEvalationType(@PathVariable  String evalationType) {
+		EvalationResponse response = new EvalationResponse();
+		Evalation evalation = userService.getEvalationByEvalationType(evalationType);
+		if(null!=evalation){
+			EvalationVO evalationVO = new EvalationVO();
+			BeanUtils.copyProperties(evalation, evalationVO);
+			response.setResult(evalationVO);
+		}
+		return response;
+	}
+
 	@RequestMapping("/insertUserEvalationResult")
 	public UserEvalationResultResponse insertUserEvalationResult(@RequestBody UserEvalationRequest userEvalationRequest) {
 		List<String> answerList = userEvalationRequest.getAnswerList();
@@ -479,6 +489,12 @@ public class UserController extends BaseController{
 			response.setResult(userEvalationResultVO);
 		}
 		return response;
+	}
+
+	@RequestMapping("/saveUserEvaluation")
+	public int saveUserEvaluation(UserEvalationResult userEvalationResult) {
+		int cnt = userService.saveUserEvaluation(userEvalationResult);
+		return cnt;
 	}
 
 	@RequestMapping("/isCompAccount/{userId}")

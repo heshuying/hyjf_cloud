@@ -215,22 +215,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         return userVO == null ? false : true;
     }
 
-    /**
-     * 检查短信验证码searchStatus:查询的短信状态,updateStatus:查询结束后的短信状态
-     * @param mobile
-     * @param verificationCode
-     * @param verificationType
-     * @param platform
-     * @param searchStatus
-     * @param updateStatus
-     * @return
-     */
-    @Override
-    public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-                                     Integer searchStatus, Integer updateStatus) {
-        int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus);
-        return cnt;
-    }
 
     @Override
     public void checkParam(String verificationType, String code, String mobile) {
