@@ -1,0 +1,14 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.user.service.admin.exception;
+
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+
+/**
+ * @author: sunpeikai
+ * @version: BorrowRegistExceptionService, v0.1 2018/7/3 18:03
+ */
+public interface BorrowRegistExceptionService {
+    BankOpenAccountVO searchBankOpenAccount(Integer userId);
+}

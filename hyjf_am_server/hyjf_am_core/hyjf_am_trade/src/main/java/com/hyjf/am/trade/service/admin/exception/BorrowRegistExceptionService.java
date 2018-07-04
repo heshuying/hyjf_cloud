@@ -3,10 +3,13 @@
  */
 package com.hyjf.am.trade.service.admin.exception;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.vo.trade.borrow.BorrowRegistExceptionVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 
 import java.util.List;
 
@@ -40,5 +43,33 @@ public interface BorrowRegistExceptionService {
      * @return
      */
     List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest);
+    /**
+     * 标的异常处理
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    BorrowVO searchBorrowByBorrowNid(String borrowNid);
 
+    /**
+     *
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    String getStAccountIdByEntrustedUserId(Integer entrustedUserId);
+    /**
+     *
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Boolean updateBorrowRegistByType(BorrowVO borrowVO,Integer type);
+    /**
+     *
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
 }

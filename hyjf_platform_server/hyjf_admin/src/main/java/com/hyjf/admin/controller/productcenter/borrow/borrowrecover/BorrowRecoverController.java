@@ -1,6 +1,8 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrecover;
 
 import com.hyjf.admin.beans.BorrowRecoverBean;
+import com.hyjf.admin.beans.request.BorrowRecoverRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
@@ -18,6 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,14 +50,18 @@ public class BorrowRecoverController extends BaseController {
      */
     @ApiOperation(value = "放款明细", notes = "放款明细页面查询初始化")
     @PostMapping(value = "/searchAction")
-    public BaseResult<BorrowRecoverBean> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRecoverRequest form) {
-        BorrowRecoverBean bean = borrowRecoverService.searchBorrowRecover(form);
+    public AdminResult<BorrowRecoverBean> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRecoverRequestBean form) {
+
+
+        BorrowRecoverRequest copyForm=new BorrowRecoverRequest();
+        BeanUtils.copyProperties(form, copyForm);
+        BorrowRecoverBean bean = borrowRecoverService.searchBorrowRecover(copyForm);
         Map<String, String> map=CacheUtil.getParamNameMap("LOAN_STATUS");
         bean.setLoanStarusList(map);
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRecoverService.selectHjhInstConfigByInstCode("-1");
         bean.setHjhInstConfigList(hjhInstConfigList);
-        BaseResult<BorrowRecoverBean> result=new BaseResult<BorrowRecoverBean> ();
+        AdminResult<BorrowRecoverBean> result=new AdminResult<BorrowRecoverBean> ();
         result.setData(bean);
         return result;
     }
@@ -73,13 +80,15 @@ public class BorrowRecoverController extends BaseController {
     @ApiOperation(value = "放款明细导出", notes = "带条件导出EXCEL")
     @PostMapping(value = "/exportAction")
     @ResponseBody
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRecoverRequest form) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRecoverRequestBean form) throws Exception {
+        BorrowRecoverRequest copyForm=new BorrowRecoverRequest();
+        BeanUtils.copyProperties(form, copyForm);
         // 表格sheet名称
         String sheetName = "放款明细";
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
-        List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(form);
+        List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
         // 列头
         String[] titles = new String[] { "序号", "借款编号", "资产来源", "计划编号", "借款人ID", "借款人用户名", "是否受托支付", "受托支付用户名", "借款标题", "项目类型", "借款期限", "年化收益", "还款方式", "投资订单号", "放款订单号","合作机构编号",
                 "投资人用户名", "投资人ID", "投资时间", "投资金额", "应放款金额", "放款服务费", "实际放款金额", "实收服务费", "放款状态", "放款时间" ,

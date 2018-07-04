@@ -42,14 +42,20 @@ public class UserAuthExceptionController extends BaseController {
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
     public JSONObject userAuthException(@RequestBody AdminUserAuthListRequest request){
+        JSONObject jsonObject = new JSONObject();
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
-            String recordTotal = response.getRecordTotal();
+            Integer recordTotal = response.getRecordTotal();
             List<AdminUserAuthListVO> resultList = response.getResultList();
-            return success(recordTotal,resultList);
+            jsonObject.put(STATUS, SUCCESS);
+            jsonObject.put(MSG, "成功");
+            jsonObject.put(TRCORD, recordTotal);
+            jsonObject.put(LIST, resultList);
         }else{
-            return fail("查询失败");
+            jsonObject.put(MSG, "查询失败");
+            jsonObject.put(STATUS, FAIL);
         }
+        return jsonObject;
     }
     /**
      * 同步用户授权状态

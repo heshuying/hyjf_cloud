@@ -11,13 +11,14 @@
 
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author dongzeshan
  */
 
-public class ChangeLogRequest extends BaseVO {
+public class ChangeLogRequest extends BasePage {
 	
 	/**
 	 * 翻页机能用的隐藏变量

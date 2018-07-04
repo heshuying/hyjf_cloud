@@ -5,7 +5,6 @@ package com.hyjf.am.config.controller.admin.exception;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.AdminUserAuthExceptionService;
-import com.hyjf.common.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -42,4 +41,5 @@ public class AdminUserAuthExceptionController extends BaseConfigController {
         }
         return "未知错误";
     }
+
 }
