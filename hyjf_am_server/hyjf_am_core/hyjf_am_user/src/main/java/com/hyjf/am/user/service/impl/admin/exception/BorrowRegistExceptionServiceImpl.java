@@ -30,6 +30,13 @@ import java.util.List;
 public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements BorrowRegistExceptionService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * 根据userId获取BankOpenAccount
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
     @Override
     public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
         logger.info("searchBankOpenAccount:::::::::userId=[{}]",userId);

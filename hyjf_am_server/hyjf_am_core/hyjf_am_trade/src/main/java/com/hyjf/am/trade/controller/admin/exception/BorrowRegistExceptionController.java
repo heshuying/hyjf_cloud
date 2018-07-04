@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +31,9 @@ import java.util.List;
 /**
  * @author: sunpeikai
  * @version: BorrowRegistExceptionController, v0.1 2018/7/3 15:05
+ * 异常中心-标的备案掉单
  */
+@Api(value = "异常中心-标的备案掉单")
 @RestController
 @RequestMapping("/am-trade/borrow_regist_exception")
 public class BorrowRegistExceptionController extends BaseController {
@@ -39,9 +42,12 @@ public class BorrowRegistExceptionController extends BaseController {
     private BorrowRegistExceptionService borrowRegistExceptionService;
 
     /**
-     * 获取项目类型
-     * @return
+     * 获取项目类型,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 项目类型list封装
      */
+    @ApiOperation(value = "获取项目类型", notes = "获取项目类型,筛选条件展示")
     @RequestMapping("/select_borrow_project")
     public BorrowProjectTypeResponse selectBorrowProjectList() {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
@@ -54,9 +60,12 @@ public class BorrowRegistExceptionController extends BaseController {
     }
 
     /**
-     * 获取还款方式
-     * @return
+     * 获取还款方式,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 还款方式list封装
      */
+    @ApiOperation(value = "获取还款方式", notes = "获取还款方式,筛选条件展示")
     @RequestMapping("/select_borrow_style")
     public BorrowStyleResponse selectBorrowStyleList() {
         BorrowStyleResponse response = new BorrowStyleResponse();
@@ -69,9 +78,12 @@ public class BorrowRegistExceptionController extends BaseController {
     }
 
     /**
-     * 获取标的列表count
+     * 获取标的列表count,用于前端分页展示
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
      * @return
      */
+    @ApiOperation(value = "获取标的列表count", notes = "获取标的列表count,用于前端分页展示")
     @RequestMapping("/get_regist_count")
     public Integer getRegistCount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
         return borrowRegistExceptionService.getRegistCount(borrowRegistListRequest);
@@ -79,8 +91,11 @@ public class BorrowRegistExceptionController extends BaseController {
 
     /**
      * 获取标的列表
-     * @return
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return 异常标list封装
      */
+    @ApiOperation(value = "获取标的列表", notes = "获取标的列表")
     @RequestMapping("/select_borrow_regist_list")
     public BorrowRegistCustomizeResponse selectBorrowRegistList(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
         BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
@@ -99,6 +114,13 @@ public class BorrowRegistExceptionController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据borrowNid查询borrow信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "根据borrowNid查询borrow信息", notes = "根据borrowNid查询borrow信息")
     @GetMapping("/search_borrow_by_borrownid/{borrowNid}")
     public BorrowResponse searchBorrowByBorrowNid(@PathVariable String borrowNid){
         logger.info("handleBorrowRegistException::::::::::borrowNid=[{}]",borrowNid);
@@ -109,35 +131,38 @@ public class BorrowRegistExceptionController extends BaseController {
         }
         return borrowResponse;
     }
+
     /**
-     * 标的备案异常处理
-     * @auth 孙沛凯
-     * @param entrustUserId 异常列表筛选检索条件
+     * 根据受托支付userId查询stAccountId
+     * @auth sunpeikai
+     * @param entrustUserId 受托支付userId
      * @return
      */
-    @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
+    @ApiOperation(value = "根据受托支付userId查询stAccountId", notes = "根据受托支付userId查询stAccountId")
     @GetMapping(value = "/get_staccountid_by_entrusteduserid/{entrusteduserid}")
     public String getStAccountIdByEntrustedUserId(@PathVariable Integer entrustUserId){
         return  borrowRegistExceptionService.getStAccountIdByEntrustedUserId(entrustUserId);
     }
+
     /**
-     * 标的备案异常处理
-     * @auth 孙沛凯
-     * @param type 类型
+     * 更新标
+     * @auth sunpeikai
+     * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
+    @ApiOperation(value = "更新标", notes = "更新标")
     @PostMapping(value = "/update_borrowregist_by_type/{type}")
     public Boolean updateBorrowRegistByType(@RequestBody BorrowVO borrowVO,@PathVariable Integer type){
         return  borrowRegistExceptionService.updateBorrowRegistByType(borrowVO,type);
     }
+
     /**
-     * 标的备案异常处理
-     * @auth 孙沛凯
+     * 更新标的资产信息如果关联计划的话
+     * @auth sunpeikai
      * @param status 状态  受托支付传4，非受托支付传5
      * @return
      */
-    @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
+    @ApiOperation(value = "更新标的资产信息如果关联计划的话", notes = "更新标的资产信息如果关联计划的话")
     @PostMapping(value = "/update_borrowasset/{status}")
     public Boolean updateBorrowAsset(@RequestBody BorrowVO borrowVO,@PathVariable Integer status){
         return  borrowRegistExceptionService.updateBorrowAsset(borrowVO,status);

@@ -3,8 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl.admin.exception;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
@@ -12,11 +11,14 @@ import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowRegistCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.trade.mq.AutoPreAuditProducer;
+import com.hyjf.am.trade.mq.Producer;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.borrow.BorrowRegistExceptionVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
@@ -27,10 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: sunpeikai
@@ -53,9 +52,14 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Autowired
     private StzhWhiteListMapper stzhWhiteListMapper;
 
+    @Autowired
+    private AutoPreAuditProducer autoPreAuditProducer;
+
     /**
-     * 获取项目类型
-     * @return
+     * 获取项目类型,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 项目类型list封装
      */
     @Override
     public List<BorrowProjectType> selectBorrowProjectList() {
@@ -69,8 +73,10 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     }
 
     /**
-     * 获取还款方式
-     * @return
+     * 获取还款方式,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 还款方式list封装
      */
     @Override
     public List<BorrowStyle> selectBorrowStyleList(){
@@ -82,8 +88,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     }
 
     /**
-     * 获取标的备案列表count
-     * @param borrowRegistListRequest
+     * 获取标的列表count,用于前端分页展示
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
      * @return
      */
     @Override
@@ -92,9 +99,10 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     }
 
     /**
-     * 获取标的备案列表
-     * @param borrowRegistListRequest
-     * @return
+     * 获取标的列表
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return 异常标list封装
      */
     @Override
     public List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
@@ -110,8 +118,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         }
         return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
     }
+
     /**
-     * 根据borrowNid查询borrow
+     * 根据borrowNid查询borrow信息
      * @auth sunpeikai
      * @param
      * @return
@@ -126,6 +135,12 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         return borrowVO;
     }
 
+    /**
+     * 根据受托支付userId查询stAccountId
+     * @auth sunpeikai
+     * @param entrustedUserId 受托支付userId
+     * @return
+     */
     @Override
     public String getStAccountIdByEntrustedUserId(Integer entrustedUserId) {
         StzhWhiteListExample stzhWhiteListExample = new StzhWhiteListExample();
@@ -139,6 +154,12 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         return "";
     }
 
+    /**
+     * 更新标
+     * @auth sunpeikai
+     * @param type 1更新标的备案 2更新受托支付标的备案
+     * @return
+     */
     @Override
     public Boolean updateBorrowRegistByType(BorrowVO borrowVO,Integer type) {
         Borrow borrow = CommonUtils.convertBean(borrowVO,Borrow.class);
@@ -153,10 +174,11 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         Boolean flag = borrowMapper.updateByExampleSelective(borrow, example) > 0;
         return flag;
     }
+
     /**
-     * 备案成功看标的是否关联计划，如果关联则更新对应资产表
+     * 更新标的资产信息如果关联计划的话
      * @auth sunpeikai
-     * @param
+     * @param status 状态  受托支付传4，非受托支付传5
      * @return
      */
     @Override
@@ -184,9 +206,12 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 params.put("mqMsgId", GetCode.getRandomCode(10));
                 params.put("assetId", hjhPlanAsset.getAssetId());
                 params.put("instCode", hjhPlanAsset.getInstCode());
-
-                //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_BORROW_PREAUDIT, JSONObject.toJSONString(params));
-                logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
+                try {
+                    autoPreAuditProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
+                } catch (MQException e) {
+                    logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列失败");
+                }
             }
 
         }

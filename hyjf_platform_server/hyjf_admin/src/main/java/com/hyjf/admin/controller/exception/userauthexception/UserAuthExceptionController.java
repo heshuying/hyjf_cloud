@@ -35,7 +35,7 @@ public class UserAuthExceptionController extends BaseController {
     private UserAuthExceptionService userAuthExceptionService;
     /**
      * 自动投资债转授权异常list查询
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param request 筛选条件请求参数
      * @return JSONObject 拼装的返回参数
      */
@@ -59,7 +59,7 @@ public class UserAuthExceptionController extends BaseController {
     }
     /**
      * 同步用户授权状态
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param userId 用户id
      * @param type 1自动投资授权  2债转授权
      * @return

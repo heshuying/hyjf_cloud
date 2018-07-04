@@ -21,7 +21,7 @@ public interface UserauthService {
 
 	/**
 	 * 调银行api拿用户数据(同步用户授权状态用)
-	 * @auth 孙沛凯
+	 * @auth sunpeikai
 	 * @param userId 用户id
 	 * @param type 1自动投资授权  2债转授权
 	 * @return
@@ -30,7 +30,7 @@ public interface UserauthService {
 
 	/**
 	 * 更新用户授权状态
-	 * @auth 孙沛凯
+	 * @auth sunpeikai
 	 * @param userId 用户id
 	 * @param bankCallBean 更新的bean
 	 * @return

@@ -26,7 +26,13 @@ public class BorrowRegistExceptionController {
     @Autowired
     private BorrowRegistExceptionService borrowRegistExceptionService;
 
-    @ApiOperation(value = "银行标的备案异常", notes = "获取BankOpenAccount")
+    /**
+     * 根据userId获取BankOpenAccount
+     * @auth sunpeikai
+     * @param userId
+     * @return
+     */
+    @ApiOperation(value = "获取BankOpenAccount", notes = "根据userId获取BankOpenAccount")
     @GetMapping(value = "/searchbankopenaccount/{userId}")
     public BankOpenAccountResponse searchBankOpenAccount(@PathVariable Integer userId){
         BankOpenAccountResponse response = new BankOpenAccountResponse();

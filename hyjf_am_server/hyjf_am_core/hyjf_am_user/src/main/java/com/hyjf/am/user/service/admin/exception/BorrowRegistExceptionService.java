@@ -10,5 +10,12 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
  * @version: BorrowRegistExceptionService, v0.1 2018/7/3 18:03
  */
 public interface BorrowRegistExceptionService {
+
+    /**
+     * 根据userId获取BankOpenAccount
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
     BankOpenAccountVO searchBankOpenAccount(Integer userId);
 }
