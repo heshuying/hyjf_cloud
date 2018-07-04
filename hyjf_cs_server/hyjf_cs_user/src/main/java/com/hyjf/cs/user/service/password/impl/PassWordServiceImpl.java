@@ -294,6 +294,23 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         }
     }
 
+    @Override
+    public boolean validPassword(Integer userId, String password) {
+        String codeSalt = "";
+        String passwordDb = "";
+        UserVO user = this.getUsersById(userId);
+        codeSalt = user.getSalt();
+        passwordDb = user.getPassword();
+        // 验证用的password
+        password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
+        // 密码正确时
+        if (password.equals(passwordDb)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 微信修改密码发送短信验证码
      * @param sendSmsVO

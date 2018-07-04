@@ -280,4 +280,29 @@ public class WebPassWordController {
         return result;
     }
 
+    /**
+     * 检查输入的 原登录密码 是否已存在
+     * @param userId
+     * @param param
+     * @return
+     */
+    @ApiOperation(value = "验证原密码是否存在",notes = "验证原密码是否存在")
+    @ApiImplicitParam(name = "param",value = "{oldPassword:String}",dataType = "Map")
+    @PostMapping(value = "checkoriginapw", produces = "application/json; charset=utf-8")
+    public boolean checkPw(@RequestHeader(value = "userId") Integer userId,@RequestBody Map<String,String> param) {
+        String pw = param.get("oldPassword");
+        if (pw != null && !"".equals(pw.trim())) {
+            pw = RSAJSPUtil.rsaToPassword(pw);
+            if (!passWordService.validPassword(userId, pw)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        //画面未输入原密码
+        else {
+            return false;
+        }
+    }
+
 }

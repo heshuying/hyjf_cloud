@@ -96,4 +96,6 @@ public interface PassWordService extends BaseUserService {
     int updatePassword(UserVO userVO, String newPW);
 
     boolean existPhone(String mobile);
+
+    boolean validPassword(Integer userId, String pw);
 }
