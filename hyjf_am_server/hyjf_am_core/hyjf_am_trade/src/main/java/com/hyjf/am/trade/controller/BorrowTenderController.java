@@ -3,8 +3,10 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
@@ -18,6 +20,7 @@ import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.trade.service.BorrowTenderService;
 import springfox.documentation.service.ApiListing;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -88,6 +91,27 @@ public class BorrowTenderController extends BaseController{
             response.setResultList(CommonUtils.convertBeanList(tenderList,BorrowTenderVO.class));
         }
         return response;
+    }
+
+    /**
+     * 根据投资订单号查询已承接金额
+     * @param tenderNid
+     * @return
+     */
+    @GetMapping("/get_assign_capital_by_tender_nid/{tenderNid}")
+    public BigDecimal getAssignCapital(@PathVariable String tenderNid){
+        return borrowTenderService.getAssignCapitalByTenderNid(tenderNid);
+    }
+
+    /**
+     * 保存债转日志
+     * @param creditTenderLogVO
+     * @return
+     */
+    @PostMapping("/save_credit_tender_assign_log")
+    public Integer saveCreditTenderAssignLog(@RequestBody CreditTenderLogVO creditTenderLogVO){
+        CreditTenderLog bean = CommonUtils.convertBean(creditTenderLogVO,CreditTenderLog.class);
+        return borrowTenderService.saveCreditTenderAssignLog(bean);
     }
 
 

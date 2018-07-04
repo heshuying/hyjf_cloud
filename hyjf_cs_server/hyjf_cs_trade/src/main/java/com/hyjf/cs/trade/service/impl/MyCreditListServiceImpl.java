@@ -314,7 +314,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
-        BorrowRecoverVO recover = this.borrowRecoverClient.selectBorrowRecoverByTenderNid(request.getTenderNid());
+        BorrowRecoverVO recover = this.borrowRecoverClient.getBorrowRecoverByTenderNid(request.getTenderNid());
         if (recover == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
@@ -428,7 +428,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
-        BorrowRecoverVO recover = this.borrowRecoverClient.selectBorrowRecoverByTenderNid(request.getTenderNid());
+        BorrowRecoverVO recover = this.borrowRecoverClient.getBorrowRecoverByTenderNid(request.getTenderNid());
         if (recover == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }

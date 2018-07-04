@@ -1,16 +1,17 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.FddTempletMapper;
-import com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowTenderService;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,6 +23,11 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
     private FddTempletMapper fddTempletMapper;
     @Autowired
     private TenderAgreementMapper tenderAgreementMapper;
+    @Autowired
+    private CreditTenderMapper creditTenderMapper;
+
+    @Autowired
+    private CreditTenderLogMapper creditTenderLogMapper;
 
     @Override
     public Integer getCountBorrowTenderService(Integer userId, String borrowNid) {
@@ -73,5 +79,39 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
         example.createCriteria().andNidEqualTo(nid);
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
         return tenderList;
+    }
+
+    /**
+     * 根据投资订单号查询已承接金额
+     *
+     * @param tenderNid
+     * @return
+     */
+    @Override
+    public BigDecimal getAssignCapitalByTenderNid(String tenderNid) {
+        BigDecimal assignCapital = BigDecimal.ZERO;
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria cra = example.createCriteria();
+        cra.andCreditTenderNidEqualTo(tenderNid);
+        Date date = GetDate.getDate(1499011200);
+        cra.andCreateTimeLessThanOrEqualTo(date);
+        List<CreditTender> list = this.creditTenderMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            for (CreditTender creditTender : list) {
+                assignCapital = assignCapital.add(creditTender.getAssignCapital());
+            }
+        }
+        return assignCapital;
+    }
+
+    /**
+     * 保存债转信息
+     *
+     * @param bean
+     * @return
+     */
+    @Override
+    public Integer saveCreditTenderAssignLog(CreditTenderLog bean) {
+        return creditTenderLogMapper.insertSelective(bean);
     }
 }

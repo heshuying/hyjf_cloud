@@ -207,4 +207,32 @@ public class CreditTenderController extends BaseController{
         }
     }
 
+    /**
+     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * @param creditNid
+     * @param assignCapital
+     * @param userId
+     * @return
+     */
+    @GetMapping("/get_interest_info/{creditNid}/{assignCapital}/{userId}")
+    public CreditAssignCustomizeResponse getInterestInfo( @PathVariable String creditNid,@PathVariable String assignCapital,@PathVariable Integer userId) {
+        CreditAssignCustomizeResponse response = new CreditAssignCustomizeResponse();
+        TenderToCreditAssignCustomizeVO bean = bankCreditTenderService.getInterestInfo(creditNid,assignCapital,userId);
+        response.setResult(bean);
+        return response;
+    }
+
+    /**
+     * 根据creditNid 查询债转信息
+     * @param creditNid
+     * @return
+     */
+    @GetMapping("/get_borrow_credit_by_credit_nid/{creditNid}")
+    public BorrowCreditResponse getBorrowCreditByCreditNid( @PathVariable String creditNid) {
+        BorrowCreditResponse response = new BorrowCreditResponse();
+        BorrowCreditVO bean = bankCreditTenderService.getBorrowCreditByCreditNid(creditNid);
+        response.setResult(bean);
+        return response;
+    }
+
 }

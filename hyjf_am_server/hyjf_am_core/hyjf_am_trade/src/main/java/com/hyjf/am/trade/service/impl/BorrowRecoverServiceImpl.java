@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -46,6 +47,43 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
     @Override
     public int updateBorrowRecover(BorrowRecover borrowRecover) {
         return this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover);
+    }
+
+    /**
+     * 根据tenderNid 和bidNid 查询
+     *
+     * @param tenderNid
+     * @param bidNid
+     * @return
+     */
+    @Override
+    public BorrowRecover getBorrowRecoverByTenderNidBidNid(String tenderNid, String bidNid) {
+        BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria borrowRecoverCra = borrowRecoverExample.createCriteria();
+        borrowRecoverCra.andBorrowNidEqualTo(bidNid).andNidEqualTo(tenderNid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
+        if(CollectionUtils.isEmpty(borrowRecoverList)){
+            return null;
+        }
+        return borrowRecoverList.get(0);
+    }
+
+    /**
+     * 根据tenderNid查询
+     *
+     * @param tenderNid
+     * @return
+     */
+    @Override
+    public BorrowRecover getBorrowRecoverByTenderNid(String tenderNid) {
+        BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria borrowRecoverCra = borrowRecoverExample.createCriteria();
+        borrowRecoverCra.andNidEqualTo(tenderNid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
+        if(CollectionUtils.isEmpty(borrowRecoverList)){
+            return null;
+        }
+        return borrowRecoverList.get(0);
     }
 
 

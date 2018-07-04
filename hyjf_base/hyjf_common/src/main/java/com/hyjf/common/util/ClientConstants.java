@@ -34,9 +34,14 @@ public class ClientConstants implements Serializable {
 	public static final int WECHAT_CLIENT = 1;
 
 	/**
-	 * APP端
+	 * APP 安卓端
 	 */
 	public static final int APP_CLIENT = 2;
+
+	/**
+	 * APP IOS端
+	 */
+	public static final int APP_CLIENT_IOS = 3;
 
 	public static final int API_CLIENT = 3;
 
