@@ -1042,11 +1042,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			// 投资编号
 			vt.setTenderNid(orderId);
 			vt.setSumVipValue(userInfo.getVipValue());
-			vt.setAddTime(nowTime);
-			vt.setAddUser(String.valueOf(userId));
-			vt.setUpdateTime(nowTime);
-			vt.setUpdateUser(String.valueOf(userId));
-			vt.setDelFlg(0);
+			vt.setCreateUserId(userId);
+			vt.setUpdateUserId(userId);
+			vt.setDelFlag(0);
 			int ret=this.vipUserTenderMapper.insertSelective(vt);
 			if (ret>0){
 				result = true;

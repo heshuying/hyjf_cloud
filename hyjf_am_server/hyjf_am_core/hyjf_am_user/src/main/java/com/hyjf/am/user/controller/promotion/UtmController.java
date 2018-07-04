@@ -48,7 +48,7 @@ public class UtmController extends BaseController {
         UtmResponse response = new UtmResponse();
         Integer size = utmService.getCountByParam(map);
         if (size != null) {
-            response.setRecordTotal(size+"");
+            response.setRecordTotal(size);
         }
         return response;
     }

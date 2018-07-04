@@ -44,7 +44,7 @@ public class UserAuthExceptionController extends BaseController {
     public JSONObject userAuthException(@RequestBody AdminUserAuthListRequest request){
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
-            String recordTotal = response.getRecordTotal();
+            String recordTotal = String.valueOf(response.getRecordTotal());
             List<AdminUserAuthListVO> resultList = response.getResultList();
             return success(recordTotal,resultList);
         }else{

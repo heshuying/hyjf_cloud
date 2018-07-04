@@ -92,7 +92,7 @@ public class AccountDetailController extends BaseController {
         List<AccountDetailVO> listAccountDtaileShow = new ArrayList<AccountDetailVO>();
         if (null != accountDetailResponse) {
             List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
-            String recordCount = accountDetailResponse.getRecordTotal();
+            String recordCount = String.valueOf(accountDetailResponse.getRecordTotal());
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
                 for (AccountDetailVO accountDetailVO : listAccountDetail) {
                     //根据用户id获取用户信息
