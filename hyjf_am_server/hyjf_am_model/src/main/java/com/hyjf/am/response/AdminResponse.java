@@ -5,7 +5,7 @@ import com.hyjf.am.vo.BaseVO;
 import java.util.List;
 
 /**
- * @author xiasq
+ * @author dongzeshan
  * @version Response, v0.1 2018/1/21 22:18
  */
 public class AdminResponse<T extends BaseVO> {
@@ -19,13 +19,13 @@ public class AdminResponse<T extends BaseVO> {
 	private T result;
 	private List<T> resultList;
 	//admin增加返回总数
-	private String recordTotal;
+	private int recordTotal;
 
-	public String getRecordTotal() {
+	public int getRecordTotal() {
 		return recordTotal;
 	}
 
-	public void setRecordTotal(String recordTotal) {
+	public void setRecordTotal(int recordTotal) {
 		this.recordTotal = recordTotal;
 	}
 

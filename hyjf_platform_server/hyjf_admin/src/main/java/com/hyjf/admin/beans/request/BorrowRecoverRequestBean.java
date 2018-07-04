@@ -1,13 +1,14 @@
-package com.hyjf.am.resquest.admin;
+package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.admin.beans.BaseRequest;
+
+import java.io.Serializable;
 
 /**
  * @author pangchengchao
  * @version BorrowRecoverRequest, v0.1 2018/7/2 14:25
  */
-public class BorrowRecoverRequest  extends BasePage {
+public class BorrowRecoverRequestBean extends BaseRequest implements Serializable {
 
     /**
      * 借款编号 检索条件
@@ -66,14 +67,6 @@ public class BorrowRecoverRequest  extends BasePage {
      */
     private String loanBatchNo;
 
-    /**
-     * 检索条件 limitStart
-     */
-    private int limitStart = -1;
-    /**
-     * 检索条件 limitEnd
-     */
-    private int limitEnd = -1;
 
 
     /**
@@ -281,21 +274,6 @@ public class BorrowRecoverRequest  extends BasePage {
         this.instCodeOrgSrch = instCodeOrgSrch;
     }
 
-    public int getLimitStart() {
-        return limitStart;
-    }
-
-    public void setLimitStart(int limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    public int getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(int limitEnd) {
-        this.limitEnd = limitEnd;
-    }
 
     public String getBorrowNameSrch() {
         return borrowNameSrch;

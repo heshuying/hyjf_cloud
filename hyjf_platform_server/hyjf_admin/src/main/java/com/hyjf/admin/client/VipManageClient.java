@@ -5,8 +5,10 @@ package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
+import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
 
 /**
  * @author yaoyong
@@ -16,4 +18,6 @@ public interface VipManageClient {
     VipManageResponse searchList(VipManageRequest vipManageRequest);
 
     VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest);
+
+    VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl);
 }
