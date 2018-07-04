@@ -37,12 +37,10 @@ public class UserPortraitServiceImpl implements UserPortraitService {
     private UserPortraitClient userPortraitClient;
     /**
      * 根据参数查询用户画像信息
-     * @param mapParam
      * @return
      */
     @Override
-    public UserPortraitResponse selectRecordList(Map<String,Object>mapParam){
-        UserPortraitRequest userPortraitRequest =  this.setParamRequest(mapParam);
+    public UserPortraitResponse selectRecordList(UserPortraitRequest userPortraitRequest){
         UserPortraitResponse response =  userPortraitClient.selectRecordList(userPortraitRequest);
         return response;
     }
@@ -114,7 +112,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
                 request.setRemark(mapParam.get("remark").toString());
             }
             if (mapParam.containsKey("limit") && StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                request.setLimit((Integer) mapParam.get("limit"));
+                request.setPageSize((Integer) mapParam.get("limit"));
             }
             //查询用
             if (mapParam.containsKey("yesterdayBeginTime") && StringUtils.isNotBlank(mapParam.get("yesterdayBeginTime").toString())) {
