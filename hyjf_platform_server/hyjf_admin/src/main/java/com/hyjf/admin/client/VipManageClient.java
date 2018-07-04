@@ -3,19 +3,17 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.admin.VipDetailListResponse;
+import com.hyjf.am.response.admin.VipManageResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.vo.admin.VipDetailListVO;
-import com.hyjf.am.vo.admin.VipManageVO;
-
-import java.util.List;
 
 /**
  * @author yaoyong
  * @version VipManageClient, v0.1 2018/7/2 16:23
  */
 public interface VipManageClient {
-    List<VipManageVO> searchList(VipManageRequest vipManageRequest);
+    VipManageResponse searchList(VipManageRequest vipManageRequest);
 
-    List<VipDetailListVO> searchDetailList(VipDetailListRequest detailListRequest);
+    VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest);
 }

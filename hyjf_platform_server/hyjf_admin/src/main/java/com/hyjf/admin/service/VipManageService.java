@@ -4,11 +4,10 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.VipDetailListResponse;
+import com.hyjf.am.response.admin.VipManageResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.vo.admin.VipDetailListVO;
-
-import java.util.List;
 
 /**
  * @author yaoyong
@@ -22,12 +21,12 @@ public interface VipManageService {
      * @param vipManageRequest
      * @return
      */
-    JSONObject searchList(VipManageRequest vipManageRequest);
+    VipManageResponse searchList(VipManageRequest vipManageRequest);
 
     /**
      * 查询vip详情列表
      * @param detailListRequest
      * @return
      */
-    List<VipDetailListVO> searchDetailList(VipDetailListRequest detailListRequest);
+    VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest);
 }
