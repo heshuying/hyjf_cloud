@@ -92,7 +92,7 @@ public class AccountDetailController extends BaseController {
         List<AccountDetailVO> listAccountDtaileShow = new ArrayList<AccountDetailVO>();
         if (null != accountDetailResponse) {
             List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
-            String recordCount = String.valueOf(accountDetailResponse.getRecordTotal());
+            Integer recordCount = accountDetailResponse.getRecordTotal();
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
                 for (AccountDetailVO accountDetailVO : listAccountDetail) {
                     //根据用户id获取用户信息
@@ -124,9 +124,13 @@ public class AccountDetailController extends BaseController {
                 }
             }
             if (null != listAccountDtaileShow) {
-                jsonObject = this.success(recordCount, listAccountDtaileShow);
+                jsonObject.put(STATUS, SUCCESS);
+                jsonObject.put(MSG, "成功");
+                jsonObject.put(TRCORD, recordCount);
+                jsonObject.put(LIST, listAccountDtaileShow);
             } else {
-                jsonObject = this.fail("暂无符合条件数据");
+                jsonObject.put(MSG, "暂无符合条件数据");
+                jsonObject.put(STATUS, FAIL);
             }
         }
         return jsonObject;

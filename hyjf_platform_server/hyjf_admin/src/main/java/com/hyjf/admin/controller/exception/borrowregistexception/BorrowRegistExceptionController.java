@@ -67,14 +67,13 @@ public class BorrowRegistExceptionController extends BaseController {
     public JSONObject borrowRegistHandleException(@RequestHeader(value = "userId")Integer userId, @RequestBody BorrowRegistListRequest request){
         JSONObject jsonObject = new JSONObject();
         String borrowNid = request.getBorrowNidSrch();
+        logger.info("borrowRegistHandleException::::::::::userId=[{}],borrowNid=[{}]",userId,borrowNid);
         if(StringUtils.isBlank(borrowNid)){
             jsonObject.put("success","1");
             jsonObject.put("msg","项目编号为空");
         }else{
-
+            jsonObject = borrowRegistExceptionService.handleBorrowRegistException(borrowNid,userId);
         }
-        // 数据总数
-
         return jsonObject;
     }
 }

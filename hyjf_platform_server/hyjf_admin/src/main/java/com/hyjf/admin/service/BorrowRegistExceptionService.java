@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -39,5 +40,12 @@ public interface BorrowRegistExceptionService {
      * @return
      */
     List <BorrowRegistCustomizeVO> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest);
+    /**
+     * 备案异常处理
+     * @auth 孙沛凯
+     * @param borrowNid 借款编号
+     * @return
+     */
+    JSONObject handleBorrowRegistException(String borrowNid,Integer userId);
 
 }

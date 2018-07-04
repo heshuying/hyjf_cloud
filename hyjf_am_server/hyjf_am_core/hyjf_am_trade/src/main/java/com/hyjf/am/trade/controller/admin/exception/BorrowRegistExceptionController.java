@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.admin.exception;
 
 import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
+import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -15,12 +16,13 @@ import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -82,6 +84,13 @@ public class BorrowRegistExceptionController extends BaseController {
     @RequestMapping("/select_borrow_regist_list")
     public BorrowRegistCustomizeResponse selectBorrowRegistList(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
         BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
+        Integer recordTotal = borrowRegistExceptionService.getRegistCount(borrowRegistListRequest);
+        logger.info("selectBorrowRegistList::::::::::recordTotal=[{}]",recordTotal);
+        Paginator paginator = new Paginator(borrowRegistListRequest.getCurrPage(), recordTotal);
+        borrowRegistListRequest.setLimitStart(paginator.getOffset());
+        borrowRegistListRequest.setLimitEnd(paginator.getLimit());
+        logger.info("selectBorrowRegistList::::::::::limitStart=[{}],limitEnd=[{}]",borrowRegistListRequest.getLimitStart(),borrowRegistListRequest.getLimitEnd());
+
         List<BorrowRegistCustomize> borrowRegistCustomizeList = borrowRegistExceptionService.selectBorrowRegistList(borrowRegistListRequest);
         if (!CollectionUtils.isEmpty(borrowRegistCustomizeList)) {
             List<BorrowRegistCustomizeVO> voList = CommonUtils.convertBeanList(borrowRegistCustomizeList, BorrowRegistCustomizeVO.class);
@@ -89,4 +98,50 @@ public class BorrowRegistExceptionController extends BaseController {
         }
         return response;
     }
+
+    @GetMapping("/search_borrow_by_borrownid/{borrowNid}")
+    public BorrowResponse searchBorrowByBorrowNid(@PathVariable String borrowNid){
+        logger.info("handleBorrowRegistException::::::::::borrowNid=[{}]",borrowNid);
+        BorrowResponse borrowResponse = new BorrowResponse();
+        BorrowVO borrowVO = borrowRegistExceptionService.searchBorrowByBorrowNid(borrowNid);
+        if(borrowVO != null){
+            borrowResponse.setResult(borrowVO);
+        }
+        return borrowResponse;
+    }
+    /**
+     * 标的备案异常处理
+     * @auth 孙沛凯
+     * @param entrustUserId 异常列表筛选检索条件
+     * @return
+     */
+    @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
+    @GetMapping(value = "/get_staccountid_by_entrusteduserid/{entrusteduserid}")
+    public String getStAccountIdByEntrustedUserId(@PathVariable Integer entrustUserId){
+        return  borrowRegistExceptionService.getStAccountIdByEntrustedUserId(entrustUserId);
+    }
+    /**
+     * 标的备案异常处理
+     * @auth 孙沛凯
+     * @param type 类型
+     * @return
+     */
+    @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
+    @PostMapping(value = "/update_borrowregist_by_type/{type}")
+    public Boolean updateBorrowRegistByType(@RequestBody BorrowVO borrowVO,@PathVariable Integer type){
+        return  borrowRegistExceptionService.updateBorrowRegistByType(borrowVO,type);
+    }
+    /**
+     * 标的备案异常处理
+     * @auth 孙沛凯
+     * @param status 状态  受托支付传4，非受托支付传5
+     * @return
+     */
+    @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
+    @PostMapping(value = "/update_borrowasset/{status}")
+    public Boolean updateBorrowAsset(@RequestBody BorrowVO borrowVO,@PathVariable Integer status){
+        return  borrowRegistExceptionService.updateBorrowAsset(borrowVO,status);
+    }
+
+
 }

@@ -5,12 +5,16 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.BorrowRegistExceptionClient;
 import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
-import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
-import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -63,4 +67,58 @@ public class BorrowRegistExceptionClientImpl implements BorrowRegistExceptionCli
         return null;
     }
 
+    @Override
+    public BorrowVO searchBorrowByBorrowNid(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/search_borrow_by_borrownid/" + borrowNid;
+        BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
+        String url = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
+        BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public AdminSystemVO getUserInfoById(Integer loginUserId) {
+        String url = "http://AM-CONFIG/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
+        AdminSystemResponse response = restTemplate.getForEntity(url,AdminSystemResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public String getStAccountIdByEntrustedUserId(Integer entrustedUserId) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/get_staccountid_by_entrusteduserid/" + entrustedUserId;
+        String response = restTemplate.getForEntity(url,String.class).getBody();
+        return response;
+    }
+
+    @Override
+    public boolean updateBorrowRegist(BorrowVO borrowVO,Integer type) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowregist_by_type/" + type;
+        Boolean response = restTemplate.postForEntity(url,borrowVO,Boolean.class).getBody();
+        return response;
+    }
+    /**
+     * 备案成功看标的是否关联计划，如果关联则更新对应资产表
+     * @param borrowVO
+     * @return
+     */
+    @Override
+    public boolean updateBorrowAsset(BorrowVO borrowVO, Integer status) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowasset/" + status;
+        Boolean response = restTemplate.postForEntity(url,borrowVO,Boolean.class).getBody();
+        return response;
+    }
 }

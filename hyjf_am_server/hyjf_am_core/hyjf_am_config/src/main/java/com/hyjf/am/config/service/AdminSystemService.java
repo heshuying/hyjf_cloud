@@ -17,5 +17,5 @@ public interface AdminSystemService {
 
 	public AdminSystem getUserInfo(AdminSystem adminSystem);
 	public List<Tree> selectLeftMenuTree2(String id);
-
+	public AdminSystem getUserInfoByUserId(Integer userId);
 }
