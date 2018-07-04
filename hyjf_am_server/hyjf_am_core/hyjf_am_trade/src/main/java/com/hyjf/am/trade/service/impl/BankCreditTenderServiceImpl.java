@@ -1177,6 +1177,19 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		return this.creditRepayMapper.selectByExample(example);
 	}
 
+	@Override
+	public List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, int status) {
+		CreditRepayExample example = new CreditRepayExample();
+		CreditRepayExample.Criteria crt = example.createCriteria();
+		crt.andBidNidEqualTo(borrowNid);
+		crt.andCreditTenderNidEqualTo(tenderOrderId);
+		crt.andRecoverPeriodEqualTo(periodNow);
+		crt.andStatusEqualTo(status);
+		example.setOrderByClause("id ASC");
+		List<CreditRepay> creditRepayList = this.creditRepayMapper.selectByExample(example);
+		return creditRepayList;
+	}
+
 	/**
 	 * 我要债转
 	 *

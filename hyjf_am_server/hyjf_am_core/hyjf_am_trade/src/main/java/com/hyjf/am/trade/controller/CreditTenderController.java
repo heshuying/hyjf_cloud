@@ -193,6 +193,22 @@ public class CreditTenderController extends BaseController{
     }
 
     /**
+     * 获取债转还款列表
+     * @param tenderNid
+     * @return
+     */
+    @GetMapping("/select_credit_repay_list/{borrowNid}/{tenderNid}/{periodNow}/{status}")
+    public CreditRepayResponse selectCreditRepayList(@PathVariable String borrowNid, @PathVariable String tenderNid, @PathVariable Integer periodNow, @PathVariable Integer status) {
+        CreditRepayResponse response = new CreditRepayResponse();
+        List<CreditRepay> list = bankCreditTenderService.selectCreditRepayList(borrowNid,tenderNid,periodNow,status);
+        if (list != null) {
+            response.setResultList(CommonUtils.convertBeanList(list, CreditRepayVO.class));
+        }
+        return response;
+    }
+
+
+    /**
      * 保存债转的数据
      * @param request
      * @return
