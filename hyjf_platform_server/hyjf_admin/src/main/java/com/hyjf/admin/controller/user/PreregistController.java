@@ -89,7 +89,7 @@ public class PreregistController extends BaseController {
 	@PostMapping(value = "/updatepreregistlist")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-	@ApiImplicitParam(name = "id", value = "主键", required = true, dataType = "String")
+	@ApiImplicitParam(name = "id", value = "主键")
 	public AdminResult<AdminPreRegistListVO> updatepreregistlist(HttpServletRequest request, 
 			@RequestBody String id) {
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
