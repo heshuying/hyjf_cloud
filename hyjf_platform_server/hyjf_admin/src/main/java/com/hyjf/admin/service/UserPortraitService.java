@@ -24,7 +24,7 @@ public interface UserPortraitService {
      * @param mapParam
      * @return
      */
-    UserPortraitResponse selectRecordList(Map<String,Object>mapParam);
+    UserPortraitResponse selectRecordList(UserPortraitRequest userPortraitRequest);
 
     /**
      * 根据用户id查找用户画像
