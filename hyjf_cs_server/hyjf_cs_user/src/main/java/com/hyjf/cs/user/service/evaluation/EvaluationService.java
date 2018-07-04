@@ -3,12 +3,9 @@
  */
 package com.hyjf.cs.user.service.evaluation;
 
-import com.hyjf.am.vo.user.EvalationVO;
-import com.hyjf.am.vo.user.QuestionCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +34,7 @@ public interface EvaluationService extends BaseUserService {
      * @param userId
      * @return
      */
-     UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId);
+     UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId,String behaviorId);
 
     /**
      * 发放优惠券
@@ -66,7 +63,7 @@ public interface EvaluationService extends BaseUserService {
      * @param userId
      * @return
      */
-    Map<String,Object> answerAnalysisAndCoupon(String userAnswer, Integer userId);
+    Map<String,Object> answerAnalysisAndCoupon(String userAnswer, Integer userId,String platform,String behaviorId);
 
     /**
      * api端风险评测验证参数
@@ -85,4 +82,23 @@ public interface EvaluationService extends BaseUserService {
      * @return
      */
     int ThirdPartySaveUserEvaluationResults(UserVO user, Integer evalationScoreCount, EvalationVO evalation, String instCode, String channel);
+
+    /**
+     * 检查平台
+     * @param activityId
+     * @param platform
+     * @return
+     */
+    String checkActivityPlatform(String activityId, String platform);
+
+    /**
+     * app端计算测评结果
+     * @param userEvalationResult
+     * @return
+     */
+    UserEvalationResultCustomizeVO createUserEvalationResult(UserEvalationResultVO userEvalationResult);
+
+    Integer insertUserEvalationBehavior(Integer userId, String s);
+
+    void updateUserEvalationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
 }

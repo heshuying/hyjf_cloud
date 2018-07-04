@@ -3,8 +3,6 @@ package com.hyjf.am.user.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.vo.user.EvalationVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -109,10 +107,13 @@ public interface UserService extends BaseService {
 
 	Evalation getEvalationByCountScore(short countScore);
 
-    UserEvalationResult insertUserEvalationResult(List<String> answerList, List<String> questionList,
-                                                  EvalationVO evalation, int countScore, Integer userId, UserEvalationResultVO oldUserEvalationResult);
+    UserEvalationResult insertUserEvalationResult(Integer userId,String userAnswer,Integer countScore,String behaviorId);
 
-	List<Evalation> getEvalationRecord();
+    UserEvalationBehavior insertUserEvalationBehavior(Integer userId, String behavior);
+
+    Integer updateUserEvalationBehavior(UserEvalationBehavior userEvalationBehavior);
+
+    List<Evalation> getEvalationRecord();
 
     Evalation getEvalationByEvalationType(String evalationType);
 
