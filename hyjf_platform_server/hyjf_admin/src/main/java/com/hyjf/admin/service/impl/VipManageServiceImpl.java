@@ -6,12 +6,15 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.VipManageClient;
 import com.hyjf.admin.service.VipManageService;
-import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.VipDetailListResponse;
+import com.hyjf.am.response.admin.VipManageResponse;
+import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
+import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.vo.admin.VipManageVO;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.vo.admin.VipDetailListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,19 +43,22 @@ public class VipManageServiceImpl implements VipManageService {
      * @return
      */
     @Override
-    public JSONObject searchList(VipManageRequest vipManageRequest) {
-        JSONObject jsonObject = new JSONObject();
-        Map<String, Object> mapParam = new HashMap<>();
-        //0->成功,99->失败
-        String status = Response.SUCCESS;
-        //初始化分页参数，并组合到请求参数
-        List<VipManageVO> vipManageVOS = vipManageClient.searchList(vipManageRequest);
-        if (CollectionUtils.isEmpty(vipManageVOS)) {
-            //暂无数据
-            status = Response.FAIL;
-        }
-        jsonObject.put("record", vipManageVOS);
-        jsonObject.put("status", status);
-        return jsonObject;
+    public VipManageResponse searchList(VipManageRequest vipManageRequest) {
+        return vipManageClient.searchList(vipManageRequest);
+    }
+
+    /**
+     * 查询vip详情信息
+     * @param detailListRequest
+     * @return
+     */
+    @Override
+    public VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest) {
+        return vipManageClient.searchDetailList(detailListRequest);
+    }
+
+    @Override
+    public VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl) {
+        return vipManageClient.searchUpdateGradeList(vgl);
     }
 }

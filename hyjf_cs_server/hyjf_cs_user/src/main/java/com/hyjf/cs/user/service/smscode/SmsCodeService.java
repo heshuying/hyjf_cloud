@@ -30,17 +30,6 @@ public interface SmsCodeService extends BaseUserService {
      */
     void appCheckParam(SmsRequest request, String verificationType, String verificationCode, String mobile,String key);
 
-    /**
-     * 验证验证码
-     * @param mobile
-     * @param code
-     * @param validCodeType
-     * @param clientPc
-     * @param ckcodeYiyan
-     * @param ckcodeYiyan1
-     * @return
-     */
-    int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
 
     void checkParam(String verificationType, String code, String mobile);
 }

@@ -58,7 +58,13 @@ public class BaseResult<T> implements Serializable {
 		this.status = status;
 		this.statusDesc = statusDesc;
 	}
-	
+
+	public BaseResult(MsgCode msgCode, Object... params) {
+		super();
+		this.status = msgCode.getCode();
+		this.statusDesc = StringUtil.getMessage(msgCode.getMsg(), params);
+	}
+
 	/**
 	 * statusDesc
 	 * @return the statusDesc

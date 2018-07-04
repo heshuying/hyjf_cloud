@@ -91,7 +91,20 @@
 		</if>
 	    AND a.del_flag = '0'
 	</select>
-	
+	<select id="getUserInfoById" resultMap="UserInfoResultMap" parameterType="Integer">
+		SELECT DISTINCT
+		a.id,
+		a.username,
+		a.truename,
+		anr.role_id,
+		a.state
+		FROM
+		ht_admin a
+		LEFT JOIN ht_admin_and_role anr ON a.id = anr.user_id
+		WHERE
+		a.id = #{id}
+		AND a.del_flag = '0'
+	</select>
 	<select id="updatePassword" resultType="java.lang.Integer" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		update 
 		  ht_admin a

@@ -1,9 +1,9 @@
 package com.hyjf.am.resquest.trade;
 
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 
-public class AssetManageBeanRequest extends BaseVO {
+public class AssetManageBeanRequest extends BasePage {
     // 用户id
     public String userId;
     // 投资开始值

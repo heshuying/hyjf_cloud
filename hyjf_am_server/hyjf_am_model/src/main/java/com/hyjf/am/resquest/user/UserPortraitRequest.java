@@ -1,11 +1,13 @@
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.math.BigDecimal;
 /**
  * @author nxl
  * @version UserPortraitResponse, v0.1 2018/6/28 14:27
  */
-public class UserPortraitRequest {
+public class UserPortraitRequest extends BasePage {
     private Integer userId;
 
     private String userName;
@@ -61,33 +63,11 @@ public class UserPortraitRequest {
     private String mobile;
 
     private static final long serialVersionUID = 1L;
-    public int limit;
     //限定标识，导出时为0
     public int limitFlg = 1;
     //查询用
-
     public String yesterdayEndTime;
     public String yesterdayBeginTime;
-
-
-    private int paginatorPage = 1;
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
 
     public Integer getUserId() {
         return userId;

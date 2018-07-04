@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
 /**
@@ -10,7 +11,7 @@ import com.hyjf.am.vo.BaseVO;
  *
  * @author zhangyk
  */
-public class CreditListRequest extends BaseVO {
+public class CreditListRequest extends BasePage {
 
     /**
      * 项目期限最小值

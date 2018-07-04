@@ -37,7 +37,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+			throws Exception {/*
 		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
 		String username = "";
 		try {
@@ -98,7 +98,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 			return false;
 
 		}
-
+*/
 		return true;
 
 	}

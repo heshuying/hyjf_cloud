@@ -31,56 +31,29 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
     }
 
     @Override
-    public void searchAction(JSONObject jsonObject, BorrowRecoverBean form) {
-
-        BorrowRecoverRequest request =createAdminBorrowRecoverBean(form);
-
-
+    public BorrowRecoverBean searchBorrowRecover(BorrowRecoverRequest request) {
+        BorrowRecoverBean bean=new BorrowRecoverBean();
         Integer count = this.borrowRecoverClient.countBorrowRecover(request);
-
-        Page page = Page.initPage(form.getCurrPage(), form.getPageSize());
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         page.setTotal(count);
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         if (count != null && count > 0) {
             List<BorrowRecoverCustomizeVO> recordList = this.borrowRecoverClient.selectBorrowRecoverList(request);
             BorrowRecoverCustomizeVO sumAccount = this.borrowRecoverClient.sumBorrowRecoverList(request);
-            jsonObject.put("sumAccount", sumAccount);
-            jsonObject.put("recordList", recordList);
-        }else
-        jsonObject.put("page",page);
+            bean.setSumAccount(sumAccount);
+            bean.setRecordList(recordList);
+        }else{
+
+        }
+        bean.setTotal(count);
+        return bean;
     }
 
-    private BorrowRecoverRequest createAdminBorrowRecoverBean(BorrowRecoverBean form) {
-
-        BorrowRecoverRequest request=new BorrowRecoverRequest();
-
-        // 借款编号 检索条件
-        request.setBorrowNidSrch(form.getBorrowNidSrch());
-        // 计划编号 检索条件
-        request.setPlanNidSrch(form.getPlanNidSrch());
-        // 投资人 检索条件
-        request.setUsernameSrch(form.getUsernameSrch());
-        // 投资订单号 检索条件
-        request.setOrderNumSrch(form.getOrderNumSrch());
-        // 合作机构编号
-        request.setInstCodeOrgSrch(form.getInstCodeOrgSrch());
-        // 放款状态 检索条件
-        request.setIsRecoverSrch(form.getIsRecoverSrch());
-        // 投资时间 检索条件
-        request.setTimeRecoverStartSrch(form.getTimeRecoverStartSrch());
-        // 投资时间 检索条件
-        request.setTimeRecoverEndSrch(form.getTimeRecoverEndSrch());
-        // 投资时间 检索条件
-        request.setTimeStartSrch(form.getTimeStartSrch());
-        // 投资时间 检索条件
-        request.setTimeEndSrch(form.getTimeEndSrch());
-        // 放款订单号
-        request.setLoanOrdid(form.getLoanOrdid());
-        // 放款批次号
-        request.setLoanBatchNo(form.getLoanBatchNo());
-        // 资金来源 检索条件
-        request.setInstCodeSrch(form.getInstCodeSrch());
-        return  request;
+    @Override
+    public List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest request) {
+        List<BorrowRecoverCustomizeVO> recordList = this.borrowRecoverClient.selectBorrowRecoverList(request);
+        return recordList;
     }
+
 }

@@ -3,6 +3,8 @@ package com.hyjf.am.config.controller.admin;
 import java.util.List;
 
 import com.hyjf.am.config.controller.BaseConfigController;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -102,5 +104,22 @@ public class AdminSystemController extends BaseConfigController {
 		List<AdminSystemVO> adminVo = CommonUtils.convertBeanList(permissionsList, AdminSystemVO.class);
 		asr.setResultList(adminVo);
 		return asr;
+	}
+
+	/**
+	 * 根据userId查询admin用户信息
+	 * @auth sunpeikai
+	 * @param userId 银行返回的错误码
+	 * @return response admin用户信息
+	 */
+	@ApiOperation(value = "根据userId查询admin用户信息",notes = "根据userId查询admin用户信息")
+	@GetMapping(value = "/get_admin_system_by_userid/{userId}")
+	public AdminSystemResponse getAdminSystemByUserId(@PathVariable Integer userId){
+		logger.info("userId========{}",userId);
+		AdminSystemResponse response = new AdminSystemResponse();
+		AdminSystem adminSystem = adminSystemService.getUserInfoByUserId(userId);
+		AdminSystemVO adminSystemVO = CommonUtils.convertBean(adminSystem,AdminSystemVO.class);
+		response.setResult(adminSystemVO);
+		return response;
 	}
 }

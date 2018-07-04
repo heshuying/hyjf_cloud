@@ -23,8 +23,16 @@ public class PasswordRequest extends AppBaseRequest{
     @ApiModelProperty(value = "确认密码 web")
     private String pwSure;
 
-    @ApiModelProperty(value = " app")
-    private String client;
+    @ApiModelProperty(value = "手机号（找回密码接口） web")
+    private String mobile;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
     public String getVerificationCode() {
         return verificationCode;

@@ -3,21 +3,6 @@
  */
 package com.hyjf.am.user.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -32,6 +17,19 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -232,7 +230,6 @@ public class UserManagerController extends BaseController{
             if (null != userManagerUpdateCustomize) {
                 BeanUtils.copyProperties(userManagerUpdateCustomize, userManagerUpdateVo);
                 response.setResult(userManagerUpdateVo);
-                response.setRtn(Response.SUCCESS);//代表成功
             }
             return response;
         }
@@ -263,6 +260,18 @@ public class UserManagerController extends BaseController{
     public int countUserByMobile(@PathVariable int userId, @PathVariable String mobile) {
         logger.info("---countUserByMobile---  " + userId + "," + mobile);
         int checkFlg = userManagerService.countUserByMobile(userId, mobile);
+        return checkFlg;
+    }
+
+    /**
+     * 统计手机号
+     * @param mobile
+     * @return
+     */
+    @RequestMapping("/countByMobile/{mobile}")
+    public int countByMobile(@PathVariable String mobile){
+        logger.info("---countByMobile---  "  + mobile);
+        int checkFlg = userManagerService.countByMobile(mobile);
         return checkFlg;
     }
 

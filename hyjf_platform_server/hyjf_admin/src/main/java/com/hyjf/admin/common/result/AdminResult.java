@@ -12,6 +12,7 @@
 package com.hyjf.admin.common.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hyjf.common.constants.MsgCode;
 
 import java.io.Serializable;
 
@@ -21,7 +22,30 @@ import java.io.Serializable;
  * @author liubinWE
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class WebResult<T> extends BaseResult<T> implements Serializable {
-	private static final long WEB = 1L;
+public class AdminResult<T> extends BaseResult<T> implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public AdminResult() {
+		super();
+	}
+
+	public AdminResult(MsgCode msgCode, Object... params) {
+		super(msgCode, params);
+	}
+
+	public AdminResult(String status, String statusDesc) {
+		super(status, statusDesc);
+	}
+
+	public AdminResult(T data) {
+		super(data);
+	}
+
+	public AdminResult(Throwable e) {
+		super(e);
+	}
 
 }

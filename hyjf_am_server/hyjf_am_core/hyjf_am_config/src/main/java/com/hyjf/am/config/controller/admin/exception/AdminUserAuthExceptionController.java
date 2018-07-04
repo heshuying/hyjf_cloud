@@ -5,7 +5,6 @@ package com.hyjf.am.config.controller.admin.exception;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.AdminUserAuthExceptionService;
-import com.hyjf.common.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +27,7 @@ public class AdminUserAuthExceptionController extends BaseConfigController {
     private AdminUserAuthExceptionService adminUserAuthExceptionService;
     /**
      * 根据银行错误码查询错误信息
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param retCode 银行返回的错误码
      * @return retMsg 错误码对应的错误信息
      */
@@ -42,4 +41,5 @@ public class AdminUserAuthExceptionController extends BaseConfigController {
         }
         return "未知错误";
     }
+
 }

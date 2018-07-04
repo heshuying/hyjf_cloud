@@ -13,9 +13,9 @@ public class ListResult<T> {
 
     private List<T> list;
 
-    private Long count;
+    private int count;
 
-    public static <T> ListResult<T> build(List<T> list,Long count) {
+    public static <T> ListResult<T> build(List<T> list,int count) {
         ListResult<T> result = new ListResult<>();
         result.setCount(count);
         result.setList(list);
@@ -30,11 +30,11 @@ public class ListResult<T> {
         this.list = list;
     }
 
-    public Long getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Long count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
