@@ -1,6 +1,3 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.admin.config;
 
 import org.springframework.context.annotation.Configuration;

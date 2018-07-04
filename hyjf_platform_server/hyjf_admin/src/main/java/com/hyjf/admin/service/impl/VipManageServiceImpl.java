@@ -8,8 +8,10 @@ import com.hyjf.admin.client.VipManageClient;
 import com.hyjf.admin.service.VipManageService;
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
+import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
 import com.hyjf.am.vo.admin.VipDetailListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,10 @@ public class VipManageServiceImpl implements VipManageService {
     @Override
     public VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest) {
         return vipManageClient.searchDetailList(detailListRequest);
+    }
+
+    @Override
+    public VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl) {
+        return vipManageClient.searchUpdateGradeList(vgl);
     }
 }

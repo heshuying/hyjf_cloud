@@ -12,10 +12,13 @@ import com.hyjf.admin.service.VipManageService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
+import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
 import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.am.vo.admin.VipManageVO;
+import com.hyjf.am.vo.admin.VipUpdateGradeListVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -86,6 +89,22 @@ public class VipManageController extends BaseController {
 
         }
         return new AdminResult<ListResult<VipDetailListVO>>(ListResult.build(vdl.getResultList(), vdl.getCount()));
+    }
+
+    @ApiOperation(value = "vip管理",notes = "vip升级详情页面")
+    @PostMapping("/vipupgradeInit")
+    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+        VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
+        vgl.setUserId(userId);
+        VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
+        if (vgr == null) {
+            return new AdminResult<>(FAIL,FAIL_DESC);
+        }
+        if (!Response.isSuccess(vgr)) {
+            return new AdminResult<>(FAIL, vgr.getMessage());
+
+        }
+        return new AdminResult<ListResult<VipUpdateGradeListVO>>(ListResult.build(vgr.getResultList(), vgr.getCount()));
     }
 
 
