@@ -5,12 +5,15 @@ package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
+import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,6 +76,23 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = tradeService+"/batch/search_user_portrait_list/" + userIds;
         BatchUserPortraitQueryResponse response = restTemplate.getForEntity(url, BatchUserPortraitQueryResponse.class).getBody();
         if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public Integer countCouponValid(Integer userId) {
+        String url =tradeService+"/couponUser/countCouponValid/" + userId;
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
+
+    @Override
+    public List<CouponUserListCustomizeVO> selectCouponUserList(Map<String, Object> mapParameter) {
+        String url = tradeService+"/couponUser/selectCouponUserList";
+        CouponUserListCustomizeResponse response = restTemplate.postForEntity(url,mapParameter,CouponUserListCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
             return response.getResultList();
         }
         return null;

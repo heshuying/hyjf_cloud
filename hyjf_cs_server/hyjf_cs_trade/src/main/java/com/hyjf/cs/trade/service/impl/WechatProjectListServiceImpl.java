@@ -1,5 +1,22 @@
 package com.hyjf.cs.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
@@ -15,33 +32,32 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.trade.bean.*;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.bean.AppBorrowProjectInfoBeanVO;
+import com.hyjf.cs.trade.bean.BorrowDetailBean;
+import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
+import com.hyjf.cs.trade.bean.BorrowRepayPlanBean;
+import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
+import com.hyjf.cs.trade.bean.ProjectInfo;
+import com.hyjf.cs.trade.bean.UserLoginInfo;
+import com.hyjf.cs.trade.bean.WebViewUser;
+import com.hyjf.cs.trade.client.AmBorrowRepayClient;
+import com.hyjf.cs.trade.client.AmHjhPlanClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.BorrowClient;
+import com.hyjf.cs.trade.client.BorrowManinfoClient;
+import com.hyjf.cs.trade.client.BorrowTenderClient;
+import com.hyjf.cs.trade.client.BorrowUserClient;
+import com.hyjf.cs.trade.client.HjhAccedeClient;
+import com.hyjf.cs.trade.client.HjhDebtCreditClient;
+import com.hyjf.cs.trade.client.UserAuthClient;
+import com.hyjf.cs.trade.client.WebProjectListClient;
 import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.service.WechatProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import org.apache.commons.lang.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.MessageFormat;
-import java.util.*;
 
 @Service
 public class WechatProjectListServiceImpl implements WechatProjectListService {
