@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.trade.service.impl.admin.finance;
 
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.trade.dao.mapper.auto.DirectionalTransferAssociatedRecordsMapper;
-import com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedRecords;
-import com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedRecordsExample;
-import com.hyjf.am.trade.service.admin.finance.AssociatedRecordsService;
+import com.hyjf.am.resquest.admin.BindLogListRequest;
+import com.hyjf.am.trade.dao.mapper.auto.DirectionalTransferAssociatedLogMapper;
+import com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLog;
+import com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLogExample;
+import com.hyjf.am.trade.service.admin.finance.AssociatedLogService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
@@ -20,49 +20,49 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: AssociatedRecordsServiceImpl, v0.1 2018/7/5 14:50
+ * @version: AssociatedLogServiceImpl, v0.1 2018/7/5 15:45
  */
 @Service
-public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements AssociatedRecordsService {
+public class AssociatedLogServiceImpl extends BaseServiceImpl implements AssociatedLogService {
 
     @Autowired
-    private DirectionalTransferAssociatedRecordsMapper directionalTransferAssociatedRecordsMapper;
+    private DirectionalTransferAssociatedLogMapper directionalTransferAssociatedLogMapper;
 
     /**
-     * 根据筛选条件查询关联记录count
+     * 根据筛选条件查询绑定日志count
      * @auth sunpeikai
-     * @param request 筛选条件
+     * @param
      * @return
      */
     @Override
-    public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
-        DirectionalTransferAssociatedRecordsExample example = convertExample(request);
-        return directionalTransferAssociatedRecordsMapper.countByExample(example);
+    public Integer getBindLogCount(BindLogListRequest request) {
+        DirectionalTransferAssociatedLogExample example = convertExample(request);
+        return directionalTransferAssociatedLogMapper.countByExample(example);
     }
 
     /**
-     * 根据筛选条件查询关联记录list
+     * 根据筛选条件查询绑定日志list
      * @auth sunpeikai
-     * @param request 筛选条件
+     * @param
      * @return
      */
     @Override
-    public List<AssociatedRecordListVo> searchAssociatedRecordList(AssociatedRecordListRequest request) {
-        DirectionalTransferAssociatedRecordsExample example = convertExample(request);
-        List<DirectionalTransferAssociatedRecords> directionalTransferAssociatedRecordsList = directionalTransferAssociatedRecordsMapper.selectByExample(example);
-        List<AssociatedRecordListVo> associatedRecordListVoList = CommonUtils.convertBeanList(directionalTransferAssociatedRecordsList,AssociatedRecordListVo.class);
-        return associatedRecordListVoList;
+    public List<BindLogVO> searchBindLogList(BindLogListRequest request) {
+        DirectionalTransferAssociatedLogExample example = convertExample(request);
+        List<DirectionalTransferAssociatedLog> directionalTransferAssociatedLogList = directionalTransferAssociatedLogMapper.selectByExample(example);
+        List<BindLogVO> bindLogVOList = CommonUtils.convertBeanList(directionalTransferAssociatedLogList,BindLogVO.class);
+        return bindLogVOList;
     }
 
     /**
-     * 筛选条件转example
+     * BindLogListRequest转example参数
      * @auth sunpeikai
-     * @param request
+     * @param
      * @return
      */
-    private DirectionalTransferAssociatedRecordsExample convertExample(AssociatedRecordListRequest request){
-        DirectionalTransferAssociatedRecordsExample example = new DirectionalTransferAssociatedRecordsExample();
-        DirectionalTransferAssociatedRecordsExample.Criteria criteria = example.createCriteria();
+    private DirectionalTransferAssociatedLogExample convertExample(BindLogListRequest request){
+        DirectionalTransferAssociatedLogExample example = new DirectionalTransferAssociatedLogExample();
+        DirectionalTransferAssociatedLogExample.Criteria criteria = example.createCriteria();
         // 转出账户
         if (StringUtils.isNotEmpty(request.getTurnOutUsername())) {
             criteria.andTurnOutUsernameLike("%" + request.getTurnOutUsername() + "%");

@@ -3,16 +3,17 @@
  */
 package com.hyjf.am.vo.admin;
 
-import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author: sunpeikai
- * @version: AssociatedRecordListVo, v0.1 2018/7/5 14:27
+ * @version: BindLogVO, v0.1 2018/7/5 15:41
  */
-public class AssociatedRecordListVo extends BaseVO {
+public class BindLogVO extends BaseVO implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Integer id;
 
     private String turnOutUsername;
@@ -34,6 +35,8 @@ public class AssociatedRecordListVo extends BaseVO {
     private Integer associatedState;
 
     private Date associatedTime;
+
+    private String remark;
 
     public Integer getId() {
         return id;
@@ -121,5 +124,13 @@ public class AssociatedRecordListVo extends BaseVO {
 
     public void setAssociatedTime(Date associatedTime) {
         this.associatedTime = associatedTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
