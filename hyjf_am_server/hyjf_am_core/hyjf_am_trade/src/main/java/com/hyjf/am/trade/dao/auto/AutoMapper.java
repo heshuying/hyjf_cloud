@@ -2,466 +2,467 @@ package com.hyjf.am.trade.dao.auto;
 
 
 import com.hyjf.am.trade.dao.mapper.auto.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class AutoMapper {
 
-    @Autowired
+    @Resource
     protected AccountMapper accountMapper;
 
-    @Autowired
+    @Resource
     protected AccountBorrowMapper accountBorrowMapper;
 
-    @Autowired
+    @Resource
     protected AccountDirectionalTransferMapper accountDirectionalTransferMapper;
 
-    @Autowired
+    @Resource
     protected AccountListMapper accountListMapper;
 
-    @Autowired
+    @Resource
     protected AccountRechargeMapper accountRechargeMapper;
 
-    @Autowired
+    @Resource
     protected AccountTradeMapper accountTradeMapper;
 
-    @Autowired
+    @Resource
     protected AccountWithdrawMapper accountWithdrawMapper;
 
-    @Autowired
+    @Resource
     protected AleveErrorLogMapper aleveErrorLogMapper;
 
-    @Autowired
+    @Resource
     protected AleveLogMapper aleveLogMapper;
 
-    @Autowired
+    @Resource
     protected BankCreditEndMapper bankCreditEndMapper;
 
-    @Autowired
+    @Resource
     protected BankMerchantAccountMapper bankMerchantAccountMapper;
 
-    @Autowired
+    @Resource
     protected BankMerchantAccountInfoMapper bankMerchantAccountInfoMapper;
 
-    @Autowired
+    @Resource
     protected BankMerchantAccountListMapper bankMerchantAccountListMapper;
 
-    @Autowired
+    @Resource
     protected BankRepayFreezeLogMapper bankRepayFreezeLogMapper;
 
-    @Autowired
+    @Resource
     protected BorrowMapper borrowMapper;
 
-    @Autowired
+    @Resource
     protected BorrowApicronMapper borrowApicronMapper;
 
-    @Autowired
+    @Resource
     protected BorrowBailMapper borrowBailMapper;
 
-    @Autowired
+    @Resource
     protected BorrowCarinfoMapper borrowCarinfoMapper;
 
-    @Autowired
+    @Resource
     protected BorrowCompanyAuthenMapper borrowCompanyAuthenMapper;
 
-    @Autowired
+    @Resource
     protected BorrowConfigMapper borrowConfigMapper;
 
-    @Autowired
+    @Resource
     protected BorrowConsumeMapper borrowConsumeMapper;
 
-    @Autowired
+    @Resource
     protected BorrowCreditMapper borrowCreditMapper;
 
-    @Autowired
+    @Resource
     protected BorrowFinhxfmanChargeMapper borrowFinhxfmanChargeMapper;
 
-    @Autowired
+    @Resource
     protected BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
 
-    @Autowired
+    @Resource
     protected BorrowFinserChargeMapper borrowFinserChargeMapper;
 
-    @Autowired
+    @Resource
     protected BorrowHousesMapper borrowHousesMapper;
 
-    @Autowired
+    @Resource
     protected BorrowInfoMapper borrowInfoMapper;
 
-    @Autowired
+    @Resource
     protected BorrowLogMapper borrowLogMapper;
 
-    @Autowired
+    @Resource
     protected BorrowManinfoMapper borrowManinfoMapper;
 
-    @Autowired
+    @Resource
     protected BorrowProjectRepayMapper borrowProjectRepayMapper;
 
-    @Autowired
+    @Resource
     protected BorrowProjectTypeMapper borrowProjectTypeMapper;
 
-    @Autowired
+    @Resource
     protected BorrowRecoverMapper borrowRecoverMapper;
 
-    @Autowired
+    @Resource
     protected BorrowRecoverPlanMapper borrowRecoverPlanMapper;
 
-    @Autowired
+    @Resource
     protected BorrowRepayMapper borrowRepayMapper;
 
-    @Autowired
+    @Resource
     protected BorrowRepayPlanMapper borrowRepayPlanMapper;
 
-    @Autowired
+    @Resource
     protected BorrowSendTypeMapper borrowSendTypeMapper;
 
-    @Autowired
+    @Resource
     protected BorrowStyleMapper borrowStyleMapper;
 
-    @Autowired
+    @Resource
     protected BorrowTenderMapper borrowTenderMapper;
 
-    @Autowired
+    @Resource
     protected BorrowTenderCpnMapper borrowTenderCpnMapper;
 
-    @Autowired
+    @Resource
     protected BorrowTenderTmpMapper borrowTenderTmpMapper;
 
-    @Autowired
+    @Resource
     protected BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
 
-    @Autowired
+    @Resource
     protected BorrowTypeMapper borrowTypeMapper;
 
-    @Autowired
+    @Resource
     protected BorrowUserMapper borrowUserMapper;
 
-    @Autowired
+    @Resource
     protected CalculateInvestInterestMapper calculateInvestInterestMapper;
 
-    @Autowired
+    @Resource
     protected ChinapnrExclusiveLogMapper chinapnrExclusiveLogMapper;
 
-    @Autowired
+    @Resource
     protected ChinapnrLogMapper chinapnrLogMapper;
 
-    @Autowired
+    @Resource
     protected ChinapnrSendLogMapper chinapnrSendLogMapper;
 
-    @Autowired
+    @Resource
     protected ConsumeMapper consumeMapper;
 
-    @Autowired
+    @Resource
     protected ConsumeListMapper consumeListMapper;
 
-    @Autowired
+    @Resource
     protected CouponConfigMapper couponConfigMapper;
 
-    @Autowired
+    @Resource
     protected CouponOperationHistoryMapper couponOperationHistoryMapper;
 
-    @Autowired
+    @Resource
     protected CouponRealTenderMapper couponRealTenderMapper;
 
-    @Autowired
+    @Resource
     protected CouponRecoverMapper couponRecoverMapper;
 
-    @Autowired
+    @Resource
     protected CouponRepayMonitorMapper couponRepayMonitorMapper;
 
-    @Autowired
+    @Resource
     protected CouponTenderMapper couponTenderMapper;
 
-    @Autowired
+    @Resource
     protected CouponUserMapper couponUserMapper;
 
-    @Autowired
+    @Resource
     protected CreditRepayMapper creditRepayMapper;
 
-    @Autowired
+    @Resource
     protected CreditRepayLogMapper creditRepayLogMapper;
 
-    @Autowired
+    @Resource
     protected CreditTenderMapper creditTenderMapper;
 
-    @Autowired
+    @Resource
     protected CreditTenderLogMapper creditTenderLogMapper;
 
-    @Autowired
+    @Resource
     protected DebtAccedeCommissionMapper debtAccedeCommissionMapper;
 
-    @Autowired
+    @Resource
     protected DebtAccountListMapper debtAccountListMapper;
 
-    @Autowired
+    @Resource
     protected DebtApicronMapper debtApicronMapper;
 
-    @Autowired
+    @Resource
     protected DebtBailMapper debtBailMapper;
 
-    @Autowired
+    @Resource
     protected DebtBorrowMapper debtBorrowMapper;
 
-    @Autowired
+    @Resource
     protected DebtCarInfoMapper debtCarInfoMapper;
 
-    @Autowired
+    @Resource
     protected DebtCommissionConfigMapper debtCommissionConfigMapper;
 
-    @Autowired
+    @Resource
     protected DebtCompanyAuthenMapper debtCompanyAuthenMapper;
 
-    @Autowired
+    @Resource
     protected DebtCompanyInfoMapper debtCompanyInfoMapper;
 
-    @Autowired
+    @Resource
     protected DebtCreditMapper debtCreditMapper;
 
-    @Autowired
+    @Resource
     protected DebtCreditRepayMapper debtCreditRepayMapper;
 
-    @Autowired
+    @Resource
     protected DebtCreditTenderMapper debtCreditTenderMapper;
 
-    @Autowired
+    @Resource
     protected DebtCreditTenderLogMapper debtCreditTenderLogMapper;
 
-    @Autowired
+    @Resource
     protected DebtDeleteLogMapper debtDeleteLogMapper;
 
-    @Autowired
+    @Resource
     protected DebtDetailMapper debtDetailMapper;
 
-    @Autowired
+    @Resource
     protected DebtFreezeMapper debtFreezeMapper;
 
-    @Autowired
+    @Resource
     protected DebtFreezeLogMapper debtFreezeLogMapper;
 
-    @Autowired
+    @Resource
     protected DebtHouseInfoMapper debtHouseInfoMapper;
 
-    @Autowired
+    @Resource
     protected DebtInvestMapper debtInvestMapper;
 
-    @Autowired
+    @Resource
     protected DebtInvestLogMapper debtInvestLogMapper;
 
-    @Autowired
+    @Resource
     protected DebtLoanMapper debtLoanMapper;
 
-    @Autowired
+    @Resource
     protected DebtLoanDetailMapper debtLoanDetailMapper;
 
-    @Autowired
+    @Resource
     protected DebtLoanLogMapper debtLoanLogMapper;
 
-    @Autowired
+    @Resource
     protected DebtPlanMapper debtPlanMapper;
 
-    @Autowired
+    @Resource
     protected DebtPlanAccedeMapper debtPlanAccedeMapper;
 
-    @Autowired
+    @Resource
     protected DebtPlanBorrowMapper debtPlanBorrowMapper;
 
-    @Autowired
+    @Resource
     protected DebtPlanConfigMapper debtPlanConfigMapper;
 
-    @Autowired
+    @Resource
     protected DebtPlanInfoStaticMapper debtPlanInfoStaticMapper;
 
-    @Autowired
+    @Resource
     protected DebtPlanInfoStaticCountMapper debtPlanInfoStaticCountMapper;
 
-    @Autowired
+    @Resource
     protected DebtRepayMapper debtRepayMapper;
 
-    @Autowired
+    @Resource
     protected DebtRepayDetailMapper debtRepayDetailMapper;
 
-    @Autowired
+    @Resource
     protected DebtUserInfoMapper debtUserInfoMapper;
 
-    @Autowired
+    @Resource
     protected EveLogMapper eveLogMapper;
 
-    @Autowired
+    @Resource
     protected FddTempletMapper fddTempletMapper;
 
-    @Autowired
+    @Resource
     protected FreezeHistoryMapper freezeHistoryMapper;
 
-    @Autowired
+    @Resource
     protected FreezeListMapper freezeListMapper;
 
-    @Autowired
+    @Resource
     protected HjhAccedeMapper hjhAccedeMapper;
 
-    @Autowired
+    @Resource
     protected HjhAllocationEngineMapper hjhAllocationEngineMapper;
 
-    @Autowired
+    @Resource
     protected HjhAssetBorrowtypeMapper hjhAssetBorrowtypeMapper;
 
-    @Autowired
+    @Resource
     protected HjhAssetTypeMapper hjhAssetTypeMapper;
 
-    @Autowired
+    @Resource
     protected HjhDebtCreditMapper hjhDebtCreditMapper;
 
-    @Autowired
+    @Resource
     protected HjhDebtCreditRepayMapper hjhDebtCreditRepayMapper;
 
-    @Autowired
+    @Resource
     protected HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
 
-    @Autowired
+    @Resource
     protected HjhDebtCreditTenderLogMapper hjhDebtCreditTenderLogMapper;
 
-    @Autowired
+    @Resource
     protected HjhDebtDetailMapper hjhDebtDetailMapper;
 
-    @Autowired
+    @Resource
     protected HjhInstConfigMapper hjhInstConfigMapper;
 
-    @Autowired
+    @Resource
     protected HjhLabelMapper hjhLabelMapper;
 
-    @Autowired
+    @Resource
     protected HjhPlanMapper hjhPlanMapper;
 
-    @Autowired
+    @Resource
     protected HjhPlanAssetMapper hjhPlanAssetMapper;
 
-    @Autowired
+    @Resource
     protected HjhPlanBorrowTmpMapper hjhPlanBorrowTmpMapper;
 
-    @Autowired
+    @Resource
     protected HjhRegionMapper hjhRegionMapper;
 
-    @Autowired
+    @Resource
     protected HjhRepayMapper hjhRepayMapper;
 
-    @Autowired
+    @Resource
     protected IncreaseInterestInvestMapper increaseInterestInvestMapper;
 
-    @Autowired
+    @Resource
     protected IncreaseInterestLoanMapper increaseInterestLoanMapper;
 
-    @Autowired
+    @Resource
     protected IncreaseInterestLoanDetailMapper increaseInterestLoanDetailMapper;
 
-    @Autowired
+    @Resource
     protected IncreaseInterestRepayMapper increaseInterestRepayMapper;
 
-    @Autowired
+    @Resource
     protected IncreaseInterestRepayDetailMapper increaseInterestRepayDetailMapper;
 
-    @Autowired
+    @Resource
     protected ManualReverseMapper manualReverseMapper;
 
-    @Autowired
+    @Resource
     protected MerchantAccountMapper merchantAccountMapper;
 
-    @Autowired
+    @Resource
     protected MerchantTransferMapper merchantTransferMapper;
 
-    @Autowired
+    @Resource
     protected PoundageMapper poundageMapper;
 
-    @Autowired
+    @Resource
     protected PoundageDetailMapper poundageDetailMapper;
 
-    @Autowired
+    @Resource
     protected PoundageExceptionMapper poundageExceptionMapper;
 
-    @Autowired
+    @Resource
     protected PoundageLedgerMapper poundageLedgerMapper;
 
-    @Autowired
+    @Resource
     protected ProducerTransactionMessageMapper producerTransactionMessageMapper;
 
-    @Autowired
+    @Resource
     protected ProductMapper productMapper;
 
-    @Autowired
+    @Resource
     protected ProductErrorLogMapper productErrorLogMapper;
 
-    @Autowired
+    @Resource
     protected ProductInfoMapper productInfoMapper;
 
-    @Autowired
+    @Resource
     protected ProductInterestMapper productInterestMapper;
 
-    @Autowired
+    @Resource
     protected ProductListMapper productListMapper;
 
-    @Autowired
+    @Resource
     protected ProductListLogMapper productListLogMapper;
 
-    @Autowired
+    @Resource
     protected ProductRedeemMapper productRedeemMapper;
 
-    @Autowired
+    @Resource
     protected ProductRedeemDayMapper productRedeemDayMapper;
 
-    @Autowired
+    @Resource
     protected ProductRedeemFailMapper productRedeemFailMapper;
 
-    @Autowired
+    @Resource
     protected ProductRedeemListMapper productRedeemListMapper;
 
-    @Autowired
+    @Resource
     protected ProductRewardListMapper productRewardListMapper;
 
-    @Autowired
+    @Resource
     protected ProductUserMapper productUserMapper;
 
-    @Autowired
+    @Resource
     protected PushMoneyMapper pushMoneyMapper;
 
-    @Autowired
+    @Resource
     protected ROaDepartmentMapper rOaDepartmentMapper;
 
-    @Autowired
+    @Resource
     protected ROaUsersMapper rOaUsersMapper;
 
-    @Autowired
+    @Resource
     protected RUserMapper rUserMapper;
 
-    @Autowired
+    @Resource
     protected StzhWhiteListMapper stzhWhiteListMapper;
 
-    @Autowired
+    @Resource
     protected SubCommissionMapper subCommissionMapper;
 
-    @Autowired
+    @Resource
     protected SubCommissionListConfigMapper subCommissionListConfigMapper;
 
-    @Autowired
+    @Resource
     protected TenderAgreementMapper tenderAgreementMapper;
 
-    @Autowired
+    @Resource
     protected TenderBackHistoryMapper tenderBackHistoryMapper;
 
-    @Autowired
+    @Resource
     protected TenderCommissionMapper tenderCommissionMapper;
 
-    @Autowired
+    @Resource
     protected TransferExceptionLogMapper transferExceptionLogMapper;
 
-    @Autowired
+    @Resource
     protected UserTransferMapper userTransferMapper;
 
-    @Autowired
+    @Resource
     protected WkcdBorrowMapper wkcdBorrowMapper;
 
-    @Autowired
+    @Resource
     protected HjhAssetBorrowtypeMapper hjhAssetBorrowTypeMapper;
 
-    @Autowired
+    @Resource
     protected StzhWhiteListMapper sTZHWhiteListMapper;
 
 
