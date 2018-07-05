@@ -1,11 +1,10 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.CoupUserResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditRepayResponse;
-import com.hyjf.am.vo.trade.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.cs.trade.client.HjhDebtCreditRepayClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.List;
  * @author hesy
  * @version HjhDebtCreditRepayClientImpl, v0.1 2018/7/4 19:05
  */
+@Component
 public class HjhDebtCreditRepayClientImpl implements HjhDebtCreditRepayClient {
     @Autowired
     private RestTemplate restTemplate;

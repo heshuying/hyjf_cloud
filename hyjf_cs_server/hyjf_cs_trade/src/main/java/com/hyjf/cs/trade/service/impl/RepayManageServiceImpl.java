@@ -7,7 +7,6 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.repay.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.repay.DebtCreditRepayVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
@@ -59,6 +58,8 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     BankCreditTenderClient bankCreditTenderClient;
     @Autowired
     HjhDebtCreditRepayClient hjhDebtCreditRepayClient;
+    @Autowired
+    HjhDebtCreditClient hjhDebtCreditClient;
 
     /**
      * 请求参数校验
@@ -155,6 +156,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         return null;
     }
 
+    @Override
     public ProjectBean searchRepayProjectDetail(ProjectBean form) throws NumberFormatException, ParseException {
 
         String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
@@ -1715,7 +1717,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                             if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
                                 if(Validator.isNull(borrowRecover.getAccedeOrderId())){
                                     // 直投类项目债转还款
-                                    List<CreditRepayVO> creditRepayList = this.selectCreditRepayList(borrowNid, recoverNid, repayPeriod);
+                                    List<CreditRepayVO> creditRepayList = creditClient.selectCreditRepayList(borrowNid, recoverNid, repayPeriod, -1);
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
                                         List<RepayCreditRepayBean> creditRepayBeanList = new ArrayList<RepayCreditRepayBean>();
                                         BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -1823,7 +1825,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                             HjhDebtCreditRepayVO creditRepay = creditRepayList.get(k);
                                             HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
                                             String assignNid = creditRepay.getAssignOrderId();// 承接订单号
-                                            HjhDebtCreditTenderVO creditTender = this.getHjhDebtCreditTender(assignNid);// 查询相应的承接记录
+                                            HjhDebtCreditTenderVO creditTender = hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(assignNid).get(0);// 查询相应的承接记录
                                             assignAccount = creditRepay.getRepayAccount();// 承接本息
                                             assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getRepayInterest();
@@ -2203,8 +2205,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             HjhDebtCreditRepayVO creditRepay = creditRepayList.get(k);
                                             HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
-                                            String assignNid = creditRepay.getAssignOrderId();// 承接订单号
-                                            HjhDebtCreditTenderVO creditTender = this.getHjhDebtCreditTender(assignNid);// 查询相应的承接记录
+                                            // 承接订单号
+                                            String assignNid = creditRepay.getAssignOrderId();
+                                            // 查询相应的承接记录
+                                            HjhDebtCreditTenderVO creditTender = hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(assignNid).get(0);
                                             assignAccount = creditRepay.getRepayAccount();
                                             assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getRepayInterest();
@@ -2505,8 +2509,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             creditRepay = creditRepayList.get(k);
                                             creditRepayBean = new HjhDebtCreditRepayBean();
-                                            String assignNid = creditRepay.getAssignOrderId();// 承接订单号
-                                            HjhDebtCreditTenderVO creditTender = this.getHjhDebtCreditTender(assignNid);// 查询相应的承接记录
+                                            // 承接订单号
+                                            String assignNid = creditRepay.getAssignOrderId();
+                                            // 查询相应的承接记录
+                                            HjhDebtCreditTenderVO creditTender = hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(assignNid).get(0);
                                             assignAccount = creditRepay.getRepayAccount();// 承接本息
                                             assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getRepayInterest();
@@ -2795,8 +2801,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             creditRepay = creditRepayList.get(k);
                                             creditRepayBean = new HjhDebtCreditRepayBean();
-                                            String assignNid = creditRepay.getAssignOrderId();// 承接订单号
-                                            HjhDebtCreditTenderVO creditTender = this.getHjhDebtCreditTender(assignNid);// 查询相应的承接记录
+                                            // 承接订单号
+                                            String assignNid = creditRepay.getAssignOrderId();
+                                            // 查询相应的承接记录
+                                            HjhDebtCreditTenderVO creditTender = hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(assignNid).get(0);
                                             assignAccount = creditRepay.getRepayAccount();// 承接本息
                                             oldAssignAccount = assignAccount;
                                             assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
@@ -3060,8 +3068,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             HjhDebtCreditRepayVO creditRepay = creditRepayList.get(k);
                                             HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
-                                            String assignNid = creditRepay.getAssignOrderId();// 承接订单号
-                                            HjhDebtCreditTenderVO creditTender = this.getHjhDebtCreditTender(assignNid);// 查询相应的承接记录
+                                            // 承接订单号
+                                            String assignNid = creditRepay.getAssignOrderId();
+                                            // 查询相应的承接记录
+                                            HjhDebtCreditTenderVO creditTender = hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(assignNid).get(0);
                                             assignAccount = creditRepay.getRepayAccount();// 承接本息
                                             assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getRepayInterest();

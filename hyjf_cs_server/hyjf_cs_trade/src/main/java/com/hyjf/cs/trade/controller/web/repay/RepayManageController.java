@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,7 +198,13 @@ public class RepayManageController extends BaseTradeController {
             projectBean.setRoleId(userVO.getRoleId());
         }
 
-        projectBean = repayManageService.searchRepayProjectDetail(projectBean);
+        try {
+            projectBean = repayManageService.searchRepayProjectDetail(projectBean);
+        } catch (Exception e) {
+            logger.error("获取还款详情页面数据异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
+        }
         resultMap.put("paymentAuthStatus", "");
         resultMap.put("repayAuthStatus", "");
         resultMap.put("repayProject", projectBean);

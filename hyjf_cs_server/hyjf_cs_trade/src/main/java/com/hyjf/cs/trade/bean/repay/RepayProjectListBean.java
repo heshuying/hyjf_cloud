@@ -1,10 +1,11 @@
 package com.hyjf.cs.trade.bean.repay;
 
+import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 
 import java.io.Serializable;
 
-public class RepayProjectListBean extends WebUserRepayProjectListCustomize implements Serializable {
+public class RepayProjectListBean extends WebUserRepayProjectListCustomizeVO implements Serializable {
 
 	/**
 	 * 

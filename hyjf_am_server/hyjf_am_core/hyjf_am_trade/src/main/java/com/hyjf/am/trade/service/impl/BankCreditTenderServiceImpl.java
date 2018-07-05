@@ -1178,13 +1178,21 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	}
 
 	@Override
-	public List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, int status) {
+	public List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status) {
 		CreditRepayExample example = new CreditRepayExample();
 		CreditRepayExample.Criteria crt = example.createCriteria();
-		crt.andBidNidEqualTo(borrowNid);
-		crt.andCreditTenderNidEqualTo(tenderOrderId);
-		crt.andRecoverPeriodEqualTo(periodNow);
-		crt.andStatusEqualTo(status);
+		if(StringUtils.isNotBlank(borrowNid)){
+			crt.andBidNidEqualTo(borrowNid);
+		}
+		if(StringUtils.isNotBlank(tenderOrderId)){
+			crt.andCreditTenderNidEqualTo(tenderOrderId);
+		}
+		if(periodNow != null && periodNow >= 0){
+			crt.andRecoverPeriodEqualTo(periodNow);
+		}
+		if(status != null && status >= 0){
+			crt.andStatusEqualTo(status);
+		}
 		example.setOrderByClause("id ASC");
 		List<CreditRepay> creditRepayList = this.creditRepayMapper.selectByExample(example);
 		return creditRepayList;

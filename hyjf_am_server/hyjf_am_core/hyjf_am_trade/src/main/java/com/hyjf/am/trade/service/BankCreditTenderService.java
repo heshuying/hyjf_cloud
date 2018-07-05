@@ -100,7 +100,7 @@ public interface BankCreditTenderService {
      */
     List<CreditRepay> selectCreditRepayList(String tenderNid);
 
-    List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, int status);
+    List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status);
 
     /**
      * 我要债转
