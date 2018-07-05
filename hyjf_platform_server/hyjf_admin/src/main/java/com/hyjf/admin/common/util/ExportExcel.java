@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  *            byte[]表jpg格式的图片数据
  * @Deprecated 不推荐方法 即将删除
  */
-@Deprecated
+//@Deprecated
 public class ExportExcel<T> implements Serializable {
 
 	/**
