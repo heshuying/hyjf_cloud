@@ -20,4 +20,12 @@ public interface CouponUserService {
     Integer countCouponValid(Integer userId);
 
     List<CouponUserListCustomize> selectCouponUserList(Map<String,Object> mapParameter);
+
+    /**
+     * 查询用户的优惠券数量
+     * @author zhangyk
+     * @date 2018/7/4 15:38
+     */
+    Integer getUserCouponCount(Integer userId , String useFlag);
+
 }

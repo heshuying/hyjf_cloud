@@ -11,4 +11,14 @@ import com.hyjf.am.vo.trade.coupon.CouponUserVO;
  * @version CouponUserResponse, v0.1 2018/6/19 18:36
  */
 public class CouponUserResponse extends Response<CouponUserVO> {
+
+    private  Integer count;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 }
