@@ -4,9 +4,11 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.BindLogVO;
 
 import java.util.List;
 
@@ -43,5 +45,18 @@ public interface AmTradeClient {
      * @return
      */
     List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request);
-
+    /**
+     * 根据筛选条件查询绑定日志count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Integer getBindLogCount(BindLogListRequest request);
+    /**
+     * 根据筛选条件查询绑定日志list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<BindLogVO> searchBindLogList(BindLogListRequest request);
 }

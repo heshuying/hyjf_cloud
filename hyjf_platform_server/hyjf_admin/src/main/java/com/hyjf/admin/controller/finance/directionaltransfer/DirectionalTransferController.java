@@ -58,6 +58,9 @@ public class DirectionalTransferController extends BaseController {
     @ApiOperation(value = "导出定向转账列表",notes = "导出定向转账列表")
     @GetMapping(value = "/directionaltransferlistexport")
     public void exportDirectionalTransferListExcel(@ModelAttribute DirectionalTransferListRequest request,HttpServletResponse response) throws Exception {
+        // currPage<0 为全部,currPage>0 为具体某一页
+        request.setCurrPage(-1);
+
         // 表格sheet名称
         String sheetName = "定向转账列表";
         // 文件名称

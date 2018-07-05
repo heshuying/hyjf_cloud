@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.impl.admin.finance;
 
-import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountDirectionalTransferMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer;
@@ -19,9 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,33 +61,32 @@ public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl imple
     private AccountDirectionalTransferExample convertExample(DirectionalTransferListRequest request){
         AccountDirectionalTransferExample accountDirectionalTransferExample = new AccountDirectionalTransferExample();
         AccountDirectionalTransferExample.Criteria criteria = accountDirectionalTransferExample.createCriteria();
-        if(null != request.getTurnOutUsername()){
-            criteria.andTurnOutUsernameEqualTo(request.getTurnOutUsername());
+        // 转出账户
+        if(StringUtils.isNotEmpty(request.getTurnOutUsername())){
+            criteria.andTurnOutUsernameLike("%" + request.getTurnOutUsername() + "%");
         }
-        if(null != request.getShiftToUsername()){
-            criteria.andShiftToUsernameEqualTo(request.getShiftToUsername());
+        // 转入账户
+        if(StringUtils.isNotEmpty(request.getShiftToUsername())){
+            criteria.andShiftToUsernameLike("%" + request.getShiftToUsername() + "%");
         }
-        if(null != request.getStatusSearch()){
-            if("转账中".equals(request.getStatusSearch())){
-                criteria.andTransferAccountsStateEqualTo(0);
-            }else if("成功".equals(request.getStatusSearch())){
-                criteria.andTransferAccountsStateEqualTo(1);
-            }else if("失败".equals(request.getStatusSearch())){
-                criteria.andTransferAccountsStateEqualTo(2);
-            }
+        // 转账状态
+        if(StringUtils.isNotEmpty(request.getStatusSearch())){
+            criteria.andTransferAccountsStateEqualTo(Integer.valueOf(request.getStatusSearch()));
         }
-        if(null != request.getOrderId()){
-            criteria.andOrderIdEqualTo(request.getOrderId());
+        // 订单号
+        if(StringUtils.isNotEmpty(request.getOrderId())){
+            criteria.andOrderIdLike("%" + request.getOrderId() + "%");
         }
-        // 关联时间开始
-        if (!StringUtils.isEmpty(request.getStartDate())) {
+        // 转账开始时间
+        if(StringUtils.isNotEmpty(request.getStartDate())) {
             criteria.andTransferAccountsTimeGreaterThanOrEqualTo(GetDate.stringToDate(request.getStartDate() + " 00:00:00"));
         }
-        // 关联时间结束
-        if (!StringUtils.isEmpty(request.getEndDate())) {
+        // 转账结束时间
+        if(StringUtils.isNotEmpty(request.getEndDate())) {
             criteria.andTransferAccountsTimeLessThanOrEqualTo(GetDate.stringToDate(request.getEndDate() + " 23:59:59"));
         }
-        if (request.getLimitStart() != -1) {
+        // 分页条件
+        if(request.getLimitStart() != -1) {
             accountDirectionalTransferExample.setLimitStart(request.getLimitStart());
             accountDirectionalTransferExample.setLimitEnd(request.getLimitEnd());
         }

@@ -32,20 +32,36 @@ public class AssociatedRecordsController extends BaseController {
     @Autowired
     private AssociatedRecordsService associatedRecordsService;
 
+    /**
+     * 根据筛选条件查询关联记录count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping("/getassociatedrecordscount")
     public Integer getAssociatedRecordsCount(@RequestBody AssociatedRecordListRequest request){
         return associatedRecordsService.getAssociatedRecordsCount(request);
     }
+
+    /**
+     * 根据筛选条件查询关联记录list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping("/searchassociatedrecordlist")
     public AssociatedRecordListResponse searchAssociatedRecordList(@RequestBody AssociatedRecordListRequest request){
         AssociatedRecordListResponse response = new AssociatedRecordListResponse();
         Integer count = associatedRecordsService.getAssociatedRecordsCount(request);
-        Paginator paginator = new Paginator(request.getCurrPage(),count);
-        request.setLimitStart(paginator.getOffset());
-        request.setLimitEnd(paginator.getLimit());
-        logger.info("searchDirectionalTransferList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+        logger.info("searchAssociatedRecordList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
         List<AssociatedRecordListVo> associatedRecordListVoList = associatedRecordsService.searchAssociatedRecordList(request);
         if(!CollectionUtils.isEmpty(associatedRecordListVoList)){
             response.setRtn("00");
