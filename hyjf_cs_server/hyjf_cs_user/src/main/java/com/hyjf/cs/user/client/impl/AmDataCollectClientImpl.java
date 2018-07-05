@@ -5,6 +5,7 @@ package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +18,9 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${am.dataCollect.service.name}")
+    private String dataCollectService;
+    
     /**
      * 根据userId查询用户渠道信息
      *
@@ -26,7 +30,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
     @Override
     public int isCompBindUser(Integer userId) {
         int response = restTemplate.getForEntity(
-                "http://AM-STATISTICS/am-statistics/seach/isCompBindUser/" + userId,
+                dataCollectService+"/seach/isCompBindUser/" + userId,
                 Integer.class).getBody();
         return response;
     }
@@ -34,7 +38,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
     @Override
     public String selectBankSmsSeq(Integer userId, String txcodeAutoBidAuthPlus) {
         String response = restTemplate.getForEntity(
-                "http://AM-STATISTICS/am-statistics/seach/selectBankSmsSeq/" + userId+"/"+txcodeAutoBidAuthPlus,
+                dataCollectService+"/seach/selectBankSmsSeq/" + userId+"/"+txcodeAutoBidAuthPlus,
                 String.class).getBody();
         return response;
     }

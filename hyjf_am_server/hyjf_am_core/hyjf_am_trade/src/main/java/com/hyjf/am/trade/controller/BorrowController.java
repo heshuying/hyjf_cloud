@@ -11,7 +11,7 @@ import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.trade.service.UserService;
+import com.hyjf.am.trade.service.HjhInstConfigService;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -20,7 +20,6 @@ import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ import java.util.Map;
 public class BorrowController extends BaseController{
 
 	@Autowired
-	UserService userService;
+	HjhInstConfigService hjhInstConfigService;
 
 	@Autowired
 	BorrowService borrowService;
@@ -131,7 +130,7 @@ public class BorrowController extends BaseController{
 		paraMap.put("userId", userId);
 		paraMap.put("limitStart", 0);
 		paraMap.put("limitEnd", 4);
-		List<RecentPaymentListCustomize> recentPaymentListCustomizeList = userService.selectRecentPaymentList(paraMap);
+		List<RecentPaymentListCustomize> recentPaymentListCustomizeList = hjhInstConfigService.selectRecentPaymentList(paraMap);
 		RecentPaymentListCustomizeResponse response = new RecentPaymentListCustomizeResponse();
 		if(null!= recentPaymentListCustomizeList){
 			List<RecentPaymentListCustomizeVO> recentPaymentListCustomizeVOS = CommonUtils.convertBeanList(recentPaymentListCustomizeList,RecentPaymentListCustomizeVO.class);

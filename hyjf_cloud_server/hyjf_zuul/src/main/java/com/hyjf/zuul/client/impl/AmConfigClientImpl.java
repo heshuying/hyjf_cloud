@@ -4,6 +4,7 @@ import com.hyjf.am.response.config.GatewayApiConfigResponse;
 import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.zuul.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,10 +19,13 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${am.config.service.name}")
+    private String configService;
+
     @Override
     public List<GatewayApiConfigVO> findGatewayConfigs() {
         GatewayApiConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/gateConfig/findAll", GatewayApiConfigResponse.class).getBody();
+                .getForEntity(configService+"/gateConfig/findAll", GatewayApiConfigResponse.class).getBody();
         return response.getResultList();
     }
 }

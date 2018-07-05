@@ -3,13 +3,6 @@
  */
 package com.hyjf.cs.user.client.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
@@ -22,6 +15,13 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmTradeClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -32,10 +32,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${am.trade.service.name}")
+    private String tradeService;
+
     @Override
     public HjhInstConfigVO selectInstConfigByInstCode(String instCode) {
         HjhInstConfigResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/trade/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
+                .getForEntity(tradeService+"/trade/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResult();
@@ -51,7 +54,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AccountVO getAccount(Integer userId) {
         AccountResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/trade/getAccount/" + userId, AccountResponse.class).getBody();
+                .getForEntity(tradeService+"/trade/getAccount/" + userId, AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -61,7 +64,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<RecentPaymentListCustomizeVO> selectRecentPaymentList(Integer userId) {
         RecentPaymentListCustomizeResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrow/selectRecentPaymentList/" + userId, RecentPaymentListCustomizeResponse.class)
+                .getForEntity(tradeService+"/borrow/selectRecentPaymentList/" + userId, RecentPaymentListCustomizeResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResultList();
@@ -71,7 +74,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(String userIds) {
-        String url = "http://AM-TRADE/am-trade/batch/search_user_portrait_list/" + userIds;
+        String url = tradeService+"/batch/search_user_portrait_list/" + userIds;
         BatchUserPortraitQueryResponse response = restTemplate.getForEntity(url, BatchUserPortraitQueryResponse.class).getBody();
         if(response != null){
             return response.getResultList();
@@ -82,13 +85,13 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public Integer countCouponValid(Integer userId) {
-        String url = "http://AM-TRADE/am-trade/couponUser/countCouponValid/" + userId;
+        String url =tradeService+"/couponUser/countCouponValid/" + userId;
         return restTemplate.getForEntity(url, Integer.class).getBody();
     }
 
     @Override
     public List<CouponUserListCustomizeVO> selectCouponUserList(Map<String, Object> mapParameter) {
-        String url = "http://AM-TRADE/am-trade/couponUser/selectCouponUserList";
+        String url = tradeService+"/couponUser/selectCouponUserList";
         CouponUserListCustomizeResponse response = restTemplate.postForEntity(url,mapParameter,CouponUserListCustomizeResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResultList();

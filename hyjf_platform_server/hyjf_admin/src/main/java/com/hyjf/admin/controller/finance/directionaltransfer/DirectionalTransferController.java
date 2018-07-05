@@ -1,4 +1,4 @@
-package com.hyjf.admin.controller.finance;
+package com.hyjf.admin.controller.finance.directionaltransfer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -38,7 +38,7 @@ public class DirectionalTransferController extends BaseController {
      */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping(value = "/getdirectionaltransferlist")
-    public JSONObject init(@RequestBody DirectionalTransferListRequest request) {
+    public JSONObject getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
         JSONObject jsonObject = new JSONObject();
         Integer count = directionaltransferService.getDirectionalTransferCount(request);
         count = (count == null)?0:count;
