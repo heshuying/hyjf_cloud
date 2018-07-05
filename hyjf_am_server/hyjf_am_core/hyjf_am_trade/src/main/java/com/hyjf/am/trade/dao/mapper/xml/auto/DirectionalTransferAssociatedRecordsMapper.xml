@@ -11,7 +11,7 @@
     <result column="shift_to_user_id" property="shiftToUserId" jdbcType="INTEGER" />
     <result column="shift_to_mobile" property="shiftToMobile" jdbcType="CHAR" />
     <result column="shift_to_chinapnr_usrcustid" property="shiftToChinapnrUsrcustid" jdbcType="BIGINT" />
-    <result column="associated_state" property="associatedState" jdbcType="BIT" />
+    <result column="associated_state" property="associatedState" jdbcType="TINYINT" />
     <result column="associated_time" property="associatedTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -121,7 +121,7 @@
     values (#{turnOutUsername,jdbcType=VARCHAR}, #{turnOutUserId,jdbcType=INTEGER}, #{turnOutMobile,jdbcType=CHAR}, 
       #{turnOutChinapnrUsrcustid,jdbcType=BIGINT}, #{shiftToUsername,jdbcType=VARCHAR}, 
       #{shiftToUserId,jdbcType=INTEGER}, #{shiftToMobile,jdbcType=CHAR}, #{shiftToChinapnrUsrcustid,jdbcType=BIGINT}, 
-      #{associatedState,jdbcType=BIT}, #{associatedTime,jdbcType=TIMESTAMP})
+      #{associatedState,jdbcType=TINYINT}, #{associatedTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedRecords" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -186,7 +186,7 @@
         #{shiftToChinapnrUsrcustid,jdbcType=BIGINT},
       </if>
       <if test="associatedState != null" >
-        #{associatedState,jdbcType=BIT},
+        #{associatedState,jdbcType=TINYINT},
       </if>
       <if test="associatedTime != null" >
         #{associatedTime,jdbcType=TIMESTAMP},
@@ -230,7 +230,7 @@
         shift_to_chinapnr_usrcustid = #{record.shiftToChinapnrUsrcustid,jdbcType=BIGINT},
       </if>
       <if test="record.associatedState != null" >
-        associated_state = #{record.associatedState,jdbcType=BIT},
+        associated_state = #{record.associatedState,jdbcType=TINYINT},
       </if>
       <if test="record.associatedTime != null" >
         associated_time = #{record.associatedTime,jdbcType=TIMESTAMP},
@@ -251,7 +251,7 @@
       shift_to_user_id = #{record.shiftToUserId,jdbcType=INTEGER},
       shift_to_mobile = #{record.shiftToMobile,jdbcType=CHAR},
       shift_to_chinapnr_usrcustid = #{record.shiftToChinapnrUsrcustid,jdbcType=BIGINT},
-      associated_state = #{record.associatedState,jdbcType=BIT},
+      associated_state = #{record.associatedState,jdbcType=TINYINT},
       associated_time = #{record.associatedTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -285,7 +285,7 @@
         shift_to_chinapnr_usrcustid = #{shiftToChinapnrUsrcustid,jdbcType=BIGINT},
       </if>
       <if test="associatedState != null" >
-        associated_state = #{associatedState,jdbcType=BIT},
+        associated_state = #{associatedState,jdbcType=TINYINT},
       </if>
       <if test="associatedTime != null" >
         associated_time = #{associatedTime,jdbcType=TIMESTAMP},
@@ -303,7 +303,7 @@
       shift_to_user_id = #{shiftToUserId,jdbcType=INTEGER},
       shift_to_mobile = #{shiftToMobile,jdbcType=CHAR},
       shift_to_chinapnr_usrcustid = #{shiftToChinapnrUsrcustid,jdbcType=BIGINT},
-      associated_state = #{associatedState,jdbcType=BIT},
+      associated_state = #{associatedState,jdbcType=TINYINT},
       associated_time = #{associatedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

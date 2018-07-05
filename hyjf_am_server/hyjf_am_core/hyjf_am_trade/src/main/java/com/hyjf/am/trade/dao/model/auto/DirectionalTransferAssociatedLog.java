@@ -22,7 +22,7 @@ public class DirectionalTransferAssociatedLog implements Serializable {
 
     private Long shiftToChinapnrUsrcustid;
 
-    private Boolean associatedState;
+    private Integer associatedState;
 
     private Date associatedTime;
 
@@ -102,11 +102,11 @@ public class DirectionalTransferAssociatedLog implements Serializable {
         this.shiftToChinapnrUsrcustid = shiftToChinapnrUsrcustid;
     }
 
-    public Boolean getAssociatedState() {
+    public Integer getAssociatedState() {
         return associatedState;
     }
 
-    public void setAssociatedState(Boolean associatedState) {
+    public void setAssociatedState(Integer associatedState) {
         this.associatedState = associatedState;
     }
 
