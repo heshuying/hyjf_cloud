@@ -208,4 +208,5 @@ public class ShiroConstants {
 	/** 投资人投标申请查询权限 */
 	public static final String PERMISSION_QUERY_INVEST_DEBT_VIEW = "QUERY_INVEST_DEBT";
 
+
 }

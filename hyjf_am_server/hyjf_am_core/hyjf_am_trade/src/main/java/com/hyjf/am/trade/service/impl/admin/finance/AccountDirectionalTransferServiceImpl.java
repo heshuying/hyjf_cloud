@@ -12,6 +12,7 @@ import com.hyjf.am.trade.service.admin.finance.AccountDirectionalTransferService
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,6 @@ public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl imple
     @Override
     public List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request) {
         AccountDirectionalTransferExample example = convertExample(request);
-        example.setLimitStart(request.getLimitStart());
-        example.setLimitEnd(request.getLimitEnd());
         List<AccountDirectionalTransfer> accountDirectionalTransferList = accountDirectionalTransferMapper.selectByExample(example);
         List<AccountDirectionalTransferVO> accountDirectionalTransferVOList = CommonUtils.convertBeanList(accountDirectionalTransferList,AccountDirectionalTransferVO.class);
         return accountDirectionalTransferVOList;
@@ -84,20 +83,18 @@ public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl imple
         if(null != request.getOrderId()){
             criteria.andOrderIdEqualTo(request.getOrderId());
         }
-        Date startTime = new Date(0);
-        Date endTime = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try{
-            if(StringUtils.isNotEmpty(request.getStartDate())){
-                startTime = simpleDateFormat.parse(request.getStartDate());
-            }
-            if(StringUtils.isNotEmpty(request.getEndDate())){
-                endTime = simpleDateFormat.parse(request.getEndDate());
-            }
-        }catch (ParseException e) {
-            logger.info("日期格式化异常");
+        // 关联时间开始
+        if (!StringUtils.isEmpty(request.getStartDate())) {
+            criteria.andTransferAccountsTimeGreaterThanOrEqualTo(GetDate.stringToDate(request.getStartDate() + " 00:00:00"));
         }
-        criteria.andTransferAccountsTimeBetween(startTime,endTime);
+        // 关联时间结束
+        if (!StringUtils.isEmpty(request.getEndDate())) {
+            criteria.andTransferAccountsTimeLessThanOrEqualTo(GetDate.stringToDate(request.getEndDate() + " 23:59:59"));
+        }
+        if (request.getLimitStart() != -1) {
+            accountDirectionalTransferExample.setLimitStart(request.getLimitStart());
+            accountDirectionalTransferExample.setLimitEnd(request.getLimitEnd());
+        }
         return accountDirectionalTransferExample;
     }
 }
