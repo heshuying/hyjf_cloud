@@ -37,4 +37,6 @@ public interface AmBorrowRepayClient {
      * @date 2018/6/30 14:01
      */
     List<BorrowRepayVO> getBorrowRepayList(String borrowNid);
+
+    BorrowRepayVO getBorrowRepay(String borrowNid);
 }
