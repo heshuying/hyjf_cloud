@@ -1,14 +1,10 @@
 package com.hyjf.pay.lib.bank.bean;
 
-import java.io.Serializable;
-
-import com.hyjf.common.spring.SpringUtils;
-import java.io.Serializable;
-
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.config.PaySystemConfig;
+
+import java.io.Serializable;
 
 public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
@@ -20,6 +16,23 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 		super();
 	}
 
+	/**
+	 * 构造体
+	 * @author liubin
+	 * @param orderId
+	 * @param userId
+	 * @param txCode
+	 * @param client
+	 */
+	public BankCallBean(String orderId, Integer userId, String txCode, String remark, Integer client) {
+		this.orderId = orderId;
+		this.txCode = txCode;
+
+		this.logOrderId = orderId;
+		this.logUserId = userId+"";
+		this.logRemark = remark;
+		this.logClient = client;
+	}
 
 	/**
 	 * 设置必须共通字段和必须Log字段的构造体<br/> 
@@ -211,6 +224,8 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 		// 操作用户Id
 		this.logUserId = String.valueOf(userId);
 	}
+
+	/** =========== 字段开始 ===========  */
 
 	/**
 	 * 序列化id
@@ -618,6 +633,21 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
     //缴费授权
     public String txType;
+
+	//保留域
+	private String reserved;
+
+	//受托支付flg 0:否，1：是
+	private String entrustFlag;
+	//(受托)收款人电子账号
+	private String receiptAccountId;
+	// 页面调用成功后跳转连接
+	private String successfulUrl;
+	// 商户名称
+	private String coinstName;
+
+	/** =========== 字段结束 ===========  */
+
     public String getTransactionUrl() {
         return transactionUrl;
     }
@@ -633,18 +663,6 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
     public void setVerifyOrderUrl(String verifyOrderUrl) {
         this.verifyOrderUrl = verifyOrderUrl;
     }
-
-    //保留域
-    private String reserved;
-    
-    //受托支付flg 0:否，1：是
-    private String entrustFlag;
-    //(受托)收款人电子账号
-    private String receiptAccountId;
-    // 页面调用成功后跳转连接
-    private String successfulUrl;
-    // 商户名称
-    private String coinstName;
     
     public String getRestMsg() {
         return restMsg;
