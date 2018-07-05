@@ -22,7 +22,6 @@ public class AllocationEngineRuquest extends BasePage implements Serializable{
     private int paginatorPage = 1;
 
 	/** (计划专区)前台查询要素---计划配置画面无检索  */
-    // 计划编号查询
     private String planNidSrch;
     // 计划名称率查询
     private String planNameSrch;

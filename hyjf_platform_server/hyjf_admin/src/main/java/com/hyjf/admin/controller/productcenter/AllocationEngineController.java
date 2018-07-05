@@ -3,13 +3,18 @@
  */
 package com.hyjf.admin.controller.productcenter;
 
+import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
+import org.springframework.beans.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,13 +22,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AllocationEngineService;
+import com.hyjf.admin.service.HjhLabelService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
+import com.hyjf.am.response.admin.HjhRegionResponse;
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
+import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
+import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
+import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 /**
  * @author libin
@@ -36,7 +57,8 @@ public class AllocationEngineController extends BaseController{
 
 	@Autowired
 	private AllocationEngineService allocationEngineService;
-	
+	@Autowired
+	private HjhLabelService labelService;
     /**
      * 画面初始化
      *
@@ -46,19 +68,18 @@ public class AllocationEngineController extends BaseController{
     @ApiOperation(value = "计划专区列表", notes = "计划专区列表初始化")
     @PostMapping(value = "/search")
     @ResponseBody
-    public JSONObject search(HttpServletRequest request, @RequestBody @Valid AllocationEngineRuquest form) {
+   /* @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)*/
+    public AdminResult<ListResult<HjhRegionVO>> search(HttpServletRequest request, @RequestBody @Valid AllocationEngineRuquest form) {
     	// 画面检索 计划编号/计划名称/添加时间/专区状态 无需初始化
-    	JSONObject jsonObject = new JSONObject();
     	// 根据删选条件获取计划专区列表
-    	List<HjhRegionVO> list = this.allocationEngineService.getHjhRegionList(form);
-        if (null != list && list.size() > 0) {
-            jsonObject.put("record", list);
-            int count = list.size();
-            success(String.valueOf(count),list);
-        } else {
-        	fail("标签配置列表查询为空！");
-        }
-        return jsonObject;
+    	HjhRegionResponse response = this.allocationEngineService.getHjhRegionList(form);
+		if(response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+        return new AdminResult<ListResult<HjhRegionVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
     }
     
 	/**
@@ -68,7 +89,7 @@ public class AllocationEngineController extends BaseController{
 	 * @return 
 	 */
 	@ApiOperation(value = "计划专区列表", notes = "生成添加/修改画面")
-	@PostMapping(value = "/info")
+	@PostMapping(value = "/reginfo")
 	@ResponseBody
 	// 计划专区根据业务要求只有添加计划而没有修改计划
 	public JSONObject getAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
@@ -103,8 +124,12 @@ public class AllocationEngineController extends BaseController{
 		VOrequest.setPlanName(planName);
 		//3.添加时间
 		VOrequest.setConfigAddTime(GetDate.getNowTime10());
-		//4.状态
-		VOrequest.setConfigStatus(Integer.valueOf(form.getConfigStatus()));
+		//4.计划专区(是否配置)状态 0：停用   1：启用 这个字段在前台是二选一 必须传入
+		if(StringUtils.isEmpty(form.getConfigStatus())){
+			VOrequest.setConfigStatus(0);
+		} else {
+			VOrequest.setConfigStatus(Integer.valueOf(form.getConfigStatus()));
+		}
 		//5.添加人
 		VOrequest.setCreateUser(userId);
 		// 插表
@@ -116,7 +141,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 画面入力校验
+	 * 专区画面入力校验
 	 * @param jsonObject,map
 	 * @return
 	 */
@@ -126,5 +151,762 @@ public class AllocationEngineController extends BaseController{
 			jsonObject.put("validatorMsg1", "在专区中添加计划时请输入计划编号!");
 		}
 	}
-      
+	
+	
+    /**
+     * 校验入力的计划编号相关AJAX
+     *
+     * @param planNid
+     * @return
+     */
+	@ApiOperation(value = "计划专区列表", notes = "校验入力的计划编号相关")
+	@PostMapping(value = "/ajaxcheck")
+	@ResponseBody
+	/*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)*/
+	@ApiImplicitParam(name = "planNid", value = "计划编号", required = true, dataType = "String")
+	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody String planNid) { // 注意 ：这里的传值可以改为 form 形式
+		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(planNid);
+		if(response==null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<String>(response.getMessage());
+	}
+	
+    /**
+     * 计划专区停用/启用状态修改
+     *
+     * @param planNid
+     * @return
+     */
+	@ApiOperation(value = "计划专区列表", notes = "计划专区停用/启用状态修改")
+	@PostMapping(value = "/status")
+	@ResponseBody
+	// 注意 ：此 id 并非画面序号，而是画面上未显示的 计划专区表主键
+	@ApiImplicitParam(name = "id", value = "计划专区表主键", required = true, dataType = "String")
+	public AdminResult<String> statusChange(HttpServletRequest request, @RequestBody String id) { // 注意 ：这里的传值可以改为 form 形式
+		HjhRegionResponse response = new HjhRegionResponse();
+		// 修改状态
+		if (StringUtils.isNotEmpty(id)) {
+			// 首先获取更新之前的 HjhRegion
+			HjhRegionVO vo = this.allocationEngineService.getHjhRegionVOById(id);
+			if (vo.getConfigStatus() == 1) {
+				vo.setConfigStatus(0);
+			} else {
+				vo.setConfigStatus(1);
+			}
+			// 使用 HjhRegionVO(实体中包含主键) 实体去更新计划专区表
+			int flg = this.allocationEngineService.updateHjhRegionRecord(vo);
+			if(flg > 0){
+				// 计划专区表更新成功后，再更新引擎表
+				//通过record的planNid去更新引擎表的 ---计划状态和标签状态
+				response = this.allocationEngineService.updateAllocationEngineRecord(vo);
+			}
+		}
+		if(response==null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<String>(response.getMessage());
+	}
+	
+	/**
+	 * 计划专区带条件导出
+	 * @param request
+	 * @return 计划专区带条件导出
+	 */
+	@ApiOperation(value = "计划专区列表", notes = "带条件导出EXCEL")
+	@PostMapping(value = "/regionexport")
+	@ResponseBody
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) throws Exception {
+		// 表格sheet名称
+		String sheetName = "计划专区";
+		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String[] titles = new String[] { "序号","计划编号", "计划名称","添加时间", "状态" };
+		// 声明一个工作薄
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 生成一个表格
+		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+		// 带检索条件的列表查询(无分页)
+		List<HjhRegionVO> resultList = this.allocationEngineService.getHjhRegionListWithOutPage(form);
+		if (resultList != null && resultList.size() > 0) {
+			int sheetCount = 1;
+			int rowNum = 0;
+			for (int i = 0; i < resultList.size(); i++) {
+				rowNum++;
+				if (i != 0 && i % 60000 == 0) {
+					sheetCount++;
+					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+					rowNum = 1;
+				}
+				// 新建一行
+				Row row = sheet.createRow(rowNum);
+				// 循环数据
+				for (int celLength = 0; celLength < titles.length; celLength++) {
+					HjhRegionVO hjhRegion = resultList.get(i);
+
+					// 创建相应的单元格
+					Cell cell = row.createCell(celLength);
+
+					// 序号
+					if (celLength == 0) {
+						cell.setCellValue(i + 1);
+					}
+					// 计划编号
+					else if (celLength == 1) {
+						cell.setCellValue(StringUtils.isEmpty(hjhRegion.getPlanNid()) ? StringUtils.EMPTY : hjhRegion.getPlanNid());
+					}
+					// 计划名称
+					else if (celLength == 2) {
+						cell.setCellValue(StringUtils.isEmpty(hjhRegion.getPlanName()) ? StringUtils.EMPTY : hjhRegion.getPlanName());
+					}
+					// 添加时间
+					else if (celLength == 3) {
+						if (hjhRegion.getConfigAddTime() != null) {//数据库默认为空
+							String configAddTime = GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(hjhRegion.getConfigAddTime());
+							cell.setCellValue(configAddTime);
+						} else {
+							cell.setCellValue(0);
+						}
+					}
+					// 状态
+					else if (celLength == 4) {
+						if (0 == hjhRegion.getConfigStatus()) {//数据库默认为0
+							cell.setCellValue("停用");
+						} else {
+							cell.setCellValue("启用");
+						} 
+					}
+				}
+			}
+		}
+		// 导出
+		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}
+	
+	                                     /*--------以下为计划专区下属 引擎配置画面各项机能----------*/
+    /**
+     * 计划专区-计划引擎配置画面初始化
+     *
+     * @param request
+     * @return 计划引擎配置列表
+     */
+    @ApiOperation(value = "计划引擎配置列表", notes = "计划引擎配置列表初始化")
+    @PostMapping(value = "/searchengine")
+    @ResponseBody
+    /* @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)*/
+    public AdminResult<ListResult<HjhAllocationEngineVO>> searchEngine(HttpServletRequest request,@RequestBody @Valid AllocationEngineRuquest form) {
+    	
+    	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+    	// 计划引擎配置列表无过滤条件直接查询
+    	// 根据计划专区传入的计划编号获取计划名称返回前台展示
+    	if(StringUtils.isNotEmpty(form.getPlanNidSrch())){
+        	String planName = this.allocationEngineService.getPlanNameByPlanNid(form);
+        	response.setPlanName(planName);
+    	}
+    	// 根据计划专区传入的计划编号获取计划引擎配置列表
+    	response = this.allocationEngineService.getHjhAllocationEngineList(form);
+		if(response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+        return new AdminResult<ListResult<HjhAllocationEngineVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
+    }
+	
+	
+	/**
+	 * 计划配置画面带条件导出
+	 * @param request
+	 * @return 计划专区带条件导出
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "带条件导出EXCEL")
+	@PostMapping(value = "/engineexport")
+	@ResponseBody
+	public void exportPlanConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) throws Exception {
+		// 表格sheet名称
+		String sheetName = "计划配置";
+		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String[] titles = new String[] { "序号","标签编号", "标签名称","添加时间", "状态","排序" };
+		// 声明一个工作薄
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 生成一个表格
+		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+		List<HjhAllocationEngineVO> resultList = null;
+    	if(StringUtils.isNotEmpty(form.getPlanNidSrch())){
+    		// 不带分页的查询 
+    		resultList = this.allocationEngineService.getAllocationList(form);
+    	}
+		if (resultList != null && resultList.size() > 0) {
+			int sheetCount = 1;
+			int rowNum = 0;
+			for (int i = 0; i < resultList.size(); i++) {
+				rowNum++;
+				if (i != 0 && i % 60000 == 0) {
+					sheetCount++;
+					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+					rowNum = 1;
+				}
+				// 新建一行
+				Row row = sheet.createRow(rowNum);
+				// 循环数据
+				for (int celLength = 0; celLength < titles.length; celLength++) {
+					HjhAllocationEngineVO hjhAllocationEngine = resultList.get(i);
+
+					// 创建相应的单元格
+					Cell cell = row.createCell(celLength);
+
+					// 序号
+					if (celLength == 0) {
+						cell.setCellValue(i + 1);
+					}
+					// 标签编号
+					else if (celLength == 1) {
+						cell.setCellValue(hjhAllocationEngine.getLabelId());//DB标签id默认为0
+					}
+					// 标签名称
+					else if (celLength == 2) {
+						cell.setCellValue(StringUtils.isEmpty(hjhAllocationEngine.getLabelName()) ? StringUtils.EMPTY : hjhAllocationEngine.getLabelName());
+					}
+					// 添加时间
+					else if (celLength == 3) {
+						if (hjhAllocationEngine.getAddTime() != null) {//数据库默认为0
+							String addTime = GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(hjhAllocationEngine.getAddTime());
+							cell.setCellValue(addTime);
+						} else {
+							cell.setCellValue(0);
+						}
+					}
+					// 状态
+					else if (celLength == 4) {
+						if (0 == hjhAllocationEngine.getLabelStatus()) {//数据库默认为0
+							cell.setCellValue("停用");
+						} else {
+							cell.setCellValue("启用");
+						} 
+					}
+					// 排序
+					else if (celLength == 5) {
+						cell.setCellValue(hjhAllocationEngine.getLabelSort());//DB标签默认为0
+					}
+				}
+			}
+		}
+		// 导出
+		ExportExcel.writeExcelFile(response, workbook, titles, fileName);	
+	}
+	
+	
+    /**
+     * 计划配置画面 停用/启用状态修改
+     *
+     * @param planNid
+     * @return
+     */
+	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置画面停用/启用状态修改")
+	@PostMapping(value = "/labelstatus")
+	@ResponseBody
+	// 注意 ：此 id 并非画面序号，而是计划引擎配置画面上 未显示的 计划引擎配置表主键
+	@ApiImplicitParam(name = "engineId", value = "计划引擎配置表主键", required = true, dataType = "String")
+	public AdminResult<String> labelStatusChange(HttpServletRequest request, @RequestBody String engineId) {  // 注意 ：这里的传值可以改为 form 形式
+		HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+		// 修改状态
+		if (StringUtils.isNotEmpty(engineId)) {
+			Integer id = Integer.valueOf(engineId);
+			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecord(id);
+			if (vo.getLabelStatus() == 1) {//标签状态
+				vo.setLabelStatus(0);
+			} else {
+				vo.setLabelStatus(1);
+			}
+			// 使用 HjhRegionVO(实体中包含主键) 实体去更新计划专区表
+			int flg = this.allocationEngineService.updateHjhAllocationEngineRecord(vo);
+			if(flg > 0){
+				response.setMessage(Response.SUCCESS);
+			}
+			/*原来的逻辑是修改完状态后再查询一遍引擎列表返回给前台，现在只需要前台带着计划编号 请求一次 searchengine 接口 即可*/	
+		}
+		return new AdminResult<String>(response.getMessage());
+	}
+	
+	/**
+	 * 计划配置画面 添加/修改 初始化info画面
+	 *
+	 * @param request
+	 * @return 
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "生成计划配置添加/修改画面")
+	@PostMapping(value = "/info")
+	@ResponseBody
+	public JSONObject getEngineAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+		JSONObject jsonObject = new JSONObject();
+		//1.添加计划配置时，往画面放一个隐藏域 planNid
+		if(form.getPlanNidSrch()!= null){
+			jsonObject.put("planNid", form.getPlanNidSrch());
+		}
+		//2.修改计划配置时
+		String planNid = form.getPlanNidSrch();
+		String labelId = form.getLabelId();
+		if(StringUtils.isNotEmpty(labelId) && StringUtils.isNotEmpty(planNid)){
+			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecordByParam(form);
+			jsonObject.put("hjhAllocationEngine", vo);
+		} else {
+			jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
+		}
+		return jsonObject;
+	}
+	
+	
+	/**
+	 * 计划配置info画面入力校验
+	 *
+	 * @param labelName
+	 * @return 
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置info画面标签名称相关输入校验")
+	@PostMapping(value = "/checkInputlabelname")
+	@ResponseBody
+	public JSONObject checkInputlabelname(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
+		HjhLabelCustomizeVO hjhLabel = new HjhLabelCustomizeVO();
+		JSONObject jsonObject = new JSONObject();
+		String labelName = form.getLabelName();
+		String planNid = form.getPlanNid();
+		if(StringUtils.isEmpty(labelName)){
+			jsonObject.put("info", "未获取标签名称，请重新输入！");
+			jsonObject.put("status", "n");
+			return jsonObject;
+		}
+		if(StringUtils.isEmpty(planNid)){
+			jsonObject.put("info", "未获取计划编号，请重新输入！");
+			jsonObject.put("status", "n");
+			return jsonObject;
+		}
+		// 校验一个计划下不能用重复的标签名称
+		boolean existflg = this.allocationEngineService.checkRepeat(labelName,planNid);
+		if(!existflg){
+			jsonObject.put("info", "该标签已经被使用，无法再次添加");
+			jsonObject.put("status", "n");
+			return jsonObject;
+		}
+		hjhLabelRequest.setLabelNameSrch(labelName);
+		List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+		hjhLabel = list.get(0);
+		if(hjhLabel == null){
+			jsonObject.put("info", "标签数据不存在，请先查看标签列表是否已经添加");
+			jsonObject.put("status", "n");
+			return jsonObject;
+		} else {
+			//校验
+			if(hjhLabel.getLabelState() == 0){
+				jsonObject.put("info", "标签已停用，请先启用");
+				jsonObject.put("status", "n");
+				return jsonObject;
+			}
+			if(hjhLabel.getDelFlg() == 1){
+				jsonObject.put("info", "标签已删除");
+				jsonObject.put("status", "n");
+				return jsonObject;
+			}
+			if(StringUtils.isEmpty(hjhLabel.getBorrowStyle())){
+				jsonObject.put("info", "该标签的还款方式为空,请查询标签列表");
+				jsonObject.put("status", "n");
+				return jsonObject;
+			}
+			//标签存在的情况下：
+			//先查询汇计划表获取该计划的还款方式
+			String planBorrowStyle = this.allocationEngineService.getPlanBorrowStyle(planNid);//planNid已经校验非空
+			if(StringUtils.isEmpty(planBorrowStyle)){
+				jsonObject.put("info", "该计划的还款方式为空，请查询计划列表");
+				jsonObject.put("status", "n");
+				return jsonObject;
+			}
+			jsonObject.put("status", "y");
+		}
+		return jsonObject;
+	}
+	
+	/**
+	 * 计划配置info画面标签排序入力校验
+	 *
+	 * @param labelName
+	 * @return 
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置info画面标签排序相关输入校验")
+	@PostMapping(value = "/checkInputlabelSort")
+	@ResponseBody
+	public JSONObject checkInputlabelSort(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+		JSONObject jsonObject = new JSONObject();
+		HjhAllocationEngineResponse hjhAllocationEngineResponse = new HjhAllocationEngineResponse();
+		String labelSort = form.getLabelSort();
+		String planNid = form.getPlanNid();
+		
+		if(StringUtils.isEmpty(labelSort)){
+			jsonObject.put("info", "请输入标签排序");
+			jsonObject.put("status", "n");
+			return jsonObject;
+		}
+		if(StringUtils.isEmpty(planNid)){
+			jsonObject.put("info", "该标签所属计划编号不存在，请查询计划专区");
+			jsonObject.put("status", "n");
+			return jsonObject;
+		}
+		form.setPlanNidSrch(planNid);
+		hjhAllocationEngineResponse = this.allocationEngineService.getHjhAllocationEngineList(form);
+		List<HjhAllocationEngineVO> hjhAllocationEngineList = hjhAllocationEngineResponse.getResultList();
+		
+		
+		if (hjhAllocationEngineList != null) {
+			for(HjhAllocationEngineVO object : hjhAllocationEngineList){
+				//取自DB的LabelSort
+				Integer planLabelSort = object.getLabelSort();
+				//如果 取自DB的LabelSort 等同于 画面传入的 labelSort,那说明重复，则不能插入
+				if(planLabelSort !=null && planLabelSort == Integer.valueOf(labelSort)){
+					jsonObject.put("info", "该计划已有标签使用此排序,请重新输入排序");
+					jsonObject.put("status", "n");
+					return jsonObject;
+				}
+			}
+		} else{
+			jsonObject.put("info", "该标签所属计划编号不存在，请查询计划专区");
+			jsonObject.put("status", "n");
+			return jsonObject;
+		}
+		jsonObject.put("status", "y");
+		return jsonObject;
+	}
+	
+	/**
+	 * 计划配置info画面 确认后添加计划配置列表
+	 *
+	 * @param request
+	 * @return 
+	 */
+	@ApiOperation(value = "计划配置列表", notes = "将Info入力数据添加到计划引擎配置")
+	@PostMapping(value = "/insertConfigAction")
+	@ResponseBody
+	public JSONObject insertConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+		JSONObject jsonObject = new JSONObject();
+		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
+		// 与实体bean一致 用于转型
+		HjhAllocationEngineVO newForm = new HjhAllocationEngineVO();
+		// 校验已经在前面异步校验了
+		// (1).从专区表中查出必要信息
+		HjhRegionVO record = this.allocationEngineService.getHjhRegionRecordByPlanNid(form.getPlanNid());
+		//1.
+		newForm.setPlanNid(record.getPlanNid());
+		//2.
+		newForm.setPlanName(record.getPlanName());
+		//3.
+		newForm.setConfigAddTime(record.getConfigAddTime());
+		//4.
+		newForm.setConfigStatus(record.getConfigStatus());
+		// (2).从标签表中查出必要信息
+		hjhLabelRequest.setLabelNameSrch(form.getLabelName().trim());
+		// 通过标签名称只能查到一条记录，因为标签名称在标签表时唯一的
+		List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+		HjhLabelCustomizeVO  hjhLabelCustomizeVO = list.get(0);
+		//5.
+		newForm.setLabelId(hjhLabelCustomizeVO.getId());
+		//6.
+		newForm.setLabelName(hjhLabelCustomizeVO.getLabelName());
+		//7.
+		newForm.setAddTime(GetDate.getNowTime10());
+		//8.
+		newForm.setLabelSort(Integer.valueOf(form.getLabelSort()));//已经校验过必须入力的LabelSort
+		//9.
+		if(StringUtils.isNotEmpty(form.getTransferTimeSort())){//表单入力时
+			newForm.setTransferTimeSort(Integer.valueOf(form.getTransferTimeSort()));
+		}
+		//10.
+		if(StringUtils.isNotEmpty(form.getTransferTimeSortPriority())){//表单入力时
+			newForm.setTransferTimeSortPriority(Integer.valueOf(form.getTransferTimeSortPriority()));
+		}
+		//11.
+		if(StringUtils.isNotEmpty(form.getAprSort())){//表单入力时
+			newForm.setAprSort(Integer.valueOf(form.getAprSort()));
+		}
+		//12.
+		if(StringUtils.isNotEmpty(form.getAprSortPriority())){//表单入力时
+			newForm.setAprSortPriority(Integer.valueOf(form.getAprSortPriority()));
+		}
+		//13.
+		if(StringUtils.isNotEmpty(form.getActulPaySort())){//表单入力时
+			newForm.setActulPaySort(Integer.valueOf(form.getActulPaySort()));
+		}
+		//14.
+		if(StringUtils.isNotEmpty(form.getActulPaySortPriority())){//表单入力时
+			newForm.setActulPaySortPriority(Integer.valueOf(form.getActulPaySortPriority()));
+		}
+		//15.
+		if(StringUtils.isNotEmpty(form.getInvestProgressSort())){//表单入力时
+			newForm.setInvestProgressSort(Integer.valueOf(form.getInvestProgressSort()));
+		}
+		//16.
+		if(StringUtils.isNotEmpty(form.getInvestProgressSortPriority())){//表单入力时
+			newForm.setInvestProgressSortPriority(Integer.valueOf(form.getInvestProgressSortPriority()));
+		}
+		//17.
+		newForm.setLabelStatus(Integer.valueOf(form.getLabelStatus()));//必须入力
+		
+		int count = this.allocationEngineService.insertHjhAllocationEngineRecord(newForm);
+		if(count > 0){
+			success();
+		}
+		return jsonObject;
+	}
+	
+	/**
+	 * 点击换绑迁按钮迁移到换绑详情info画面
+	 * 
+	 * @Title moveToInfoAction
+	 * @param request
+	 * @param form
+	 * @return
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "生成换绑详情info画面")
+	@PostMapping(value = "/changeAction")
+	@ResponseBody
+	public JSONObject getEngineChangeView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+		JSONObject jsonObject = new JSONObject();
+		if(form.getPlanNidSrch()!= null){
+			jsonObject.put("planNid", form.getPlanNidSrch());
+			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecord(Integer.parseInt(form.getId()));
+			jsonObject.put("labelName", vo.getLabelName());
+		}
+		if (StringUtils.isNotEmpty(form.getLabelId())) {
+			
+			HjhAllocationEngineVO hjhAllocationEngineVO = this.allocationEngineService.getPlanConfigRecordByParam(form);
+			jsonObject.put("hjhAllocationEngineVO", hjhAllocationEngineVO);
+		}
+		return jsonObject;
+	}
+	
+	
+	/**
+	 * 点击换绑后的保存
+	 * 根据获取到的leableName到allocation-engine查询出来相对应的数据,执行删除操作
+	 * 根据planNid去新加一条数据,
+	 * @Title moveToInfoAction
+	 * @param request
+	 * @param form
+	 * @return
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置画面换绑确认后修改DB")
+	@PostMapping(value = "/updateConfigActionInfo")
+	@ResponseBody
+	public AdminResult<String> updateConfigActionInfo(HttpServletRequest request, @RequestBody @Valid AllocationEngineRuquest form) {
+		HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+		//获取原计划的计划编号
+		String planNidSrch = form.getPlanNidSrch();
+		//获取到当前输入的订单号
+		String planNid = form.getPlanNid();
+		String newLabelStatus = form.getLabelStatus();
+		String id = form.getId();
+		form.setPlanNid(planNidSrch);
+		form.setLabelStatus("0");
+		//根据LabelName进行更改状态
+		HjhAllocationEngineVO hjhAllocationEngine = new HjhAllocationEngineVO();
+		BeanUtils.copyProperties(form,hjhAllocationEngine);	
+		hjhAllocationEngine.setLabelStatus(0);
+		hjhAllocationEngine.setId(Integer.parseInt(id));
+		this.allocationEngineService.updateHjhAllocationEngineRecord(hjhAllocationEngine);
+		hjhAllocationEngine.setPlanNid(planNid);
+		form.setPlanNameSrch(planNid);
+		String planNameM = this.allocationEngineService.getPlanNameByPlanNid(form);
+		hjhAllocationEngine.setPlanName(planNameM);
+		hjhAllocationEngine.setLabelStatus(Integer.parseInt(newLabelStatus));
+		hjhAllocationEngine.setUpdateTime(GetDate.getNowTime10());
+		hjhAllocationEngine.setLabelSort(Integer.parseInt(form.getLabelSort()));
+		hjhAllocationEngine.setCreateTime(GetDate.getNowTime10());
+		int flag = this.allocationEngineService.updateHjhAllocationEngineRecord(hjhAllocationEngine);
+		if(flag > 0){
+			response.setMessage(Response.SUCCESS);
+		}
+		return new AdminResult<String>(response.getMessage());
+	}
+	
+	/**
+	 * 修改畫面
+	 * 
+	 * @param request
+	 * @param form
+	 * @return
+	 */	
+	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置画面修改完后更新DB")
+	@PostMapping(value = "/updateConfigAction")
+	@ResponseBody
+	public AdminResult<String> updateConfigAction(HttpServletRequest request, @RequestBody @Valid AllocationEngineRuquest form) {
+		HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+		// 开始插表
+		HjhAllocationEngineVO record = new HjhAllocationEngineVO();
+		if (StringUtils.isNotEmpty(form.getPlanNid()) && StringUtils.isNotEmpty(form.getLabelName())) {
+			record = this.allocationEngineService.getPlanConfigRecordByParam(form);
+			//1.
+			record.setLabelName(form.getLabelName());
+			//2.
+			if(StringUtils.isNotEmpty(form.getTransferTimeSort())){
+				record.setTransferTimeSort(Integer.valueOf(form.getTransferTimeSort()));
+			} 
+			//3.
+			if(StringUtils.isNotEmpty(form.getTransferTimeSortPriority())){
+				record.setTransferTimeSortPriority(Integer.valueOf(form.getTransferTimeSortPriority()));
+			} 
+			//4.
+			if(StringUtils.isNotEmpty(form.getAprSort())){
+				record.setAprSort(Integer.valueOf(form.getAprSort()));
+			}
+			//5.
+			if(StringUtils.isNotEmpty(form.getAprSortPriority())){
+				record.setAprSortPriority(Integer.valueOf(form.getAprSortPriority()));
+			}
+			//6.
+			if(StringUtils.isNotEmpty(form.getActulPaySort())){
+				record.setActulPaySort(Integer.valueOf(form.getActulPaySort()));
+			}
+			//7.
+			if(StringUtils.isNotEmpty(form.getActulPaySortPriority())){
+				record.setActulPaySortPriority(Integer.valueOf(form.getActulPaySortPriority()));
+			}
+			//8.
+			if(StringUtils.isNotEmpty(form.getInvestProgressSort())){
+				record.setInvestProgressSort(Integer.valueOf(form.getInvestProgressSort()));
+			}
+			//9.
+			if(StringUtils.isNotEmpty(form.getInvestProgressSortPriority())){
+				record.setInvestProgressSortPriority(Integer.valueOf(form.getInvestProgressSortPriority()));
+			}
+			//9.x
+			if(StringUtils.isNotEmpty(form.getPlanNid())){
+				record.setPlanNid(form.getPlanNid());
+			}
+			if(StringUtils.isNotEmpty(form.getConfigStatus())){
+				record.setConfigStatus(Integer.valueOf(form.getConfigStatus()));
+			}
+			if(StringUtils.isNotEmpty(form.getLabelSort())){
+				record.setLabelSort(Integer.valueOf(form.getLabelSort()));
+			}
+			//10.
+			record.setLabelSort(Integer.valueOf(form.getLabelSort()));
+			//11.
+			record.setLabelStatus(Integer.valueOf(form.getLabelStatus()));
+		
+			int flg = this.allocationEngineService.updateHjhAllocationEngineRecord(record);
+	
+			if(flg > 0){
+				response.setMessage(Response.SUCCESS);
+			}
+		}
+		return new AdminResult<String>(response.getMessage());
+	}
+	
+	
+	/**
+	 * 计划配置info画面标签排序入力校验
+	 *
+	 * @param labelName
+	 * @return 
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置info画面修改前报消息")
+	@PostMapping(value = "/reportAction")
+	@ResponseBody
+	public JSONObject reportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+		JSONObject jsonObject = new JSONObject();
+		HjhLabelRequest label = new HjhLabelRequest();
+		//原始画面已经存在，不需要校验为空
+		String labelId = form.getLabelId();
+		String planNid = form.getPlanNid();
+		// (计划专区)原始专区画面已经有此计划了，不需要为空校验
+		HjhRegionVO hjhRegion  = this.allocationEngineService.getHjhRegionRecordByPlanNid(planNid);
+		label.setLabelIdSrch(Integer.valueOf(labelId));
+		// (标签列表)原始画面已经有此标签了通过标签id只能检索出一条记录
+		List<HjhLabelCustomizeVO>  hjhLabelList = this.labelService.getHjhLabelListById(label);
+		HjhLabelCustomizeVO hjhLabel = hjhLabelList.get(0);
+		// (引擎)
+		HjhAllocationEngineVO hjhAllocationEngine = this.allocationEngineService.getPlanConfigRecordByParam(form);
+		if(hjhRegion.getConfigStatus() == 0 && hjhLabel.getLabelState()  == 1 && hjhAllocationEngine.getLabelStatus() == 0){
+			jsonObject.put("info", "计划已被停用需重新启用");
+			jsonObject.put("status", "0");
+			return jsonObject;
+		}
+		if(hjhRegion.getConfigStatus() == 0 && hjhLabel.getLabelState()  == 0 && hjhAllocationEngine.getLabelStatus() == 0){
+			jsonObject.put("info", "计划和标签都已被停用需重新启用");
+			jsonObject.put("status", "1");
+			return jsonObject;
+		}
+		if(hjhRegion.getConfigStatus() == 1 && hjhLabel.getLabelState()  == 0 && hjhAllocationEngine.getLabelStatus() == 0){
+			jsonObject.put("info", "标签已被停用需重新启用");
+			jsonObject.put("status", "2");
+			return jsonObject;
+		}
+		if(hjhRegion.getConfigStatus() == 1 && hjhLabel.getLabelState()  == 1 && hjhAllocationEngine.getLabelStatus() == 0){
+			jsonObject.put("info", "确定要执行本次操作吗！");
+			jsonObject.put("status", "3");
+			return jsonObject;
+		}
+		return jsonObject;
+	}
+		
+	/**
+	 * 计划配置info画面标签排序入力校验
+	 *
+	 * @param labelName
+	 * @return 
+	 */
+	@ApiOperation(value = "计划引擎配置列表", notes = "校验计划编号是否存在")
+	@PostMapping(value = "/isExistsPlaneNumber")
+	@ResponseBody
+	public JSONObject isExistsPlaneNumber(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+		JSONObject jsonObject = new JSONObject();
+		// request实际从前台传入的就是 planNid
+		String planNid = request.getParameter("param");
+		if (StringUtils.isEmpty(planNid)) {
+			jsonObject.put("info", "未传入计划编号！");
+			return jsonObject;
+		}
+		int flag = this.isExistsPlanNumber(planNid);
+		if (flag == 1) {
+			jsonObject.put("error", "该计划编号不存在！");
+			return jsonObject;
+		} else if (flag == 2) {
+			jsonObject.put("error", "该计划已经被禁用！");
+			return jsonObject;
+		} else if (flag == 3) {
+			jsonObject.put("error", "该计划不存在于计划专区，请在计划专区添加！");
+			return jsonObject;
+		}
+		return jsonObject;
+	}
+	
+	/**
+	 * 去数据库查询计划编号是不是存在
+	 * @param planNid
+	 * @return
+	 */
+	public int isExistsPlanNumber(String planNid) {
+		if (StringUtils.isNotEmpty(planNid)) {
+			List<HjhPlanVO> list = this.allocationEngineService.getHjhPlanByPlanNid(planNid);
+			if(list == null || list.size()==0) {
+				// 该计划不存在。
+				return 1;
+			}
+			HjhPlanVO hjhPlan = list.get(0);
+			if (hjhPlan.getDelFlag()==1) {
+				//该计划已经被禁用
+				return 2;
+			}
+			List<HjhRegionVO> regionList = this.allocationEngineService.getHjhRegioByPlanNid(planNid);
+			if(regionList == null || regionList.size()==0) {
+				// 该计划编号不存在与计划专区
+				return 3;
+			}
+		}
+		return 0;
+	}	
+								/*--------以上为计划专区下属 引擎配置画面各项机能----------*/
 }
