@@ -22,4 +22,5 @@ public interface MyProfileService extends BaseService {
 
 	String getUserCouponsData(String couponStatus, Integer page, Integer pageSize, Integer userId, String host);
 
+    UserVO getUsers(Integer userId);
 }

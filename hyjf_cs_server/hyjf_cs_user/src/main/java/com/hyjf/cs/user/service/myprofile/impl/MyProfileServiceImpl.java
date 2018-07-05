@@ -345,4 +345,9 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         String date = HttpClientUtils.post(requestUrl, params);
         return date;
 	}
+
+    @Override
+    public UserVO getUsers(Integer userId) {
+        return this.amUserClient.findUserById(userId);
+    }
 }
