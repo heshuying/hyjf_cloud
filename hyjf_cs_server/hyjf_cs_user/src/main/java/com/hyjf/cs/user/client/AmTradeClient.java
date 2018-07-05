@@ -3,12 +3,14 @@
  */
 package com.hyjf.cs.user.client;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
-
-import java.util.List;
 
 /**
  * @author zhangqingqing
@@ -25,4 +27,9 @@ public interface AmTradeClient {
      * 根据userId获得填充userPortrait的info --用户画像定时任务用
      * */
     List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(String userIds);
+
+    Integer countCouponValid(Integer userId);
+
+    List<CouponUserListCustomizeVO> selectCouponUserList(Map<String,Object> mapParameter);
+
 }

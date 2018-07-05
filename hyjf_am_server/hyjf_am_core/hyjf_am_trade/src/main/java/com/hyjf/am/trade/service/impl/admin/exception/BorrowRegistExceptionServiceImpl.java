@@ -3,25 +3,33 @@
  */
 package com.hyjf.am.trade.service.impl.admin.exception;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
+import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowRegistCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.trade.mq.AutoPreAuditProducer;
+import com.hyjf.am.trade.mq.Producer;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: sunpeikai
@@ -29,6 +37,9 @@ import java.util.Map;
  */
 @Service
 public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements BorrowRegistExceptionService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private BorrowProjectTypeMapper borrowProjectTypeMapper;
 
@@ -38,9 +49,17 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Autowired
     private BorrowRegistCustomizeMapper borrowRegistCustomizeMapper;
 
+    @Autowired
+    private StzhWhiteListMapper stzhWhiteListMapper;
+
+    @Autowired
+    private AutoPreAuditProducer autoPreAuditProducer;
+
     /**
-     * 获取项目类型
-     * @return
+     * 获取项目类型,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 项目类型list封装
      */
     @Override
     public List<BorrowProjectType> selectBorrowProjectList() {
@@ -54,8 +73,10 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     }
 
     /**
-     * 获取还款方式
-     * @return
+     * 获取还款方式,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 还款方式list封装
      */
     @Override
     public List<BorrowStyle> selectBorrowStyleList(){
@@ -67,8 +88,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     }
 
     /**
-     * 获取标的备案列表count
-     * @param borrowRegistListRequest
+     * 获取标的列表count,用于前端分页展示
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
      * @return
      */
     @Override
@@ -77,9 +99,10 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     }
 
     /**
-     * 获取标的备案列表
-     * @param borrowRegistListRequest
-     * @return
+     * 获取标的列表
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return 异常标list封装
      */
     @Override
     public List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
@@ -96,4 +119,122 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
     }
 
+    /**
+     * 根据borrowNid查询borrow信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public BorrowVO searchBorrowByBorrowNid(String borrowNid) {
+        // 返回结果
+        BorrowVO borrowVO = new BorrowVO();
+        // 获取相应的标的详情
+        Borrow borrow = this.getBorrow(borrowNid);
+        borrowVO = CommonUtils.convertBean(borrow,BorrowVO.class);
+        return borrowVO;
+    }
+
+    /**
+     * 根据受托支付userId查询stAccountId
+     * @auth sunpeikai
+     * @param entrustedUserId 受托支付userId
+     * @return
+     */
+    @Override
+    public String getStAccountIdByEntrustedUserId(Integer entrustedUserId) {
+        StzhWhiteListExample stzhWhiteListExample = new StzhWhiteListExample();
+        StzhWhiteListExample.Criteria sTZHCra = stzhWhiteListExample.createCriteria();
+        sTZHCra.andStUserIdEqualTo(entrustedUserId);
+        List<StzhWhiteList> sTZHWhiteList = stzhWhiteListMapper.selectByExample(stzhWhiteListExample);
+        if (sTZHWhiteList != null && sTZHWhiteList.size() > 0) {
+            StzhWhiteList stzf = sTZHWhiteList.get(0);
+            return stzf.getStAccountid();
+        }
+        return "";
+    }
+
+    /**
+     * 更新标
+     * @auth sunpeikai
+     * @param type 1更新标的备案 2更新受托支付标的备案
+     * @return
+     */
+    @Override
+    public Boolean updateBorrowRegistByType(BorrowVO borrowVO,Integer type) {
+        Borrow borrow = CommonUtils.convertBean(borrowVO,Borrow.class);
+        BorrowExample example = new BorrowExample();
+        if(type == 1){
+            // 更新备案
+            example.createCriteria().andIdEqualTo(borrow.getId()).andStatusEqualTo(borrow.getStatus()).andRegistStatusEqualTo(borrow.getRegistStatus());
+        }else{
+            // 更新受托支付备案
+            example.createCriteria().andIdEqualTo(borrow.getId());
+        }
+        Boolean flag = borrowMapper.updateByExampleSelective(borrow, example) > 0;
+        return flag;
+    }
+
+    /**
+     * 更新标的资产信息如果关联计划的话
+     * @auth sunpeikai
+     * @param status 状态  受托支付传4，非受托支付传5
+     * @return
+     */
+    @Override
+    public Boolean updateBorrowAsset(BorrowVO borrowVO, Integer status) {
+        boolean borrowFlag = false;
+
+        HjhPlanAsset hjhPlanAsset = this.selectAssetByBorrow(borrowVO);
+        if(hjhPlanAsset != null){
+            logger.info(borrowVO.getInstCode()+" 机构,资产类型  "+borrowVO.getAssetType()+" 更新资产表状态为初审中,标的号 "+borrowVO.getBorrowNid());
+            // 更新资产表
+            HjhPlanAsset hjhPlanAssetnew = new HjhPlanAsset();
+            hjhPlanAssetnew.setId(hjhPlanAsset.getId());
+            hjhPlanAssetnew.setStatus(status);//初审中
+            //获取当前时间
+            Date nowTime = GetDate.getNowTime();
+            hjhPlanAssetnew.setUpdateTime(nowTime);
+            hjhPlanAssetnew.setUpdateUserId(1);
+
+            borrowFlag = this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew)>0;
+
+            // 受托支付备案失败推送
+            if(borrowVO.getEntrustedFlg() !=1){
+                // 加入到消息队列
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("mqMsgId", GetCode.getRandomCode(10));
+                params.put("assetId", hjhPlanAsset.getAssetId());
+                params.put("instCode", hjhPlanAsset.getInstCode());
+                try {
+                    autoPreAuditProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
+                } catch (MQException e) {
+                    logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列失败");
+                }
+            }
+
+        }
+
+        return borrowFlag;
+    }
+    /**
+     * 跟标的找资产
+     *
+     * @return
+     */
+    private HjhPlanAsset selectAssetByBorrow(BorrowVO borrow) {
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        HjhPlanAssetExample.Criteria cra = example.createCriteria();
+        cra.andInstCodeEqualTo(borrow.getInstCode());
+        cra.andBorrowNidEqualTo(borrow.getBorrowNid());
+
+        List<HjhPlanAsset> list = this.hjhPlanAssetMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+
+        return null;
+
+    }
 }

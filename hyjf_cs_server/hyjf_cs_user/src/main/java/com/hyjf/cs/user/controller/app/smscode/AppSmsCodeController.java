@@ -12,6 +12,7 @@ import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.SmsRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +66,11 @@ public class AppSmsCodeController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/verification-code", produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "app验证验证码",notes = "验证验证码")
+    @PostMapping(value = "/verification", produces = "application/json; charset=utf-8")
     public JSONObject validateVerificationCodeAction(@RequestHeader String key, @RequestBody SmsRequest request) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/user/smsCode/validateVerificationCodeAction");
+        ret.put("request", "/user/smsCode/verification");
         // 验证方式
         String verificationType = request.getVerificationType();
         // 验证码

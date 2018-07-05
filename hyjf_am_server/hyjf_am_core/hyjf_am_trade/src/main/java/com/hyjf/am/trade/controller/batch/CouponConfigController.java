@@ -13,7 +13,7 @@ import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.service.CouponConfigService;
-import com.hyjf.am.vo.trade.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 
 /**
  * @author yaoy

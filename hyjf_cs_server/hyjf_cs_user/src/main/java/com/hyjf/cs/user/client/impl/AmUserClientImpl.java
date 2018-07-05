@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -35,13 +36,16 @@ import java.util.List;
 public class AmUserClientImpl implements AmUserClient {
 	private static Logger logger = LoggerFactory.getLogger(AmUserClient.class);
 
+	@Value("${am.user.service.name}")
+	private String userService;
+
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Override
 	public UserVO findUserByMobile(String mobile) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findByMobile/" + mobile, UserResponse.class).getBody();
+				.getForEntity(userService+"/user/findByMobile/" + mobile, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -54,7 +58,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int countUserByRecommendName(String reffer) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findReffer/" + reffer, UserResponse.class).getBody();
+				.getForEntity(userService+"/user/findReffer/" + reffer, UserResponse.class).getBody();
 		if (response != null  && response.getResult() != null) {
 			return 1;
 		}
@@ -64,7 +68,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO register(RegisterUserRequest request) {
 		UserResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/register", request, UserResponse.class).getBody();
+				.postForEntity(userService+"/user/register", request, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -74,7 +78,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+				.getForEntity(userService+"/user/findById/" + userId, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -84,7 +88,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO findUserInfoById(int userId) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
+				.getForEntity(userService+"/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -109,7 +113,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(status);
 		request.setPlatform(platform);
 		SmsCodeResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/smsCode/save", request, SmsCodeResponse.class).getBody();
+				.postForEntity(userService+"/smsCode/save", request, SmsCodeResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getCnt();
 		} else {
@@ -128,7 +132,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
 
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", request, Integer.class)
+		Integer result = restTemplate.postForEntity(userService+"/smsCode/check/", request, Integer.class)
 				.getBody();
 		if (result == null) {
 			return 0;
@@ -139,7 +143,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO findUserByUserNameOrMobile(String loginUserName) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findByCondition/" + loginUserName, UserResponse.class)
+				.getForEntity(userService+"/user/findByCondition/" + loginUserName, UserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
@@ -159,7 +163,7 @@ public class AmUserClientImpl implements AmUserClient {
 			logger.error(e.getMessage(), e);
 			throw new ReturnMessageException(Response.FAIL_MSG);
 		}
-		String url = "http://AM-USER/am-user/user/updateLoginUser/" + userId + "/" + args;
+		String url = userService+"/user/updateLoginUser/" + userId + "/" + args;
 		logger.info("url:{}", url);
 		restTemplate.getForEntity(url, String.class);
 	}
@@ -168,7 +172,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
 		HjhUserAuthResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getHjhUserAuthByUserId/"+userId, HjhUserAuthResponse.class)
+				.getForEntity(userService+"/user/getHjhUserAuthByUserId/"+userId, HjhUserAuthResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();
@@ -188,13 +192,13 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog) {
-		restTemplate.put("http://AM-USER/am-user/user/insertLogSelective",hjhUserAuthLog);
+		restTemplate.put(userService+"/user/insertLogSelective",hjhUserAuthLog);
 	}
 
 	@Override
 	public HjhUserAuthLogVO selectByExample(String orderId) {
 		HjhUserAuthLogResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
+				.getForEntity(userService+"/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();
@@ -204,7 +208,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
     public void updateUserAuthInves(BankRequest bean){
-		 restTemplate.put("http://AM-USER/am-user/user/updateUserAuthInves", bean) ;
+		 restTemplate.put(userService+"/user/updateUserAuthInves", bean) ;
 	}
 
 	/**
@@ -217,12 +221,25 @@ public class AmUserClientImpl implements AmUserClient {
 		if(user == null || user.getUserId() == null){
 			return 0;
 		}
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", user, Integer.class)
+		Integer result = restTemplate.postForEntity(userService+"/user/updateByUserId", user, Integer.class)
 				.getBody();
 		if (result == null) {
 			return 0;
 		}
 		return result;
+	}
+
+	/**
+	 * 统计手机号
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public int countByMobile(String mobile){
+		int checkFlg = restTemplate.
+				getForEntity(userService+"/userManager/countByMobile/"+ mobile, Integer.class).
+				getBody();
+		return checkFlg;
 	}
 
 	/**
@@ -241,7 +258,7 @@ public class AmUserClientImpl implements AmUserClient {
 			result.put("statusDesc", "请求参数非法");
 			return result;
 		}
-		String url = "http://AM-USER/am-user/user/updatePassWd/" + userId + "/" + oldPW + "/" + newPW;
+		String url = userService+"/user/updatePassWd/" + userId + "/" + oldPW + "/" + newPW;
 		logger.info("url:{}", url);
 		ResponseEntity<JSONObject> resp = restTemplate.getForEntity(url, JSONObject.class);
 		result = resp.getBody();
@@ -255,7 +272,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO findUsersInfoById(int userId) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
+				.getForEntity(userService+"/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -265,7 +282,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public AccountChinapnrVO getAccountChinapnr(Integer userId) {
 		AccountChinapnrResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getAccountChinapnr/" + userId, AccountChinapnrResponse.class).getBody();
+				.getForEntity(userService+"/user/getAccountChinapnr/" + userId, AccountChinapnrResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -278,7 +295,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean checkEmailUsed(String email) {
 		boolean result = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/checkEmailUsed/" + email, boolean.class).getBody();
+				.getForEntity(userService+"/user/checkEmailUsed/" + email, boolean.class).getBody();
 		return result;
 	}
 	
@@ -289,7 +306,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public void insertBindEmailLog(BindEmailLogRequest bean) {
-		restTemplate.postForEntity("http://AM-USER/am-user/user/insertBindEmailLog/",  bean, int.class).getBody();
+		restTemplate.postForEntity(userService+"/user/insertBindEmailLog/",  bean, int.class).getBody();
 	}
 	
 	/**
@@ -300,7 +317,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BindEmailLogVO getBindEmailLog(Integer userId) {
 		BindEmailLogResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getBindEmailLog/" + userId, BindEmailLogResponse.class).getBody();
+				.getForEntity(userService+"/user/getBindEmailLog/" + userId, BindEmailLogResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -314,7 +331,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public void updateBindEmail(BindEmailLogRequest bean) {
-		restTemplate.postForEntity("http://AM-USER/am-user/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, int.class).getBody();
+		restTemplate.postForEntity(userService+"/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, int.class).getBody();
 	}
 	
 	/**
@@ -325,7 +342,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int updateUserContract(UsersContractRequest bean) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/updateUserContract/",  bean, int.class).getBody();
+				.postForEntity(userService+"/user/updateUserContract/",  bean, int.class).getBody();
 		return result;
 	}
 
@@ -339,7 +356,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UsersContactVO selectUserContact(Integer userId) {
 		UsersContactResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/selectUserContact/" + userId, UsersContactResponse.class).getBody();
+				.getForEntity(userService+"/user/selectUserContact/" + userId, UsersContactResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -356,7 +373,7 @@ public class AmUserClientImpl implements AmUserClient {
 		if(requestBean == null || requestBean.getUserId() == null){
 			return 0;
 		}
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", requestBean, Integer.class)
+		Integer result = restTemplate.postForEntity(userService+"/user/updateByUserId", requestBean, Integer.class)
 				.getBody();
 		if (result == null) {
 			return 0;
@@ -372,7 +389,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO getUserByIdNo(String idNo) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findByIdNo/" + idNo, UserInfoResponse.class).getBody();
+				.getForEntity(userService+"/userInfo/findByIdNo/" + idNo, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -383,7 +400,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserLoginLogVO getUserLoginById(Integer userId){
 		UserLoginLogResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getUserLoginById/" + userId, UserLoginLogResponse.class).getBody();
+				.getForEntity(userService+"/user/getUserLoginById/" + userId, UserLoginLogResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -393,7 +410,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankOpenAccountVO selectById(int userId) {
 		BankOpenAccountResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+				.getForEntity(userService+"/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -407,7 +424,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean updateBankSmsLog(BankSmsLogRequest request) {
 		boolean result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/updateBankSmsLog", request, Boolean.class).getBody();
+				.postForEntity(userService+"/card/updateBankSmsLog", request, Boolean.class).getBody();
 		return result;
 	}
 
@@ -415,14 +432,14 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public String selectBankSmsLog(BankSmsLogRequest request) {
 		String result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/selectBankSmsLog", request, String.class).getBody();
+				.postForEntity(userService+"/card/selectBankSmsLog", request, String.class).getBody();
 		return result;
 	}
 
 	@Override
 	public EvalationVO getEvalationByCountScore(short countScore) {
 		EvalationResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getEvalationByCountScore/" + countScore, EvalationResponse.class).getBody();
+				.getForEntity(userService+"/user/getEvalationByCountScore/" + countScore, EvalationResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -432,17 +449,25 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<EvalationVO> getEvalationRecord() {
 		EvalationResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getEvalationRecord", EvalationResponse.class).getBody();
+				.getForEntity(userService+"/user/getEvalationRecord", EvalationResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
 		return null;
 	}
 
-
+	@Override
+	public EvalationVO getEvalationByEvalationType(String evalationType) {
+	EvalationResponse response = restTemplate
+			.getForEntity(userService+"/user/getEvalationByEvalationType/" + evalationType, EvalationResponse.class).getBody();
+	if (response != null) {
+		return response.getResult();
+	}
+	return null;
+	}
 	@Override
 	public UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest) {
-		UserEvalationResultResponse response = restTemplate.postForEntity("http://AM-USER/am-user/user/insertUserEvalationResult",userEvalationRequest,UserEvalationResultResponse.class).getBody();
+		UserEvalationResultResponse response = restTemplate.postForEntity(userService+"/user/insertUserEvalationResult",userEvalationRequest,UserEvalationResultResponse.class).getBody();
 		if(null!=response){
 			return   response.getResult();
 		}
@@ -452,7 +477,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO findUserInfoByCardNo(String cradNo) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/findByCardId/" + cradNo, UserInfoResponse.class).getBody();
+				.getForEntity(userService+"/bankopen/findByCardId/" + cradNo, UserInfoResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -463,7 +488,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int updateUserAccountLog(BankOpenRequest request) {
 		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankopen/updateUserAccountLog", request, Integer.class).getBody();
+				.postForEntity(userService+"/bankopen/updateUserAccountLog", request, Integer.class).getBody();
 		if (result != null ) {
 			return result;
 		}
@@ -473,7 +498,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankOpenAccountVO selectByAccountId(String accountId) {
 		BankOpenAccountResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/selectByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+				.getForEntity(userService+"/bankopen/selectByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -483,7 +508,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
 		UserEvalationResultResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/selectUserEvalationResultByUserId/" + userId, UserEvalationResultResponse.class).getBody();
+				.getForEntity(userService+"/user/selectUserEvalationResultByUserId/" + userId, UserEvalationResultResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -493,7 +518,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public void deleteUserEvalationResultByUserId(Integer userId) {
-		restTemplate.put("http://AM-USER/am-user/user/deleteUserEvalationResultByUserId/", userId);
+		restTemplate.put(userService+"/user/deleteUserEvalationResultByUserId/", userId);
 	}
 
 	/**
@@ -512,7 +537,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setRetCode(retCode);
 		request.setRetMsg(retMsg);
 		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankopen/updateUserAccountLogStatus", request, Integer.class).getBody();
+				.postForEntity(userService+"/bankopen/updateUserAccountLogStatus", request, Integer.class).getBody();
 		if (result != null) {
 			return result;
 		}
@@ -536,7 +561,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setMobile(bean.getMobile());
 
 		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankopen/updateUserAccount", request, Integer.class).getBody();
+				.postForEntity(userService+"/bankopen/updateUserAccount", request, Integer.class).getBody();
 		if (result != null) {
 			return result;
 		}
@@ -551,7 +576,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer saveCardNoToBank(BankCardRequest request) {
 		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankopen/saveCardNoToBank", request, Integer.class).getBody();
+				.postForEntity(userService+"/bankopen/saveCardNoToBank", request, Integer.class).getBody();
 		if (result != null) {
 			return result;
 		}
@@ -567,7 +592,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankCardVO queryUserCardValid(String userId, String cardNo) {
 		BankCardResponse response = restTemplate
-				.getForEntity("http://AM-USER//am-user/card/queryUserCardValid/" + userId + "/" + cardNo, BankCardResponse.class).getBody();
+				.getForEntity(userService+"/card/queryUserCardValid/" + userId + "/" + cardNo, BankCardResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -582,7 +607,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int countUserCardValid(String userId) {
 		int count = restTemplate
-				.getForEntity("http://AM-USER//am-user/card/countUserCardValid/" + userId, Integer.class).getBody();
+				.getForEntity(userService+"/card/countUserCardValid/" + userId, Integer.class).getBody();
 		return count;
 	}
 
@@ -594,7 +619,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int deleteUserCardByUserId(String userId) {
 		int result = restTemplate
-				.getForEntity("http://AM-USER//am-user/card/deleteUserCardByUserId/" + userId, Integer.class).getBody();
+				.getForEntity(userService+"/card/deleteUserCardByUserId/" + userId, Integer.class).getBody();
 		return result;
 	}
 
@@ -606,7 +631,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int deleteUserCardByCardNo(String cardNo) {
 		int result = restTemplate
-				.getForEntity("http://AM-USER//am-user/card/deleteUserCardByCardNo/" + cardNo, Integer.class).getBody();
+				.getForEntity(userService+"/card/deleteUserCardByCardNo/" + cardNo, Integer.class).getBody();
 		return result;
 	}
 
@@ -618,7 +643,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int insertUserCard(BankCardRequest request) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/insertUserCard", request, Integer.class).getBody();
+				.postForEntity(userService+"/card/insertUserCard", request, Integer.class).getBody();
 		return result;
 	}
 
@@ -630,7 +655,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int updateUserCard(BankCardRequest request) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/updateUserCard", request, Integer.class).getBody();
+				.postForEntity(userService+"/card/updateUserCard", request, Integer.class).getBody();
 		return result;
 	}
 
@@ -640,14 +665,14 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int insertBindCardLog(BankCardLogRequest request) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/insertBindCardLog", request, Integer.class).getBody();
+				.postForEntity(userService+"/card/insertBindCardLog", request, Integer.class).getBody();
 		return result;
 	}
 
 	@Override
 	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId) {
 		CorpOpenAccountRecordResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/getCorpOpenAccountRecord/" + userId, CorpOpenAccountRecordResponse.class).getBody();
+				.getForEntity(userService+"/bankopen/getCorpOpenAccountRecord/" + userId, CorpOpenAccountRecordResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -657,7 +682,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<BankCardVO> getBankOpenAccountById(UserVO user) {
 		BankCardResponse bankCardResponse = restTemplate
-				.getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/" + user.getUserId(), BankCardResponse.class)
+				.getForEntity(userService+"/callcenter/getTiedCardForBank/" + user.getUserId(), BankCardResponse.class)
 				.getBody();
 		if (bankCardResponse != null) {
 			return bankCardResponse.getResultList();
@@ -668,7 +693,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int isCompAccount(Integer userId) {
 		int result = restTemplate
-				.getForEntity("http://AM-USER//am-user/user/isCompAccount/" + userId, Integer.class).getBody();
+				.getForEntity(userService+"/user/isCompAccount/" + userId, Integer.class).getBody();
 		return result;
 	}
 
@@ -681,14 +706,14 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public String getBankOpenAccountFiledMess(String logOrdId) {
 		String mess = restTemplate
-				.getForEntity("http://AM-USER//am-user/bankopen/getBankOpenAccountFiledMess/" + logOrdId, String.class).getBody();
+				.getForEntity(userService+"/bankopen/getBankOpenAccountFiledMess/" + logOrdId, String.class).getBody();
 		return mess;
 	}
 
 	@Override
 	public UtmPlatVO selectUtmPlatByUtmId(String utmId){
 		UtmPlatResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUtmId/" + utmId,UtmPlatResponse.class)
+				.getForEntity(userService+"/user/selectUtmPlatByUtmId/" + utmId,UtmPlatResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();
@@ -703,7 +728,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
-		String url = "http://AM-USER//am-user/invite/myInviteList";
+		String url = userService+"/invite/myInviteList";
 		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
@@ -719,7 +744,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int selectMyInviteCount(MyInviteListRequest requestBean) {
 		int count = restTemplate
-				.postForEntity("http://AM-USER//am-user/invite/myInviteCount", requestBean, Integer.class).getBody();
+				.postForEntity(userService+"/invite/myInviteCount", requestBean, Integer.class).getBody();
 		return count;
 	}
 
@@ -730,7 +755,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AccountMobileSynchVO> searchAccountMobileSynch(String flag){
-		String url = "http://AM-USER//am-user/batch/searchAccountMobileSynch/" + flag;
+		String url = userService+"/batch/searchAccountMobileSynch/" + flag;
 		AccountMobileSynchResponse response = restTemplate.getForEntity(url,AccountMobileSynchResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
@@ -745,7 +770,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest){
-		String url = "http://AM-USER//am-user/batch/updateAccountMobileSynch";
+		String url = userService+"/batch/updateAccountMobileSynch";
 		return restTemplate.postForEntity(url,accountMobileSynchRequest,boolean.class).getBody();
 	}
 	/**
@@ -754,7 +779,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 * */
 	@Override
 	public List<OrganizationStructureVO> searchGroupInfo() {
-		String url = "http://AM-USER//am-user/group/query_group_info";
+		String url = userService+"/group/query_group_info";
 		GroupInfoResponse response = restTemplate.getForEntity(url,GroupInfoResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
@@ -783,4 +808,25 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-USER/user_batch/portrait/save_user_portrait";
 		restTemplate.postForEntity(url,batchUserPortraitQueryRequest,String.class);
 	}
+
+	@Override
+	public int saveUserEvaluation(UserEvalationResultVO userEvalationResult) {
+		int count = restTemplate
+				.postForEntity(userService+"/user/saveUserEvaluation", userEvalationResult, Integer.class).getBody();
+		return count;
+	}
+
+	@Override
+	public Integer insertUserEvalationBehavior(Integer userId, String behavior) {
+		Integer id = restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+behavior, Integer.class).getBody();
+		return id;
+	}
+
+	@Override
+	public Integer updateUserEvaluationBehavior(UserEvalationBehaviorVO userEvalationBehavior) {
+		int count = restTemplate
+				.postForEntity(userService+"/user/updateUserEvalationBehavior", userEvalationBehavior, Integer.class).getBody();
+		return count;
+	}
+
 }

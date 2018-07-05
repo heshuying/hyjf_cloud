@@ -51,18 +51,70 @@ public interface BaseUserService extends BaseService{
 	 */
 	UserVO getUsersById(Integer userId);
 
+	/**
+	 * 验证验证码
+	 * @param mobile
+	 * @param code
+	 * @param validCodeType
+	 * @param clientPc
+	 * @param ckcodeYiyan
+	 * @param ckcodeYiyan1
+	 * @return
+	 */
+	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+
+	/**
+	 * 验证外部请求签名
+	 * @param paramBean
+	 * @param methodName
+	 * @return
+	 */
 	boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
+	/**
+	 * 获取用户在银行的开户信息
+	 * @param userId
+	 * @return
+	 */
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
+	/**
+	 * 校验用户是否已开户
+	 * @param userId
+	 * @return
+	 */
 	boolean checkIsOpen(Integer userId);
 
+	/**
+	 * 更新用户信息
+	 * @param userVO
+	 * @return
+	 */
 	Integer updateUserByUserId(UserVO userVO);
 
+	/**
+	 * 请求验证码接口
+	 * @param userId
+	 * @param mobile
+	 * @param txCode
+	 * @param client
+	 * @param cardNo
+	 * @return
+	 */
 	BankCallBean callSendCode(Integer userId, String mobile, String txCode, String client, String cardNo);
 
+	/**
+	 * 更新绑卡短信验证码
+	 * @param request
+	 * @return
+	 */
 	boolean updateAfterSendCode(BankSmsLogRequest request);
 
+	/**
+	 * 根据用户ID查询企业用户信息
+	 * @param userId
+	 * @return
+	 */
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
 	/**
@@ -73,6 +125,11 @@ public interface BaseUserService extends BaseService{
 	 */
 	WebViewUserVO setToken(WebViewUserVO webViewUserVO);
 
+	/**
+	 * 获取UserInfo
+	 * @param userId
+	 * @return
+	 */
 	UserInfoVO getUserInfo(int userId);
 
 	/**

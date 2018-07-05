@@ -1916,4 +1916,26 @@ public class GetDate extends PropertyEditorSupport {
 	public static int getTime10(Date date) {
 		return (int) date.getTime()/1000;
 	}
+
+	/**
+	 * 返回距离某个日期多少年(不满按一年计算)
+	 * @param dateStart 字符串必须是 2015-08的格式
+	 * @return
+	 */
+	public static Integer getYearFromDate(String dateStart) {
+		Calendar calendar1 = Calendar.getInstance();
+		int yearNow = calendar1.get(Calendar.YEAR);
+		int monthNow = calendar1.get(Calendar.MONTH) + 1;
+		Date date = stringToDate3(dateStart, "yyyy-MM");
+		Calendar calendar2 = Calendar.getInstance();
+		calendar2.setTime(date);
+		int yearDate = calendar2.get(Calendar.YEAR);
+		int monthDate = calendar2.get(Calendar.MONTH) + 1;
+		int result = yearNow - yearDate;
+		if (monthNow > monthDate) {
+			return result + 1;
+		} else {
+			return result;
+		}
+	}
 }

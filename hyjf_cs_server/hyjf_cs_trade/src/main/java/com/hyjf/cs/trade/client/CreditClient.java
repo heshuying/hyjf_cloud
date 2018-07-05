@@ -76,9 +76,27 @@ public interface CreditClient {
      */
     List<CreditRepayVO> selectCreditRepayList(Integer tenderId);
 
+    List<CreditRepayVO> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status);
+
     /**
      * 插入债转  我要债转
      * @param borrowCredit
      */
     Integer insertCredit(BorrowCreditVO borrowCredit);
+
+    /**
+     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * @param creditNid
+     * @param assignCapital
+     * @param userId
+     * @return
+     */
+    TenderToCreditAssignCustomizeVO getInterestInfo(String creditNid, String assignCapital, Integer userId);
+
+    /**
+     * 获取债转数据
+     * @param creditNid
+     * @return
+     */
+    BorrowCreditVO getBorrowCreditByCreditNid(String creditNid);
 }

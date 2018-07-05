@@ -5,8 +5,6 @@ package com.hyjf.admin.controller.user;
 
 
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.admin.beans.request.PreRegistRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -57,7 +54,6 @@ public class PreregistController extends BaseController {
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<AdminPreRegistListVO>> init(HttpServletRequest request,
 			@RequestBody PreRegistRequestBean adminPreRegistListRequest) {
-		 BaseResult<ListResult<AdminPreRegistListVO>> rs=new BaseResult<ListResult<AdminPreRegistListVO>>();
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
 //		aprlr.setMobile(adminPreRegistListRequest.getMobile());
 //		aprlr.setReferrer(adminPreRegistListRequest.getReferrer());
@@ -78,9 +74,7 @@ public class PreregistController extends BaseController {
 			return new AdminResult<>(FAIL, prs.getMessage());
 
 		}
-		ListResult<AdminPreRegistListVO> lrs=new ListResult<AdminPreRegistListVO>();
-
-		return new AdminResult<ListResult<AdminPreRegistListVO>>(lrs) ;
+		return new AdminResult<ListResult<AdminPreRegistListVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal())) ;
 	}
 
 	/**
@@ -95,7 +89,7 @@ public class PreregistController extends BaseController {
 	@PostMapping(value = "/updatepreregistlist")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-	@ApiImplicitParam(name = "id", value = "主键", required = true, dataType = "String")
+	@ApiImplicitParam(name = "id", value = "主键")
 	public AdminResult<AdminPreRegistListVO> updatepreregistlist(HttpServletRequest request, 
 			@RequestBody String id) {
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();

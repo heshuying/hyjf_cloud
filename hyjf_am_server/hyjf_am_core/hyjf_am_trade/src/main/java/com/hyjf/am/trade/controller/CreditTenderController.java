@@ -193,6 +193,22 @@ public class CreditTenderController extends BaseController{
     }
 
     /**
+     * 获取债转还款列表
+     * @param tenderNid
+     * @return
+     */
+    @GetMapping("/select_credit_repay_list/{borrowNid}/{tenderNid}/{periodNow}/{status}")
+    public CreditRepayResponse selectCreditRepayList(@PathVariable String borrowNid, @PathVariable String tenderNid, @PathVariable Integer periodNow, @PathVariable Integer status) {
+        CreditRepayResponse response = new CreditRepayResponse();
+        List<CreditRepay> list = bankCreditTenderService.selectCreditRepayList(borrowNid,tenderNid,periodNow,status);
+        if (list != null) {
+            response.setResultList(CommonUtils.convertBeanList(list, CreditRepayVO.class));
+        }
+        return response;
+    }
+
+
+    /**
      * 保存债转的数据
      * @param request
      * @return
@@ -205,6 +221,34 @@ public class CreditTenderController extends BaseController{
         }catch (Exception e){
             return 0;
         }
+    }
+
+    /**
+     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * @param creditNid
+     * @param assignCapital
+     * @param userId
+     * @return
+     */
+    @GetMapping("/get_interest_info/{creditNid}/{assignCapital}/{userId}")
+    public CreditAssignCustomizeResponse getInterestInfo( @PathVariable String creditNid,@PathVariable String assignCapital,@PathVariable Integer userId) {
+        CreditAssignCustomizeResponse response = new CreditAssignCustomizeResponse();
+        TenderToCreditAssignCustomizeVO bean = bankCreditTenderService.getInterestInfo(creditNid,assignCapital,userId);
+        response.setResult(bean);
+        return response;
+    }
+
+    /**
+     * 根据creditNid 查询债转信息
+     * @param creditNid
+     * @return
+     */
+    @GetMapping("/get_borrow_credit_by_credit_nid/{creditNid}")
+    public BorrowCreditResponse getBorrowCreditByCreditNid( @PathVariable String creditNid) {
+        BorrowCreditResponse response = new BorrowCreditResponse();
+        BorrowCreditVO bean = bankCreditTenderService.getBorrowCreditByCreditNid(creditNid);
+        response.setResult(bean);
+        return response;
     }
 
 }

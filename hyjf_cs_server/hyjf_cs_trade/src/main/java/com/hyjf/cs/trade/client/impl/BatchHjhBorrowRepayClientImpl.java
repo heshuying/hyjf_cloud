@@ -39,7 +39,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public List<BorrowTenderVO> selectBorrowTenderListByAccedeOrderId(String accedeOrderId) {
         BorrowTenderResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectBorrowTenderListByAccedeOrderId/" + accedeOrderId , BorrowTenderResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectBorrowTenderListByAccedeOrderId/" + accedeOrderId , BorrowTenderResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -55,7 +55,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId) {
         HjhAccedeResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectHjhAccedeListByOrderId/" + accedeOrderId , HjhAccedeResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhAccedeListByOrderId/" + accedeOrderId , HjhAccedeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -65,7 +65,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public List<HjhAccedeVO> selectHjhAccedeListById(Integer id) {
         HjhAccedeResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectHjhAccedeListById/" + id , HjhAccedeResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhAccedeListById/" + id , HjhAccedeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -75,7 +75,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public List<HjhPlanVO> selectHjhPlanListByPlanNid(String planNid) {
         HjhPlanResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectHjhPlanListByPlanNid/" + planNid , HjhPlanResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhPlanListByPlanNid/" + planNid , HjhPlanResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -107,7 +107,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public List<BorrowRecoverVO> selectBorrowRecoverListByAccedeOrderId(String accedeOrderId) {
         BorrowRecoverResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectBorrowRecoverListByAccedeOrderId/" + accedeOrderId , BorrowRecoverResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectBorrowRecoverListByAccedeOrderId/" + accedeOrderId , BorrowRecoverResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -117,7 +117,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public List<HjhRepayVO> selectHjhRepayListByAccedeOrderId(String accedeOrderId) {
         HjhRepayResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectHjhRepayListByAccedeOrderId/" + accedeOrderId , HjhRepayResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhRepayListByAccedeOrderId/" + accedeOrderId , HjhRepayResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -127,7 +127,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public HjhRepayVO selectHjhRepayListById(Integer Id) {
         HjhRepayResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectHjhRepayListById/" + Id , HjhRepayResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhRepayListById/" + Id , HjhRepayResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -181,7 +181,7 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     @Override
     public List<CalculateInvestInterestVO> selectCalculateInvestInterest() {
         CalculateInvestInterestResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/batchHjhBorrowRepay/selectCalculateInvestInterest/" , CalculateInvestInterestResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectCalculateInvestInterest/" , CalculateInvestInterestResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

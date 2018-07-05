@@ -3,21 +3,24 @@ package com.hyjf.am.config.controller;
 import com.hyjf.am.config.dao.model.auto.BankConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
+import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -112,4 +115,16 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+
+
+    @GetMapping("/getParamNameList/{nameClass}")
+    public ParamNameResponse getParamNameList(@PathVariable String nameClass){
+        ParamNameResponse response = new ParamNameResponse();
+        List<ParamName> paramNameList =bankConfigService.getParamNameList(nameClass);
+        if (CollectionUtils.isNotEmpty(paramNameList)){
+            response.setResultList(CommonUtils.convertBeanList(paramNameList,ParamNameVO.class));
+        }
+        return response;
+    }
+
 }

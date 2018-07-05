@@ -21,7 +21,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCusto
 import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
 import com.hyjf.am.trade.service.task.CouponRepaySerivce;
 import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
-import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 
 

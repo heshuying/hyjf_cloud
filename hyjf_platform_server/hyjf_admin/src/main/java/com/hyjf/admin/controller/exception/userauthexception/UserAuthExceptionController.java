@@ -35,25 +35,31 @@ public class UserAuthExceptionController extends BaseController {
     private UserAuthExceptionService userAuthExceptionService;
     /**
      * 自动投资债转授权异常list查询
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param request 筛选条件请求参数
      * @return JSONObject 拼装的返回参数
      */
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
     public JSONObject userAuthException(@RequestBody AdminUserAuthListRequest request){
+        JSONObject jsonObject = new JSONObject();
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
-            String recordTotal = response.getRecordTotal();
+            Integer recordTotal = response.getRecordTotal();
             List<AdminUserAuthListVO> resultList = response.getResultList();
-            return success(recordTotal,resultList);
+            jsonObject.put(STATUS, SUCCESS);
+            jsonObject.put(MSG, "成功");
+            jsonObject.put(TRCORD, recordTotal);
+            jsonObject.put(LIST, resultList);
         }else{
-            return fail("查询失败");
+            jsonObject.put(MSG, "查询失败");
+            jsonObject.put(STATUS, FAIL);
         }
+        return jsonObject;
     }
     /**
      * 同步用户授权状态
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param userId 用户id
      * @param type 1自动投资授权  2债转授权
      * @return

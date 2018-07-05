@@ -287,6 +287,21 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         int cnt = userMapper.countByExample(example);
         return cnt;
     }
+    /**
+     * 校验手机号
+     *
+     * @param mobile
+     * @return
+     */
+    @Override
+    public int countByMobile(String mobile) {
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        criteria.andMobileEqualTo(mobile);
+        int cnt = userMapper.countByExample(example);
+        return cnt;
+    }
+
 
     /**
      * 校验推荐人

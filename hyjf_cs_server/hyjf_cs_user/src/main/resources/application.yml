@@ -18,10 +18,16 @@ rocketMQ:
 am:
   config:
     service:
-      name: AM-CONFIG
+      name: http://AM-CONFIG/am-config
   user:
     service:
-      name: AM-USER
+      name: http://AM-USER/am-user
   trade:
     service:
-      name: AM-TRADE
+      name: http://AM-TRADE/am-trade
+  market:
+    service:
+      name: http://AM-MARKET/am-market
+  dataCollect:
+    service:
+      name: http://AM-STATISTICS/am-statistics

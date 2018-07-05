@@ -7,7 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.vo.trade.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.cs.trade.client.CouponConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;

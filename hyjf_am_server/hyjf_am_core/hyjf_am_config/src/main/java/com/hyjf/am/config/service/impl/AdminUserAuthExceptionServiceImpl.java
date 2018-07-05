@@ -24,7 +24,7 @@ public class AdminUserAuthExceptionServiceImpl implements AdminUserAuthException
 
     /**
      * 根据银行返回的错误码查询错误信息
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param retCode 银行返回的错误码
      * @return retMsg 错误码对应的错误信息
      */

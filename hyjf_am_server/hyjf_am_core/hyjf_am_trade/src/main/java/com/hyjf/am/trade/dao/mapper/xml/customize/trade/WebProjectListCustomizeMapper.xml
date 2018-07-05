@@ -297,31 +297,31 @@
         hydb.borrow_nid,
         hydbpt.borrow_project_type AS project_type,
         hydbpt.borrow_cd AS type,
-        hydbpt.reverify_status AS project_status,
+        hydb.reverify_status AS project_status,
         hydbpt.borrow_name AS type_name,
-        hydb.`name` AS borrow_name,
-        IFNULL(hydb.project_name,hydb.borrow_nid) as project_name,
-        hydb.borrow_contents,
-        hydb.borrow_measures_mea,
-        hydb.is_new,
-        hydb.finance_purpose,
-        hydb.monthly_income,
-        hydb.payment,
-        hydb.first_payment,
-        hydb.second_payment,
-        hydb.cost_introdution,
-        hydb.fiance_condition,
+        htbi.`name` AS borrow_name,
+        IFNULL(htbi.project_name,hydb.borrow_nid) as project_name,
+        htbi.borrow_contents,
+        htbi.borrow_measures_mea,
+        htbi.is_new,
+        htbi.finance_purpose,
+        htbi.monthly_income,
+        htbi.payment,
+        htbi.first_payment,
+        htbi.second_payment,
+        htbi.cost_introdution,
+        htbi.fiance_condition,
         hydb.borrow_style,
-        hydb.inst_code,
-        hydb.asset_type,
+        htbi.inst_code,
+        htbi.asset_type,
         hydb.is_show,
         CASE
-        WHEN hydb.company_or_personal = 2 THEN
+        WHEN htbi.company_or_personal = 2 THEN
         (
         SELECT
         m.credit
         FROM
-        huiyingdai_borrow_maninfo m
+        ht_borrow_maninfo m
         WHERE
         m.borrow_nid = hydb.borrow_nid
         )
@@ -330,29 +330,29 @@
         SELECT
         u.credit
         FROM
-        huiyingdai_borrow_users u
+        ht_borrow_user u
         WHERE
         u.borrow_nid = hydb.borrow_nid
         )
         END AS user_credit,
-        hydb.borrow_measures_instit AS measures_instit,
+        htbi.borrow_measures_instit AS measures_instit,
         hydb.account AS borrow_account,
         truncate(hydb.account/10000,2) AS borrow_account_wan,
         hydb.borrow_apr,
-        hydb.borrow_period,
+         hydb.borrow_period,
         CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
         hydb.borrow_account_wait AS invest_account,
-        hydb.company_or_personal AS com_or_per,
+        htbi.company_or_personal AS com_or_per,
         hydbs.`name` AS repay_style,
-        hydb.borrow_account_scale AS borrow_schedule,
-        hydb.booking_status,
-        hydb.booking_begin_time,
-        hydb.booking_end_time,
-        hydb.borrow_account_wait_appoint,
-        hydb.borrow_account_scale_appoint,
-        hydb.tender_account_min,
-        truncate(hydb.tender_account_min/10000,2) tender_account_min_wan,
-        hydb.tender_account_max,
+        -- hydb.borrow_account_scale AS borrow_schedule,
+         -- hydb.booking_status,
+         -- hydb.booking_begin_time,
+         -- hydb.booking_end_time,
+         -- hydb.borrow_account_wait_appoint,
+         -- hydb.borrow_account_scale_appoint,
+        htbi.tender_account_min,
+        truncate(htbi.tender_account_min/10000,2) tender_account_min_wan,
+        htbi.tender_account_max,
         CASE
         WHEN hydb.`status` = 1 AND hydb.verify_status = 3
         THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i' )
@@ -367,7 +367,7 @@
         '%Y-%m-%d %H:%i:%s'
         ) AS full_time,
         FROM_UNIXTIME(
-        (hydb.verify_time + hydb.borrow_valid_time * 24 * 60 * 60),
+        (hydb.verify_time + htbi.borrow_valid_time * 24 * 60 * 60),
         '%Y-%m-%d %H:%i:%s'
         ) AS borrow_end_time,
         CASE
@@ -375,11 +375,7 @@
         THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i:%s' )
         ELSE ''
         END AS on_time,
-        CASE
-        WHEN hydb.`status` = 1 AND hydb.booking_status =0
-        THEN FROM_UNIXTIME( hydb.booking_begin_time, '%Y-%m-%d %H:%i:%s' )
-        ELSE ''
-        END AS on_appoint_time,
+
         CASE
         WHEN hydb.`status` = 1 AND hydb.verify_status = 3
         THEN hydb.ontime
@@ -390,7 +386,7 @@
         WHEN hydb.`status` = 2 AND hydb.borrow_full_status = 0
         AND (
         hydb.verify_time + (
-        hydb.borrow_valid_time * 24 * 60 * 60
+        htbi.borrow_valid_time * 24 * 60 * 60
         ) > UNIX_TIMESTAMP(NOW())
         ) THEN
         '11'
@@ -401,33 +397,34 @@
         '13'
         WHEN hydb.`status` = 5 THEN
         '14'
-        <!-- WHEN hydb.`status` = 2 THEN
-            '15' -->
+
         ELSE
         ''
         END AS `status`,
         hydb.`status` AS status_orginal,
-        hydb.borrow_increase_money increase_money,
-        hydb.borrow_interest_coupon interest_coupon,
-        hydb.borrow_taste_money taste_money,
-        hydb.borrow_asset_number,
-        hydb.borrow_project_source,
-        hydb.borrow_interest_time,
-        hydb.borrow_due_time,
-        hydb.borrow_safeguard_way,
-        hydb.borrow_income_description,
-        hydb.borrow_publisher,
-        hydb.borrow_extra_yield,
-        hydb.contract_period,
+        htbi.borrow_increase_money increase_money,
+        htbi.borrow_interest_coupon interest_coupon,
+        htbi.borrow_taste_money taste_money,
+        htbi.borrow_asset_number,
+        htbi.borrow_project_source,
+        htbi.borrow_interest_time,
+        htbi.borrow_due_time,
+        htbi.borrow_safeguard_way,
+        htbi.borrow_income_description,
+        htbi.borrow_publisher,
+        htbi.borrow_extra_yield,
+        htbi.contract_period,
         FROM_UNIXTIME(
         hydb.recover_last_time,
         '%Y年%m月%d日'
         ) recover_last_time,
-        hydb.borrow_level
+        htbi.borrow_level
         FROM
-        huiyingdai_borrow hydb
-        LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-        LEFT JOIN huiyingdai_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
+        ht_borrow hydb
+        left join ht_borrow_info htbi on hydb.borrow_nid =  htbi.borrow_nid
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = htbi.project_type
+        LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
+
         WHERE
         (
         hydbpt.borrow_project_type = 'HZT'
@@ -445,7 +442,7 @@
         AND hydb.borrow_full_status = 0
         AND (
         hydb.verify_time + (
-        hydb.borrow_valid_time * 24 * 60 * 60
+        htbi.borrow_valid_time * 24 * 60 * 60
         ) > UNIX_TIMESTAMP(NOW())
         )
         )
@@ -458,28 +455,28 @@
         OR (
         hydb.`status` = 5
         )
-        <!-- OR (hydb.`status` = 2) -->
+
         )
-        AND hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
+        AND hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
     </select>
 
     <!--债权转让查询data -->
     <select id="searchCreditList"  resultMap="ProjectListNewMap" parameterType="Map">
         select
         <include refid="Credit_Base_Column_List"/>
-        from   huiyingdai_borrow_credit
-        INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
+        from   ht_borrow_credit
+        INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+	    INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
 	    <include refid="Credit_Common_Where_Column"/>
         ORDER BY credit_inProgress DESC,
         <if test="discountSort != null and discountSort != ''">
-            credit_discount ${discountSort},
+            credit_discount #{discountSort},
         </if>
         <if test="termSort != null and termSort != ''">
-            credit_term ${termSort},
+            credit_term #{termSort},
         </if>
         <if test="capitalSort != null and capitalSort != ''">
-            credit_capital ${capitalSort},
+            credit_capital #{capitalSort},
         </if>
         add_time DESC
         <if test="limitStart != null and limitEnd !=null" >
@@ -490,9 +487,9 @@
     <!--债权转让查询count-->
     <select id="countCreditList" resultType="int" parameterType="Map">>
         select count(*)
-        from   huiyingdai_borrow_credit
-        INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-        INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
+        from   ht_borrow_credit
+        INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+        INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
 
@@ -501,7 +498,7 @@
     <!--债权转让(web，app)查询公用where-->
     <sql id="Credit_Common_Where_Column">
         <where>
-            huiyingdai_borrow.is_show <![CDATA[<>]]> 1
+            ht_borrow.is_show <![CDATA[<>]]> 1
             <if test="creditStatus != null and creditStatus != ''">
                 AND credit_status = #{creditStatus}
             </if>
@@ -512,19 +509,19 @@
                 </if>
             </if>
             AND ((
-                huiyingdai_borrow.borrow_style !='endday'
+                ht_borrow.borrow_style !='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
-                    AND huiyingdai_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin}
+                    AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin}
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
-                        AND huiyingdai_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax}
+                        AND ht_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax}
                     </if>
                 </if>
             ) OR (
-                huiyingdai_borrow.borrow_style ='endday'
+                ht_borrow.borrow_style ='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
-                    AND huiyingdai_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin} * 30
+                    AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin} * 30
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
-                        AND huiyingdai_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax} * 30
+                        AND ht_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax} * 30
                     </if>
                 </if>
             ))
@@ -541,7 +538,7 @@
 	    bid_name,
 	    borrow_style,
 	    hbs.name AS borrow_style_name,
-	    huiyingdai_borrow_credit.tender_nid,
+	    ht_borrow_credit.tender_nid,
 	    credit_status,
 	    credit_order,
 	    credit_period,
@@ -714,8 +711,8 @@
         SELECT
         COUNT(hydb.borrow_nid) AS total
         FROM
-        huiyingdai_borrow hydb
-        LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        ht_borrow hydb
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
         <include refid="App_Where_Clause" />
     </select>
 
@@ -805,8 +802,8 @@
         end project_type_code,
         IFNULL(hydb.borrow_account_wait,0) borrow_account_wait
         FROM
-        huiyingdai_borrow hydb
-        LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        ht_borrow hydb
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
         <include refid="App_Where_Clause" />
         ORDER BY
         hydb.`status` ASC,
@@ -873,7 +870,7 @@
             <if test="(type == null or type == '') and projectType=='CFH' ">
                 AND hydb.project_type NOT IN (4,8)
                 AND CASE
-                WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM huiyingdai_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+                WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
                 THEN
                 hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                 ELSE
@@ -884,7 +881,7 @@
             <if test="(type == null or type == '') and projectType=='ZQ' ">
                 AND hydb.project_type NOT IN (4,8)
                 AND CASE
-                WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM huiyingdai_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+                WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
                 THEN
                 hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                 ELSE
@@ -962,8 +959,8 @@
     <select id="countAppCredit" resultType="int" parameterType="Map">
         SELECT
         COUNT(credit_nid)
-        from huiyingdai_borrow_credit
-        INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid INNER JOIN huiyingdai_borrow_style hbs
+        from ht_borrow_credit
+        INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid INNER JOIN ht_borrow_style hbs
         ON hydb.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
@@ -1026,10 +1023,10 @@
         CONCAT(#{host},'?creditNid=',hydc.credit_nid) AS borrow_url,
         hydc.add_time AS add_time,
         '0' AS couponEnable
-        from huiyingdai_borrow_credit hydc
-        INNER JOIN huiyingdai_borrow hydb
+        from ht_borrow_credit hydc
+        INNER JOIN ht_borrow hydb
         ON hydc.bid_nid = hydb.borrow_nid
-        INNER JOIN huiyingdai_borrow_style hbs
+        INNER JOIN ht_borrow_style hbs
         ON hydb.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
         ORDER BY

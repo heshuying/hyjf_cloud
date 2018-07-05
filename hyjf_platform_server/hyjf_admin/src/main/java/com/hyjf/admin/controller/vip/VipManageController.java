@@ -4,13 +4,21 @@
 package com.hyjf.admin.controller.vip;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.VipManageService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.VipDetailListResponse;
+import com.hyjf.am.response.admin.VipManageResponse;
+import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
 import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.am.vo.admin.VipManageVO;
+import com.hyjf.am.vo.admin.VipUpdateGradeListVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -41,7 +49,7 @@ import java.util.Map;
 @Api(value = "vip管理接口")
 @RestController
 @RequestMapping("/hyjf-admin/vipManage")
-public class VipManageController {
+public class VipManageController extends BaseController {
 
     @Autowired
     private VipManageService vipManageService;
@@ -55,28 +63,48 @@ public class VipManageController {
 
     @ApiOperation(value = "vip管理", notes = "vip管理列表查询")
     @PostMapping("/vipManageList")
-    public JSONObject searchUser(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject();
-        VipManageRequest vipManageRequest = setParamRequest(map);
-        jsonObject = vipManageService.searchList(vipManageRequest);
-        return jsonObject;
+    public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
+        VipManageResponse vmr = vipManageService.searchList(vipManageRequest);
+        if (vmr == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(vmr)) {
+            return new AdminResult<>(FAIL, vmr.getMessage());
+
+        }
+        return new AdminResult<ListResult<VipManageVO>>(ListResult.build(vmr.getResultList(), vmr.getCount())) ;
     }
 
     @ApiOperation(value = "vip管理", notes = "vip详情页面")
     @PostMapping("/vipdetailInit")
-    public JSONObject vipDetailInit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject();
-        String userId = map.get("userId").toString();
-        VipDetailListRequest detailListRequest = new VipDetailListRequest();
-        detailListRequest.setUserId(userId);
-        String status = Response.SUCCESS;
-        List<VipDetailListVO> vipDetailList = vipManageService.searchDetailList(detailListRequest);
-        if (CollectionUtils.isEmpty(vipDetailList)) {
-            status = Response.FAIL;
+    public AdminResult<ListResult<VipDetailListVO>> vipDetailInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+        VipDetailListRequest vdr = new VipDetailListRequest();
+        vdr.setUserId(userId);
+        VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
+        if (vdl == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("record", vipDetailList);
-        jsonObject.put("status", status);
-        return jsonObject;
+        if (!Response.isSuccess(vdl)) {
+            return new AdminResult<>(FAIL, vdl.getMessage());
+
+        }
+        return new AdminResult<ListResult<VipDetailListVO>>(ListResult.build(vdl.getResultList(), vdl.getCount()));
+    }
+
+    @ApiOperation(value = "vip管理",notes = "vip升级详情页面")
+    @PostMapping("/vipupgradeInit")
+    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+        VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
+        vgl.setUserId(userId);
+        VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
+        if (vgr == null) {
+            return new AdminResult<>(FAIL,FAIL_DESC);
+        }
+        if (!Response.isSuccess(vgr)) {
+            return new AdminResult<>(FAIL, vgr.getMessage());
+
+        }
+        return new AdminResult<ListResult<VipUpdateGradeListVO>>(ListResult.build(vgr.getResultList(), vgr.getCount()));
     }
 
 

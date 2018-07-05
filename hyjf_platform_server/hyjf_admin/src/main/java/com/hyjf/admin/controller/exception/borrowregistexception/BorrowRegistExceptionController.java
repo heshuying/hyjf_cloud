@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * @author: sunpeikai
  * @version: BorrowRegistExceptionController, v0.1 2018/7/3 10:55
+ * 银行标的备案掉单
  */
 @RestController
 @RequestMapping("/hyjf-admin/borrow_regist_exception")
@@ -34,7 +35,7 @@ public class BorrowRegistExceptionController extends BaseController {
     private BorrowRegistExceptionService borrowRegistExceptionService;
     /**
      * 查询银行标的备案异常list
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param request 异常列表筛选检索条件
      * @return
      */
@@ -58,8 +59,9 @@ public class BorrowRegistExceptionController extends BaseController {
     }
     /**
      * 标的备案异常处理
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param request 异常列表筛选检索条件
+     * @param userId admin项目-当前登录用户id
      * @return
      */
     @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
@@ -67,14 +69,13 @@ public class BorrowRegistExceptionController extends BaseController {
     public JSONObject borrowRegistHandleException(@RequestHeader(value = "userId")Integer userId, @RequestBody BorrowRegistListRequest request){
         JSONObject jsonObject = new JSONObject();
         String borrowNid = request.getBorrowNidSrch();
+        logger.info("borrowRegistHandleException::::::::::userId=[{}],borrowNid=[{}]",userId,borrowNid);
         if(StringUtils.isBlank(borrowNid)){
             jsonObject.put("success","1");
             jsonObject.put("msg","项目编号为空");
         }else{
-
+            jsonObject = borrowRegistExceptionService.handleBorrowRegistException(borrowNid,userId);
         }
-        // 数据总数
-
         return jsonObject;
     }
 }

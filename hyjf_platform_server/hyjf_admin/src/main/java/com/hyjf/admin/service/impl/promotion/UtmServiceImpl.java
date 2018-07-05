@@ -35,7 +35,7 @@ public class UtmServiceImpl implements UtmService {
         if(0 == recodeTotal){
             UtmResponse utmResponse = utmClient.getCountByParam(map);
             if(null != utmResponse){
-                recodeTotal = Integer.parseInt(utmResponse.getRecordTotal());
+                recodeTotal = utmResponse.getRecordTotal();
             }
         }
         //查询当前页数据

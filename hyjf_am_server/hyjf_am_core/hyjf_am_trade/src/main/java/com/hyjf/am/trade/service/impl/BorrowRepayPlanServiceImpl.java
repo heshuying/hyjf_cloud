@@ -62,4 +62,12 @@ public class BorrowRepayPlanServiceImpl implements BorrowRepayPlanService {
         cra.andBorrowNidEqualTo(borrowNid).andRepayPeriodEqualTo(borrowPeriod);
         return this.borrowRepayPlanMapper.selectByExample(example);
     }
+
+    @Override
+    public List<BorrowRepayPlan> selectByBorrowNid(String borrowNid) {
+        BorrowRepayPlanExample example = new BorrowRepayPlanExample();
+        BorrowRepayPlanExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        return this.borrowRepayPlanMapper.selectByExample(example);
+    }
 }

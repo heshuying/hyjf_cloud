@@ -6,6 +6,15 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.admin.beans.request.UserPortraitRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.am.response.user.AdminPreRegistListResponse;
+import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
+import com.hyjf.am.resquest.user.UserPortraitRequest;
+import com.hyjf.am.vo.user.AdminPreRegistListVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -13,6 +22,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +49,8 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/hyjf-admin/userPortrait")
 public class UserPortraitController extends BaseController {
 
+    private static final String PERMISSIONS = "userPortrait";
+
     @Autowired
     private UserPortraitService userPortraitService;
 
@@ -53,20 +65,20 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "用户画像", notes = "获取用户画像列表")
     @PostMapping(value = "/selectUserPortraitList")
     @ResponseBody
-    public JSONObject selectUserPortraitList(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<UserPortraitVO>> selectUserPortraitList(HttpServletRequest request,@RequestBody UserPortraitRequestBean userPortraitRequestBean) {
         JSONObject jsonObject = new JSONObject();
-        UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(map);
-        String status = Response.FAIL;
-        if(null!=responseUserPortrait){
-            List<UserPortraitVO> userPortraitVOList = responseUserPortrait.getResultList();
-            if(null!=userPortraitVOList&&userPortraitVOList.size()>0){
-                jsonObject.put("record", userPortraitVOList);
-                jsonObject.put("count", responseUserPortrait.getCount());
-                status = Response.SUCCESS;
-            }
+        UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
+        BeanUtils.copyProperties(userPortraitRequestBean, userPortraitRequest);
+        UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(userPortraitRequest);
+        if(responseUserPortrait==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status", status);
-        return jsonObject;
+        if (!Response.isSuccess(responseUserPortrait)) {
+            return new AdminResult<>(FAIL, responseUserPortrait.getMessage());
+        }
+        return new AdminResult<ListResult<UserPortraitVO>>(ListResult.build(responseUserPortrait.getResultList(), responseUserPortrait.getCount())) ;
+
     }
 
 
@@ -78,20 +90,12 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "用户画像", notes = "初始化用户画像修改页面")
     @PostMapping(value = "/initUserPortraitEdit")
     @ResponseBody
-    public JSONObject initUserPortraitEdit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject result = new JSONObject();
-        String status = Response.FAIL;
-        String strUserId = map.get("userId").toString();
-        if (StringUtils.isNotBlank(strUserId)) {
-            int userId = Integer.parseInt(strUserId);
+    public AdminResult<UserPortraitVO>  initUserPortraitEdit(HttpServletRequest request, @RequestBody int userId) {
             UserPortraitVO userPortraitVO = userPortraitService.selectUsersPortraitByUserId(userId);
             if (null != userPortraitVO) {
-                result.put("record", userPortraitVO);
-                status = Response.SUCCESS;
+                return new AdminResult<UserPortraitVO>(userPortraitVO);
             }
-        }
-        result.put("status", status);
-        return result;
+            return new AdminResult<>(FAIL, FAIL_DESC);
     }
 
     /**
@@ -123,11 +127,10 @@ public class UserPortraitController extends BaseController {
        * 导出功能
        *
        * @param request
-       * @param form
      * */
     @ApiOperation(value = "借款盖章用户", notes = "导出借款盖章用户")
     @PostMapping(value = "/exportLoancover")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody String userName) throws Exception {
         // 表格sheet名称
         String sheetName = "用户画像";
         // 文件名称
@@ -147,11 +150,13 @@ public class UserPortraitController extends BaseController {
         String yesterday = GetDate.date_sdf.format(cal.getTime());
         String yesterdayBegin = yesterday + " 00:00:00";
         String yesterdayEnd = yesterday + " 23:59:59";
-        map.put("yesterdayBeginTime", yesterdayBegin);
-        map.put("yesterdayEnd", yesterdayEnd);
-        map.put("limitFlg", 0);
+        UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
+        userPortraitRequest.setUserName(userName);
+        userPortraitRequest.setYesterdayBeginTime(yesterdayBegin);
+        userPortraitRequest.setYesterdayEndTime(yesterdayEnd);
+        userPortraitRequest.setLimitFlg(0);
         List<UserPortraitVO> loanCoverUserVOList =new ArrayList<UserPortraitVO>();
-        UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(map);
+        UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(userPortraitRequest);
         if(null!=responseUserPortrait){
             loanCoverUserVOList = responseUserPortrait.getResultList();
         }

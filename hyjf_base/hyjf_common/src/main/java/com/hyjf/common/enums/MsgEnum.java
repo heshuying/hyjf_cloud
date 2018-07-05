@@ -296,7 +296,8 @@ public enum MsgEnum implements MsgCode {
 	STATUS_TP000002("TP000002","未设置过交易密码，请先设置交易密码"),
 	// ----------用户测评错误信息------------
 	STATUS_EV000001("EV000001","未找到对应测评结果"),
-
+	STATUS_EV000003("EV000003", "用户已测评"),
+	STATUS_EV000004("EV000004", "用户测评已过期"),
 	//----------上传用户头像错误信息-------------
 	STATUS_EV000002("EV000002","头像修改失败,请刷新重试！"),
 
@@ -343,6 +344,12 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_DISCOUNT_FORMAT_ERROR("1","折让率格式错误"),
 
 	ERROR_SMS_SEND("1","发送验证码失败，请稍后再试"),
+	ERROR_CREDIT_NID_CAPITAL_NULL("1","债转编号和承接本金不能为空"),
+	ERROR_CREDIT_NID_CAPITAL_NUMBER("1","债转编号和承接本金必须是数字格式"),
+	ERROR_CREDIT_NO_MONEY("1","余额不足"),
+	ERROR_CREDIT_CANT_BBY_YOURSELF("1","不可以承接自己出让的债权"),
+	ERROR_CREDIT_NO_BORROW_RECOVER("1","未查询到用户的放款记录"),
+	ERROR_CREDIT_NO_BORROW("1","当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试"),
 
 
 

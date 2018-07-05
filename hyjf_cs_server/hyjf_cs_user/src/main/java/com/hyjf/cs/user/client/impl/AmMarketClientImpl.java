@@ -12,6 +12,7 @@ import com.hyjf.cs.user.client.AmMarketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,6 +23,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AmMarketClientImpl implements AmMarketClient {
 	private static Logger logger = LoggerFactory.getLogger(AmMarketClientImpl.class);
+
+	@Value("${am.market.service.name}")
+	private String marketService;
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -35,7 +39,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
 	public AdsVO findAdsById(Integer activityId) {
 		AdsResponse response = restTemplate
-				.getForEntity("http://AM-MARKET/am-market/ads/findAdsById/" + activityId, AdsResponse.class)
+				.getForEntity(marketService+"/ads/findAdsById/" + activityId, AdsResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
@@ -45,7 +49,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListVO selectActivityList(int activityId){
-		ActivityListResponse response = restTemplate.getForEntity("http://AM-MARKET/am-market/activity/selectActivityList/"+activityId, com.hyjf.am.response.user.ActivityListResponse.class).getBody();
+		ActivityListResponse response = restTemplate.getForEntity(marketService+"/activity/selectActivityList/"+activityId, com.hyjf.am.response.user.ActivityListResponse.class).getBody();
 		if(null!=response){
 			return   response.getResult();
 		}
@@ -54,7 +58,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public AppAdsCustomizeVO searchBanner(AdsRequest adsRequest){
-		AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchBanner",adsRequest, AppAdsCustomizeResponse.class).getBody();
+		AppAdsCustomizeResponse response = restTemplate.postForEntity(marketService+"/ads/searchBanner",adsRequest, AppAdsCustomizeResponse.class).getBody();
 		if(null!=response){
 			return   response.getResult();
 		}

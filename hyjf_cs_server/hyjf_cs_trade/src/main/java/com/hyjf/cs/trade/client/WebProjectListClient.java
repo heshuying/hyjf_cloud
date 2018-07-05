@@ -23,14 +23,14 @@ public interface WebProjectListClient {
      * @param request
      * @return
      */
-    ProjectListResponse searchProjectList(ProjectListRequest request);
+    List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request);
 
     /**
      * 查询所有分页总数
      * @param request
      * @return
      */
-    public ProjectListResponse countProjectList(ProjectListRequest request);
+    public Integer countProjectList(ProjectListRequest request);
 
     /**
      * 获取标的详情

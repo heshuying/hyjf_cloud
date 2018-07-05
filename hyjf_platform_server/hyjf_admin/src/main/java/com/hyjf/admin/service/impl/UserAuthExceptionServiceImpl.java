@@ -27,7 +27,7 @@ public class UserAuthExceptionServiceImpl implements UserAuthExceptionService {
     private UserauthClient userauthClient;
     /**
      * 查询自动投资债转授权异常列表
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param request 筛选条件
      * @return
      */
@@ -38,7 +38,7 @@ public class UserAuthExceptionServiceImpl implements UserAuthExceptionService {
     }
     /**
      * 同步用户授权状态
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param userId 用户id
      * @param type 1自动投资授权  2债转授权
      * @return

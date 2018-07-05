@@ -1,19 +1,23 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,13 +31,16 @@ import java.util.List;
 public class AmConfigClientImpl implements AmConfigClient {
     private static Logger logger = LoggerFactory.getLogger(AmConfigClientImpl.class);
 
+    @Value("${am.config.service.name}")
+    private String configService;
+
     @Autowired
     private RestTemplate restTemplate;
 
     @Override
     public SmsConfigVO findSmsConfig() {
         SmsConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/smsConfig/findOne", SmsConfigResponse.class).getBody();
+                .getForEntity(configService+"/smsConfig/findOne", SmsConfigResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -49,7 +56,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String getBankIdByCardNo(String cardNo) {
         return restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+                .getForEntity(configService+"/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
     }
 
     /**
@@ -62,7 +69,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public BanksConfigVO getBankNameByBankId(String bankId) {
         BanksConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+                .getForEntity(configService+"/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -72,7 +79,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<QuestionCustomizeVO> getNewQuestionList() {
         QuestionCustomizeResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getNewQuestionList", QuestionCustomizeResponse.class).getBody();
+                .getForEntity(configService+"/config/getNewQuestionList", QuestionCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -82,14 +89,14 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public int countScore(AnswerRequest answerList) {
         int result = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/countScore", answerList, Integer.class).getBody();
+                .postForEntity(configService+"/config/countScore", answerList, Integer.class).getBody();
         return result;
     }
 
     @Override
     public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
         BankReturnCodeConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
+                .getForEntity(configService+"/config/getBankReturnCodeConfig/"+retCode,BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -104,7 +111,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String queryBankIdByCardNo(String cardNo) {
         String result = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+                .getForEntity(configService+"/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
         return result;
     }
 
@@ -117,9 +124,19 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public BanksConfigVO getBanksConfigByBankId(String bankId) {
         BanksConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+                .getForEntity(configService+"/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ParamNameVO> getParamNameList(String nameClass) {
+        String url = configService+"/config/getParamNameList/" + nameClass;
+        ParamNameResponse response = restTemplate.getForEntity(url,ParamNameResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
         }
         return null;
     }

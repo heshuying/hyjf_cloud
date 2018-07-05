@@ -11,10 +11,12 @@ import com.hyjf.am.trade.service.BorrowRecoverService;
 import com.hyjf.am.trade.service.BorrowRepayPlanService;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.netflix.discovery.converters.Auto;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -44,8 +46,75 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
     }
 
     @Override
+    public BorrowRecover selectBorrowRecoverByNid(String nid) {
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        example.createCriteria().andNidEqualTo(nid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(example);
+        if (borrowRecoverList!= null && borrowRecoverList.size() >0){
+            return borrowRecoverList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据id检索BorrowRecover
+     * @param id
+     * @return
+     */
+    @Override
+    public BorrowRecover selectBorrowRecoverById(Integer id){
+        return borrowRecoverMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<BorrowRecover> selectByBorrowNid(String borrowNid){
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria crt = example.createCriteria();
+        crt.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRecover> borrowRecovers = borrowRecoverMapper.selectByExample(example);
+        return borrowRecovers;
+    }
+
+    @Override
     public int updateBorrowRecover(BorrowRecover borrowRecover) {
         return this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover);
+    }
+
+    /**
+     * 根据tenderNid 和bidNid 查询
+     *
+     * @param tenderNid
+     * @param bidNid
+     * @return
+     */
+    @Override
+    public BorrowRecover getBorrowRecoverByTenderNidBidNid(String tenderNid, String bidNid) {
+        BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria borrowRecoverCra = borrowRecoverExample.createCriteria();
+        borrowRecoverCra.andBorrowNidEqualTo(bidNid).andNidEqualTo(tenderNid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
+        if(CollectionUtils.isEmpty(borrowRecoverList)){
+            return null;
+        }
+        return borrowRecoverList.get(0);
+    }
+
+    /**
+     * 根据tenderNid查询
+     *
+     * @param tenderNid
+     * @return
+     */
+    @Override
+    public BorrowRecover getBorrowRecoverByTenderNid(String tenderNid) {
+        BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria borrowRecoverCra = borrowRecoverExample.createCriteria();
+        borrowRecoverCra.andNidEqualTo(tenderNid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
+        if(CollectionUtils.isEmpty(borrowRecoverList)){
+            return null;
+        }
+        return borrowRecoverList.get(0);
     }
 
 
