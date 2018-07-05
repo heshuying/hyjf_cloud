@@ -4,6 +4,8 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +27,10 @@ public interface AdminCommonService {
      * @return
      */
     List<BorrowStyleVO> selectBorrowStyleList();
+
+    /**
+     * 资产来源
+     * @return
+     */
+    List<HjhInstConfigVO> selectHjhInstConfigList();
 }

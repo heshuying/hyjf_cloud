@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.BorrowResponse;
-import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.cs.trade.client.BorrowClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,5 @@ public class BorrowClientImpl implements BorrowClient {
             return response.getResult();
         }
         return null;
-    }
-
-    @Override
-    public int updateBorrowRegist(BorrowRegistRequest borrowRegistRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow_regist/update_borrow_regist",borrowRegistRequest,int.class).getBody();
-    }
-
-    @Override
-    public int updateEntrustedBorrowRegist(BorrowRegistRequest borrowRegistRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow_regist/update_entrusted_borrow_regist",borrowRegistRequest,int.class).getBody();
     }
 }

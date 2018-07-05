@@ -47,6 +47,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
 
     /**
      * 获取项目类型
+     *
      * @return
      */
     @Override
@@ -62,10 +63,11 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
 
     /**
      * 获取还款方式
+     *
      * @return
      */
     @Override
-    public List<BorrowStyle> selectBorrowStyleList(){
+    public List<BorrowStyle> selectBorrowStyleList() {
         BorrowStyleExample example = new BorrowStyleExample();
         BorrowStyleExample.Criteria cra = example.createCriteria();
         cra.andStatusEqualTo(Integer.valueOf(CustomConstants.FLAG_NORMAL));
@@ -75,41 +77,44 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
 
     /**
      * 获取标的备案列表count
+     *
      * @param borrowRegistListRequest
      * @return
      */
     @Override
-    public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest){
+    public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest) {
         return borrowRegistCustomizeMapper.getRegistCount(borrowRegistListRequest);
     }
 
     /**
      * 获取标的备案列表
+     *
      * @param borrowRegistListRequest
      * @return
      */
     @Override
-    public List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
+    public List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest) {
         List<BorrowRegistCustomize> list = borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
-        if(!CollectionUtils.isEmpty(list)){
+        if (!CollectionUtils.isEmpty(list)) {
             //处理标的备案状态
-            Map<String, String> map = CacheUtil.getParamNameMap("REGIST_STATUS");
-            if(!CollectionUtils.isEmpty(map)){
-                for(BorrowRegistCustomize borrowRegistCustomize : list){
-                    borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(),null));
+            Map<String, String> map = CacheUtil.getParamNameMap("hyjf_param_name:REGIST_STATUS");
+            if (!CollectionUtils.isEmpty(map)) {
+                for (BorrowRegistCustomize borrowRegistCustomize : list) {
+                    borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(), null));
                 }
             }
         }
-        return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
+        return list;
     }
 
     /**
      * 统计总额
+     *
      * @param borrowRegistListRequest
      * @return
      */
     @Override
-    public String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest){
+    public String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest) {
         return borrowRegistCustomizeMapper.sumBorrowRegistAccount(borrowRegistListRequest);
     }
 
@@ -122,20 +127,21 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);
         List<StzhWhiteList> list = this.stzhWhiteListMapper.selectByExample(example);
-        if(list.size() > 0){
+        if (list.size() > 0) {
             return list.get(0);
-        }else{
+        } else {
             return null;
         }
     }
 
     /**
      * 更新相应的标的信息
+     *
      * @param request
      * @return
      */
     @Override
-    public int updateBorrowRegistFromList(BorrowRegistRequest request){
+    public int updateBorrowRegistFromList(BorrowRegistRequest request) {
         BorrowVO borrowVO = request.getBorrowVO();
         BorrowExample example = new BorrowExample();
         example.createCriteria().andIdEqualTo(borrowVO.getId()).andStatusEqualTo(borrowVO.getStatus()).andRegistStatusEqualTo(borrowVO.getRegistStatus());
@@ -146,11 +152,12 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
 
     /**
      * 更新标的信息(受托支付备案)
+     *
      * @param request
      * @return
      */
     @Override
-    public int updateEntrustedBorrowRegist(BorrowRegistRequest request){
+    public int updateEntrustedBorrowRegist(BorrowRegistRequest request) {
         BorrowVO borrowVO = request.getBorrowVO();
         BorrowExample example = new BorrowExample();
         example.createCriteria().andIdEqualTo(borrowVO.getId());
