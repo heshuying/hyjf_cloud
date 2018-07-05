@@ -13,8 +13,7 @@ package com.hyjf.admin.common.util;
 
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +36,9 @@ import java.util.regex.Pattern;
  *            应用泛型，代表任意一个符合javabean风格的类
  *            注意这里为了简单起见，boolean型的属性xxx的get器方式为getXxx(),而不是isXxx()
  *            byte[]表jpg格式的图片数据
+ * @Deprecated 不推荐方法 即将删除
  */
+@Deprecated
 public class ExportExcel<T> implements Serializable {
 
 	/**
@@ -48,7 +49,7 @@ public class ExportExcel<T> implements Serializable {
 
 	/**
 	 * 这是一个通用的方法，利用了JAVA的反射机制，可以将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上
-	 * 
+	 *
 	 * @param sheetName
 	 *            表格sheet名称
 	 * @param author
@@ -64,13 +65,14 @@ public class ExportExcel<T> implements Serializable {
 	 *            如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
 	 * @throws IOException
 	 */
-	public void exportExcel(String sheetName, String author, Map<String, String> columnNames, Collection<T> dataset, HttpServletResponse response, String pattern) throws IOException {
+	public void exportExcel(String sheetName, String author, Map<String, String> columnNames, Collection<T> dataset,
+			HttpServletResponse response, String pattern) throws IOException {
 		exportExcel(sheetName, author, columnNames, dataset, response.getOutputStream(), pattern);
 	}
 
 	/**
 	 * 这是一个通用的方法，利用了JAVA的反射机制，可以将放置在JAVA集合中并且符号一定条件的数据以EXCEL 的形式输出到指定IO设备上
-	 * 
+	 *
 	 * @param sheetName
 	 *            表格sheet名称
 	 * @param author
@@ -85,7 +87,8 @@ public class ExportExcel<T> implements Serializable {
 	 * @param pattern
 	 *            如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
 	 */
-	public void exportExcel(String sheetName, String author, Map<String, String> columnNames, Collection<T> dataset, ServletOutputStream out, String pattern) {
+	public void exportExcel(String sheetName, String author, Map<String, String> columnNames, Collection<T> dataset,
+			ServletOutputStream out, String pattern) {
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -93,33 +96,34 @@ public class ExportExcel<T> implements Serializable {
 		// 生成一个样式
 		HSSFCellStyle style = workbook.createCellStyle();
 		// 设置这些样式
-		style.setFillForegroundColor(HSSFColor.WHITE.index);
-		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		style.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		style.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		style.setFillForegroundColor(IndexedColors.WHITE.index);
+		style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setAlignment(HorizontalAlignment.CENTER);
 		// 生成一个字体
 		HSSFFont font = workbook.createFont();
-		font.setColor(HSSFColor.BLACK.index);
+		font.setColor(IndexedColors.BLACK.index);
 		font.setFontHeightInPoints((short) 12);
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		// 字体加粗
+		font.setBold(true);
 		// 把字体应用到当前的样式
 		style.setFont(font);
 		// 生成并设置另一个样式
 		HSSFCellStyle style2 = workbook.createCellStyle();
-		style2.setFillForegroundColor(HSSFColor.WHITE.index);
-		style2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		style2.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		style2.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		style2.setFillForegroundColor(IndexedColors.WHITE.index);
+		style2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		style2.setBorderBottom(BorderStyle.THIN);
+		style2.setBorderLeft(BorderStyle.THIN);
+		style2.setBorderRight(BorderStyle.THIN);
+		style2.setBorderTop(BorderStyle.THIN);
+		style2.setAlignment(HorizontalAlignment.CENTER);
+		style2.setVerticalAlignment(VerticalAlignment.CENTER);
 		// 生成另一个字体
 		HSSFFont font2 = workbook.createFont();
-		font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
+		font2.setBold(false);
 		// 把字体应用到当前的样式
 		style2.setFont(font2);
 		// 声明一个画图的顶级管理器
@@ -138,8 +142,8 @@ public class ExportExcel<T> implements Serializable {
 		String[] columns = new String[columnNames.size()];
 		while (columIterator.hasNext()) {
 			Map.Entry<String, String> entry = columIterator.next();
-			String column = (String) entry.getKey();
-			String columnName = (String) entry.getValue();
+			String column = entry.getKey();
+			String columnName = entry.getValue();
 			HSSFCell cellTitle = columnTitleRow.createCell(columnIndex);
 			cellTitle.setCellStyle(style);
 			HSSFRichTextString text = new HSSFRichTextString(columnName);
@@ -148,7 +152,8 @@ public class ExportExcel<T> implements Serializable {
 			columnIndex++;
 		}
 		// 遍历集合数据，产生数据行
-		int index = 1;// 行号
+		// 行号
+		int index = 1;
 		Iterator<T> it = dataset.iterator();
 		while (it.hasNext()) {
 			// 创建一行
@@ -194,11 +199,12 @@ public class ExportExcel<T> implements Serializable {
 							columnValueRow.setHeightInPoints(60);
 							// 设置图片所在列宽度为80px,注意这里单位的一个换算
 							sheet.setColumnWidth(i, (short) (35.7 * 80));
-							// sheet.autoSizeColumn(i);
 							byte[] bsValue = (byte[]) value;
-							HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 1023, 255, (short) 6, index, (short) 6, index);
-							anchor.setAnchorType(2);
-							patriarch.createPicture(anchor, workbook.addPicture(bsValue, HSSFWorkbook.PICTURE_TYPE_JPEG));
+							HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 1023, 255, (short) 6, index, (short) 6,
+									index);
+							anchor.setAnchorType(ClientAnchor.AnchorType.MOVE_DONT_RESIZE);
+							patriarch.createPicture(anchor,
+									workbook.addPicture(bsValue, HSSFWorkbook.PICTURE_TYPE_JPEG));
 						} else {
 							// 其它数据类型都当作字符串简单处理
 							textValue = value.toString();
@@ -208,7 +214,8 @@ public class ExportExcel<T> implements Serializable {
 					}
 					// 如果不是图片数据，就利用正则表达式判断textValue是否全部由数字组成
 					if (textValue != null) {
-						Pattern p = Pattern.compile("^//d+(//.//d+)?$");
+						String regex = "^//d+(//.//d+)?$";
+						Pattern p = Pattern.compile(regex);
 						Matcher matcher = p.matcher(textValue);
 						if (matcher.matches()) {
 							// 是数字当作double处理
@@ -260,7 +267,7 @@ public class ExportExcel<T> implements Serializable {
 
 	/**
 	 * 创建导出标题
-	 * 
+	 *
 	 * @param titles
 	 * @param sheetName
 	 * @return
@@ -281,19 +288,21 @@ public class ExportExcel<T> implements Serializable {
 
 	/**
 	 * 输出附件
-	 * 
+	 *
 	 * @param titles
 	 * @param sheetName
 	 * @return
 	 */
-	public static void writeExcelFile(HttpServletResponse response, HSSFWorkbook workbook, String[] titles, String fileName) {
+	public static void writeExcelFile(HttpServletResponse response, HSSFWorkbook workbook, String[] titles,
+			String fileName) {
 		// 根据列名填充相应的数据
 		ServletOutputStream out = null;
 		try {
 			out = response.getOutputStream();
 			response.reset();
 			response.setContentType("application/msexcel;charset=utf-8");
-			response.setHeader("content-disposition", "attachment;filename=" + new String((fileName).getBytes("UTF-8"), "ISO8859-1"));
+			response.setHeader("content-disposition",
+					"attachment;filename=" + new String((fileName).getBytes("UTF-8"), "ISO8859-1"));
 
 			workbook.write(out);
 			out.flush();
@@ -311,15 +320,16 @@ public class ExportExcel<T> implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * 输出附件
-	 * 
+	 *
 	 * @param titles
 	 * @param sheetName
 	 * @return
 	 */
-	public static void writeExcelFile(HttpServletRequest request, HttpServletResponse response, HSSFWorkbook workbook, String[] titles, String fileName) {
+	public static void writeExcelFile(HttpServletRequest request, HttpServletResponse response, HSSFWorkbook workbook,
+			String[] titles, String fileName) {
 		// 根据列名填充相应的数据
 		ServletOutputStream out = null;
 		try {
@@ -327,14 +337,15 @@ public class ExportExcel<T> implements Serializable {
 			response.reset();
 			response.setContentType("application/msexcel;charset=utf-8");
 
-            String filenameWrapper;
-            String header = request.getHeader("User-Agent").toUpperCase();
-            if (header.contains("MSIE") || header.contains("TRIDENT") || header.contains("EDGE")) {
-                filenameWrapper = URLEncoder.encode(fileName, "utf-8");
-                filenameWrapper = filenameWrapper.replace("+", "%20");    //IE下载文件名空格变+号问题
-            } else {
-                filenameWrapper = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
-            }
+			String filenameWrapper;
+			String header = request.getHeader("User-Agent").toUpperCase();
+			if (header.contains("MSIE") || header.contains("TRIDENT") || header.contains("EDGE")) {
+				filenameWrapper = URLEncoder.encode(fileName, "utf-8");
+				// IE下载文件名空格变+号问题
+				filenameWrapper = filenameWrapper.replace("+", "%20");
+			} else {
+				filenameWrapper = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+			}
 			response.setHeader("content-disposition", "attachment;filename=" + filenameWrapper);
 
 			workbook.write(out);

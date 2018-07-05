@@ -25,11 +25,18 @@ public interface BankCardManagerService {
     List<BanksConfigVO> selectBankConfigList();
 
     /**
+     *  根据筛选条件查找汇付银行卡信息总数
+     * @param request 筛选条件
+     * @return
+     */
+    int countBankCardList(BankCardManagerRequest request);
+
+    /**
      *  根据筛选条件查找汇付银行卡信息列表
      * @param request 筛选条件
      * @return
      */
-     List<BankcardManagerVO> selectBankCardList(BankCardManagerRequest request);
+     List<BankcardManagerVO> selectBankCardList(BankCardManagerRequest request, int limitStart, int limit);
 
     /**
      * 根据筛选条件查找江西银行卡信息列表
