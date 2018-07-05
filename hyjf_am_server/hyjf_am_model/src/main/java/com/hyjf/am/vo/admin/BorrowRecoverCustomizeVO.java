@@ -2,11 +2,13 @@ package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
+
 /**
  * @author pangchengchao
  * @version BorrowRecoverCustomizeVO, v0.1 2018/7/2 14:50
  */
-public class BorrowRecoverCustomizeVO extends BaseVO {
+public class BorrowRecoverCustomizeVO extends BaseVO implements Serializable {
     /**
      * serialVersionUID:
      */

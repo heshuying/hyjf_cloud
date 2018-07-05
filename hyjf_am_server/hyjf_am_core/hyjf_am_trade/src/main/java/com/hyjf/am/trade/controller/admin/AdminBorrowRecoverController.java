@@ -2,19 +2,11 @@ package com.hyjf.am.trade.controller.admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowRecoverResponse;
-import com.hyjf.am.response.admin.AssetListCustomizeResponse;
-import com.hyjf.am.response.trade.TenderDetailResponse;
-import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.trade.controller.AssetManageController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRecoverCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserTradeListCustomize;
 import com.hyjf.am.trade.service.admin.AdminBorrowRecoverService;
-import com.hyjf.am.trade.service.admin.AdminHjhLabelService;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -23,12 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao

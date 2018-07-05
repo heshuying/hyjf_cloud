@@ -31,7 +31,7 @@ public class AssociatedRecordListVo extends BaseVO {
 
     private Long shiftToChinapnrUsrcustid;
 
-    private Integer associatedState;
+    private Boolean associatedState;
 
     private Date associatedTime;
 

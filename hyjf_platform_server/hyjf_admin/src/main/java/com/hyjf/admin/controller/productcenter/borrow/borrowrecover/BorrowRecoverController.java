@@ -5,7 +5,9 @@ import com.hyjf.admin.beans.request.BorrowRecoverRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRecoverService;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
@@ -37,11 +39,12 @@ import java.util.Map;
  */
 @Api(value = "产品中心-汇直投-放款明细")
 @RestController
-@RequestMapping("/hyjf-admin/borrowrecover")
+@RequestMapping("/borrow/borrowrecover")
 public class BorrowRecoverController extends BaseController {
     @Autowired
     private BorrowRecoverService borrowRecoverService;
-
+    /** 查看权限 */
+    public static final String PERMISSIONS = "borrowrecover";
     /**
      * 画面初始化
      *
@@ -50,6 +53,7 @@ public class BorrowRecoverController extends BaseController {
      */
     @ApiOperation(value = "放款明细", notes = "放款明细页面查询初始化")
     @PostMapping(value = "/searchAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowRecoverBean> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRecoverRequestBean form) {
 
 
@@ -79,7 +83,7 @@ public class BorrowRecoverController extends BaseController {
      */
     @ApiOperation(value = "放款明细导出", notes = "带条件导出EXCEL")
     @PostMapping(value = "/exportAction")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRecoverRequestBean form) throws Exception {
         BorrowRecoverRequest copyForm=new BorrowRecoverRequest();
         BeanUtils.copyProperties(form, copyForm);
