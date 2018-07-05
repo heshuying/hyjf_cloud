@@ -23,7 +23,7 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 
 
     @Autowired
-    private RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 
     @Override
     public Integer countUserInvest(Integer userId, String borrowNid) {

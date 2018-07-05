@@ -73,4 +73,20 @@ public class BorrowRepayPlanController extends BaseController{
         }
         return response;
     }
+
+    /**
+     * 根据borrowNid检索
+     * @param borrowNid
+     * @return
+     */
+    @GetMapping("/select_by_borrownid/{borrowNid}")
+    public BorrowRepayPlanResponse selectByBorrowNid(@PathVariable String borrowNid) {
+        BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+        List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanService.selectByBorrowNid(borrowNid);
+        if(borrowRepayPlans != null){
+            List<BorrowRepayPlanVO> borrowRepayPlanVO = CommonUtils.convertBeanList(borrowRepayPlans,BorrowRepayPlanVO.class);
+            response.setResultList(borrowRepayPlanVO);
+        }
+        return response;
+    }
 }

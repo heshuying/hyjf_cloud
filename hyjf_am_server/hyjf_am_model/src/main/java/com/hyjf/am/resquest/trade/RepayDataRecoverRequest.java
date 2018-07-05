@@ -4,7 +4,7 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.resquest.Request;
-import com.hyjf.am.vo.trade.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 

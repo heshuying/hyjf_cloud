@@ -76,6 +76,8 @@ public interface CreditClient {
      */
     List<CreditRepayVO> selectCreditRepayList(Integer tenderId);
 
+    List<CreditRepayVO> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status);
+
     /**
      * 插入债转  我要债转
      * @param borrowCredit
