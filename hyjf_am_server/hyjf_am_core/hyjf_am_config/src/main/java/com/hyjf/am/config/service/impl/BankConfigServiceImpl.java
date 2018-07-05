@@ -2,6 +2,8 @@ package com.hyjf.am.config.service.impl;
 
 import java.util.List;
 
+import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ public class BankConfigServiceImpl implements BankConfigService {
 	
 	@Autowired
 	protected CardBinMapper cardBinMapper;
+
+	@Autowired
+	private ParamNameMapper paramNameMapper;
 
 	/**
 	 * 获取银行卡配置信息
@@ -139,5 +144,15 @@ public class BankConfigServiceImpl implements BankConfigService {
 	public List<BankConfig> selectBankConfigList(){
 		List<BankConfig> banks = bankConfigMapper.selectByExample(new BankConfigExample());
 		return banks;
+	}
+
+	@Override
+	public List<ParamName> getParamNameList(String nameClass) {
+		ParamNameExample example = new ParamNameExample();
+		ParamNameExample.Criteria cra = example.createCriteria();
+		cra.andNameClassEqualTo(nameClass);
+		cra.andDelFlagEqualTo(Integer.parseInt(CustomConstants.FLAG_NORMAL));
+		example.setOrderByClause(" sort ASC ");
+		return this.paramNameMapper.selectByExample(example);
 	}
 }

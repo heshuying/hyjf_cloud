@@ -58,7 +58,7 @@ public class UserVO extends BaseVO implements Serializable {
 
 	private Integer userType;
 
-	private Boolean paymentAuthStatus;
+	private Integer paymentAuthStatus;
 
 	private Integer isSetPassword;
 
@@ -264,11 +264,11 @@ public class UserVO extends BaseVO implements Serializable {
 		this.userType = userType;
 	}
 
-	public Boolean getPaymentAuthStatus() {
+	public Integer getPaymentAuthStatus() {
 		return paymentAuthStatus;
 	}
 
-	public void setPaymentAuthStatus(Boolean paymentAuthStatus) {
+	public void setPaymentAuthStatus(Integer paymentAuthStatus) {
 		this.paymentAuthStatus = paymentAuthStatus;
 	}
 
