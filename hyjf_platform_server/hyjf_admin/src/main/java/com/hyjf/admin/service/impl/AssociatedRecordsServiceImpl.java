@@ -23,11 +23,23 @@ public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements Ass
     @Autowired
     private AmTradeClient amTradeClient;
 
+    /**
+     * 根据筛选条件查询数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
     @Override
     public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
         return amTradeClient.getAssociatedRecordsCount(request);
     }
 
+    /**
+     * 根据筛选条件查询关联记录list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
     @Override
     public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
         return amTradeClient.getAssociatedRecordList(request);

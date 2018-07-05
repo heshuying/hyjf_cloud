@@ -28,12 +28,24 @@ public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements Ass
     @Autowired
     private DirectionalTransferAssociatedRecordsMapper directionalTransferAssociatedRecordsMapper;
 
+    /**
+     * 根据筛选条件查询关联记录count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
     @Override
     public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
         DirectionalTransferAssociatedRecordsExample example = convertExample(request);
         return directionalTransferAssociatedRecordsMapper.countByExample(example);
     }
 
+    /**
+     * 根据筛选条件查询关联记录list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
     @Override
     public List<AssociatedRecordListVo> searchAssociatedRecordList(AssociatedRecordListRequest request) {
         DirectionalTransferAssociatedRecordsExample example = convertExample(request);
@@ -41,42 +53,48 @@ public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements Ass
         List<AssociatedRecordListVo> associatedRecordListVoList = CommonUtils.convertBeanList(directionalTransferAssociatedRecordsList,AssociatedRecordListVo.class);
         return associatedRecordListVoList;
     }
+
+    /**
+     * 筛选条件转example
+     * @auth sunpeikai
+     * @param request
+     * @return
+     */
     private DirectionalTransferAssociatedRecordsExample convertExample(AssociatedRecordListRequest request){
         DirectionalTransferAssociatedRecordsExample example = new DirectionalTransferAssociatedRecordsExample();
         DirectionalTransferAssociatedRecordsExample.Criteria criteria = example.createCriteria();
         // 转出账户
-        if (!StringUtils.isEmpty(request.getTurnOutUsername())) {
+        if (StringUtils.isNotEmpty(request.getTurnOutUsername())) {
             criteria.andTurnOutUsernameLike("%" + request.getTurnOutUsername() + "%");
         }
         // 转出账户手机
-        if (!StringUtils.isEmpty(request.getTurnOutMobile())) {
+        if (StringUtils.isNotEmpty(request.getTurnOutMobile())) {
             criteria.andTurnOutMobileLike("%" + request.getTurnOutMobile() + "%");
         }
         // 关联状态
-        if (!StringUtils.isEmpty(request.getStatusSearch())) {
+        if (StringUtils.isNotEmpty(request.getStatusSearch())) {
             criteria.andAssociatedStateEqualTo(Integer.parseInt(request.getStatusSearch()));
         }
         // 转入账户
-        if (!StringUtils.isEmpty(request.getShiftToUsername())) {
+        if (StringUtils.isNotEmpty(request.getShiftToUsername())) {
             criteria.andShiftToUsernameLike("%" + request.getShiftToUsername() + "%");
         }
         // 转入账户手机
-        if (!StringUtils.isEmpty(request.getShiftToMobile())) {
+        if (StringUtils.isNotEmpty(request.getShiftToMobile())) {
             criteria.andShiftToMobileLike("%" + request.getShiftToMobile() + "%");
         }
         // 关联时间开始
-        if (!StringUtils.isEmpty(request.getStartDate())) {
+        if (StringUtils.isNotEmpty(request.getStartDate())) {
             criteria.andAssociatedTimeGreaterThanOrEqualTo(GetDate.stringToDate(request.getStartDate() + " 00:00:00"));
         }
         // 关联时间结束
-        if (!StringUtils.isEmpty(request.getEndDate())) {
+        if (StringUtils.isNotEmpty(request.getEndDate())) {
             criteria.andAssociatedTimeLessThanOrEqualTo(GetDate.stringToDate(request.getEndDate() + " 23:59:59"));
         }
         if (request.getLimitStart() != -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
         }
-
         return example;
     }
 }

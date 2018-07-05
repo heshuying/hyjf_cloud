@@ -35,13 +35,27 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
     }
 
     /**
+     * 根据筛选条件查找汇付银行卡信息总数
+     *
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public int countBankCardList(BankCardManagerRequest request) {
+        List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerClient.selectBankCardList(request);
+        //todo 不允许这么做，容易爆内存， 偷懒写法，后续待优化
+        return bankcardManagerVOList.size();
+    }
+
+    /**
      * 根据筛选条件查找汇付银行卡信息列表
      *
      * @param request 筛选条件
      * @return
      */
     @Override
-    public List<BankcardManagerVO> selectBankCardList(BankCardManagerRequest request) {
+    public List<BankcardManagerVO> selectBankCardList(BankCardManagerRequest request,int limitStart, int limit) {
+        // todo limitStart limit要用上，偷懒写法，后续待优化
         List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerClient.selectBankCardList(request);
         List<BanksConfigVO> banksConfigVOList = bankCardManagerClient.selectBankConfigList();
         for (BankcardManagerVO bankcardManagerVO : bankcardManagerVOList) {

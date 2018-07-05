@@ -53,10 +53,13 @@ public class AccountDirectionalTransferController extends BaseController {
     public AccountDirectionalTransferResponse searchDirectionalTransferList(DirectionalTransferListRequest request){
         AccountDirectionalTransferResponse response = new AccountDirectionalTransferResponse();
         Integer count = accountDirectionalTransferService.getDirectionalTransferCount(request);
-        Paginator paginator = new Paginator(request.getCurrPage(),count);
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
 
-        request.setLimitStart(paginator.getOffset());
-        request.setLimitEnd(paginator.getLimit());
         logger.info("searchDirectionalTransferList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
 
         List<AccountDirectionalTransferVO> accountDirectionalTransferVOList = accountDirectionalTransferService.searchDirectionalTransferList(request);
