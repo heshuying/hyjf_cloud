@@ -13,7 +13,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version UserService, v0.1 2018/5/28 12:53
  */
-public interface UserService {
+public interface HjhInstConfigService {
 
     /**
      * 根据机构编号检索机构信息
