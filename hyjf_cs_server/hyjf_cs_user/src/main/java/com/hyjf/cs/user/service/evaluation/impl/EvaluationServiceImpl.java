@@ -9,12 +9,13 @@ import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.UserEvalationRequest;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -80,10 +81,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
      * @return
      */
     @Override
-    public UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId) {
-        UserEvalationResultVO oldUserEvalationResult = this.selectUserEvalationResultByUserId(userId);
-        amUserClient.deleteUserEvalationResultByUserId(userId);
-
+    public UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId,String behaviorId) {
         String[] answer = userAnswer.split(",");
         List<String> answerList = new ArrayList<String>();
         List<String> questionList = new ArrayList<String>();
@@ -96,15 +94,12 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         AnswerRequest answerRequest = new AnswerRequest();
         answerRequest.setResultList(answerList);
         int countScore = amConfigClient.countScore(answerRequest);
-        EvalationVO evalation = amUserClient.getEvalationByCountScore((short) countScore);
-        UserEvalationRequest request = new UserEvalationRequest();
-        request.setAnswerList(answerList);
-        request.setQuestionList(questionList);
-        request.setEvalation(evalation);
-        request.setCountScore(countScore);
-        request.setUserId(userId);
-        request.setUserEvalationResultVO(oldUserEvalationResult);
-        UserEvalationResultVO userEvalationResult = amUserClient.insertUserEvalationResult(request);
+        UserEvalationRequest userEvalationRequest = new UserEvalationRequest();
+        userEvalationRequest.setUserId(userId);
+        userEvalationRequest.setCountScore(countScore);
+        userEvalationRequest.setUserAnswer(userAnswer);
+        userEvalationRequest.setBehaviorId(behaviorId);
+        UserEvalationResultVO userEvalationResult = amUserClient.insertUserEvalationResult(userEvalationRequest);
         return userEvalationResult;
     }
 
@@ -152,13 +147,19 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
      */
     @Override
     public String checkActivityIfAvailable(String activityId) {
-        CheckUtil.check(null != activityId, MsgEnum.ERR_OBJECT_REQUIRED, "活动编号");//活动编号不能为空
-
+        if(activityId==null){
+            return CommonConstant.ACTIVITYID_IS_NULL;
+        }
         ActivityListVO activityList = amMarketClient.selectActivityList(new Integer(activityId));
-        CheckUtil.check(null != activityList, MsgEnum.ERR_ACTIVITY_NOT_EXIST);
-        CheckUtil.check(null != activityList, MsgEnum.ERR_ACTIVITY_NOT_EXIST);
-        CheckUtil.check(activityList.getTimeStart() <= System.currentTimeMillis() / 1000, MsgEnum.ERR_ACTIVITY_NOT_START);
-        CheckUtil.check(activityList.getTimeEnd() >= System.currentTimeMillis() / 1000, MsgEnum.ERR_ACTIVITY_END);
+        if(activityList==null){
+            return CommonConstant.ACTIVITY_ISNULL;
+        }
+        if(activityList.getTimeStart()> GetDate.getNowTime10()){
+            return CommonConstant.ACTIVITY_TIME_NOT_START;
+        }
+        if(activityList.getTimeEnd()<GetDate.getNowTime10()){
+            return CommonConstant.ACTIVITY_TIME_END;
+        }
         return "";
     }
 
@@ -168,11 +169,13 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         return evalationVOList;
     }
 
+    @Override
     public String checkActivityPlatform(String activityId, String platform) {
-        CheckUtil.check(null != activityId, MsgEnum.ERR_OBJECT_REQUIRED, "活动编号");//活动编号不能为空
+        if(activityId==null){
+            return CommonConstant.ACTIVITYID_IS_NULL;
+        }
         ActivityListVO activityList = amMarketClient.selectActivityList(new Integer(activityId));
         if (activityList.getPlatform().indexOf(platform) == -1) {
-
             // 操作平台
             Map<String, String> clients = CacheUtil.getParamNameMap("CLIENT");
             // 被选中操作平台
@@ -187,11 +190,10 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                         selectedClientDisplayBuffer.append("/");
                     }
                 }
-
             }
             return ClientConstants.PLATFORM_LIMIT.replace("***", selectedClientDisplayBuffer.toString());
         }
-        return "";
+        return  "";
     }
 
     /**
@@ -202,18 +204,14 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
      * @return
      */
     @Override
-    public synchronized Map<String, Object> answerAnalysisAndCoupon(String userAnswer, Integer userId) {
+    public synchronized Map<String, Object> answerAnalysisAndCoupon(String userAnswer, Integer userId,String platform,String behaviorId) {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         //发放优惠券 start
         UserEvalationResultVO ueResult = this.selectUserEvalationResultByUserId(userId);
         // 是否已经参加过测评（true：已测评过，false：测评）
         boolean isAdvisor = ueResult != null ? true : false;
-        // 发放优惠券 end
-        // 1_1,2_8
-        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, new Integer(userId));
         // 发放优惠券 start
         if (!isAdvisor) {
-            String platform = CustomConstants.CLIENT_PC;
             // 发放优惠券
             String result = this.sendCoupon(userId, platform);
             if (StringUtils.isNotEmpty(result)) {
@@ -224,6 +222,8 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                 }
             }
         }
+        // 1_1,2_8
+        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, new Integer(userId),behaviorId);
         returnMap.put("userEvalationResult", userEvalationResult);
         return returnMap;
         // 发放优惠券 end
@@ -249,15 +249,14 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
 
     @Override
     public int ThirdPartySaveUserEvaluationResults(UserVO user, Integer evalationScoreCount, EvalationVO evalation, String instCode, String channel) {
+        HjhInstConfigVO hjhInstConfig = amTradeClient.selectInstConfigByInstCode(instCode);
         UserEvalationResultVO oldUserEvalationResult = this.selectUserEvalationResultByUserId(user.getUserId());
-        amUserClient.deleteUserEvalationResultByUserId(user.getUserId());
         UserEvalationResultVO userEvalationResult = new UserEvalationResultVO();
         userEvalationResult.setUserId(user.getUserId());
         userEvalationResult.setScoreCount(evalationScoreCount);
         userEvalationResult.setEvalType(evalation.getEvalType());
         userEvalationResult.setSummary(evalation.getSummary());
         userEvalationResult.setCreateTime(new Date());
-        HjhInstConfigVO hjhInstConfig = amTradeClient.selectInstConfigByInstCode(instCode);
         if (hjhInstConfig != null) {
             userEvalationResult.setInstCode(hjhInstConfig.getInstCode());
             userEvalationResult.setInstName(hjhInstConfig.getInstName());
@@ -267,6 +266,25 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         }
         int insertCount = amUserClient.saveUserEvaluation(userEvalationResult);
         return insertCount;
+    }
+
+    @Override
+    public UserEvalationResultCustomizeVO createUserEvalationResult(UserEvalationResultVO userEvalationResult) {
+        UserEvalationResultCustomizeVO userEvalationResultCustomize=new UserEvalationResultCustomizeVO();
+        userEvalationResultCustomize.setType(userEvalationResult.getEvalType());
+        userEvalationResultCustomize.setSummary(userEvalationResult.getSummary());
+        userEvalationResultCustomize.setScoreCount(userEvalationResult.getScoreCount());
+        return userEvalationResultCustomize;
+    }
+
+    @Override
+    public Integer insertUserEvalationBehavior(Integer userId, String s) {
+        return amUserClient.insertUserEvalationBehavior(userId,s);
+    }
+
+    @Override
+    public void updateUserEvalationBehavior(UserEvalationBehaviorVO userEvalationBehavior) {
+        amUserClient.updateUserEvaluationBehavior(userEvalationBehavior);
     }
 
 }

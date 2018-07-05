@@ -131,8 +131,8 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				boolean ret = this.batchBankInvestAllClient.updateTenderStart(request);
 				if (!ret){
 					logger.info("=============投资全部掉单异常处理失败! 失败订单: " + orderid);
+					return;
 				}else {
-
 					//更新渠道统计用户累计投资
 					if (Validator.isNotNull(request.getLogUser()) && request.getBorrowInfo().getProjectType()!=8){
 						//发送mq

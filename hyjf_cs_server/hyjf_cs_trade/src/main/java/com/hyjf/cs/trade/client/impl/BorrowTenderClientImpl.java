@@ -4,6 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -72,5 +74,30 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	/**
+	 * 根据投资订单号查询已承接金额
+	 *
+	 * @param tenderNid
+	 * @return
+	 */
+	@Override
+	public BigDecimal getAssignCapital(String tenderNid) {
+		String url = "http://AM-TRADE/am-trade/borrowTender/get_assign_capital_by_tender_nid/"+tenderNid;
+		BigDecimal response = restTemplate.getForEntity(url,BigDecimal.class).getBody();
+		return response;
+	}
+
+	/**
+	 * 保存债转日志
+	 *
+	 * @param creditTenderLog
+	 * @return
+	 */
+	@Override
+	public Integer saveCreditTenderAssignLog(CreditTenderLogVO creditTenderLog) {
+		String url = "http://AM-TRADE/am-trade/borrowTender/save_credit_tender_assign_log";
+		return restTemplate.postForEntity(url,creditTenderLog,Integer.class).getBody();
 	}
 }

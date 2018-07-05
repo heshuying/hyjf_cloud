@@ -25,4 +25,19 @@ public interface BorrowRecoverClient {
     List<BorrowRecoverVO> selectBorrowRecoverByBorrowNid(String borrowNid);
 
     void updateBorrowRecover(BorrowRecoverVO borrowRecover);
+
+    /**
+     * 根据tenderNid   和  bidNid 查询
+     * @param tenderNid
+     * @param bidNid
+     * @return
+     */
+    BorrowRecoverVO getBorrowRecoverByTenderNidBidNid(String tenderNid, String bidNid);
+
+    /**
+     * 根据tenderNid 查询
+     * @param tenderNid
+     * @return
+     */
+    BorrowRecoverVO getBorrowRecoverByTenderNid(String tenderNid);
 }

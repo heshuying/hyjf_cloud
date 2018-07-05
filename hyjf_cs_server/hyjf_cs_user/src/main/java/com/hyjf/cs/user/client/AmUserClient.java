@@ -219,4 +219,14 @@ public interface AmUserClient {
 
 
     int saveUserEvaluation(UserEvalationResultVO userEvalationResult);
+
+	/**
+	 * 插入behavior数据并返回id
+	 * @param userId
+	 * @param s
+	 * @return
+	 */
+    Integer insertUserEvalationBehavior(Integer userId, String s);
+
+	Integer updateUserEvaluationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
 }

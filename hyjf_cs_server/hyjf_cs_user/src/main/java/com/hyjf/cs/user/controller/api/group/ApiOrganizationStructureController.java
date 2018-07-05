@@ -33,7 +33,7 @@ public class ApiOrganizationStructureController extends BaseUserController {
     ApiOrganizationStructureService apiGroupQueryService;
 
     /**
-     * @Author: 孙沛凯
+     * @Author: sunpeikai
      * @Desc :集团组织机构查询
      * @Param: * @param instCode 机构编号
      * @Date: 9:40 2018/6/27

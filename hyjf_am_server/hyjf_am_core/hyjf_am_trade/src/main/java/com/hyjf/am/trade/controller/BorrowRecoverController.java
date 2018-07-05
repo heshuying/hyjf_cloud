@@ -80,4 +80,35 @@ public class BorrowRecoverController extends BaseController{
 		}
 	}
 
+	/**
+	 * 根据tenderNid和bidNid查询
+	 * @param tenderNid
+	 * @param bidNid
+	 * @return
+	 */
+	@GetMapping("/getBorrowRecoverByTenderNidBidNid/{tenderNid}/{bidNid}")
+	public BorrowRecoverResponse getBorrowRecoverByTenderNidBidNid(@PathVariable String tenderNid,@PathVariable String bidNid){
+		BorrowRecoverResponse response = new BorrowRecoverResponse();
+		BorrowRecover borrowRecover=borrowRecoverService.getBorrowRecoverByTenderNidBidNid(tenderNid,bidNid);
+		if (Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverVO.class));
+		}
+		return response;
+	}
+
+	/**
+	 * 根据tenderNid查询
+	 * @param tenderNid
+	 * @return
+	 */
+	@GetMapping("/getBorrowRecoverByTenderNid/{tenderNid}")
+	public BorrowRecoverResponse getBorrowRecoverByTenderNid(@PathVariable String tenderNid){
+		BorrowRecoverResponse response = new BorrowRecoverResponse();
+		BorrowRecover borrowRecover=borrowRecoverService.getBorrowRecoverByTenderNid(tenderNid);
+		if (Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverVO.class));
+		}
+		return response;
+	}
+
 }

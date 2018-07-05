@@ -3,6 +3,7 @@ package com.hyjf.am.config.service;
 import com.hyjf.am.config.dao.model.auto.BankConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
+import com.hyjf.am.config.dao.model.auto.ParamName;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface BankConfigService {
      * 获取银行列表
      */
     List<BankConfig> selectBankConfigList();
+
+    List<ParamName> getParamNameList(String nameClass);
 }

@@ -457,5 +457,13 @@ public class AutoMapper {
 
     @Autowired
     protected WkcdBorrowMapper wkcdBorrowMapper;
+
+    @Autowired
+    protected HjhAssetBorrowtypeMapper hjhAssetBorrowTypeMapper;
+
+    @Autowired
+    protected StzhWhiteListMapper sTZHWhiteListMapper;
+
+
 }
 

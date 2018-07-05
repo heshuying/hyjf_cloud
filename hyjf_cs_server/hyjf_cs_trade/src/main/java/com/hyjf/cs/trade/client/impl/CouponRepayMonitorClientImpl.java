@@ -4,9 +4,8 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
-import com.hyjf.am.vo.trade.CouponRepayMonitorVO;
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import com.hyjf.cs.trade.client.CouponRepayMonitorClient;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

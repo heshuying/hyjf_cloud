@@ -1,15 +1,18 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +123,16 @@ public class AmConfigClientImpl implements AmConfigClient {
                 .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ParamNameVO> getParamNameList(String nameClass) {
+        String url = "http://AM-CONFIG/am-config/config/getParamNameList/" + nameClass;
+        ParamNameResponse response = restTemplate.getForEntity(url,ParamNameResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
         }
         return null;
     }

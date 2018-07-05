@@ -170,4 +170,38 @@ public class CreditClientImpl implements CreditClient {
         return restTemplate.postForEntity(url, borrowCredit, Integer.class).getBody();
     }
 
+    /**
+     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     *
+     * @param creditNid
+     * @param assignCapital
+     * @param userId
+     * @return
+     */
+    @Override
+    public TenderToCreditAssignCustomizeVO getInterestInfo(String creditNid, String assignCapital, Integer userId) {
+        String url = "http://AM-TRADE/am-trade/creditTender/get_interest_info/" + creditNid + "/" + assignCapital + "/" + userId;
+        CreditAssignCustomizeResponse response = restTemplate.getForEntity(url, CreditAssignCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取债转数据
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public BorrowCreditVO getBorrowCreditByCreditNid(String creditNid) {
+        String url = "http://AM-TRADE/am-trade/creditTender/get_borrow_credit_by_credit_nid/" + creditNid ;
+        BorrowCreditResponse response = restTemplate.getForEntity(url, BorrowCreditResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 }

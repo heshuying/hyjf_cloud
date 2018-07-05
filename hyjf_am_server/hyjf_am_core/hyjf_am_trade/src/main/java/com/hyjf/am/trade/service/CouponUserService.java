@@ -4,13 +4,20 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoy
  * @version CouponUserService, v0.1 2018/6/19 19:07
  */
 public interface CouponUserService {
+
     List<CouponUser> selectCouponUser(int nowBeginDate, int nowEndDate);
+
+    Integer countCouponValid(Integer userId);
+
+    List<CouponUserListCustomize> selectCouponUserList(Map<String,Object> mapParameter);
 }

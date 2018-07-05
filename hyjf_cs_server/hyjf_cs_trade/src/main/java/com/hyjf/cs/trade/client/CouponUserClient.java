@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 
 import java.util.List;
 

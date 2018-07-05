@@ -4,11 +4,10 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.*;
@@ -42,7 +41,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

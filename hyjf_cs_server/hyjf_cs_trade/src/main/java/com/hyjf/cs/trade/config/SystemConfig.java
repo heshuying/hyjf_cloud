@@ -20,6 +20,9 @@ public class SystemConfig {
     @Value("${hyjf.front.host}")
     public String frontHost;
 
+    @Value("${hyjf.web.bank.forgetpassword}")
+    public String forgetpassword;
+
 
     public String getWebHost() {
         return webHost;
@@ -59,5 +62,13 @@ public class SystemConfig {
 
     public void setFrontHost(String frontHost) {
         this.frontHost = frontHost;
+    }
+
+    public String getForgetpassword() {
+        return forgetpassword;
+    }
+
+    public void setForgetpassword(String forgetpassword) {
+        this.forgetpassword = forgetpassword;
     }
 }

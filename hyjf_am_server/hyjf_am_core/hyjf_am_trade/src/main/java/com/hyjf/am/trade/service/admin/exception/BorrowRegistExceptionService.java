@@ -3,12 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin.exception;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
-import com.hyjf.am.vo.trade.borrow.BorrowRegistExceptionVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 
 import java.util.List;
@@ -18,33 +16,41 @@ import java.util.List;
  * @version: BorrowRegistExceptionService, v0.1 2018/7/3 15:06
  */
 public interface BorrowRegistExceptionService {
+
     /**
-     * 获取项目类型
-     * @return
+     * 获取项目类型,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 项目类型list封装
      */
     List<BorrowProjectType> selectBorrowProjectList();
 
     /**
-     * 获取还款方式
-     * @return
+     * 获取还款方式,筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return 还款方式list封装
      */
     List<BorrowStyle> selectBorrowStyleList();
 
     /**
-     * 获取标的备案列表count
-     * @param borrowRegistListRequest
+     * 获取标的列表count,用于前端分页展示
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
      * @return
      */
     Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest);
 
     /**
-     * 获取标的备案列表
-     * @param borrowRegistListRequest
-     * @return
+     * 获取标的列表
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return 异常标list封装
      */
     List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest);
+
     /**
-     * 标的异常处理
+     * 根据borrowNid查询borrow信息
      * @auth sunpeikai
      * @param
      * @return
@@ -52,23 +58,25 @@ public interface BorrowRegistExceptionService {
     BorrowVO searchBorrowByBorrowNid(String borrowNid);
 
     /**
-     *
+     * 根据受托支付userId查询stAccountId
      * @auth sunpeikai
-     * @param
+     * @param entrustedUserId 受托支付userId
      * @return
      */
     String getStAccountIdByEntrustedUserId(Integer entrustedUserId);
+
     /**
-     *
+     * 更新标
      * @auth sunpeikai
-     * @param
+     * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
     Boolean updateBorrowRegistByType(BorrowVO borrowVO,Integer type);
+
     /**
-     *
+     * 更新标的资产信息如果关联计划的话
      * @auth sunpeikai
-     * @param
+     * @param status 状态  受托支付传4，非受托支付传5
      * @return
      */
     Boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.hyjf.common.spring.SpringUtils;
 import java.io.Serializable;
 
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.config.PaySystemConfig;
@@ -128,6 +129,16 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 		this.logClient = client;
 		// 页面调用必传   页面地址
 		this.logBankDetailUrl = logBankDetailUrl;
+		if (client != null) {
+			if (client == ClientConstants.WEB_CLIENT) {
+				this.channel = BankCallConstant.CHANNEL_PC;
+			} else if (client == ClientConstants.APP_CLIENT || client == ClientConstants.APP_CLIENT_IOS) {
+				this.channel = BankCallConstant.CHANNEL_APP;
+			} else if (client == ClientConstants.WECHAT_CLIENT) {
+				this.channel = BankCallConstant.CHANNEL_WEI;
+			}
+
+		}
 	}
 
 	private void setCallCommon(Integer userId, String txCode, Integer client) {

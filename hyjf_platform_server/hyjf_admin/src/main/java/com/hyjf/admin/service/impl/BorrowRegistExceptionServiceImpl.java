@@ -11,15 +11,11 @@ import com.hyjf.admin.service.BorrowRegistExceptionService;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRegistExceptionVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -33,9 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -55,27 +49,57 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Autowired
     private BorrowRegistExceptionClient borrowRegistExceptionClient;
 
+    /**
+     * 获取项目类型list,用于筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     @Override
     public List<BorrowProjectTypeVO> selectBorrowProjectList(){
         return borrowRegistExceptionClient.selectBorrowProjectList();
     }
 
+    /**
+     * 获取还款方式list,用于筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     @Override
     public List<BorrowStyleVO> selectBorrowStyleList(){
         return borrowRegistExceptionClient.selectBorrowStyleList();
     }
 
-
+    /**
+     * 获取标的列表count,用于前端分页显示条数
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return
+     */
     @Override
     public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest){
         return borrowRegistExceptionClient.getRegistCount(borrowRegistListRequest);
     }
 
+    /**
+     * 获取标的备案异常列表
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return
+     */
     @Override
     public List <BorrowRegistCustomizeVO> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
         return borrowRegistExceptionClient.selectBorrowRegistList(borrowRegistListRequest);
     }
 
+    /**
+     * 备案异常处理
+     * @auth sunpeikai
+     * @param borrowNid 借款编号
+     * @param loginUserId 当前登录用户id
+     * @return
+     */
     @Override
     public JSONObject handleBorrowRegistException(String borrowNid, Integer loginUserId) {
         JSONObject result = new JSONObject();
@@ -286,7 +310,6 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
 
     /**
      * 查询相应的标的备案状态
-     *
      * @param borrowNid 标的id
      * @param accountId 银行账户
      * @param loginUserId 登录用户id
@@ -406,17 +429,4 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         borrow.setRegistTime(nowDate);
         return borrowRegistExceptionClient.updateBorrowRegist(borrow,type);
     }
-
-    /**
-     * 更新相应的标的状态
-     * type 1
-     * @param borrow
-     * @param status
-     * @param registStatus
-     * @return
-     */
-
-
-
-
 }

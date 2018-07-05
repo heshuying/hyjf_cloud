@@ -42,7 +42,6 @@ public class CustomizeMapper extends AutoMapper {
     @Autowired
     protected RUserCustomizeMapper rUserCustomizeMapper;
 
-
     @Autowired
     protected AssetManageCustomizeMapper assetManageCustomizeMapper;
 

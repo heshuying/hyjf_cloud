@@ -65,4 +65,37 @@ public class BorrowRecoverClientImpl implements BorrowRecoverClient {
         String url = "http://AM-TRADE/am-trade/borrowRecover/updateBorrowRecover";
         restTemplate.postForEntity(url,borrowRecover,Boolean.class).getBody();
     }
+
+    /**
+     * 根据tenderNid   和  bidNid 查询
+     *
+     * @param tenderNid
+     * @param bidNid
+     * @return
+     */
+    @Override
+    public BorrowRecoverVO getBorrowRecoverByTenderNidBidNid(String tenderNid, String bidNid) {
+        String url = "http://AM-TRADE/am-trade/borrowRecover/getBorrowRecoverByTenderNidBidNid/"+tenderNid+"/"+bidNid;
+        BorrowRecoverResponse response = restTemplate.getForEntity(url,BorrowRecoverResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据tenderNid 查询
+     *
+     * @param tenderNid
+     * @return
+     */
+    @Override
+    public BorrowRecoverVO getBorrowRecoverByTenderNid(String tenderNid) {
+        String url = "http://AM-TRADE/am-trade/borrowRecover/getBorrowRecoverByTenderNid/"+tenderNid;
+        BorrowRecoverResponse response = restTemplate.getForEntity(url,BorrowRecoverResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }
