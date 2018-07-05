@@ -28,17 +28,23 @@ public class WebProjectListClientImpl implements WebProjectListClient {
     @Autowired
     private RestTemplate restTemplate;
     @Override
-    public ProjectListResponse searchProjectList(ProjectListRequest request) {
+    public List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request) {
        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectList",request,ProjectListResponse.class).getBody();
        logger.info("WebProjectListClientImpl --> searchProjectList --> response = {}",response);
-       return response;
+       if (Response.isSuccess(response)){
+           return response.getResultList();
+       }
+       return null;
     }
 
     @Override
-    public ProjectListResponse countProjectList(ProjectListRequest request) {
+    public Integer countProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
-        return response;
+        if (Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return null;
     }
 
     @Override

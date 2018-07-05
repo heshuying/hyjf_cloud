@@ -58,4 +58,19 @@ public class CouponUserController extends BaseController {
         return response;
     }
 
+
+    /**
+     * 查询用户的优惠券数目(useFlag[0:未使用，1：已使用])
+     * @author zhangyk
+     * @date 2018/7/4 15:34
+     */
+    @RequestMapping("/user_coupon_count/{userId}/{useFlag}")
+    public CouponUserResponse getUserCouponCount(@PathVariable Integer userId,@PathVariable String useFlag) {
+        CouponUserResponse response = new CouponUserResponse();
+        Integer count = couponUserService.getUserCouponCount(userId,useFlag);
+        response.setCount(count);
+        return response;
+    }
+
+
 }
