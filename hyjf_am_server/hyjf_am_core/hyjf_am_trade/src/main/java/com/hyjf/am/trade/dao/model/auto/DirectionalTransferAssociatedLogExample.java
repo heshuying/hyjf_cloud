@@ -715,52 +715,52 @@ public class DirectionalTransferAssociatedLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateEqualTo(Boolean value) {
+        public Criteria andAssociatedStateEqualTo(Integer value) {
             addCriterion("associated_state =", value, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateNotEqualTo(Boolean value) {
+        public Criteria andAssociatedStateNotEqualTo(Integer value) {
             addCriterion("associated_state <>", value, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateGreaterThan(Boolean value) {
+        public Criteria andAssociatedStateGreaterThan(Integer value) {
             addCriterion("associated_state >", value, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andAssociatedStateGreaterThanOrEqualTo(Integer value) {
             addCriterion("associated_state >=", value, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateLessThan(Boolean value) {
+        public Criteria andAssociatedStateLessThan(Integer value) {
             addCriterion("associated_state <", value, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateLessThanOrEqualTo(Boolean value) {
+        public Criteria andAssociatedStateLessThanOrEqualTo(Integer value) {
             addCriterion("associated_state <=", value, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateIn(List<Boolean> values) {
+        public Criteria andAssociatedStateIn(List<Integer> values) {
             addCriterion("associated_state in", values, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateNotIn(List<Boolean> values) {
+        public Criteria andAssociatedStateNotIn(List<Integer> values) {
             addCriterion("associated_state not in", values, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateBetween(Boolean value1, Boolean value2) {
+        public Criteria andAssociatedStateBetween(Integer value1, Integer value2) {
             addCriterion("associated_state between", value1, value2, "associatedState");
             return (Criteria) this;
         }
 
-        public Criteria andAssociatedStateNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andAssociatedStateNotBetween(Integer value1, Integer value2) {
             addCriterion("associated_state not between", value1, value2, "associatedState");
             return (Criteria) this;
         }
