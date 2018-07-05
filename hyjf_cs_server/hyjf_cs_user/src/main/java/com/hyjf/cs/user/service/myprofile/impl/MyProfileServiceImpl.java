@@ -15,10 +15,8 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
-import com.hyjf.common.util.PropertiesConstants;
-import com.hyjf.cs.user.client.AmAccountClient;
 import com.hyjf.cs.user.client.AmConfigClient;
-import com.hyjf.cs.user.client.AmCouponUserClient;
+import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
@@ -47,9 +45,8 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
-    private AmAccountClient accountClient;
-    @Autowired
-    private AmCouponUserClient amCouponUserClient;
+    private AmTradeClient amTradeClient;
+   
     @Autowired
     private AmConfigClient amConfigClient;
 
@@ -163,7 +160,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Override
     public void buildOutInfo(Integer userId, MyProfileVO myProfileVO) {
 
-        AccountVO account=this.accountClient.getAccountByUserId(userId);
+        AccountVO account=this.amTradeClient.getAccount(userId);
 
         Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
 
@@ -196,7 +193,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         myProfileVO.setPlanAccountWait(account.getPlanAccountWait() == null ? BigDecimal.ZERO : account.getPlanAccountWait());
 
         //优惠卷数量
-        Integer couponValidCount=this.amCouponUserClient.countCouponValid(userId);
+        Integer couponValidCount=this.amTradeClient.countCouponValid(userId);
 
         myProfileVO.setCouponValidCount(couponValidCount == null ? 0 : couponValidCount);
 
@@ -218,7 +215,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         mapParameter.put("userId", userId);
         mapParameter.put("limitStart",-1);
 
-        List<CouponUserListCustomizeVO> lstResult=this.amCouponUserClient.selectCouponUserList(mapParameter);
+        List<CouponUserListCustomizeVO> lstResult=this.amTradeClient.selectCouponUserList(mapParameter);
 
         //平台
         List<ParamNameVO> clients = this.getParamNameList("CLIENT");
