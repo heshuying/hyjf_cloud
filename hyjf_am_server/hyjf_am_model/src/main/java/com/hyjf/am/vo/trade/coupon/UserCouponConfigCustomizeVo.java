@@ -9,7 +9,7 @@
  * Modified by : 
  */
 
-package com.hyjf.am.vo.trade;
+package com.hyjf.am.vo.trade.coupon;
 
 
 import java.io.Serializable;

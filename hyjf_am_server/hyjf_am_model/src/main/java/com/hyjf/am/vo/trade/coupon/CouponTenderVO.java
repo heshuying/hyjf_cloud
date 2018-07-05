@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.trade;
+package com.hyjf.am.vo.trade.coupon;
 
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
