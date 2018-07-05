@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DirectionalTransferAssociatedLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="turn_out_username" property="turnOutUsername" jdbcType="VARCHAR" />
+    <result column="turn_out_user_id" property="turnOutUserId" jdbcType="INTEGER" />
+    <result column="turn_out_mobile" property="turnOutMobile" jdbcType="CHAR" />
+    <result column="turn_out_chinapnr_usrcustid" property="turnOutChinapnrUsrcustid" jdbcType="BIGINT" />
+    <result column="shift_to_username" property="shiftToUsername" jdbcType="VARCHAR" />
+    <result column="shift_to_user_id" property="shiftToUserId" jdbcType="INTEGER" />
+    <result column="shift_to_mobile" property="shiftToMobile" jdbcType="CHAR" />
+    <result column="shift_to_chinapnr_usrcustid" property="shiftToChinapnrUsrcustid" jdbcType="BIGINT" />
+    <result column="associated_state" property="associatedState" jdbcType="BIT" />
+    <result column="associated_time" property="associatedTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, turn_out_username, turn_out_user_id, turn_out_mobile, turn_out_chinapnr_usrcustid, 
+    shift_to_username, shift_to_user_id, shift_to_mobile, shift_to_chinapnr_usrcustid, 
+    associated_state, associated_time, remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_directional_transfer_associated_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_directional_transfer_associated_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_directional_transfer_associated_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLogExample" >
+    delete from ht_directional_transfer_associated_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_directional_transfer_associated_log (turn_out_username, turn_out_user_id, turn_out_mobile, 
+      turn_out_chinapnr_usrcustid, shift_to_username, 
+      shift_to_user_id, shift_to_mobile, shift_to_chinapnr_usrcustid, 
+      associated_state, associated_time, remark
+      )
+    values (#{turnOutUsername,jdbcType=VARCHAR}, #{turnOutUserId,jdbcType=INTEGER}, #{turnOutMobile,jdbcType=CHAR}, 
+      #{turnOutChinapnrUsrcustid,jdbcType=BIGINT}, #{shiftToUsername,jdbcType=VARCHAR}, 
+      #{shiftToUserId,jdbcType=INTEGER}, #{shiftToMobile,jdbcType=CHAR}, #{shiftToChinapnrUsrcustid,jdbcType=BIGINT}, 
+      #{associatedState,jdbcType=BIT}, #{associatedTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_directional_transfer_associated_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="turnOutUsername != null" >
+        turn_out_username,
+      </if>
+      <if test="turnOutUserId != null" >
+        turn_out_user_id,
+      </if>
+      <if test="turnOutMobile != null" >
+        turn_out_mobile,
+      </if>
+      <if test="turnOutChinapnrUsrcustid != null" >
+        turn_out_chinapnr_usrcustid,
+      </if>
+      <if test="shiftToUsername != null" >
+        shift_to_username,
+      </if>
+      <if test="shiftToUserId != null" >
+        shift_to_user_id,
+      </if>
+      <if test="shiftToMobile != null" >
+        shift_to_mobile,
+      </if>
+      <if test="shiftToChinapnrUsrcustid != null" >
+        shift_to_chinapnr_usrcustid,
+      </if>
+      <if test="associatedState != null" >
+        associated_state,
+      </if>
+      <if test="associatedTime != null" >
+        associated_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="turnOutUsername != null" >
+        #{turnOutUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="turnOutUserId != null" >
+        #{turnOutUserId,jdbcType=INTEGER},
+      </if>
+      <if test="turnOutMobile != null" >
+        #{turnOutMobile,jdbcType=CHAR},
+      </if>
+      <if test="turnOutChinapnrUsrcustid != null" >
+        #{turnOutChinapnrUsrcustid,jdbcType=BIGINT},
+      </if>
+      <if test="shiftToUsername != null" >
+        #{shiftToUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="shiftToUserId != null" >
+        #{shiftToUserId,jdbcType=INTEGER},
+      </if>
+      <if test="shiftToMobile != null" >
+        #{shiftToMobile,jdbcType=CHAR},
+      </if>
+      <if test="shiftToChinapnrUsrcustid != null" >
+        #{shiftToChinapnrUsrcustid,jdbcType=BIGINT},
+      </if>
+      <if test="associatedState != null" >
+        #{associatedState,jdbcType=BIT},
+      </if>
+      <if test="associatedTime != null" >
+        #{associatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_directional_transfer_associated_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_directional_transfer_associated_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.turnOutUsername != null" >
+        turn_out_username = #{record.turnOutUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.turnOutUserId != null" >
+        turn_out_user_id = #{record.turnOutUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.turnOutMobile != null" >
+        turn_out_mobile = #{record.turnOutMobile,jdbcType=CHAR},
+      </if>
+      <if test="record.turnOutChinapnrUsrcustid != null" >
+        turn_out_chinapnr_usrcustid = #{record.turnOutChinapnrUsrcustid,jdbcType=BIGINT},
+      </if>
+      <if test="record.shiftToUsername != null" >
+        shift_to_username = #{record.shiftToUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shiftToUserId != null" >
+        shift_to_user_id = #{record.shiftToUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.shiftToMobile != null" >
+        shift_to_mobile = #{record.shiftToMobile,jdbcType=CHAR},
+      </if>
+      <if test="record.shiftToChinapnrUsrcustid != null" >
+        shift_to_chinapnr_usrcustid = #{record.shiftToChinapnrUsrcustid,jdbcType=BIGINT},
+      </if>
+      <if test="record.associatedState != null" >
+        associated_state = #{record.associatedState,jdbcType=BIT},
+      </if>
+      <if test="record.associatedTime != null" >
+        associated_time = #{record.associatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_directional_transfer_associated_log
+    set id = #{record.id,jdbcType=INTEGER},
+      turn_out_username = #{record.turnOutUsername,jdbcType=VARCHAR},
+      turn_out_user_id = #{record.turnOutUserId,jdbcType=INTEGER},
+      turn_out_mobile = #{record.turnOutMobile,jdbcType=CHAR},
+      turn_out_chinapnr_usrcustid = #{record.turnOutChinapnrUsrcustid,jdbcType=BIGINT},
+      shift_to_username = #{record.shiftToUsername,jdbcType=VARCHAR},
+      shift_to_user_id = #{record.shiftToUserId,jdbcType=INTEGER},
+      shift_to_mobile = #{record.shiftToMobile,jdbcType=CHAR},
+      shift_to_chinapnr_usrcustid = #{record.shiftToChinapnrUsrcustid,jdbcType=BIGINT},
+      associated_state = #{record.associatedState,jdbcType=BIT},
+      associated_time = #{record.associatedTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLog" >
+    update ht_directional_transfer_associated_log
+    <set >
+      <if test="turnOutUsername != null" >
+        turn_out_username = #{turnOutUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="turnOutUserId != null" >
+        turn_out_user_id = #{turnOutUserId,jdbcType=INTEGER},
+      </if>
+      <if test="turnOutMobile != null" >
+        turn_out_mobile = #{turnOutMobile,jdbcType=CHAR},
+      </if>
+      <if test="turnOutChinapnrUsrcustid != null" >
+        turn_out_chinapnr_usrcustid = #{turnOutChinapnrUsrcustid,jdbcType=BIGINT},
+      </if>
+      <if test="shiftToUsername != null" >
+        shift_to_username = #{shiftToUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="shiftToUserId != null" >
+        shift_to_user_id = #{shiftToUserId,jdbcType=INTEGER},
+      </if>
+      <if test="shiftToMobile != null" >
+        shift_to_mobile = #{shiftToMobile,jdbcType=CHAR},
+      </if>
+      <if test="shiftToChinapnrUsrcustid != null" >
+        shift_to_chinapnr_usrcustid = #{shiftToChinapnrUsrcustid,jdbcType=BIGINT},
+      </if>
+      <if test="associatedState != null" >
+        associated_state = #{associatedState,jdbcType=BIT},
+      </if>
+      <if test="associatedTime != null" >
+        associated_time = #{associatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DirectionalTransferAssociatedLog" >
+    update ht_directional_transfer_associated_log
+    set turn_out_username = #{turnOutUsername,jdbcType=VARCHAR},
+      turn_out_user_id = #{turnOutUserId,jdbcType=INTEGER},
+      turn_out_mobile = #{turnOutMobile,jdbcType=CHAR},
+      turn_out_chinapnr_usrcustid = #{turnOutChinapnrUsrcustid,jdbcType=BIGINT},
+      shift_to_username = #{shiftToUsername,jdbcType=VARCHAR},
+      shift_to_user_id = #{shiftToUserId,jdbcType=INTEGER},
+      shift_to_mobile = #{shiftToMobile,jdbcType=CHAR},
+      shift_to_chinapnr_usrcustid = #{shiftToChinapnrUsrcustid,jdbcType=BIGINT},
+      associated_state = #{associatedState,jdbcType=BIT},
+      associated_time = #{associatedTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
