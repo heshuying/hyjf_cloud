@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.CouponTenderVO;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 
 /**
  * @Description 优惠券相关

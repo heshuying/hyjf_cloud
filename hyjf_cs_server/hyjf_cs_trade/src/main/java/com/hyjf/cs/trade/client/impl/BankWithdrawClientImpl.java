@@ -30,10 +30,8 @@ public class BankWithdrawClientImpl implements BankWithdrawClient {
 
 	@Override
 	public List<AccountWithdrawVO> selectBankWithdrawList() {
-		AccountWithdrawResponse response = restTemplate
-				.getForEntity("http://AM-TRADE/am-trade/bankException/selectBankWithdrawList",
-						AccountWithdrawResponse.class)
-				.getBody();
+		String url = "http://AM-TRADE/am-trade/bankException/selectBankWithdrawList";
+		AccountWithdrawResponse response = restTemplate.getForEntity(url,AccountWithdrawResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}

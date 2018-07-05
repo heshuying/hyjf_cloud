@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.cs.trade.client.CouponUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

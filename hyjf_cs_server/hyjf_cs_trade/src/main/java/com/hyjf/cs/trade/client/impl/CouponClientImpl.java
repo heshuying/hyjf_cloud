@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.CoupUserResponse;
-import com.hyjf.am.vo.trade.CouponTenderVO;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CouponClient;
 import org.slf4j.Logger;
