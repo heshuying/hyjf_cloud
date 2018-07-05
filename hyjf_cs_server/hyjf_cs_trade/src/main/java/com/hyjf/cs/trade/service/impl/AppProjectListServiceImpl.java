@@ -218,7 +218,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     isInvested = true;
                 }
                 //是否缴费授权
-                paymentAuthStatus = users.getPaymentAuthStatus() ;
+                paymentAuthStatus = users.getPaymentAuthStatus();
                 // 用户角色
                 UserInfoVO usersInfo = amUserClient.findUsersInfoById(userId);
                 if (usersInfo != null) {
