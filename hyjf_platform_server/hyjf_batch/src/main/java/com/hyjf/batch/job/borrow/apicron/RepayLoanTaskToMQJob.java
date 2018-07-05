@@ -22,7 +22,7 @@ public class RepayLoanTaskToMQJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("RepayLoadToMQJob: {} execute...", context.getJobDetail().getKey().getName());
         
-        restTemplate.getForEntity("http://AM-TRADE/batch/taskAssign", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/taskAssign", String.class);
         
         logger.info("RepayLoadToMQJob execute end...");
     }
