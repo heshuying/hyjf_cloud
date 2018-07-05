@@ -41,10 +41,10 @@ public interface SafeService  extends BaseUserService {
 
     /**
      * 账户设置信息查询
-     * @param webViewUserVO
+     * @param
      * @return
      */
-    Map<String,Object> safeInit(WebViewUserVO webViewUserVO);
+    Map<String,Object> safeInit(UserVO user);
 
     /**
      * 绑定邮箱发送激活邮件

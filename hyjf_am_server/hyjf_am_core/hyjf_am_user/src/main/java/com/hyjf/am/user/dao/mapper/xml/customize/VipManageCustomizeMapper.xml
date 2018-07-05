@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.VipManageCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+		    t.vip_id IS NOT NULL
+			<if test="userName != null and userName !=''">
+				AND t.user_name LIKE CONCAT('%', #{userName}, '%')
+			</if>
+			<if test="realName != null and realName != ''">
+				AND t.real_name LIKE CONCAT('%', #{realName}, '%')
+			</if>
+			<if test="recommendName != null and recommendName != ''">
+				AND t.recommend_name LIKE CONCAT('%', #{recommendName}, '%')
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND t.mobile LIKE CONCAT('%', #{mobile}, '%')
+			</if>
+			<if test="userRole != null and userRole != ''">
+				AND t.role_id = #{userRole,jdbcType=INTEGER}
+			</if>
+			<if test="userProperty != null and userProperty != ''">
+				AND t.attribute = #{userProperty,jdbcType=INTEGER}
+			</if>
+			<if test="accountStatus != null and accountStatus != ''">
+				AND t.open_account = #{accountStatus,jdbcType=INTEGER}
+			</if>
+			<if test="userStatus != null and userStatus != ''">
+				AND t.`status` = #{userStatus,jdbcType=INTEGER}
+			</if>
+			<if test="registPlat != null and registPlat != ''">
+				AND t.reg_esb = #{registPlat,jdbcType=INTEGER}
+			</if>
+			<if test="is51 != null and is51 != ''">
+				AND t.is51_cd = #{is51,jdbcType=INTEGER}
+			</if>
+			<if test="regTimeStart != null and regTimeStart != '' ">
+				AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[>=]]> #{regTimeStart}
+			</if>
+			<if test="regTimeEnd != null and regTimeEnd != ''">
+				AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[<=]]> #{regTimeEnd}
+			</if>
+			<if test="combotreeListSrch != null and combotreeListSrch != ''">
+				AND od.id in
+				<foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
+					#{dep}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	<resultMap id="UserListPOMap" type="com.hyjf.am.user.dao.model.customize.VipManageListCustomize">
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="vip_name" property="vipName" jdbcType="VARCHAR" />
+		<result column="vip_value" property="vipValue" jdbcType="VARCHAR" />
+		<result column="vip_platform" property="vipPlatform" jdbcType="VARCHAR" />
+		<result column="user_role" property="userRole" jdbcType="VARCHAR" />
+		<result column="user_property" property="userProperty" jdbcType="VARCHAR" />
+		<result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
+		<result column="is51" property="is51" jdbcType="INTEGER" />
+		<result column="user_status" property="userStatus" jdbcType="VARCHAR" />
+		<result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
+		<result column="regist_plat" property="registPlat" jdbcType="VARCHAR" />
+		<result column="reg_time" property="regTime" jdbcType="VARCHAR" />
+		<result column="vip_add_time" property="vipAddTime" jdbcType="VARCHAR" />
+		
+		<result column="regionName" property="regionName" /> <!-- 大区 -->
+		<result column="branchName" property="branchName" /> <!-- 分公司  -->
+		<result column="departmentName" property="departmentName" /> <!-- 部门  -->
+	</resultMap>
+	<select id="selectUserList" resultMap="UserListPOMap" parameterType="Map">
+		SELECT
+			t.*,
+		    `od3`.`name` AS `regionName`,
+			`od2`.`name` AS `branchName`,
+			`od`.`name` AS `departmentName`
+		FROM
+			(
+				SELECT
+					hydu.user_id,
+					hydu.username AS user_name,
+					hydui.truename AS real_name,
+					hydu.mobile,
+					hydui.vip_id,
+					IFNULL(hvi.vip_name,"") AS vip_name,
+					IFNULL(hydui.vip_value,"0") AS vip_value,
+					CASE hydui.vip_platform
+			            WHEN 0 THEN 'PC'
+			            WHEN 1 THEN '微官网 '
+			            WHEN 2 THEN 'Android'
+			            WHEN 3 THEN 'iOS'
+			            WHEN 4 THEN '其他'
+			            ELSE IFNULL(hydui.vip_platform,'')
+					END vip_platform,
+					hydui.role_id,
+					hydui.attribute,
+					hydu.open_account,
+					hydu.`status`,
+					hydu.reg_esb,
+					hydui.is51 as is51_cd,
+					hydu.reg_time as regTime,
+					pnr.`name` AS user_role,
+					pna.`name` AS user_property,
+					pnac.`name` AS account_status,
+					pnu.`name` AS user_status,
+					hydur.username AS recommend_name,
+					pnrp.`name` AS regist_plat,
+					pnis51.`name` AS is51,
+					FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d %H:%i:%s' ) AS reg_time,
+					CASE WHEN hydui.attribute = 2 OR hydui.attribute = 3 THEN hydu.user_id ELSE hydsu.spreads_userid END AS hyd_id,
+					FROM_UNIXTIME( hvuu.add_time, '%Y-%m-%d %H:%i:%s' ) AS vip_add_time
+				FROM
+					ht_users hydu
+				LEFT JOIN ht_users_info hydui ON hydu.user_id = hydui.user_id
+				LEFT JOIN ht_vip_info hvi ON hvi.id = hydui.vip_id
+				LEFT JOIN ht_spreads_users hydsu ON hydsu.user_id = hydu.user_id
+				LEFT JOIN ht_users hydur ON hydur.user_id = hydsu.spreads_userid
+-- 				LEFT JOIN hyjf_param_name pnr ON cast(hydui.role_id AS CHAR) = pnr.name_cd AND pnr.name_class = 'USER_ROLE'
+-- 				LEFT JOIN hyjf_param_name pna ON cast(hydui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
+-- 				LEFT JOIN hyjf_param_name pnac ON cast(hydu.open_account AS CHAR) = pnac.name_cd AND pnac.name_class = 'ACCOUNT_STATUS'
+-- 				LEFT JOIN hyjf_param_name pnu ON cast(hydu.`status` AS CHAR) = pnu.name_cd AND pnu.name_class = 'USER_STATUS'
+-- 				LEFT JOIN hyjf_param_name pnrp ON cast(hydu.reg_esb AS CHAR) = pnrp.name_cd AND pnrp.name_class = 'CLIENT'
+-- 				LEFT JOIN hyjf_param_name pnis51 ON cast(hydui.is51 AS CHAR) = pnis51.name_cd AND pnis51.name_class = 'IS_51'
+				LEFT JOIN ht_vip_user_upgrade hvuu ON hvuu.user_id=hydu.user_id AND hvuu.upgrade_vip_type=1
+				) t
+		LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2','Q21')
+		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+		LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+		<include refid="Where_Clause" />
+		ORDER BY t.reg_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+	     		LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+	    	</if>
+	</select>
+	<select id="countRecord" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+			count(1)
+		FROM
+			(
+				SELECT
+					hydu.user_id,
+					hydu.username AS user_name,
+					hydui.truename AS real_name,
+					hydu.mobile,
+					hydui.vip_id,
+					IFNULL(hvi.vip_name,"") AS vip_name,
+					IFNULL(hydui.vip_value,"0") AS vip_value,
+					CASE hydui.vip_platform
+			            WHEN 0 THEN 'PC'
+			            WHEN 1 THEN '微官网 '
+			            WHEN 2 THEN 'Android'
+			            WHEN 3 THEN 'iOS'
+			            WHEN 4 THEN '其他'
+			            ELSE IFNULL(hydui.vip_platform,'')
+					END vip_platform,
+					hydui.role_id,
+					hydui.attribute,
+					hydu.open_account,
+					hydu.`status`,
+					hydu.reg_esb,
+					hydui.is51 as is51_cd,
+					hydu.reg_time as regTime,
+-- 					pnr.`name` AS user_role,
+-- 					pna.`name` AS user_property,
+-- 					pnac.`name` AS account_status,
+-- 					pnu.`name` AS user_status,
+-- 					hydur.username AS recommend_name,
+-- 					pnrp.`name` AS regist_plat,
+-- 					pnis51.`name` AS is51,
+					FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d %H:%i:%s' ) AS reg_time,
+					CASE WHEN hydui.attribute = 2 OR hydui.attribute = 3 THEN hydu.user_id ELSE hydsu.spreads_userid END AS hyd_id
+				FROM
+					ht_users hydu
+				LEFT JOIN ht_users_info hydui ON hydu.user_id = hydui.user_id
+				LEFT JOIN ht_vip_info hvi ON hvi.id = hydui.vip_id
+				LEFT JOIN ht_spreads_users hydsu ON hydsu.user_id = hydu.user_id
+				LEFT JOIN ht_users hydur ON hydur.user_id = hydsu.spreads_userid
+-- 				LEFT JOIN hyjf_param_name pnr ON cast(hydui.role_id AS CHAR) = pnr.name_cd AND pnr.name_class = 'USER_ROLE'
+-- 				LEFT JOIN hyjf_param_name pna ON cast(hydui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
+-- 				LEFT JOIN hyjf_param_name pnac ON cast(hydu.open_account AS CHAR) = pnac.name_cd AND pnac.name_class = 'ACCOUNT_STATUS'
+-- 				LEFT JOIN hyjf_param_name pnu ON cast(hydu.`status` AS CHAR) = pnu.name_cd AND pnu.name_class = 'USER_STATUS'
+-- 				LEFT JOIN hyjf_param_name pnrp ON cast(hydu.reg_esb AS CHAR) = pnrp.name_cd AND pnrp.name_class = 'CLIENT'
+-- 				LEFT JOIN hyjf_param_name pnis51 ON cast(hydui.is51 AS CHAR) = pnis51.name_cd AND pnis51.name_class = 'IS_51'
+				) t
+		LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2','Q21')
+		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+		LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+		<include refid="Where_Clause" />
+	</select>
+</mapper>

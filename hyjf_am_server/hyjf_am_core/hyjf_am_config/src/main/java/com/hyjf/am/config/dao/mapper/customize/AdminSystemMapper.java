@@ -30,6 +30,15 @@ public interface AdminSystemMapper {
 	 * @return
 	 */
 	AdminSystem getUserInfo(AdminSystem adminSystem);
+
+	/**
+	 * 根据用户id查询用户
+	 * @auth sunpeikai
+	 * @param id 登录用户id
+	 * @return
+	 */
+	AdminSystem getUserInfoById(Integer id);
+
 	/**
 	 * 更新密码
 	 * @param adminSystem

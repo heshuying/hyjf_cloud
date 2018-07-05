@@ -16,14 +16,14 @@ import java.util.List;
 public interface UserAuthExceptionService {
     /**
      * 自动债转授权异常list
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param request 自动债转授权异常的筛选条件
      * @return list
      */
     AdminUserAuthListResponse selectUserAuthList(AdminUserAuthListRequest request);
     /**
      * 同步用户授权状态
-     * @auth 孙沛凯
+     * @auth sunpeikai
      * @param userId 用户id
      * @param type 1自动投资授权  2债转授权
      * @return

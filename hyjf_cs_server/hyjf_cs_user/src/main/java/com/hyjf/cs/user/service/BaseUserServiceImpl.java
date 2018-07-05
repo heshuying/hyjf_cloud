@@ -17,6 +17,7 @@ import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -24,7 +25,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
@@ -129,9 +129,34 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 集团组织机构查询
 			OrganizationStructureRequestBean bean = (OrganizationStructureRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getTimestamp();
+		}else if(BaseDefine.METHOD_BORROW_AUTH_SEND_SMS.endsWith(methodName)){
+			// 自动投资 债转  短信验证码
+			AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getSendType() + bean.getTimestamp();
+		}else if (BaseDefine.METHOD_SAVE_USER_EVALUATION_RESULTS.equals(methodName)) {
+			// 第三方用户测评结果记录
+			ThirdPartyEvaluationRequestBean bean = (ThirdPartyEvaluationRequestBean) paramBean;
+			sign =  bean.getInstCode() + bean.getMobile() + bean.getPlatform() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
+	}
+
+	/**
+	 * 检查短信验证码searchStatus:查询的短信状态,updateStatus:查询结束后的短信状态
+	 * @param mobile
+	 * @param verificationCode
+	 * @param verificationType
+	 * @param platform
+	 * @param searchStatus
+	 * @param updateStatus
+	 * @return
+	 */
+	@Override
+	public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
+									 Integer searchStatus, Integer updateStatus) {
+		int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus);
+		return cnt;
 	}
 
 	/**

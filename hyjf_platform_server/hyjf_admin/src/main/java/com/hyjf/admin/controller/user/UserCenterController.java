@@ -10,9 +10,7 @@ import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -450,7 +448,6 @@ public class UserCenterController {
      * @return
      */
     @ResponseBody
-//    @RequestMapping(value = "serchCompanyInfo")
     @PostMapping(value = "/serchCompanyInfo")
     @ApiOperation(value = "会员管理", notes = "查询企业开户信息")
     public JSONObject serchCompanyInfo(@RequestBody Map<String, String> map) {

@@ -1,13 +1,10 @@
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
-import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
-
-import java.util.Map;
+import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 
 /**
  * @Description  债转列表
@@ -47,4 +44,44 @@ public interface MyCreditListService extends BaseTradeService{
      * @return
      */
     WebResult tenderAbleToCredit(CreditDetailsRequestBean request, Integer userId);
+
+    /**
+     * 检查是否可债转
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult checkCanCredit(CreditDetailsRequestBean request, Integer userId);
+
+    /**
+     * 债转提交保存
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId);
+
+    /**
+     * 用户中心查询 债转详细预计服务费计算
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult getExpectCreditFee(TenderBorrowCreditCustomize request, Integer userId);
+
+    /**
+     * 发送短信验证码（ajax请求） 短信验证码数据保存
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId);
+
+    /**
+     * 短信验证码校验
+     * @param request
+     * @param userId
+     * @return
+     */
+    WebResult checkCode(TenderBorrowCreditCustomize request, Integer userId);
 }

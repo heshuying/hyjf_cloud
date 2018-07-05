@@ -100,7 +100,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                         // mod by nxl 20180412 更新log表中的状态(有几个固定的状态，待确认)需将状态设置为9 start
                         if("CA110112".equals(retCode)) {
                             //投标记录不存在
-                            creditTenderLog.setStatus((byte) 9);
+                            creditTenderLog.setStatus(9);
                             boolean tenderLogsFlag = this.bankCreditTenderClient.updateCreditTenderLog(creditTenderLog);
                             if(tenderLogsFlag) {
                                 logger.info("债转投资记录日志表creditTenderLog表更新成功，承接订单号编号：" + assignNid+"，应答码："+retCode);

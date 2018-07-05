@@ -65,7 +65,7 @@ public class UserauthServiceImpl extends BaseServiceImpl  implements UserauthSer
 
 	/**
 	 * 调银行api拿用户数据(同步用户授权状态用)
-	 * @auth 孙沛凯
+	 * @auth sunpeikai
 	 * @param userId 用户id
 	 * @param type 1自动投资授权  2债转授权
 	 * @return
@@ -110,7 +110,7 @@ public class UserauthServiceImpl extends BaseServiceImpl  implements UserauthSer
 	}
 	/**
 	 * 同步用户授权状态 -> 更新数据库
-	 * @auth 孙沛凯
+	 * @auth sunpeikai
 	 * @param
 	 * @return
 	 */

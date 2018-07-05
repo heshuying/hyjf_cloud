@@ -9,47 +9,47 @@ import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMappe
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class CustomizeMapper extends AutoMapper {
 
-    @Autowired
+    @Resource
     protected BorrowCustomizeMapper borrowCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected HjhDebtDetailCustomizeMapper hjhDebtDetailCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected RepayManageCustomizeMapper repayManageCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected BatchUserPortraitQueryCustomizeMapper batchUserPortraitQueryCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected EmployeeCustomizeMapper employeeCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected RUserCustomizeMapper rUserCustomizeMapper;
 
-
-    @Autowired
+    @Resource
     protected AssetManageCustomizeMapper assetManageCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected UserTradeDetailCustomizeMapper userTradeDetailCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
 }
 

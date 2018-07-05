@@ -12,6 +12,7 @@
 package com.hyjf.cs.common.bean.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.util.ApiSignUtil;
 
 import java.io.Serializable;
@@ -33,19 +34,30 @@ public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	}
 
 	public ApiResult() {
-		super();
 	}
 
-	public ApiResult(T data) {
+	public ApiResult(String chkValue) {
+		this.chkValue = chkValue;
+	}
+
+	public ApiResult(T data, String chkValue) {
 		super(data);
+		this.chkValue = chkValue;
 	}
 
-	public ApiResult(Throwable e) {
+	public ApiResult(Throwable e, String chkValue) {
 		super(e);
+		this.chkValue = chkValue;
 	}
 
-	public ApiResult(String status, String statusDesc) {
-		super(status,statusDesc);
+	public ApiResult(String status, String statusDesc, String chkValue) {
+		super(status, statusDesc);
+		this.chkValue = chkValue;
+	}
+
+	public ApiResult(MsgCode msgCode, String chkValue, Object... params) {
+		super(msgCode, params);
+		this.chkValue = chkValue;
 	}
 
 	/**

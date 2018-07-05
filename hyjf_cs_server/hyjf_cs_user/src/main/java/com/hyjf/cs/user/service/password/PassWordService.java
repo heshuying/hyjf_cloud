@@ -87,4 +87,15 @@ public interface PassWordService extends BaseUserService {
      */
     void checkPassword(String password);
 
+    /**
+     * 修改登录密码
+     * @param userVO
+     * @param newPW
+     * @return
+     */
+    int updatePassword(UserVO userVO, String newPW);
+
+    boolean existPhone(String mobile);
+
+    boolean validPassword(Integer userId, String pw);
 }

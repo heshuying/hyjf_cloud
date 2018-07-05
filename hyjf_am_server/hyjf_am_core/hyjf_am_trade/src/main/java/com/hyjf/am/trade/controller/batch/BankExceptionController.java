@@ -89,7 +89,7 @@ public class BankExceptionController extends BaseController {
      * 获取银行充值记录
      * @return
      */
-    @RequestMapping(value = "/selectBankWithdrawList")
+    @GetMapping("/selectBankWithdrawList")
     public AccountWithdrawResponse selectBankWithdrawList(){
         logger.info("selectBankWithdrawList...");
         AccountWithdrawResponse response = new AccountWithdrawResponse();

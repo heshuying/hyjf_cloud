@@ -10,14 +10,12 @@ import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
-import com.hyjf.am.vo.trade.CreditPageVO;
-import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 
 /**
  * 银行债转异常处理
@@ -94,4 +92,36 @@ public interface BankCreditTenderService {
      * @return
      */
     Integer tenderAbleToCredit(Integer userId);
+
+    /**
+     * 查询债转还款列表
+     * @param tenderNid
+     * @return
+     */
+    List<CreditRepay> selectCreditRepayList(String tenderNid);
+
+    List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status);
+
+    /**
+     * 我要债转
+     * @param request
+     * @return
+     */
+    Integer saveCreditTender(BorrowCreditVO request);
+
+    /**
+     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * @param creditNid
+     * @param assignCapital
+     * @param userId
+     * @return
+     */
+    TenderToCreditAssignCustomizeVO getInterestInfo(String creditNid, String assignCapital, Integer userId);
+
+    /**
+     * 根据creditNid查询
+     * @param creditNid
+     * @return
+     */
+    BorrowCreditVO getBorrowCreditByCreditNid(String creditNid);
 }

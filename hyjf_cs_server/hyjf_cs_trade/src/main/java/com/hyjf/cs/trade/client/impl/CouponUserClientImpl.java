@@ -3,8 +3,9 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.cs.trade.client.CouponUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,4 +31,15 @@ public class CouponUserClientImpl implements CouponUserClient {
         }
         return null;
     }
+
+    @Override
+    public Integer getUserCouponCount(Integer userId, String usedFlag) {
+        CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/user_coupon_count/" + userId + "/" + usedFlag, CouponUserResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return null;
+    }
+
+
 }

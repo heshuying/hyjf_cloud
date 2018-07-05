@@ -60,6 +60,9 @@ public class TenderRequest extends BaseVO {
     // 订单号
     private String orderId;
 
+    // 债转用到的---------------
+    private String assignCapital;
+
     public String getCreditNid() {
         return creditNid;
     }
@@ -210,5 +213,13 @@ public class TenderRequest extends BaseVO {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getAssignCapital() {
+        return assignCapital;
+    }
+
+    public void setAssignCapital(String assignCapital) {
+        this.assignCapital = assignCapital;
     }
 }

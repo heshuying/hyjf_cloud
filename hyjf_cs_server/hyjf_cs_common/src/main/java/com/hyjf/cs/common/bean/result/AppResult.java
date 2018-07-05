@@ -12,7 +12,7 @@
 package com.hyjf.cs.common.bean.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.common.constants.MsgCode;
 import com.hyjf.cs.common.util.Page;
 
 import java.io.Serializable;
@@ -25,6 +25,26 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public AppResult() {
+	}
+
+	public AppResult(T data) {
+		super(data);
+	}
+
+	public AppResult(Throwable e) {
+		super(e);
+	}
+
+	public AppResult(String status, String statusDesc) {
+		super(status, statusDesc);
+	}
+
+	public AppResult(MsgCode msgCode, Object... params) {
+		super(msgCode, params);
+	}
+
 	public static final String SUCCESS = "0";
 	{
 		// 成功码变更 "000" → "0"

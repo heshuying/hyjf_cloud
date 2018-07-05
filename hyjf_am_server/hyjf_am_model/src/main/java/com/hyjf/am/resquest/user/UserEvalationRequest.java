@@ -3,53 +3,23 @@
  */
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.user.EvalationVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-
-import java.util.List;
-
 /**
  * @author zhangqingqing
  * @version UserEvalationRequest, v0.1 2018/6/17 23:36
  */
 public class UserEvalationRequest {
-    private List<String> answerList;
-    private List<String> questionList;
-    private EvalationVO evalation;
-    private int countScore;
+
     private Integer userId;
-    private UserEvalationResultVO userEvalationResultVO;
+    private String userAnswer;
+    private Integer countScore;
+    private String behaviorId;
 
-    public List<String> getAnswerList() {
-        return answerList;
+    public String getBehaviorId() {
+        return behaviorId;
     }
 
-    public void setAnswerList(List<String> answerList) {
-        this.answerList = answerList;
-    }
-
-    public List<String> getQuestionList() {
-        return questionList;
-    }
-
-    public void setQuestionList(List<String> questionList) {
-        this.questionList = questionList;
-    }
-
-    public EvalationVO getEvalation() {
-        return evalation;
-    }
-
-    public void setEvalation(EvalationVO evalation) {
-        this.evalation = evalation;
-    }
-
-    public int getCountScore() {
-        return countScore;
-    }
-
-    public void setCountScore(int countScore) {
-        this.countScore = countScore;
+    public void setBehaviorId(String behaviorId) {
+        this.behaviorId = behaviorId;
     }
 
     public Integer getUserId() {
@@ -60,11 +30,19 @@ public class UserEvalationRequest {
         this.userId = userId;
     }
 
-    public UserEvalationResultVO getUserEvalationResultVO() {
-        return userEvalationResultVO;
+    public String getUserAnswer() {
+        return userAnswer;
     }
 
-    public void setUserEvalationResultVO(UserEvalationResultVO userEvalationResultVO) {
-        this.userEvalationResultVO = userEvalationResultVO;
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
+    }
+
+    public Integer getCountScore() {
+        return countScore;
+    }
+
+    public void setCountScore(Integer countScore) {
+        this.countScore = countScore;
     }
 }

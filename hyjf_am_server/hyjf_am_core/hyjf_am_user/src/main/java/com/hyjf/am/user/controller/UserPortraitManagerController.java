@@ -55,9 +55,9 @@ public class UserPortraitManagerController extends BaseController{
         Map<String, Object> mapParam = paramToMap(request);
         UserPortraitResponse response = new UserPortraitResponse();
         Integer registCount = userPortraitManagerService.countLoanSubjectCertificateAuthority(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
-        if(request.getLimit() ==0){
-            paginator = new Paginator(request.getPaginatorPage(), registCount);
+        Paginator paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
+        if(request.getPageSize() ==0){
+            paginator = new Paginator(request.getCurrPage(), registCount);
         }
         int limitStart = 0;
         int limitEnd = 1000;

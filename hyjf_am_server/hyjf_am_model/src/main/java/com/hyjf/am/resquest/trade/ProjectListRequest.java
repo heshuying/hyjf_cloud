@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
 /**
@@ -11,7 +12,7 @@ import com.hyjf.am.vo.BaseVO;
  * @author liuyang
  * @version ProjectListRequest, v0.1 2018/6/13 10:58
  */
-public class ProjectListRequest extends BaseVO {
+public class ProjectListRequest extends BasePage {
 
     private String projectType;
 

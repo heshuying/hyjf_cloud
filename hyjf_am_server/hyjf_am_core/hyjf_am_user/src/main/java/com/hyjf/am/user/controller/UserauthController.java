@@ -63,7 +63,7 @@ public class UserauthController extends BaseController{
 			if (recordList != null) {
 				BeanUtils.copyProperties(recordList, avo);
 				aualr.setResultList(avo);
-				aualr.setRecordTotal(String.valueOf(recordTotal));
+				aualr.setRecordTotal(recordTotal);
 				aualr.setRtn(Response.SUCCESS);
 			}
 			return aualr;
@@ -98,7 +98,7 @@ public class UserauthController extends BaseController{
 
 	/**
 	 * 同步用户授权状态
-	 * @auth 孙沛凯
+	 * @auth sunpeikai
 	 * @param userId 用户id
 	 * @param type 1自动投资授权  2债转授权
 	 * @return

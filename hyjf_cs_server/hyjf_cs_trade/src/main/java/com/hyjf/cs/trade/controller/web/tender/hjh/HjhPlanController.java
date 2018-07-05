@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Api(value = "Web端加入计划")
 @RestController
-@RequestMapping("/web/hjh")
+@RequestMapping("/web/tender/hjh")
 public class HjhPlanController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(HjhPlanController.class);
 

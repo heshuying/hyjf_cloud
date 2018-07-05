@@ -54,6 +54,7 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 		return this.treeMenuList2(tree, TOP_MEN_UID);
 	}
 
+
 	/**
 	 * 菜单树形结构
 	 * 
@@ -149,6 +150,12 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 	public AdminSystem getUserInfo(AdminSystem adminSystem) {
 		return this.adminSystemMapper.getUserInfo(adminSystem);
 	}
+
+	@Override
+	public AdminSystem getUserInfoByUserId(Integer userId) {
+		return adminSystemMapper.getUserInfoById(userId);
+	}
+
 
 	/**
 	 * 获取用户的菜单权限

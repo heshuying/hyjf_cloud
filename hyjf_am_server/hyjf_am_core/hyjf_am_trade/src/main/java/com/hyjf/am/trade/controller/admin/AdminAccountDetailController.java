@@ -71,7 +71,7 @@ public class AdminAccountDetailController {
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<AccountDetailVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, AccountDetailVO.class);
                 response.setResultList(userVoList);
-                response.setRecordTotal(String.valueOf(intCountAccountDetail));
+                response.setRecordTotal(intCountAccountDetail);
                 returnCode = Response.SUCCESS;
             }
         }

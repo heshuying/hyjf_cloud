@@ -40,9 +40,9 @@ public class StzhWhiteList implements Serializable {
 
     private Integer delFlag;
 
-    private String createUser;
+    private Integer createUserId;
 
-    private String updateUser;
+    private Integer updateUserId;
 
     private Date createTime;
 
@@ -194,20 +194,20 @@ public class StzhWhiteList implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public String getCreateUser() {
-        return createUser;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public String getUpdateUser() {
-        return updateUser;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {

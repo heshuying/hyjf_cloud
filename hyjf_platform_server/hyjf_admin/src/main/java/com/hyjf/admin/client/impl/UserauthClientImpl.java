@@ -28,7 +28,7 @@ public class UserauthClientImpl implements UserauthClient {
 	private RestTemplate restTemplate;
 	/**
 	 * am-user层查询自动投资债转异常列表
-	 * @auth 孙沛凯
+	 * @auth sunpeikai
 	 * @param
 	 * @return
 	 */
@@ -42,7 +42,7 @@ public class UserauthClientImpl implements UserauthClient {
 	}
 	/**
 	 * 同步用户授权状态
-	 * @auth 孙沛凯
+	 * @auth sunpeikai
 	 * @param type 1自动投资授权  2债转授权
 	 * @return
 	 */

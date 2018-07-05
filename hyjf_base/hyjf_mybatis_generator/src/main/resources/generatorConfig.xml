@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1329,6 +1329,7 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <!-- 分布式事务本地消息表 -->
         <table tableName="ht_producer_transaction_message" domainObjectName="ProducerTransactionMessage">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="message_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1761,13 +1762,10 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
-
-        <!-- 分布式事务本地消息表 -->
-        <table tableName="ht_producer_transaction_message" domainObjectName="ProducerTransactionMessage">
+        <table tableName="ht_coupon_check" domainObjectName="CouponCheck">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="message_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="de_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
     </context>
 </generatorConfiguration>

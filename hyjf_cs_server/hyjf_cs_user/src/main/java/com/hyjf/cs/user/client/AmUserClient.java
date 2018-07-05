@@ -17,13 +17,40 @@ import java.util.List;
  */
 public interface AmUserClient {
 
+	/**
+	 * 根据手机号查询User
+	 * @param mobile
+	 * @return
+	 */
 	UserVO findUserByMobile(String mobile);
 
+	/**
+	 * 根据userId查询User
+	 * @param userId
+	 * @return
+	 */
+	UserVO findUserById(int userId);
+
+	/**
+	 * 根据用户名或者手机号查询user
+	 * @param loginUserName
+	 * @return
+	 */
+	UserVO findUserByUserNameOrMobile(String loginUserName);
+
+	/**
+	 * 根据推荐人手机号或userId查询推荐人
+	 * @param reffer
+	 * @return
+	 */
 	int countUserByRecommendName(String reffer);
 
+	/**
+	 * 注册
+	 * @param request
+	 * @return
+	 */
 	UserVO register(RegisterUserRequest request);
-
-	UserVO findUserById(int userId);
 
 	UserInfoVO findUserInfoById(int userId);
 
@@ -32,7 +59,6 @@ public interface AmUserClient {
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 						Integer searchStatus, Integer updateStatus);
 
-    UserVO findUserByUserNameOrMobile(String loginUserName);
 
 	void updateLoginUser(int userId, String ip);
 
@@ -52,6 +78,13 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer updateUserById(UserVO user);
+
+	/**
+	 * 手机手机号
+	 * @param mobile
+	 * @return
+	 */
+	int countByMobile(String mobile);
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 
@@ -87,7 +120,9 @@ public interface AmUserClient {
 
 	List<EvalationVO> getEvalationRecord();
 
-	UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+    EvalationVO getEvalationByEvalationType(String evalationType);
+
+    UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
 
 	UserInfoVO findUserInfoByCardNo(String cradNo);
 
@@ -183,4 +218,15 @@ public interface AmUserClient {
 	void saveUserPortrait(BatchUserPortraitQueryRequest batchUserPortraitQueryRequest);
 
 
+    int saveUserEvaluation(UserEvalationResultVO userEvalationResult);
+
+	/**
+	 * 插入behavior数据并返回id
+	 * @param userId
+	 * @param s
+	 * @return
+	 */
+    Integer insertUserEvalationBehavior(Integer userId, String s);
+
+	Integer updateUserEvaluationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
 }

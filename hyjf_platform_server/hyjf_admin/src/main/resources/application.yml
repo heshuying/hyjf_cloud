@@ -36,3 +36,10 @@ redis:
     testOnBorrow: true
     testOnReturn: true
     password: RH06863b3e6
+    
+hyjf:
+  anrong:
+    payUrl: http://test.hyjf.com:8080/hyjf-pay/anrongcall
+    keypath: D:/HYJF/anrou_key/testServer_new.cer
+    member: 1096
+    sign: Rj2IpQsZvAaRM

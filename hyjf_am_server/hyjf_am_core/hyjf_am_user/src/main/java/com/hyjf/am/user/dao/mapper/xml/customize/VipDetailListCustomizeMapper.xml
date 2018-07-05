@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.VipDetailListCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+		    hvut.del_flg = 0
+		    AND hydbt.status = 1
+			<if test="userName != null and userName !=''">
+				AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+			</if>
+			<if test="userId != null and userId !=''">
+				AND hydu.user_id LIKE CONCAT('%', #{userId}, '%')
+			</if>
+		</where>
+	</sql>
+	<resultMap id="DetailListPOMap" type="com.hyjf.am.user.dao.model.customize.VipDetailListCustomize">
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="username" property="userName" jdbcType="VARCHAR" />
+		<result column="nid" property="tenderNid" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="trade_time" property="tradeTime" jdbcType="VARCHAR" />
+		<result column="vip_name" property="vipName" jdbcType="VARCHAR" />
+		<result column="tender_vip_value" property="tenderVipValue" jdbcType="VARCHAR" />
+		<result column="sum_vip_value" property="sumVipValue" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectRecordList" resultMap="DetailListPOMap" parameterType="Map">
+		SELECT
+		    hydu.user_id,
+			hydu.username,
+			FORMAT(hydbt.account, 2) account,
+			FROM_UNIXTIME(hydbt.addtime, '%Y-%m-%d %H:%i:%s' ) trade_time,
+			hvi.vip_name,
+			IFNULL(hvut.tender_vip_value,0) tender_vip_value,
+			IFNULL(hvut.sum_vip_value,0) sum_vip_value,
+			IFNULL(hvut.remark,'') remark
+		FROM
+			ht_vip_user_tender hvut
+		LEFT JOIN ht_users hydu ON hvut.user_id = hydu.user_id
+		LEFT JOIN ht_vip_info hvi ON hvut.vip_id = hvi.id
+		<include refid="Where_Clause" />
+		ORDER BY hydbt.addtime DESC
+		<if test="limitStart != null and limitEnd !=null" >
+     		LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+    	</if>
+	</select>
+	<select id="countRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+			count(hvut.id)
+		FROM
+			ht_vip_user_tender hvut
+		LEFT JOIN ht_users hydu ON hvut.user_id = hydu.user_id
+		LEFT JOIN ht_vip_info hvi ON hvut.vip_id = hvi.id
+		<include refid="Where_Clause" />
+	</select>
+</mapper>

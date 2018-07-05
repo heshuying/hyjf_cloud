@@ -17,8 +17,6 @@ public class CreditTenderLogVO extends BaseVO implements Serializable {
 
     private String creditUserName;
 
-    private Byte status;
-
     private String bidNid;
 
     private Integer borrowUserId;
@@ -63,11 +61,9 @@ public class CreditTenderLogVO extends BaseVO implements Serializable {
 
     private BigDecimal creditFee;
 
-    private Date addTime;
-
-    private String addip;
-
     private Integer client;
+
+    private Integer status;
 
     private String logOrderId;
 
@@ -80,6 +76,12 @@ public class CreditTenderLogVO extends BaseVO implements Serializable {
     private String bankSeqNo;
 
     private String accountId;
+
+    private String addIp;
+
+    private Date createTime;
+    // 实际投资金额
+    private  BigDecimal tenderMoney;
 
     private static final long serialVersionUID = 1L;
 
@@ -121,14 +123,6 @@ public class CreditTenderLogVO extends BaseVO implements Serializable {
 
     public void setCreditUserName(String creditUserName) {
         this.creditUserName = creditUserName == null ? null : creditUserName.trim();
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
     }
 
     public String getBidNid() {
@@ -307,28 +301,20 @@ public class CreditTenderLogVO extends BaseVO implements Serializable {
         this.creditFee = creditFee;
     }
 
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
-    }
-
     public Integer getClient() {
         return client;
     }
 
     public void setClient(Integer client) {
         this.client = client;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getLogOrderId() {
@@ -377,5 +363,29 @@ public class CreditTenderLogVO extends BaseVO implements Serializable {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId == null ? null : accountId.trim();
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public BigDecimal getTenderMoney() {
+        return tenderMoney;
+    }
+
+    public void setTenderMoney(BigDecimal tenderMoney) {
+        this.tenderMoney = tenderMoney;
     }
 }

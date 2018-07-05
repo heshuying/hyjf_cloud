@@ -56,4 +56,37 @@ public class BorrowRepayPlanController extends BaseController{
     public Integer updateBorrowPlanRepay(@RequestBody @Valid BorrowRepayPlanVO borrowRepayPlanVO) {
         return this.borrowRepayPlanService.updateBorrowRepayPlan(borrowRepayPlanVO);
     }
+
+    /**
+     * 根据还款期数和borrowNid查询
+     * @param borrowNid
+     * @param borrowPeriod
+     * @return
+     */
+    @GetMapping("/select_repay_list_by_period/{borrowNid}/{borrowPeriod}")
+    public BorrowRepayPlanResponse selectRepayListByPeriod(@PathVariable String borrowNid, @PathVariable Integer borrowPeriod) {
+        BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+        List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanService.selectBorrowRepayPlanListByPeriod(borrowNid ,borrowPeriod);
+        if(borrowRepayPlans != null){
+            List<BorrowRepayPlanVO> borrowRepayPlanVO = CommonUtils.convertBeanList(borrowRepayPlans,BorrowRepayPlanVO.class);
+            response.setResultList(borrowRepayPlanVO);
+        }
+        return response;
+    }
+
+    /**
+     * 根据borrowNid检索
+     * @param borrowNid
+     * @return
+     */
+    @GetMapping("/select_by_borrownid/{borrowNid}")
+    public BorrowRepayPlanResponse selectByBorrowNid(@PathVariable String borrowNid) {
+        BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+        List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanService.selectByBorrowNid(borrowNid);
+        if(borrowRepayPlans != null){
+            List<BorrowRepayPlanVO> borrowRepayPlanVO = CommonUtils.convertBeanList(borrowRepayPlans,BorrowRepayPlanVO.class);
+            response.setResultList(borrowRepayPlanVO);
+        }
+        return response;
+    }
 }

@@ -92,6 +92,15 @@ public class BorrowRegistController {
     }
 
     /**
+     * 统计页面值总和
+     * @return
+     */
+    @RequestMapping("/sum_borrow_regist_account")
+    public String sumBorrowRegistAccount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
+        return borrowRegistService.sumBorrowRegistAccount(borrowRegistListRequest);
+    }
+
+    /**
      * 获取受托支付电子账户列表
      * @param instCode
      * @param entrustedAccountId

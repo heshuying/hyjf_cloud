@@ -4,14 +4,21 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
+import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserListCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.auto.CouponUserExample;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 import com.hyjf.am.trade.service.CouponUserService;
 import com.hyjf.common.util.GetDate;
+import com.mysql.fabric.xmlrpc.base.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoy
@@ -22,6 +29,11 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     @Autowired
     private CouponUserMapper couponUserMapper;
+    @Autowired
+    private CouponUserCustomizeMapper couponUserCustomizeMapper;
+    @Autowired
+    private CouponUserListCustomizeMapper couponUserListCustomizeMapper;
+
     @Override
     public List<CouponUser> selectCouponUser(int nowBeginDate, int nowEndDate) {
 
@@ -77,4 +89,26 @@ public class CouponUserServiceImpl implements CouponUserService {
         List<CouponUser> couponUserList = couponUserMapper.selectByExample(example);
         return couponUserList;
     }
+
+    @Override
+    public Integer countCouponValid(Integer userId) {
+       return couponUserCustomizeMapper.countCouponValid(userId);
+    }
+
+
+    @Override
+    public List<CouponUserListCustomize> selectCouponUserList(Map<String, Object> mapParameter) {
+        return couponUserListCustomizeMapper.selectCouponUserList(mapParameter);
+    }
+
+
+    @Override
+    public Integer getUserCouponCount(Integer userId, String useFlag) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("userId",userId);
+        param.put("useFlag",useFlag);
+        Integer count = couponUserCustomizeMapper.countCouponUser(param);
+        return count;
+    }
+
 }
