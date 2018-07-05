@@ -119,26 +119,25 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         // ①查询count
-        ProjectListResponse response = webProjectListClient.countProjectList(request);
+        Integer count = webProjectListClient.countProjectList(request);
         // 对调用返回的结果进行转换和拼装
         WebResult webResult = new WebResult();
         // 先抛错方式，避免代码看起来头重脚轻。
-        if (!Response.isSuccess(response)) {
+        if (count == null) {
             logger.error("查询散标投资列表原子层count异常");
             throw new RuntimeException("查询散标投资列表原子层count异常");
         }
-        int count = response.getCount();
         page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
         webResult.setData(new ArrayList<>());
         if (count > 0) {
             List<WebProjectListCsVO> result = new ArrayList<>();
-            ProjectListResponse dataResponse = webProjectListClient.searchProjectList(request);
-            if (!Response.isSuccess(dataResponse)) {
+            List<WebProjectListCustomizeVO> list = webProjectListClient.searchProjectList(request);
+            if (CollectionUtils.isEmpty(list)) {
                 logger.error("查询散标投资列表原子层List异常");
                 throw new RuntimeException("查询散标投资列表原子层list数据异常");
             }
-            result = CommonUtils.convertBeanList(dataResponse.getResultList(), WebProjectListCsVO.class);
+            result = CommonUtils.convertBeanList(list, WebProjectListCsVO.class);
             webResult.setData(result);
         }
         webResult.setPage(page);
@@ -169,7 +168,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     @Override
     public WebResult getBorrowDetail(Map map, String userId) {
         Object borrowNid = map.get(ProjectConstant.PARAM_BORROW_NID);
-        CheckUtil.check(null == borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
+        CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         ProjectListRequest request = new ProjectListRequest();
         // ① 先查出标的基本信息  ② 根据是否是新标的，进行参数组装
         ProjectCustomeDetailVO projectCustomeDetail = webProjectListClient.searchProjectDetail(map);

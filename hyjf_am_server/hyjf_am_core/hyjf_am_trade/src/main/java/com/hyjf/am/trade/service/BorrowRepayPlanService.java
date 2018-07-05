@@ -34,4 +34,6 @@ public interface BorrowRepayPlanService {
      * @return
      */
     List<BorrowRepayPlan> selectBorrowRepayPlanListByPeriod(String borrowNid, Integer borrowPeriod);
+
+    List<BorrowRepayPlan> selectByBorrowNid(String borrowNid);
 }

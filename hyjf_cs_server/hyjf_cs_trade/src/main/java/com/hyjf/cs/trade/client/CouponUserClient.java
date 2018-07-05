@@ -13,4 +13,11 @@ import java.util.List;
  */
 public interface CouponUserClient {
     List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate);
+
+    /**
+     * 查询用户有效的优惠券数目
+     * @author zhangyk
+     * @date 2018/7/4 15:31
+     */
+    Integer getUserCouponCount(Integer userId, String usedFlag);
 }

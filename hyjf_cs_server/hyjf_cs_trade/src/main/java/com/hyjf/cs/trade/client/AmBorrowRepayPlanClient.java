@@ -35,4 +35,6 @@ public interface AmBorrowRepayPlanClient {
      * @return
      */
     List<BorrowRepayPlanVO> getBorrowRepayPlansByPeriod(String bidNid, Integer borrowPeriod);
+
+    List<BorrowRepayPlanVO> getBorrowRepayPlansByBorrowNid(String borrowNid);
 }

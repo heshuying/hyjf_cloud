@@ -421,7 +421,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             userLoginInfo.setSetPassword(userVO.getIsSetPassword() == 1 ? Boolean.TRUE : Boolean.FALSE);
 
             // 7.缴费授权状态
-            userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus()  ? 1: 0);
+            userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
 
             // 5. 用户是否完成风险测评标识：0未测评 1已测评
             if(userVO.getIsEvaluationFlag()==1 && null != userVO.getEvaluationExpiredTime()){
