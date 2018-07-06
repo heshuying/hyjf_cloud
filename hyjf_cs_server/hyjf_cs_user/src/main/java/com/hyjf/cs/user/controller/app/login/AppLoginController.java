@@ -4,31 +4,23 @@
 package com.hyjf.cs.user.controller.app.login;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.DES;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author zhangqingqing
@@ -45,58 +37,137 @@ public class AppLoginController extends BaseUserController {
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 登录
-     * @param
-     * * @param request
-     * @return
+     *
+     * @throws Exception
      */
+    @ResponseBody
     @ApiOperation(value = "登录", notes = "登录")
-    @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public AppResult< Map<String,String>> login(@RequestHeader String key, @RequestBody LoginRequestVO loginRequestVO,
-                                          HttpServletRequest request) {
-        logger.info("App端登录接口, user is :{}", JSONObject.toJSONString(loginRequestVO));
-        //检查参数正确性
-        loginService.checkForApp(loginRequestVO);
-        AppResult< Map<String,String>> result = new AppResult< Map<String,String>>();
-        Map<String,String> map = new HashMap<>();
-        // 账户密码解密
-        String loginUserName = DES.decodeValue(key, loginRequestVO.getUsername());
-        String loginPassword = DES.decodeValue(key, loginRequestVO.getPassword());
-        CheckUtil.check(StringUtils.isNotEmpty(loginUserName) && StringUtils.isNotEmpty(loginPassword)&&CommonUtils.isMobile(loginUserName),MsgEnum.ERR_USER_LOGIN);
-        WebViewUserVO webViewUserVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
-        if (webViewUserVO != null) {
-            logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
-            map.put("token",webViewUserVO.getToken());
-            result.setData(map);
-        } else {
-            logger.error("app端登录失败...");
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
+    @RequestMapping(value = "/login")
+    public JSONObject loginInAction(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/appUser/login");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 用户名
+        String username = request.getParameter("username");
+        // 密码
+        String password = request.getParameter("password");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        loginService.checkForApp(version,platform,netStatus);
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
         }
-        return result;
+        // 取得加密用的Key
+        if (Validator.isNull(key)) {
+            ret.put("status", "709");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 业务逻辑
+        try {
+            // 解密
+            username = DES.decodeValue(key, username);
+            password = DES.decodeValue(key, password);
+            if (Validator.isNull(username)) {
+                ret.put("status", "1");
+                ret.put("statusDesc", "用户名不能为空");
+                return ret;
+            }
+            if (Validator.isNull(password)) {
+                ret.put("status", "1");
+                ret.put("statusDesc", "密码不能为空");
+                return ret;
+            }
+            // 执行登录(登录时间，登录ip)
+            WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request));
+            if (webViewUserVO != null) {
+                logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
+                ret.put("status", "0");
+                ret.put("statusDesc", "登录成功");
+                ret.put("token", webViewUserVO.getToken());
+                ret.put("sign", sign);
+
+            } else {
+                logger.error("app端登录失败...");
+                ret.put("status", "1");
+                ret.put("statusDesc", "app端登录失败");
+            }
+        }catch (Exception e){
+            logger.error("app端登录失败...");
+            ret.put("status", "1");
+            ret.put("statusDesc", e.getMessage());
+        }
+        return ret;
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc : 退出登录
-     * @Param: * @param token
-     * @Date: 16:29 2018/6/5
-     * @Return
+     * 用户退出登录
+     *
+     * @param request
+     * @param response
+     * @return
      */
     @ApiOperation(value = "登出", notes = "登出")
-    @PostMapping(value = "logout")
-    public AppResult<String> loginout(@RequestHeader(value = "token") String token){
-        AppResult<String> result = new AppResult<>();
-        // 退出到首页
-        result.setData("index");
-        try {
-            RedisUtils.del(RedisKey.USER_TOKEN_REDIS + token);
-        }catch (Exception e){
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc("退出失败");
+    @PostMapping(value = "/logout")
+    public JSONObject loginOutAction(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "version") String version,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/appUser/logout");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(token) || Validator.isNull(randomString) || Validator.isNull(order)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
         }
-        return result;
+        if (Validator.isNull(key)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 业务逻辑
+        try {
+            if (userId != null) {
+                clearMobileCode(userId,sign);
+
+                // 移除sign
+                if(version.substring(0,5).equals(systemConfig.getNewVersion()) && "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)){
+                    logger.info("sign不做移除");
+                }else{
+                    SecretUtil.clearToken(sign);
+                }
+                ret.put("status", "0");
+                ret.put("statusDesc", "退出登录成功");
+            } else {
+                ret.put("status", "1");
+                ret.put("statusDesc", "用户信息不存在");
+            }
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "退出登录发生错误");
+        }
+        return ret;
+    }
+
+    private void clearMobileCode(Integer userId, String sign) {
+        loginService.clearMobileCode(userId,sign);
+
     }
 
 }

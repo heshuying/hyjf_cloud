@@ -7,7 +7,6 @@ import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
-import com.hyjf.cs.user.vo.PasswordRequest;
 import com.hyjf.cs.user.vo.SendSmsVO;
 
 import java.util.Map;
@@ -23,7 +22,7 @@ public interface PassWordService extends BaseUserService {
      * @param newPW
      * @return
      */
-    void updatePassWd(UserVO user, String newPW);
+    boolean updatePassWd(UserVO user, String newPW);
 
     /**
      * 更新修改密码状态
@@ -53,15 +52,6 @@ public interface PassWordService extends BaseUserService {
      * @param pwSure
      */
     void checkParam(UserVO userVO, String oldPW, String newPW, String pwSure);
-
-    /**
-     * app端 检查参数
-     * @param key
-     * @param
-     * @param userVO
-     * @param passwordRequest
-     */
-    void appCheckParam(String key,UserVO userVO, PasswordRequest passwordRequest);
 
 
     void sendCode(SendSmsVO sendSmsVo);
@@ -98,4 +88,19 @@ public interface PassWordService extends BaseUserService {
     boolean existPhone(String mobile);
 
     boolean validPassword(Integer userId, String pw);
+
+    /**
+     * app端 检查参数
+     * @param key
+     * @param version
+     * @param netStatus
+     * @param platform
+     * @param sign
+     * @param token
+     * @param randomString
+     * @param order
+     * @param newPassword
+     * @param oldPassword
+     */
+    void appCheckParam(String key,UserVO userVO, String version, String netStatus, String platform, String sign, String token, String randomString, String order, String newPassword,String oldPassword);
 }

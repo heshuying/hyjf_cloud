@@ -8,13 +8,21 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.BindLogResponse;
+import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
+import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.admin.MerchantAccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,9 +34,29 @@ import java.util.List;
  */
 @Service
 public class AmTradeClientImpl implements AmTradeClient{
+    private static Logger logger = LoggerFactory.getLogger(AmTradeClientImpl.class);
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${am.trade.service.name}")
+    private String tradeService;
+
+    @Override
+    public Integer updateByPrimaryKeySelective(MerchantAccountVO merchantAccount) {
+        int cnt = restTemplate.postForEntity(tradeService+"/merchantAccount/updateByPrimaryKeySelective",merchantAccount,Integer.class).getBody();
+        return cnt;
+    }
+
+    @Override
+    public MerchantAccountResponse selectRecordList(MerchantAccountListRequest request) {
+        MerchantAccountResponse response = restTemplate
+                .postForEntity(tradeService+"/merchantAccount/selectRecordList",request, MerchantAccountResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 
     /**
      * 查询定向转账列表count
@@ -39,7 +67,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public Integer getDirectionalTransferCount(DirectionalTransferListRequest request) {
         Integer count = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accountdirectionaltransfer/getdirectionaltransfercount", request, Integer.class)
+                .postForEntity(tradeService+"/accountdirectionaltransfer/getdirectionaltransfercount", request, Integer.class)
                 .getBody();
 
         return count;
@@ -54,7 +82,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request) {
         AccountDirectionalTransferResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accountdirectionaltransfer/searchdirectionaltransferlist", request, AccountDirectionalTransferResponse.class)
+                .postForEntity(tradeService+"/accountdirectionaltransfer/searchdirectionaltransferlist", request, AccountDirectionalTransferResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
@@ -71,7 +99,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
         Integer count = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/associatedrecords/getassociatedrecordscount", request, Integer.class)
+                .postForEntity(tradeService+"/associatedrecords/getassociatedrecordscount", request, Integer.class)
                 .getBody();
 
         return count;
@@ -86,7 +114,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
         AssociatedRecordListResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/associatedrecords/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
+                .postForEntity(tradeService+"/associatedrecords/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
@@ -103,7 +131,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public Integer getBindLogCount(BindLogListRequest request) {
         Integer count = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/associatedlog/getbindlogcount", request, Integer.class)
+                .postForEntity(tradeService+"/associatedlog/getbindlogcount", request, Integer.class)
                 .getBody();
 
         return count;
@@ -118,11 +146,29 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public List<BindLogVO> searchBindLogList(BindLogListRequest request) {
         BindLogResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/associatedlog/searchbindloglist", request, BindLogResponse.class)
+                .postForEntity(tradeService+"/associatedlog/searchbindloglist", request, BindLogResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
         }
         return null;
     }
+
+    /**
+     * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public List<AccountVO> searchAccountByUserId(Integer userId) {
+        AccountResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/customertransfer/searchaccountbyuserid", userId, AccountResponse.class)
+                .getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
 }

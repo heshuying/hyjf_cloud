@@ -820,4 +820,9 @@ public class AmUserClientImpl implements AmUserClient {
 		return count;
 	}
 
+	@Override
+	public void clearMobileCode(Integer userId, String sign) {
+		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
+	}
+
 }

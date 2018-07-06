@@ -35,4 +35,6 @@ public interface UserAliasService {
      * @return
      */
     Integer countAliasByClient(String clientAndroid);
+
+    void clearMobileCode(Integer userId, String sign);
 }

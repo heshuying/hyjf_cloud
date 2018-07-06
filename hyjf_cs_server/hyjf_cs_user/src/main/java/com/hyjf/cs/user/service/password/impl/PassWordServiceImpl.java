@@ -35,7 +35,6 @@ import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.util.RSAJSPUtil;
-import com.hyjf.cs.user.vo.PasswordRequest;
 import com.hyjf.cs.user.vo.SendSmsVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -82,11 +81,12 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
      * @return
      */
     @Override
-    public void updatePassWd(UserVO user, String newPW) {
+    public boolean updatePassWd(UserVO user, String newPW) {
         logger.info("UserController.updatePassWd run.. newPW is :{}",newPW);
         user.setPassword(MD5Utils.MD5(MD5Utils.MD5(newPW) + user.getSalt()));
         boolean success =  amUserClient.updateUserById(user) > 0;
         CheckUtil.check(success,MsgEnum.ERR_PASSWORD_MODIFY);
+        return success;
     }
 
     @Override
@@ -232,33 +232,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public void appCheckParam(String key, UserVO userVO,PasswordRequest passwordRequest) {
-         String version = passwordRequest.getVersion();
-         String netStatus = passwordRequest.getNetStatus();
-         String platform = passwordRequest.getPlatform();
-         String randomString = passwordRequest.getRandomString();
-         String order = passwordRequest.getOrder();
-         String newPassword = passwordRequest.getNewPassword();
-         String oldPassword = passwordRequest.getOldPassword();
-        // 检查参数正确性
-        CheckUtil.check(StringUtils.isNotBlank(version)&&StringUtils.isNotBlank(netStatus)&&StringUtils.isNotBlank(platform)&&StringUtils.isNotBlank(randomString)&&StringUtils.isNotBlank(order),MsgEnum.STATUS_CE000001);
-        try {
-            // 解密
-            oldPassword = DES.decodeValue(key, oldPassword);
-            CheckUtil.check(StringUtils.isNotBlank(oldPassword),MsgEnum.ERR_OBJECT_REQUIRED,"旧密码");
-            oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword)+userVO.getSalt());
-            // 密码正确时
-            CheckUtil.check(StringUtils.isNotBlank(oldPassword) && oldPassword.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
-        } catch (Exception e) {
-            throw new CheckException(MsgEnum.STATUS_CE000001);
-        }
-        // 解密
-        newPassword = DES.decodeValue(key, newPassword);
-        CheckUtil.check(StringUtils.isNotBlank(newPassword),MsgEnum.ERR_PASSWORD_NEW_REQUIRED);
-        checkPassword(newPassword);
-    }
-
-    @Override
     public void checkPassword(String password){
         CheckUtil.check(password.length()>=6 || password.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
         boolean hasNumber = false;
@@ -309,6 +282,26 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void appCheckParam(String key,UserVO userVO, String version, String netStatus, String platform, String sign, String token, String randomString, String order, String newPassword,String oldPassword) {
+        // 检查参数正确性
+        CheckUtil.check(StringUtils.isNotBlank(version)&&StringUtils.isNotBlank(netStatus)&&StringUtils.isNotBlank(platform)&&StringUtils.isNotBlank(randomString)&&StringUtils.isNotBlank(order),MsgEnum.STATUS_CE000001);
+        try {
+            // 解密
+            oldPassword = DES.decodeValue(key, oldPassword);
+            CheckUtil.check(StringUtils.isNotBlank(oldPassword),MsgEnum.ERR_OBJECT_REQUIRED,"旧密码");
+            oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword)+userVO.getSalt());
+            // 密码正确时
+            CheckUtil.check(StringUtils.isNotBlank(oldPassword) && oldPassword.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
+        } catch (Exception e) {
+            throw new CheckException(MsgEnum.STATUS_CE000001);
+        }
+        // 解密
+        newPassword = DES.decodeValue(key, newPassword);
+        CheckUtil.check(StringUtils.isNotBlank(newPassword),MsgEnum.ERR_PASSWORD_NEW_REQUIRED);
+        checkPassword(newPassword);
     }
 
     /**

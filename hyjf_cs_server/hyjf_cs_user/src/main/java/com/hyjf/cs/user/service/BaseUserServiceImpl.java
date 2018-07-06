@@ -87,6 +87,12 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		return userVO;
 	}
 
+	@Override
+	public HjhUserAuthVO getHjhUserAuth(Integer userId){
+		HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthByUserId(userId);
+		return userAuth;
+	}
+
 	/**
 	 * @param userId
 	 * @Description 根据userid查询用户

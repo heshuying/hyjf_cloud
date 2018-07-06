@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.autoplus;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoPlusRetBean;
@@ -47,7 +48,7 @@ public interface AutoPlusService extends BaseUserService {
      * @param bean
      * @return
      */
-    String userBgreturn(BankCallBean bean);
+    String userBgreturn(BankCallBean bean,String type);
 
     Map<String,String> checkParam(AutoPlusRequestBean payRequestBean);
 
@@ -59,7 +60,9 @@ public interface AutoPlusService extends BaseUserService {
 
     BankCallResult userAuthInvesBgreturn(BankCallBean bean, String callback, String acqRes);
 
-    BankCallBean getTermsAuthQuery(int userId,String channel);
+    BankCallBean getUserAuthQUery(Integer userId, String type);
+
+    BankCallBean getTermsAuthQuery(int userId, String channel);
 
     void checkUserMessage(UserVO users, String lastSrvAuthCode, String smsCode);
 
@@ -73,10 +76,25 @@ public interface AutoPlusService extends BaseUserService {
     /**
      * 校验发送验证码接口参数
      * @param user
-     * @param param
+     * @param
      * @return
      */
-    String checkSmsParam(UserVO user,Map<String,String> param);
+    String checkSmsParam(UserVO user, String userAutoType);
 
     String checkApiSmsParam(AutoPlusRequestBean autoPlusRequestBean);
+
+    BankCallBean appGetCommonBankCallBean(UserVO users, int i, String srvAuthCode, String code, String sign, String token);
+
+    BaseMapBean appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId);
+
+    /**
+     * 插入用户签约授权log
+     * @param user
+     * @param bean
+     * @param client
+     * @param authType
+     */
+    void insertUserAuthLog(UserVO user, BankCallBean bean, Integer client, String authType);
+
+    String getBankRetMsg(String retCode);
 }

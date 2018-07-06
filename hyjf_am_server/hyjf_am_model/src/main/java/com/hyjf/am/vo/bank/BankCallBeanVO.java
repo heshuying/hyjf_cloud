@@ -1,18 +1,20 @@
 package com.hyjf.am.vo.bank;
 
-import com.hyjf.am.vo.BaseVO;
-
 import java.io.Serializable;
 
+import com.hyjf.am.vo.BaseVO;
+
+/**
+ * 接收银行数据的bean
+ * @author jun 20180619
+ *
+ */
 public class BankCallBeanVO extends BaseVO implements Serializable {
-	/** =========== 字段开始 ===========  */
 
 	/**
 	 * 序列化id
 	 */
 	private static final long serialVersionUID = 8472170072969081116L;
-	// 参数
-	// log参数
 	/** 操作用户userId */
 	public String logUserId;
 	/** 操作用户的userName */
@@ -25,7 +27,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String logTime;
 	/** 备注 */
 	public String logRemark;
-	/** 订单号 */
+	/** 订单id */
 	public String logOrderId;
 	/** 订单日期 */
 	public String logOrderDate;
@@ -44,7 +46,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	/** 回调url类型 */
 	public String logNotifyType;
 
-	// 共通参数
+	// 公共参数
 	/** 版本号 */
 	public String version;
 	/** 交易代码 */
@@ -84,7 +86,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	/** 响应描述 */
 	public String retMsg;
 	public String restMsg;
-	// 方法内部参数
+    // 方法内部参数
 	/** 证件类型 */
 	public String idType;
 	/** 证件号码 */
@@ -292,10 +294,10 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String caccount;
 	/**证件号码*/
 	public String busId;
-	/**税务登记号*/
+	/**税务登记号*/ 
 	public String taxId;
 	/**冻结状态*/
-	public String frzType;
+    public String frzType;
 	/** 预期年化收益率*/
 	public String yield;
 	/** 预期本息收益*/
@@ -306,7 +308,7 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String incFlag;
 	/** 交易描述 */
 	public String description;
-
+	
 	/** 短信发送时间*/
 	public String sendTime;
 	/** 短信序号*/
@@ -321,115 +323,322 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String riskAmount;
 	/**申请订单号*/
 	public String lendPayOrderId;
-
+	
 	/**签约日期*/
-	public String txnDate;
-	/**签约时间*/
-	public String txnTime;
-	/**性别 M  男性  F  女性*/
-	public String gender;
-	/** 身份属性 1：出借角色2：借款角色3：代偿角色*/
-	public String identity;
+    public String txnDate;
+    /**签约时间*/
+    public String txnTime;
+    /**性别 M  男性  F  女性*/
+    public String gender;
+    /** 身份属性 1：出借角色2：借款角色3：代偿角色*/
+    public String identity;
+
+    
+    //是否维护标志位 由0和1组成的标志位，0表示不维护，1表示维护，共20位，第1位表示12域是否生效，第2位表示13域是否生效，其余以此类推；
+    private String bitMap;
+    //开通自动投标功能标志 0：取消 1：开通
+    private String autoBid;
+    //开通自动债转功能标志 0：取消 1：开通
+    private String autoTransfer;
+    //开通预约取现功能标志 0：取消 1：开通
+    private String agreeWithdraw;
+    //开通无密消费功能标识 0：取消 1：开通
+    private String directConsume;
+    /**返回交易页面链接*/
+    private String transactionUrl ;
+    /**订单有效性连接*/
+    private String verifyOrderUrl ;
+
+    /** 备注 */
+    public String remark;
+    
+    /**交易确认日期*/
+    public String affirmDate;
+    /**交易确认时间*/
+    public String affirmTime;
+    
+    /**翻页标识 空：首次查询；1：翻页查询；其它：非法*/
+    public String rtnInd;
+
+    /**交易日期 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录交易日期；YYYYMMDD */
+    public String inpDate;
+
+    /**交易时间 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录交易时间；HH24MISSTT */
+    public String inpTime;
+    /**自然日期 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录自然日期；YYYYMMDD */
+    public String relDate;
+    /**流水号 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录流水号； */
+    public String traceNo;
+
+    /** 地址*/
+    public String addr;
+
+    /** 签约到期日期*/
+    public String deadline;
+    /** 签约到期日期*/
+    public String bidDeadline;
+    /*签约最大金额*/
+    public String maxAmt;
+
+    /** 缴费授权*/
+    public String paymentAuth;
+
+    /** 还款授权*/
+    public String repayAuth;
+
+    /** 自动投标到期日*/
+    public String autoBidDeadline;
+
+    /** 自动投标签约最高金额*/
+    public String autoBidMaxAmt;
+    /** 缴费授权到期日*/
+    public String paymentDeadline;
+    /** 缴费签约最高金额*/
+    public String paymentMaxAmt;
+    /** 还款授权到期日*/
+    public String repayDeadline;
+    /** 还款签约最高金额*/
+    public String repayMaxAmt;
 
 
-	//是否维护标志位 由0和1组成的标志位，0表示不维护，1表示维护，共20位，第1位表示12域是否生效，第2位表示13域是否生效，其余以此类推；
-	private String bitMap;
-	//开通自动投标功能标志 0：取消 1：开通
-	private String autoBid;
-	//开通自动债转功能标志 0：取消 1：开通
-	private String autoTransfer;
-	//开通预约取现功能标志 0：取消 1：开通
-	private String agreeWithdraw;
-	//开通无密消费功能标识 0：取消 1：开通
-	private String directConsume;
-	/**返回交易页面链接*/
-	private String transactionUrl ;
-	/**订单有效性连接*/
-	private String verifyOrderUrl ;
-
-	/** 备注 */
-	public String remark;
-
-	/**交易确认日期*/
-	public String affirmDate;
-	/**交易确认时间*/
-	public String affirmTime;
-
-	/**翻页标识 空：首次查询；1：翻页查询；其它：非法*/
-	public String rtnInd;
-
-	/**交易日期 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录交易日期；YYYYMMDD */
-	public String inpDate;
-
-	/**交易时间 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录交易时间；HH24MISSTT */
-	public String inpTime;
-	/**自然日期 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录自然日期；YYYYMMDD */
-	public String relDate;
-	/**流水号 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录流水号； */
-	public String traceNo;
-
-	/** 地址*/
-	public String addr;
-
-	/** 签约到期日期*/
-	public String deadline;
-	/** 签约到期日期*/
-	public String bidDeadline;
-	/*签约最大金额*/
-	public String maxAmt;
-
-	/** 缴费授权*/
-	public String paymentAuth;
-
-	/** 还款授权*/
-	public String repayAuth;
-
-	/** 自动投标到期日*/
-	public String autoBidDeadline;
-
-	/** 自动投标签约最高金额*/
-	public String autoBidMaxAmt;
-	/** 缴费授权到期日*/
-	public String paymentDeadline;
-	/** 缴费签约最高金额*/
-	public String paymentMaxAmt;
-	/** 还款授权到期日*/
-	public String repayDeadline;
-	/** 还款签约最高金额*/
-	public String repayMaxAmt;
+    /** 代扣签约*/
+    public String agreeDeduct;
 
 
-	/** 代扣签约*/
-	public String agreeDeduct;
+    /** 签约取消日期*/
+    public String cancelDate;
+    /** cancelTime*/
+    public String cancelTime;
+
+    /** 验证码类型*/
+    public String smsType;
+
+    //缴费授权
+    public String txType;
+    public String getTransactionUrl() {
+        return transactionUrl;
+    }
+
+    public void setTransactionUrl(String transactionUrl) {
+        this.transactionUrl = transactionUrl;
+    }
+
+    public String getVerifyOrderUrl() {
+        return verifyOrderUrl;
+    }
+
+    public void setVerifyOrderUrl(String verifyOrderUrl) {
+        this.verifyOrderUrl = verifyOrderUrl;
+    }
+
+    //保留域
+    private String reserved;
+    
+    //受托支付flg 0:否，1：是
+    private String entrustFlag;
+    //(受托)收款人电子账号
+    private String receiptAccountId;
+    // 页面调用成功后跳转连接
+    private String successfulUrl;
+    // 商户名称
+    private String coinstName;
+    
+    public String getRestMsg() {
+        return restMsg;
+    }
+
+    public void setRestMsg(String restMsg) {
+        this.restMsg = restMsg;
+    }
+    
+    
+    public String getReserved() {
+        return reserved;
+    }
 
 
-	/** 签约取消日期*/
-	public String cancelDate;
-	/** cancelTime*/
-	public String cancelTime;
+	public void setReserved(String reserved) {
+        this.reserved = reserved;
+    }
+	public String getTxCode() {
+        return txCode;
+    }
+    public void setTxCode(String txCode) {
+        this.txCode = txCode;
+    }
+    public String getInstCode() {
+        return instCode;
+    }
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
+    }
+    public String getBankCode() {
+        return bankCode;
+    }
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+    public String getTxDate() {
+        return txDate;
+    }
+    public void setTxDate(String txDate) {
+        this.txDate = txDate;
+    }
+    public String getTxTime() {
+        return txTime;
+    }
+    public void setTxTime(String txTime) {
+        this.txTime = txTime;
+    }
+    public String getSeqNo() {
+        return seqNo;
+    }
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo;
+    }
+    public String getChannel() {
+        return channel;
+    }
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+    public String getAccountId() {
+        return accountId;
+    }
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+    public String getOrderId() {
+        return orderId;
+    }
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+    public String getBitMap() {
+        return bitMap;
+    }
+    public void setBitMap(String bitMap) {
+        this.bitMap = bitMap;
+    }
+    public String getAutoBid() {
+        return autoBid;
+    }
+    public void setAutoBid(String autoBid) {
+        this.autoBid = autoBid;
+    }
+    public String getAutoTransfer() {
+        return autoTransfer;
+    }
+    public void setAutoTransfer(String autoTransfer) {
+        this.autoTransfer = autoTransfer;
+    }
+    public String getAgreeWithdraw() {
+        return agreeWithdraw;
+    }
+    public void setAgreeWithdraw(String agreeWithdraw) {
+        this.agreeWithdraw = agreeWithdraw;
+    }
+    public String getDirectConsume() {
+        return directConsume;
+    }
+    public void setDirectConsume(String directConsume) {
+        this.directConsume = directConsume;
+    }
+    
+	public String getLendPayOrderId() {
+		return lendPayOrderId;
+	}
 
-	/** 验证码类型*/
-	public String smsType;
+	public void setLendPayOrderId(String lendPayOrderId) {
+		this.lendPayOrderId = lendPayOrderId;
+	}
 
-	//缴费授权
-	public String txType;
+	public String getFeeAmount() {
+		return feeAmount;
+	}
 
-	//保留域
-	private String reserved;
+	public void setFeeAmount(String feeAmount) {
+		this.feeAmount = feeAmount;
+	}
 
-	//受托支付flg 0:否，1：是
-	private String entrustFlag;
-	//(受托)收款人电子账号
-	private String receiptAccountId;
-	// 页面调用成功后跳转连接
-	private String successfulUrl;
-	// 商户名称
-	private String coinstName;
+	public String getRiskAmount() {
+		return riskAmount;
+	}
 
-	/** =========== 字段结束 ===========  */
+	public void setRiskAmount(String riskAmount) {
+		this.riskAmount = riskAmount;
+	}
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
+	public String getCaccount() {
+		return caccount;
+	}
+
+	public void setCaccount(String caccount) {
+		this.caccount = caccount;
+	}
+
+	public String getBusId() {
+		return busId;
+	}
+
+	public void setBusId(String busId) {
+		this.busId = busId;
+	}
+
+	public String getTaxId() {
+		return taxId;
+	}
+
+	public void setTaxId(String taxId) {
+		this.taxId = taxId;
+	}
+
+	public String getOpenDate() {
+		return openDate;
+	}
+
+	public void setOpenDate(String openDate) {
+		this.openDate = openDate;
+	}
+
+	public String getAcctState() {
+		return acctState;
+	}
+
+	public void setAcctState(String acctState) {
+		this.acctState = acctState;
+	}
+
+	public String getFrzState() {
+		return frzState;
+	}
+
+	public void setFrzState(String frzState) {
+		this.frzState = frzState;
+	}
+
+	public String getPinLosCd() {
+		return pinLosCd;
+	}
+
+	public void setPinLosCd(String pinLosCd) {
+		this.pinLosCd = pinLosCd;
+	}
+
+	public String getForIncome() {
+		return forIncome;
+	}
+
+	public void setForIncome(String forIncome) {
+		this.forIncome = forIncome;
+	}
+
+	public String getBuyDate() {
+		return buyDate;
+	}
+
+	public void setBuyDate(String buyDate) {
+		this.buyDate = buyDate;
 	}
 
 	public String getLogUserId() {
@@ -512,14 +721,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.logUuid = logUuid;
 	}
 
-	public int getLogClient() {
-		return logClient;
-	}
-
-	public void setLogClient(int logClient) {
-		this.logClient = logClient;
-	}
-
 	public boolean isLogVerifyFlag() {
 		return logVerifyFlag;
 	}
@@ -560,54 +761,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.version = version;
 	}
 
-	public String getTxCode() {
-		return txCode;
-	}
-
-	public void setTxCode(String txCode) {
-		this.txCode = txCode;
-	}
-
-	public String getInstCode() {
-		return instCode;
-	}
-
-	public void setInstCode(String instCode) {
-		this.instCode = instCode;
-	}
-
-	public String getBankCode() {
-		return bankCode;
-	}
-
-	public void setBankCode(String bankCode) {
-		this.bankCode = bankCode;
-	}
-
-	public String getTxDate() {
-		return txDate;
-	}
-
-	public void setTxDate(String txDate) {
-		this.txDate = txDate;
-	}
-
-	public String getTxTime() {
-		return txTime;
-	}
-
-	public void setTxTime(String txTime) {
-		this.txTime = txTime;
-	}
-
-	public String getSeqNo() {
-		return seqNo;
-	}
-
-	public void setSeqNo(String seqNo) {
-		this.seqNo = seqNo;
-	}
-
 	public String getTxAmount() {
 		return txAmount;
 	}
@@ -622,30 +775,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 
 	public void setTxFee(String txFee) {
 		this.txFee = txFee;
-	}
-
-	public String getChannel() {
-		return channel;
-	}
-
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
-
-	public String getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
 	}
 
 	public String getRetUrl() {
@@ -702,14 +831,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 
 	public void setRetMsg(String retMsg) {
 		this.retMsg = retMsg;
-	}
-
-	public String getRestMsg() {
-		return restMsg;
-	}
-
-	public void setRestMsg(String restMsg) {
-		this.restMsg = restMsg;
 	}
 
 	public String getIdType() {
@@ -848,14 +969,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.pageNum = pageNum;
 	}
 
-	public String getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(String pageSize) {
-		this.pageSize = pageSize;
-	}
-
 	public String getTotAmount() {
 		return totAmount;
 	}
@@ -934,22 +1047,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 
 	public void setFrzFlag(String frzFlag) {
 		this.frzFlag = frzFlag;
-	}
-
-	public String getBonusFlag() {
-		return bonusFlag;
-	}
-
-	public void setBonusFlag(String bonusFlag) {
-		this.bonusFlag = bonusFlag;
-	}
-
-	public String getBonusAmount() {
-		return bonusAmount;
-	}
-
-	public void setBonusAmount(String bonusAmount) {
-		this.bonusAmount = bonusAmount;
 	}
 
 	public String getRouteCode() {
@@ -1032,14 +1129,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.txCounts = txCounts;
 	}
 
-	public String getNotifyURL() {
-		return notifyURL;
-	}
-
-	public void setNotifyURL(String notifyURL) {
-		this.notifyURL = notifyURL;
-	}
-
 	public String getRetNotifyURL() {
 		return retNotifyURL;
 	}
@@ -1060,7 +1149,17 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		return orgTxAmount;
 	}
 
-	public void setOrgTxAmount(String orgTxAmount) {
+	public String getMaxAmt() {
+        return maxAmt;
+    }
+
+
+    public void setMaxAmt(String maxAmt) {
+        this.maxAmt = maxAmt;
+    }
+
+
+    public void setOrgTxAmount(String orgTxAmount) {
 		this.orgTxAmount = orgTxAmount;
 	}
 
@@ -1078,6 +1177,14 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 
 	public void setReceived(String received) {
 		this.received = received;
+	}
+
+	public String getNotifyURL() {
+		return notifyURL;
+	}
+
+	public void setNotifyURL(String notifyURL) {
+		this.notifyURL = notifyURL;
 	}
 
 	public String getState() {
@@ -1104,20 +1211,12 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.totalItems = totalItems;
 	}
 
-	public String getBidFee() {
-		return bidFee;
+	public int getLogClient() {
+		return logClient;
 	}
 
-	public void setBidFee(String bidFee) {
-		this.bidFee = bidFee;
-	}
-
-	public String getDebtFee() {
-		return debtFee;
-	}
-
-	public void setDebtFee(String debtFee) {
-		this.debtFee = debtFee;
+	public void setLogClient(int logClient) {
+		this.logClient = logClient;
 	}
 
 	public String getReqType() {
@@ -1182,14 +1281,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 
 	public void setAvailBal(String availBal) {
 		this.availBal = availBal;
-	}
-
-	public String getCurrBal() {
-		return currBal;
-	}
-
-	public void setCurrBal(String currBal) {
-		this.currBal = currBal;
 	}
 
 	public String getProductDesc() {
@@ -1264,6 +1355,30 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.nominalAccountId = nominalAccountId;
 	}
 
+	public String getCurrBal() {
+		return currBal;
+	}
+
+	public void setCurrBal(String currBal) {
+		this.currBal = currBal;
+	}
+
+	public String getBonusFlag() {
+		return bonusFlag;
+	}
+
+	public void setBonusFlag(String bonusFlag) {
+		this.bonusFlag = bonusFlag;
+	}
+
+	public String getBonusAmount() {
+		return bonusAmount;
+	}
+
+	public void setBonusAmount(String bonusAmount) {
+		this.bonusAmount = bonusAmount;
+	}
+
 	public String getDesLineFlag() {
 		return desLineFlag;
 	}
@@ -1336,6 +1451,14 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.batchState = batchState;
 	}
 
+	public String getFailMsg() {
+		return failMsg;
+	}
+
+	public void setFailMsg(String failMsg) {
+		this.failMsg = failMsg;
+	}
+
 	public String getBatchTxCode() {
 		return batchTxCode;
 	}
@@ -1344,12 +1467,20 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.batchTxCode = batchTxCode;
 	}
 
-	public String getFailMsg() {
-		return failMsg;
+	public String getBidFee() {
+		return bidFee;
 	}
 
-	public void setFailMsg(String failMsg) {
-		this.failMsg = failMsg;
+	public void setBidFee(String bidFee) {
+		this.bidFee = bidFee;
+	}
+
+	public String getDebtFee() {
+		return debtFee;
+	}
+
+	public void setDebtFee(String debtFee) {
+		this.debtFee = debtFee;
 	}
 
 	public String getAccType() {
@@ -1400,54 +1531,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.txIncome = txIncome;
 	}
 
-	public String getForIncome() {
-		return forIncome;
-	}
-
-	public void setForIncome(String forIncome) {
-		this.forIncome = forIncome;
-	}
-
-	public String getBuyDate() {
-		return buyDate;
-	}
-
-	public void setBuyDate(String buyDate) {
-		this.buyDate = buyDate;
-	}
-
-	public String getOpenDate() {
-		return openDate;
-	}
-
-	public void setOpenDate(String openDate) {
-		this.openDate = openDate;
-	}
-
-	public String getAcctState() {
-		return acctState;
-	}
-
-	public void setAcctState(String acctState) {
-		this.acctState = acctState;
-	}
-
-	public String getFrzState() {
-		return frzState;
-	}
-
-	public void setFrzState(String frzState) {
-		this.frzState = frzState;
-	}
-
-	public String getPinLosCd() {
-		return pinLosCd;
-	}
-
-	public void setPinLosCd(String pinLosCd) {
-		this.pinLosCd = pinLosCd;
-	}
-
 	public String getPayAllianceCode() {
 		return payAllianceCode;
 	}
@@ -1496,38 +1579,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.orFlag = orFlag;
 	}
 
-	public String getCaccount() {
-		return caccount;
-	}
-
-	public void setCaccount(String caccount) {
-		this.caccount = caccount;
-	}
-
-	public String getBusId() {
-		return busId;
-	}
-
-	public void setBusId(String busId) {
-		this.busId = busId;
-	}
-
-	public String getTaxId() {
-		return taxId;
-	}
-
-	public void setTaxId(String taxId) {
-		this.taxId = taxId;
-	}
-
-	public String getFrzType() {
-		return frzType;
-	}
-
-	public void setFrzType(String frzType) {
-		this.frzType = frzType;
-	}
-
 	public String getYield() {
 		return yield;
 	}
@@ -1558,14 +1609,6 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 
 	public void setIncFlag(String incFlag) {
 		this.incFlag = incFlag;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getSendTime() {
@@ -1600,324 +1643,37 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.contOrderId = contOrderId;
 	}
 
-	public String getFeeAmount() {
-		return feeAmount;
-	}
-
-	public void setFeeAmount(String feeAmount) {
-		this.feeAmount = feeAmount;
-	}
-
-	public String getRiskAmount() {
-		return riskAmount;
-	}
-
-	public void setRiskAmount(String riskAmount) {
-		this.riskAmount = riskAmount;
-	}
-
-	public String getLendPayOrderId() {
-		return lendPayOrderId;
-	}
-
-	public void setLendPayOrderId(String lendPayOrderId) {
-		this.lendPayOrderId = lendPayOrderId;
-	}
-
-	public String getTxnDate() {
-		return txnDate;
-	}
-
-	public void setTxnDate(String txnDate) {
-		this.txnDate = txnDate;
-	}
-
-	public String getTxnTime() {
-		return txnTime;
-	}
-
-	public void setTxnTime(String txnTime) {
-		this.txnTime = txnTime;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	public String getIdentity() {
-		return identity;
-	}
-
-	public void setIdentity(String identity) {
-		this.identity = identity;
-	}
-
-	public String getBitMap() {
-		return bitMap;
-	}
-
-	public void setBitMap(String bitMap) {
-		this.bitMap = bitMap;
-	}
-
-	public String getAutoBid() {
-		return autoBid;
-	}
-
-	public void setAutoBid(String autoBid) {
-		this.autoBid = autoBid;
-	}
-
-	public String getAutoTransfer() {
-		return autoTransfer;
-	}
-
-	public void setAutoTransfer(String autoTransfer) {
-		this.autoTransfer = autoTransfer;
-	}
-
-	public String getAgreeWithdraw() {
-		return agreeWithdraw;
-	}
-
-	public void setAgreeWithdraw(String agreeWithdraw) {
-		this.agreeWithdraw = agreeWithdraw;
-	}
-
-	public String getDirectConsume() {
-		return directConsume;
-	}
-
-	public void setDirectConsume(String directConsume) {
-		this.directConsume = directConsume;
-	}
-
-	public String getTransactionUrl() {
-		return transactionUrl;
-	}
-
-	public void setTransactionUrl(String transactionUrl) {
-		this.transactionUrl = transactionUrl;
-	}
-
-	public String getVerifyOrderUrl() {
-		return verifyOrderUrl;
-	}
-
-	public void setVerifyOrderUrl(String verifyOrderUrl) {
-		this.verifyOrderUrl = verifyOrderUrl;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public String getAffirmDate() {
-		return affirmDate;
-	}
-
-	public void setAffirmDate(String affirmDate) {
-		this.affirmDate = affirmDate;
-	}
-
-	public String getAffirmTime() {
-		return affirmTime;
-	}
-
-	public void setAffirmTime(String affirmTime) {
-		this.affirmTime = affirmTime;
-	}
-
-	public String getRtnInd() {
-		return rtnInd;
-	}
-
-	public void setRtnInd(String rtnInd) {
-		this.rtnInd = rtnInd;
-	}
-
-	public String getInpDate() {
-		return inpDate;
-	}
-
-	public void setInpDate(String inpDate) {
-		this.inpDate = inpDate;
-	}
+    public String getTxnDate() {
+        return txnDate;
+    }
 
-	public String getInpTime() {
-		return inpTime;
-	}
-
-	public void setInpTime(String inpTime) {
-		this.inpTime = inpTime;
-	}
-
-	public String getRelDate() {
-		return relDate;
-	}
-
-	public void setRelDate(String relDate) {
-		this.relDate = relDate;
-	}
-
-	public String getTraceNo() {
-		return traceNo;
-	}
-
-	public void setTraceNo(String traceNo) {
-		this.traceNo = traceNo;
-	}
-
-	public String getAddr() {
-		return addr;
-	}
-
-	public void setAddr(String addr) {
-		this.addr = addr;
-	}
-
-	public String getDeadline() {
-		return deadline;
-	}
-
-	public void setDeadline(String deadline) {
-		this.deadline = deadline;
-	}
-
-	public String getBidDeadline() {
-		return bidDeadline;
-	}
-
-	public void setBidDeadline(String bidDeadline) {
-		this.bidDeadline = bidDeadline;
-	}
-
-	public String getMaxAmt() {
-		return maxAmt;
-	}
-
-	public void setMaxAmt(String maxAmt) {
-		this.maxAmt = maxAmt;
-	}
-
-	public String getPaymentAuth() {
-		return paymentAuth;
-	}
-
-	public void setPaymentAuth(String paymentAuth) {
-		this.paymentAuth = paymentAuth;
-	}
-
-	public String getRepayAuth() {
-		return repayAuth;
-	}
-
-	public void setRepayAuth(String repayAuth) {
-		this.repayAuth = repayAuth;
-	}
-
-	public String getAutoBidDeadline() {
-		return autoBidDeadline;
-	}
+    public void setTxnDate(String txnDate) {
+        this.txnDate = txnDate;
+    }
 
-	public void setAutoBidDeadline(String autoBidDeadline) {
-		this.autoBidDeadline = autoBidDeadline;
-	}
-
-	public String getAutoBidMaxAmt() {
-		return autoBidMaxAmt;
-	}
-
-	public void setAutoBidMaxAmt(String autoBidMaxAmt) {
-		this.autoBidMaxAmt = autoBidMaxAmt;
-	}
-
-	public String getPaymentDeadline() {
-		return paymentDeadline;
-	}
-
-	public void setPaymentDeadline(String paymentDeadline) {
-		this.paymentDeadline = paymentDeadline;
-	}
-
-	public String getPaymentMaxAmt() {
-		return paymentMaxAmt;
-	}
-
-	public void setPaymentMaxAmt(String paymentMaxAmt) {
-		this.paymentMaxAmt = paymentMaxAmt;
-	}
-
-	public String getRepayDeadline() {
-		return repayDeadline;
-	}
-
-	public void setRepayDeadline(String repayDeadline) {
-		this.repayDeadline = repayDeadline;
-	}
-
-	public String getRepayMaxAmt() {
-		return repayMaxAmt;
-	}
+    public String getTxnTime() {
+        return txnTime;
+    }
 
-	public void setRepayMaxAmt(String repayMaxAmt) {
-		this.repayMaxAmt = repayMaxAmt;
-	}
-
-	public String getAgreeDeduct() {
-		return agreeDeduct;
-	}
-
-	public void setAgreeDeduct(String agreeDeduct) {
-		this.agreeDeduct = agreeDeduct;
-	}
-
-	public String getCancelDate() {
-		return cancelDate;
-	}
-
-	public void setCancelDate(String cancelDate) {
-		this.cancelDate = cancelDate;
-	}
+    public void setTxnTime(String txnTime) {
+        this.txnTime = txnTime;
+    }
 
-	public String getCancelTime() {
-		return cancelTime;
-	}
-
-	public void setCancelTime(String cancelTime) {
-		this.cancelTime = cancelTime;
-	}
-
-	public String getSmsType() {
-		return smsType;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public void setSmsType(String smsType) {
-		this.smsType = smsType;
-	}
-
-	public String getTxType() {
-		return txType;
-	}
-
-	public void setTxType(String txType) {
-		this.txType = txType;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+	
 
-	public String getReserved() {
-		return reserved;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setReserved(String reserved) {
-		this.reserved = reserved;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getEntrustFlag() {
@@ -1936,19 +1692,268 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 		this.receiptAccountId = receiptAccountId;
 	}
 
-	public String getSuccessfulUrl() {
-		return successfulUrl;
+    public String getAffirmDate() {
+        return affirmDate;
+    }
+
+    public void setAffirmDate(String affirmDate) {
+        this.affirmDate = affirmDate;
+    }
+
+    public String getAffirmTime() {
+        return affirmTime;
+    }
+
+    public void setAffirmTime(String affirmTime) {
+        this.affirmTime = affirmTime;
+    }
+
+    public String getRtnInd() {
+        return rtnInd;
+    }
+
+    public void setRtnInd(String rtnInd) {
+        this.rtnInd = rtnInd;
+    }
+
+    public String getInpDate() {
+        return inpDate;
+    }
+
+    public void setInpDate(String inpDate) {
+        this.inpDate = inpDate;
+    }
+
+    public String getInpTime() {
+        return inpTime;
+    }
+
+    public void setInpTime(String inpTime) {
+        this.inpTime = inpTime;
+    }
+
+    public String getRelDate() {
+        return relDate;
+    }
+
+    public void setRelDate(String relDate) {
+        this.relDate = relDate;
+    }
+
+    public String getTraceNo() {
+        return traceNo;
+    }
+
+    public void setTraceNo(String traceNo) {
+        this.traceNo = traceNo;
+    }
+
+
+    public String getSuccessfulUrl() {
+        return successfulUrl;
+    }
+
+
+    public void setSuccessfulUrl(String successfulUrl) {
+        this.successfulUrl = successfulUrl;
+    }
+    public String getGender() {
+        return gender;
+    }
+
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+
+    public String getIdentity() {
+        return identity;
+    }
+
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+
+    public String getAddr() {
+        return addr;
+    }
+
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+
+    public String getBidDeadline() {
+        return bidDeadline;
+    }
+
+
+    public void setBidDeadline(String bidDeadline) {
+        this.bidDeadline = bidDeadline;
+    }
+
+
+    public String getCoinstName() {
+        return coinstName;
+    }
+
+
+    public void setCoinstName(String coinstName) {
+        this.coinstName = coinstName;
+    }
+
+
+    public String getPaymentAuth() {
+        return paymentAuth;
+    }
+
+
+    public void setPaymentAuth(String paymentAuth) {
+        this.paymentAuth = paymentAuth;
+    }
+
+
+    public String getRepayAuth() {
+        return repayAuth;
+    }
+
+
+    public void setRepayAuth(String repayAuth) {
+        this.repayAuth = repayAuth;
+    }
+
+
+    public String getAutoBidDeadline() {
+        return autoBidDeadline;
+    }
+
+
+    public void setAutoBidDeadline(String autoBidDeadline) {
+        this.autoBidDeadline = autoBidDeadline;
+    }
+
+
+    public String getAutoBidMaxAmt() {
+        return autoBidMaxAmt;
+    }
+
+
+    public void setAutoBidMaxAmt(String autoBidMaxAmt) {
+        this.autoBidMaxAmt = autoBidMaxAmt;
+    }
+
+
+    public String getPaymentDeadline() {
+        return paymentDeadline;
+    }
+
+
+    public void setPaymentDeadline(String paymentDeadline) {
+        this.paymentDeadline = paymentDeadline;
+    }
+
+
+    public String getPaymentMaxAmt() {
+        return paymentMaxAmt;
+    }
+
+
+    public void setPaymentMaxAmt(String paymentMaxAmt) {
+        this.paymentMaxAmt = paymentMaxAmt;
+    }
+
+
+    public String getRepayDeadline() {
+        return repayDeadline;
+    }
+
+
+    public void setRepayDeadline(String repayDeadline) {
+        this.repayDeadline = repayDeadline;
+    }
+
+
+    public String getRepayMaxAmt() {
+        return repayMaxAmt;
+    }
+
+
+    public void setRepayMaxAmt(String repayMaxAmt) {
+        this.repayMaxAmt = repayMaxAmt;
+    }
+
+
+    public String getAgreeDeduct() {
+        return agreeDeduct;
+    }
+
+
+    public void setAgreeDeduct(String agreeDeduct) {
+        this.agreeDeduct = agreeDeduct;
+    }
+    public String getCancelDate() {
+        return cancelDate;
+    }
+
+
+    public void setCancelDate(String cancelDate) {
+        this.cancelDate = cancelDate;
+    }
+
+
+    public String getCancelTime() {
+        return cancelTime;
+    }
+
+
+    public void setCancelTime(String cancelTime) {
+        this.cancelTime = cancelTime;
+    }
+
+
+    public String getSmsType() {
+        return smsType;
+    }
+
+
+    public void setSmsType(String smsType) {
+        this.smsType = smsType;
+    }
+
+
+
+
+	public String getTxType() {
+		return txType;
 	}
 
-	public void setSuccessfulUrl(String successfulUrl) {
-		this.successfulUrl = successfulUrl;
+
+	public void setTxType(String txType) {
+		this.txType = txType;
 	}
 
-	public String getCoinstName() {
-		return coinstName;
+
+	public String getFrzType() {
+		return frzType;
 	}
 
-	public void setCoinstName(String coinstName) {
-		this.coinstName = coinstName;
+
+	public void setFrzType(String frzType) {
+		this.frzType = frzType;
 	}
+
 }

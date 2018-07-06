@@ -1,28 +1,34 @@
 package com.hyjf.am.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.common.CheckResult;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountWithdrawMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.AccountListExample;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdrawExample;
 import com.hyjf.am.trade.service.BankWithdrawService;
-import com.hyjf.am.vo.trade.BankCallBeanVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 江西银行提现掉单异常处理Service实现类

@@ -3,12 +3,17 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.vo.admin.MerchantAccountVO;
+
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 
 import java.util.List;
 
@@ -17,6 +22,18 @@ import java.util.List;
  * @version AmTradeClient, v0.1 2018/7/5 10:47
  */
 public interface AmTradeClient {
+
+    /**
+     * 更新商户子账户的金额信息
+     * @param merchantAccount
+     */
+    Integer updateByPrimaryKeySelective(MerchantAccountVO merchantAccount);
+
+    /**
+     * 查询商户配置表相应的账户配置
+     * @return
+     */
+    MerchantAccountResponse selectRecordList(MerchantAccountListRequest request);
     /**
      * 查询定向转账列表count
      * @auth sunpeikai
@@ -59,4 +76,12 @@ public interface AmTradeClient {
      * @return
      */
     List<BindLogVO> searchBindLogList(BindLogListRequest request);
+
+    /**
+     * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    List<AccountVO> searchAccountByUserId(Integer userId);
 }

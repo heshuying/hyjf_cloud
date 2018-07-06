@@ -2,10 +2,7 @@ package com.hyjf.cs.user.service;
 
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.BaseBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -42,6 +39,8 @@ public interface BaseUserService extends BaseService{
 	 * @Date 2018/6/12 10:36
 	 */
 	UserVO getUsersByMobile(String mobile);
+
+	HjhUserAuthVO getHjhUserAuth(Integer userId);
 
 	/**
 	 * @Description 根据userid查询用户

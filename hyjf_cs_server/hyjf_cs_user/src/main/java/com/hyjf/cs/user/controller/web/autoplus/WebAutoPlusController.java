@@ -14,6 +14,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -52,7 +53,8 @@ public class WebAutoPlusController extends BaseUserController {
         WebResult<Object> result = new WebResult<Object>();
         CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = autoPlusService.getUsersById(userId);
-        String srvTxCode = autoPlusService.checkSmsParam(user,param);
+        String userAutoType = param.get("userAutoType");
+        String srvTxCode = autoPlusService.checkSmsParam(user,userAutoType);
         // 请求银行接口
         BankCallBean bankBean = null;
         try {
@@ -119,16 +121,26 @@ public class WebAutoPlusController extends BaseUserController {
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc :用户授权自动债转异步回调
-     * @Param: * @param bean
-     * @Date: 16:43 2018/5/30
-     * @Return: String
+     * 用户授权自动债转异步回调
+     * @param bean
+     * @return
      */
-    @ApiOperation(value = "用户授权异步回调", notes = "用户授权自动债转异步回调")
-    @PostMapping(value = "/bgreturn", produces = "application/json; charset=utf-8")
-    public String userCreditAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
-        String result = autoPlusService.userBgreturn(bean);
+    @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
+    @PostMapping(value = "/creditbgreturn", produces = "application/json; charset=utf-8")
+    public String userCreditBgreturn(@RequestBody @Valid BankCallBean bean) {
+        String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_2);
+        return result;
+    }
+
+    /**
+     * 用户授权自动投资异步回调
+     * @param bean
+     * @return
+     */
+    @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
+    @PostMapping(value = "/invesbgreturn", produces = "application/json; charset=utf-8")
+    public String userInvesAuthBgreturn(@RequestBody @Valid BankCallBean bean) {
+        String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_1);
         return result;
     }
 
