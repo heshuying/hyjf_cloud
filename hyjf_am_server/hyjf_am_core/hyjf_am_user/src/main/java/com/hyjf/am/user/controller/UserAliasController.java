@@ -3,19 +3,18 @@
  */
 package com.hyjf.am.user.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.hyjf.am.response.user.UserAliasResponse;
+import com.hyjf.am.user.dao.model.auto.UserAlias;
+import com.hyjf.am.user.service.UserAliasService;
+import com.hyjf.am.vo.user.UserAliasVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.user.UserAliasResponse;
-import com.hyjf.am.user.dao.model.auto.UserAlias;
-import com.hyjf.am.user.service.UserAliasService;
-import com.hyjf.am.vo.user.UserAliasVO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -81,5 +80,10 @@ public class UserAliasController extends BaseController{
 		Integer count = userAliasService.countAliasByClient(clientAndroid);
 		response.setCount(count);
 		return response;
+	}
+
+	@RequestMapping("/clearMobileCode/{userId}/{sign}")
+	public void clearMobileCode(@PathVariable Integer userId,@PathVariable String sign){
+		userAliasService.clearMobileCode(userId,sign);
 	}
 }

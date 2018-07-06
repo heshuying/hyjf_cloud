@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version BaseController, v0.1 2018/6/15 19:18
  */
 public class BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     /**
      * Exception错误异常处理

@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;

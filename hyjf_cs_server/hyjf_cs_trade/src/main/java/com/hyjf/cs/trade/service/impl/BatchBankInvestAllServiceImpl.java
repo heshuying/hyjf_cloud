@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -131,8 +131,8 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				boolean ret = this.batchBankInvestAllClient.updateTenderStart(request);
 				if (!ret){
 					logger.info("=============投资全部掉单异常处理失败! 失败订单: " + orderid);
+					return;
 				}else {
-
 					//更新渠道统计用户累计投资
 					if (Validator.isNotNull(request.getLogUser()) && request.getBorrowInfo().getProjectType()!=8){
 						//发送mq

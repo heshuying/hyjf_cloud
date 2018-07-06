@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
@@ -40,4 +41,11 @@ public interface AmConfigClient {
     String queryBankIdByCardNo(String cardNo);
 
     BanksConfigVO getBanksConfigByBankId(String bankId);
+
+    /**
+     * 获取数据字典表的下拉列表
+     * @param nameClass
+     * @return
+     */
+    List<ParamNameVO> getParamNameList(String nameClass);
 }

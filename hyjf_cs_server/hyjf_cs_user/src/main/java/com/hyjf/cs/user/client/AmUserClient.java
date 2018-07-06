@@ -88,8 +88,6 @@ public interface AmUserClient {
 
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 
-	UserInfoVO findUsersInfoById(int userId);
-
     AccountChinapnrVO getAccountChinapnr(Integer userId);
 
 	boolean checkEmailUsed(String email);
@@ -229,4 +227,6 @@ public interface AmUserClient {
     Integer insertUserEvalationBehavior(Integer userId, String s);
 
 	Integer updateUserEvaluationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
+
+    void clearMobileCode(Integer userId, String sign);
 }

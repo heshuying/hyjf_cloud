@@ -5,6 +5,7 @@ import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.RepayManageService;
 import io.swagger.annotations.Api;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 还款管理相关页面接口
@@ -143,6 +146,13 @@ public class RepayManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 垫付机构已还款列表
+     * @param token
+     * @param requestBean
+     * @param request
+     * @return
+     */
     @ApiOperation(value = "垫付机构已还款列表", notes = "垫付机构已还款列表")
     @PostMapping(value = "/repayed_org_list", produces = "application/json; charset=utf-8")
     public WebResult<List<RepayListCustomizeVO>> selectOrgRepayedList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
@@ -170,6 +180,35 @@ public class RepayManageController extends BaseTradeController {
         }
 
         result.setPage(page);
+        return result;
+    }
+
+    @ApiOperation(value = "还款详情页面数据", notes = "还款详情页面数据")
+    @PostMapping(value = "/repay_detail", produces = "application/json; charset=utf-8")
+    public WebResult repayDetail(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
+        WebResult result = new WebResult();
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+        ProjectBean projectBean = new ProjectBean();
+        WebViewUserVO userVO = repayManageService.getUsersByToken(token);
+
+        if(userVO != null){
+            projectBean.setUserId(userVO.getUserId().toString());
+            projectBean.setUsername(userVO.getUsername());
+            projectBean.setRoleId(userVO.getRoleId());
+        }
+
+        try {
+            projectBean = repayManageService.searchRepayProjectDetail(projectBean);
+        } catch (Exception e) {
+            logger.error("获取还款详情页面数据异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
+        }
+        resultMap.put("paymentAuthStatus", "");
+        resultMap.put("repayAuthStatus", "");
+        resultMap.put("repayProject", projectBean);
+        result.setData(resultMap);
+
         return result;
     }
 }

@@ -19,6 +19,12 @@ public interface BorrowRecoverClient {
 
     BorrowRecoverVO selectBorrowRecoverByTenderNid(String tenderAgreementID);
 
+    BorrowRecoverVO selectBorrowRecoverById(Integer id);
+
+    BorrowRecoverVO selectBorrowRecoverByNid(String nid);
+
+    List<BorrowRecoverVO> selectBorrowRecoverByBorrowNid(String borrowNid);
+
     void updateBorrowRecover(BorrowRecoverVO borrowRecover);
 
     /**

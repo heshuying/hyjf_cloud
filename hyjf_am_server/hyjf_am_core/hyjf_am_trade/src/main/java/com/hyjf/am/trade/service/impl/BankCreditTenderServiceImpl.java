@@ -449,7 +449,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				creditTender.setAssignRepayNextTime(creditTenderLog.getAssignRepayNextTime());// 下次还款时间
 				creditTender.setAssignRepayYesTime(creditTenderLog.getAssignRepayYesTime());// 最终实际还款时间
 				creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());// 还款期数
-				creditTender.setAddIp(creditTenderLog.getAddip());// ip
+				creditTender.setAddIp(creditTenderLog.getAddIp());// ip
 				creditTender.setClient(0);// 客户端
 				creditTender.setAuthCode(authCode);// 银行存管新增授权码
 				creditTender.setRecoverPeriod(borrowCredit.getRecoverPeriod());// 已还款期数
@@ -599,7 +599,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 				sellerAccountList.setRemark("出让债权");
 				sellerAccountList.setCreateTime(GetDate.getDate(nowTime));
 				sellerAccountList.setOperator(String.valueOf(creditTenderLog.getCreditUserId()));
-				sellerAccountList.setIp(creditTenderLog.getAddip());
+				sellerAccountList.setIp(creditTenderLog.getAddIp());
 				sellerAccountList.setWeb(0);
 				sellerAccountList.setIsBank(1);
 				sellerAccountList.setCheckStatus(0);
@@ -1174,6 +1174,27 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		cra.andCreditTenderNidEqualTo(tenderNid);
 		cra.andStatusEqualTo(0);
 		return this.creditRepayMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status) {
+		CreditRepayExample example = new CreditRepayExample();
+		CreditRepayExample.Criteria crt = example.createCriteria();
+		if(StringUtils.isNotBlank(borrowNid)){
+			crt.andBidNidEqualTo(borrowNid);
+		}
+		if(StringUtils.isNotBlank(tenderOrderId)){
+			crt.andCreditTenderNidEqualTo(tenderOrderId);
+		}
+		if(periodNow != null && periodNow >= 0){
+			crt.andRecoverPeriodEqualTo(periodNow);
+		}
+		if(status != null && status >= 0){
+			crt.andStatusEqualTo(status);
+		}
+		example.setOrderByClause("id ASC");
+		List<CreditRepay> creditRepayList = this.creditRepayMapper.selectByExample(example);
+		return creditRepayList;
 	}
 
 	/**

@@ -164,6 +164,8 @@ public class BankCallApiImpl implements BankCallApi {
      * @param bean
      */
     private void setCommonItems(BankCallPnrApiBean bean) {
+        String txDate = GetOrderIdUtils.getTxDate();
+        String txTime = GetOrderIdUtils.getTxTime();
         // 版本号
         if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_VERSION)) {
             bean.set(BankCallConstant.PARAM_VERSION, _version);
@@ -180,21 +182,21 @@ public class BankCallApiImpl implements BankCallApi {
         if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_CHANNEL)) {
             bean.set(BankCallConstant.PARAM_CHANNEL, _coinstChannel);
         }
-        // 交易日期
-        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_TXDATE)) {
-            bean.set(BankCallConstant.PARAM_TXDATE, GetOrderIdUtils.getTxDate());
-        }
-        // 交易时间
-        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_TXTIME)) {
-            bean.set(BankCallConstant.PARAM_TXTIME, GetOrderIdUtils.getTxTime());
-        }
         // 交易流水号
         if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_SEQNO)) {
             bean.set(BankCallConstant.PARAM_SEQNO, GetOrderIdUtils.getSeqNo(6));
         }
+        // 交易日期
+        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_TXDATE)) {
+            bean.set(BankCallConstant.PARAM_TXDATE, txDate);
+        }
+        // 交易时间
+        if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_TXTIME)) {
+            bean.set(BankCallConstant.PARAM_TXTIME, txTime);
+        }
         // 订单日期
         if (!bean.getAllParams().containsKey(BankCallConstant.PARAM_LOGORDERDATE)) {
-            bean.set(BankCallConstant.PARAM_LOGORDERDATE, GetOrderIdUtils.getOrderDate());
+            bean.set(BankCallConstant.PARAM_LOGORDERDATE, txDate);
         }
     }
 

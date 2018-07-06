@@ -217,8 +217,10 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             if (StringUtils.isNotEmpty(result)) {
                 JSONObject resultObj = JSONObject.parseObject(result);
                 if (resultObj.getIntValue("status") == 0 && resultObj.getIntValue("couponCount") > 0) {
+                    String sendResult = "恭喜您获得"+resultObj.getIntValue("couponCount")+"张加息券，体验投资流程，获取高额收益，可在我的账户-优惠券中查看";
                     int sendCount = resultObj.getIntValue("couponCount");
                     returnMap.put("sendCount", sendCount);
+                    returnMap.put("sendResult", sendResult);
                 }
             }
         }

@@ -1,5 +1,7 @@
 package com.hyjf.am.trade.mq;
 
+import java.util.UUID;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -14,10 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.AmTradeApplication;
 import com.hyjf.am.trade.mq.transactionmq.AccountTProducer;
 import com.hyjf.am.trade.mq.transactionmq.TransactionProducer;
-import com.hyjf.am.trade.service.UserService;
 import com.hyjf.common.exception.MQException;
-
-import java.util.UUID;
 
 /**
  * @author xiasq
@@ -33,9 +32,6 @@ public class TestTransactionProducer {
 
 	@Autowired
 	AccountTProducer accountTProducer;
-
-	@Autowired
-	UserService userService;
 
 	@Test
 	public void testCommintTransaction() throws MQException {

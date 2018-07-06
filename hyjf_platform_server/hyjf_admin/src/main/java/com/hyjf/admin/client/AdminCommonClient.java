@@ -4,6 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import java.util.List;
 
@@ -14,7 +15,15 @@ import java.util.List;
 public interface AdminCommonClient {
     /**
      * 还款方式下拉列表
+     *
      * @return
      */
     List<BorrowStyleVO> selectBorrowStyleList();
+
+    /**
+     * 资产来源
+     *
+     * @return
+     */
+    List<HjhInstConfigVO> selectHjhInstConfigList();
 }

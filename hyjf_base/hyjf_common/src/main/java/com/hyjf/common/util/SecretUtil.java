@@ -337,4 +337,35 @@ public class SecretUtil {
         SignValue signValue = JSON.parseObject(value, SignValue.class);
         return signValue.getToken();
     }
+    
+    /**
+     * 从token中取得用户ID
+     *
+     * @param sign
+     * @return
+     */
+    public static Integer getUserId(String sign) {
+    	// 获取sign缓存
+        String value = RedisUtils.get(sign);
+        if(Validator.isNull(value)){
+        	return null;
+        }
+        SignValue signValue = JSON.parseObject(value, SignValue.class);
+        if(Validator.isNull(signValue)){
+        	return null;
+        }
+        String token = signValue.getToken();
+        AppUserToken appUserToken;
+        if (null != token) {
+            appUserToken = JSON.parseObject(DES.decodeValue(signValue.getKey(), token), AppUserToken.class);
+        } else {
+            throw new RuntimeException("用户未登陆");
+        }
+        if(appUserToken.getUserId()==null){
+            throw new RuntimeException("用户未登陆");
+        }
+        return appUserToken.getUserId();
+    }
+    
+    
 }

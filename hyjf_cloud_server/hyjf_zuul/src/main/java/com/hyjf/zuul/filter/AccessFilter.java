@@ -73,7 +73,7 @@ public class AccessFilter extends ZuulFilter {
 		String prefix = "/api";
 		if (requestUrl.contains("app")) {
 			if (StringUtils.isNotBlank(appKeyIgnoreUrls) && !appKeyIgnoreUrls.contains(requestUri)) {
-				String sign = request.getHeader("sign");
+				String sign = request.getParameter("sign");
 				if (sign == null) {
 					logger.error("sign is empty");
 					ctx.setResponseBody("sign is empty");
@@ -82,6 +82,9 @@ public class AccessFilter extends ZuulFilter {
 				SignValue signValue = RedisUtils.getObj(sign, SignValue.class);
 				ctx.addZuulRequestHeader("key", signValue.getKey());
 				ctx.addZuulRequestHeader("initKey", signValue.getInitKey());
+				ctx.addZuulRequestHeader("version", signValue.getVersion());
+				ctx.addZuulRequestHeader("token", signValue.getToken());
+				ctx.addZuulRequestHeader("sign", sign);
 			}
 			if (StringUtils.isNotBlank(appIgnoreUrls) && !appIgnoreUrls.contains(requestUri)) {
 				ctx = setUserIdByToken(request, ctx);

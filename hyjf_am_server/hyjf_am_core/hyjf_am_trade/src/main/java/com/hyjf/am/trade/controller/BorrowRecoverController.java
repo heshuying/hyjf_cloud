@@ -3,33 +3,20 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
-import com.hyjf.am.resquest.trade.BorrowRegistRequest;
-import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
+import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
+import com.hyjf.am.response.trade.BorrowRecoverResponse;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.service.BorrowRecoverService;
-import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.trade.service.UserService;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
-import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jijun
@@ -48,6 +35,37 @@ public class BorrowRecoverController extends BaseController{
 	public BorrowRecoverResponse selectBorrowRecoverByTenderNid(@PathVariable String tenderAgreementID){
 		BorrowRecoverResponse response = new BorrowRecoverResponse();
 		BorrowRecover borrowRecover=borrowRecoverService.selectBorrowRecoverByTenderNid(tenderAgreementID);
+		if (Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverVO.class));
+		}
+		return response;
+	}
+
+	@GetMapping("/select_by_id/{id}")
+	public BorrowRecoverResponse selectBorrowRecoverById(@PathVariable Integer id){
+		BorrowRecoverResponse response = new BorrowRecoverResponse();
+		BorrowRecover borrowRecover=borrowRecoverService.selectBorrowRecoverById(id);
+		if (Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverVO.class));
+		}
+		return response;
+	}
+
+	@RequestMapping("/select_by_borrownid/{borrowNid}")
+	public BorrowRecoverResponse selectByBorrowNid(String borrowNid) {
+		BorrowRecoverResponse response = new BorrowRecoverResponse();
+		List<BorrowRecover> recoverList=borrowRecoverService.selectByBorrowNid(borrowNid);
+		if (recoverList != null){
+			List<BorrowRecoverVO> resultList = CommonUtils.convertBeanList(recoverList,BorrowRecoverVO.class);
+			response.setResultList(resultList);
+		}
+		return response;
+	}
+
+	@GetMapping("/select_by_nid/{nid}")
+	public BorrowRecoverResponse selectBorrowRecoverByNid(@PathVariable String nid){
+		BorrowRecoverResponse response = new BorrowRecoverResponse();
+		BorrowRecover borrowRecover=borrowRecoverService.selectBorrowRecoverByNid(nid);
 		if (Validator.isNotNull(borrowRecover)){
 			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverVO.class));
 		}

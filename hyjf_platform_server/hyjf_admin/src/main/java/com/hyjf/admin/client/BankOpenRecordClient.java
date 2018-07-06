@@ -3,13 +3,11 @@
  */
 package com.hyjf.admin.client;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
-import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
-import com.hyjf.am.vo.user.RegistRecordVO;
-
-import java.util.List;
 
 /**
  * @author nixiaoling

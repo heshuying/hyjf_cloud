@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.vo.trade.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 
 /**

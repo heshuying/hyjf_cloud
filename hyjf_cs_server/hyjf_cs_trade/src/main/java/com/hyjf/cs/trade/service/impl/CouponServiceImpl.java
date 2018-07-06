@@ -4,9 +4,9 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.CouponRealTenderVO;
-import com.hyjf.am.vo.trade.CouponTenderVO;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
+import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;

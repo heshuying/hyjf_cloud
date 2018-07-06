@@ -63,6 +63,17 @@ public class SystemConfig {
     @Value("${file.physical.path}")
     public String physicalPath;
 
+    @Value("${hyjf.app.version.new}")
+    private String newVersion;
+
+    public String getNewVersion() {
+        return newVersion;
+    }
+
+    public void setNewVersion(String newVersion) {
+        this.newVersion = newVersion;
+    }
+
     public String getPhysicalPath() {
         return physicalPath;
     }

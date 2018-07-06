@@ -50,7 +50,8 @@ public class WeChatAutoPlusController extends BaseUserController {
         WebResult<Object> result = new WebResult<Object>();
         CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = autoPlusService.getUsersById(userId);
-        String srvTxCode = autoPlusService.checkSmsParam(user,param);
+        String userAutoType = param.get("userAutoType");
+        String srvTxCode = autoPlusService.checkSmsParam(user,userAutoType);
         // 请求银行接口
         BankCallBean bankBean = null;
         try {
@@ -131,7 +132,7 @@ public class WeChatAutoPlusController extends BaseUserController {
     @ResponseBody
     @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
-        String result = autoPlusService.userBgreturn(bean);
+        String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);
         return result;
     }
 
@@ -146,7 +147,7 @@ public class WeChatAutoPlusController extends BaseUserController {
     @PostMapping(value = "/userAuthCreditBgreturn", produces = "application/json; charset=utf-8")
     public String userCreditAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
 
-        String result = autoPlusService.userBgreturn(bean);
+        String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_2);
         return result;
     }
 }

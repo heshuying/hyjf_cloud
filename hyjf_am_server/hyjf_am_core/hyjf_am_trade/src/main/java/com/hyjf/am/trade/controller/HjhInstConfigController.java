@@ -2,7 +2,7 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.service.UserService;
+import com.hyjf.am.trade.service.HjhInstConfigService;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ import java.util.List;
 public class HjhInstConfigController extends BaseController{
 
 	@Autowired
-	UserService userService;
+	HjhInstConfigService hjhInstConfigService;
 
 	/**
 	 * @Author: zhangqingqing
@@ -38,7 +39,7 @@ public class HjhInstConfigController extends BaseController{
 	@GetMapping("/selectInstConfigByInstCode/{instCode}")
 	public HjhInstConfigResponse selectInstConfigByInstCode(@PathVariable(value = "instCode") String instCode) {
 		HjhInstConfigResponse response = new HjhInstConfigResponse();
-		HjhInstConfig hjhInstConfig = userService.selectInstConfigByInstCode(instCode);
+		HjhInstConfig hjhInstConfig = hjhInstConfigService.selectInstConfigByInstCode(instCode);
 		if (null != hjhInstConfig) {
 			HjhInstConfigVO hjhInstConfigVO = new HjhInstConfigVO();
 			BeanUtils.copyProperties(hjhInstConfig, hjhInstConfigVO);
@@ -56,7 +57,7 @@ public class HjhInstConfigController extends BaseController{
 	public HjhInstConfigResponse selectInstConfigListByInstCode(){
         HjhInstConfigResponse response = new HjhInstConfigResponse();
 		String returnCode = "00";//代表成功
-        List<HjhInstConfig> hjhInstConfigList = userService.selectInstConfigAll();
+        List<HjhInstConfig> hjhInstConfigList = hjhInstConfigService.selectInstConfigAll();
         if (null!=hjhInstConfigList&&hjhInstConfigList.size()>0) {
             List<HjhInstConfigVO> hjhInstConfigVO = CommonUtils.convertBeanList(hjhInstConfigList,HjhInstConfigVO.class);
             response.setResultList(hjhInstConfigVO);

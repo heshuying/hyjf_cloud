@@ -3,16 +3,16 @@
  */
 package com.hyjf.cs.user.bean;
 
-import java.io.Serializable;
-
 import com.hyjf.common.util.ApiSignUtil;
+
+import java.io.Serializable;
 
 /**
  * 接口返回数据的基类
  * @author renxingchen
  * @version hyjf 1.0
  * @since hyjf 1.0 2016年2月19日
- * @see 下午2:23:01
+ * @see 2:23:01
  */
 public class BaseResultBean implements Serializable {
 	

@@ -5,8 +5,8 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.AppMsMessage;
-import com.hyjf.am.vo.trade.CouponConfigVO;
-import com.hyjf.am.vo.trade.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;

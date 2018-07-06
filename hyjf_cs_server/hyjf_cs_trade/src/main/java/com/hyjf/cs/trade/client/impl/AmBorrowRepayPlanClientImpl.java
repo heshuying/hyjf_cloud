@@ -69,4 +69,20 @@ public class AmBorrowRepayPlanClientImpl implements AmBorrowRepayPlanClient {
         }
         return null;
     }
+
+    /**
+     * 根据borrowNid检索
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowRepayPlanVO> getBorrowRepayPlansByBorrowNid(String borrowNid) {
+        BorrowRepayPlanResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrowRepayPlan/select_by_borrownid/" + borrowNid,
+                BorrowRepayPlanResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
