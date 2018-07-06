@@ -43,3 +43,22 @@ hyjf:
     keypath: D:/HYJF/anrou_key/testServer_new.cer
     member: 1096
     sign: Rj2IpQsZvAaRM
+  chinapnr:
+    mercustid: 6000060000149067
+
+am:
+  config:
+    service:
+      name: http://AM-CONFIG/am-config
+  user:
+    service:
+      name: http://AM-USER/am-user
+  trade:
+    service:
+      name: http://AM-TRADE/am-trade
+  market:
+    service:
+      name: http://AM-MARKET/am-market
+  dataCollect:
+    service:
+      name: http://AM-STATISTICS/am-statistics

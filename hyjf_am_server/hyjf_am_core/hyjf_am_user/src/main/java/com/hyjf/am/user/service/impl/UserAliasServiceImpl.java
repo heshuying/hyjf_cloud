@@ -4,11 +4,9 @@
 package com.hyjf.am.user.service.impl;
 
 import com.hyjf.am.user.dao.mapper.auto.UserAliasMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserAliasMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserAliasCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.dao.model.auto.UserAliasExample;
-import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.service.UserAliasService;
 import com.hyjf.am.vo.user.UserAliasVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ import java.util.List;
 public class UserAliasServiceImpl implements UserAliasService {
 
 	@Autowired
-	private UserAliasMapper UserAliasMapper;
+	private UserAliasMapper userAliasMapper;
 
 	@Autowired
 	private UserAliasCustomizeMapper userAliasCustomizeMapper;
@@ -34,7 +32,7 @@ public class UserAliasServiceImpl implements UserAliasService {
 	public UserAlias findAliasByMobile(String mobile) {
 		UserAliasExample example = new UserAliasExample();
 		example.createCriteria().andAliasEqualTo(mobile);
-		List<UserAlias> UserAliasList = UserAliasMapper.selectByExample(example);
+		List<UserAlias> UserAliasList = userAliasMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(UserAliasList)) {
 			return UserAliasList.get(0);
 		}
@@ -51,10 +49,18 @@ public class UserAliasServiceImpl implements UserAliasService {
 	public Integer countAliasByClient(String clientAndroid) {
 		UserAliasExample example = new UserAliasExample();
 		example.createCriteria().andClientEqualTo(clientAndroid);
-		List<UserAlias> UserAliasList = UserAliasMapper.selectByExample(example);
+		List<UserAlias> UserAliasList = userAliasMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(UserAliasList)) {
 			return UserAliasList.size();
 		}
 		return 0;
+	}
+
+	@Override
+	public void clearMobileCode(Integer userId, String sign) {
+		UserAliasExample example=new UserAliasExample();
+		example.createCriteria().andUserIdEqualTo(userId).andSignEqualTo(sign);
+		userAliasMapper.deleteByExample(example);
+
 	}
 }

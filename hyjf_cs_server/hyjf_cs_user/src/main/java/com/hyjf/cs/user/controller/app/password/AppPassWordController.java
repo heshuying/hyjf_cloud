@@ -7,17 +7,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.common.bean.result.BaseResult;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
-import com.hyjf.cs.user.vo.PasswordRequest;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -29,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -51,23 +51,64 @@ public class AppPassWordController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppPassWordController.class);
 
+    /**
+     * 修改密码
+     * @param key
+     * @param userId
+     * @param request
+     * @return
+     */
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
-    @PostMapping(value = "/updateLoginPassword", produces = "application/json; charset=utf-8")
-    public BaseResult<Object> updateLoginPassWD(@RequestHeader String key,@RequestHeader(value = "token") String token, @RequestBody PasswordRequest passwordRequest) {
-        logger.info("app修改登陆密码 updateLoginPassword start");
-        CheckUtil.check(token != null&&null!=key, MsgEnum.ERR_USER_NOT_LOGIN);
-        UserVO userVO = passWordService.getUsers(token);
-        CheckUtil.check(null!=userVO&&null!=userVO.getUserId(),MsgEnum.STATUS_CE000006);
-        passWordService.appCheckParam(key,userVO,passwordRequest);
-        AppResult<Object> result = new AppResult<>();
+    @ResponseBody
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    public JSONObject updatePasswordAction(@RequestHeader(value = "key") String key, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/user/password/updatePassword");
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // token
+        String token = request.getParameter("token");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+        // 新密码
+        String newPassword = request.getParameter("newPassword");
+        // 旧密码
+        String oldPassword = request.getParameter("oldPassword");
+        UserVO userVO = passWordService.getUsersById(userId);
+        CheckUtil.check(null != userVO && null != userVO.getUserId(), MsgEnum.STATUS_CE000006);
+        passWordService.appCheckParam(key, userVO, version, netStatus, platform, sign, token, randomString, order, newPassword, oldPassword);
         // 获取登录信息
-        String newPassword = DES.decodeValue(key, passwordRequest.getNewPassword());
-        passWordService.updatePassWd(userVO,newPassword);
-        return result;
+        newPassword = DES.decodeValue(key, newPassword);
+        try {
+            boolean success = passWordService.updatePassWd(userVO, newPassword);
+            if (success) {
+                //如果修改密码成功或者重置密码就将登陆密码错误次数的key删除
+                RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_APP + userVO.getUsername());
+                ret.put("status", "0");
+                ret.put("statusDesc", "修改密码成功");
+            } else {
+                ret.put("status", "1");
+                ret.put("statusDesc", "修改密码失败");
+            }
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "修改密码发生错误");
+        }
+        return ret;
     }
 
     /**
      * 设置交易密码
+     *
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
@@ -75,14 +116,16 @@ public class AppPassWordController {
     public AppResult<Object> setPassword(@RequestHeader(value = "token") String token) {
         AppResult<Object> result = new AppResult<Object>();
         UserVO user = this.passWordService.getUsers(token);
-        CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
-        Map<String,Object> map = passWordService.setPassword(user);
+        CheckUtil.check(null != user, MsgEnum.ERR_USER_NOT_LOGIN);
+        Map<String, Object> map = passWordService.setPassword(user);
         result.setData(map);
         return result;
     }
 
+
     /**
      * 设置交易密码异步回调
+     *
      * @return
      */
     @ResponseBody
@@ -111,21 +154,23 @@ public class AppPassWordController {
 
     /**
      * 重置交易密码
+     *
      * @return
      */
     @ApiOperation(value = "重置交易密码", notes = "重置交易密码")
     @PostMapping(value = "/resetTeaderPassword", produces = "application/json; charset=utf-8")
-    public WebResult<Object>  resetPassword(@RequestHeader(value = "token") String token) {
-        WebResult<Object> result = new WebResult<Object>();
+    public AppResult<Object> resetPassword(@RequestHeader(value = "token") String token) {
+        AppResult<Object> result = new AppResult<Object>();
         UserVO user = this.passWordService.getUsers(token);
-        CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
-        Map<String,Object> map = passWordService.resetPassword(user);
+        CheckUtil.check(null != user, MsgEnum.ERR_USER_NOT_LOGIN);
+        Map<String, Object> map = passWordService.resetPassword(user);
         result.setData(map);
         return result;
     }
 
     /**
      * 重置交易密码异步回调
+     *
      * @return
      */
     @PostMapping(value = "/resetPasswordBgreturn")
@@ -139,21 +184,21 @@ public class AppPassWordController {
     /**
      * 找回密码(重置密码)
      *
-     * @paramrequest
      * @param
      * @return
+     * @paramrequest
      */
     @PostMapping(value = "/getBackPasswordAction")
-    public AppResult getBackPasswordAction(@RequestBody SmsCodeRequest request,@RequestBody Map<String,String> param) {
+    public AppResult getBackPasswordAction(@RequestBody SmsCodeRequest request, @RequestBody Map<String, String> param) {
         AppResult result = new AppResult();
         // 新密码
         String newPassword = param.get("newPassword");
         String verificationType = CustomConstants.PARAM_TPL_ZHAOHUIMIMA;
         request.setVerificationType(verificationType);
-        passWordService.backCheck(request,newPassword);
+        passWordService.backCheck(request, newPassword);
         String mobile = request.getMobile();
         UserVO user = passWordService.getUsersByMobile(mobile);
-        CheckUtil.check(null!=user&&null!=user.getUserId(),MsgEnum.ERR_USER_NOT_EXISTS);
+        CheckUtil.check(null != user && null != user.getUserId(), MsgEnum.ERR_USER_NOT_EXISTS);
         passWordService.updatePassWd(user, newPassword);
         return result;
     }

@@ -5,7 +5,6 @@ package com.hyjf.cs.user.service.login;
 
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.service.BaseUserService;
-import com.hyjf.cs.user.vo.LoginRequestVO;
 
 /**
  * @author zhangqingqing
@@ -22,5 +21,7 @@ public interface LoginService extends BaseUserService {
      */
     WebViewUserVO login(String loginUserName, String loginPassword, String ip);
 
-    void checkForApp(LoginRequestVO loginRequestVO);
+    void checkForApp(String version,String platform,String netStatus);
+
+    void clearMobileCode(Integer userId, String sign);
 }

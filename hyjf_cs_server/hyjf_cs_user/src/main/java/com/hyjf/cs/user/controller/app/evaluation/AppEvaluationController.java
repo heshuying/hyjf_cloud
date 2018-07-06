@@ -7,18 +7,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationBehaviorVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import java.util.Map;
 @Api(value = "App端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/app/user/evaluation")
+@RequestMapping("/app/user/financialAdvisor")
 public class AppEvaluationController {
 
     @Autowired
@@ -41,15 +41,16 @@ public class AppEvaluationController {
     @Autowired
     SystemConfig systemConfig;
 
+
     @ApiOperation(value = "app用户测评初始化", notes = "用户测评初始化")
-    @ApiImplicitParam(name = "param" ,value = "{platform:String}",dataType = "Map")
     @PostMapping(value = "/init")
-    public String init(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
-        JSONObject ret = new JSONObject();
-        String platform = param.get("platform");
-        ret.put("platform", platform);
+    public ModelAndView init(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("/financialAdvisor/evaluation");
+        modelAndView.addObject("sign", sign);
+        String platform = request.getParameter("platform");
+        modelAndView.addObject("platform", platform);
         UserEvalationResultVO ueResult = evaluationService.selectUserEvalationResultByUserId(userId);
-        if (ueResult == null) {
+        if(ueResult==null){
             String activityId = systemConfig.getActivityId();
             // 活动有效期校验
             String resultActivity = evaluationService.checkActivityIfAvailable(activityId);
@@ -57,21 +58,21 @@ public class AppEvaluationController {
             String resultPlatform = evaluationService.checkActivityPlatform(activityId, platform);
             // String
             String couponResult = StringUtils.EMPTY;
-            if (StringUtils.isEmpty(resultActivity) && StringUtils.isEmpty(resultPlatform)) {
+            if(StringUtils.isEmpty(resultActivity)&&StringUtils.isEmpty(resultPlatform)){
                 couponResult = "首次完成评测，可以获得1张加息券";
             }
-            ret.put("couponResult", couponResult);
+            modelAndView.addObject("couponResult", couponResult);
         } else {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-            Long lCreate = GetDate.countDate(ueResult.getCreateTime(), 1, 1).getTime();
+            Long lCreate = GetDate.countDate(ueResult.getCreateTime(),1,1).getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-            Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
+            Long lNow = GetDate.countDate(new Date(), 5,1).getTime();
             if (lCreate <= lNow) {
                 //已过期需要重新评测
-                ret.put("couponResult", MsgEnum.STATUS_EV000004.getMsg());
+                modelAndView.addObject("couponResult", "已过期需要重新评测");
             }
         }
-        return JSONObject.toJSONString(ret);
+        return modelAndView;
     }
 
     /**
@@ -80,7 +81,7 @@ public class AppEvaluationController {
      * @return
      */
     @ApiOperation(value = "返回测评问卷", notes = "返回测评问卷")
-    @PostMapping(value = "/question", produces = "text/html;charset=UTF-8")
+    @PostMapping(value = "/questionnaireInit", produces = "text/html;charset=UTF-8")
     public String questionnaireInit(@RequestHeader(value = "userId") Integer userId) {
         JSONObject ret = new JSONObject();
         // 检查参数
@@ -118,16 +119,15 @@ public class AppEvaluationController {
     /**
      * 统计用户测评结果
      * @param userId
-     * @param param
+     * @param request
      * @return
      */
     @ApiOperation(value = "统计用户测评结果",notes = "统计用户测评结果")
-    @ApiImplicitParam(name = "param" ,value = "{behaviorId:String,userAnswer:String}",dataType = "Map")
-    @PostMapping(value = "calculation", produces = "text/html;charset=UTF-8")
-    public String evaluationResult(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
+    @PostMapping(value = "/evaluationResult", produces = "text/html;charset=UTF-8")
+    public String evaluationResult(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         // 统计ID
-        String behaviorId = param.get("behaviorId");
+        String behaviorId = request.getParameter("behaviorId");
 //        Integer userId =2;
         if (userId == null || userId == 0) {
             //ifEvaluation是否已经调查表示  1是已调查，0是未调查
@@ -137,7 +137,7 @@ public class AppEvaluationController {
             return JSONObject.toJSONString(ret);
         }
         UserEvalationResultVO ueResult = new UserEvalationResultVO();
-        String userAnswer = param.get("userAnswer");
+        String userAnswer = request.getParameter("userAnswer");
         Map<String, Object> returnMap = evaluationService.answerAnalysisAndCoupon(userAnswer, userId, CustomConstants.CLIENT_PC, behaviorId);
         if(null!=returnMap){
             ueResult = (UserEvalationResultVO) returnMap.get("userEvalationResult");
@@ -152,15 +152,14 @@ public class AppEvaluationController {
     /**
      * 开始记录用户行为
      * @param userId
-     * @param param
+     * @param request
      * @return
      */
     @ApiOperation(value = "开始记录用户行为",notes = "开始记录用户行为")
-    @ApiImplicitParam(name = "param" ,value = "{platform:String}",dataType = "Map")
-    @PostMapping(value="/startbehavior", produces = "text/html;charset=UTF-8")
-    public String startUserEvaluationBehavior(@RequestHeader(value = "userId") Integer userId,@RequestBody Map<String,String> param) {
+    @PostMapping(value="/startUserEvaluationBehavior", produces = "text/html;charset=UTF-8")
+    public String startUserEvaluationBehavior(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         JSONObject ret=new JSONObject();
-        String platform = param.get("platform");
+        String platform = request.getParameter("platform");
         if(platform!=null&&platform.length()!=0){
             String platformString="";
             if(CustomConstants.CLIENT_ANDROID.equals(platform)){
@@ -180,17 +179,17 @@ public class AppEvaluationController {
 
     /**
      * 记录用户行为
-     * @param param
+     * @param request
      * @return
      */
-    @ApiImplicitParam(name = "param" ,value = "{behaviorId:String,behavior:String}",dataType = "Map")
-    @PostMapping(value="behavior", produces = "text/html;charset=UTF-8")
-    public String userEvaluationBehavior(@RequestBody Map<String,String> param) {
+    @ApiOperation(value = "记录用户行为",notes = "记录用户行为")
+    @PostMapping(value="/userEvaluationBehavior", produces = "text/html;charset=UTF-8")
+    public String userEvaluationBehavior(HttpServletRequest request) {
         JSONObject ret=new JSONObject();
         // 统计ID
-        String behaviorId = param.get("behaviorId");
+        String behaviorId = request.getParameter("behaviorId");
         // 统计内容
-        String behavior = param.get("behavior");
+        String behavior = request.getParameter("behavior");
         if(behaviorId!=null&&behaviorId.length()!=0){
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd HH:mm:ss");
             behavior=sdf.format(new Date())+"用户选择问题答案为: "+behavior;

@@ -15,7 +15,6 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
-import com.hyjf.cs.user.vo.LoginRequestVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,18 +98,27 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
      * @return
      */
     @Override
-    public void checkForApp(LoginRequestVO loginRequestVO){
-        CheckUtil.check(loginRequestVO!=null,MsgEnum.STATUS_CE000001);
-        String version = loginRequestVO.getVersion();
-        String platform = loginRequestVO.getPlatform();
-        String netStatus = loginRequestVO.getNetStatus();
+    public void checkForApp(String version,String platform,String netStatus){
+        CheckUtil.check(null!=version&&null!=platform&&null!=netStatus,MsgEnum.STATUS_CE000001);
         CheckUtil.check(StringUtils.isNotEmpty(version),MsgEnum.STATUS_CE000014);
         CheckUtil.check(StringUtils.isNotEmpty(platform)&&StringUtils.isNotEmpty(netStatus),MsgEnum.STATUS_CE000001);
-        if(version.length()>=5){
+              if(version.length()>=5){
             version = version.substring(0, 5);
         }
         CheckUtil.check(version.compareTo("1.4.0")>0,MsgEnum.STATUS_CE000014);
 
+    }
+
+    /**
+     *
+     * 退出清空MobileCod
+     * @author pcc
+     * @param userId
+     * @param sign
+     */
+    @Override
+    public void clearMobileCode(Integer userId, String sign) {
+        amUserClient.clearMobileCode(userId,sign);
     }
 
     /**

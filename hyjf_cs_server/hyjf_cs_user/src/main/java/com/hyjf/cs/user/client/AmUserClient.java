@@ -229,4 +229,6 @@ public interface AmUserClient {
     Integer insertUserEvalationBehavior(Integer userId, String s);
 
 	Integer updateUserEvaluationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
+
+    void clearMobileCode(Integer userId, String sign);
 }
