@@ -62,4 +62,11 @@ public interface AssetListClient {
      * @return
      */
     BigDecimal sumAccount(AssetListRequest request);
+
+    /**
+     * 处理保证金不足的资产
+     * @param assetId
+     * @param menuHide
+     */
+	void updateCashDepositeStatus(String assetId, String menuHide);
 }

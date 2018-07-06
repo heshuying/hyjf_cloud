@@ -11,6 +11,12 @@ public interface MQConstant {
 	 */
 	String HYJF_DEFAULT_TAG = "HYJF_DEFAULT_TAG";
 
+    /**
+     * 测试 group topic
+     */
+    String TEST_GROUP = "TEST_GROUP";
+    String TEST_TOPIC = "TEST_TOPIC";
+
 	/**
 	 * 发送短信的 group topic
 	 */

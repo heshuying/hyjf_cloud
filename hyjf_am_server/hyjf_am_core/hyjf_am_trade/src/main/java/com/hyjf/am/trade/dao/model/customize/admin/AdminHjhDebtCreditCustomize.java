@@ -133,9 +133,30 @@ public class AdminHjhDebtCreditCustomize {
      */
     private String endTime;
 
+    private String creditStatus;
+
+    private String repayStatus;
+
+
     private int limitStart = -1;
 
     private int limitEnd = -1;
+
+    public String getCreditStatus() {
+        return creditStatus;
+    }
+
+    public void setCreditStatus(String creditStatus) {
+        this.creditStatus = creditStatus;
+    }
+
+    public String getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(String repayStatus) {
+        this.repayStatus = repayStatus;
+    }
 
     public String getId() {
         return id;

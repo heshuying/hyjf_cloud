@@ -1,5 +1,9 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
+import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
+import com.hyjf.am.response.trade.MyCouponListResponse;
+import com.hyjf.am.response.trade.MyRewardListResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -7,10 +11,12 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.cs.trade.client.AmTradeClient;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -204,6 +211,35 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .postForEntity(urlBase + "borrowauth/count_authed", requestBean, Integer.class).getBody();
         return count;
     }
+
+    /**
+     * 受托支付回调更新
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Integer updateTrusteePaySuccess(String borrowNid) {
+        String url = urlBase + "borrowauth/auth_update/" + borrowNid;
+        return restTemplate.getForEntity(url,Integer.class).getBody();
+    }
+
+    /**
+     * 根据用户id查询受托支付白名单
+     * @param userId
+     * @param stzUserId
+     * @return
+     */
+    @Override
+    public STZHWhiteListVO getCurrentCouponRecover(Integer userId, Integer stzUserId) {
+        String url = urlBase + "borrowauth/get_whitelist/" + userId + "/" +stzUserId;
+        STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
 
 
 }

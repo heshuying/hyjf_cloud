@@ -64,7 +64,7 @@ public class AssociatedRecordsController extends BaseController {
         logger.info("searchAssociatedRecordList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
         List<AssociatedRecordListVo> associatedRecordListVoList = associatedRecordsService.searchAssociatedRecordList(request);
         if(!CollectionUtils.isEmpty(associatedRecordListVoList)){
-            response.setRtn("00");
+            response.setRtn("0");
             response.setResultList(associatedRecordListVoList);
         }
         return response;

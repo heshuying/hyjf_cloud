@@ -1,8 +1,10 @@
 package com.hyjf.am.statistics.bean;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.util.Date;
-
+@Document(collection = "ht_directional_transfer_associated_records")
 public class DirectionalTransferAssociatedRecords implements Serializable {
     private Integer id;
 

@@ -1,15 +1,14 @@
 package com.hyjf.callcenter.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.vo.callcenter.CallcenterHztInvestVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.callcenter.client.HztInvestClient;
+import com.hyjf.callcenter.client.AmTradeClient;
 import com.hyjf.callcenter.service.HztInvestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author libin
@@ -19,7 +18,7 @@ import com.hyjf.callcenter.service.HztInvestService;
 public class HztInvestServiceImpl implements HztInvestService {
 	
 	@Autowired
-	private HztInvestClient hztInvestBeanClient;
+	private AmTradeClient amTradeClient;
 
 	@Override
 	public List<CallcenterHztInvestVO> getRecordList(UserVO user, Integer limitStart, Integer limitEnd) {
@@ -28,7 +27,7 @@ public class HztInvestServiceImpl implements HztInvestService {
 		callcenterHztInvestRequest.setLimitSize(limitEnd);
 		callcenterHztInvestRequest.setUserId(user.getUserId()+"");
 		List<CallcenterHztInvestVO> list = null;
-		list = hztInvestBeanClient.selectBorrowInvestList(callcenterHztInvestRequest);
+		list = amTradeClient.selectBorrowInvestList(callcenterHztInvestRequest);
 		return list;
 	}
 

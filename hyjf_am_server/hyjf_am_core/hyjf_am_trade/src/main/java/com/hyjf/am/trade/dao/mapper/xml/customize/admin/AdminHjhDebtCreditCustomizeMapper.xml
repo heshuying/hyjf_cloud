@@ -28,6 +28,8 @@
         <result column="liquidates_period" 			property="liquidatesPeriod" 		jdbcType="VARCHAR" />
         <result column="repay_next_time" 			property="repayNextTime" 			jdbcType="VARCHAR" />
         <result column="end_time" 					property="endTime" 					jdbcType="VARCHAR" />
+        <result column="credit_status" 				property="creditStatus" 			jdbcType="VARCHAR" />
+        <result column="repay_status" 				property="repayStatus" 					jdbcType="VARCHAR" />
 
     </resultMap>
 
@@ -113,64 +115,45 @@
         <include refid="Where_Clause" />
     </select>
 
-    <!--<select id="selectDebtCreditList" resultMap="DebtCreditMap" parameterType="map">-->
-        <!--SELECT-->
-        <!--dc.id,-->
-        <!--dc.plan_nid,-->
-        <!--dc.plan_nid_new,-->
-        <!--dc.plan_order_id,-->
-        <!--dc.user_name,-->
-        <!--dc.credit_nid,-->
-        <!--dc.borrow_nid,-->
-        <!--dc.borrow_apr,-->
-        <!--bs.`name` AS repay_style_name,-->
-        <!--dc.credit_capital,-->
-        <!--dc.liquidation_fair_value,-->
-        <!--dc.actual_apr,-->
-        <!--dc.credit_account_wait,-->
-        <!--dc.credit_account_assigned AS assign_account,-->
-        <!--dc.credit_capital_assigned AS assign_capital,-->
-        <!--dc.credit_interest_advance_assigned AS assign_advance_interest,-->
-        <!--dc.credit_income AS account_receive,-->
-        <!--FROM_UNIXTIME(dc.create_time,'%Y-%m-%d %H:%i:%s') AS liquidates_time,-->
-        <!--CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,-->
-        <!--dc.assign_period,-->
-        <!--dc.liquidates_period,-->
-        <!--pa.`name` AS credit_status_name,-->
-        <!--par.`name` AS repay_status_name,-->
-        <!--FROM_UNIXTIME(IF(dc.end_time=0, NULL, dc.end_time),'%Y-%m-%d %H:%i:%s') AS end_time,-->
-        <!--CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE-->
-        <!--FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time-->
-        <!--FROM-->
-        <!--hyjf_hjh_debt_credit dc-->
-        <!--INNER JOIN huiyingdai_borrow b ON dc.borrow_nid = b.borrow_nid-->
-        <!--INNER JOIN hyjf_hjh_plan dp ON dp.plan_nid = dc.plan_nid-->
-        <!--LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = b.borrow_style-->
-        <!--LEFT JOIN hyjf_param_name pa ON pa.name_cd = dc.credit_status-->
-        <!--AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'-->
-        <!--LEFT JOIN hyjf_param_name par ON par.name_cd = dc.repay_status-->
-        <!--AND par.name_class = 'HJH_DEBT_REPAY_STATUS'-->
-        <!--<include refid="Where_Clause" />-->
-        <!--ORDER BY dc.create_time DESC-->
-        <!--<if  test="limitStart != null and limitEnd != null and limitStart >= 0">-->
-            <!--LIMIT #{limitStart} , #{limitEnd}-->
-        <!--</if>-->
-    <!--</select>-->
+    <select id="selectDebtCreditList" resultMap="DebtCreditMap" parameterType="map">
+        SELECT
+        dc.id,
+        dc.plan_nid,
+        dc.plan_nid_new,
+        dc.plan_order_id,
+        dc.user_name,
+        dc.credit_nid,
+        dc.borrow_nid,
+        dc.borrow_apr,
+        bs.`name` AS repay_style_name,
+        dc.credit_capital,
+        dc.liquidation_fair_value,
+        dc.actual_apr,
+        dc.credit_account_wait,
+        dc.credit_account_assigned AS assign_account,
+        dc.credit_capital_assigned AS assign_capital,
+        dc.credit_interest_advance_assigned AS assign_advance_interest,
+        dc.credit_income AS account_receive,
+        dc.credit_status,
+        dc.repay_status,
+        FROM_UNIXTIME(dc.create_time,'%Y-%m-%d %H:%i:%s') AS liquidates_time,
+        CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
+        dc.assign_period,
+        dc.liquidates_period,
+        FROM_UNIXTIME(IF(dc.end_time=0, NULL, dc.end_time),'%Y-%m-%d %H:%i:%s') AS end_time,
+        CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
+        FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time
+        FROM
+        hyjf_hjh_debt_credit dc
+        INNER JOIN huiyingdai_borrow b ON dc.borrow_nid = b.borrow_nid
+        INNER JOIN hyjf_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+        LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = b.borrow_style
+        <include refid="Where_Clause" />
+        ORDER BY dc.create_time DESC
+        <if  test="limitStart != null and limitEnd != null and limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
 
-    <!--<select id="selectSumRecord" resultType="java.util.HashMap" parameterType="map">-->
-        <!--SELECT-->
-        <!--SUM(dc.credit_capital)  AS sumCreditCapital,-->
-        <!--SUM(dc.liquidation_fair_value) AS sumLiquidationFairValue,-->
-        <!--SUM(dc.credit_capital_assigned) AS sumAssignCapital,-->
-        <!--SUM(dc.credit_interest_advance_assigned) AS sumAssignAdvanceInterest-->
-        <!--FROM-->
-        <!--hyjf_hjh_debt_credit dc-->
-        <!--INNER JOIN huiyingdai_borrow b ON dc.borrow_nid = b.borrow_nid-->
-        <!--<include refid="Where_Clause" />-->
-        <!--ORDER BY dc.create_time DESC-->
-        <!--<if  test="limitStart != null and limitEnd != null and limitStart >= 0">-->
-            <!--LIMIT #{limitStart} , #{limitEnd}-->
-        <!--</if>-->
-    <!--</select>-->
 
 </mapper>

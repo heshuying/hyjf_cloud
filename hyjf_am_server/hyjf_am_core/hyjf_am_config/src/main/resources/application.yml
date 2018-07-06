@@ -61,3 +61,6 @@ redis:
     testOnReturn: true
     password: RH06863b3e6
 
+# Rocket MQ
+rocketMQ:
+  namesrvAddr: 123.56.216.212:5555

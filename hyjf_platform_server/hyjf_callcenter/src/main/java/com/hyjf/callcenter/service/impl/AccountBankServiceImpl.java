@@ -5,7 +5,7 @@ package com.hyjf.callcenter.service.impl;
 
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.callcenter.client.AccountBankClient;
+import com.hyjf.callcenter.client.AmUserClient;
 import com.hyjf.callcenter.service.AccountBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ public class AccountBankServiceImpl implements AccountBankService {
      * @author wangjun
      */
     @Autowired
-    private AccountBankClient accountBankClient;
+    private AmUserClient amUserClient;
 
     @Override
     public List<BankCardVO> getTiedCardOfAccountBank(UserVO user) {
-        return accountBankClient.getTiedCardOfAccountBank(user);
+        return amUserClient.getTiedCardOfAccountBank(user);
     }
 }
