@@ -50,4 +50,15 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         List<AccountChinapnr> accountChinapnrList = this.accountChinapnrMapper.selectByExample(example);
         return accountChinapnrList;
     }
+
+    /**
+     * 根据userId查询User用户信息
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public User searchUserByUserId(Integer userId) {
+        return this.findUserByUserId(userId);
+    }
 }

@@ -26,4 +26,12 @@ public interface AmUserClient {
      * @return
      */
     List<AccountChinapnrVO> searchAccountChinapnrByUserId(Integer userId);
+
+    /**
+     * 根据userId查询用户信息
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    UserVO searchUserByUserId(Integer userId);
 }

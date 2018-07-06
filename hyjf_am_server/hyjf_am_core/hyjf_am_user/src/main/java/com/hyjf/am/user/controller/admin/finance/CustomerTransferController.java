@@ -16,10 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -74,4 +71,24 @@ public class CustomerTransferController extends BaseController {
         }
         return response;
     }
+    /**
+     * 根据userId查询User用户信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "根据userId查询User用户信息",notes = "根据userId查询User用户信息")
+    @GetMapping(value = "/searchuserbyuserid/{userId}")
+    public UserResponse searchUserByUserId(@PathVariable Integer userId){
+        UserResponse response = new UserResponse();
+        User user = customerTransferService.searchUserByUserId(userId);
+        if(user != null){
+            UserVO userVO = CommonUtils.convertBean(user,UserVO.class);
+            response.setResult(userVO);
+            response.setRtn("00");
+            response.setMessage("查询成功");
+        }
+        return response;
+    }
+
 }

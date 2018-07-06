@@ -64,4 +64,22 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 根据userId查询用户信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public UserVO searchUserByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/customertransfer/searchuserbyuserid/" + userId;
+		UserResponse response = restTemplate
+				.getForEntity(url, UserResponse.class)
+				.getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
 }
