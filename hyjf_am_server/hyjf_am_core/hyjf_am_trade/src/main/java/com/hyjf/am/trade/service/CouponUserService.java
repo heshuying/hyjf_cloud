@@ -28,4 +28,10 @@ public interface CouponUserService {
      */
     Integer getUserCouponCount(Integer userId , String useFlag);
 
+    /**
+     * 根据优惠券编号查询
+     * @param couponCode
+     * @return
+     */
+    Integer getIssueNumber(String couponCode);
 }
