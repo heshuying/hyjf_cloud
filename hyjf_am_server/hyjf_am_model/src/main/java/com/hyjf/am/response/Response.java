@@ -1,14 +1,12 @@
 package com.hyjf.am.response;
 
-import com.hyjf.am.vo.BaseVO;
-
 import java.util.List;
 
 /**
  * @author xiasq
  * @version Response, v0.1 2018/1/21 22:18
  */
-public class Response<T extends BaseVO> {
+public class Response<T> {
 	public static final String SUCCESS = "00";
 	public static final String SUCCESS_MSG = "成功";
 	public static final String FAIL = "99";
