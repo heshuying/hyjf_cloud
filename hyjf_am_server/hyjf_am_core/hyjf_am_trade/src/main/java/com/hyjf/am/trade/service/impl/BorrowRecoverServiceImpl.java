@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -30,6 +31,9 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
     TenderAgreementMapper tenderAgreementMapper;
     @Autowired
     BorrowRecoverMapper borrowRecoverMapper;
+    @Autowired
+    BorrowRecoverPlanMapper borrowRecoverPlanMapper;
+
 
     @Override
     public BorrowRecover selectBorrowRecoverByTenderNid(String tenderAgreementID) {
@@ -84,6 +88,26 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
             return null;
         }
         return borrowRecoverList.get(0);
+    }
+
+    /**
+     * 获取borrow_recover_plan更新每次还款时间
+     *
+     * @param bidNid
+     * @param creditTenderNid
+     * @param periodNow
+     * @return
+     */
+    @Override
+    public BorrowRecoverPlan getPlanByBidTidPeriod(String bidNid, String creditTenderNid, Integer periodNow) {
+        BorrowRecoverPlanExample borrowRecoverPlanExample = new BorrowRecoverPlanExample();
+        BorrowRecoverPlanExample.Criteria borrowRecoverPlanCra = borrowRecoverPlanExample.createCriteria();
+        borrowRecoverPlanCra.andBorrowNidEqualTo(bidNid).andNidEqualTo(creditTenderNid).andRecoverPeriodEqualTo(periodNow);
+        List<BorrowRecoverPlan> list = borrowRecoverPlanMapper.selectByExample(borrowRecoverPlanExample);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
     }
 
 

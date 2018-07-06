@@ -100,4 +100,17 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 		String url = "http://AM-TRADE/am-trade/borrowTender/save_credit_tender_assign_log";
 		return restTemplate.postForEntity(url,creditTenderLog,Integer.class).getBody();
 	}
+
+	/**
+	 * 查看是否已经插入网站收支明细
+	 *
+	 * @param logOrderId
+	 * @param tenderType 交易类型
+	 * @return
+	 */
+	@Override
+	public Integer countAccountWebListByOrdId(String logOrderId, String tenderType) {
+		String url = "http://AM-TRADE/am-trade/borrowTender/countAccountWebListByOrdId/"+tenderType+"/"+tenderType;
+		return restTemplate.getForEntity(url,Integer.class).getBody();
+	}
 }

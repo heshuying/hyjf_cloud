@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.BorrowRecoverService;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.trade.service.UserService;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -94,5 +95,23 @@ public class BorrowRecoverController extends BaseController{
 		}
 		return response;
 	}
+
+	/**
+	 * 获取borrow_recover_plan更新每次还款时间
+	 * @param bidNid
+	 * @param creditTenderNid
+	 * @param periodNow
+	 * @return
+	 */
+	@GetMapping("/getPlanByBidTidPeriod/{bidNid}/{creditTenderNid}/{periodNow}")
+	public BorrowRecoverPlanResponse getPlanByBidTidPeriod(@PathVariable String bidNid, @PathVariable String creditTenderNid, @PathVariable Integer periodNow){
+		BorrowRecoverPlanResponse response = new BorrowRecoverPlanResponse();
+		BorrowRecoverPlan borrowRecover=borrowRecoverService.getPlanByBidTidPeriod(bidNid,creditTenderNid,periodNow);
+		if (Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverPlanVO.class));
+		}
+		return response;
+	}
+
 
 }
