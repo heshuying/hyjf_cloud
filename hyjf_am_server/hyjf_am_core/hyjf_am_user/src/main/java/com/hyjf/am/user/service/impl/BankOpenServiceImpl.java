@@ -353,21 +353,5 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         return null;
     }
 
-    /**
-     * 企业用户开户记录
-     * @auther: hesy
-     * @date: 2018/7/6
-     */
-    public CorpOpenAccountRecord getCorpOpenAccountRecord(int userId) {
-        CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
-        CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        cra.andIsBankEqualTo(1);//江西银行
-        List<CorpOpenAccountRecord> list = this.corpOpenAccountRecordMapper.selectByExample(example);
-        if(list != null && list.size() > 0){
-            return list.get(0);
-        }
-        return null;
-    }
 
 }
