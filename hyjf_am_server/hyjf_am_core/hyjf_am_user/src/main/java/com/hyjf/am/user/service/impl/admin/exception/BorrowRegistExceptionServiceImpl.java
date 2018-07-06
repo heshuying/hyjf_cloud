@@ -3,21 +3,16 @@
  */
 package com.hyjf.am.user.service.impl.admin.exception;
 
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.BankCallBeanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRegistExceptionVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -65,354 +65,355 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
 	public String txAmount;
 	/** 手续费 */
 	public String txFee;
-	/** 浜ゆ槗娓犻亾 */
+	/** 交易渠道 */
 	public String channel;
-	/** 鐢靛瓙璐﹀彿 */
+	/** 电子账号 */
 	public String accountId;
-	/** 璁㈠崟锟�? */
+	/** 订单号 */
 	public String orderId;
-	/** 鍓嶅彴璺宠浆閾炬帴 */
+	/** 前台跳转链接 */
 	public String retUrl;
-	/** 鍚庡彴閫氱煡杩炴帴 */
+	/** 后台通知连接 */
 	public String notifyUrl;
-	/** 瀹㈡埛IP */
+	/** 客户IP */
 	public String userIP;
-	/** 璇锋眰鏂逛繚锟�? */
+	/** 请求方保留 */
 	public String acqRes;
-	/** 楠岃瘉锟�? */
+	/** 验证值 */
 	public String sign;
-	/** 鍝嶅簲浠ｇ爜 */
+	/** 响应代码 */
 	public String retCode;
-	/** 鍝嶅簲鎻忚堪 */
+	/** 响应描述 */
 	public String retMsg;
 	public String restMsg;
-    // 鏂规硶鍐呴儴鍙傛暟
-	/** 璇佷欢绫诲瀷 */
+    // 方法内部参数
+	/** 证件类型 */
 	public String idType;
-	/** 璇佷欢鍙风爜 */
+	/** 证件号码 */
 	public String idNo;
-	/** 濮撳悕 */
+	/** 姓名 */
 	public String name;
-	/** 鎵嬫満锟�? */
+	/** 手机号 */
 	public String mobile;
-	/** 閾惰鍗″彿 */
+	/** 银行卡号 */
 	public String cardNo;
-	/** 閭 */
+	/** 邮箱 */
 	public String email;
-	/** 璐︽埛鐢拷?? */
+	/** 账户用途 */
 	public String acctUse;
-	/** 浜ゆ槗甯佺 */
+	/** 交易币种 */
 	public String currency;
 	/** srvTxCode */
 	public String srvTxCode;
-	/** 鍓嶅涓氬姟鎺堟潈锟�? */
+	/** 前导业务授权码 */
 	public String lastSrvAuthCode;
-	/** 楠岃瘉锟�? */
+	/** 验证码 */
 	public String smsCode;
-	/** 閫夐」 */
+	/** 选项 */
 	public String option;
-	/** 璧峰鏃ユ湡 */
+	/** 起始日期 */
 	public String startDate;
-	/** 缁撴潫鏃ユ湡 */
+	/** 结束日期 */
 	public String endDate;
-	/** 浜ゆ槗绉嶇被 0-锟�?鏈変氦锟�? 1-杞叆浜ゆ槗 2-杞嚭浜ゆ槗 9-鎸囧畾浜ゆ槗绫诲瀷 */
+	/** 交易种类 0-所有交易 1-转入交易 2-转出交易 9-指定交易类型 */
 	public String type;
-	/** 浜ゆ槗绫诲瀷 */
+	/** 交易类型 */
 	public String tranType;
-	/** 椤垫暟 */
+	/** 页数 */
 	public String pageNum;
-	
-	/** 鑷姩鎶曟爣鎬婚噾棰濅笂闄愶紙涓嶇畻宸茶繕閲戦锟�? */
+	/** 页长 */
+	public String pageSize;
+	/** 自动投标总金额上限（不算已还金额） */
 	public String totAmount;
-	/** 鍘熻鍗曞彿 */
+	/** 原订单号 */
 	public String orgOrderId;
-	/** 楠岃瘉鐮佹巿鏉冪爜 */
+	/** 验证码授权码 */
 	public String srvAuthCode;
-	/** 浜ゆ槗鍒╂伅 */
+	/** 交易利息 */
 	public String intAmount;
-	/** 杩樻鎵嬬画锟�?:鍚戣瀺璧勪汉鏀跺彇鐨勬墜缁垂 */
+	/** 还款手续费:向融资人收取的手续费 */
 	public String txFeeOut;
-	/** 鏀舵鎵嬬画锟�?:鍚戞姇璧勪汉鏀跺彇鐨勬墜缁垂 */
+	/** 收款手续费:向投资人收取的手续费 */
 	public String txFeeIn;
-	/** 瀵规墜鐢靛瓙璐﹀彿:鎶曡祫浜鸿处锟�? */
+	/** 对手电子账号:投资人账号 */
 	public String forAccountId;
-	/** 鏍囩殑锟�? */
+	/** 标的号 */
 	public String productId;
-	/** 鎺堟潈锟�?:鎶曡祫浜烘姇鏍囨垚鍔熺殑鎺堟潈锟�? */
+	/** 授权码:投资人投标成功的授权号 */
 	public String authCode;
-	/** 鍐荤粨璧勯噾锟�?锟�? */
+	/** 冻结资金开关 */
 	public String frzFlag;
-	/** 鏄惁浣跨敤绾㈠寘 0-涓嶄娇鐢ㄧ孩锟�?,1-浣跨敤绾㈠寘 */
+	/** 是否使用红包 0-不使用红包,1-使用红包 */
 	public String bonusFlag;
-	/** 鎶垫墸绾㈠寘閲戦 */
+	/** 抵扣红包金额 */
 	public String bonusAmount;
-	/** 璺敱浠ｇ爜0-鏈閫氶亾 1-閾惰仈閫氶亾 2-浜鸿閫氶亾锟�?-鑷姩閫夋嫨 */
+	/** 路由代码0-本行通道 1-银联通道 2-人行通道空-自动选择 */
 	public String routeCode;
-	/** 缁戝畾閾惰鑱旇鍙蜂汉姘戦摱琛屽垎閰嶇殑12浣嶈仈琛屽彿 routeCode=2锛屽繀锟�? 鎴栵拷?锟絩outeCode涓虹┖锛屼絾浜ゆ槗閲戦>20涓囷紝蹇呰緭 */
+	/** 绑定银行联行号人民银行分配的12位联行号 routeCode=2，必输 或者routeCode为空，但交易金额>20万，必输 */
 	public String cardBankCnaps;
-	/** 缁戝畾閾惰涓枃鍚嶇О ,缁戝畾鐨勯摱琛屽崱瀵瑰簲鐨勯摱琛屼腑鏂囧悕锟�? */
+	/** 绑定银行中文名称 ,绑定的银行卡对应的银行中文名称 */
 	public String cardBankNameCn;
-	/** 缁戝畾閾惰鑻辨枃鍚嶇О ,缁戝畾鐨勯摱琛屽崱瀵瑰簲鐨勯摱琛岃嫳鏂囧悕绉扮缉锟�? */
+	/** 绑定银行英文名称 ,绑定的银行卡对应的银行英文名称缩写 */
 	public String cardBankNameEn;
-	/** 缁戝畾閾惰鍗″紑鎴风渷锟�? ,缁戝畾鐨勯摱琛屽崱鐨勫紑鎴风渷锟�? */
+	/** 绑定银行卡开户省份 ,绑定的银行卡的开户省份 */
 	public String cardBankProvince;
-	/** 缁戝畾閾惰鍗″紑鎴峰煄锟�?,缁戝畾鐨勯摱琛屽崱鐨勫紑鎴峰煄锟�? */
+	/** 绑定银行卡开户城市,绑定的银行卡的开户城市 */
 	public String cardBankCity;
-	/** 蹇樿瀵嗙爜璺宠浆 ,蹇樿瀵嗙爜鐨勮烦杞琔RL */
+	/** 忘记密码跳转 ,忘记密码的跳转URL */
 	public String forgotPwdUrl;
-	/** 缁戝畾閾惰浠ｇ爜 ,缁戝畾鐨勯摱琛屽崱瀵瑰簲鐨勯摱琛屼唬锟�? */
+	/** 绑定银行代码 ,绑定的银行卡对应的银行代码 */
 	public String cardBankCode;
-	/** 鎵规锟�? */
+	/** 批次号 */
 	public String batchNo;
-	/** 浜ゆ槗绗旀暟 */
+	/** 交易笔数 */
 	public String txCounts;
-	/** 鍚庡彴閫氱煡杩炴帴 */
+	/** 后台通知连接 */
 	public String notifyURL;
-	/** 涓氬姟缁撴灉閫氱煡 */
+	/** 业务结果通知 */
 	public String retNotifyURL;
-	/** 杞閲戦 鍗栧嚭鐨勶拷?锟芥潈閲戦 */
+	/** 转让金额 卖出的债权金额 */
 	public String tsfAmount;
-	/** 鍘熶氦鏄撻噾锟�? 鍗栧嚭鏂规姇鏍囩殑鍘熶氦鏄撻噾棰濓紙鎴栧崠鍑烘柟璐拱鍊烘潈鐨勫師浜ゆ槗閲戦锟�? */
+	/** 原交易金额 卖出方投标的原交易金额（或卖出方购买债权的原交易金额） */
 	public String orgTxAmount;
-	/** 璇锋眰鏁扮粍 */
+	/** 请求数组 */
 	public String subPacks;
-	/** 鎺ユ敹缁撴灉 */
+	/** 接收结果 */
 	public String received;
-	/** 绛剧害鐘讹拷?? 0锛氭湭绛剧害 1锛氬凡绛剧害 */
+	/** 签约状态 0：未签约 1：已签约 */
 	public String state;
-	/** 鎵规浜ゆ槗鏃ユ湡 */
+	/** 批次交易日期 */
 	public String batchTxDate;
 
-	/** 鎬昏褰曟暟 锟�?锟�?10鏉¤锟�? */
+	/** 总记录数 最大10条记录 */
 	public String totalItems;
 
-	/** 鎶曡祫鎵嬬画锟�? */
+	/** 投资手续费 */
 	public String bidFee;
-	/** 铻嶈祫鎵嬬画锟�? */
+	/** 融资手续费 */
 	public String debtFee;
 
 	/**
-	 * 鏌ヨ绫诲埆1-鎸夋祦姘村彿鏌ヨ锛堟壒娆＄被浜ゆ槗涓嶅彲鐢級 2-鎸夎鍗曞彿鏌ヨ
+	 * 查询类别1-按流水号查询（批次类交易不可用） 2-按订单号查询
 	 */
 	public String reqType;
 
-	/** 鏌ヨ浜ゆ槗浠ｇ爜 */
+	/** 查询交易代码 */
 	public String reqTxCode;
-	/** 鏌ヨ浜ゆ槗鏃ユ湡 */
+	/** 查询交易日期 */
 	public String reqTxDate;
-	/** 鏌ヨ浜ゆ槗鏃堕棿 */
+	/** 查询交易时间 */
 	public String reqTxTime;
-	/** 鏌ヨ浜ゆ槗娴佹按锟�? */
+	/** 查询交易流水号 */
 	public String reqSeqNo;
-	/** 鏌ヨ璁㈠崟锟�? */
+	/** 查询订单号 */
 	public String reqOrderId;
-	/** 浜ゆ槗鐘讹拷?锟絊-鎴愬姛 F-澶辫触 N-浜ゆ槗涓嶅瓨锟�? Z-鏈煡 D-寰呭锟�? */
+	/** 交易状态S-成功 F-失败 N-交易不存在 Z-未知 D-待处理 */
 	public String txState;
-	/** 鍙敤浣欓 */
+	/** 可用余额 */
 	public String availBal;
-	/** 璐﹂潰浣欓 璐﹂潰浣欓-鍙敤浣欓=鍐荤粨閲戦 */
+	/** 账面余额 账面余额-可用余额=冻结金额 */
 	public String currBal;
-	/** 鏍囩殑鎻忚堪 */
+	/** 标的描述 */
 	public String productDesc;
-	/** 鍕熼泦锟�? */
+	/** 募集日 */
 	public String raiseDate;
-	/** 鍕熼泦缁撴潫鏃ユ湡 */
+	/** 募集结束日期 */
 	public String raiseEndDate;
-	/** 浠樻伅鏂瑰紡 0-鍒版湡涓庢湰閲戜竴璧峰綊锟�? 1-姣忔湀鍥哄畾鏃ユ湡鏀粯 2-姣忔湀涓嶇‘瀹氭棩鏈熸敮锟�? */
+	/** 付息方式 0-到期与本金一起归还 1-每月固定日期支付 2-每月不确定日期支付 */
 	public String intType;
-	/** 鍒╂伅姣忔湀鏀粯锟�? */
+	/** 利息每月支付日 */
 	public String intPayDay;
-	/** 鍊熸鏈熼檺 */
+	/** 借款期限 */
 	public String duration;
-	/** 骞村寲鍒╃巼 */
+	/** 年化利率 */
 	public String rate;
-	/** 鎷呬繚璐︽埛 */
+	/** 担保账户 */
 	public String bailAccountId;
-	/** 鍚嶄箟鍊熸浜虹數瀛愬笎锟�? */
+	/** 名义借款人电子帐号 */
 	public String nominalAccountId;
-	/** 鏄惁浣跨敤浜ゆ槗鎻忚堪 */
+	/** 是否使用交易描述 */
 	public String desLineFlag;
-	/** 浜ゆ槗鎻忚堪 */
+	/** 交易描述 */
 	public String desLine;
-	/** 鎴愬姛浜ゆ槗閲戦 */
+	/** 成功交易金额 */
 	public String sucAmount;
-	/** 鎴愬姛浜ゆ槗绗旀暟 */
+	/** 成功交易笔数 */
 	public String sucCounts;
-	/** 澶辫触浜ゆ槗閲戦 */
+	/** 失败交易金额 */
 	public String failAmount;
-	/** 澶辫触浜ゆ槗绗旀暟 */
+	/** 失败交易笔数 */
 	public String failCounts;
-	/** 鎵规澶勭悊閲戦 */
+	/** 批次处理金额 */
 	public String relAmount;
-	/** 鎵规澶勭悊绗旀暟 */
+	/** 批次处理笔数 */
 	public String relCounts;
-	/** 鎵规澶勭悊鐘讹拷?? */
+	/** 批次处理状态 */
 	public String batchState;
-	/** 鎵规浜ゆ槗浠ｇ爜 */
+	/** 批次交易代码 */
 	public String batchTxCode;
-	/** 澶辫触鎻忚堪 */
+	/** 失败描述 */
 	public String failMsg;
-	/** 璐︽埛绫诲瀷 */
+	/** 账户类型 */
 	public String accType;
-	/** 鎻愮幇锟�?锟�? */
+	/** 提现开关 */
 	public String withdrawFlag;
-	/** 鏄惁璁剧疆杩囧瘑锟�? */
+	/** 是否设置过密码 */
 	public String pinFlag;
-	/** 瀵规墜濮撳悕 */
+	/** 对手姓名 */
 	public String forName;
-	/** 鍓╀綑鍙浆璁╅噾锟�? */
+	/** 剩余可转让金额 */
 	public String availAmount;
-	/** 杞锟�?锟�? */
+	/** 转让所得 */
 	public String txIncome;
-	/**棰勬湡鏀剁泭*/
+	/**预期收益*/
 	public String forIncome;
-	/**鎶曟爣鏃ユ湡*/
+	/**投标日期*/
 	public String buyDate;
-	/**锟�?鎴锋棩锟�?*/
+	/**开户日期*/
 	public String openDate;
-	/**璐︽埛鐘讹拷??*/
+	/**账户状态*/
 	public String acctState;
-	/**鍐荤粨涓氬姟绫诲埆*/
+	/**冻结业务类别*/
 	public String frzState;
 
-	/**瀵嗙爜鎸傚け鐘讹拷??*/
+	/**密码挂失状态*/
 	public String pinLosCd;
-	/** 鑱旇锟�?*/
+	/** 联行号*/
 	public String payAllianceCode;
-	/** 鍘熶氦鏄撴棩锟�? */
+	/** 原交易日期 */
 	public String orgTxDate;
-	/** 鍘熶氦鏄撴椂锟�? */
+	/** 原交易时间 */
 	public String orgTxTime;
-	/** 鍘熶氦鏄撴祦姘村彿 */
+	/** 原交易流水号 */
 	public String orgSeqNo;
-	/** 浜ゆ槗澶勭悊缁撴灉 */
+	/** 交易处理结果 */
 	public String result;
-	/** 鍐叉鎾ら攢鏍囧織 0:姝ｅ父 1锛氬凡鍐叉/鎾ら攢*/
+	/** 冲正撤销标志 0:正常 1：已冲正/撤销*/
 	public String orFlag;
-	/**瀵瑰叕璐﹀彿*/
+	/**对公账号*/
 	public String caccount;
-	/**璇佷欢鍙风爜*/
+	/**证件号码*/
 	public String busId;
-	/**绋庡姟鐧昏锟�?*/ 
+	/**税务登记号*/ 
 	public String taxId;
-	/**鍐荤粨鐘讹拷??*/
+	/**冻结状态*/
     public String frzType;
-	/** 棰勬湡骞村寲鏀剁泭锟�?*/
+	/** 预期年化收益率*/
 	public String yield;
-	/** 棰勬湡鏈伅鏀剁泭*/
+	/** 预期本息收益*/
 	public String intTotal;
-	/** 瀹為檯鏀剁泭*/
+	/** 实际收益*/
 	public String income;
-	/** 瀹為檯鏀剁泭绗﹀彿*/
+	/** 实际收益符号*/
 	public String incFlag;
-	/** 浜ゆ槗鎻忚堪 */
+	/** 交易描述 */
 	public String description;
 	
-	/** 鐭俊鍙戯拷?锟芥椂锟�?*/
+	/** 短信发送时间*/
 	public String sendTime;
-	/** 鐭俊搴忓彿*/
+	/** 短信序号*/
 	public String smsSeq;
-	/** 楠岃瘉鐮佹湁鏁堟椂锟�?*/
+	/** 验证码有效时长*/
 	public String validTime;
-	/** 绛剧害璁㈠崟锟�?*/
+	/** 签约订单号*/
 	public String contOrderId;
-	/** 鎵嬬画璐归噾锟�?*/
+	/** 手续费金额*/
 	public String feeAmount;
-	/** 椋庨櫓鍑嗗锟�?*/
+	/** 风险准备金*/
 	public String riskAmount;
-	/**鐢宠璁㈠崟锟�?*/
+	/**申请订单号*/
 	public String lendPayOrderId;
 	
-	/**绛剧害鏃ユ湡*/
+	/**签约日期*/
     public String txnDate;
-    /**绛剧害鏃堕棿*/
+    /**签约时间*/
     public String txnTime;
-    /**鎬у埆 M  鐢凤拷??  F  濂筹拷??*/
+    /**性别 M  男性  F  女性*/
     public String gender;
-    /** 韬唤灞烇拷?? 1锛氬嚭鍊熻锟�?2锛氾拷?锟芥瑙掕壊3锛氫唬鍋胯锟�?*/
+    /** 身份属性 1：出借角色2：借款角色3：代偿角色*/
     public String identity;
 
     
-    //鏄惁缁存姢鏍囧織锟�? 锟�?0锟�?1缁勬垚鐨勬爣蹇椾綅锟�?0琛ㄧず涓嶇淮鎶わ紝1琛ㄧず缁存姢锛屽叡20浣嶏紝锟�?1浣嶈〃锟�?12鍩熸槸鍚︾敓鏁堬紝锟�?2浣嶈〃锟�?13鍩熸槸鍚︾敓鏁堬紝鍏朵綑浠ユ绫绘帹锟�?
+    //是否维护标志位 由0和1组成的标志位，0表示不维护，1表示维护，共20位，第1位表示12域是否生效，第2位表示13域是否生效，其余以此类推；
     private String bitMap;
-    //锟�?閫氳嚜鍔ㄦ姇鏍囧姛鑳芥爣锟�? 0锛氬彇锟�? 1锛氬紑锟�?
+    //开通自动投标功能标志 0：取消 1：开通
     private String autoBid;
-    //锟�?閫氳嚜鍔拷?锟借浆鍔熻兘鏍囧織 0锛氬彇锟�? 1锛氬紑锟�?
+    //开通自动债转功能标志 0：取消 1：开通
     private String autoTransfer;
-    //锟�?閫氶绾﹀彇鐜板姛鑳芥爣锟�? 0锛氬彇锟�? 1锛氬紑锟�?
+    //开通预约取现功能标志 0：取消 1：开通
     private String agreeWithdraw;
-    //锟�?閫氭棤瀵嗘秷璐瑰姛鑳芥爣锟�? 0锛氬彇锟�? 1锛氬紑锟�?
+    //开通无密消费功能标识 0：取消 1：开通
     private String directConsume;
-    /**杩斿洖浜ゆ槗椤甸潰閾炬帴*/
+    /**返回交易页面链接*/
     private String transactionUrl ;
-    /**璁㈠崟鏈夋晥鎬ц繛锟�?*/
+    /**订单有效性连接*/
     private String verifyOrderUrl ;
 
-    /** 澶囨敞 */
+    /** 备注 */
     public String remark;
     
-    /**浜ゆ槗纭鏃ユ湡*/
+    /**交易确认日期*/
     public String affirmDate;
-    /**浜ゆ槗纭鏃堕棿*/
+    /**交易确认时间*/
     public String affirmTime;
     
-    /**缈婚〉鏍囪瘑 绌猴細棣栨鏌ヨ锟�?1锛氱炕椤垫煡璇紱鍏跺畠锛氶潪锟�?*/
+    /**翻页标识 空：首次查询；1：翻页查询；其它：非法*/
     public String rtnInd;
 
-    /**浜ゆ槗鏃ユ湡 缈婚〉鎺у埗浣跨敤锛涢娆℃煡璇笂閫佺┖锛涚炕椤垫煡璇㈡椂涓婏拷?锟戒笂椤佃繑鍥炵殑锟�?鍚庝竴鏉¤褰曚氦鏄撴棩鏈燂紱YYYYMMDD */
+    /**交易日期 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录交易日期；YYYYMMDD */
     public String inpDate;
 
-    /**浜ゆ槗鏃堕棿 缈婚〉鎺у埗浣跨敤锛涢娆℃煡璇笂閫佺┖锛涚炕椤垫煡璇㈡椂涓婏拷?锟戒笂椤佃繑鍥炵殑锟�?鍚庝竴鏉¤褰曚氦鏄撴椂闂达紱HH24MISSTT */
+    /**交易时间 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录交易时间；HH24MISSTT */
     public String inpTime;
-    /**鑷劧鏃ユ湡 缈婚〉鎺у埗浣跨敤锛涢娆℃煡璇笂閫佺┖锛涚炕椤垫煡璇㈡椂涓婏拷?锟戒笂椤佃繑鍥炵殑锟�?鍚庝竴鏉¤褰曡嚜鐒舵棩鏈燂紱YYYYMMDD */
+    /**自然日期 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录自然日期；YYYYMMDD */
     public String relDate;
-    /**娴佹按锟�? 缈婚〉鎺у埗浣跨敤锛涢娆℃煡璇笂閫佺┖锛涚炕椤垫煡璇㈡椂涓婏拷?锟戒笂椤佃繑鍥炵殑锟�?鍚庝竴鏉¤褰曟祦姘村彿锟�? */
+    /**流水号 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录流水号； */
     public String traceNo;
 
-    /** 鍦板潃*/
+    /** 地址*/
     public String addr;
 
-    /** 绛剧害鍒版湡鏃ユ湡*/
+    /** 签约到期日期*/
     public String deadline;
-    /** 绛剧害鍒版湡鏃ユ湡*/
+    /** 签约到期日期*/
     public String bidDeadline;
-    /*绛剧害锟�?澶ч噾锟�?*/
+    /*签约最大金额*/
     public String maxAmt;
 
-    /** 缂磋垂鎺堟潈*/
+    /** 缴费授权*/
     public String paymentAuth;
 
-    /** 杩樻鎺堟潈*/
+    /** 还款授权*/
     public String repayAuth;
 
-    /** 鑷姩鎶曟爣鍒版湡锟�?*/
+    /** 自动投标到期日*/
     public String autoBidDeadline;
 
-    /** 鑷姩鎶曟爣绛剧害锟�?楂橀噾锟�?*/
+    /** 自动投标签约最高金额*/
     public String autoBidMaxAmt;
-    /** 缂磋垂鎺堟潈鍒版湡锟�?*/
+    /** 缴费授权到期日*/
     public String paymentDeadline;
-    /** 缂磋垂绛剧害锟�?楂橀噾锟�?*/
+    /** 缴费签约最高金额*/
     public String paymentMaxAmt;
-    /** 杩樻鎺堟潈鍒版湡锟�?*/
+    /** 还款授权到期日*/
     public String repayDeadline;
-    /** 杩樻绛剧害锟�?楂橀噾锟�?*/
+    /** 还款签约最高金额*/
     public String repayMaxAmt;
 
 
-    /** 浠ｆ墸绛剧害*/
+    /** 代扣签约*/
     public String agreeDeduct;
 
 
-    /** 绛剧害鍙栨秷鏃ユ湡*/
+    /** 签约取消日期*/
     public String cancelDate;
     /** cancelTime*/
     public String cancelTime;
 
-    /** 楠岃瘉鐮佺被锟�?*/
+    /** 验证码类型*/
     public String smsType;
 
-    //缂磋垂鎺堟潈
+    //缴费授权
     public String txType;
     public String getTransactionUrl() {
         return transactionUrl;
@@ -430,16 +431,16 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
         this.verifyOrderUrl = verifyOrderUrl;
     }
 
-    //淇濈暀锟�?
+    //保留域
     private String reserved;
     
-    //鍙楁墭鏀粯flg 0:鍚︼紝1锛氭槸
+    //受托支付flg 0:否，1：是
     private String entrustFlag;
-    //(鍙楁墭)鏀舵浜虹數瀛愯处锟�?
+    //(受托)收款人电子账号
     private String receiptAccountId;
-    // 椤甸潰璋冪敤鎴愬姛鍚庤烦杞繛锟�?
+    // 页面调用成功后跳转连接
     private String successfulUrl;
-    // 鍟嗘埛鍚嶇О
+    // 商户名称
     private String coinstName;
     
     public String getRestMsg() {
