@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
@@ -209,6 +210,33 @@ public class AmTradeClientImpl implements AmTradeClient {
         int count = restTemplate
                 .postForEntity(urlBase + "borrowauth/count_authed", requestBean, Integer.class).getBody();
         return count;
+    }
+
+    /**
+     * 受托支付回调更新
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Integer updateTrusteePaySuccess(String borrowNid) {
+        String url = urlBase + "borrowauth/auth_update/" + borrowNid;
+        return restTemplate.getForEntity(url,Integer.class).getBody();
+    }
+
+    /**
+     * 根据用户id查询受托支付白名单
+     * @param userId
+     * @param stzUserId
+     * @return
+     */
+    @Override
+    public STZHWhiteListVO getCurrentCouponRecover(Integer userId, Integer stzUserId) {
+        String url = urlBase + "borrowauth/get_whitelist/" + userId + "/" +stzUserId;
+        STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
 
