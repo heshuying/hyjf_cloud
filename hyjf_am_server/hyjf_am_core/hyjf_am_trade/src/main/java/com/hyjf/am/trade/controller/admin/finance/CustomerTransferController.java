@@ -3,21 +3,22 @@
  */
 package com.hyjf.am.trade.controller.admin.finance;
 
+import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.UserTransfer;
 import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
+import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +33,37 @@ public class CustomerTransferController extends BaseController {
 
     @Autowired
     private CustomerTransferService customerTransferService;
+
+    /**
+     * 根据筛选条件查询UserTransfer数据条数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "根据筛选条件查询UserTransfer数据条数",notes = "根据筛选条件查询UserTransfer数据条数")
+    @PostMapping(value = "/getusertransfercount")
+    public Integer getUserTransferCount(@RequestBody CustomerTransferListRequest request){
+        return customerTransferService.getUserTransferCount(request);
+    }
+
+    /**
+     * 根据筛选条件查询UserTransfer列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "根据筛选条件查询UserTransfer列表",notes = "根据筛选条件查询UserTransfer列表")
+    @PostMapping(value = "/searchusertransferlist")
+    public UserTransferResponse searchUserTransferList(@RequestBody CustomerTransferListRequest request){
+        UserTransferResponse response = new UserTransferResponse();
+        List<UserTransfer> userTransferList = customerTransferService.searchUserTransferList(request);
+        if(!CollectionUtils.isEmpty(userTransferList)){
+            List<UserTransferVO> userTransferVOList = CommonUtils.convertBeanList(userTransferList,UserTransferVO.class);
+            response.setResultList(userTransferVOList);
+            response.setRtn("00");
+        }
+        return response;
+    }
 
     /**
      * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
@@ -64,4 +96,22 @@ public class CustomerTransferController extends BaseController {
         return success;
     }
 
+    /**
+     * 根据主键id查询userTransfer
+     * @auth sunpeikai
+     * @param id ht_user_transfer表的主键id
+     * @return
+     */
+    @ApiOperation(value = "根据主键id查询userTransfer",notes = "根据主键id查询userTransfer")
+    @GetMapping(value = "/searchusertransferbyid/{id}")
+    public UserTransferResponse searchUserTransferById(@PathVariable Integer id){
+        UserTransferResponse response = new UserTransferResponse();
+        UserTransfer userTransfer = customerTransferService.searchUserTransferById(id);
+        if(userTransfer != null){
+            UserTransferVO userTransferVO = CommonUtils.convertBean(userTransfer,UserTransferVO.class);
+            response.setResult(userTransferVO);
+            response.setRtn("00");
+        }
+        return response;
+    }
 }

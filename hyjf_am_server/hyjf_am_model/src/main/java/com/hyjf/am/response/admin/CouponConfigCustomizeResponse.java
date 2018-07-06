@@ -1,16 +1,16 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.response.trade;
+package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 
 /**
- * @author yaoy
- * @version CouponConfigResponse, v0.1 2018/6/19 18:35
+ * @author yaoyong
+ * @version CouponConfigCustomizeResponse, v0.1 2018/7/5 14:37
  */
-public class CouponConfigResponse extends Response<CouponConfigVO> {
+public class CouponConfigCustomizeResponse extends Response<CouponConfigCustomizeVO> {
     private int count;
 
     public int getCount() {
