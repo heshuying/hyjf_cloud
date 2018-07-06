@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -102,6 +104,15 @@ public class AdminAssetListController extends BaseController {
 	}
 	
     /**
+     * 保证金不足处理
+     */
+	@GetMapping("/updateCashDepositeStatus/{assetId}/{menuHide}")
+	public boolean updateCashDepositeStatus(@PathVariable String assetId,@PathVariable String menuHide) {
+		return assetListService.updateCashDepositeStatus(assetId,menuHide);
+	}
+	
+	
+	/**
 	 * 查询条件设置
 	 *
 	 * @param userRequest

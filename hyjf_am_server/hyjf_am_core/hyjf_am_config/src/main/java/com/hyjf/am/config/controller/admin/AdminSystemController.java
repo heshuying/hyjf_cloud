@@ -109,7 +109,7 @@ public class AdminSystemController extends BaseConfigController {
 	/**
 	 * 根据userId查询admin用户信息
 	 * @auth sunpeikai
-	 * @param userId 银行返回的错误码
+	 * @param userId 用户id
 	 * @return response admin用户信息
 	 */
 	@ApiOperation(value = "根据userId查询admin用户信息",notes = "根据userId查询admin用户信息")

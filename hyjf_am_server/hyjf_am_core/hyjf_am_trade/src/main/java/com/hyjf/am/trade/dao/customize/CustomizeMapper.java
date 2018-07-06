@@ -7,7 +7,9 @@ import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMap
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRecoverCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhDebtCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.repay.BorrowAuthCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
@@ -60,6 +62,12 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
+
+    @Resource
+    protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
+
+    @Resource
+    protected BorrowAuthCustomizeMapper borrowAuthCustomizeMapper;
 }
 
 

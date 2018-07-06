@@ -57,7 +57,7 @@ public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements Ass
     /**
      * 筛选条件转example
      * @auth sunpeikai
-     * @param request
+     * @param request 筛选条件
      * @return
      */
     private DirectionalTransferAssociatedRecordsExample convertExample(AssociatedRecordListRequest request){
