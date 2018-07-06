@@ -1,25 +1,24 @@
 package com.hyjf.cs.trade.client.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.response.trade.MyRewardListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.cs.trade.client.AmTradeClient;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -151,6 +150,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 		BigDecimal result = restTemplate.postForEntity(url,requestBean,BigDecimal.class).getBody();
 		return result;
 	}
+
+
 
 
 }

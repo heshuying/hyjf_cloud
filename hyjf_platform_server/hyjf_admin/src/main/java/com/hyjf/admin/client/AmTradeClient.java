@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
 
 import java.util.List;
 
@@ -75,4 +76,10 @@ public interface AmTradeClient {
      * @return
      */
     List<BindLogVO> searchBindLogList(BindLogListRequest request);
+
+    /**
+     * 查询用户交易明细的交易类型
+     * @return
+     */
+    List<AccountTradeVO> selectTradeTypes();
 }

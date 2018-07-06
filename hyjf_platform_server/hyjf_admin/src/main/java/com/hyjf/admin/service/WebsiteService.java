@@ -1,14 +1,21 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.client;
+package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.vo.statistics.AccountWebListVO; /**
+import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+
+import java.util.List;
+
+/**
  * @author zhangqingqing
- * @version AmDataCollectClient, v0.1 2018/6/25 10:27
+ * @version WebsiteService, v0.1 2018/7/6 10:52
  */
-public interface AmDataCollectClient {
+public interface WebsiteService {
+
+    List<AccountTradeVO> selectTradeTypes();
 
     AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList);
 
