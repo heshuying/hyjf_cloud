@@ -3,15 +3,14 @@
  */
 package com.hyjf.callcenter.service.impl;
 
-import java.util.List;
-
+import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterWithdrawVO;
-import com.hyjf.callcenter.client.SrchWithdrawalInfoClient;
+import com.hyjf.callcenter.client.AmTradeClient;
 import com.hyjf.callcenter.service.SrchWithdrawalInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
+import java.util.List;
 
 /**
  * @author wangjun
@@ -20,7 +19,7 @@ import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 @Service
 public class SrchWithdrawalInfoServiceImpl implements SrchWithdrawalInfoService {
     @Autowired
-    private SrchWithdrawalInfoClient srchWithdrawalInfoClient;
+    private AmTradeClient amTradeClient;
     /**
      * 查询提现明细
      * @author wangjun
@@ -29,6 +28,6 @@ public class SrchWithdrawalInfoServiceImpl implements SrchWithdrawalInfoService 
      */
     @Override
     public List<CallCenterWithdrawVO> getWithdrawRecordList(CallCenterBaseRequest callCenterBaseRequest) {
-        return srchWithdrawalInfoClient.getWithdrawRecordList(callCenterBaseRequest);
+        return amTradeClient.getWithdrawRecordList(callCenterBaseRequest);
     }
 }
