@@ -30,7 +30,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
     @Override
     public int isCompBindUser(Integer userId) {
         int response = restTemplate.getForEntity(
-                dataCollectService+"/seach/isCompBindUser/" + userId,
+                dataCollectService+"/search/isCompBindUser/" + userId,
                 Integer.class).getBody();
         return response;
     }
@@ -38,7 +38,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
     @Override
     public String selectBankSmsSeq(Integer userId, String txcodeAutoBidAuthPlus) {
         String response = restTemplate.getForEntity(
-                dataCollectService+"/seach/selectBankSmsSeq/" + userId+"/"+txcodeAutoBidAuthPlus,
+                dataCollectService+"/search/selectBankSmsSeq/" + userId+"/"+txcodeAutoBidAuthPlus,
                 String.class).getBody();
         return response;
     }

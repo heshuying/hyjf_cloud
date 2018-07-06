@@ -11,4 +11,13 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
  * @version CouponConfigResponse, v0.1 2018/6/19 18:35
  */
 public class CouponConfigResponse extends Response<CouponConfigVO> {
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

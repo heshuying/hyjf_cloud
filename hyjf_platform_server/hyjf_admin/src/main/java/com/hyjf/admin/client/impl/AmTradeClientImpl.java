@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.BindLogResponse;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.response.trade.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
@@ -17,6 +18,12 @@ import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +154,93 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .postForEntity(tradeService+"/associatedlog/searchbindloglist", request, BindLogResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public List<AccountVO> searchAccountByUserId(Integer userId) {
+        AccountResponse response = restTemplate
+                .getForEntity(tradeService + "/customertransfer/searchaccountbyuserid/" + userId, AccountResponse.class)
+                .getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 向数据库的ht_user_transfer表中插入数据
+     * @auth sunpeikai
+     * @param request 用户转账-发起转账的参数
+     * @return
+     */
+    @Override
+    public Boolean insertUserTransfer(CustomerTransferRequest request) {
+        String url = tradeService + "/customertransfer/insertusertransfer";
+        Boolean response = restTemplate.postForEntity(url,request,Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据筛选条件查询ht_user_transfer的数据总数
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getUserTransferCount(CustomerTransferListRequest request) {
+        Integer count = restTemplate
+                .postForEntity(tradeService+"/customertransfer/getusertransfercount", request, Integer.class)
+                .getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询UserTransfer列表
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<UserTransferVO> searchUserTransferList(CustomerTransferListRequest request) {
+        UserTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/customertransfer/searchusertransferlist", request, UserTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据transferId查询UserTransfer
+     * @auth sunpeikai
+     * @param transferId ht_user_transfer表的主键id
+     * @return
+     */
+    @Override
+    public UserTransferVO searchUserTransferById(Integer transferId) {
+        String url = tradeService + "/customertransfer/searchusertransferbyid/" + transferId;
+        UserTransferResponse response = restTemplate.getForEntity(url,UserTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<AccountTradeVO> selectTradeTypes() {
+        String url = "http://AM-TRADE/am-trade/accounttrade/selectTradeTypes";
+        AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
+        if (response != null) {
             return response.getResultList();
         }
         return null;

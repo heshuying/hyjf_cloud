@@ -3,6 +3,10 @@
  */
 package com.hyjf.admin.common.service;
 
+import com.hyjf.am.vo.config.ParamNameVO;
+
+import java.util.List;
+
 /**
  * 组合层共用Service基接口
  * @author liubin
@@ -10,4 +14,18 @@ package com.hyjf.admin.common.service;
  */
 public interface BaseService {
 
+    /**
+     * 根据hyjf_param_name 的nameCd和nameClass获得param描述
+     * @param nameCd
+     * @param params
+     * @return
+     */
+    String getParamName(String nameCd,List<ParamNameVO> params);
+
+    /**
+     * 根据nameClass 获得hyjf_param_name 的列表
+     * @param nameClass
+     * @return
+     */
+    List<ParamNameVO> getParamNameList(String nameClass);
 }

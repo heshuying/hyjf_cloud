@@ -2,11 +2,9 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
-import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RewardService;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -4,15 +4,21 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.resquest.admin.AssetListRequest;
+import com.hyjf.am.trade.dao.mapper.auto.HjhPlanAssetMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AssetListServiceCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
 import com.hyjf.am.trade.service.admin.AssetListService;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisUtils;
 
 /**
  * @author libin
@@ -23,7 +29,9 @@ public class AssetListServiceImpl implements AssetListService{
 	
     @Autowired
     private AssetListServiceCustomizeMapper assetListServiceCustomizeMapper;
-
+    @Autowired
+    private HjhPlanAssetMapper hjhPlanAssetMapper;
+    
 	@Override
 	public List<AssetListCustomizeVO> findAssetList(Map<String, Object> mapParam,int limitStart, int limitEnd) {
         // 封装查询条件
@@ -60,5 +68,29 @@ public class AssetListServiceImpl implements AssetListService{
 	@Override
 	public BigDecimal getSumAccount(AssetListRequest request) {
 		return assetListServiceCustomizeMapper.getSumAccount(request);
+	}
+
+	@Override
+	public boolean updateCashDepositeStatus(String assetId, String menuHide) {
+	    HjhPlanAsset hjhPlanAsset = new HjhPlanAsset();
+        if(StringUtils.equals("1",menuHide)){
+            hjhPlanAsset.setStatus(0);//补交
+        }else{
+            hjhPlanAsset.setStatus(15);//流标
+        }
+          HjhPlanAssetExample hjhPlanAssetExample = new HjhPlanAssetExample();
+          HjhPlanAssetExample.Criteria criteria = hjhPlanAssetExample.createCriteria();
+          criteria.andAssetIdEqualTo(assetId);
+          int i = hjhPlanAssetMapper.updateByExampleSelective(hjhPlanAsset, hjhPlanAssetExample);
+          if(i > 0&&StringUtils.equals("1",menuHide)) {
+            List<HjhPlanAsset> hjhPlanAssets = hjhPlanAssetMapper.selectByExample(hjhPlanAssetExample);
+            HjhPlanAsset asset = hjhPlanAssets.get(0);
+            String redisKey = "borrowsend:" + asset.getInstCode()+asset.getAssetId();
+              if(RedisUtils.exists(redisKey)){
+                  RedisUtils.del(redisKey);
+              }
+           //sendToMQ(assetId,asset.getInstCode());//  AutoIssueRecoverTask 自动录标修复
+        }
+		return false;
 	}
 }

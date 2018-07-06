@@ -26,7 +26,7 @@ public class AmMongoClientImpl implements AmMongoClient {
     @Override
     public AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId) {
         AppChannelStatisticsDetailResponse response = restTemplate.getForEntity(
-                "http://AM-STATISTICS/am-statistics/seach/getAppChannelStatisticsDetailByUserId/" + userId,
+                "http://AM-STATISTICS/am-statistics/search/getAppChannelStatisticsDetailByUserId/" + userId,
                 AppChannelStatisticsDetailResponse.class).getBody();
         if (response != null) {
             return response.getResult();

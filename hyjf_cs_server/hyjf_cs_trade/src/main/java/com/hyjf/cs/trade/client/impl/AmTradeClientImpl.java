@@ -1,25 +1,30 @@
 package com.hyjf.cs.trade.client.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.response.trade.MyRewardListResponse;
+import java.math.BigDecimal;
+import java.util.List;
+
+import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.cs.trade.client.AmTradeClient;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -151,6 +156,62 @@ public class AmTradeClientImpl implements AmTradeClient {
 		BigDecimal result = restTemplate.postForEntity(url,requestBean,BigDecimal.class).getBody();
 		return result;
 	}
+
+	/**
+     * 受托支付待授权列表
+     * @auther: hesy
+     * @date: 2018/7/6
+     */
+    @Override
+    public List<BorrowAuthCustomizeVO> selectBorrowAuthList(BorrowAuthRequest requestBean){
+        String url = urlBase + "borrowauth/list_auth";
+        BorrowAuthResponse response = restTemplate.postForEntity(url,requestBean,BorrowAuthResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 受托支付待授权总记录数
+     * @auther: hesy
+     * @date: 2018/7/6
+     */
+    @Override
+    public int selectBorrowAuthCount(BorrowAuthRequest requestBean) {
+        int count = restTemplate
+                .postForEntity(urlBase + "borrowauth/count_auth", requestBean, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 受托支付已授权列表
+     * @auther: hesy
+     * @date: 2018/7/6
+     */
+    @Override
+    public List<BorrowAuthCustomizeVO> selectBorrowAuthedList(BorrowAuthRequest requestBean){
+        String url = urlBase + "borrowauth/list_authed";
+        BorrowAuthResponse response = restTemplate.postForEntity(url,requestBean,BorrowAuthResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 受托支付已授权总记录数
+     * @auther: hesy
+     * @date: 2018/7/6
+     */
+    @Override
+    public int selectBorrowAuthedCount(BorrowAuthRequest requestBean) {
+        int count = restTemplate
+                .postForEntity(urlBase + "borrowauth/count_authed", requestBean, Integer.class).getBody();
+        return count;
+    }
+
+
 
 
 }

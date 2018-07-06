@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/coupon/checkList")
 public class CouponCheckController extends BaseController {
-    //权限名称
+    /**权限名称 */
     private static final String PERMISSIONS = "couponuser";
     @Autowired
     CouponCheckService couponCheckService;

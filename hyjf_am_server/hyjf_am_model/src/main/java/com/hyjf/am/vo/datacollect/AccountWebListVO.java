@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.datacollect;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -7,7 +9,37 @@ import java.math.BigDecimal;
  * @author xiasq
  * @version AccountWebListVO, v0.1 2018/6/19 16:38
  */
-public class AccountWebListVO implements Serializable {
+public class AccountWebListVO extends BaseVO implements Serializable {
+
+    private int limitStart = -1;
+    private int limitEnd = -1;
+    /**
+     * 创建时间 起始
+     */
+    private String startDate;
+    /**创建时间  结束*/
+    private String endDate;
+
+    private String usernameSearch;
+    private String truenameSearch;
+    /**收支类型  1：收入  2：支出*/
+    private int typeSearche ;
+
+    /**交易类型*/
+    private String tradeTypeSearch;
+
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
 
     private String id;
 
@@ -45,7 +77,85 @@ public class AccountWebListVO implements Serializable {
 
     private Integer flag;
 
+    private String username;
+
     private static final long serialVersionUID = 1L;
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
+
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getUsernameSearch() {
+        return usernameSearch;
+    }
+
+    public void setUsernameSearch(String usernameSearch) {
+        this.usernameSearch = usernameSearch;
+    }
+
+    public String getTruenameSearch() {
+        return truenameSearch;
+    }
+
+    public void setTruenameSearch(String truenameSearch) {
+        this.truenameSearch = truenameSearch;
+    }
+
+    public int getTypeSearche() {
+        return typeSearche;
+    }
+
+    public void setTypeSearche(int typeSearche) {
+        this.typeSearche = typeSearche;
+    }
+
+    public String getTradeTypeSearch() {
+        return tradeTypeSearch;
+    }
+
+    public void setTradeTypeSearch(String tradeTypeSearch) {
+        this.tradeTypeSearch = tradeTypeSearch;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getId() {
         return id;

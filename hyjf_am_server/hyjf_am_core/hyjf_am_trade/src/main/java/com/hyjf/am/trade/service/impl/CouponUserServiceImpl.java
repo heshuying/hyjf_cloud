@@ -11,8 +11,10 @@ import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.auto.CouponUserExample;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 import com.hyjf.am.trade.service.CouponUserService;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.mysql.fabric.xmlrpc.base.Param;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,6 +111,17 @@ public class CouponUserServiceImpl implements CouponUserService {
         param.put("useFlag",useFlag);
         Integer count = couponUserCustomizeMapper.countCouponUser(param);
         return count;
+    }
+
+    @Override
+    public Integer getIssueNumber(String couponCode) {
+        CouponUserExample example = new CouponUserExample();
+        CouponUserExample.Criteria cra = example.createCriteria();
+        if (StringUtils.isNotEmpty(couponCode)) {
+            cra.andCouponCodeEqualTo(couponCode);
+        }
+        cra.andDelFlagEqualTo(CustomConstants.FALG_NOR);
+        return this.couponUserMapper.countByExample(example);
     }
 
 }

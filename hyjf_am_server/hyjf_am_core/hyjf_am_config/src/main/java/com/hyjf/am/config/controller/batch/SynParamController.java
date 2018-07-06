@@ -3,15 +3,26 @@
  */
 package com.hyjf.am.config.controller.batch;
 
-import com.hyjf.am.config.controller.BaseConfigController;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.mq.base.MessageContent;
+import com.hyjf.am.config.mq.producer.TestProducer;
+import com.hyjf.am.config.service.SiteSettingService;
 import com.hyjf.am.config.service.SynParamService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 /**
  * @author dxj
@@ -23,6 +34,14 @@ public class SynParamController extends BaseConfigController {
 	
     @Autowired
     private SynParamService synParamService;
+    
+    @Autowired
+    SiteSettingService siteSettingService;
+    
+    @Autowired
+    TestProducer testProducer;
+    
+    private static AtomicInteger painte = new AtomicInteger();
 
     
     /**
@@ -35,6 +54,54 @@ public class SynParamController extends BaseConfigController {
     	
     	synParamService.synParam();
     	
+        return response;
+    }
+
+    
+    /**
+     *  测试事务
+     * @return
+     * @throws Exception 
+     */
+    @GetMapping("/testTranaction")
+    public Response<BaseVO> synParam2(){
+        Response<BaseVO>  response = new Response<BaseVO>();
+        
+        try {
+            siteSettingService.updateTest1();
+        } catch (Exception e) {
+             e.printStackTrace();
+        }
+        
+        return response;
+    }
+
+    
+    /**
+     *  测试生产消息
+     * @return
+     * @throws Exception 
+     */
+    @GetMapping("/testMq")
+    public Response<BaseVO> synParam3(){
+        Response<BaseVO>  response = new Response<BaseVO>();
+        
+       
+        for (int i = 0; i < 5; i++) {
+            Map<String, String> maps = new HashMap<String, String>();
+            int p1 = painte.incrementAndGet();
+            maps.put("hehe", "sdf"+ p1);
+            maps.put("uu", "僵死sdf"+ p1);
+            MessageContent message = new MessageContent(MQConstant.TEST_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(maps));
+            
+            try {
+                testProducer.messageSend(message);
+            } catch (MQException e) {
+                 e.printStackTrace();
+            }
+            
+        }
+        
         return response;
     }
 }
