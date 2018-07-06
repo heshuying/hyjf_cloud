@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.BindLogResponse;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
@@ -17,6 +18,7 @@ import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,4 +153,22 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+
+    /**
+     * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public List<AccountVO> searchAccountByUserId(Integer userId) {
+        AccountResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/customertransfer/searchaccountbyuserid", userId, AccountResponse.class)
+                .getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
 }

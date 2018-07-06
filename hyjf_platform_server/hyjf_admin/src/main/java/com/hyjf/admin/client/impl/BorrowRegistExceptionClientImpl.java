@@ -110,7 +110,7 @@ public class BorrowRegistExceptionClientImpl implements BorrowRegistExceptionCli
     /**
      * 利用borrowNid查询出来的异常标的借款人userId查询银行账户
      * @auth sunpeikai
-     * @param
+     * @param userId 用户id
      * @return
      */
     @Override
