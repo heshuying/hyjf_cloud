@@ -34,7 +34,7 @@ public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl imple
     /**
      * 根据筛选条件 查询数据count
      * @auth sunpeikai
-     * @param
+     * @param request 筛选条件
      * @return
      */
     @Override

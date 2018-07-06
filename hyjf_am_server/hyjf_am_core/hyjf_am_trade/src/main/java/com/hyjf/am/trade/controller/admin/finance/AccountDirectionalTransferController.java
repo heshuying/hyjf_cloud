@@ -45,7 +45,7 @@ public class AccountDirectionalTransferController extends BaseController {
     /**
      * 根据筛选条件查询list
      * @auth sunpeikai
-     * @param
+     * @param request 筛选条件
      * @return
      */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")

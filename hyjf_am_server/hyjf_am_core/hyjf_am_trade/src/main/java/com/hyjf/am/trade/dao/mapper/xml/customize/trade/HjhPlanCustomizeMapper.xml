@@ -154,4 +154,52 @@
 		where
 		id = #{id,jdbcType=INTEGER}
 	</update>
+	
+	
+	
+	<resultMap id="sumMap" type="com.hyjf.am.vo.trade.hjh.HjhPlanSumVO">
+		<result column="sumRepayWaitAll" property="sumWaitTotal" jdbcType="VARCHAR" />
+		<result column="sumOpenAccount" property="sumOpenAccount" jdbcType="VARCHAR" />
+		<result column="sumJoinTotal" property="sumJoinTotal" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getCalcSumByParam" resultMap="sumMap" parameterType="com.hyjf.am.resquest.admin.PlanListCustomizeRequest" >
+	    select
+	      SUM(repay_wait_all) AS sumRepayWaitAll,
+	      SUM(available_invest_account) AS sumOpenAccount,
+	      SUM(join_total) AS sumJoinTotal
+	    from ht_hjh_plan plan
+	    <include refid="Where_hjh_Clause" />
+    </select>
+    
+    <sql id="Where_hjh_Clause">
+		<where>
+			<if test="planNidSrch != null and planNidSrch !='' ">
+				AND plan.plan_nid LIKE CONCAT('%', #{planNidSrch}, '%')
+			</if>
+			<if test="planNameSrch != null and planNameSrch !='' ">
+				AND plan.plan_name LIKE CONCAT('%', #{planNameSrch}, '%')
+			</if>
+			<if test="lockPeriodSrch != null and lockPeriodSrch !=''">
+				AND plan.lock_period = #{lockPeriodSrch}
+			</if>
+			<if test="planStatusSrch != null and planStatusSrch !=''">
+				AND plan.plan_invest_status = #{planStatusSrch}
+			</if>
+			<if test="planDisplayStatusSrch != null and planDisplayStatusSrch !=''">
+				AND plan.plan_display_status = #{planDisplayStatusSrch}
+			</if>
+			<if test="borrowStyleSrch != null and borrowStyleSrch !=''">
+				AND plan.borrow_style = #{borrowStyleSrch}
+			</if>
+ 			<if test="addTimeStart != null and addTimeStart !='' ">
+				AND FROM_UNIXTIME( plan.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+			</if>
+			<if test="addTimeEnd != null and addTimeEnd !='' ">
+				AND FROM_UNIXTIME( plan.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+			</if>
+		</where>
+	</sql>
+    
+ 
+
 </mapper>

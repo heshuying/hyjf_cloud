@@ -4,15 +4,13 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 
 import java.util.List;
 
@@ -75,4 +73,20 @@ public interface AmTradeClient {
      * @return
      */
     List<BindLogVO> searchBindLogList(BindLogListRequest request);
+
+    /**
+     * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    List<AccountVO> searchAccountByUserId(Integer userId);
+
+    /**
+     * 向数据库的ht_user_transfer表中插入数据
+     * @auth sunpeikai
+     * @param request 用户转账-发起转账的参数
+     * @return
+     */
+    Boolean insertUserTransfer(CustomerTransferRequest request);
 }
