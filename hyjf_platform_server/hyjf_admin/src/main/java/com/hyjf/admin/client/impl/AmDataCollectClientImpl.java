@@ -5,7 +5,7 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmDataCollectClient;
 import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
