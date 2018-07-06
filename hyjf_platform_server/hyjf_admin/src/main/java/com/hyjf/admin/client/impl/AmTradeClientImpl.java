@@ -154,7 +154,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public List<AccountVO> searchAccountByUserId(Integer userId) {
         AccountResponse response = restTemplate
-                .postForEntity(tradeService + "/customertransfer/searchaccountbyuserid", userId, AccountResponse.class)
+                .getForEntity(tradeService + "/customertransfer/searchaccountbyuserid/" + userId, AccountResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();

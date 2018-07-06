@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.admin.finance;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.user.AccountChinapnrResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.user.controller.BaseController;
@@ -39,14 +40,16 @@ public class CustomerTransferController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据userName查询用户信息list",notes = "根据userName查询用户信息list")
-    @PostMapping(value = "/searchuserbyusername")
-    public UserResponse searchUserByUsername(@RequestBody String userName){
+    @GetMapping(value = "/searchuserbyusername/{userName}")
+    public UserResponse searchUserByUsername(@PathVariable String userName){
         UserResponse response = new UserResponse();
         List<User> userList = customerTransferService.searchUserByUsername(userName);
+        logger.info("userList=[{}]", JSON.toJSONString(userList));
         if(!CollectionUtils.isEmpty(userList)){
+            logger.info("am-user searchUserByUserName 查询出来的userList.size=[{}]",userList.size());
             List<UserVO> userVOList = CommonUtils.convertBeanList(userList,UserVO.class);
             response.setResultList(userVOList);
-            response.setRtn("00");
+            response.setRtn("0");
             response.setMessage("查询成功");
         }
         return response;
@@ -59,14 +62,14 @@ public class CustomerTransferController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据userId查询AccountChinapnr开户信息",notes = "根据userId查询AccountChinapnr开户信息")
-    @PostMapping(value = "/searchaccountchinapnrbyuserid")
-    public AccountChinapnrResponse searchAccountChinapnrByUserId(@RequestBody Integer userId){
+    @GetMapping(value = "/searchaccountchinapnrbyuserid/{userId}")
+    public AccountChinapnrResponse searchAccountChinapnrByUserId(@PathVariable Integer userId){
         AccountChinapnrResponse response = new AccountChinapnrResponse();
         List<AccountChinapnr> accountChinapnrList = customerTransferService.searchAccountChinapnrByUserId(userId);
         if(!CollectionUtils.isEmpty(accountChinapnrList)){
             List<AccountChinapnrVO> accountChinapnrVOList = CommonUtils.convertBeanList(accountChinapnrList,AccountChinapnrVO.class);
             response.setResultList(accountChinapnrVOList);
-            response.setRtn("00");
+            response.setRtn("0");
             response.setMessage("查询成功");
         }
         return response;
@@ -85,7 +88,7 @@ public class CustomerTransferController extends BaseController {
         if(user != null){
             UserVO userVO = CommonUtils.convertBean(user,UserVO.class);
             response.setResult(userVO);
-            response.setRtn("00");
+            response.setRtn("0");
             response.setMessage("查询成功");
         }
         return response;

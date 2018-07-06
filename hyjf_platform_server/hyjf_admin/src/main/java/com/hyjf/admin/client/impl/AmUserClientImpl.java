@@ -36,9 +36,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<UserVO> searchUserByUsername(String userName) {
-		String url = "http://AM-USER/am-user/customertransfer/searchuserbyusername";
+		String url = "http://AM-USER/am-user/customertransfer/searchuserbyusername/" + userName;
 		UserResponse response = restTemplate
-				.postForEntity(url, userName, UserResponse.class)
+				.getForEntity(url, UserResponse.class)
 				.getBody();
 		if(Response.isSuccess(response)){
 			return response.getResultList();
@@ -54,9 +54,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AccountChinapnrVO> searchAccountChinapnrByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/customertransfer/searchaccountchinapnrbyuserid";
+		String url = "http://AM-USER/am-user/customertransfer/searchaccountchinapnrbyuserid/" + userId;
 		AccountChinapnrResponse response = restTemplate
-				.postForEntity(url, userId, AccountChinapnrResponse.class)
+				.getForEntity(url, AccountChinapnrResponse.class)
 				.getBody();
 		if(Response.isSuccess(response)){
 			return response.getResultList();

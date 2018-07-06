@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.model.auto.UserTransfer;
 import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
 import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -56,11 +58,18 @@ public class CustomerTransferController extends BaseController {
     @PostMapping(value = "/searchusertransferlist")
     public UserTransferResponse searchUserTransferList(@RequestBody CustomerTransferListRequest request){
         UserTransferResponse response = new UserTransferResponse();
+        Integer count = customerTransferService.getUserTransferCount(request);
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
         List<UserTransfer> userTransferList = customerTransferService.searchUserTransferList(request);
         if(!CollectionUtils.isEmpty(userTransferList)){
             List<UserTransferVO> userTransferVOList = CommonUtils.convertBeanList(userTransferList,UserTransferVO.class);
             response.setResultList(userTransferVOList);
-            response.setRtn("00");
+            response.setRtn("0");
         }
         return response;
     }
@@ -72,14 +81,14 @@ public class CustomerTransferController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据userId查询Account列表",notes = "根据userId查询Account列表")
-    @PostMapping(value = "/searchaccountbyuserid")
-    public AccountResponse searchAccountByUserId(@RequestBody Integer userId){
+    @GetMapping(value = "/searchaccountbyuserid/{userId}")
+    public AccountResponse searchAccountByUserId(@PathVariable Integer userId){
         AccountResponse response = new AccountResponse();
         List<Account> accountList = customerTransferService.searchAccountByUserId(userId);
         if(!CollectionUtils.isEmpty(accountList)){
             List<AccountVO> accountVOList = CommonUtils.convertBeanList(accountList,AccountVO.class);
             response.setResultList(accountVOList);
-            response.setRtn("00");
+            response.setRtn("0");
         }
         return response;
     }
@@ -110,7 +119,7 @@ public class CustomerTransferController extends BaseController {
         if(userTransfer != null){
             UserTransferVO userTransferVO = CommonUtils.convertBean(userTransfer,UserTransferVO.class);
             response.setResult(userTransferVO);
-            response.setRtn("00");
+            response.setRtn("0");
         }
         return response;
     }

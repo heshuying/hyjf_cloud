@@ -16,6 +16,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -75,6 +78,8 @@ public class CustomerTransferController extends BaseController {
          * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
          * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
          */
+        // currPage<0 为全部,currPage>0 为具体某一页
+        request.setCurrPage(-1);
         // 表格sheet名称
         String sheetName = "转账记录";
         // 文件名称
@@ -172,12 +177,17 @@ public class CustomerTransferController extends BaseController {
     /**
      * 根据userName查询账户余额-发起转账
      * @auth sunpeikai
-     * @param outUserName 用户名
+     * @param map 包含用户名
      * @return
      */
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "outUserName", value = "转出用户名", required = true, dataType = "String"),
+    })
     @ApiOperation(value = "查询余额",notes = "根据用户账号查询余额-发起转账")
     @PostMapping(value = "/searchbalance")
-    public JSONObject searchBalanceByUsername(@RequestBody String outUserName){
+    public JSONObject searchBalanceByUsername(@RequestBody Map map){
+        String outUserName = map.get("outUserName").toString();
+        logger.info("outUserName=[{}]",outUserName);
         JSONObject result = new JSONObject();
         if(StringUtils.isNotEmpty(outUserName)){
             result = customerTransferService.searchBalanceByUsername(outUserName);
@@ -199,13 +209,13 @@ public class CustomerTransferController extends BaseController {
     public JSONObject addTransfer(@RequestHeader Integer userId,@RequestBody CustomerTransferRequest request){
         JSONObject result = new JSONObject();
         result = customerTransferService.checkCustomerTransferParam(request);
-        if(result != null && "00".equals(result.get("status"))){
+        if(result != null && "0".equals(result.get("status"))){
             AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
             request.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
             request.setCreateUserName(adminSystemVO.getUsername());
             boolean success = customerTransferService.insertTransfer(request);
             if(success){
-                result.put("status","00");
+                result.put("status","0");
                 result.put("result","成功");
             }else{
                 result.put("status","error");
@@ -218,12 +228,16 @@ public class CustomerTransferController extends BaseController {
     /**
      * 用户转账-发送邮件
      * @auth sunpeikai
-     * @param transferId 转账记录id
+     * @param map 包含transferId 转账记录id
      * @return
      */
-    @ApiOperation(value = "用户转账",notes = "发送邮件")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String"),
+    })
+    @ApiOperation(value = "用户转账-发送邮件",notes = "发送邮件")
     @PostMapping(value = "/transfersendmail")
-    public JSONObject transferSendMail(@RequestParam(value = "transferId") Integer transferId){
+    public JSONObject transferSendMail(@RequestBody Map map){
+        Integer transferId = (Integer) map.get("transferId");
         JSONObject result = new JSONObject();
         result = customerTransferService.transferSendMail(transferId);
         return result;

@@ -18,6 +18,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.AccountChinapnrVO;
 import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,8 @@ import java.util.Map;
  */
 @Service
 public class CustomerTransferServiceImpl extends BaseServiceImpl implements CustomerTransferService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmUserClient amUserClient;
@@ -84,6 +88,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     public JSONObject searchBalanceByUsername(String userName) {
         JSONObject jsonObject = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
+        logger.info("admin 项目 查询出来的userList.size=[{}]",userVOList.size());
         if(userVOList != null && userVOList.size() == 1){
             UserVO userVO = userVOList.get(0);
             List<AccountChinapnrVO> accountChinapnrVOList = amUserClient.searchAccountChinapnrByUserId(userVO.getUserId());
@@ -91,7 +96,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
                 List<AccountVO> accountVOList = amTradeClient.searchAccountByUserId(userVO.getUserId());
                 if (accountVOList != null && accountVOList.size() == 1) {
                     AccountVO accountVO = accountVOList.get(0);
-                    jsonObject.put("status","00");
+                    jsonObject.put("status","0");
                     jsonObject.put("result",accountVO.getBalance().toString());
                 } else {
                     jsonObject.put("status","error");
@@ -126,7 +131,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
                 if(accountChinapnrVOList != null && accountChinapnrVOList.size() == 1){
                     List<AccountVO> accountVOList = amTradeClient.searchAccountByUserId(userVO.getUserId());
                     if(accountVOList != null && accountVOList.size() == 1){
-                        jsonObject.put("status","00");
+                        jsonObject.put("status","0");
                         jsonObject.put("result","校验参数成功");
                     }else{
                         jsonObject.put("status","error");
@@ -183,7 +188,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
             UserTransferVO userTransferVO = amTradeClient.searchUserTransferById(transferId);
             if(userTransferVO != null){
                 UserVO userVO = amUserClient.searchUserByUserId(userTransferVO.getOutUserId());
-                if (StringUtils.isNotBlank(userVO.getEmail())) {
+                if (null != userVO && StringUtils.isNotBlank(userVO.getEmail())) {
                     Map<String, String> replaceMap = new HashMap<String, String>();
                     replaceMap.put("val_name", userTransferVO.getOutUserName());
                     replaceMap.put("val_amount", userTransferVO.getTransferAmount().toString());
@@ -193,10 +198,10 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
                     //MailMessage messageMail = new MailMessage(null, replaceMap, "用户转账",null,null, email,CustomConstants.PARAM_TPL_TRANSFER, MessageDefine.MAILSENDFORMAILINGADDRESS);
                     //TODO:发送email
                     //mailMessageProcesser.gather(messageMail);
-                    jsonObject.put("status", "00");
+                    jsonObject.put("status", "0");
                     jsonObject.put("result", "邮件发送成功");
                 }else{
-                    jsonObject.put("status", "00");
+                    jsonObject.put("status", "0");
                     jsonObject.put("result", "用户邮箱为空不能发送邮件");
                 }
             }else{

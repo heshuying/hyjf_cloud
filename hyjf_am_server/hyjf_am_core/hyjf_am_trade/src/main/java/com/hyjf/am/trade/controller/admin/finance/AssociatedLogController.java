@@ -63,7 +63,7 @@ public class AssociatedLogController extends BaseController {
         logger.info("searchBindLogList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
         List<BindLogVO> bindLogVOList = associatedLogService.searchBindLogList(request);
         if(!CollectionUtils.isEmpty(bindLogVOList)){
-            response.setRtn("00");
+            response.setRtn("0");
             response.setResultList(bindLogVOList);
         }
         return response;
