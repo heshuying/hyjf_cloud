@@ -1,5 +1,8 @@
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
+import com.hyjf.am.trade.dao.model.customize.admin.AdminHjhDebtCreditCustomize;
+
+import java.util.List;
 import java.util.Map; /**
  * @Auther:yangchangwei
  * @Date:2018/7/5
@@ -8,4 +11,6 @@ import java.util.Map; /**
 public interface AdminHjhDebtCreditCustomizeMapper {
 
     int countDebtCredit(Map paramMap);
+
+    List<AdminHjhDebtCreditCustomize> selectDebtCreditList(Map map);
 }

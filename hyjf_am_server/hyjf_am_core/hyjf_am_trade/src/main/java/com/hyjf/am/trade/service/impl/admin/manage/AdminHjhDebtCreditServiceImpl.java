@@ -37,8 +37,10 @@ public class AdminHjhDebtCreditServiceImpl extends BaseServiceImpl implements Ad
     @Override
     public List<AdminHjhDebtCreditCustomize> getList(Map map,int limitStart,int limitEnd) {
 
-
-        return null;
+        map.put("limitStart",limitStart);
+        map.put("limitEnd",limitEnd);
+        List<AdminHjhDebtCreditCustomize> list = this.adminHjhDebtCreditCustomizeMapper.selectDebtCreditList(map);
+        return list;
     }
 
 }

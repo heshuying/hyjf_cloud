@@ -1,6 +1,9 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing
@@ -14,4 +17,11 @@ public interface AmConfigClient {
      * @return
      */
     AdminSystemVO getUserInfoById(Integer loginUserId);
+
+    /**
+     * 获取数据字典表的下拉列表
+     * @param nameClass
+     * @return
+     */
+    List<ParamNameVO> getParamNameList(String nameClass);
 }
