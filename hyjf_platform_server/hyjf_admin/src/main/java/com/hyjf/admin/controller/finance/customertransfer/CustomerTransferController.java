@@ -6,6 +6,8 @@ package com.hyjf.admin.controller.finance.customertransfer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CustomerTransferService;
+import com.hyjf.am.resquest.admin.CustomerTransferRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +41,33 @@ public class CustomerTransferController extends BaseController {
         }else{
             result.put("status","error");
             result.put("result","用户账号不能为空");
+        }
+        return result;
+    }
+
+    /**
+     * 用户转账
+     * @auth sunpeikai
+     * @param request 发起转账提交时所用的参数
+     * @return
+     */
+    @ApiOperation(value = "用户转账",notes = "用户转账")
+    @PostMapping(value = "/addtransfer")
+    public JSONObject addTransfer(@RequestHeader Integer userId,@RequestBody CustomerTransferRequest request){
+        JSONObject result = new JSONObject();
+        result = customerTransferService.checkCustomerTransferParam(request);
+        if(result != null && "00".equals(result.get("status"))){
+            AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
+            request.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
+            request.setCreateUserName(adminSystemVO.getUsername());
+            boolean success = customerTransferService.insertTransfer(request);
+            if(success){
+                result.put("status","00");
+                result.put("result","成功");
+            }else{
+                result.put("status","error");
+                result.put("result","数据插入失败");
+            }
         }
         return result;
     }

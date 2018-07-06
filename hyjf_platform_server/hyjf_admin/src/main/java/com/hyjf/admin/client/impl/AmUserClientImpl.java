@@ -35,7 +35,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public List<UserVO> searchBalanceByUsername(String userName) {
+	public List<UserVO> searchUserByUsername(String userName) {
 		String url = "http://AM-USER/am-user/customertransfer/searchuserbyusername";
 		UserResponse response = restTemplate
 				.postForEntity(url, userName, UserResponse.class)

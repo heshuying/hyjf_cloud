@@ -10,10 +10,7 @@ import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.BindLogResponse;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
-import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
@@ -169,6 +166,19 @@ public class AmTradeClientImpl implements AmTradeClient{
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 向数据库的ht_user_transfer表中插入数据
+     * @auth sunpeikai
+     * @param request 用户转账-发起转账的参数
+     * @return
+     */
+    @Override
+    public Boolean insertUserTransfer(CustomerTransferRequest request) {
+        String url = "http://AM-TRADE/am-trade/customertransfer/insertusertransfer";
+        Boolean response = restTemplate.postForEntity(url,request,Boolean.class).getBody();
+        return response;
     }
 
 }
