@@ -23,6 +23,12 @@ public class Response<T> {
 		this.message = SUCCESS_MSG;
 	}
 
+	public Response(T result) {
+		this.rtn = SUCCESS;
+		this.message = SUCCESS_MSG;
+		this.result = result;
+	}
+
 	public Response(String rtn, String message) {
 		this.rtn = rtn;
 		this.message = message;
