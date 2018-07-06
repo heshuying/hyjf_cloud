@@ -182,7 +182,7 @@ public class AOPHandler {
 		Response result = null;
 		try {
 			result = (Response) pjp.proceed();
-			if (result.getRtn().equals("99")){
+			if (result.getRtn().equals(Response.ERROR)){
 				throw new Exception(result.getMessage());
 			}
 		}catch(Throwable e) {
