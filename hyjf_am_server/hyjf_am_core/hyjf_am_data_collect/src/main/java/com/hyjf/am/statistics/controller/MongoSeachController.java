@@ -7,7 +7,7 @@ import com.hyjf.am.statistics.bean.DirectionalTransferAssociatedRecords;
 import com.hyjf.am.statistics.mongo.AppChannelStatisticsDetailDao;
 import com.hyjf.am.statistics.mongo.BankSmsAuthCodeDao;
 import com.hyjf.am.statistics.mongo.DirectionalTransferAssociatedRecordsDao;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.statistics;
+package com.hyjf.am.vo.datacollect;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

@@ -22,7 +22,7 @@ import com.hyjf.am.trade.mq.SmsProducer;
 import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;

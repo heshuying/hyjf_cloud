@@ -24,21 +24,21 @@ public class StatisticsTzjUtm implements Serializable {
 
     private BigDecimal openRate;
 
-    private Integer cardbindCount;
+    private Integer cardBindCount;
 
-    private BigDecimal cardbindRate;
+    private BigDecimal cardBindRate;
 
-    private Integer rechargenewCount;
+    private Integer rechargeNewCount;
 
     private Integer rechargeCount;
 
-    private Integer tendernewCount;
+    private Integer tenderNewCount;
 
-    private Integer tenderfirstCount;
+    private Integer tenderFirstCount;
 
-    private BigDecimal tenderfirstMoney;
+    private BigDecimal tenderFirstMoney;
 
-    private BigDecimal tendernewRate;
+    private BigDecimal tenderNewRate;
 
     private Integer tenderCount;
 
@@ -50,9 +50,9 @@ public class StatisticsTzjUtm implements Serializable {
 
     private String channelName;
 
-    private Integer channelFlg;
+    private Integer channelFlag;
 
-    private Integer addTime;
+    private Integer createTime;
 
     private Integer updateTime;
 
@@ -98,28 +98,28 @@ public class StatisticsTzjUtm implements Serializable {
         this.openRate = openRate;
     }
 
-    public Integer getCardbindCount() {
-        return cardbindCount;
+    public Integer getCardBindCount() {
+        return cardBindCount;
     }
 
-    public void setCardbindCount(Integer cardbindCount) {
-        this.cardbindCount = cardbindCount;
+    public void setCardBindCount(Integer cardBindCount) {
+        this.cardBindCount = cardBindCount;
     }
 
-    public BigDecimal getCardbindRate() {
-        return cardbindRate;
+    public BigDecimal getCardBindRate() {
+        return cardBindRate;
     }
 
-    public void setCardbindRate(BigDecimal cardbindRate) {
-        this.cardbindRate = cardbindRate;
+    public void setCardBindRate(BigDecimal cardBindRate) {
+        this.cardBindRate = cardBindRate;
     }
 
-    public Integer getRechargenewCount() {
-        return rechargenewCount;
+    public Integer getRechargeNewCount() {
+        return rechargeNewCount;
     }
 
-    public void setRechargenewCount(Integer rechargenewCount) {
-        this.rechargenewCount = rechargenewCount;
+    public void setRechargeNewCount(Integer rechargeNewCount) {
+        this.rechargeNewCount = rechargeNewCount;
     }
 
     public Integer getRechargeCount() {
@@ -130,36 +130,36 @@ public class StatisticsTzjUtm implements Serializable {
         this.rechargeCount = rechargeCount;
     }
 
-    public Integer getTendernewCount() {
-        return tendernewCount;
+    public Integer getTenderNewCount() {
+        return tenderNewCount;
     }
 
-    public void setTendernewCount(Integer tendernewCount) {
-        this.tendernewCount = tendernewCount;
+    public void setTenderNewCount(Integer tenderNewCount) {
+        this.tenderNewCount = tenderNewCount;
     }
 
-    public Integer getTenderfirstCount() {
-        return tenderfirstCount;
+    public Integer getTenderFirstCount() {
+        return tenderFirstCount;
     }
 
-    public void setTenderfirstCount(Integer tenderfirstCount) {
-        this.tenderfirstCount = tenderfirstCount;
+    public void setTenderFirstCount(Integer tenderFirstCount) {
+        this.tenderFirstCount = tenderFirstCount;
     }
 
-    public BigDecimal getTenderfirstMoney() {
-        return tenderfirstMoney;
+    public BigDecimal getTenderFirstMoney() {
+        return tenderFirstMoney;
     }
 
-    public void setTenderfirstMoney(BigDecimal tenderfirstMoney) {
-        this.tenderfirstMoney = tenderfirstMoney;
+    public void setTenderFirstMoney(BigDecimal tenderFirstMoney) {
+        this.tenderFirstMoney = tenderFirstMoney;
     }
 
-    public BigDecimal getTendernewRate() {
-        return tendernewRate;
+    public BigDecimal getTenderNewRate() {
+        return tenderNewRate;
     }
 
-    public void setTendernewRate(BigDecimal tendernewRate) {
-        this.tendernewRate = tendernewRate;
+    public void setTenderNewRate(BigDecimal tenderNewRate) {
+        this.tenderNewRate = tenderNewRate;
     }
 
     public Integer getTenderCount() {
@@ -199,23 +199,23 @@ public class StatisticsTzjUtm implements Serializable {
     }
 
     public void setChannelName(String channelName) {
-        this.channelName = channelName == null ? null : channelName.trim();
+        this.channelName = channelName;
     }
 
-    public Integer getChannelFlg() {
-        return channelFlg;
+    public Integer getChannelFlag() {
+        return channelFlag;
     }
 
-    public void setChannelFlg(Integer channelFlg) {
-        this.channelFlg = channelFlg;
+    public void setChannelFlag(Integer channelFlag) {
+        this.channelFlag = channelFlag;
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public Integer getCreateTime() {
+        return createTime;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
     }
 
     public Integer getUpdateTime() {

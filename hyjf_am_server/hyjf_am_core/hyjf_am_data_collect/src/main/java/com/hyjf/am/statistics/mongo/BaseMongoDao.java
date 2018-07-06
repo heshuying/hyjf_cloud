@@ -49,6 +49,10 @@ public abstract class BaseMongoDao<T> {
 		this.mongoTemplate.upsert(query, update, getEntityClass());
 	}
 
+	public void del(Query query){
+		this.mongoTemplate.remove(query, getEntityClass());
+	}
+
 	public void setMongoTemplate(MongoTemplate mongoTemplate){
 		this.mongoTemplate = mongoTemplate;
 	}
