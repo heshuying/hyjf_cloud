@@ -17,7 +17,7 @@ public interface AmUserClient {
      * @param
      * @return
      */
-    List<UserVO> searchBalanceByUsername(String userName);
+    List<UserVO> searchUserByUsername(String userName);
 
     /**
      * 根据userId查询accountChinapnr开户信息

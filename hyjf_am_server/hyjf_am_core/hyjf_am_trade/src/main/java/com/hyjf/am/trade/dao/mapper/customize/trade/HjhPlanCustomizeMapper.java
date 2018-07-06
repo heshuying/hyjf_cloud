@@ -2,11 +2,13 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import java.util.Map;
 
+import com.hyjf.am.resquest.admin.PlanListCustomizeRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
+import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 
 /**
  * @Description 计划类
@@ -57,4 +59,11 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     int updateHjhAccedeForHjhProcess(HjhAccede hjhAccede);
+    
+    /**
+     * 获取汇计划sum
+     * @param hjhAccede
+     * @return
+     */
+    HjhPlanSumVO getCalcSumByParam(PlanListCustomizeRequest request);
 }

@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.finance;
 
 import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: CustomerTransferController, v0.1 2018/7/6 10:12
  */
-@Api(value = "资金中心-定向转账-用户转账")
+@Api(value = "资金中心-转账管理-用户转账")
 @RestController
 @RequestMapping("/am-trade/customertransfer")
 public class CustomerTransferController extends BaseController {
@@ -50,4 +51,17 @@ public class CustomerTransferController extends BaseController {
         }
         return response;
     }
+    /**
+     * 向ht_user_transfer表中插入数据
+     * @auth sunpeikai
+     * @param request 发起转账的参数
+     * @return
+     */
+    @ApiOperation(value = "向ht_user_transfer表中插入数据",notes = "向ht_user_transfer表中插入数据")
+    @PostMapping(value = "/insertusertransfer")
+    public Boolean insertUserTransfer(@RequestBody CustomerTransferRequest request){
+        Boolean success = customerTransferService.insertUserTransfer(request);
+        return success;
+    }
+
 }
