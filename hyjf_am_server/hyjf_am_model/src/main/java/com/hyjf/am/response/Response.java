@@ -7,9 +7,9 @@ import java.util.List;
  * @version Response, v0.1 2018/1/21 22:18
  */
 public class Response<T> {
-	public static final String SUCCESS = "00";
+	public static final String SUCCESS = "0";
 	public static final String SUCCESS_MSG = "成功";
-	public static final String FAIL = "99";
+	public static final String FAIL = "1";
 	public static final String FAIL_MSG = "失败";
 
 	private String rtn;
