@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.finance;
 
+import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 
 import java.util.List;
@@ -20,4 +21,11 @@ public interface CustomerTransferService {
      * @return
      */
     List<Account> searchAccountByUserId(Integer userId);
+    /**
+     * 向ht_user_transfer表中插入数据
+     * @auth sunpeikai
+     * @param request 发起转账的参数
+     * @return
+     */
+    Boolean insertUserTransfer(CustomerTransferRequest request);
 }
