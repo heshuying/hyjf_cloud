@@ -39,6 +39,7 @@ public class BorrowRegistController {
 
     /**
      * 获取项目类型
+     *
      * @return
      */
     @RequestMapping("/select_borrow_project")
@@ -54,6 +55,7 @@ public class BorrowRegistController {
 
     /**
      * 获取还款方式
+     *
      * @return
      */
     @RequestMapping("/select_borrow_style")
@@ -69,6 +71,7 @@ public class BorrowRegistController {
 
     /**
      * 获取标的列表count
+     *
      * @return
      */
     @RequestMapping("/get_regist_count")
@@ -78,6 +81,7 @@ public class BorrowRegistController {
 
     /**
      * 获取标的列表
+     *
      * @return
      */
     @RequestMapping("/select_borrow_regist_list")
@@ -93,6 +97,7 @@ public class BorrowRegistController {
 
     /**
      * 统计页面值总和
+     *
      * @return
      */
     @RequestMapping("/sum_borrow_regist_account")
@@ -102,6 +107,7 @@ public class BorrowRegistController {
 
     /**
      * 获取受托支付电子账户列表
+     *
      * @param instCode
      * @param entrustedAccountId
      * @return
@@ -109,7 +115,7 @@ public class BorrowRegistController {
     @GetMapping("/select_stzf_white_list/{instCode}/{entrustedAccountId}")
     public STZHWhiteListResponse selectStzfWhiteList(@PathVariable String instCode, @PathVariable String entrustedAccountId) {
         STZHWhiteListResponse response = new STZHWhiteListResponse();
-        StzhWhiteList stzhWhiteList =  borrowRegistService.selectStzfWhiteList(instCode, entrustedAccountId);
+        StzhWhiteList stzhWhiteList = borrowRegistService.selectStzfWhiteList(instCode, entrustedAccountId);
         if (stzhWhiteList != null) {
             STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
             BeanUtils.copyProperties(stzhWhiteList, stzhWhiteListVO);
@@ -120,16 +126,18 @@ public class BorrowRegistController {
 
     /**
      * 更新标的信息
+     *
      * @param request
      * @return
      */
     @RequestMapping("/update_borrow_regist")
-    public int updateBorrowRegistFromList(@RequestBody BorrowRegistRequest request) {
+    public int updateBorrowRegist(@RequestBody BorrowRegistRequest request) {
         return borrowRegistService.updateBorrowRegistFromList(request);
     }
 
     /**
      * 更新标的信息(受托支付备案)
+     *
      * @param request
      * @return
      */

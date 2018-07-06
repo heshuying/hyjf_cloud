@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AccountDirectionalTransferClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.DirectionalTransferService;
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
@@ -25,15 +25,15 @@ public class DirectionalTransferServiceImpl extends BaseServiceImpl implements D
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private AccountDirectionalTransferClient accountDirectionalTransferClient;
+    private AmTradeClient amTradeClient;
 
     @Override
     public Integer getDirectionalTransferCount(DirectionalTransferListRequest request) {
-        return accountDirectionalTransferClient.getDirectionalTransferCount(request);
+        return amTradeClient.getDirectionalTransferCount(request);
     }
 
     @Override
     public List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request) {
-        return accountDirectionalTransferClient.searchDirectionalTransferList(request);
+        return amTradeClient.searchDirectionalTransferList(request);
     }
 }

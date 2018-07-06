@@ -85,6 +85,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 			if(listZhitouApicron == null || listZhitouApicron.size() == 0){
 				return;
 			}
+	        _log.info("任务总数："+listZhitouApicron.size());
 			// 循环进行将还款任务压入队列中还款
 			for (BorrowApicron apicron : listZhitouApicron) {
 				_log.info("任务缓存:项目编号:[" + apicron.getBorrowNid() + "].计划编号:[" + (StringUtils.isEmpty(apicron.getPlanNid()) ? "" : apicron.getPlanNid()) + "].");

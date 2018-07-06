@@ -61,7 +61,7 @@
 		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
 		<result column="regist_status_name" property="registStatusName" jdbcType="VARCHAR" />
 		<result column="regist_status" property="registStatus" jdbcType="VARCHAR" />
-		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<select id="selectBorrowRegistList" resultMap="selectBorrowFirstListMap" parameterType="com.hyjf.am.resquest.admin.BorrowRegistListRequest">
 		SELECT
@@ -79,7 +79,7 @@
 			b.borrow_style,
 			bs.`name` AS borrow_style_name,
 			bpt.borrow_name AS project_type_name,
-			FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+			b.create_time,
 			b.regist_status,
 			bi.project_type
 		FROM

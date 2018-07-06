@@ -110,7 +110,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         CheckUtil.check(passwordFlag != 1, MsgEnum.STATUS_TP000001);
         int userId = user.getUserId();
         // 取得用户详细信息
-        UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
+        UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         // 调用设置密码接口
         String txcode="";
@@ -162,7 +162,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     @Override
     public Map<String, Object> resetPassword(UserVO user) {
         int userId = user.getUserId();
-        UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
+        UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();

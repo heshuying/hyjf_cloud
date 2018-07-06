@@ -3,9 +3,9 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
-import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
@@ -19,48 +19,34 @@ import java.util.Map;
 public interface BorrowRegistService {
     /**
      * 获取项目类型
+     *
      * @return
      */
     List<BorrowProjectTypeVO> selectBorrowProjectList();
 
-    /**
-     * 获取还款方式
-     * @return
-     */
-    List<BorrowStyleVO> selectBorrowStyleList();
 
     /**
      * 根据param获取对应数据
+     *
      * @param param
      * @return
      */
     Map<String, String> getParamNameMap(String param);
 
     /**
-     * 获取标的列表count
-     * @param borrowRegistListRequest
-     * @return
-     */
-    Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest);
-
-    /**
      * 获取标的备案列表
+     *
      * @param borrowRegistListRequest
      * @return
      */
-    List <BorrowRegistCustomizeVO> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest);
+    BorrowRegistResponseBean getRegistList(BorrowRegistListRequest borrowRegistListRequest);
 
     /**
      * 标的备案
+     *
      * @param borrowNid
      * @return
      */
-    JSONObject updateBorrowRegist(String borrowNid);
+    AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName);
 
-    /**
-     * 统计总额
-     * @param borrowRegistListRequest
-     * @return
-     */
-    String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
 }

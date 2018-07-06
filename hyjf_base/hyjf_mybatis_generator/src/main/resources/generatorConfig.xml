@@ -1769,9 +1769,11 @@
         </table>
         <table tableName="ht_directional_transfer_associated_log" domainObjectName="DirectionalTransferAssociatedLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="associated_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
         <table tableName="ht_directional_transfer_associated_records" domainObjectName="DirectionalTransferAssociatedRecords">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="associated_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
     </context>
 </generatorConfiguration>

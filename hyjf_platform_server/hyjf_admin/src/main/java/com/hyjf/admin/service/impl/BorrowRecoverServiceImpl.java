@@ -12,6 +12,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +45,8 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
             bean.setSumAccount(sumAccount);
             bean.setRecordList(recordList);
         }else{
-
+            bean.setSumAccount(new BorrowRecoverCustomizeVO());
+            bean.setRecordList(new ArrayList<BorrowRecoverCustomizeVO>());
         }
         bean.setTotal(count);
         return bean;
