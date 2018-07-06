@@ -1,13 +1,13 @@
 package com.hyjf.cs.trade.client;
 
 
+import java.util.List;
+
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
-import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.BankCardVO;
-
-import java.util.List;
 
 /**
  * 江西银行提现掉单异常处理Client

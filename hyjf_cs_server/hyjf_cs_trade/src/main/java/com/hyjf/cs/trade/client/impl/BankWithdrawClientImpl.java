@@ -2,21 +2,21 @@ package com.hyjf.cs.trade.client.impl;
 
 import java.util.List;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.BankCardVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.AccountWithdrawResponse;
 import com.hyjf.am.response.trade.BankCardBeanResponse;
 import com.hyjf.am.response.trade.BankCardResponse;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
-import com.hyjf.am.vo.trade.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.trade.client.BankWithdrawClient;
 
 /**
