@@ -1,11 +1,14 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -59,4 +62,15 @@ public interface AmTradeClient {
 
     BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean);
 
+    List<BorrowAuthCustomizeVO> selectBorrowAuthList(BorrowAuthRequest requestBean);
+
+    int selectBorrowAuthCount(BorrowAuthRequest requestBean);
+
+    List<BorrowAuthCustomizeVO> selectBorrowAuthedList(BorrowAuthRequest requestBean);
+
+    int selectBorrowAuthedCount(BorrowAuthRequest requestBean);
+
+    Integer updateTrusteePaySuccess(String borrowNid);
+
+    STZHWhiteListVO getCurrentCouponRecover(Integer userId, Integer stzUserId);
 }

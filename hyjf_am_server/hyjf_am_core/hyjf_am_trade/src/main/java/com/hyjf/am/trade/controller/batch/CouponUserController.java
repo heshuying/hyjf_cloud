@@ -3,19 +3,27 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
+import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
+import com.hyjf.am.resquest.admin.CouponConfigRequest;
+import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 import com.hyjf.am.trade.service.CouponUserService;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +62,18 @@ public class CouponUserController extends BaseController {
         List<CouponUserListCustomize> lstResult = couponUserService.selectCouponUserList(mapParameter);
         if (CollectionUtils.isNotEmpty(lstResult)){
             response.setResultList(CommonUtils.convertBeanList(lstResult,CouponUserListCustomizeVO.class));
+        }
+        return response;
+    }
+
+
+    @PostMapping("/getIssueNumber")
+    public CouponUserResponse getIssueNumber(@RequestBody @Valid CouponUserRequest request) {
+        CouponUserResponse response = new CouponUserResponse();
+        if (StringUtils.isNotEmpty(request.getCouponCode())) {
+            String couponCode = request.getCouponCode();
+            int count = couponUserService.getIssueNumber(couponCode);
+            response.setCount(count);
         }
         return response;
     }

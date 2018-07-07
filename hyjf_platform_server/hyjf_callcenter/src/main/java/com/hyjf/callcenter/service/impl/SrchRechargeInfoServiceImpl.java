@@ -5,7 +5,7 @@ package com.hyjf.callcenter.service.impl;
 
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterRechargeVO;
-import com.hyjf.callcenter.client.SrchRechargeInfoClient;
+import com.hyjf.callcenter.client.AmTradeClient;
 import com.hyjf.callcenter.service.SrchRechargeInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class SrchRechargeInfoServiceImpl implements SrchRechargeInfoService {
     @Autowired
-    private SrchRechargeInfoClient srchRechargeInfoClient;
+    private AmTradeClient amTradeClient;
     /**
      * 查询充值明细
      * @author wangjun
@@ -28,6 +28,6 @@ public class SrchRechargeInfoServiceImpl implements SrchRechargeInfoService {
      */
     @Override
     public List<CallCenterRechargeVO> queryRechargeList(CallCenterBaseRequest callCenterBaseRequest) {
-        return srchRechargeInfoClient.queryRechargeList(callCenterBaseRequest);
+        return amTradeClient.queryRechargeList(callCenterBaseRequest);
     }
 }

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 邀请及奖励记录
  * @author hesy
- * @version InviteController, v0.1 2018/6/23 17:14
+ * @version RewardController, v0.1 2018/6/23 17:14
  */
 @Api(value = "Web端奖励记录")
 @RestController

@@ -16,4 +16,7 @@ public interface SiteSettingService {
      * @return
      */
     SiteSetting findOne();
+
+
+    void updateTest1() throws Exception;
 }

@@ -1,16 +1,16 @@
 package com.hyjf.callcenter.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
 import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.callcenter.client.AccountHuifuClient;
+import com.hyjf.callcenter.client.AmConfigClient;
+import com.hyjf.callcenter.client.AmUserClient;
 import com.hyjf.callcenter.service.AccountHuifuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author libin
@@ -20,7 +20,10 @@ import com.hyjf.callcenter.service.AccountHuifuService;
 public class AccountHuifuServiceImpl implements AccountHuifuService {
 	
 	@Autowired
-	private AccountHuifuClient accountHuifuClient;
+	private AmUserClient amUserClient;
+
+	@Autowired
+	private AmConfigClient amConfigClient;
 	/**
 	 * 按照用户名/手机号查询汇付绑卡关系
 	 * @param user
@@ -34,7 +37,7 @@ public class AccountHuifuServiceImpl implements AccountHuifuService {
 		callcenterAccountHuifuRequest.setLimitSize(limitEnd);
 		callcenterAccountHuifuRequest.setUserName(user.getUsername());
 		List<CallcenterAccountHuifuVO> list = null;
-		list = accountHuifuClient.selectBankCardList(callcenterAccountHuifuRequest);
+		list = amUserClient.selectBankCardList(callcenterAccountHuifuRequest);
 		return list;
 	}
 	
@@ -47,7 +50,7 @@ public class AccountHuifuServiceImpl implements AccountHuifuService {
 	@Override
 	public List<CallcenterBankConfigVO> getBankConfigList() {
 		CallcenterAccountHuifuRequest callcenterAccountHuifuRequest = new CallcenterAccountHuifuRequest();
-		List<CallcenterBankConfigVO> list = accountHuifuClient.getBankConfigList(callcenterAccountHuifuRequest);;
+		List<CallcenterBankConfigVO> list = amConfigClient.getBankConfigList(callcenterAccountHuifuRequest);;
 		return list;
 	}
 }
