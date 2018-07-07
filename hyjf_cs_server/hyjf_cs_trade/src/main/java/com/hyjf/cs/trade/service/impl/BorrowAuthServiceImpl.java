@@ -49,6 +49,7 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
      * @param borrowNid
      * @param user
      */
+    @Override
     public void checkForAuth(String borrowNid, WebViewUserVO user){
         if(StringUtils.isBlank(borrowNid)){
             throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
