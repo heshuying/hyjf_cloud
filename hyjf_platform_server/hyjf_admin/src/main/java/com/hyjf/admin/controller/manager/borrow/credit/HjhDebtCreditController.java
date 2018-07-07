@@ -1,17 +1,12 @@
 package com.hyjf.admin.controller.manager.borrow.credit;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.ConvertUtils;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.HjhDebtCreditService;
-import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
-import com.hyjf.am.vo.admin.AccountDetailVO;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -20,17 +15,13 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther:yangchangwei
@@ -42,7 +33,6 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/hjhDebtCredit")
 public class HjhDebtCreditController extends BaseController{
 
-    Logger _log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private HjhDebtCreditService hjhDebtCreditService;
