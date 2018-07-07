@@ -4,10 +4,7 @@ package com.hyjf.am.trade.dao.customize;
 import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRecoverCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhDebtCreditCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.*;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.BorrowAuthCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
@@ -68,6 +65,9 @@ public class CustomizeMapper extends AutoMapper {
 
     @Resource
     protected BorrowAuthCustomizeMapper borrowAuthCustomizeMapper;
+
+    @Resource
+    protected BatchCenterCustomizeMapper batchCenterCustomizeMapper;
 }
 
 

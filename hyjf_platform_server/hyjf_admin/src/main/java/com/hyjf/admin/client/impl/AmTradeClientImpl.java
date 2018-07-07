@@ -263,4 +263,15 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response =  restTemplate.
+                postForEntity(tradeService + "/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
 }
