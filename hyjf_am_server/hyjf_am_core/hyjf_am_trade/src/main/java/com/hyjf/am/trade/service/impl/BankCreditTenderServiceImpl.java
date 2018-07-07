@@ -1432,5 +1432,49 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		return CommonUtils.convertBean(borrowCreditList.get(0), BorrowCreditVO.class);
 	}
 
+	/**
+	 * 保存债转异步数据
+	 *
+	 * @param request
+	 */
+	@Override
+	public void saveCreditBgData(CreditTenderBgVO request) {
+		// 删除tmp表
+		deleteByOrderIdAndUserId(request.getCreditTenderLog().getLogOrderId(),request.getCreditTenderLog().getUserId());
+		CreditTender creditTender = CommonUtils.convertBean(request.getCreditTender(),CreditTender.class);
+		// 插入credit_tender
+		creditTenderMapper.insertSelective(creditTender);
+		// 处理承接人account表和account_list表
+		Account assignAccountNew = CommonUtils.convertBean(request.getAssignAccountNew(),Account.class);
+		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(assignAccountNew) ;
+		AccountList assignAccountList = CommonUtils.convertBean(request.getAssignAccountList(),AccountList.class);
+		this.accountListMapper.insertSelective(assignAccountList);
+
+		// 处理出让人的 account表和account_list表
+		Account sellerAccountNew = CommonUtils.convertBean(request.getSellerAccountNew(),Account.class);
+		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(sellerAccountNew) ;
+		AccountList sellerAccountList = CommonUtils.convertBean(request.getSellerAccountList(),AccountList.class);
+		this.accountListMapper.insertSelective(sellerAccountList);
+
+		// 插入 creditRepay
+		if(request.getCreditRepayVO()!=null){
+			CreditRepay creditRepay = CommonUtils.convertBean(request.getCreditRepayVO(),CreditRepay.class);
+			creditRepayMapper.insertSelective(creditRepay);
+		}
+
+		// 更新Borrow_recover
+		BorrowRecover borrowRecover = CommonUtils.convertBean(request.getBorrowRecover(),BorrowRecover.class);
+		this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) ;
+
+		// 更新Borrow_recover_plan
+		if(request.getBorrowRecoverPlan()!=null){
+			BorrowRecoverPlan borrowRecoverPlan = CommonUtils.convertBean(request.getBorrowRecoverPlan(),BorrowRecoverPlan.class);
+			this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan);
+		}
+
+		// 调用银行结束债转接口
+		this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
+	}
+
 
 }
