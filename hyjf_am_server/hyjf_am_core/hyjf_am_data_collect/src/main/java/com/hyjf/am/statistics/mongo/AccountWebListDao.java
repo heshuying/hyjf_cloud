@@ -1,8 +1,19 @@
 package com.hyjf.am.statistics.mongo;
 
+import com.hyjf.am.statistics.bean.AccountWebList;
+import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.hyjf.am.statistics.bean.AccountWebList;
+import java.util.List;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 
 /**
  * @author xiasq
@@ -15,4 +26,68 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
     protected Class<AccountWebList> getEntityClass() {
         return AccountWebList.class;
     }
+
+    public long queryWebCount(AccountWebListVO accountWebList){
+        Query query = new Query();
+        Criteria criteria = createCriteria(accountWebList);
+        query.addCriteria(criteria);
+        return mongoTemplate.count(query,getEntityClass());
+    }
+
+    public List<AccountWebList> queryWebList(AccountWebListVO accountWebList,int start,int end){
+        Query query = new Query();
+        Criteria criteria = createCriteria(accountWebList);
+        query.with(new Sort(Sort.Direction.DESC, "createTime","id"));
+        query.addCriteria(criteria);
+        return mongoTemplate.find(query.skip(start-1).limit(end),getEntityClass());
+    }
+
+    public List<AccountWebList> queryAccountWebList(AccountWebListVO accountWebList){
+        Query query = new Query();
+        Criteria criteria = createCriteria(accountWebList);
+        query.with(new Sort(Sort.Direction.DESC, "createTime","id"));
+        query.addCriteria(criteria);
+        return mongoTemplate.find(query,getEntityClass());
+    }
+
+    public Criteria createCriteria(AccountWebListVO accountWebList){
+        Criteria criteria;
+        if(null!=accountWebList){
+            criteria = Criteria.where("id").gt(0);
+            if(StringUtils.isNotBlank( accountWebList.getTruenameSearch())){
+                criteria = criteria.and("truename").is(accountWebList.getTruenameSearch());
+            }
+            if (StringUtils.isNotBlank(accountWebList.getUsernameSearch())){
+                criteria = criteria.and("username").is(accountWebList.getUsernameSearch());
+            }
+            if (StringUtils.isNotBlank(accountWebList.getTradeTypeSearch())){
+                criteria = criteria.and("trade").is(accountWebList.getTradeTypeSearch());
+            }
+            if (StringUtils.isNotBlank(accountWebList.getStartDate())){
+                Integer begin = GetDate.dateString2Timestamp(accountWebList.getStartDate());
+                criteria = criteria.and("createTime").gte(begin);
+            }
+            if (StringUtils.isNotBlank(accountWebList.getEndDate())){
+                Integer end = GetDate.dateString2Timestamp(accountWebList.getEndDate());
+                criteria = criteria.and("createTime").lte(end);
+            }
+            return criteria;
+        }
+        return new Criteria();
+    }
+
+    public int selectBorrowInvestAccount(AccountWebListVO accountWebList){
+        int total = 0;
+        Aggregation aggregation = Aggregation.newAggregation(
+                match(createCriteria(accountWebList)),
+                Aggregation.group("id").sum("amount").as("account")
+        );
+        AggregationResults<Integer> ar = mongoTemplate.aggregate(aggregation,"account", Integer.class);
+        List<Integer> list = ar.getMappedResults();
+        if(list.size() > 0){
+            total += list.get(0);
+        }
+        return total;
+    }
+
 }

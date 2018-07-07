@@ -3,8 +3,12 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
+import com.hyjf.am.response.config.SiteSettingsResponse;
+import com.hyjf.am.response.config.SmsMailTemplateResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.SiteSettingsVO;
+import com.hyjf.am.vo.config.SmsMailTemplateVO;
 import com.hyjf.common.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +51,41 @@ public class AmConfigClientImpl implements AmConfigClient {
         ParamNameResponse response = restTemplate.getForEntity(url,ParamNameResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询邮件配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public SiteSettingsVO findSiteSetting() {
+
+        SiteSettingsResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 查询邮件模板
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode) {
+        SmsMailTemplateResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/smsMailTemplate/findSmsMailByCode/" + mailCode,
+                        SmsMailTemplateResponse.class)
+                .getBody();
+        if (response != null) {
+            return response.getResult();
         }
         return null;
     }

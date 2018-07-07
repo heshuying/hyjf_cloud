@@ -20,6 +20,8 @@ public interface AssetListService {
 	Integer getRecordCount(AssetListRequest request);
 	
 	BigDecimal getSumAccount(AssetListRequest request);
+
+	boolean updateCashDepositeStatus(String assetId, String menuHide);
 }
 
 

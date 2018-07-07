@@ -9,12 +9,20 @@ import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.BindLogResponse;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.BindLogListRequest;
+import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
+import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +168,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public List<AccountVO> searchAccountByUserId(Integer userId) {
         AccountResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/customertransfer/searchaccountbyuserid", userId, AccountResponse.class)
+                .getForEntity(tradeService + "/customertransfer/searchaccountbyuserid/" + userId, AccountResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
@@ -176,9 +184,83 @@ public class AmTradeClientImpl implements AmTradeClient{
      */
     @Override
     public Boolean insertUserTransfer(CustomerTransferRequest request) {
-        String url = "http://AM-TRADE/am-trade/customertransfer/insertusertransfer";
+        String url = tradeService + "/customertransfer/insertusertransfer";
         Boolean response = restTemplate.postForEntity(url,request,Boolean.class).getBody();
         return response;
+    }
+
+    /**
+     * 根据筛选条件查询ht_user_transfer的数据总数
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getUserTransferCount(CustomerTransferListRequest request) {
+        Integer count = restTemplate
+                .postForEntity(tradeService+"/customertransfer/getusertransfercount", request, Integer.class)
+                .getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询UserTransfer列表
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<UserTransferVO> searchUserTransferList(CustomerTransferListRequest request) {
+        UserTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/customertransfer/searchusertransferlist", request, UserTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据transferId查询UserTransfer
+     * @auth sunpeikai
+     * @param transferId ht_user_transfer表的主键id
+     * @return
+     */
+    @Override
+    public UserTransferVO searchUserTransferById(Integer transferId) {
+        String url = tradeService + "/customertransfer/searchusertransferbyid/" + transferId;
+        UserTransferResponse response = restTemplate.getForEntity(url,UserTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<AccountTradeVO> selectTradeTypes() {
+        String url = "http://AM-TRADE/am-trade/accounttrade/selectTradeTypes";
+        AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询汇计划转让列表
+     * @param request
+     * @return
+     */
+    @Override
+    public HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request) {
+
+        HjhDebtCreditReponse response =  restTemplate.
+                postForEntity(tradeService + "/adminHjhDebtCredit/getList", request, HjhDebtCreditReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
     }
 
 }

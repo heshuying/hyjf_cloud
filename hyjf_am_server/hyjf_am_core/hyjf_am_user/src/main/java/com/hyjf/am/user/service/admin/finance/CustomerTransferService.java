@@ -30,4 +30,12 @@ public interface CustomerTransferService {
      * @return
      */
     List<AccountChinapnr> searchAccountChinapnrByUserId(Integer userId);
+
+    /**
+     * 根据userId查询User用户信息
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    User searchUserByUserId(Integer userId);
 }

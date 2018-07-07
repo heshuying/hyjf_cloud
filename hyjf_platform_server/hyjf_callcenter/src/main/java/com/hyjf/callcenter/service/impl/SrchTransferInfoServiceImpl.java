@@ -1,14 +1,13 @@
 package com.hyjf.callcenter.service.impl;
 
-import java.util.List;
-
+import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
+import com.hyjf.am.vo.callcenter.CallCenterBorrowCreditVO;
+import com.hyjf.callcenter.client.AmTradeClient;
+import com.hyjf.callcenter.service.SrchTransferInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
-import com.hyjf.am.vo.callcenter.CallCenterBorrowCreditVO;
-import com.hyjf.callcenter.client.SrchTransferInfoClient;
-import com.hyjf.callcenter.service.SrchTransferInfoService;
+import java.util.List;
 
 /**
  * @author libin
@@ -17,7 +16,7 @@ import com.hyjf.callcenter.service.SrchTransferInfoService;
 @Service
 public class SrchTransferInfoServiceImpl implements SrchTransferInfoService {
     @Autowired
-    private SrchTransferInfoClient srchTransferInfoClient;
+    private AmTradeClient amTradeClient;
 	
 	@Override
 	public List<CallCenterBorrowCreditVO> selectBorrowCreditList(CallCenterBorrowCreditVO callCenterBorrowCreditVO) {
@@ -25,7 +24,7 @@ public class SrchTransferInfoServiceImpl implements SrchTransferInfoService {
 		SrchTransferInfoRequest.setLimitStart(callCenterBorrowCreditVO.getLimitStart());
 		SrchTransferInfoRequest.setLimitSize(callCenterBorrowCreditVO.getLimitEnd());
 		SrchTransferInfoRequest.setUsernameSrch(callCenterBorrowCreditVO.getUsernameSrch());
-		List<CallCenterBorrowCreditVO> list = srchTransferInfoClient.selectBorrowInvestList(SrchTransferInfoRequest);
+		List<CallCenterBorrowCreditVO> list = amTradeClient.selectBorrowInvestList(SrchTransferInfoRequest);
 		return list;
 	}
 }

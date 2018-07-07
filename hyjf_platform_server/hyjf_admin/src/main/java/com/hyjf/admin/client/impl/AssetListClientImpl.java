@@ -112,4 +112,11 @@ public class AssetListClientImpl implements AssetListClient {
 		}
 		return null;
 	}
+
+	@Override
+	public void updateCashDepositeStatus(String assetId, String menuHide) {
+		String url = "http://AM-TRADE/am-trade/assetList/updateCashDepositeStatus/"+assetId+"/"+menuHide;
+		restTemplate.getForEntity(url, String.class).getBody();
+		
+	}
 }

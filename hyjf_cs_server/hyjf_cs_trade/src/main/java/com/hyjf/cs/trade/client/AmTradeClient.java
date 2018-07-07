@@ -3,9 +3,10 @@ package com.hyjf.cs.trade.client;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 
@@ -68,4 +69,8 @@ public interface AmTradeClient {
     List<BorrowAuthCustomizeVO> selectBorrowAuthedList(BorrowAuthRequest requestBean);
 
     int selectBorrowAuthedCount(BorrowAuthRequest requestBean);
+
+    Integer updateTrusteePaySuccess(String borrowNid);
+
+    STZHWhiteListVO getStzhWhiteListVO(Integer userId, Integer stzUserId);
 }
