@@ -245,4 +245,22 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+
+    /**
+     * 查询汇计划转让列表
+     * @param request
+     * @return
+     */
+    @Override
+    public HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request) {
+
+        HjhDebtCreditReponse response =  restTemplate.
+                postForEntity(tradeService + "/adminHjhDebtCredit/getList", request, HjhDebtCreditReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
 }
