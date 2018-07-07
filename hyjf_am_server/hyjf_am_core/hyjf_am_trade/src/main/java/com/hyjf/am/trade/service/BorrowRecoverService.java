@@ -47,4 +47,13 @@ public interface BorrowRecoverService{
      * @return
      */
     BorrowRecover getBorrowRecoverByTenderNid(String tenderNid);
+
+    /**
+     * 获取borrow_recover_plan更新每次还款时间
+     * @param bidNid
+     * @param creditTenderNid
+     * @param periodNow
+     * @return
+     */
+    BorrowRecoverPlan getPlanByBidTidPeriod(String bidNid, String creditTenderNid, Integer periodNow);
 }

@@ -124,4 +124,10 @@ public interface BankCreditTenderService {
      * @return
      */
     BorrowCreditVO getBorrowCreditByCreditNid(String creditNid);
+
+    /**
+     * 保存债转异步数据
+     * @param request
+     */
+    void saveCreditBgData(CreditTenderBgVO request);
 }

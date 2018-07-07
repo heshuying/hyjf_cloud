@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service.admin.manage;
+package com.hyjf.am.trade.service.admin.productcenter.hjhcredit;
 
 import com.hyjf.am.trade.dao.model.customize.admin.AdminHjhDebtCreditCustomize;
 
