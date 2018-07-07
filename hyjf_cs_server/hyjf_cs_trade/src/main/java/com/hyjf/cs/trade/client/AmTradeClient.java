@@ -72,5 +72,5 @@ public interface AmTradeClient {
 
     Integer updateTrusteePaySuccess(String borrowNid);
 
-    STZHWhiteListVO getCurrentCouponRecover(Integer userId, Integer stzUserId);
+    STZHWhiteListVO getStzhWhiteListVO(Integer userId, Integer stzUserId);
 }
