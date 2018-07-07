@@ -241,6 +241,11 @@ public class PlanListRequest extends BasePage implements Serializable{
 	private String minInvestCounts;
 
 	public int limit;
+	
+	/**
+	 * 登陆者userid
+	 */
+	private int userid;
 
 	public String getSort() {
 		return sort;
@@ -618,6 +623,14 @@ public class PlanListRequest extends BasePage implements Serializable{
 		this.limit = limit;
 	}
 
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+	
 	/**
 	 * 检索条件 计划类型 “配置中心-汇添金配置”中所有计划类型（暂时不用）
 	 */
