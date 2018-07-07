@@ -1,4 +1,4 @@
-package com.hyjf.am.response.user;
+package com.hyjf.admin.beans.response;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,8 +19,13 @@ import com.hyjf.am.vo.user.MspShixininfosVO;
 import com.hyjf.am.vo.user.MspTitleVO;
 import com.hyjf.am.vo.user.MspZhixinginfosVO;
 
-public class MspApplytResponse extends AdminResponse<MspApplyVO>  {
+public class MspApplytResponseBean extends MspApplyVO {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private int recordTotal;
 

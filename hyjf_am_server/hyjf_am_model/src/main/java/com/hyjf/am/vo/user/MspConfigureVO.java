@@ -3,207 +3,276 @@ package com.hyjf.am.vo.user;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-public class MspConfigureVO implements Serializable {
-    private Integer id;
+import com.hyjf.am.vo.BaseVO;
 
-    private String configureName;
+public class MspConfigureVO extends BaseVO implements Serializable {
+	 private Integer id;
 
-    private String loanType;
+	    private String configureName;
 
-    private String serviceType;
+	    private String loanType;
+	    
+	    private String loanTypeName;
 
-    private String approvalResult;
+	    private String serviceType;
+	    
+	    private String serviceTypeName;
 
-    private BigDecimal loanMoney;
+	    private String approvalResult;
+	    
+	    private String approvalResultName;
 
-    private Integer loanTimeLimit;
+	    private BigDecimal loanMoney;
 
-    private String creditAddress;
+	    private Integer loanTimeLimit;
 
-    private String guaranteeType;
+	    private String creditAddress;
+	    
+	    private String creditAddresss;
 
-    private BigDecimal unredeemedMoney;
+	    public String getCreditAddresss() {
+			return creditAddresss;
+		}
 
-    private String repaymentStatus;
+		public void setCreditAddresss(String creditAddresss) {
+			this.creditAddresss = creditAddresss;
+		}
 
-    private BigDecimal overdueAmount;
+		private String guaranteeType;
+	    
+	    private String guaranteeTypeName;
 
-    private String overdueDate;
+	    private BigDecimal unredeemedMoney;
 
-    private Integer overdueLength;
+	    private String repaymentStatus;
+	    
+	    private String repaymentStatusName;
 
-    private String overdueReason;
+	    private BigDecimal overdueAmount;
 
-    private Integer delFlag;
+	    private String overdueDate;
 
-    private Integer createUser;
+	    private Integer overdueLength;
 
-    private Integer updateUser;
+	    private String overdueReason;
 
-    private Date createTime;
+	    private Integer createUser;
 
-    private Date updateTime;
+	    private Integer createTime;
 
-    private static final long serialVersionUID = 1L;
+	    private Integer updateUser;
 
-    public Integer getId() {
-        return id;
-    }
+	    private Integer updateTime;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	    private Integer delFlg;
+	    
 
-    public String getConfigureName() {
-        return configureName;
-    }
 
-    public void setConfigureName(String configureName) {
-        this.configureName = configureName == null ? null : configureName.trim();
-    }
+	    public String getLoanTypeName() {
+			return loanTypeName;
+		}
 
-    public String getLoanType() {
-        return loanType;
-    }
+		public void setLoanTypeName(String loanTypeName) {
+			this.loanTypeName = loanTypeName;
+		}
 
-    public void setLoanType(String loanType) {
-        this.loanType = loanType == null ? null : loanType.trim();
-    }
+		public String getServiceTypeName() {
+			return serviceTypeName;
+		}
 
-    public String getServiceType() {
-        return serviceType;
-    }
+		public void setServiceTypeName(String serviceTypeName) {
+			this.serviceTypeName = serviceTypeName;
+		}
 
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType == null ? null : serviceType.trim();
-    }
+		public String getApprovalResultName() {
+			return approvalResultName;
+		}
 
-    public String getApprovalResult() {
-        return approvalResult;
-    }
+		public void setApprovalResultName(String approvalResultName) {
+			this.approvalResultName = approvalResultName;
+		}
 
-    public void setApprovalResult(String approvalResult) {
-        this.approvalResult = approvalResult == null ? null : approvalResult.trim();
-    }
+		public String getGuaranteeTypeName() {
+			return guaranteeTypeName;
+		}
 
-    public BigDecimal getLoanMoney() {
-        return loanMoney;
-    }
+		public void setGuaranteeTypeName(String guaranteeTypeName) {
+			this.guaranteeTypeName = guaranteeTypeName;
+		}
 
-    public void setLoanMoney(BigDecimal loanMoney) {
-        this.loanMoney = loanMoney;
-    }
+		public String getRepaymentStatusName() {
+			return repaymentStatusName;
+		}
 
-    public Integer getLoanTimeLimit() {
-        return loanTimeLimit;
-    }
+		public void setRepaymentStatusName(String repaymentStatusName) {
+			this.repaymentStatusName = repaymentStatusName;
+		}
 
-    public void setLoanTimeLimit(Integer loanTimeLimit) {
-        this.loanTimeLimit = loanTimeLimit;
-    }
+		public static long getSerialversionuid() {
+			return serialVersionUID;
+		}
 
-    public String getCreditAddress() {
-        return creditAddress;
-    }
+		private static final long serialVersionUID = 1L;
 
-    public void setCreditAddress(String creditAddress) {
-        this.creditAddress = creditAddress == null ? null : creditAddress.trim();
-    }
+	    public Integer getId() {
+	        return id;
+	    }
 
-    public String getGuaranteeType() {
-        return guaranteeType;
-    }
+	    public void setId(Integer id) {
+	        this.id = id;
+	    }
 
-    public void setGuaranteeType(String guaranteeType) {
-        this.guaranteeType = guaranteeType == null ? null : guaranteeType.trim();
-    }
+	    public String getConfigureName() {
+	        return configureName;
+	    }
 
-    public BigDecimal getUnredeemedMoney() {
-        return unredeemedMoney;
-    }
+	    public void setConfigureName(String configureName) {
+	        this.configureName = configureName == null ? null : configureName.trim();
+	    }
 
-    public void setUnredeemedMoney(BigDecimal unredeemedMoney) {
-        this.unredeemedMoney = unredeemedMoney;
-    }
+	    public String getLoanType() {
+	        return loanType;
+	    }
 
-    public String getRepaymentStatus() {
-        return repaymentStatus;
-    }
+	    public void setLoanType(String loanType) {
+	        this.loanType = loanType == null ? null : loanType.trim();
+	    }
 
-    public void setRepaymentStatus(String repaymentStatus) {
-        this.repaymentStatus = repaymentStatus == null ? null : repaymentStatus.trim();
-    }
+	    public String getServiceType() {
+	        return serviceType;
+	    }
 
-    public BigDecimal getOverdueAmount() {
-        return overdueAmount;
-    }
+	    public void setServiceType(String serviceType) {
+	        this.serviceType = serviceType == null ? null : serviceType.trim();
+	    }
 
-    public void setOverdueAmount(BigDecimal overdueAmount) {
-        this.overdueAmount = overdueAmount;
-    }
+	    public String getApprovalResult() {
+	        return approvalResult;
+	    }
 
-    public String getOverdueDate() {
-        return overdueDate;
-    }
+	    public void setApprovalResult(String approvalResult) {
+	        this.approvalResult = approvalResult == null ? null : approvalResult.trim();
+	    }
 
-    public void setOverdueDate(String overdueDate) {
-        this.overdueDate = overdueDate == null ? null : overdueDate.trim();
-    }
+	    public BigDecimal getLoanMoney() {
+	        return loanMoney;
+	    }
 
-    public Integer getOverdueLength() {
-        return overdueLength;
-    }
+	    public void setLoanMoney(BigDecimal loanMoney) {
+	        this.loanMoney = loanMoney;
+	    }
 
-    public void setOverdueLength(Integer overdueLength) {
-        this.overdueLength = overdueLength;
-    }
+	    public Integer getLoanTimeLimit() {
+	        return loanTimeLimit;
+	    }
 
-    public String getOverdueReason() {
-        return overdueReason;
-    }
+	    public void setLoanTimeLimit(Integer loanTimeLimit) {
+	        this.loanTimeLimit = loanTimeLimit;
+	    }
 
-    public void setOverdueReason(String overdueReason) {
-        this.overdueReason = overdueReason == null ? null : overdueReason.trim();
-    }
+	    public String getCreditAddress() {
+	        return creditAddress;
+	    }
 
-    public Integer getDelFlag() {
-        return delFlag;
-    }
+	    public void setCreditAddress(String creditAddress) {
+	        this.creditAddress = creditAddress == null ? null : creditAddress.trim();
+	    }
 
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-    }
+	    public String getGuaranteeType() {
+	        return guaranteeType;
+	    }
 
-    public Integer getCreateUser() {
-        return createUser;
-    }
+	    public void setGuaranteeType(String guaranteeType) {
+	        this.guaranteeType = guaranteeType == null ? null : guaranteeType.trim();
+	    }
 
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
+	    public BigDecimal getUnredeemedMoney() {
+	        return unredeemedMoney;
+	    }
 
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
+	    public void setUnredeemedMoney(BigDecimal unredeemedMoney) {
+	        this.unredeemedMoney = unredeemedMoney;
+	    }
 
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
-    }
+	    public String getRepaymentStatus() {
+	        return repaymentStatus;
+	    }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	    public void setRepaymentStatus(String repaymentStatus) {
+	        this.repaymentStatus = repaymentStatus == null ? null : repaymentStatus.trim();
+	    }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	    public BigDecimal getOverdueAmount() {
+	        return overdueAmount;
+	    }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	    public void setOverdueAmount(BigDecimal overdueAmount) {
+	        this.overdueAmount = overdueAmount;
+	    }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	    public String getOverdueDate() {
+	        return overdueDate;
+	    }
+
+	    public void setOverdueDate(String overdueDate) {
+	        this.overdueDate = overdueDate == null ? null : overdueDate.trim();
+	    }
+
+	    public Integer getOverdueLength() {
+	        return overdueLength;
+	    }
+
+	    public void setOverdueLength(Integer overdueLength) {
+	        this.overdueLength = overdueLength;
+	    }
+
+	    public String getOverdueReason() {
+	        return overdueReason;
+	    }
+
+	    public void setOverdueReason(String overdueReason) {
+	        this.overdueReason = overdueReason == null ? null : overdueReason.trim();
+	    }
+
+	    public Integer getCreateUser() {
+	        return createUser;
+	    }
+
+	    public void setCreateUser(Integer createUser) {
+	        this.createUser = createUser;
+	    }
+
+	    public Integer getCreateTime() {
+	        return createTime;
+	    }
+
+	    public void setCreateTime(Integer createTime) {
+	        this.createTime = createTime;
+	    }
+
+	    public Integer getUpdateUser() {
+	        return updateUser;
+	    }
+
+	    public void setUpdateUser(Integer updateUser) {
+	        this.updateUser = updateUser;
+	    }
+
+	    public Integer getUpdateTime() {
+	        return updateTime;
+	    }
+
+	    public void setUpdateTime(Integer updateTime) {
+	        this.updateTime = updateTime;
+	    }
+
+	    public Integer getDelFlg() {
+	        return delFlg;
+	    }
+
+	    public void setDelFlg(Integer delFlg) {
+	        this.delFlg = delFlg;
+	    }
 }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.response.user;
 
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 
@@ -11,6 +12,6 @@ import com.hyjf.am.vo.user.CertificateAuthorityVO;
  * @version UserBankOpenAccountResponse, v0.1 2018/6/21 21:53
  * 用户CA认证记录
  */
-public class CertificateAuthorityResponse extends Response<CertificateAuthorityVO>{
+public class CertificateAuthorityResponse extends AdminResponse<CertificateAuthorityVO>{
 
 }

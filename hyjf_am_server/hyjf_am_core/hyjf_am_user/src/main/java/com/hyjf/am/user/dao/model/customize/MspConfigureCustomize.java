@@ -1,31 +1,52 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.user.dao.model.customize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class MspConfigure implements Serializable {
+
+public class MspConfigureCustomize implements Serializable {
     private Integer id;
 
     private String configureName;
 
     private String loanType;
+    
+    private String loanTypeName;
 
     private String serviceType;
+    
+    private String serviceTypeName;
 
     private String approvalResult;
+    
+    private String approvalResultName;
 
     private BigDecimal loanMoney;
 
     private Integer loanTimeLimit;
 
     private String creditAddress;
+    
+    private String creditAddresss;
 
-    private String guaranteeType;
+    public String getCreditAddresss() {
+		return creditAddresss;
+	}
+
+	public void setCreditAddresss(String creditAddresss) {
+		this.creditAddresss = creditAddresss;
+	}
+
+	private String guaranteeType;
+    
+    private String guaranteeTypeName;
 
     private BigDecimal unredeemedMoney;
 
     private String repaymentStatus;
+    
+    private String repaymentStatusName;
 
     private BigDecimal overdueAmount;
 
@@ -35,17 +56,62 @@ public class MspConfigure implements Serializable {
 
     private String overdueReason;
 
-    private Integer delFlag;
-
     private Integer createUser;
-
-    private Integer updateUser;
 
     private Date createTime;
 
+    private Integer updateUser;
+
     private Date updateTime;
 
-    private static final long serialVersionUID = 1L;
+    private Integer delFlg;
+    
+
+    public String getLoanTypeName() {
+		return loanTypeName;
+	}
+
+	public void setLoanTypeName(String loanTypeName) {
+		this.loanTypeName = loanTypeName;
+	}
+
+	public String getServiceTypeName() {
+		return serviceTypeName;
+	}
+
+	public void setServiceTypeName(String serviceTypeName) {
+		this.serviceTypeName = serviceTypeName;
+	}
+
+	public String getApprovalResultName() {
+		return approvalResultName;
+	}
+
+	public void setApprovalResultName(String approvalResultName) {
+		this.approvalResultName = approvalResultName;
+	}
+
+	public String getGuaranteeTypeName() {
+		return guaranteeTypeName;
+	}
+
+	public void setGuaranteeTypeName(String guaranteeTypeName) {
+		this.guaranteeTypeName = guaranteeTypeName;
+	}
+
+	public String getRepaymentStatusName() {
+		return repaymentStatusName;
+	}
+
+	public void setRepaymentStatusName(String repaymentStatusName) {
+		this.repaymentStatusName = repaymentStatusName;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -167,28 +233,12 @@ public class MspConfigure implements Serializable {
         this.overdueReason = overdueReason == null ? null : overdueReason.trim();
     }
 
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-    }
-
     public Integer getCreateUser() {
         return createUser;
     }
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
-    }
-
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
     }
 
     public Date getCreateTime() {
@@ -199,11 +249,27 @@ public class MspConfigure implements Serializable {
         this.createTime = createTime;
     }
 
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getDelFlg() {
+        return delFlg;
+    }
+
+    public void setDelFlg(Integer delFlg) {
+        this.delFlg = delFlg;
     }
 }
