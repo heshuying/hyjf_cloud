@@ -1,12 +1,14 @@
-package com.hyjf.am.trade.controller.admin.manage;
+package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.borrowrecover;
 
 import com.hyjf.am.common.ConvertUtils;
+import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminHjhDebtCreditCustomize;
-import com.hyjf.am.trade.service.admin.manage.AdminHjhDebtCreditService;
-import com.hyjf.am.vo.admin.AccountDetailVO;
+import com.hyjf.am.trade.service.admin.productcenter.batchcenter.borrowRecover.BatchCenterBorrowRecoverService;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -23,35 +25,34 @@ import java.util.Map;
 
 /**
  * @Auther:yangchangwei
- * @Date:2018/7/4
- * @Description:    后台列表查询汇计划-转让列表
+ * @Date:2018/7/7
+ * @Description: 后台列表-批次放款
  */
-@Api(value = "汇计划-转让列表")
+@Api(value = "批次中心-批次放款")
 @RestController
-@RequestMapping("/am-trade/adminHjhDebtCredit")
-public class AdminHjhDebtCreditController extends BaseController{
+@RequestMapping("/am-trade/adminBatchBorrowRecover")
+public class AdminBatchBorrowRecoverController extends BaseController {
 
     @Autowired
-    private AdminHjhDebtCreditService adminHjhDebtCreditService;
+    private BatchCenterBorrowRecoverService batchBorrowRecoverService;
 
     /**
      *
      * @param request
      * @return
      */
-    @ApiOperation(value = "转让列表查询总件数")
+    @ApiOperation(value = "放款列表查询总件数")
     @PostMapping("/getListTotal")
-    public Integer getListTotal(HjhDebtCreditListRequest request) {
-        Map map = ConvertUtils.convertObjectToMap(request);
-        Integer count = adminHjhDebtCreditService.getListTotal(map);
+    public Integer getListTotal(BatchBorrowRecoverRequest request) {
+        Integer count = batchBorrowRecoverService.getListTotal(request);
         return count;
     }
 
-    @ApiOperation(value = "转让列表查询")
+    @ApiOperation(value = "放款列表查询")
     @PostMapping("/getList")
-    public HjhDebtCreditReponse getList(HjhDebtCreditListRequest request){
+    public BatchBorrowRecoverReponse getList(BatchBorrowRecoverRequest request){
 
-        HjhDebtCreditReponse reponse = new HjhDebtCreditReponse();
+        BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
         Integer total = getListTotal(request);
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
         if(request.getPageSize() ==0){
@@ -60,16 +61,13 @@ public class AdminHjhDebtCreditController extends BaseController{
         int limitStart = paginator.getOffset();
         int limitEnd = paginator.getLimit();
 
-        Map map = ConvertUtils.convertObjectToMap(request);
-        List<AdminHjhDebtCreditCustomize> list =  adminHjhDebtCreditService.getList(map,limitStart,limitEnd);
-        List<HjhDebtCreditVo> voList = null;
-        if(!CollectionUtils.isEmpty(list)){
-            voList = CommonUtils.convertBeanList(list, HjhDebtCreditVo.class);
-        }
+        List<BatchBorrowRecoverVo> list =  batchBorrowRecoverService.getList(request,limitStart,limitEnd);
+        //TODO 获取列表后循环列表设置状态显示描述
         reponse.setRecordTotal(total);
-        reponse.setResultList(voList);
+        reponse.setResultList(list);
         return reponse;
     }
 
+    //TODO 获取列表求和用于显示
 
 }

@@ -1,7 +1,7 @@
-package com.hyjf.am.trade.service.impl.admin.manage;
+package com.hyjf.am.trade.service.impl.admin.productcenter.hjhcredit;
 
 import com.hyjf.am.trade.dao.model.customize.admin.AdminHjhDebtCreditCustomize;
-import com.hyjf.am.trade.service.admin.manage.AdminHjhDebtCreditService;
+import com.hyjf.am.trade.service.admin.productcenter.hjhcredit.AdminHjhDebtCreditService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 

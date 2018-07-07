@@ -1,4 +1,4 @@
-package com.hyjf.admin.controller.manager.borrow.credit;
+package com.hyjf.admin.controller.productcenter.borrow.credit;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
