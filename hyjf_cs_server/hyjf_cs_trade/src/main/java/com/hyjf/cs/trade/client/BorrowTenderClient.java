@@ -36,4 +36,12 @@ public interface BorrowTenderClient {
 	 * @return
 	 */
     Integer saveCreditTenderAssignLog(CreditTenderLogVO creditTenderLog);
+
+	/**
+	 * 查看是否已经插入网站收支明细
+	 * @param logOrderId
+	 * @param tenderType  交易类型
+	 * @return
+	 */
+    Integer countAccountWebListByOrdId(String logOrderId, String tenderType);
 }

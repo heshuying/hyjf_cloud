@@ -113,6 +113,4 @@ public class BorrowTenderController extends BaseController{
         CreditTenderLog bean = CommonUtils.convertBean(creditTenderLogVO,CreditTenderLog.class);
         return borrowTenderService.saveCreditTenderAssignLog(bean);
     }
-
-
 }

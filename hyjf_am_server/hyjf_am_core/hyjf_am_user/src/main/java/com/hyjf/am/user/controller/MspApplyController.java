@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
@@ -129,11 +130,11 @@ public class MspApplyController  {
 			}
 			
 		}
-		List<MspApply> recordList = this.mspApplyService.getRecordList(ma, -1, -1,start,end);
-		mr.setRecordTotal(recordList.size());
-		if (recordList != null) {
-			Paginator paginator = new Paginator(form.getCurrPage(), recordList.size());
-			recordList = this.mspApplyService.getRecordList(ma, paginator.getOffset(),
+		int count = this.mspApplyService.countByExample(ma);
+		mr.setRecordTotal(count);
+		if (count >0) {
+			Paginator paginator = new Paginator(form.getCurrPage(), count);
+			List<MspApply> recordList  = this.mspApplyService.getRecordList(ma, paginator.getOffset(),
 					paginator.getLimit(),start,end);
 			List<MspApplyVO> adminVo= CommonUtils.convertBeanList(recordList,MspApplyVO.class);
 			mr.setResultList(adminVo);
@@ -151,12 +152,8 @@ public class MspApplyController  {
 	 * @return
 	 */
 	@RequestMapping("/infoAction")	
-	public  MspApplytResponse infoAction(@RequestBody  MspApplytRequest form) {	
+	public  MspApplytResponse infoAction() {	
 		MspApplytResponse mr=new MspApplytResponse();
-		 Date currentTime = new Date();  
-	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
-	    form.setApplyDate(formatter.format(currentTime));
-		
 	    mr.setRegionList(CommonUtils.convertBeanList(this.mspApplyService.getRegionList(),MspRegionVO.class));
 		mr.setConfigureList(CommonUtils.convertBeanList(this.mspApplyService.getConfigureList(),MspConfigureVO.class));
 		return mr;
@@ -193,7 +190,7 @@ public class MspApplyController  {
 		MspApply mspapply=new MspApply();
 		BeanUtils.copyProperties(form,mspapply);
 		this.mspApplyService.insertRecord(mspapply);
-		result.setRtn(result.SUCCESS);
+		result.setRtn(AdminResponse.SUCCESS);
 		return result;
 	}
 
@@ -273,119 +270,7 @@ public class MspApplyController  {
 		}
 		return result;
 	}
-//	/**
-//	 * 导出功能
-//	 * 
-//	 * @param request
-//	 * @param modelAndView
-//	 * @param form
-//	 */
-//	@RequestMapping(MspApplyDefine.EXPORT_ACTION)
-//	@RequiresPermissions(MspApplyDefine.PERMISSIONS_EXPORT)
-//	public void exportAction(HttpServletRequest request, HttpServletResponse response, @ModelAttribute(MspApplyDefine.CONFIGBANK_FORM) MspApplyBean form) throws Exception {
-//		LogUtil.startLog(MspApplyDefine.class.toString(), MspApplyDefine.EXPORT_ACTION);
-//		
-//		
-//		
-//		MspApply ma=new MspApply();
-//		int start=0;
-//		int end=0;
-//		ma.setName(form.getName());
-//
-//		ma.setIdentityCard(form.getIdentityCard());
-//
-//		ma.setCreateUser(form.getCreateUser());
-//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//		if(form.getStartCreate() != null) {
-//	        Date date;
-//			try {
-//				date = simpleDateFormat.parse(form.getStartCreate());
-//				start = (int) (date.getTime()/1000);
-//			} catch (ParseException e) {
-//			    _log.info("安融返回日期格式化异常："+e.getMessage());
-//			}
-//	        
-//		}
-//		if(form.getEndCreate() != null) {
-//			Date date;
-//			try {
-//				date = simpleDateFormat.parse(form.getEndCreate());
-//				Calendar cal = Calendar.getInstance();
-//				cal.setTime(date);
-//				cal.add(Calendar.DATE, 1);
-//				
-//				end = (int) ((cal.getTime()).getTime()/1000);
-//			} catch (ParseException e) {
-//			    _log.info("安融返回日期格式化异常："+e.getMessage());
-//			}
-//			
-//		}
-//		List<MspApply> recordList = this.mspApplyService.getRecordList(ma, -1, -1,start,end);
-//		
-//		
-//		
-//		// 表格sheet名称
-//		String sheetName = "安融反欺诈查询";
-//
-//
-//		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-//		String[] titles = new String[] {"序号", "姓名", "身份证号","操作人","查询时间" };
-//		// 声明一个工作薄
-//		HSSFWorkbook workbook = new HSSFWorkbook();
-//		
-//		// 生成一个表格
-//		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-//		SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-//		if (recordList != null && recordList.size() > 0) {
-//
-//			int sheetCount = 1;
-//			int rowNum = 0;
-//
-//			for (int i = 0; i < recordList.size(); i++) {
-//				rowNum++;
-//				if (i != 0 && i % 60000 == 0) {
-//					sheetCount++;
-//					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-//					rowNum = 1;
-//				}
-//
-//				// 新建一行
-//				Row row = sheet.createRow(rowNum);
-//				// 循环数据
-//				for (int celLength = 0; celLength < titles.length; celLength++) {
-//					MspApply pInfo = recordList.get(i);
-//
-//					// 创建相应的单元格
-//					Cell cell = row.createCell(celLength);
-//
-//					// 序号
-//					if (celLength == 0) {
-//						cell.setCellValue(i + 1);
-//					}
-//					else if (celLength == 1) {
-//						cell.setCellValue(pInfo.getName());
-//					}
-//					else if (celLength == 2) {
-//						cell.setCellValue(pInfo.getIdentityCard());
-//					}
-//					else if (celLength == 3) {
-//						cell.setCellValue(pInfo.getCreateUser());
-//					}
-//					else if (celLength == 4) {
-//					    Long time1=new Long(pInfo.getCreateTime());
-//					    String d = format.format(time1*1000);  
-//						cell.setCellValue(d);
-//					}
-//
-//				}
-//			}
-//		}
-//		// 导出
-//		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-//
-//		LogUtil.endLog(MspApplyController.class.toString(), MspApplyDefine.EXPORT_ACTION);
-//	}
-//	
+
 	/**
 	 * 画面迁移(含有id更新，不含有id添加)
 	 * 

@@ -251,4 +251,19 @@ public class CreditTenderController extends BaseController{
         return response;
     }
 
+    /**
+     * 保存债转异步数据
+     * @param request
+     * @return
+     */
+    @PostMapping("/saveCreditBgData")
+    public Integer saveCreditBgData(@RequestBody @Valid CreditTenderBgVO request){
+        try{
+            bankCreditTenderService.saveCreditBgData(request);
+            return 1;
+        }catch (Exception e){
+            return 0;
+        }
+    }
+
 }

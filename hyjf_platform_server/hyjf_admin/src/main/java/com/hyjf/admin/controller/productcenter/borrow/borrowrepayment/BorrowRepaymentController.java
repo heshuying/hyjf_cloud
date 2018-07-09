@@ -1,6 +1,9 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepayment;
 
+import com.hyjf.admin.beans.BorrowRecoverBean;
 import com.hyjf.admin.beans.BorrowRepaymentBean;
+import com.hyjf.admin.beans.DelayRepayInfoBean;
+import com.hyjf.admin.beans.request.BorrowRecoverRequestBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentPlanRequestBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -10,12 +13,15 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRepaymentService;
+import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
+import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -28,16 +34,15 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -58,7 +63,6 @@ public class BorrowRepaymentController extends BaseController {
      * 画面初始化
      *
      * @param request
-     * @return 标签配置列表
      */
     @ApiOperation(value = "还款信息", notes = "还款信息页面查询初始化")
     @PostMapping(value = "/searchAction")
@@ -80,6 +84,38 @@ public class BorrowRepaymentController extends BaseController {
     }
 
 
+    /**
+     * 延期画面初始化
+     *
+     * @param request
+     * @return 标签配置列表
+     */
+    @ApiOperation(value = "延期画面初始化", notes = "延期页面查询初始化")
+    @PostMapping(value = "/initDelayRepayAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<DelayRepayInfoBean> initDelayRepayAction(HttpServletRequest request, @PathVariable  String borrowNid) {
+        DelayRepayInfoBean bean= new DelayRepayInfoBean();
+        bean=borrowRepaymentService.getDelayRepayInfo(borrowNid);
+        AdminResult<DelayRepayInfoBean> result=new AdminResult<DelayRepayInfoBean> ();
+        result.setData(bean);
+        return result;
+    }
+
+    /**
+     * 延期
+     *
+     * @param request
+     * @return 标签配置列表
+     */
+    @ApiOperation(value = "延期", notes = "延期")
+    @PostMapping(value = "/delayRepayAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public AdminResult<DelayRepayInfoBean> delayRepayAction(HttpServletRequest request, @PathVariable  String borrowNid,@PathVariable  String delayDays,@PathVariable  String repayTime) {
+        DelayRepayInfoBean bean=borrowRepaymentService.updateBorrowRepayDelayDays( borrowNid,delayDays,repayTime);
+        AdminResult<DelayRepayInfoBean>  result=new AdminResult<DelayRepayInfoBean> ();
+        result.setData(bean);
+        return result;
+    }
 
     /**
      * @Description 数据导出--还款计划

@@ -21,4 +21,11 @@ public interface BorrowCreditTenderService extends BaseTradeService{
      * @return
      */
     WebResult<Map<String,Object>> borrowCreditTender(TenderRequest request);
+
+    /**
+     * 债转投资异步
+     * @param bean
+     * @return
+     */
+    BankCallResult borrowCreditTenderBgReturn(BankCallBean bean);
 }

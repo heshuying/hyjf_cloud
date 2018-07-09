@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
+import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
@@ -123,4 +125,18 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountTradeVO> selectTradeTypes();
+
+    /**
+     * 查询汇计划-转让列表
+     * @param request
+     * @return
+     */
+    HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request);
+
+    /**
+     * 查询批次中心-批次放款列表
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
 }

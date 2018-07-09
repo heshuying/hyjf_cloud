@@ -36,6 +36,8 @@ public class HjhPlanVO extends BaseVO implements Serializable {
     private BigDecimal repayWaitAll;
 
     private Integer planInvestStatus;
+    
+    private Integer planDisplayStatus;
 
     private Integer addTime;
 
@@ -274,4 +276,12 @@ public class HjhPlanVO extends BaseVO implements Serializable {
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
+
+	public Integer getPlanDisplayStatus() {
+		return planDisplayStatus;
+	}
+
+	public void setPlanDisplayStatus(Integer planDisplayStatus) {
+		this.planDisplayStatus = planDisplayStatus;
+	}
 }

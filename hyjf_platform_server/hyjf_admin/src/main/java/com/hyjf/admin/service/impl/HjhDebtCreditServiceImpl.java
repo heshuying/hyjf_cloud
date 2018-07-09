@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.HjhDebtCreditClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.HjhDebtCreditService;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
@@ -22,7 +22,7 @@ import java.util.List;
 public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebtCreditService{
 
     @Autowired
-    private HjhDebtCreditClient hjhDebtCreditClient;
+    private AmTradeClient amTradeClient;
 
     /**
      * 查询汇计划转让列表
@@ -32,7 +32,7 @@ public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebt
     @Override
     public HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request) {
 
-        HjhDebtCreditReponse reponse = hjhDebtCreditClient.queryHjhDebtCreditList(request);
+        HjhDebtCreditReponse reponse = amTradeClient.queryHjhDebtCreditList(request);
         return reponse;
     }
 

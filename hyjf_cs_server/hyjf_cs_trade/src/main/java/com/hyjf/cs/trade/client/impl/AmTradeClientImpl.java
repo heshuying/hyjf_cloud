@@ -230,7 +230,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public STZHWhiteListVO getCurrentCouponRecover(Integer userId, Integer stzUserId) {
+    public STZHWhiteListVO getStzhWhiteListVO(Integer userId, Integer stzUserId) {
         String url = urlBase + "borrowauth/get_whitelist/" + userId + "/" +stzUserId;
         STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
         if (response != null) {
