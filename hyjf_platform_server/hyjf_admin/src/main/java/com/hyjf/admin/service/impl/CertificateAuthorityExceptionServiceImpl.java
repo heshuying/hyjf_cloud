@@ -1,12 +1,14 @@
 package com.hyjf.admin.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.client.CertificateAuthorityExceptionClient;
 import com.hyjf.admin.service.CertificateAuthorityExceptionService;
 import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 
+@Service
 public class CertificateAuthorityExceptionServiceImpl implements CertificateAuthorityExceptionService {
 	@Autowired
 	private CertificateAuthorityExceptionClient certificateAuthorityExceptionClient;
