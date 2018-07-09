@@ -64,8 +64,8 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
             criteria.andNidLike("%"+request.getNidSearch()+"%");
         }
         // 转账状态
-        if(StringUtils.isNotEmpty(String.valueOf(request.getStatusSearch()))){
-            criteria.andStatusEqualTo(request.getStatusSearch());
+        if(StringUtils.isNotEmpty(request.getStatusSearch())){
+            criteria.andStatusEqualTo(Integer.valueOf(request.getStatusSearch()));
         }
         // 添加时间开始
         if(StringUtils.isNotEmpty(request.getStartDate())){

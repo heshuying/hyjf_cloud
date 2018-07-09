@@ -3,13 +3,16 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.AppProjectListResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectDetailResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
@@ -157,13 +160,13 @@ public class ProjectListController extends BaseController{
      * @param request
      * @return
      */
-    @RequestMapping("/app/searchProjectList")
-    public ProjectListResponse searchAppProjectList(@RequestBody @Valid ProjectListRequest request){
-        ProjectListResponse projectListResponse = new ProjectListResponse();
-        List<WebProjectListCustomize> list = projectListService.searchAppProjectList(request);
+    @RequestMapping("/app/searchAppProjectList")
+    public AppProjectListResponse searchAppProjectList(@RequestBody @Valid ProjectListRequest request){
+        AppProjectListResponse projectListResponse = new AppProjectListResponse();
+        List<AppProjectListCustomize> list = projectListService.searchAppProjectList(request);
         if(!CollectionUtils.isEmpty(list)){
-            List<WebProjectListCustomizeVO> webProjectListCustomizeVO = CommonUtils.convertBeanList(list,WebProjectListCustomizeVO.class);
-            projectListResponse.setResultList(webProjectListCustomizeVO);
+            List<AppProjectListCustomizeVO> appProjectListCustomizeVOList = CommonUtils.convertBeanList(list,AppProjectListCustomizeVO.class);
+            projectListResponse.setResultList(appProjectListCustomizeVOList);
         }
         return projectListResponse;
     }

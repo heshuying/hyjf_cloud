@@ -34,4 +34,6 @@ public interface BorrowCustomizeMapper {
 
     WebProjectPersonDetailVO  getProjectPsersonDetail(String borrowNid);
 
+    Integer getTotalInverestCount(Integer userId);
+
 }

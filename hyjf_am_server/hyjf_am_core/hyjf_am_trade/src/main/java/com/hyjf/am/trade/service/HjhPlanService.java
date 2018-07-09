@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 
@@ -56,4 +58,10 @@ public interface HjhPlanService {
      * @return
      */
     UserHjhInvistDetailCustomize selectUserHjhInvistDetail(Map<String,Object> params);
+
+    /**
+     * 获取app首页hjh数据
+     * @date 2018/7/9 11:42
+     */
+    List<HjhPlanCustomize> selectAppHomeHjhPlan(HjhPlanRequest request);
 }

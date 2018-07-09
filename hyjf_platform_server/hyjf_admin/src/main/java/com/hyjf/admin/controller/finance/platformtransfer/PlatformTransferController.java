@@ -4,11 +4,13 @@
 package com.hyjf.admin.controller.finance.platformtransfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlatformTransferService;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +26,7 @@ import java.util.List;
 @Api(value = "资金中心-转账管理-平台转账")
 @RestController
 @RequestMapping(value = "/hyjf-admin/platformtransfer")
-public class PlatformTransferController{
+public class PlatformTransferController extends BaseController {
 
     @Autowired
     private PlatformTransferService platformTransferService;
@@ -32,7 +34,7 @@ public class PlatformTransferController{
     /**
      * 平台转账-查询转账列表
      * @auth sunpeikai
-     * @param
+     * @param request 查询条件
      * @return
      */
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
@@ -44,6 +46,23 @@ public class PlatformTransferController{
         result.put("count",count);
         List<AccountRechargeVO> accountRechargeVOList = platformTransferService.searchPlatformTransferList(request);
         result.put("accountRechargeVOList",accountRechargeVOList);
+        return result;
+    }
+
+    /**
+     * 根据userName检查是否可以平台转账
+     * @auth sunpeikai
+     * @param userName 用户名
+     * @return
+     */
+    @ApiOperation(value = "平台转账-根据username查询用户信息",notes = "平台转账-根据username查询用户信息")
+    @PostMapping(value = "/getuserinfobyusername")
+    public JSONObject getUserInfoByUserName(@RequestBody String userName){
+        logger.info("userName=[{}]",userName);
+        JSONObject result = new JSONObject();
+        if(StringUtils.isNotEmpty(userName)){
+            result = platformTransferService.checkTransfer(userName);
+        }
         return result;
     }
 

@@ -102,4 +102,11 @@ public interface AmBorrowClient {
      * @return
      */
     public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params);
+
+    /**
+     * 根据用户id获取总投资笔数
+     * @author zhangyk
+     * @date 2018/7/5 18:04
+     */
+    public Integer getTotalInverestCount(String userId);
 }
