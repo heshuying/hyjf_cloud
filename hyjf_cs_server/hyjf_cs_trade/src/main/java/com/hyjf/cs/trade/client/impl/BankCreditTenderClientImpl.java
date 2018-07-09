@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.vo.trade.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,10 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.validator.Validator;
@@ -205,6 +202,18 @@ public class BankCreditTenderClientImpl implements BankCreditTenderClient {
             response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 保存债转的数据
+     * @param creditTenderBg
+     * @return
+     */
+    @Override
+    public Integer saveCreditBgData(CreditTenderBgVO creditTenderBg) {
+        String url  = "http://AM-TRADE/am-trade/creditTender/saveCreditBgData";
+        Integer response = restTemplate.postForEntity(url,creditTenderBg,Integer.class).getBody();
+        return response;
     }
 
 

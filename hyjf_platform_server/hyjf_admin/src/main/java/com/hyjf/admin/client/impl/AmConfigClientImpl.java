@@ -57,6 +57,41 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     /**
      * 查询邮件配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public SiteSettingsVO findSiteSetting() {
+
+        SiteSettingsResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 查询邮件模板
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode) {
+        SmsMailTemplateResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/smsMailTemplate/findSmsMailByCode/" + mailCode,
+                        SmsMailTemplateResponse.class)
+                .getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 查询邮件配置
      *
      * @return
      */

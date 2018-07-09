@@ -27,6 +27,24 @@ public interface AmConfigClient {
      */
     List<ParamNameVO> getParamNameList(String nameClass);
 
+    /**
+     * 查询邮件配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    SiteSettingsVO findSiteSetting();
+
+    /**
+     * 查询邮件模板
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);
+
+
+
     SiteSettingsVO findSiteSetting();
 
     SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);

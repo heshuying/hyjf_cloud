@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.statistics.bean.AccountWebList;
 import com.hyjf.am.statistics.mongo.AccountWebListDao;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.common.constants.MQConstant;
 
 /**

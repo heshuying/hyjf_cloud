@@ -1,7 +1,9 @@
 package com.hyjf.am.trade.service.repay;
 
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import io.swagger.models.auth.In;
 
 import java.util.List;
 
@@ -19,4 +21,8 @@ public interface BorrowAuthService {
     int countBorrowAuthedRecordTotal(BorrowAuthRequest requestBean);
 
     List<BorrowAuthCustomizeVO> searchBorrowAuthedList(BorrowAuthRequest requestBean);
+
+    Integer updateTrusteePaySuccess(String nid);
+
+    StzhWhiteList getSTZHWhiteListByUserID(Integer userId, Integer stzUserId);
 }

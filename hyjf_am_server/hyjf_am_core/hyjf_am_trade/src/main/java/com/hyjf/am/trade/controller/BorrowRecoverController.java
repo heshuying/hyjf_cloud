@@ -3,9 +3,12 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.service.BorrowRecoverService;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
@@ -110,5 +113,23 @@ public class BorrowRecoverController extends BaseController{
 		}
 		return response;
 	}
+
+	/**
+	 * 获取borrow_recover_plan更新每次还款时间
+	 * @param bidNid
+	 * @param creditTenderNid
+	 * @param periodNow
+	 * @return
+	 */
+	@GetMapping("/getPlanByBidTidPeriod/{bidNid}/{creditTenderNid}/{periodNow}")
+	public BorrowRecoverPlanResponse getPlanByBidTidPeriod(@PathVariable String bidNid, @PathVariable String creditTenderNid, @PathVariable Integer periodNow){
+		BorrowRecoverPlanResponse response = new BorrowRecoverPlanResponse();
+		BorrowRecoverPlan borrowRecover=borrowRecoverService.getPlanByBidTidPeriod(bidNid,creditTenderNid,periodNow);
+		if (Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverPlanVO.class));
+		}
+		return response;
+	}
+
 
 }

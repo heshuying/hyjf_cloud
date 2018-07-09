@@ -1,0 +1,169 @@
+package com.hyjf.am.user.service.impl;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
+import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.mq.FddCertificateProducer;
+import com.hyjf.am.user.mq.Producer;
+import com.hyjf.am.user.service.CertificateAuthorityExceptionService;
+import com.hyjf.am.user.service.impl.batch.FddCertificateServiceImpl;
+import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * CA认证异常Service实现类
+ *
+ * @author dongzeshan
+ */
+@Service
+public class CertificateAuthorityExceptionServiceImpl  implements CertificateAuthorityExceptionService {
+	  private static final Logger logger = LoggerFactory.getLogger(CertificateAuthorityExceptionServiceImpl.class);
+
+    @Autowired
+    private CertificateAuthorityMapper certificateAuthorityMapper;
+    /**
+     * 检索CA异常件数
+     *
+     * @param form
+     * @return
+     */
+    @Override
+    public Integer countCAExceptionList(CertificateAuthorityExceptionRequest form) {
+
+    	CertificateAuthorityExample example = new CertificateAuthorityExample();
+        CertificateAuthorityExample.Criteria cra = example.createCriteria();
+        // 用户名不为空
+        if (StringUtils.isNotBlank(form.getUserNameSrch())) {
+            cra.andUserNameLike("%" + form.getUserNameSrch() + "%");
+        }
+        // 用户手机号
+        if (StringUtils.isNotBlank(form.getMobileSrch())) {
+            cra.andMobileLike("%" + form.getMobileSrch() + "%");
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(form.getTrueNameSrch())) {
+            cra.andTrueNameLike("%" + form.getTrueNameSrch() + "%");
+        }
+        // 检索条件转账时间开始
+        if (StringUtils.isNotBlank(form.getStartTimeSrch())) {
+            try {
+				cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        }
+        // 检索条件转账时间结束
+        if (StringUtils.isNotBlank(form.getEndTimeSrch())) {
+            try {
+				cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        }
+
+        cra.andCodeNotEqualTo("1000");
+        return this.certificateAuthorityMapper.countByExample(example);
+    }
+
+
+    /**
+     * 检索CA异常列表
+     *
+     * @param form
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @Override
+    public List<CertificateAuthority> getCAExceptionList(CertificateAuthorityExceptionRequest form, int limitStart, int limitEnd) {
+
+        CertificateAuthorityExample example = new CertificateAuthorityExample();
+        CertificateAuthorityExample.Criteria cra = example.createCriteria();
+        // 用户名不为空
+        if (StringUtils.isNotBlank(form.getUserNameSrch())) {
+            cra.andUserNameLike("%" + form.getUserNameSrch() + "%");
+        }
+        // 用户手机号
+        if (StringUtils.isNotBlank(form.getMobileSrch())) {
+            cra.andMobileLike("%" + form.getMobileSrch() + "%");
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(form.getTrueNameSrch())) {
+            cra.andTrueNameLike("%" + form.getTrueNameSrch() + "%");
+        }
+        // 检索条件转账时间开始
+        if (StringUtils.isNotBlank(form.getStartTimeSrch())) {
+            try {
+				cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
+				
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        }
+        // 检索条件转账时间结束
+        if (StringUtils.isNotBlank(form.getEndTimeSrch())) {
+            try {
+				cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
+			} catch (ParseException e) {
+		
+				e.printStackTrace();
+			}
+        }
+        cra.andCodeNotEqualTo("1000");
+        if (limitStart >= 0) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        return this.certificateAuthorityMapper.selectByExample(example);
+    }
+
+    @Autowired
+    FddCertificateProducer fddProducer;
+
+	/**
+	 * 发送CA认证MQ
+	 * 
+	 * @param userId
+	 */
+	@Override
+	public void updateUserCAMQ(int userId) throws ParseException, MQException {
+		// add by liuyang 20180209 开户成功后,将用户ID加入到CA认证消息队列 start
+		// 加入到消息队列
+
+		String startTime = GetDate.dateToString(new Date());
+		// 循环去做CA认证
+
+		FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
+		fddCertificateAuthorityVO.setUserId(userId);
+		fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
+				UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+
+		// 处理结束时间
+		String endTime = GetDate.dateToString(new Date());
+		// 处理用时
+		String consumeTime = GetDate.countTime(GetDate.stringToDate(startTime), GetDate.stringToDate(endTime));
+		logger.info("处理用时:" + startTime + "减去" + endTime + "等于" + consumeTime);
+	}
+}

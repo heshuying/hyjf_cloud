@@ -46,4 +46,21 @@ public interface AmUserClient {
     UserVO findUserById(int userId);
 
     UserInfoVO findUsersInfoById(int userId);
+
+    /**
+     * 根据userId查询用户信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    UserInfoVO findUsersInfoById(int userId);
+
+    /**
+     * 根据userId查询用户
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    UserVO findUserById(final int userId);
+
 }

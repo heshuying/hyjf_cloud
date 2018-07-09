@@ -11,7 +11,8 @@ import com.hyjf.callcenter.beans.CouponBackMoneyBean;
 import com.hyjf.callcenter.beans.CouponBean;
 import com.hyjf.callcenter.beans.CouponTenderBean;
 import com.hyjf.callcenter.beans.ResultListBean;
-import com.hyjf.callcenter.client.CouponClient;
+import com.hyjf.callcenter.client.AmTradeClient;
+import com.hyjf.callcenter.client.AmUserClient;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.CouponService;
 import com.hyjf.common.cache.CacheUtil;
@@ -31,7 +32,10 @@ import java.util.Map;
 @Service
 public class CouponServiceImpl implements CouponService {
     @Autowired
-    CouponClient couponClient;
+    AmTradeClient amTradeClient;
+
+    @Autowired
+    AmUserClient amUserClient;
     /**
      * 查询优惠券
      * @param centerBaseRequest
@@ -41,7 +45,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public ResultListBean selectCouponUserList(CallCenterBaseRequest centerBaseRequest){
         ResultListBean result = new ResultListBean();
-        List<CallCenterCouponUserVO> list = couponClient.selectCouponUserList(centerBaseRequest);
+        List<CallCenterCouponUserVO> list = amTradeClient.selectCouponUserList(centerBaseRequest);
         if(!CollectionUtils.isEmpty(list)){
             for (CallCenterCouponUserVO recordBean : list) {
                 CouponBean returnBean = new CouponBean();
@@ -56,7 +60,7 @@ public class CouponServiceImpl implements CouponService {
 
                 //获取优惠券内容
                 if("3".equals(recordBean.getCouponSource())){
-                    returnBean.setCouponContent(couponClient.getCouponContent(recordBean.getCouponCode()));
+                    returnBean.setCouponContent(amUserClient.getCouponContent(recordBean.getCouponCode()));
                 }
                 result.getDataList().add(returnBean);
             }
@@ -78,7 +82,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public ResultListBean selectCouponTenderList(CallCenterBaseRequest centerBaseRequest){
         ResultListBean result = new ResultListBean();
-        List<CallCenterCouponTenderVO> list =  couponClient.selectCouponTenderList(centerBaseRequest);
+        List<CallCenterCouponTenderVO> list =  amTradeClient.selectCouponTenderList(centerBaseRequest);
         if(!CollectionUtils.isEmpty(list)){
             for (CallCenterCouponTenderVO recordBean : list) {
                 CouponTenderBean returnBean = new CouponTenderBean();
@@ -110,7 +114,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public ResultListBean selectCouponBackMoneyList(CallCenterBaseRequest centerBaseRequest){
         ResultListBean result = new ResultListBean();
-        List<CallCenterCouponBackMoneyVO> recordList = this.couponClient.selectCouponBackMoneyList(centerBaseRequest);
+        List<CallCenterCouponBackMoneyVO> recordList = this.amTradeClient.selectCouponBackMoneyList(centerBaseRequest);
         if (recordList == null) {
             result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户没有优惠券回款记录！");
             return result;

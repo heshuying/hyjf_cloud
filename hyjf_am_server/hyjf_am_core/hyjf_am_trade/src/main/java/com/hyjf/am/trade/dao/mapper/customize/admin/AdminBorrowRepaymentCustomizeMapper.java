@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.admin.AdminRepayDelayCustomize;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface AdminBorrowRepaymentCustomizeMapper {
     AdminBorrowRepaymentCustomize sumBorrowRepayment(BorrowRecoverRequest request);
 
     List<AdminBorrowRepaymentPlanCustomize> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
+
+    AdminRepayDelayCustomize selectBorrowInfo(AdminRepayDelayCustomize repayDelayCustomize);
 }

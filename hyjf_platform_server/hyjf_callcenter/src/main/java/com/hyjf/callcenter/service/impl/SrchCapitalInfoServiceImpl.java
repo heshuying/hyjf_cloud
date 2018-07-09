@@ -2,7 +2,7 @@ package com.hyjf.callcenter.service.impl;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
-import com.hyjf.callcenter.client.SrchCapitalInfoClient;
+import com.hyjf.callcenter.client.AmTradeClient;
 import com.hyjf.callcenter.service.SrchCapitalInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class SrchCapitalInfoServiceImpl implements SrchCapitalInfoService {
     @Autowired
-    private SrchCapitalInfoClient srchCapitalInfoClient;
+    private AmTradeClient amTradeClient;
     /**
      * 查询资金明细
      * @param callCenterAccountDetailRequest
@@ -25,7 +25,7 @@ public class SrchCapitalInfoServiceImpl implements SrchCapitalInfoService {
      */
 	@Override
 	public List<CallCenterAccountDetailVO> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest) {
-		return srchCapitalInfoClient.queryAccountDetails(callCenterAccountDetailRequest);
+		return amTradeClient.queryAccountDetails(callCenterAccountDetailRequest);
 	}
 	
 }

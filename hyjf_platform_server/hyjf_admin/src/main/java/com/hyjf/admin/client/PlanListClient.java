@@ -3,8 +3,11 @@
  */
 package com.hyjf.admin.client;
 
+import java.util.List;
+
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.resquest.admin.PlanListRequest;
+import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 
 /**
@@ -24,4 +27,77 @@ public interface PlanListClient {
     * @return
     */
 	HjhPlanSumVO getCalcSumByParam(PlanListRequest form);
+	
+	/**
+    * 获取计划详情列表
+    * @return
+    */
+	List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form);
+	
+	/**
+    * AJax
+    * @return
+    */
+	HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form);
+	
+	/**
+    * AJax
+    * @return
+    */
+	HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form);
+	
+	/**
+    * 修改计划状态
+    * @return
+    */
+	HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form);
+	
+	/**
+    * 修改计划显示状态
+    * @return
+    */
+	HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form);
+	
+	/**
+	 * 根据主键判断数据是否存在
+	 * 
+	 * @Title isExistsRecord
+	 * @param planNid
+	 * @return
+	 */
+	boolean isExistsRecord(String planNid);
+	
+	/**
+	 * 根据计划名称查询数量
+	 * 
+	 * @Title isExistsRecord
+	 * @param planNid
+	 * @return
+	 */
+	int countByPlanName(String planName);
+	
+	/**
+	 * 根据计划还款方式，锁定期，锁定期类型获取计划数量(月)
+	 * 
+	 * @Title isDebtPlanTypeNameExist
+	 * @param debtPlanTypeName
+	 * @return
+	 */
+	int isLockPeriodExist(String lockPeriod,String borrowStyle,String isMonth);
+	
+	/**
+	 * 更新操作
+	 * 
+	 * @Title updateRecord
+	 * @param planListBean
+	 * @throws Exception
+	 */
+	int updateRecord(PlanListRequest form);
+	
+	/**
+	 * 插入操作
+	 * 
+	 * @param record
+	 */
+	int insertRecord(PlanListRequest form);
 }

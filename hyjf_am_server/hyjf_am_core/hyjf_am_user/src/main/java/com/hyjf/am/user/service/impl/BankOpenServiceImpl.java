@@ -353,4 +353,5 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         return null;
     }
 
+
 }

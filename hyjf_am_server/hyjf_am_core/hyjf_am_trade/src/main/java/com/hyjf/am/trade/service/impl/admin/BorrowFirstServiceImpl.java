@@ -3,25 +3,12 @@
  */
 package com.hyjf.am.trade.service.impl.admin;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.admin.BorrowFireRequest;
-import com.hyjf.am.resquest.admin.BorrowFirstRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowBailMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFirstCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowFirstCustomize;
-import com.hyjf.am.trade.mq.BorrowFirstProducer;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.service.admin.BorrowFirstService;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +17,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.BorrowFireRequest;
+import com.hyjf.am.resquest.admin.BorrowFirstRequest;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowBailMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFirstCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowBail;
+import com.hyjf.am.trade.dao.model.auto.BorrowBailExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.customize.admin.BorrowFirstCustomize;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.BorrowFirstProducer;
+import com.hyjf.am.trade.service.admin.BorrowFirstService;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author wangjun
@@ -243,7 +248,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
             try {
                 JSONObject params = new JSONObject();
                 params.put("borrowNid", borrow.getBorrowNid());
-                borrowFirstProducer.messageSend(new Producer.MassageContent(MQConstant.HYJF_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                borrowFirstProducer.messageSend(new MessageContent(MQConstant.HYJF_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
             } catch (MQException e) {
                 logger.error("发送【关联计划】MQ失败...");
             }

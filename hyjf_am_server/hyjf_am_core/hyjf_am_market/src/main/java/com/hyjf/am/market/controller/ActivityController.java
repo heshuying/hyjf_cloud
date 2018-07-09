@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
@@ -118,5 +119,21 @@ public class ActivityController {
         mapParam.put("startCreate",activityListRequest.getStartCreate());
         mapParam.put("endCreate", activityListRequest.getEndCreate());
         return mapParam;
+    }
+
+    /**
+     * @auth walter.limeng
+     * 根据活动ID获取活动title
+     * @param activityId 活动ID
+     * @return CouponTenderResponse
+     */
+    @RequestMapping("/hztgetactivitytitle/{activityId}")
+    public CouponTenderResponse getActivityTitle(@PathVariable int activityId){
+        ActivityList activityList = activityService.selectActivityList(activityId);
+        CouponTenderResponse response = new CouponTenderResponse();
+        if(null != activityList){
+            response.setAttrbute(activityList.getTitle());
+        }
+        return response;
     }
 }

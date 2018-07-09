@@ -1,6 +1,6 @@
 package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.common.paginator.Paginator;
 

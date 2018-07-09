@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.MspConfigureCustomizeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.customize.MspConfigureCustomize" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="configure_name" property="configureName" jdbcType="VARCHAR" />
+    <result column="loan_type" property="loanType" jdbcType="VARCHAR" />
+    <result column="loan_type_name" property="loanTypeName" jdbcType="VARCHAR" /><!--  -->
+    <result column="service_type" property="serviceType" jdbcType="VARCHAR" />
+    <result column="service_type_name" property="serviceTypeName" jdbcType="VARCHAR" /><!--  -->
+    <result column="approval_result" property="approvalResult" jdbcType="VARCHAR" />
+    <result column="approval_result_name" property="approvalResultName" jdbcType="VARCHAR" /><!--  -->
+    <result column="loan_money" property="loanMoney" jdbcType="DECIMAL" />
+    <result column="loan_time_limit" property="loanTimeLimit" jdbcType="INTEGER" />
+    <result column="credit_address" property="creditAddress" jdbcType="VARCHAR" />
+    <result column="credit_addresss" property="creditAddresss" jdbcType="VARCHAR" />
+    <result column="guarantee_type" property="guaranteeType" jdbcType="VARCHAR" />
+    <result column="guarantee_type_name" property="guaranteeTypeName" jdbcType="VARCHAR" /><!--  -->
+    <result column="unredeemed_money" property="unredeemedMoney" jdbcType="DECIMAL" />
+    <result column="repayment_status" property="repaymentStatus" jdbcType="VARCHAR" />
+    <result column="repayment_status_name" property="repaymentStatusName" jdbcType="VARCHAR" /><!--  -->
+    <result column="overdue_amount" property="overdueAmount" jdbcType="DECIMAL" />
+    <result column="overdue_date" property="overdueDate" jdbcType="VARCHAR" />
+    <result column="overdue_length" property="overdueLength" jdbcType="INTEGER" />
+    <result column="overdue_reason" property="overdueReason" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Where_Clause">
+		<where>
+			<!--  业务类型 -->
+			<if test="serviceTypeSrch != null and serviceTypeSrch != ''">
+				AND hfml.service_type=#{serviceTypeSrch}
+			</if>
+			<!-- 借款类型	-->
+			<if test="loanTypeSrch != null and loanTypeSrch != ''">
+				AND hfml.loan_type=#{loanTypeSrch}
+			</if>
+			<!-- 担保类型查询-->
+			<if test="sourceTypeSrch != null and sourceTypeSrch != ''">
+				AND hfml.guarantee_type LIKE CONCAT('%', #{sourceTypeSrch}, '%')
+			</if>
+			<!-- 借款城市-->
+			<if test="creditAddress != null and creditAddress != ''">
+				AND hfml.credit_address in (SELECT region_id FROM ht_msp_region WHERE region_name LIKE CONCAT('%', #{creditAddress}, '%'))
+			</if>
+			<!-- 借款金额 -->
+			<if test="loanMoney != null and loanMoney != ''">
+				AND hfml.loan_money LIKE CONCAT('%', #{loanMoney}, '%')
+			</if>
+		</where>
+	</sql>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, configure_name, loan_type, service_type, approval_result, loan_money, loan_time_limit, 
+    credit_address, 
+    guarantee_type, unredeemed_money, repayment_status, overdue_amount, 
+    overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
+    update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomizeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_configure
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="sourceNameIsExists" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomize" >
+    select
+    <include refid="Base_Column_List" />
+    from ht_msp_configure where 1=1 
+    <!--  标的名称 -->
+	<if test="configureName != null and configureName != ''">
+		and configure_name=#{configureName}
+	</if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    id, configure_name, loan_type, service_type, approval_result, loan_money, loan_time_limit, credit_address,
+    (select region_name from ht_msp_region hmr where hmr.region_id=hmc.credit_address) credit_addresss, 
+    guarantee_type, unredeemed_money, repayment_status, overdue_amount, 
+    overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
+    update_time
+    from ht_msp_configure hmc
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_msp_configure
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomizeExample" >
+    delete from ht_msp_configure
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomize" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_configure (configure_name, loan_type, service_type, 
+      approval_result, loan_money, loan_time_limit, 
+      credit_address, guarantee_type, unredeemed_money, 
+      repayment_status, overdue_amount, overdue_date, 
+      overdue_length, overdue_reason, create_user, 
+      create_time, update_user, update_time)
+    values (#{configureName,jdbcType=VARCHAR}, #{loanType,jdbcType=VARCHAR}, #{serviceType,jdbcType=VARCHAR}, 
+      #{approvalResult,jdbcType=VARCHAR}, #{loanMoney,jdbcType=DECIMAL}, #{loanTimeLimit,jdbcType=INTEGER}, 
+      #{creditAddress,jdbcType=VARCHAR}, #{guaranteeType,jdbcType=VARCHAR}, #{unredeemedMoney,jdbcType=DECIMAL}, 
+      #{repaymentStatus,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=DECIMAL}, #{overdueDate,jdbcType=VARCHAR}, 
+      #{overdueLength,jdbcType=INTEGER}, #{overdueReason,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomize" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_configure
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="configureName != null" >
+        configure_name,
+      </if>
+      <if test="loanType != null" >
+        loan_type,
+      </if>
+      <if test="serviceType != null" >
+        service_type,
+      </if>
+      <if test="approvalResult != null" >
+        approval_result,
+      </if>
+      <if test="loanMoney != null" >
+        loan_money,
+      </if>
+      <if test="loanTimeLimit != null" >
+        loan_time_limit,
+      </if>
+      <if test="creditAddress != null" >
+        credit_address,
+      </if>
+      <if test="guaranteeType != null" >
+        guarantee_type,
+      </if>
+      <if test="unredeemedMoney != null" >
+        unredeemed_money,
+      </if>
+      <if test="repaymentStatus != null" >
+        repayment_status,
+      </if>
+      <if test="overdueAmount != null" >
+        overdue_amount,
+      </if>
+      <if test="overdueDate != null" >
+        overdue_date,
+      </if>
+      <if test="overdueLength != null" >
+        overdue_length,
+      </if>
+      <if test="overdueReason != null" >
+        overdue_reason,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="configureName != null" >
+        #{configureName,jdbcType=VARCHAR},
+      </if>
+      <if test="loanType != null" >
+        #{loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType != null" >
+        #{serviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalResult != null" >
+        #{approvalResult,jdbcType=VARCHAR},
+      </if>
+      <if test="loanMoney != null" >
+        #{loanMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="loanTimeLimit != null" >
+        #{loanTimeLimit,jdbcType=INTEGER},
+      </if>
+      <if test="creditAddress != null" >
+        #{creditAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteeType != null" >
+        #{guaranteeType,jdbcType=VARCHAR},
+      </if>
+      <if test="unredeemedMoney != null" >
+        #{unredeemedMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentStatus != null" >
+        #{repaymentStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueAmount != null" >
+        #{overdueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="overdueDate != null" >
+        #{overdueDate,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueLength != null" >
+        #{overdueLength,jdbcType=INTEGER},
+      </if>
+      <if test="overdueReason != null" >
+        #{overdueReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomizeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_configure
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_configure
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.configureName != null" >
+        configure_name = #{record.configureName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanType != null" >
+        loan_type = #{record.loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceType != null" >
+        service_type = #{record.serviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.approvalResult != null" >
+        approval_result = #{record.approvalResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanMoney != null" >
+        loan_money = #{record.loanMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanTimeLimit != null" >
+        loan_time_limit = #{record.loanTimeLimit,jdbcType=INTEGER},
+      </if>
+      <if test="record.creditAddress != null" >
+        credit_address = #{record.creditAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.guaranteeType != null" >
+        guarantee_type = #{record.guaranteeType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unredeemedMoney != null" >
+        unredeemed_money = #{record.unredeemedMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repaymentStatus != null" >
+        repayment_status = #{record.repaymentStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueAmount != null" >
+        overdue_amount = #{record.overdueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.overdueDate != null" >
+        overdue_date = #{record.overdueDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueLength != null" >
+        overdue_length = #{record.overdueLength,jdbcType=INTEGER},
+      </if>
+      <if test="record.overdueReason != null" >
+        overdue_reason = #{record.overdueReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_configure
+    set id = #{record.id,jdbcType=INTEGER},
+      configure_name = #{record.configureName,jdbcType=VARCHAR},
+      loan_type = #{record.loanType,jdbcType=VARCHAR},
+      service_type = #{record.serviceType,jdbcType=VARCHAR},
+      approval_result = #{record.approvalResult,jdbcType=VARCHAR},
+      loan_money = #{record.loanMoney,jdbcType=DECIMAL},
+      loan_time_limit = #{record.loanTimeLimit,jdbcType=INTEGER},
+      credit_address = #{record.creditAddress,jdbcType=VARCHAR},
+      guarantee_type = #{record.guaranteeType,jdbcType=VARCHAR},
+      unredeemed_money = #{record.unredeemedMoney,jdbcType=DECIMAL},
+      repayment_status = #{record.repaymentStatus,jdbcType=VARCHAR},
+      overdue_amount = #{record.overdueAmount,jdbcType=DECIMAL},
+      overdue_date = #{record.overdueDate,jdbcType=VARCHAR},
+      overdue_length = #{record.overdueLength,jdbcType=INTEGER},
+      overdue_reason = #{record.overdueReason,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomize" >
+    update ht_msp_configure
+    <set >
+      <if test="configureName != null" >
+        configure_name = #{configureName,jdbcType=VARCHAR},
+      </if>
+      <if test="loanType != null" >
+        loan_type = #{loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType != null" >
+        service_type = #{serviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalResult != null" >
+        approval_result = #{approvalResult,jdbcType=VARCHAR},
+      </if>
+      <if test="loanMoney != null" >
+        loan_money = #{loanMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="loanTimeLimit != null" >
+        loan_time_limit = #{loanTimeLimit,jdbcType=INTEGER},
+      </if>
+      <if test="creditAddress != null" >
+        credit_address = #{creditAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteeType != null" >
+        guarantee_type = #{guaranteeType,jdbcType=VARCHAR},
+      </if>
+      <if test="unredeemedMoney != null" >
+        unredeemed_money = #{unredeemedMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentStatus != null" >
+        repayment_status = #{repaymentStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueAmount != null" >
+        overdue_amount = #{overdueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="overdueDate != null" >
+        overdue_date = #{overdueDate,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueLength != null" >
+        overdue_length = #{overdueLength,jdbcType=INTEGER},
+      </if>
+      <if test="overdueReason != null" >
+        overdue_reason = #{overdueReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomize" >
+    update ht_msp_configure
+    set configure_name = #{configureName,jdbcType=VARCHAR},
+      loan_type = #{loanType,jdbcType=VARCHAR},
+      service_type = #{serviceType,jdbcType=VARCHAR},
+      approval_result = #{approvalResult,jdbcType=VARCHAR},
+      loan_money = #{loanMoney,jdbcType=DECIMAL},
+      loan_time_limit = #{loanTimeLimit,jdbcType=INTEGER},
+      credit_address = #{creditAddress,jdbcType=VARCHAR},
+      guarantee_type = #{guaranteeType,jdbcType=VARCHAR},
+      unredeemed_money = #{unredeemedMoney,jdbcType=DECIMAL},
+      repayment_status = #{repaymentStatus,jdbcType=VARCHAR},
+      overdue_amount = #{overdueAmount,jdbcType=DECIMAL},
+      overdue_date = #{overdueDate,jdbcType=VARCHAR},
+      overdue_length = #{overdueLength,jdbcType=INTEGER},
+      overdue_reason = #{overdueReason,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="countAssetList" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		  COUNT(*)
+		FROM ht_msp_configure hfml 
+		<include refid="Where_Clause" />
+	</select>
+	<select id="selectAssetListList" resultMap="BaseResultMap" parameterType="Map">
+		SELECT
+			<if test="distinct" >
+		      distinct
+		    </if>
+		    id, configure_name, loan_type, service_type, approval_result, loan_money, loan_time_limit, 
+		    (select region_name from ht_msp_region hmr where hmr.region_id=hfml.credit_address) credit_address, 
+		    guarantee_type, unredeemed_money, repayment_status, overdue_amount, 
+		    overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
+		    update_time, 
+		    <!-- id, configure_name, loan_type, service_type, approval_result, loan_money, loan_time_limit, 
+		    credit_address, guarantee_type, unredeemed_money, repayment_status, overdue_amount, 
+		    overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
+		    update_time, del_flg, -->
+		    CASE loan_type WHEN '01' THEN '经营' WHEN '02' THEN '消费' WHEN '99' THEN '其他' ELSE '其他' END loan_type_name,
+		    CASE service_type WHEN '01' THEN '信用额度' WHEN '02' THEN '一般借贷' WHEN '03' THEN '消费信贷' WHEN '04' THEN '循环贷' WHEN '05' THEN '其他' ELSE '其他' END  service_type_name,
+		    CASE approval_result WHEN '01' THEN '审批通过' WHEN '02' THEN '审批拒绝' WHEN '04' THEN '重新审批' WHEN '05' THEN '客户取消' ELSE '其他' END approval_result_name,
+		    CASE guarantee_type WHEN 'A' THEN '抵押' WHEN 'B' THEN '质押' WHEN 'C' THEN '担保' WHEN 'D' THEN '信用' WHEN 'E' THEN '保证' WHEN 'Y' THEN '其他' ELSE '其他' END guarantee_type_name,
+		    CASE repayment_status WHEN '01' THEN '正常' WHEN '02' THEN '逾期中' WHEN '03' THEN '逾期核销' WHEN '04' THEN '正常结清' ELSE '其他' END repayment_status_name
+		FROM ht_msp_configure hfml
+		<include refid="Where_Clause" />
+		<if test="limitStart != null and limitStart >= 0">
+				LIMIT #{limitStart} , #{limitEnd}
+			</if>
+	</select>
+</mapper>

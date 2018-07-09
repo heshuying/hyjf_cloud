@@ -158,7 +158,6 @@ public class ExcelUtil {
 	 * 设置excel样式，生成第一行Header数据
 	 *
 	 * @param workbook
-	 * @param title
 	 *            头
 	 * @param headList
 	 *            列头 用map无法保证列的顺序，所以改用list

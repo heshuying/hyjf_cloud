@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BorrowRecoverClient;
@@ -93,6 +95,24 @@ public class BorrowRecoverClientImpl implements BorrowRecoverClient {
     public BorrowRecoverVO getBorrowRecoverByTenderNid(String tenderNid) {
         String url = "http://AM-TRADE/am-trade/borrowRecover/getBorrowRecoverByTenderNid/"+tenderNid;
         BorrowRecoverResponse response = restTemplate.getForEntity(url,BorrowRecoverResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取borrow_recover_plan更新每次还款时间
+     *
+     * @param bidNid
+     * @param creditTenderNid
+     * @param periodNow
+     * @return
+     */
+    @Override
+    public BorrowRecoverPlanVO getPlanByBidTidPeriod(String bidNid, String creditTenderNid, int periodNow) {
+        String url = "http://AM-TRADE/am-trade/borrowRecover/getPlanByBidTidPeriod/"+bidNid+"/"+creditTenderNid+"/"+periodNow;
+        BorrowRecoverPlanResponse response = restTemplate.getForEntity(url,BorrowRecoverPlanResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResult();
         }

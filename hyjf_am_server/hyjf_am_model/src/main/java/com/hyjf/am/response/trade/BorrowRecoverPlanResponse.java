@@ -4,8 +4,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.repay.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 
 /**
  * @author hesy

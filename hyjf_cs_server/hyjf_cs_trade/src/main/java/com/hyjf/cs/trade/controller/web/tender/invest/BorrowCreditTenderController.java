@@ -53,10 +53,16 @@ public class BorrowCreditTenderController extends BaseTradeController {
             result =  borrowTenderService.borrowCreditTender(tender);
         }catch (CheckException e){
             throw e;
-        }finally {
-            // TODO: 2018/6/25  删除redis校验
-            //RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }
+        return result;
+    }
+
+    @ApiOperation(value = "web端债转投资异步处理", notes = "web端债转投资异步处理")
+    @RequestMapping("/bgReturn")
+    @ResponseBody
+    public BankCallResult borrowCreditTenderBgReturn(BankCallBean bean ) {
+        logger.info("web端债转投资异步处理start,userId:{}", bean.getLogUserId());
+        BankCallResult result = borrowTenderService.borrowCreditTenderBgReturn(bean);
         return result;
     }
 }

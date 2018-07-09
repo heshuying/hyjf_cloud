@@ -1,7 +1,7 @@
 package com.hyjf.am.statistics.mongo;
 
 import com.hyjf.am.statistics.bean.AccountWebList;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;

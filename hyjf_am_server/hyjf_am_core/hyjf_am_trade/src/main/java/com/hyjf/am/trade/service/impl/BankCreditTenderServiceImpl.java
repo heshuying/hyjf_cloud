@@ -3,28 +3,84 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
+import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BankCreditEndMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayPlanMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CreditTenderLogMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.TenderCreditCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
+import com.hyjf.am.trade.dao.model.auto.CreditRepay;
+import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
+import com.hyjf.am.trade.dao.model.auto.CreditTender;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderLogExample;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
-import com.hyjf.am.trade.mq.AccountWebListProducer;
-import com.hyjf.am.trade.mq.AppMessageProducer;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
+import com.hyjf.am.trade.mq.producer.AppMessageProducer;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.BankCreditTenderService;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
-import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditPageVO;
+import com.hyjf.am.vo.trade.CreditTenderBgVO;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
+import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.EmployeeCustomizeVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -36,18 +92,6 @@ import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.*;
 
 /**
  * 银行债转异常处理
@@ -304,10 +348,10 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			// 发送短信验证码
 			SmsMessage smsMessage = new SmsMessage(null, param, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
 					CustomConstants.CHANNEL_TYPE_NORMAL);
-			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 			
 			AppMsMessage appMsMessage = new AppMsMessage(null, param, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
-			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 		}
 	}
 
@@ -635,7 +679,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 					accountWebList.setOperator(null);
 					accountWebList.setFlag(1);
 					
-					accountWebListProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+					accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
 					
 				}
 
@@ -857,7 +901,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			param.put("val_balance", creditTender.getAssignPay() + "");
 			param.put("val_profit", creditTender.getAssignInterest() + "");
 			param.put("val_amount", creditTender.getAssignAccount() + "");
-			appMsProcesser.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(param)));
+			appMsProcesser.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(param)));
 		}
 	}
 
@@ -1430,6 +1474,50 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			return null;
 		}
 		return CommonUtils.convertBean(borrowCreditList.get(0), BorrowCreditVO.class);
+	}
+
+	/**
+	 * 保存债转异步数据
+	 *
+	 * @param request
+	 */
+	@Override
+	public void saveCreditBgData(CreditTenderBgVO request) {
+		// 删除tmp表
+		deleteByOrderIdAndUserId(request.getCreditTenderLog().getLogOrderId(),request.getCreditTenderLog().getUserId());
+		CreditTender creditTender = CommonUtils.convertBean(request.getCreditTender(),CreditTender.class);
+		// 插入credit_tender
+		creditTenderMapper.insertSelective(creditTender);
+		// 处理承接人account表和account_list表
+		Account assignAccountNew = CommonUtils.convertBean(request.getAssignAccountNew(),Account.class);
+		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(assignAccountNew) ;
+		AccountList assignAccountList = CommonUtils.convertBean(request.getAssignAccountList(),AccountList.class);
+		this.accountListMapper.insertSelective(assignAccountList);
+
+		// 处理出让人的 account表和account_list表
+		Account sellerAccountNew = CommonUtils.convertBean(request.getSellerAccountNew(),Account.class);
+		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(sellerAccountNew) ;
+		AccountList sellerAccountList = CommonUtils.convertBean(request.getSellerAccountList(),AccountList.class);
+		this.accountListMapper.insertSelective(sellerAccountList);
+
+		// 插入 creditRepay
+		if(request.getCreditRepayVO()!=null){
+			CreditRepay creditRepay = CommonUtils.convertBean(request.getCreditRepayVO(),CreditRepay.class);
+			creditRepayMapper.insertSelective(creditRepay);
+		}
+
+		// 更新Borrow_recover
+		BorrowRecover borrowRecover = CommonUtils.convertBean(request.getBorrowRecover(),BorrowRecover.class);
+		this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) ;
+
+		// 更新Borrow_recover_plan
+		if(request.getBorrowRecoverPlan()!=null){
+			BorrowRecoverPlan borrowRecoverPlan = CommonUtils.convertBean(request.getBorrowRecoverPlan(),BorrowRecoverPlan.class);
+			this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan);
+		}
+
+		// 调用银行结束债转接口
+		this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
 	}
 
 
