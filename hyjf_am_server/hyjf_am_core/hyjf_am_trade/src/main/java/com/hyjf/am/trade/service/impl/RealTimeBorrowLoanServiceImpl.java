@@ -4,7 +4,11 @@
 package com.hyjf.am.trade.service.impl;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,11 +63,10 @@ import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest;
 import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
 import com.hyjf.am.trade.dao.model.auto.FreezeList;
 import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
-import com.hyjf.am.trade.mq.MailProducer;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.MailProducer;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.RealTimeBorrowLoanService;
-import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -1781,7 +1784,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		SmsMessage borrowerSmsMessage = new SmsMessage(borrowUserId, borrowerReplaceStrs, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_JIEKUAN_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
-			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
+			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}
@@ -1796,7 +1799,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
-			mailProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}
