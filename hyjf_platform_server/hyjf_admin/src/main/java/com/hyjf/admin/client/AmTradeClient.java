@@ -140,4 +140,20 @@ public interface AmTradeClient {
      * @return
      */
     BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
+
+    /**
+     * 根据筛选条件查询平台转账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getPlatformTransferCount(PlatformTransferListRequest request);
+
+    /**
+     * 根据筛选条件查询平台转账list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request);
 }

@@ -262,13 +262,40 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
-
     @Override
     public UserTransferResponse getRecordList(TransferListRequest form) {
         UserTransferResponse response = restTemplate
                 .postForEntity(tradeService + "/customertransfer/getRecordList", form, UserTransferResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getPlatformTransferCount(PlatformTransferListRequest request) {
+        Integer count = restTemplate.postForEntity(tradeService + "/platformtransfer/getplatformtransfercount", request, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request) {
+        PlatformTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/platformtransfer/searchplatformtransferlist", request, PlatformTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }
