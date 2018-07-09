@@ -31,7 +31,6 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	private CouponConfigMapper couponConfigMapper;
 	@Resource
 	CouponConfigCustomizeMapper couponConfigCustomizeMapper;
-
 	/**
 	 * 根据优惠券编号查找优惠券配置
 	 * 
@@ -143,6 +142,17 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 			map.put("msg", "删除失败");
 		}
 		return map;
+	}
+
+	/**
+	 * 根据优惠券编号查询已发行数量
+	 * @param couponCode
+	 * @return
+	 */
+	@Override
+	public int checkCouponSendExcess(String couponCode) {
+		int remain = couponConfigCustomizeMapper.checkCouponSendExcess(couponCode);
+		return remain;
 	}
 
 }

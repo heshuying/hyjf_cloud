@@ -65,5 +65,10 @@ public interface CouponConfigService {
      */
     Map<String,Object> deleteCouponConfig(int id);
 
-
+    /**
+     * 查询优惠券已发行数量
+     * @param couponCode
+     * @return
+     */
+    int checkCouponSendExcess(String couponCode);
 }
