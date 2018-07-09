@@ -240,7 +240,7 @@ public class MspApplyController extends BaseController {
 	 * @param modelAndView
 	 * @param form
 	 */
-	@RequestMapping("/validateBeforeAction")
+	@RequestMapping("/exportAction")
 	@ApiOperation(value = "导出", notes = "导出")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletRequest request,
