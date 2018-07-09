@@ -1,15 +1,50 @@
 package com.hyjf.cs.trade.handle;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.HjhAccedeResponse;
-import com.hyjf.am.response.trade.TenderAgreementResponse;
-import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
+import com.hyjf.am.resquest.trade.TenderAgreementRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -32,28 +67,25 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.CreditAssignedBean;
 import com.hyjf.cs.trade.bean.fdd.FddDessenesitizationBean;
 import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
-import com.hyjf.cs.trade.client.*;
-import com.hyjf.cs.trade.mq.FddProducer;
-import com.hyjf.cs.trade.mq.MailProducer;
-import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.AssetManageClient;
+import com.hyjf.cs.trade.client.BankCreditTenderClient;
+import com.hyjf.cs.trade.client.BorrowCreditClient;
+import com.hyjf.cs.trade.client.BorrowManinfoClient;
+import com.hyjf.cs.trade.client.BorrowRecoverClient;
+import com.hyjf.cs.trade.client.BorrowTenderClient;
+import com.hyjf.cs.trade.client.BorrowUserClient;
+import com.hyjf.cs.trade.client.HjhAccedeClient;
+import com.hyjf.cs.trade.client.HjhDebtCreditClient;
+import com.hyjf.cs.trade.client.HjhDebtCreditTenderClient;
+import com.hyjf.cs.trade.client.TenderAgreementClient;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.FddProducer;
+import com.hyjf.cs.trade.mq.producer.MailProducer;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.*;
 
 /**
  * 法大大 handle
@@ -597,7 +629,7 @@ public class FddHandle {
                 bean.setTenderCompany(isTenderCompany);
                 bean.setCreditCompany(isCreditCompany);
                 try {
-					fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,JSON.toJSONBytes(bean)));
+					fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,JSON.toJSONBytes(bean)));
 				} catch (MQException e) {
 					e.printStackTrace();
 					logger.error("法大大发送下载脱敏消息失败...", e);	
@@ -1692,7 +1724,7 @@ public class FddHandle {
 				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 				// 发送邮件
-				mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+				mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
 
 
 				logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资--------------------------结束!");
@@ -1758,7 +1790,7 @@ public class FddHandle {
 				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇盈金服互联网金融服务平台居间服务协议", null, new String[] { filePath +"/" + fileName }, emails, CustomConstants.EMAILPARAM_TPL_LOANS,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 				// 发送邮件
-				mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+				mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
 
 				// 更新BorrowRecover邮件发送状态
 				borrowRecover.setSendmail(1);

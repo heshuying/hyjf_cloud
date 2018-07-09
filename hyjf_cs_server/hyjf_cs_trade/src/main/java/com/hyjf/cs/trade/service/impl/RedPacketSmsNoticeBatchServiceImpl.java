@@ -3,18 +3,11 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.mq.SmsProducer;
-import com.hyjf.cs.trade.service.RedPacketSmsNoticeBatchService;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.RedPacketSmsNoticeBatchService;
 
 /**
  * @author PC-LIUSHOUYI
@@ -79,7 +80,7 @@ public class RedPacketSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl imp
                     CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(
-                        new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                        new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             } catch (MQException e) {
                 logger.error("短信发送失败...", e);
             }

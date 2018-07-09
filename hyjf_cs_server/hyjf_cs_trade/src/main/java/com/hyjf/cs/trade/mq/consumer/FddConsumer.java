@@ -1,9 +1,7 @@
-package com.hyjf.cs.trade.mq;
+package com.hyjf.cs.trade.mq.consumer;
 
 import java.util.List;
 
-import com.hyjf.cs.trade.bean.fdd.FddDessenesitizationBean;
-import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -22,8 +20,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.fdd.FddDessenesitizationBean;
 import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
 import com.hyjf.cs.trade.handle.FddHandle;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 
 /**
  * 法大大consumer

@@ -3,6 +3,16 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
@@ -13,18 +23,9 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.CouponConfigClient;
 import com.hyjf.cs.trade.client.CouponUserClient;
-import com.hyjf.cs.trade.mq.AppMessageProducer;
-import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.service.CouponExpiredPushService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author yaoy
@@ -78,7 +79,7 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
             param.put("val_coupon_type", config.getCouponType() == 1 ? "体验金" : config.getCouponType() == 2 ? "加息券" : "代金券");
             param.put("val_profit_deadline", GetDate.formatDate(Long.parseLong(cUser.getEndTime() + "000")));
             AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, "appMsSendForUser", CustomConstants.JYTZ_COUPON_DEADLINE);
-            appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
+            appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
         }
 
         List<CouponUserVO> couponUsersExp = couponUserClient.selectCouponUser(yestodayBeginDate, yestodayEndDate);
@@ -96,7 +97,7 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
             param.put("val_coupon_balance", config.getCouponType() == 1 ? config.getCouponQuota() + "元" : config.getCouponType() == 2 ? config.getCouponQuota() + "%" : config.getCouponQuota() + "元");
             param.put("val_coupon_type", config.getCouponType() == 1 ? "体验金" : config.getCouponType() == 2 ? "加息券" : "代金券");
             AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, "appMsSendForUser", CustomConstants.JYTZ_COUPON_INVALIDED);
-            appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
+            appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
         }
 
         logger.info("优惠券即将过期push消息提醒结束");

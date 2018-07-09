@@ -1,5 +1,17 @@
 package com.hyjf.cs.trade.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
@@ -7,7 +19,13 @@ import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.EmployeeCustomizeVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
@@ -18,25 +36,14 @@ import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
-import com.hyjf.cs.trade.mq.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.FddProducer;
-import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.FddProducer;
 import com.hyjf.cs.trade.service.BankCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * 债转投资异常Service实现类
@@ -208,7 +215,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         params.put("investFlag",investUser.getInvestflag());
                                         //推送mq
                                         this.appChannelStatisticsDetailProducer.messageSend(
-                                                new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                                                new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                                         MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                                     }else{
 
@@ -309,7 +316,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
         bean.setTransType(3);
         bean.setTenderType(1);
         try {
-            fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_TOPIC,
+            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
                     MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
         } catch (MQException e) {
             e.printStackTrace();
