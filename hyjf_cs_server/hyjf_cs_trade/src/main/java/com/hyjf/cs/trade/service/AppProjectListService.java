@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -21,7 +22,7 @@ public interface AppProjectListService extends BaseTradeService{
      * @author zhangyk
      * @return
      */
-    public AppResult searchAppProjectList(ProjectListRequest request);
+    public AppResult searchAppProjectList(AppProjectListRequest request);
 
 
     /**

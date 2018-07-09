@@ -3,20 +3,46 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.CreditRepayVO;
+import com.hyjf.am.vo.trade.CreditTenderBgVO;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWebListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -31,26 +57,34 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmBorrowRepayPlanClient;
+import com.hyjf.cs.trade.client.AmConfigClient;
+import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.client.BankCreditTenderClient;
+import com.hyjf.cs.trade.client.BorrowClient;
+import com.hyjf.cs.trade.client.BorrowRecoverClient;
+import com.hyjf.cs.trade.client.BorrowTenderClient;
+import com.hyjf.cs.trade.client.CouponClient;
+import com.hyjf.cs.trade.client.CreditClient;
+import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.mq.*;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
+import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
+import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BorrowCreditTenderService;
 import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
 
 /**
  * @Description 投资接口
@@ -825,7 +859,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         accountWebList.setOperator(null);
                         accountWebList.setFlag(1);
                         try {
-                            accountWebListProducer.messageSend(new Producer.MassageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+                            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
                         } catch (MQException e) {
                             e.printStackTrace();
                         }
@@ -848,7 +882,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         params.put("investFlag", checkIsNewUserCanInvest(userId));
                         //压入消息队列
                         try {
-                            appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                     MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                         } catch (MQException e) {
                             e.printStackTrace();
@@ -874,7 +908,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                             // 更新huiyingdai_utm_reg的首投信息
                             try {
                                 if(this.checkIsNewUserCanInvest(userId)){
-                                    utmRegProducer.messageSend(new Producer.MassageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                                    utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                                 }
                             } catch (MQException e) {
                                 e.printStackTrace();
@@ -895,7 +929,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     try {
                         // 网站累计投资追加
                         // 投资修改mongodb运营数据
-                        calculateInvestInterestProducer.messageSend(new Producer.MassageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                        calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                         // 推送app消息 和满标发短信
                         this.sendCreditSuccessMessage(creditTender,borrowCredit);
                     } catch (MQException e) {
@@ -942,7 +976,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             appParam.put("val_balance", creditTender.getAssignPay() + "");
             appParam.put("val_profit", creditTender.getAssignInterest() + "");
             appParam.put("val_amount", creditTender.getAssignAccount() + "");
-            appMsProcesser.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appParam)));
+            appMsProcesser.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appParam)));
 
             if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
                 // 向出让人推送债转完全承接消息
@@ -951,10 +985,10 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 发送短信验证码
                 SmsMessage smsMessage = new SmsMessage(null, smsParam, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
-                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 
                 AppMsMessage appMsMessage = new AppMsMessage(null, smsParam, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
-                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
             }
         }
     }

@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -130,6 +132,15 @@ public class HjhPlanServiceImpl implements HjhPlanService {
         return hjhPlanCustomizeMapper.selectUserHjhInvistDetail(params);
     }
 
+    @Override
+    public List<HjhPlanCustomize> selectAppHomeHjhPlan(HjhPlanRequest request) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("limitStart",request.getLimitStart());
+        param.put("limitEnd",request.getLimitEnd());
+        param.put("lockFlag",request.getLockFlag());
+        return hjhPlanCustomizeMapper.getHjhPlanAppList(param);
+    }
+
     /**
      * 插入资金明细表
      * @param request
@@ -204,4 +215,8 @@ public class HjhPlanServiceImpl implements HjhPlanService {
             this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
         }*/
     }
+
+
+
+
 }

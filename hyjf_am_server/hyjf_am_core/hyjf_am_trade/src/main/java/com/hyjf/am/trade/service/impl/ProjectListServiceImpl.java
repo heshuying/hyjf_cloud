@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,7 +213,7 @@ public class ProjectListServiceImpl implements ProjectListService {
      * @date 2018/6/20 16:11
      */
     @Override
-    public List<WebProjectListCustomize> searchAppProjectList(@Valid ProjectListRequest request) {
+    public List<AppProjectListCustomize> searchAppProjectList(@Valid ProjectListRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();
         // 项目类型
         String projectType = request.getProjectType();

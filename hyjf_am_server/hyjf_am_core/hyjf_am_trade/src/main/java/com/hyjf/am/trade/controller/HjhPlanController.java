@@ -4,19 +4,23 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.HjhLabelResponse;
+import com.hyjf.am.response.trade.HjhPlanAppResponse;
 import com.hyjf.am.response.trade.UserHjhInvistDetailCustomizeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
+import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
@@ -110,6 +114,16 @@ public class HjhPlanController extends BaseController{
         UserHjhInvistDetailCustomize userHjhInvistDetailCustomize = hjhPlanService.selectUserHjhInvistDetail(params);
         if (Validator.isNotNull(userHjhInvistDetailCustomize)){
             response.setResult(CommonUtils.convertBean(userHjhInvistDetailCustomize,UserHjhInvistDetailCustomizeVO.class));
+        }
+        return response;
+    }
+
+    @PostMapping("/selectAppHjhPlanList")
+    public HjhPlanAppResponse selectAppHjhPlanList(@RequestBody HjhPlanRequest request){
+        HjhPlanAppResponse response = new HjhPlanAppResponse();
+        List<HjhPlanCustomize> list= hjhPlanService.selectAppHomeHjhPlan(request);
+        if (!CollectionUtils.isEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,HjhPlanCustomizeVO.class));
         }
         return response;
     }

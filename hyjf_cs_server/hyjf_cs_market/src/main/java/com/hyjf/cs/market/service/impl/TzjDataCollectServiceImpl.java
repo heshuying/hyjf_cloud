@@ -1,9 +1,7 @@
 package com.hyjf.cs.market.service.impl;
 
-import java.util.Date;
 import java.util.Set;
 
-import com.hyjf.common.util.GetDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,10 +13,11 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
-import com.hyjf.cs.market.mq.Producer;
-import com.hyjf.cs.market.mq.StatisticsTzjProducer;
+import com.hyjf.cs.market.mq.base.MessageContent;
+import com.hyjf.cs.market.mq.producer.StatisticsTzjProducer;
 import com.hyjf.cs.market.service.TzjDataCollectService;
 
 /**
@@ -62,7 +61,7 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 
         //4.mq通知
         try {
-            statisticsTzjProducer.messageSend(new Producer.MassageContent(MQConstant.STATISTICS_TZJ_TOPIC, System.currentTimeMillis()+"", JSON.toJSONBytes(tzjDayReportVO)));
+            statisticsTzjProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC, System.currentTimeMillis()+"", JSON.toJSONBytes(tzjDayReportVO)));
         } catch (MQException e) {
             logger.error("投之家日报表发送mq失败...", e);
         }

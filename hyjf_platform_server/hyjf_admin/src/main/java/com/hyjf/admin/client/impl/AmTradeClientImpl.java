@@ -8,10 +8,12 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -262,6 +264,15 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+    @Override
+    public List<CouponRepayMonitorVO> selectRecordList(CouponRepayRequest form) {
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/selectCouponRepayMonitorPage";
+        CouponRepayMonitorResponse response = restTemplate.postForEntity(url,form,CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 
     @Override
     public UserTransferResponse getRecordList(TransferListRequest form) {
@@ -269,6 +280,34 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .postForEntity(tradeService + "/customertransfer/getRecordList", form, UserTransferResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getPlatformTransferCount(PlatformTransferListRequest request) {
+        Integer count = restTemplate.postForEntity(tradeService + "/platformtransfer/getplatformtransfercount", request, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request) {
+        PlatformTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/platformtransfer/searchplatformtransferlist", request, PlatformTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }

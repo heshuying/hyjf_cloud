@@ -8,4 +8,11 @@ import com.hyjf.am.vo.trade.borrow.BorrowVO;
  */
 public interface BorrowClient {
     BorrowVO selectBorrowByNid(String borrowNid);
+
+    /**
+     * 根据用户id获取用户总投资笔数
+     * @author zhangyk
+     * @date 2018/7/5 17:15
+     */
+    int getTotalInvestCountByUserId(Integer userId);
 }
