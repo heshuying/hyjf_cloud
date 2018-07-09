@@ -225,11 +225,11 @@ public class WebsiteController extends BaseController {
 
     /**
      * 余额查询
-     * @param request
+     * @param
      * @return
      */
     @PostMapping(value = "/yueSearchAction")
-    public ApiResult yueSearch(HttpServletRequest request) {
+    public ApiResult yueSearch() {
         ApiResult result = new ApiResult();
         // 取得客户编号
         String companyId = systemConfig.getMerCustId();

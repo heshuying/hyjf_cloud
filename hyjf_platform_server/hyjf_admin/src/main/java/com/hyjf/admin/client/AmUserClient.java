@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 
@@ -58,5 +59,22 @@ public interface AmUserClient {
      * @return
      */
     UserVO findUserById(final int userId);
+
+    /**
+     * 根据userId列表查询user列表
+     * @auth sunpeikai
+     * @param userIds 用户id列表
+     * @return
+     */
+    List<UserVO> findUserListByUserIds(String userIds);
+
+    /**
+     * 利用borrowNid查询出来的异常标的借款人userId查询银行账户
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    BankOpenAccountVO searchBankOpenAccount(Integer userId);
+
 
 }

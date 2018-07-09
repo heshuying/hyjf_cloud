@@ -3,19 +3,27 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
-import java.util.List;
-
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminCouponRepayMonitorCustomizeResponse;
+import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
+import com.hyjf.am.trade.dao.model.customize.admin.AdminCouponRepayMonitorCustomize;
+import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
+import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
-import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoy
@@ -39,6 +47,58 @@ public class CouponRepayMonitorController extends BaseController {
         return response;
     }
 
+
+    @PostMapping("/selectCouponRepayMonitorPage")
+    public AdminCouponRepayMonitorCustomizeResponse selectCouponRepayMonitorPage(@RequestBody CouponRepayRequest form) {
+        AdminCouponRepayMonitorCustomizeResponse response = new AdminCouponRepayMonitorCustomizeResponse();
+        Map<String, Object> paraMap = new HashMap<String, Object>();
+        if(StringUtils.isNotEmpty(form.getTimeStartSrch())){
+            paraMap.put("timeStartSrch", form.getTimeStartSrch());
+        }
+        if(StringUtils.isNotEmpty(form.getTimeEndSrch())){
+            paraMap.put("timeEndSrch", form.getTimeEndSrch());
+        }
+        List<AdminCouponRepayMonitorCustomize> couponRepayMonitorList = couponRepayMonitorService.selectCouponRepayMonitorPage(paraMap);
+        if (!CollectionUtils.isEmpty(couponRepayMonitorList)) {
+            List<AdminCouponRepayMonitorCustomizeVO> couponRepayMonitorVOList = CommonUtils.convertBeanList(couponRepayMonitorList,AdminCouponRepayMonitorCustomizeVO.class);
+            response.setResultList(couponRepayMonitorVOList);
+        }
+        return response;
+    }
+
+    @PostMapping("/couponRepayMonitorCreatePage")
+    public AdminCouponRepayMonitorCustomizeResponse couponRepayMonitorCreatePage(@RequestBody CouponRepayRequest form) {
+        AdminCouponRepayMonitorCustomizeResponse response = new AdminCouponRepayMonitorCustomizeResponse();
+        Integer count = this.couponRepayMonitorService.countRecordTotal(form);
+        if(count>0){
+            Paginator paginator = new Paginator(form.getPaginatorPage(), count);
+            Map<String, Object> paraMap = new HashMap<>();
+            paraMap.put("limitStart", paginator.getOffset());
+            paraMap.put("limitEnd", paginator.getLimit());
+            List<AdminCouponRepayMonitorCustomize> recordList = couponRepayMonitorService.selectCouponRepayMonitorPage(paraMap);
+            if (recordList != null) {
+                List<AdminCouponRepayMonitorCustomizeVO> avo = CommonUtils.convertBeanList(recordList,AdminCouponRepayMonitorCustomizeVO.class);
+                response.setResultList(avo);
+                response.setRecordTotal(count);
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+        return response;
+    }
+
+    @PostMapping("/selectInterestSum")
+    public AdminCouponRepayMonitorCustomizeResponse selectInterestSum(@RequestBody CouponRepayRequest form) {
+        AdminCouponRepayMonitorCustomizeResponse response = new AdminCouponRepayMonitorCustomizeResponse();
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("limitStart", form.getLimitStart());
+        paraMap.put("limitEnd", form.getLimitEnd());
+        List<AdminCouponRepayMonitorCustomize> couponRepayMonitorList = couponRepayMonitorService.selectInterestSum(paraMap);
+        if (!CollectionUtils.isEmpty(couponRepayMonitorList)) {
+            List<AdminCouponRepayMonitorCustomizeVO> couponRepayMonitorVOList = CommonUtils.convertBeanList(couponRepayMonitorList,AdminCouponRepayMonitorCustomizeVO.class);
+            response.setResultList(couponRepayMonitorVOList);
+        }
+        return response;
+    }
 
     @PostMapping("/insertCouponRepayMonitor")
     public CouponRepayMonitorResponse insertCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO ) {

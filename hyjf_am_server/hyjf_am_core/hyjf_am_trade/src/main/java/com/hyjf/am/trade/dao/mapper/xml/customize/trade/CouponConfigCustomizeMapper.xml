@@ -354,12 +354,12 @@
 	<!--</select>-->
 	
 	<!-- 校验优惠券发放数量是否超限 -->
-	<select id="checkCouponSendExcess" resultType="int" parameterType="java.util.Map" >
+	<select id="checkCouponSendExcess" resultType="int" parameterType="java.lang.String" >
 		SELECT
 			IFNULL(cc.coupon_quantity,0) - IFNULL(COUNT(cu.id),0)
 		FROM
-			hyjf_coupon_user cu
-		RIGHT JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
+			ht_coupon_user cu
+		RIGHT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		WHERE
 			cc.coupon_code = #{couponCode}
 	</select>

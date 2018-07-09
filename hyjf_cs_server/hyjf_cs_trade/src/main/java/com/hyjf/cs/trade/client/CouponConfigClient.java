@@ -21,4 +21,10 @@ public interface CouponConfigClient {
    Integer countAvaliableCoupon(MyCouponListRequest request);
 
 
+   /**
+    *
+    * @param couponCode
+    * @return
+    */
+   Integer checkCouponSendExcess(String couponCode);
 }

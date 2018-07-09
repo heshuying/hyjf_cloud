@@ -14,4 +14,10 @@ public interface ContentArticleService {
      */
     List<ContentArticle> getContentArticleList(ContentArticleRequest request);
 
+    /**
+     * 获取公司简介
+     *
+     * @return
+     */
+    ContentArticle getAboutUs();
 }

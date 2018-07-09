@@ -22,6 +22,10 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     private Integer userId;
 
+    private Integer activityId;
+
+    private Integer couponSource;
+
     private BigDecimal couponQuota;
 
     private Integer couponQuantity;
@@ -70,6 +74,10 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     private Integer auditTime;
 
+    private Integer attribute;
+
+    private String channel;
+
     private Integer repayTimeConfig;
 
     private Integer addTime;
@@ -80,7 +88,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     private String updateUser;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     // 使用截止时间
     private int endTime;
@@ -347,12 +355,12 @@ public class CouponUserVO extends BaseVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlg) {
+        this.delFlag = delFlg;
     }
 
     public int getEndTime() {
@@ -393,5 +401,37 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Integer activityId) {
+        this.activityId = activityId;
+    }
+
+    public Integer getCouponSource() {
+        return couponSource;
+    }
+
+    public void setCouponSource(Integer couponSource) {
+        this.couponSource = couponSource;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.auto.CouponUserExample;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 import com.hyjf.am.trade.service.CouponUserService;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.mysql.fabric.xmlrpc.base.Param;
@@ -122,6 +123,12 @@ public class CouponUserServiceImpl implements CouponUserService {
         }
         cra.andDelFlagEqualTo(CustomConstants.FALG_NOR);
         return this.couponUserMapper.countByExample(example);
+    }
+
+    @Override
+    public int insertCouponUser(CouponUser couponUser) {
+        int count = couponUserMapper.insertSelective(couponUser);
+        return count;
     }
 
 }
