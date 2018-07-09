@@ -86,39 +86,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	/**
-	 * 根据userId查询用户信息
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
-	@Override
-	public UserInfoVO findUsersInfoById(int userId) {
-		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-	/**
-	 * 根据userId查询用户
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
-	@Override
-	public UserVO findUserById(int userId) {
-		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-
 	@Override
 	public UserVO getUserByUserName(String loginUserName) {
 		UserResponse response = restTemplate

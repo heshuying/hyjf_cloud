@@ -8,10 +8,12 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,6 +260,16 @@ public class AmTradeClientImpl implements AmTradeClient{
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponRepayMonitorVO> selectRecordList(CouponRepayRequest form) {
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/selectCouponRepayMonitorPage";
+        CouponRepayMonitorResponse response = restTemplate.postForEntity(url,form,CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
         }
         return null;
     }
