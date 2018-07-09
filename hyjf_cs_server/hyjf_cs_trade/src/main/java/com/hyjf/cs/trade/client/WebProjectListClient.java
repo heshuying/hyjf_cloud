@@ -1,9 +1,12 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.trade.AppProjectListResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 
@@ -84,14 +87,14 @@ public interface WebProjectListClient {
      * @author zhangyk
      * @date 2018/6/20 17:23
      */
-    public ProjectListResponse countAppProjectList(ProjectListRequest request);
+    public Integer countAppProjectList(AppProjectListRequest request);
 
     /**
      * app端获取散标投资项目列表
      * @author zhangyk
      * @date 2018/6/20 17:24
      */
-    public ProjectListResponse searchAppProjectList(ProjectListRequest request);
+    public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request);
 
     /**
      *  app端查询债权转让所有分页总数

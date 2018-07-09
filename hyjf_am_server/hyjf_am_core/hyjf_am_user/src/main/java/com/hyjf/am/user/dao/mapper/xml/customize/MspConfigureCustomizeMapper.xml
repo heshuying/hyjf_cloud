@@ -117,7 +117,7 @@
     overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
     update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomizeExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspConfigureExample" >
     select
     <if test="distinct" >
       distinct
@@ -134,7 +134,7 @@
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="sourceNameIsExists" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomize" >
+  <select id="sourceNameIsExists" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspConfigure" >
     select
     <include refid="Base_Column_List" />
     from ht_msp_configure where 1=1 
@@ -157,7 +157,7 @@
     delete from ht_msp_configure
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomizeExample" >
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspConfigureExample" >
     delete from ht_msp_configure
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -298,7 +298,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.customize.MspConfigureCustomizeExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspConfigureExample" resultType="java.lang.Integer" >
     select count(*) from ht_msp_configure
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />

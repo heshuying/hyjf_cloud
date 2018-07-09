@@ -518,4 +518,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         return result;
     }
 
+    @Override
+    public Integer getTotalInverestCount(Integer userId) {
+       return borrowCustomizeMapper.getTotalInverestCount(userId);
+    }
+
+
 }

@@ -307,5 +307,17 @@
 		AND hydb.company_or_personal = 2
 	</select>
 
+	<select id="getTotalInverestCount" resultType="int" parameterType="String">
+		SELECT  (
+				(SELECT COUNT(*) a  FROM ht_borrow_tender htbt WHERE user_id = #{userId} )
+					 +
+				  (  SELECT COUNT(*) a  FROM ht_credit_tender  WHERE user_id = #{userId})
+					 +
+				   ( SELECT COUNT(*) a  FROM ht_borrow_tender_cpn WHERE user_id =  #{userId} )
+					 +
+				  (  SELECT COUNT(*)   FROM ht_hjh_accede   WHERE user_id =  #{userId} )
+		) as total
+	</select>
+
 
 </mapper>

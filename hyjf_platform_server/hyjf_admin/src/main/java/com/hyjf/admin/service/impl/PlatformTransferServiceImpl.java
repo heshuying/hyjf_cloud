@@ -9,6 +9,8 @@ import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.PlatformTransferService;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ import java.util.List;
  */
 @Service
 public class PlatformTransferServiceImpl extends BaseServiceImpl implements PlatformTransferService {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -46,9 +49,12 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     @Override
     public List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request) {
         List<AccountRechargeVO> accountRechargeVOList = amTradeClient.searchPlatformTransferList(request);
+        String userIds = "";
         for(AccountRechargeVO accountRechargeVO:accountRechargeVOList){
-            // amUserClient.findUserById();
+            userIds += String.valueOf(accountRechargeVO.getUserId()) + ",";
         }
+        userIds = userIds.substring(0,userIds.lastIndexOf(","));
+        logger.info("userIds=====[{}]",userIds);
         return accountRechargeVOList;
     }
 }

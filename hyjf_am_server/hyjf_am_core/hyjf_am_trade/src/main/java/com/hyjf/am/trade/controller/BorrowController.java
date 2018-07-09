@@ -284,4 +284,18 @@ public class BorrowController extends BaseController{
 		return borrowService.getBorrowTenderResult(userId,logOrdId,borrowNid);
 	}
 
+
+    /**
+     * 根据用户id获取用户总投资笔数
+     * @author zhangyk
+     * @date 2018/7/5 18:00
+     */
+    @GetMapping("/inverestCount/{userId}")
+    public Object getTotalInverestCount(@PathVariable String userId){
+        ProjectListResponse response = new ProjectListResponse();
+        int count = borrowService.getTotalInverestCount(Integer.valueOf(userId));
+        response.setCount(count);
+        return response;
+    }
+
 }

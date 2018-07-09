@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.app;
 
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -40,7 +41,7 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端投资散标列表", notes = "APP投资散标列表")
     @PostMapping(value = "/homeBorrowProjectList", produces = "application/json; charset=utf-8")
-    public Object homeBorrowProjectList(@RequestBody @Valid ProjectListRequest request){
+    public Object homeBorrowProjectList(@RequestBody @Valid AppProjectListRequest request){
         // controller 不做业务处理
         AppResult result =  appProjectListService.searchAppProjectList(request);
         return result;
