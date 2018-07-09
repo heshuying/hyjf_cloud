@@ -3,21 +3,22 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.cs.trade.bean.MQBorrow;
-import com.hyjf.cs.trade.mq.AutoPreAuditProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.service.AutoPreAuditService;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.cs.trade.bean.MQBorrow;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AutoPreAuditProducer;
+import com.hyjf.cs.trade.service.AutoPreAuditService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 
 /**
  * @author fuqiang
@@ -42,7 +43,7 @@ public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements Aut
             params.put("creditNid", mqBorrow.getCreditNid());
         }
         try {
-            autoPreAuditProducer.messageSend(new Producer.MassageContent(MQConstant.HYJF_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+            autoPreAuditProducer.messageSend(new MessageContent(MQConstant.HYJF_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             _log.error("发送自动关联计划消息失败...");
         }

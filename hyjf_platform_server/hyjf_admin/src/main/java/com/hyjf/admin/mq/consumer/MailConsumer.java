@@ -1,9 +1,8 @@
 package com.hyjf.admin.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
+import java.io.File;
+import java.util.List;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -17,8 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.mq.base.Consumer;
+import com.hyjf.am.vo.message.MailMessage;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 
 /**
  * @author xiasq

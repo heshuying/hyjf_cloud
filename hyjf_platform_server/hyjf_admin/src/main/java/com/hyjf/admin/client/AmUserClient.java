@@ -43,14 +43,10 @@ public interface AmUserClient {
      */
     UserVO getUserByUserName(String userName);
 
-    UserVO findUserById(int userId);
-
-    UserInfoVO findUsersInfoById(int userId);
-
     /**
      * 根据userId查询用户信息
      * @auth sunpeikai
-     * @param
+     * @param userId 用户id
      * @return
      */
     UserInfoVO findUsersInfoById(int userId);
@@ -58,7 +54,7 @@ public interface AmUserClient {
     /**
      * 根据userId查询用户
      * @auth sunpeikai
-     * @param
+     * @param userId 用户id
      * @return
      */
     UserVO findUserById(final int userId);
