@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.market.service.impl;
 
+import com.hyjf.am.vo.config.EventVO;
+import com.hyjf.am.vo.config.LinkVO;
 import com.hyjf.am.vo.config.TeamVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,8 @@ import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.cs.market.client.AboutUsClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -34,6 +38,26 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
     @Override
     public TeamVO getFounder() {
+        return aboutUsClient.getFounder();
+    }
+
+    @Override
+    public List<LinkVO> getPartnersList(Integer partnerType) {
         return null;
+    }
+
+    @Override
+    public List<EventVO> getEventsList() {
+        return aboutUsClient.getEventsList();
+    }
+
+    @Override
+    public List<ContentArticleVO> getNoticeListCount() {
+        return aboutUsClient.aboutUsClient();
+    }
+
+    @Override
+    public ContentArticleVO getNoticeInfo(Integer id) {
+        return aboutUsClient.getNoticeInfo(id);
     }
 }

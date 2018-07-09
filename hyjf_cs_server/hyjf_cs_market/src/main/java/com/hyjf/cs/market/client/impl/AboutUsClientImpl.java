@@ -4,10 +4,14 @@
 package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.config.EventVO;
+import com.hyjf.am.vo.config.TeamVO;
 import com.hyjf.cs.market.client.AboutUsClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -26,6 +30,26 @@ public class AboutUsClientImpl implements AboutUsClient {
 
     @Override
     public String getTotalInvestmentAmount() {
+        return null;
+    }
+
+    @Override
+    public TeamVO getFounder() {
+        return null;
+    }
+
+    @Override
+    public List<EventVO> getEventsList() {
+        return null;
+    }
+
+    @Override
+    public List<ContentArticleVO> aboutUsClient() {
+        return null;
+    }
+
+    @Override
+    public ContentArticleVO getNoticeInfo(Integer id) {
         return null;
     }
 }
