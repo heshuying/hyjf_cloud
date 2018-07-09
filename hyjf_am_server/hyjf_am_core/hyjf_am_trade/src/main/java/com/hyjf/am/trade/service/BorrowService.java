@@ -111,4 +111,11 @@ public interface BorrowService extends BaseService{
      * @return
      */
     String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
+
+    /**
+     * 根据userId获取用户总投资笔数
+     * @author zhangyk
+     * @date 2018/7/5 17:35
+     */
+    Integer getTotalInverestCount(Integer userId);
 }
