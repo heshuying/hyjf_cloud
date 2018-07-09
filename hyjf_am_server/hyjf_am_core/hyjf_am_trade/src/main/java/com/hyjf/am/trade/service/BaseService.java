@@ -3,8 +3,7 @@
  */
 package com.hyjf.am.trade.service;
 
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.*;
 
 /**
  * 资金服务: BaseService
@@ -25,4 +24,12 @@ public interface BaseService {
      * @return
      */
     BorrowInfo getBorrowInfoByNid(String borrowNid);
+
+    BorrowRepay getBorrowRepay(String borrowNid);
+
+    BorrowRepayPlan getRepayPlan(String borrowNid, int period);
+
+    Account getAccount(Integer userId);
+
+    RUser getRUser(Integer userId);
 }

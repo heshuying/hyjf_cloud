@@ -4,10 +4,7 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.customize.CustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BaseService;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -55,4 +52,69 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
         return null;
     }
+
+    /**
+     * 获取借款人总的还款表数据
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
+    @Override
+    public BorrowRepay getBorrowRepay(String borrowNid) {
+        BorrowRepayExample borrowRepayExample = new BorrowRepayExample();
+        BorrowRepayExample.Criteria borrowRepayCrt = borrowRepayExample.createCriteria();
+        borrowRepayCrt.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRepay> borrowRepays = borrowRepayMapper.selectByExample(borrowRepayExample);
+        if (borrowRepays != null && borrowRepays.size() == 1) {
+            return borrowRepays.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 获取某一期的还款计划
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
+    @Override
+    public BorrowRepayPlan getRepayPlan(String borrowNid, int period) {
+        BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
+        BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
+        borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
+        borrowRepayPlanCrt.andRepayPeriodEqualTo(period);
+        List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
+        if (borrowRepayPlans != null && borrowRepayPlans.size() == 1) {
+            return borrowRepayPlans.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 获取用户的账户信息
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
+    @Override
+    public Account getAccount(Integer userId) {
+        AccountExample example = new AccountExample();
+        AccountExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        List<Account> listAccount = this.accountMapper.selectByExample(example);
+        if (listAccount != null && listAccount.size() > 0) {
+            return listAccount.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户信息
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
+    @Override
+    public RUser getRUser(Integer userId){
+        return rUserMapper.selectByPrimaryKey(userId);
+    }
+
 }

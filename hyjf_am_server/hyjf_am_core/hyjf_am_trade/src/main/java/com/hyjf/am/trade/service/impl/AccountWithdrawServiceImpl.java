@@ -154,18 +154,7 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
     public void updateAccountWithdrawLog(AccountWithdraw accountwithdraw) {
         accountWithdrawMapper.updateByPrimaryKeySelective(accountwithdraw);
     }
-    private Account getAccount(Integer userId) {
-        AccountExample example = new AccountExample();
-        AccountExample.Criteria criteria = example.createCriteria();
-        criteria.andUserIdEqualTo(userId);
-        List<Account> listAccount = this.accountMapper.selectByExample(example);
-        if (listAccount != null && listAccount.size() > 0) {
-            return listAccount.get(0);
-        }
-        return null;
-    }
-    
-    
+
     /**
      * 账户充值更新
      */
