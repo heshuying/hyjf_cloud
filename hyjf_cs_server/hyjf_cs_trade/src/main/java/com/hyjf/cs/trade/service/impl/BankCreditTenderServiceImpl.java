@@ -3,7 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;

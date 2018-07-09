@@ -4,7 +4,7 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 
 /**
  * @author zhangqingqing

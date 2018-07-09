@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.statistics;
+package com.hyjf.am.vo.datacollect;
 
 import com.hyjf.am.vo.BaseVO;
 

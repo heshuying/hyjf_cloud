@@ -7,7 +7,7 @@ import com.hyjf.admin.client.AmDataCollectClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.WebsiteService;
 import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
