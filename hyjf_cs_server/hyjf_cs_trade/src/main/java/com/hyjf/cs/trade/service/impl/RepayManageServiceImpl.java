@@ -6,7 +6,7 @@ import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
-import com.hyjf.am.vo.trade.repay.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
