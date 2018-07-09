@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -37,8 +37,10 @@ import com.hyjf.cs.trade.client.AmBorrowClient;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BatchBankInvestAllClient;
-import com.hyjf.cs.trade.mq.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
+import com.hyjf.cs.trade.mq.producer.VIPUserTenderProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BatchBankInvestAllService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -64,6 +66,11 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 
 	@Autowired
 	private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
+
+	@Autowired
+	private UtmRegProducer utmRegProducer;
+	@Autowired
+	private VIPUserTenderProducer vipUserTenderProducer;
 
 
 	@Value("${hyjf.bank.instcode}")
@@ -131,6 +138,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				boolean ret = this.batchBankInvestAllClient.updateTenderStart(request);
 				if (!ret){
 					logger.info("=============投资全部掉单异常处理失败! 失败订单: " + orderid);
+					//更新失败不继续执行
 					return;
 				}else {
 					//更新渠道统计用户累计投资
@@ -161,7 +169,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							params.put("investFlag",request.getLogUser().getInvestflag());
 							//压入消息队列
 							try {
-								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+								appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
 										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 							} catch (MQException e) {
 								e.printStackTrace();
@@ -169,7 +177,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							}
 							logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
 						}else{
-							//更新手投信息
+							//更新首投信息
 							UtmRegVO utmRegVO =this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
 							if(Validator.isNotNull(utmRegVO)){
 								Map<String, Object> params = new HashMap<String, Object>();
@@ -191,10 +199,14 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 									investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
 								}
 								params.put("investProjectPeriod", investProjectPeriod);
-								// 更新渠道统计用户累计投资
-								params.put("investFlag",request.getLogUser().getInvestflag());
-								this.amUserClient.updateFirstUtmReg(params);
-								logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
+
+								try {
+									this.utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+									logger.info("******首投信息推送消息队列******");
+								} catch (MQException e) {
+									e.printStackTrace();
+									logger.info("******首投信息推送消息队列失败******");
+								}
 							}
 						}
 					}
@@ -205,11 +217,11 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 						para.put("nowTime", request.getNowTime());
 						para.put("userId",Integer.parseInt(bean.getLogUserId()));
 						para.put("orderId",bean.getOrderId());
-						boolean ret1=this.amUserClient.insertVipUserTender(para);
-						if (ret1){
-							logger.info("插入VIP用户信息成功！！！");
-						}else{
-							logger.info("插入VIP用户信息失败！！！");
+						try {
+							this.vipUserTenderProducer.messageSend(new MessageContent(MQConstant.VIP_USER_TENDER_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(para)));
+						} catch (MQException e) {
+							e.printStackTrace();
+							logger.info("保存VIP用户信息推送消息队列失败！！！");
 						}
 					}
 					

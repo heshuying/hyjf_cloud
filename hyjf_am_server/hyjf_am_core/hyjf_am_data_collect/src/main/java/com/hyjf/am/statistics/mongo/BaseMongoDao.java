@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.util.List;
+
 
 /**
  * mongodb dao基类,可以继续扩展
@@ -45,8 +47,20 @@ public abstract class BaseMongoDao<T> {
 		return this.mongoTemplate.findOne(query, getEntityClass(), collectionName);
 	}
 
+	public List<T> find(Query query){
+		return this.mongoTemplate.find(query, getEntityClass());
+	}
+
+	public List<T> find(Query query, String collectionName){
+		return this.mongoTemplate.find(query, getEntityClass(), collectionName);
+	}
+
 	public void update(Query query, Update update){
 		this.mongoTemplate.upsert(query, update, getEntityClass());
+	}
+
+	public void del(Query query){
+		this.mongoTemplate.remove(query, getEntityClass());
 	}
 
 	public void setMongoTemplate(MongoTemplate mongoTemplate){
@@ -54,4 +68,5 @@ public abstract class BaseMongoDao<T> {
 	}
 
 	protected abstract Class<T> getEntityClass();
+
 }

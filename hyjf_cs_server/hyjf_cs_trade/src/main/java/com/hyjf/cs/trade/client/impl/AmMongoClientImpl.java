@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class AmMongoClientImpl implements AmMongoClient {
     @Override
     public AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId) {
         AppChannelStatisticsDetailResponse response = restTemplate.getForEntity(
-                "http://AM-STATISTICS/am-statistics/seach/getAppChannelStatisticsDetailByUserId/" + userId,
+                "http://AM-STATISTICS/am-statistics/search/getAppChannelStatisticsDetailByUserId/" + userId,
                 AppChannelStatisticsDetailResponse.class).getBody();
         if (response != null) {
             return response.getResult();

@@ -1,10 +1,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 
@@ -46,4 +43,10 @@ public interface BankCreditTenderClient {
     List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String,Object> params);
 
     List<TenderToCreditDetailCustomizeVO> selectHJHWebCreditTenderDetail(Map<String,Object> params);
+
+    /**
+     * 保存债转的数据
+     * @param creditTenderBg
+     */
+    Integer saveCreditBgData(CreditTenderBgVO creditTenderBg);
 }

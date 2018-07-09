@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.TenderAgreementRequest;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 
@@ -40,4 +41,14 @@ public interface BorrowRecoverClient {
      * @return
      */
     BorrowRecoverVO getBorrowRecoverByTenderNid(String tenderNid);
+
+    /**
+     * 获取borrow_recover_plan更新每次还款时间
+     * @param bidNid
+     * @param creditTenderNid
+     * @param periodNow
+     * @return
+     */
+    BorrowRecoverPlanVO getPlanByBidTidPeriod(String bidNid, String creditTenderNid, int periodNow);
+
 }

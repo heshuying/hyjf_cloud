@@ -3,16 +3,10 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.user.dao.mapper.auto.*;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.mq.AppChannelStatisticsDetailProducer;
-import com.hyjf.am.user.mq.Producer;
-import com.hyjf.am.user.service.BankOpenService;
-import com.hyjf.am.user.utils.IdCard15To18;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +14,31 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
+import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountLogMapper;
+import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper;
+import com.hyjf.am.user.dao.mapper.auto.CorpOpenAccountRecordMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
+import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.auto.BankCardExample;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.user.dao.model.auto.UtmRegExample;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.am.user.service.BankOpenService;
+import com.hyjf.am.user.utils.IdCard15To18;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 @Service
 public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
@@ -213,7 +229,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
          * APP渠道统计明细更新-修改开户时间
          */
         try {
-            appChannelStatisticsDetailProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+            appChannelStatisticsDetailProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                     MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(userId)));
         } catch (MQException e) {
             logger.error("开户统计app渠道失败....", e);
@@ -352,5 +368,6 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         }
         return null;
     }
+
 
 }

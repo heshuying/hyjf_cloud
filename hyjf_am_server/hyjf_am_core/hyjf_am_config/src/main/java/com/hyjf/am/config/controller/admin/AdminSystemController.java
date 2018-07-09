@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller.admin;
 import java.util.List;
 
 import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.response.admin.CouponTenderResponse;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -120,6 +121,21 @@ public class AdminSystemController extends BaseConfigController {
 		AdminSystem adminSystem = adminSystemService.getUserInfoByUserId(userId);
 		AdminSystemVO adminSystemVO = CommonUtils.convertBean(adminSystem,AdminSystemVO.class);
 		response.setResult(adminSystemVO);
+		return response;
+	}
+
+	/**
+	 * 根据userId查询admin用户信息
+	 * @auth walter.limeng
+	 * @param userId 用户ID
+	 * @return response admin用户信息
+	 */
+	@GetMapping(value = "/hztgetusername/{userId}")
+	public CouponTenderResponse getUserNameByUserId(@PathVariable Integer userId){
+		logger.info("userId========{}",userId);
+		CouponTenderResponse response = new CouponTenderResponse();
+		AdminSystem adminSystem = adminSystemService.getUserInfoByUserId(userId);
+		response.setAttrbute(adminSystem==null?"":adminSystem.getUsername());
 		return response;
 	}
 }

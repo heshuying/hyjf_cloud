@@ -3,6 +3,7 @@ package com.hyjf.am.response.user;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.user.MspAbnormalBeanVO;
 import com.hyjf.am.vo.user.MspAnliinfosVO;
@@ -18,7 +19,7 @@ import com.hyjf.am.vo.user.MspShixininfosVO;
 import com.hyjf.am.vo.user.MspTitleVO;
 import com.hyjf.am.vo.user.MspZhixinginfosVO;
 
-public class MspApplytResponse extends Response<MspApplyVO>  {
+public class MspApplytResponse extends AdminResponse<MspApplyVO>  {
 
 
 	private int recordTotal;

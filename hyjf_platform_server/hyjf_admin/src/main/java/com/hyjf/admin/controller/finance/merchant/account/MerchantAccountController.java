@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "商户子账户信息")
 @RestController
-@RequestMapping("/admin/merchant/account")
+@RequestMapping("/hyjf-admin/merchant/account")
 public class MerchantAccountController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(MerchantAccountController.class);
     @Autowired

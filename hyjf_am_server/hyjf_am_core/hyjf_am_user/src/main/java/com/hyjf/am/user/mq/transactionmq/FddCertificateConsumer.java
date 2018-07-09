@@ -1,15 +1,11 @@
 package com.hyjf.am.user.mq.transactionmq;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.mq.CrmBankOpenMessageProducer;
-import com.hyjf.am.user.mq.Producer;
-import com.hyjf.am.user.service.batch.FddCertificateService;
-import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
-import com.hyjf.common.constants.MQConstant;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -23,11 +19,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.mq.base.Consumer;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.CrmBankOpenMessageProducer;
+import com.hyjf.am.user.service.batch.FddCertificateService;
+import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
+import com.hyjf.common.constants.MQConstant;
 
 /**
  * @author zhangqingqing
@@ -99,7 +101,7 @@ public class FddCertificateConsumer extends Consumer {
                     Map<String, String> map = Maps.newHashMap();
                     map.put("userId", String.valueOf(userId));
                     //crm投资推送
-                    crmBankOpenMessageProducer.messageSend(new Producer.MassageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
+                    crmBankOpenMessageProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
                     logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
                 } catch (Exception e) {

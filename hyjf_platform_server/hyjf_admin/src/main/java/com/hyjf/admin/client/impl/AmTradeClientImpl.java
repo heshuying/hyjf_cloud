@@ -7,8 +7,10 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +156,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public List<AccountVO> searchAccountByUserId(Integer userId) {
         AccountResponse response = restTemplate
-                .postForEntity(tradeService + "/customertransfer/searchaccountbyuserid", userId, AccountResponse.class)
+                .getForEntity(tradeService + "/customertransfer/searchaccountbyuserid/" + userId, AccountResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
@@ -221,4 +223,80 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+
+    @Override
+    public List<AccountTradeVO> selectTradeTypes() {
+        String url = "http://AM-TRADE/am-trade/accounttrade/selectTradeTypes";
+        AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询汇计划转让列表
+     * @param request
+     * @return
+     */
+    @Override
+    public HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request) {
+
+        HjhDebtCreditReponse response =  restTemplate.
+                postForEntity(tradeService + "/adminHjhDebtCredit/getList", request, HjhDebtCreditReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response =  restTemplate.
+                postForEntity(tradeService + "/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public UserTransferResponse getRecordList(TransferListRequest form) {
+        UserTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/customertransfer/getRecordList", form, UserTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getPlatformTransferCount(PlatformTransferListRequest request) {
+        Integer count = restTemplate.postForEntity(tradeService + "/platformtransfer/getplatformtransfercount", request, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request) {
+        PlatformTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/platformtransfer/searchplatformtransferlist", request, PlatformTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

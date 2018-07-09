@@ -64,7 +64,7 @@ public class AccountDirectionalTransferController extends BaseController {
 
         List<AccountDirectionalTransferVO> accountDirectionalTransferVOList = accountDirectionalTransferService.searchDirectionalTransferList(request);
         if(!CollectionUtils.isEmpty(accountDirectionalTransferVOList)){
-            response.setRtn("00");
+            response.setRtn("0");
             response.setResultList(accountDirectionalTransferVOList);
         }
         return response;

@@ -3,16 +3,19 @@
  */
 package com.hyjf.am.trade.controller.admin.finance;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
+import com.hyjf.am.resquest.admin.TransferListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.UserTransfer;
 import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
 import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,11 +59,42 @@ public class CustomerTransferController extends BaseController {
     @PostMapping(value = "/searchusertransferlist")
     public UserTransferResponse searchUserTransferList(@RequestBody CustomerTransferListRequest request){
         UserTransferResponse response = new UserTransferResponse();
+        Integer count = customerTransferService.getUserTransferCount(request);
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
         List<UserTransfer> userTransferList = customerTransferService.searchUserTransferList(request);
         if(!CollectionUtils.isEmpty(userTransferList)){
             List<UserTransferVO> userTransferVOList = CommonUtils.convertBeanList(userTransferList,UserTransferVO.class);
             response.setResultList(userTransferVOList);
-            response.setRtn("00");
+            response.setRtn("0");
+            response.setRecordTotal(count);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 根据筛选条件查询UserTransfer列表
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/getRecordList")
+    public UserTransferResponse getRecordList(@RequestBody TransferListRequest request){
+        UserTransferResponse response = new UserTransferResponse();
+        Integer count = customerTransferService.getRecordCount(request);
+        if (count > 0) {
+            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            List<UserTransfer> recordList = customerTransferService.selectRecordList(request, paginator.getOffset(), paginator.getLimit());
+            if (recordList != null) {
+                List<UserTransferVO> voList = CommonUtils.convertBeanList(recordList, UserTransferVO.class);
+                response.setResultList(voList);
+                response.setRecordTotal(count);
+                response.setRtn(Response.SUCCESS);
+            }
         }
         return response;
     }
@@ -72,14 +106,14 @@ public class CustomerTransferController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据userId查询Account列表",notes = "根据userId查询Account列表")
-    @PostMapping(value = "/searchaccountbyuserid")
-    public AccountResponse searchAccountByUserId(@RequestBody Integer userId){
+    @GetMapping(value = "/searchaccountbyuserid/{userId}")
+    public AccountResponse searchAccountByUserId(@PathVariable Integer userId){
         AccountResponse response = new AccountResponse();
         List<Account> accountList = customerTransferService.searchAccountByUserId(userId);
         if(!CollectionUtils.isEmpty(accountList)){
             List<AccountVO> accountVOList = CommonUtils.convertBeanList(accountList,AccountVO.class);
             response.setResultList(accountVOList);
-            response.setRtn("00");
+            response.setRtn("0");
         }
         return response;
     }
@@ -110,7 +144,7 @@ public class CustomerTransferController extends BaseController {
         if(userTransfer != null){
             UserTransferVO userTransferVO = CommonUtils.convertBean(userTransfer,UserTransferVO.class);
             response.setResult(userTransferVO);
-            response.setRtn("00");
+            response.setRtn("0");
         }
         return response;
     }

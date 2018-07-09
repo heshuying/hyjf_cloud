@@ -11,6 +11,12 @@ public interface MQConstant {
 	 */
 	String HYJF_DEFAULT_TAG = "HYJF_DEFAULT_TAG";
 
+    /**
+     * 测试 group topic todo 暂时使用
+     */
+    String TEST_GROUP = "TEST_GROUP";
+    String TEST_TOPIC = "TEST_TOPIC";
+
 	/**
 	 * 发送短信的 group topic
 	 */
@@ -119,11 +125,11 @@ public interface MQConstant {
 	 String CRM_ROUTINGKEY_BANCKOPEN_GROUP = "CRM_ROUTINGKEY_BANCKOPEN_GROUP";
 	String CRM_ROUTINGKEY_BANCKOPEN_TOPIC="CRM_ROUTINGKEY_BANCKOPEN_TOPIC";
 
-	//法大大生成合同处理
+	/**法大大生成合同处理*/
 	String FDD_GENERATE_CONTRACT_TAG = "FDD_GENERATE_CONTRACT_TAG";
-	//法大大自动签署处理
+	/**法大大自动签署处理*/
 	String FDD_AUTO_SIGN_TAG = "FDD_AUTO_SIGN_TAG";
-	//法大大下载脱敏处理
+	/**法大大下载脱敏处理*/
 	String FDD_DOWNPDF_AND_DESSENSITIZATION_TAG = "FDD_DOWNPDF_AND_DESSENSITIZATION_TAG";
 	/**
 	 * 汇计划退出
@@ -174,4 +180,24 @@ public interface MQConstant {
 	 */
 	String STATISTICS_TZJ_UTM_GROUP = "STATISTICS_TZJ_UTM_GROUP";
 	String STATISTICS_TZJ_UTM_TOPIC = "STATISTICS_TZJ_UTM_TOPIC";
+
+	/**
+	 * 更新huiyingdai_utm_reg的首投信息
+	 */
+	String STATISTICS_UTM_REG_GROUP = "STATISTICS_UTM_REG_GROUP";
+	String STATISTICS_UTM_REG_TOPIC = "STATISTICS_UTM_REG_TOPIC";
+
+	/**
+	 * VIP用户
+	 */
+	String VIP_USER_TENDER_GROUP = "VIP_USER_TENDER_GROUP";
+	String VIP_USER_TENDER_TOPIC = "VIP_USER_TENDER_TOPIC";
+
+
+	/**
+	 * 网站累计投资追加    修改mongodb运营数据
+	 */
+	String STATISTICS_CALCULATE_INVEST_INTEREST_GROUP = "STATISTICS_CALCULATE_INVEST_INTEREST_GROUP";
+	String STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC = "STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC";
+
 }

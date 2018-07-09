@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.impl.repay;
 
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.repay.BorrowAuthService;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
@@ -102,5 +103,55 @@ public class BorrowAuthServiceImpl extends BaseServiceImpl implements BorrowAuth
 
         return params;
     }
+
+    /**
+     * 受托支付申请回调更新
+     * @param nid
+     * @return
+     */
+    @Override
+    public Integer updateTrusteePaySuccess(String nid) {
+        // 修改huiyingdai_borrow表状态
+        Borrow borrow = new Borrow();
+        borrow.setBorrowNid(nid);
+        borrow.setStatus(1);
+        BorrowExample example = new BorrowExample();
+        example.createCriteria().andBorrowNidEqualTo(nid).andStatusEqualTo(7);
+        borrowMapper.updateByExampleSelective(borrow, example);
+
+        // 更新受托支付申请完成时间
+        BorrowInfo borrowInfo = new BorrowInfo();
+        borrowInfo.setTrusteePayTime(GetDate.getNowTime10());// 受托支付完成时间
+        BorrowInfoExample exampleInfo = new BorrowInfoExample();
+        exampleInfo.createCriteria().andBorrowNidEqualTo(nid);
+        borrowInfoMapper.updateByExample(borrowInfo,exampleInfo);
+
+        // 修改hyjf_hjh_plan_asset
+        HjhPlanAsset hp = new HjhPlanAsset();
+        hp.setStatus(5);
+        hp.setBorrowNid(nid);
+        HjhPlanAssetExample hpexp = new HjhPlanAssetExample();
+        hpexp.createCriteria().andBorrowNidEqualTo(nid);
+        hjhPlanAssetMapper.updateByExampleSelective(hp, hpexp);
+        return 1;
+    }
+
+    /**
+     * 受托支付白名单查询
+     * @auther: hesy
+     * @date: 2018/7/6
+     */
+    @Override
+    public StzhWhiteList getSTZHWhiteListByUserID(Integer userId, Integer stzUserId) {
+        StzhWhiteListExample example = new StzhWhiteListExample();
+        example.createCriteria().andStUserIdEqualTo(stzUserId).andUserIdEqualTo(userId);
+        List<StzhWhiteList> lists = this.sTZHWhiteListMapper.selectByExample(example);
+        if (lists != null && lists.size() > 0) {
+            return lists.get(0);
+
+        }
+        return null;
+    }
+
 
 }

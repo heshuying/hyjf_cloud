@@ -19,7 +19,7 @@ public class BatchBankInvestExceptionJob extends BaseJob implements Job{
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BatchBankInvestExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/investexception/handle", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/investExceptionHandle", String.class);
         logger.info("BatchBankInvestExceptionJob execute end...");
     }
 }

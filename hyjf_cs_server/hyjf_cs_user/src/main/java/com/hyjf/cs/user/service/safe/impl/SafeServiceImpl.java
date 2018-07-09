@@ -56,8 +56,8 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.mq.MailProducer;
-import com.hyjf.cs.user.mq.Producer;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.MailProducer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
@@ -268,7 +268,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         MailMessage mailMessage = new MailMessage(null, replaceMap, "绑定邮箱激活", null, null, new String[]{email},
                 CustomConstants.EMAILPARAM_TPL_BINDEMAIL, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
         // 发送邮件
-        mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+        mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
 
         return true;
     }
