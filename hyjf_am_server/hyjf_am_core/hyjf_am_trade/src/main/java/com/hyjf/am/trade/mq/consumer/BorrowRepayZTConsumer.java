@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.mq;
+package com.hyjf.am.trade.mq.consumer;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +23,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.mq.base.Consumer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.service.BatchBorrowRepayZTService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
@@ -184,7 +187,7 @@ public class BorrowRepayZTConsumer extends Consumer{
 	        			MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
 
 				try {
-					mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}

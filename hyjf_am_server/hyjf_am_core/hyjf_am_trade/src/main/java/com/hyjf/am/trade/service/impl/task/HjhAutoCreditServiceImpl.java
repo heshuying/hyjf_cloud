@@ -3,10 +3,42 @@
  */
 package com.hyjf.am.trade.service.impl.task;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.mq.hjh.calculatefairvalue.HjhCalculateFairValueProducer;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
+import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtDetailExample;
+import com.hyjf.am.trade.dao.model.auto.HjhRepay;
+import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.hjh.calculatefairvalue.HjhCalculateFairValueProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
@@ -15,18 +47,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * 汇计划自动清算Service实现类
@@ -69,7 +89,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         params.put("accedeOrderId", hjhCalculateFairValueBean.getAccedeOrderId());
         params.put("calculateType", String.valueOf(hjhCalculateFairValueBean.getCalculateType()));
         try {
-            hjhCalculateFairValueProducer.messageSend(new Producer.MassageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+            hjhCalculateFairValueProducer.messageSend(new MessageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             logger.error("发送汇计划加入订单计算公允价值MQ失败...");
         }
