@@ -17,7 +17,7 @@ public class TzjDataCollectController extends BaseMarketController {
     @Autowired
     TzjDataCollectService tzjDataCollectService;
 
-    @RequestMapping("/cs-market/day-report-data")
+    @RequestMapping("/day-report-data")
     public String queryTzjDayReport(){
         tzjDataCollectService.queryTzjDayReport();
         return "success";
