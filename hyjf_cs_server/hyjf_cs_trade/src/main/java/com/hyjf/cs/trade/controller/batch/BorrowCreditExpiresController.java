@@ -37,7 +37,7 @@ import java.util.UUID;
 @RequestMapping(value = "/batch/borrowCredit")
 public class BorrowCreditExpiresController {
 
-    Logger logger = LoggerFactory.getLogger(BatchBankInvestExceptionController.class);
+    Logger logger = LoggerFactory.getLogger(BorrowCreditExpiresController.class);
 
     @Autowired
     private BorrowCreditService borrowCreditService;
