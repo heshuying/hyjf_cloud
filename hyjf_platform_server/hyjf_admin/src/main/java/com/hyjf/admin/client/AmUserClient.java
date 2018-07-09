@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 
 import java.util.List;
@@ -34,4 +35,15 @@ public interface AmUserClient {
      * @return
      */
     UserVO searchUserByUserId(Integer userId);
+
+    /**
+     * 根据手机号获取用户信息
+     * @param userName
+     * @return
+     */
+    UserVO getUserByUserName(String userName);
+
+    UserVO findUserById(int userId);
+
+    UserInfoVO findUsersInfoById(int userId);
 }

@@ -2,6 +2,8 @@ package com.hyjf.admin.client;
 
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.SiteSettingsVO;
+import com.hyjf.am.vo.config.SmsMailTemplateVO;
 
 import java.util.List;
 
@@ -24,4 +26,8 @@ public interface AmConfigClient {
      * @return
      */
     List<ParamNameVO> getParamNameList(String nameClass);
+
+    SiteSettingsVO findSiteSetting();
+
+    SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);
 }

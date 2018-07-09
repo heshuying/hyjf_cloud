@@ -20,4 +20,6 @@ public interface WebsiteService {
     AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList);
 
     String selectBorrowInvestAccount(AccountWebListVO accountWebList);
+
+    double getCompanyYuE(String companyId);
 }

@@ -4,17 +4,11 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
-
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 
 import java.util.List;
 
@@ -123,4 +117,11 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountTradeVO> selectTradeTypes();
+
+    /**
+     * 根据筛选条件查询userTransfer列表
+     * @param form
+     * @return
+     */
+    UserTransferResponse getRecordList(TransferListRequest form);
 }

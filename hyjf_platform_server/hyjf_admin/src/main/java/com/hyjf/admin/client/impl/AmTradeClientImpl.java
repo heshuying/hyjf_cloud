@@ -5,24 +5,12 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
-import com.hyjf.am.response.admin.AssociatedRecordListResponse;
-import com.hyjf.am.response.admin.BindLogResponse;
-import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
-import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.BindLogVO;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -242,6 +230,16 @@ public class AmTradeClientImpl implements AmTradeClient{
         AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public UserTransferResponse getRecordList(TransferListRequest form) {
+        UserTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/customertransfer/getRecordList", form, UserTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response;
         }
         return null;
     }
