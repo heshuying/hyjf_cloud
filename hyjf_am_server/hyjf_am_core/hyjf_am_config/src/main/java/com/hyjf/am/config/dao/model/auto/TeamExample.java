@@ -396,142 +396,142 @@ public class TeamExample {
         }
 
         public Criteria andImgurlIsNull() {
-            addCriterion("imgUrl is null");
+            addCriterion("imgurl is null");
             return (Criteria) this;
         }
 
         public Criteria andImgurlIsNotNull() {
-            addCriterion("imgUrl is not null");
+            addCriterion("imgurl is not null");
             return (Criteria) this;
         }
 
         public Criteria andImgurlEqualTo(String value) {
-            addCriterion("imgUrl =", value, "imgurl");
+            addCriterion("imgurl =", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlNotEqualTo(String value) {
-            addCriterion("imgUrl <>", value, "imgurl");
+            addCriterion("imgurl <>", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlGreaterThan(String value) {
-            addCriterion("imgUrl >", value, "imgurl");
+            addCriterion("imgurl >", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlGreaterThanOrEqualTo(String value) {
-            addCriterion("imgUrl >=", value, "imgurl");
+            addCriterion("imgurl >=", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlLessThan(String value) {
-            addCriterion("imgUrl <", value, "imgurl");
+            addCriterion("imgurl <", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlLessThanOrEqualTo(String value) {
-            addCriterion("imgUrl <=", value, "imgurl");
+            addCriterion("imgurl <=", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlLike(String value) {
-            addCriterion("imgUrl like", value, "imgurl");
+            addCriterion("imgurl like", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlNotLike(String value) {
-            addCriterion("imgUrl not like", value, "imgurl");
+            addCriterion("imgurl not like", value, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlIn(List<String> values) {
-            addCriterion("imgUrl in", values, "imgurl");
+            addCriterion("imgurl in", values, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlNotIn(List<String> values) {
-            addCriterion("imgUrl not in", values, "imgurl");
+            addCriterion("imgurl not in", values, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlBetween(String value1, String value2) {
-            addCriterion("imgUrl between", value1, value2, "imgurl");
+            addCriterion("imgurl between", value1, value2, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgurlNotBetween(String value1, String value2) {
-            addCriterion("imgUrl not between", value1, value2, "imgurl");
+            addCriterion("imgurl not between", value1, value2, "imgurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlIsNull() {
-            addCriterion("imgAppUrl is null");
+            addCriterion("imgappurl is null");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlIsNotNull() {
-            addCriterion("imgAppUrl is not null");
+            addCriterion("imgappurl is not null");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlEqualTo(String value) {
-            addCriterion("imgAppUrl =", value, "imgappurl");
+            addCriterion("imgappurl =", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlNotEqualTo(String value) {
-            addCriterion("imgAppUrl <>", value, "imgappurl");
+            addCriterion("imgappurl <>", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlGreaterThan(String value) {
-            addCriterion("imgAppUrl >", value, "imgappurl");
+            addCriterion("imgappurl >", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlGreaterThanOrEqualTo(String value) {
-            addCriterion("imgAppUrl >=", value, "imgappurl");
+            addCriterion("imgappurl >=", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlLessThan(String value) {
-            addCriterion("imgAppUrl <", value, "imgappurl");
+            addCriterion("imgappurl <", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlLessThanOrEqualTo(String value) {
-            addCriterion("imgAppUrl <=", value, "imgappurl");
+            addCriterion("imgappurl <=", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlLike(String value) {
-            addCriterion("imgAppUrl like", value, "imgappurl");
+            addCriterion("imgappurl like", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlNotLike(String value) {
-            addCriterion("imgAppUrl not like", value, "imgappurl");
+            addCriterion("imgappurl not like", value, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlIn(List<String> values) {
-            addCriterion("imgAppUrl in", values, "imgappurl");
+            addCriterion("imgappurl in", values, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlNotIn(List<String> values) {
-            addCriterion("imgAppUrl not in", values, "imgappurl");
+            addCriterion("imgappurl not in", values, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlBetween(String value1, String value2) {
-            addCriterion("imgAppUrl between", value1, value2, "imgappurl");
+            addCriterion("imgappurl between", value1, value2, "imgappurl");
             return (Criteria) this;
         }
 
         public Criteria andImgappurlNotBetween(String value1, String value2) {
-            addCriterion("imgAppUrl not between", value1, value2, "imgappurl");
+            addCriterion("imgappurl not between", value1, value2, "imgappurl");
             return (Criteria) this;
         }
 
@@ -595,63 +595,63 @@ public class TeamExample {
             return (Criteria) this;
         }
 
-        public Criteria andOrderIsNull() {
-            addCriterion("`order` is null");
+        public Criteria andOrderIdIsNull() {
+            addCriterion("order_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIsNotNull() {
-            addCriterion("`order` is not null");
+        public Criteria andOrderIdIsNotNull() {
+            addCriterion("order_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOrderEqualTo(Integer value) {
-            addCriterion("`order` =", value, "order");
+        public Criteria andOrderIdEqualTo(Integer value) {
+            addCriterion("order_id =", value, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderNotEqualTo(Integer value) {
-            addCriterion("`order` <>", value, "order");
+        public Criteria andOrderIdNotEqualTo(Integer value) {
+            addCriterion("order_id <>", value, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderGreaterThan(Integer value) {
-            addCriterion("`order` >", value, "order");
+        public Criteria andOrderIdGreaterThan(Integer value) {
+            addCriterion("order_id >", value, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`order` >=", value, "order");
+        public Criteria andOrderIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("order_id >=", value, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderLessThan(Integer value) {
-            addCriterion("`order` <", value, "order");
+        public Criteria andOrderIdLessThan(Integer value) {
+            addCriterion("order_id <", value, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderLessThanOrEqualTo(Integer value) {
-            addCriterion("`order` <=", value, "order");
+        public Criteria andOrderIdLessThanOrEqualTo(Integer value) {
+            addCriterion("order_id <=", value, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIn(List<Integer> values) {
-            addCriterion("`order` in", values, "order");
+        public Criteria andOrderIdIn(List<Integer> values) {
+            addCriterion("order_id in", values, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderNotIn(List<Integer> values) {
-            addCriterion("`order` not in", values, "order");
+        public Criteria andOrderIdNotIn(List<Integer> values) {
+            addCriterion("order_id not in", values, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderBetween(Integer value1, Integer value2) {
-            addCriterion("`order` between", value1, value2, "order");
+        public Criteria andOrderIdBetween(Integer value1, Integer value2) {
+            addCriterion("order_id between", value1, value2, "orderId");
             return (Criteria) this;
         }
 
-        public Criteria andOrderNotBetween(Integer value1, Integer value2) {
-            addCriterion("`order` not between", value1, value2, "order");
+        public Criteria andOrderIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("order_id not between", value1, value2, "orderId");
             return (Criteria) this;
         }
 

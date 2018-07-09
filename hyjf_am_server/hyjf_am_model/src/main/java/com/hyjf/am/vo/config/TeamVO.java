@@ -1,9 +1,17 @@
-package com.hyjf.am.config.dao.model.auto;
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.vo.config;
 
-import java.io.Serializable;
+import com.hyjf.am.vo.BaseVO;
+
 import java.util.Date;
 
-public class Team implements Serializable {
+/**
+ * @author fuqiang
+ * @version TeamVO, v0.1 2018/7/9 10:38
+ */
+public class TeamVO extends BaseVO {
     private Integer id;
 
     private String name;
