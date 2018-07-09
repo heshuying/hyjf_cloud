@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 
@@ -27,4 +28,12 @@ public interface PlatformTransferService {
      * @return
      */
     List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request);
+
+    /**
+     * 根据userName检查是否可以平台转账
+     * @auth sunpeikai
+     * @param userName 用户名
+     * @return
+     */
+    JSONObject checkTransfer(String userName);
 }
