@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
 
@@ -140,4 +141,11 @@ public interface AmTradeClient {
      * @return
      */
     BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
+
+    /**
+     * 查询CouponRepayMonitorVO
+     * @param form
+     * @return
+     */
+    List<CouponRepayMonitorVO> selectRecordList(CouponRepayRequest form);
 }
