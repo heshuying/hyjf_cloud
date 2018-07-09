@@ -5,8 +5,10 @@ package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
+import com.hyjf.am.resquest.admin.PlatformTransferRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -36,4 +38,12 @@ public interface PlatformTransferService {
      * @return
      */
     JSONObject checkTransfer(String userName);
+
+    /**
+     * 执行平台转账
+     * @auth sunpeikai
+     * @param request 传参
+     * @return
+     */
+    JSONObject handRecharge(Integer loginUserId,HttpServletRequest request,PlatformTransferRequest platformTransferRequest);
 }

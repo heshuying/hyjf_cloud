@@ -1775,5 +1775,12 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="associated_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
+
+        <table tableName="ht_account_web_list" domainObjectName="AccountWebList">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
     </context>
 </generatorConfiguration>
