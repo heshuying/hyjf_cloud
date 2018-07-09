@@ -62,8 +62,8 @@ import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
 import com.hyjf.am.trade.dao.model.auto.FreezeList;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomizeV2;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.BankInvestAllService;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -1187,7 +1187,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 					replaceMap.put("val_times", sendType.getAfterTime() + "");
 					// 发送短信验证码
 					SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
-					smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+					smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 
 				} else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
 					result.put("message", "投资失败！");

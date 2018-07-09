@@ -2,6 +2,7 @@ package com.hyjf.admin.client.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.client.MspApplyClient;
@@ -10,7 +11,7 @@ import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.user.MspApplytRequest;
 import com.hyjf.am.resquest.user.MspRequest;
 
-
+@Service
 public class MspApplyClientImpl implements MspApplyClient{
     @Autowired
     private RestTemplate restTemplate;

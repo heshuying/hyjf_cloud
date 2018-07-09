@@ -63,9 +63,9 @@ import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
-import com.hyjf.am.trade.mq.MailProducer;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.MailProducer;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.BatchBorrowRepayZTService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
@@ -3292,7 +3292,7 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
                 		CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 		
 		try {
-			smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}

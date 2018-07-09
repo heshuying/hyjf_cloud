@@ -3,13 +3,24 @@
  */
 package com.hyjf.am.user.service.impl.batch;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.mq.FddCertificateProducer;
-import com.hyjf.am.user.mq.Producer;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.FddCertificateProducer;
 import com.hyjf.am.user.service.batch.FddCertificateService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
@@ -20,16 +31,6 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -52,7 +53,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             for (User user : usersList) {
                 FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
                 fddCertificateAuthorityVO.setUserId( user.getUserId());
-                fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+                fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
             }
             // 处理结束时间
             String endTime = GetDate.dateToString(new Date());

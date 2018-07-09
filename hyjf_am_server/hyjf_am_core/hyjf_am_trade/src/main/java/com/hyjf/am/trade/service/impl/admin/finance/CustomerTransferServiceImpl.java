@@ -5,12 +5,10 @@ package com.hyjf.am.trade.service.impl.admin.finance;
 
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
+import com.hyjf.am.resquest.admin.TransferListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.UserTransferMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.UserTransfer;
-import com.hyjf.am.trade.dao.model.auto.UserTransferExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
@@ -106,6 +104,15 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         if(StringUtils.isNotEmpty(request.getTransferTimeEnd())){
             criteria.andTransferTimeLessThanOrEqualTo(GetDate.stringToDate(GetDate.getDayEnd(request.getTransferTimeEnd())));
         }
+        if(StringUtils.isNotEmpty(request.getOpreateTimeStart())){
+            criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(GetDate.getDayStart(request.getOpreateTimeStart())));
+        }
+        if(StringUtils.isNotEmpty(request.getOpreateTimeEnd())){
+            criteria.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(GetDate.getDayEnd(request.getOpreateTimeEnd())));
+        }
+        if(StringUtils.isNotEmpty(request.getTransferTypeSrch())){
+            criteria.andTransferTypeEqualTo(Integer.valueOf(request.getTransferTypeSrch()));
+        }
 
         example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {
@@ -174,5 +181,86 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     @Override
     public UserTransfer searchUserTransferById(Integer id) {
         return userTransferMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Integer getRecordCount(TransferListRequest request) {
+        UserTransferExample example = new UserTransferExample();
+        UserTransferExample.Criteria cra = example.createCriteria();
+        if(StringUtils.isNotEmpty(request.getOutUserNameSrch())){
+            cra.andOutUserNameLike("%"+request.getOutUserNameSrch()+"%");
+        }
+        if(StringUtils.isNotEmpty(request.getReconciliationIdSrch())){
+            cra.andReconciliationIdLike("%"+request.getReconciliationIdSrch()+"%");
+        }
+        if(StringUtils.isNotEmpty(request.getStatusSrch())){
+            cra.andStatusEqualTo(Integer.valueOf(request.getStatusSrch()));
+        }
+        if(StringUtils.isNotEmpty(request.getOrderIdSrch())){
+            cra.andOrderIdEqualTo(request.getOrderIdSrch());
+        }
+        if(StringUtils.isNotEmpty(request.getOpreateTimeStart())){
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(GetDate.getDayStart(request.getOpreateTimeStart())));
+        }
+        if(StringUtils.isNotEmpty(request.getOpreateTimeEnd())){
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(GetDate.getDayEnd(request.getOpreateTimeEnd())));
+        }
+        if(StringUtils.isNotEmpty(request.getTransferTimeStart())){
+            cra.andTransferTimeGreaterThanOrEqualTo(GetDate.stringToDate(GetDate.getDayStart(request.getTransferTimeStart())));
+        }
+        if(StringUtils.isNotEmpty(request.getTransferTimeEnd())){
+            cra.andTransferTimeLessThanOrEqualTo(GetDate.stringToDate(GetDate.getDayEnd(request.getTransferTimeEnd())));
+        }
+        if(StringUtils.isNotEmpty(request.getReconciliationId())){
+            cra.andReconciliationIdEqualTo(request.getReconciliationId());
+        }
+        if(StringUtils.isNotEmpty(request.getTransferTypeSrch())){
+            cra.andTransferTypeEqualTo(Integer.valueOf(request.getTransferTypeSrch()));
+        }
+
+        example.setOrderByClause("create_time desc");
+        return userTransferMapper.countByExample(example);
+    }
+
+    @Override
+    public List<UserTransfer> selectRecordList(TransferListRequest request, int offset, int limit) {
+        UserTransferExample example = new UserTransferExample();
+        UserTransferExample.Criteria cra = example.createCriteria();
+        if(StringUtils.isNotEmpty(request.getOutUserNameSrch())){
+            cra.andOutUserNameLike("%"+request.getOutUserNameSrch()+"%");
+        }
+        if(StringUtils.isNotEmpty(request.getReconciliationIdSrch())){
+            cra.andReconciliationIdLike("%"+request.getReconciliationIdSrch()+"%");
+        }
+        if(StringUtils.isNotEmpty(request.getStatusSrch())){
+            cra.andStatusEqualTo(Integer.valueOf(request.getStatusSrch()));
+        }
+        if(StringUtils.isNotEmpty(request.getOrderIdSrch())){
+            cra.andOrderIdEqualTo(request.getOrderIdSrch());
+        }
+        if(StringUtils.isNotEmpty(request.getOpreateTimeStart())){
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(GetDate.getDayStart(request.getOpreateTimeStart())));
+        }
+        if(StringUtils.isNotEmpty(request.getOpreateTimeEnd())){
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(GetDate.getDayEnd(request.getOpreateTimeEnd())));
+        }
+        if(StringUtils.isNotEmpty(request.getTransferTimeStart())){
+            cra.andTransferTimeGreaterThanOrEqualTo(GetDate.stringToDate(GetDate.getDayStart(request.getTransferTimeStart())));
+        }
+        if(StringUtils.isNotEmpty(request.getTransferTimeEnd())){
+            cra.andTransferTimeLessThanOrEqualTo(GetDate.stringToDate(GetDate.getDayEnd(request.getTransferTimeEnd())));
+        }
+        if(StringUtils.isNotEmpty(request.getReconciliationId())){
+            cra.andReconciliationIdEqualTo(request.getReconciliationId());
+        }
+        if(StringUtils.isNotEmpty(request.getTransferTypeSrch())){
+            cra.andTransferTypeEqualTo(Integer.valueOf(request.getTransferTypeSrch()));
+        }
+        example.setOrderByClause("create_time desc");
+        if (offset != -1) {
+            example.setLimitStart(offset);
+            example.setLimitEnd(limit);
+        }
+        return userTransferMapper.selectByExample(example);
     }
 }
