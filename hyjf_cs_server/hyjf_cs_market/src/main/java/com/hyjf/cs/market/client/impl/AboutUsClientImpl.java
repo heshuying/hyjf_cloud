@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.config.TeamVO;
@@ -25,6 +26,10 @@ public class AboutUsClientImpl implements AboutUsClient {
 
     @Override
     public ContentArticleVO getAboutUs() {
+        ContentArticleResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/article/getaboutus", ContentArticleResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
         return null;
     }
 

@@ -5,15 +5,12 @@ import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,6 +41,23 @@ public class ContentArticleController {
         if (!CollectionUtils.isEmpty(list)){
             List<ContentArticleVO> result = CommonUtils.convertBeanList(list,ContentArticleVO.class);
             response.setResultList(result);
+        }
+        return response;
+    }
+
+    /**
+     * 获取公司简介
+     *
+     * @return
+     */
+    @GetMapping("/getaboutus")
+    public ContentArticleResponse getAboutUs() {
+        ContentArticleResponse response = new ContentArticleResponse();
+        ContentArticle contentArticle = contentArticleService.getAboutUs();
+        if (contentArticle != null) {
+            ContentArticleVO contentArticleVO = new ContentArticleVO();
+            BeanUtils.copyProperties(contentArticle, contentArticleVO);
+            response.setResult(contentArticleVO);
         }
         return response;
     }
