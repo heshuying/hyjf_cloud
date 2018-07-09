@@ -4,12 +4,14 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -21,6 +23,7 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
@@ -41,6 +44,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +95,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Autowired
     private BorrowTenderCpnClient borrowTenderCpnClient;
 
+    @Autowired
+    private CouponConfigClient couponConfigClient;
+    @Autowired
+    private CouponUserClient couponUserClient;
 
     /**
      * @param request
@@ -526,6 +535,125 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
+        return result;
+    }
+
+    /**
+     * 获取投资信息
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public WebResult<TenderInfoResult> getInvestInfo(TenderRequest tender) {
+        TenderInfoResult investInfo = new TenderInfoResult();
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        df.setRoundingMode(RoundingMode.FLOOR);
+        // 查询项目信息
+        String money = tender.getAccount();
+        BorrowVO borrow = borrowClient.selectBorrowByNid(tender.getBorrowNid());
+        if (null == borrow) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        WebViewUserVO loginUser = RedisUtils.getObj(tender.getToken(), WebViewUserVO.class);
+        BestCouponListVO couponConfig = new BestCouponListVO();
+        // 未登录，不计算优惠券
+        if (loginUser != null) {
+            // 获取用户最优优惠券
+            MyCouponListRequest request = new MyCouponListRequest();
+            request.setBorrowNid(tender.getBorrowNid());
+            request.setUserId(String.valueOf(loginUser.getUserId()));
+            request.setPlatform(tender.getPlatform());
+            couponConfig = couponConfigClient.selectBestCoupon(request);
+            if (couponConfig != null) {
+                investInfo.setIsThereCoupon(1);
+            } else {
+                investInfo.setIsThereCoupon(0);
+            }
+            // 可用优惠券张数
+            Integer couponAvailableCount = couponConfigClient.countAvaliableCoupon(request);
+            investInfo.setCouponAvailableCount(couponAvailableCount);
+            // 优惠券总张数
+            /** 获取用户优惠券总张数开始  */
+            Integer recordTotal = couponUserClient.getUserCouponCount(loginUser.getUserId(),"0");
+            investInfo.setRecordTotal(recordTotal);
+            /** 获取用户优惠券总张数结束 */
+        } else {
+            couponConfig = null;
+            // 是否有优惠券
+            investInfo.setIsThereCoupon(0);
+            // 优惠券总张数
+            investInfo.setRecordTotal(0);
+            // 优惠券可用张数
+            investInfo.setCouponAvailableCount(0);
+        }
+
+        // 如果投资金额不为空
+        if ((!StringUtils.isBlank(money) && Long.parseLong(money) > 0) || (couponConfig != null && (couponConfig.getCouponType() == 3 || couponConfig.getCouponType() == 1))) {
+
+            String borrowStyle = borrow.getBorrowStyle();
+            // 收益率
+            BigDecimal borrowApr = borrow.getBorrowApr();
+            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
+                borrowApr = borrowApr.add(borrow.getBorrowExtraYield());
+            }
+            BigDecimal couponInterest = BigDecimal.ZERO;
+            /** 叠加收益率开始*/
+            if (couponConfig != null) {
+                if (couponConfig.getCouponType() == 1) {
+                    couponInterest =couponService.getInterestDj(couponConfig.getCouponQuota(), couponConfig.getCouponProfitTime().intValue(), borrowApr);
+                } else {
+                    couponInterest = couponService.getInterest(borrowStyle, couponConfig.getCouponType(), borrowApr, couponConfig.getCouponQuota(), money, borrow.getBorrowPeriod());
+                }
+
+                couponConfig.setCouponInterest(df.format(couponInterest));
+                if (couponConfig.getCouponType() == 2) {
+                    borrowApr = borrowApr.add(couponConfig.getCouponQuota());
+                }
+                if (couponConfig.getCouponType() == 3) {
+                    money = new BigDecimal(money).add(couponConfig.getCouponQuota()).toString();
+                }
+            }
+            /** 叠加收益率结束 */
+            // 周期
+            Integer borrowPeriod = borrow.getBorrowPeriod();
+            BigDecimal earnings = new BigDecimal("0");
+            switch (borrowStyle) {
+                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                    // 计算历史回报
+                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2,
+                            BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+                    earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
+                            BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“
+                    earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                default:
+                    break;
+            }
+            investInfo.setEarnings(df.format(earnings));
+            if (couponConfig != null && couponConfig.getCouponType() == 3) {
+                investInfo.setCapitalInterest(df.format(earnings.add(couponConfig.getCouponQuota()).subtract(couponInterest)));
+            } else if (couponConfig != null && couponConfig.getCouponType() == 1) {
+                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setCapitalInterest(df.format(earnings));
+            } else {
+                investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
+            }
+            investInfo.setCouponConfig(couponConfig);
+        }
+        WebResult<TenderInfoResult> result = new WebResult();
+        result.setData(investInfo);
         return result;
     }
 
