@@ -15,6 +15,16 @@ public class CouponRepayMonitorResponse extends Response<CouponRepayMonitorVO> {
 
     private int insertFlag;
 
+    private int recordTotal;
+
+    public int getRecordTotal() {
+        return recordTotal;
+    }
+
+    public void setRecordTotal(int recordTotal) {
+        this.recordTotal = recordTotal;
+    }
+
     public int getUpdateFlag() {
         return updateFlag;
     }

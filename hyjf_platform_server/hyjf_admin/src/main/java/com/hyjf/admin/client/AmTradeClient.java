@@ -3,15 +3,11 @@
  */
 package com.hyjf.admin.client;
 
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
-import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.response.admin.UserTransferResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
 
@@ -121,6 +117,10 @@ public interface AmTradeClient {
      */
     List<AccountTradeVO> selectTradeTypes();
 
+    AdminCouponRepayMonitorCustomizeResponse couponRepayMonitorCreatePage(CouponRepayRequest form);
+
+    List<AdminCouponRepayMonitorCustomizeVO> selectInterestSum(CouponRepayRequest form);
+
     /**
      * 根据筛选条件查询userTransfer列表
      * @param form
@@ -147,7 +147,7 @@ public interface AmTradeClient {
      * @param form
      * @return
      */
-    List<CouponRepayMonitorVO> selectRecordList(CouponRepayRequest form);
+    List<AdminCouponRepayMonitorCustomizeVO> selectRecordList(CouponRepayRequest form);
 
     /**
      * 根据筛选条件查询平台转账count

@@ -8,12 +8,10 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.AccountTradeResponse;
-import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -228,7 +226,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     @Override
     public List<AccountTradeVO> selectTradeTypes() {
-        String url = "http://AM-TRADE/am-trade/accounttrade/selectTradeTypes";
+        String url = tradeService + "/accounttrade/selectTradeTypes";
         AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -265,10 +263,31 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
     @Override
-    public List<CouponRepayMonitorVO> selectRecordList(CouponRepayRequest form) {
-        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/selectCouponRepayMonitorPage";
-        CouponRepayMonitorResponse response = restTemplate.postForEntity(url,form,CouponRepayMonitorResponse.class).getBody();
+    public  List<AdminCouponRepayMonitorCustomizeVO> selectRecordList(CouponRepayRequest form) {
+        String url = tradeService + "/couponRepayMonitor/selectCouponRepayMonitorPage";
+        AdminCouponRepayMonitorCustomizeResponse response = restTemplate.postForEntity(url,form,AdminCouponRepayMonitorCustomizeResponse.class).getBody();
         if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public AdminCouponRepayMonitorCustomizeResponse couponRepayMonitorCreatePage(CouponRepayRequest form) {
+        String url = tradeService + "/couponRepayMonitor/CouponRepayMonitorCreatePage";
+        AdminCouponRepayMonitorCustomizeResponse response = restTemplate.postForEntity(url,form,AdminCouponRepayMonitorCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<AdminCouponRepayMonitorCustomizeVO> selectInterestSum(CouponRepayRequest form) {
+        String url = tradeService + "/couponRepayMonitor/selectInterestSum";
+        AdminCouponRepayMonitorCustomizeResponse response = restTemplate.postForEntity(url,form,AdminCouponRepayMonitorCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
         return null;
