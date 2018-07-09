@@ -3,9 +3,11 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AccountChinapnrResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import org.slf4j.Logger;
@@ -124,6 +126,37 @@ public class AmUserClientImpl implements AmUserClient {
 		UserInfoResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+	/**
+	 * 根据userId列表查询user列表
+	 * @auth sunpeikai
+	 * @param userIds 用户id列表
+	 * @return
+	 */
+	@Override
+	public List<UserVO> findUserListByUserIds(String userIds) {
+		UserResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/platformtransfer/finduserlistbyuserids",userIds, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 利用borrowNid查询出来的异常标的借款人userId查询银行账户
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
+		String url = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
+		if(response != null){
 			return response.getResult();
 		}
 		return null;

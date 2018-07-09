@@ -11,6 +11,9 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
@@ -164,4 +167,69 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request);
+
+    /**
+     * 获取项目类型list,用于筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<BorrowProjectTypeVO> selectBorrowProjectList();
+
+    /**
+     * 获取还款方式list,用于筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<BorrowStyleVO> selectBorrowStyleList();
+
+    /**
+     * 获取标的列表count,用于前端分页显示条数
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return
+     */
+    Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest);
+
+    /**
+     * 获取标的备案异常列表
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return
+     */
+    List <BorrowRegistCustomizeVO> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest);
+
+    /**
+     * 根据borrowNid查询出来异常标
+     * @auth sunpeikai
+     * @param borrowNid 借款编号
+     * @return
+     */
+    BorrowVO searchBorrowByBorrowNid(String borrowNid);
+
+    /**
+     * 根据受托支付userId查询stAccountId
+     * @auth sunpeikai
+     * @param entrustedUserId 受托支付userId
+     * @return stAccountId
+     */
+    String getStAccountIdByEntrustedUserId(Integer entrustedUserId);
+
+    /**
+     * 更新标
+     * @auth sunpeikai
+     * @param borrowVO 标信息
+     * @param type 1更新标的备案 2更新受托支付标的备案
+     * @return
+     */
+    boolean updateBorrowRegist(BorrowVO borrowVO, Integer type);
+
+    /**
+     * 备案成功看标的是否关联计划，如果关联则更新对应资产表
+     * @auth sunpeikai
+     * @param borrowVO 标信息
+     * @return
+     */
+    boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
 }
