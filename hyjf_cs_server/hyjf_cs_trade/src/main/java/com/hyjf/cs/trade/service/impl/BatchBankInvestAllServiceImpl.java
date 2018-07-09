@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.hyjf.cs.trade.mq.UtmRegProducer;
-import com.hyjf.cs.trade.mq.VIPUserTenderProducer;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +37,10 @@ import com.hyjf.cs.trade.client.AmBorrowClient;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BatchBankInvestAllClient;
-import com.hyjf.cs.trade.mq.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.Producer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
+import com.hyjf.cs.trade.mq.producer.VIPUserTenderProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BatchBankInvestAllService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -169,7 +169,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							params.put("investFlag",request.getLogUser().getInvestflag());
 							//压入消息队列
 							try {
-								appChannelStatisticsProducer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+								appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
 										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 							} catch (MQException e) {
 								e.printStackTrace();
@@ -201,7 +201,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								params.put("investProjectPeriod", investProjectPeriod);
 
 								try {
-									this.utmRegProducer.messageSend(new Producer.MassageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+									this.utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 									logger.info("******首投信息推送消息队列******");
 								} catch (MQException e) {
 									e.printStackTrace();
@@ -218,7 +218,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 						para.put("userId",Integer.parseInt(bean.getLogUserId()));
 						para.put("orderId",bean.getOrderId());
 						try {
-							this.vipUserTenderProducer.messageSend(new Producer.MassageContent(MQConstant.VIP_USER_TENDER_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(para)));
+							this.vipUserTenderProducer.messageSend(new MessageContent(MQConstant.VIP_USER_TENDER_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(para)));
 						} catch (MQException e) {
 							e.printStackTrace();
 							logger.info("保存VIP用户信息推送消息队列失败！！！");

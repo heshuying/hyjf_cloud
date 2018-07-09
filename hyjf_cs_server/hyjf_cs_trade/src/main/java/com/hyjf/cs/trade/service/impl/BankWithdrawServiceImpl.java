@@ -57,9 +57,9 @@ import com.hyjf.cs.trade.client.BankWithdrawClient;
 import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.client.WithdrawClient;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.mq.AppMessageProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.mq.SmsProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -252,9 +252,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
                                         CustomConstants.CHANNEL_TYPE_NORMAL);
                                 AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
-                                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+                                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                                         UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-                                appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+                                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
                                         UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 
                             } else {
@@ -266,7 +266,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 replaceMap.put("val_name", info.getTruename().substring(0, 1));
                                 replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
                                 AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
-                                appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+                                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
                                         UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
                             }
                             // TODO 活动统计 需要的时候放开
