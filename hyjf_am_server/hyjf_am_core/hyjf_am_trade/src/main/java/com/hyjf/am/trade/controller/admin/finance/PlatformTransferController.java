@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,13 +37,13 @@ public class PlatformTransferController extends BaseController {
 
     @ApiOperation(value = "平台转账-查询count",notes = "平台转账-查询count")
     @PostMapping(value = "/getplatformtransfercount")
-    public Integer getPlatformTransferCount(PlatformTransferListRequest request){
+    public Integer getPlatformTransferCount(@RequestBody PlatformTransferListRequest request){
         return platformTransferService.getPlatformTransferCount(request);
     }
 
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
     @PostMapping(value = "/searchplatformtransferlist")
-    public PlatformTransferResponse searchPlatformTransferList(PlatformTransferListRequest request){
+    public PlatformTransferResponse searchPlatformTransferList(@RequestBody PlatformTransferListRequest request){
         PlatformTransferResponse response = new PlatformTransferResponse();
         Integer count = platformTransferService.getPlatformTransferCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
@@ -51,6 +52,7 @@ public class PlatformTransferController extends BaseController {
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
+        logger.info("searchPlatformTransferList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
         List<AccountRecharge> accountRechargeList = platformTransferService.searchPlatformTransferList(request);
         if(!CollectionUtils.isEmpty(accountRechargeList)){
             List<AccountRechargeVO> accountRechargeVOList = CommonUtils.convertBeanList(accountRechargeList,AccountRechargeVO.class);

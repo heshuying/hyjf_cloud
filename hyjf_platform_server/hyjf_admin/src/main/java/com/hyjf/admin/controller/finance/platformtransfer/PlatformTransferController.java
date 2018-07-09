@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.platformtransfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlatformTransferService;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
@@ -24,7 +25,7 @@ import java.util.List;
 @Api(value = "资金中心-转账管理-平台转账")
 @RestController
 @RequestMapping(value = "/hyjf-admin/platformtransfer")
-public class PlatformTransferController{
+public class PlatformTransferController extends BaseController {
 
     @Autowired
     private PlatformTransferService platformTransferService;

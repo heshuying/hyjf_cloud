@@ -17,7 +17,7 @@ public class PlatformTransferListRequest extends BasePage implements Serializabl
     // 订单号
     private String nidSearch;
     // 转账状态
-    private Integer statusSearch;
+    private String statusSearch;
     // 开始时间(检索用)
     private String startDate;
 
@@ -47,11 +47,11 @@ public class PlatformTransferListRequest extends BasePage implements Serializabl
         this.nidSearch = nidSearch;
     }
 
-    public Integer getStatusSearch() {
+    public String getStatusSearch() {
         return statusSearch;
     }
 
-    public void setStatusSearch(Integer statusSearch) {
+    public void setStatusSearch(String statusSearch) {
         this.statusSearch = statusSearch;
     }
 
