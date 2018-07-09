@@ -37,6 +37,17 @@ public interface AmUserClient {
     UserVO searchUserByUserId(Integer userId);
 
     /**
+     * 根据手机号获取用户信息
+     * @param userName
+     * @return
+     */
+    UserVO getUserByUserName(String userName);
+
+    UserVO findUserById(int userId);
+
+    UserInfoVO findUsersInfoById(int userId);
+
+    /**
      * 根据userId查询用户信息
      * @auth sunpeikai
      * @param

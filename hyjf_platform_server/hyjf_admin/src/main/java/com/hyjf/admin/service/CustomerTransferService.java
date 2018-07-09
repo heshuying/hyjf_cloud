@@ -80,5 +80,5 @@ public interface CustomerTransferService {
      * @param
      * @return
      */
-    JSONObject transferSendMail(Integer transferId);
+    void transferSendMail(Integer transferId);
 }

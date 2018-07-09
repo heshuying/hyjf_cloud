@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.customertransfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CustomerTransferService;
@@ -236,11 +237,10 @@ public class CustomerTransferController extends BaseController {
     })
     @ApiOperation(value = "用户转账-发送邮件",notes = "发送邮件")
     @PostMapping(value = "/transfersendmail")
-    public JSONObject transferSendMail(@RequestBody Map map){
+    public AdminResult transferSendMail(@RequestBody Map map){
         Integer transferId = (Integer) map.get("transferId");
-        JSONObject result = new JSONObject();
-        result = customerTransferService.transferSendMail(transferId);
-        return result;
+        customerTransferService.transferSendMail(transferId);
+        return new AdminResult();
     }
 
 

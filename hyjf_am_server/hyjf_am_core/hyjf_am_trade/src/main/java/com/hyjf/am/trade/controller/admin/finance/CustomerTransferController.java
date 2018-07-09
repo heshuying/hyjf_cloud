@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.trade.controller.admin.finance;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
+import com.hyjf.am.resquest.admin.TransferListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.UserTransfer;
@@ -22,7 +24,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -70,6 +71,30 @@ public class CustomerTransferController extends BaseController {
             List<UserTransferVO> userTransferVOList = CommonUtils.convertBeanList(userTransferList,UserTransferVO.class);
             response.setResultList(userTransferVOList);
             response.setRtn("0");
+            response.setRecordTotal(count);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 根据筛选条件查询UserTransfer列表
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/getRecordList")
+    public UserTransferResponse getRecordList(@RequestBody TransferListRequest request){
+        UserTransferResponse response = new UserTransferResponse();
+        Integer count = customerTransferService.getRecordCount(request);
+        if (count > 0) {
+            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            List<UserTransfer> recordList = customerTransferService.selectRecordList(request, paginator.getOffset(), paginator.getLimit());
+            if (recordList != null) {
+                List<UserTransferVO> voList = CommonUtils.convertBeanList(recordList, UserTransferVO.class);
+                response.setResultList(voList);
+                response.setRecordTotal(count);
+                response.setRtn(Response.SUCCESS);
+            }
         }
         return response;
     }
