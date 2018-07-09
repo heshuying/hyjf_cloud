@@ -43,9 +43,4 @@ public interface AmConfigClient {
      */
     SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);
 
-
-
-    SiteSettingsVO findSiteSetting();
-
-    SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);
 }
