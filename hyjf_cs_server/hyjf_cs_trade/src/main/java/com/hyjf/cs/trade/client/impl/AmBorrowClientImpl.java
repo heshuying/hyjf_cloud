@@ -1,8 +1,10 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
@@ -201,4 +203,14 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 		}
 		return null;
 	}
+
+	@Override
+	public Integer getTotalInverestCount(String userId) {
+		ProjectListResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/inverestCount/" + userId,ProjectListResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getCount();
+		}
+		return null;
+	}
+
 }

@@ -131,7 +131,6 @@
 			<artifactId>rocketmq-client</artifactId>
 		</dependency>
 
-		<!--mail-->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>

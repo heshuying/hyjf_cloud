@@ -30,4 +30,19 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         List<ContentArticle> list = contentArticleMapper.selectByExample(example);
         return list;
     }
+
+    @Override
+    public ContentArticle getAboutUs() {
+        ContentArticleExample example = new ContentArticleExample();
+        ContentArticleExample.Criteria cra = example.createCriteria();
+        // 关于我们
+        cra.andTypeEqualTo("5");
+        // 启用状态
+        cra.andStatusEqualTo(1);
+        List<ContentArticle> conlist = contentArticleMapper.selectByExample(example);
+        if (conlist != null && conlist.size() > 0) {
+            return conlist.get(0);
+        }
+        return new ContentArticle();
+    }
 }

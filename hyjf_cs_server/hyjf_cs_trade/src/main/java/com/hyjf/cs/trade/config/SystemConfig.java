@@ -23,6 +23,15 @@ public class SystemConfig {
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
 
+    @Value("${file.domain.url}")
+    public String fileDomainUrl;
+
+    @Value("hyjf.notice.status")
+    public String noticeStatus;
+
+    @Value("hyjf.notice.requesturl.ios")
+    public String iosNoticeRequestUrl;
+
 
     public String getWebHost() {
         return webHost;
@@ -70,5 +79,29 @@ public class SystemConfig {
 
     public void setForgetpassword(String forgetpassword) {
         this.forgetpassword = forgetpassword;
+    }
+
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
+
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
+    }
+
+    public String getNoticeStatus() {
+        return noticeStatus;
+    }
+
+    public void setNoticeStatus(String noticeStatus) {
+        this.noticeStatus = noticeStatus;
+    }
+
+    public String getIosNoticeRequestUrl() {
+        return iosNoticeRequestUrl;
+    }
+
+    public void setIosNoticeRequestUrl(String iosNoticeRequestUrl) {
+        this.iosNoticeRequestUrl = iosNoticeRequestUrl;
     }
 }

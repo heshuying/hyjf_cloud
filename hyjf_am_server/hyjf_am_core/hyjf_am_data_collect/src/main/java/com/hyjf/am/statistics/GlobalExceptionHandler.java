@@ -1,16 +1,15 @@
 package com.hyjf.am.statistics;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.exception.ReturnMessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.exception.ReturnMessageException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author xiasq
@@ -20,16 +19,14 @@ import com.hyjf.common.exception.ReturnMessageException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    private static final String SYSTEM_ERROR = "99";
-    private static final String SYSTEM_ERROR_MSG = "系统异常";
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Response<BaseVO> defaultErrorHandler(HttpServletRequest req, Exception e) {
         logger.error("system error", e);
         Response<BaseVO> response = new Response<BaseVO>();
-        response.setRtn(SYSTEM_ERROR);
-        response.setMessage(SYSTEM_ERROR_MSG);
+        response.setRtn(Response.ERROR);
+        response.setMessage(e.getMessage() == null ? Response.ERROR_MSG : e.getMessage());
         return response;
     }
 

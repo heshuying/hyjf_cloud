@@ -5,7 +5,9 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -34,4 +36,11 @@ public interface CouponUserService {
      * @return
      */
     Integer getIssueNumber(String couponCode);
+
+    /**
+     * 插入优惠券用户表
+     * @param couponUser
+     * @return
+     */
+    int insertCouponUser(CouponUser couponUser);
 }

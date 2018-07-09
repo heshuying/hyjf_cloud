@@ -175,19 +175,19 @@ public class AOPHandler {
 	 * @return
 	 * @throws Throwable
 	 */
-//	@Around("execution(public org.springframework.web.client.RestTemplate *(..))")
-//	public Object amExceptionHandler(ProceedingJoinPoint pjp) throws Throwable {
-//
-//		long startTime = System.currentTimeMillis();
-//		Response result = null;
-//		try {
-//			result = (Response) pjp.proceed();
-//			if (result.getRtn().equals("99")){
-//				throw new Exception(result.getMessage());
-//			}
-//		}catch(Throwable e) {
-//			throw e;
-//		}
-//		return result;
-//	}
+	@Around("execution(public org.springframework.web.client.RestTemplate *(..))")
+	public Object amExceptionHandler(ProceedingJoinPoint pjp) throws Throwable {
+
+		long startTime = System.currentTimeMillis();
+		Response result = null;
+		try {
+			result = (Response) pjp.proceed();
+			if (result.getRtn().equals(Response.ERROR)){
+				throw new Exception(result.getMessage());
+			}
+		}catch(Throwable e) {
+			throw e;
+		}
+		return result;
+	}
 }

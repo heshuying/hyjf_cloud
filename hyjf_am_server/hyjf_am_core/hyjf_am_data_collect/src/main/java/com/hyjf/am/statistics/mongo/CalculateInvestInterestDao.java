@@ -1,8 +1,11 @@
 package com.hyjf.am.statistics.mongo;
 
-import com.hyjf.am.statistics.bean.AccountWebList;
 import com.hyjf.am.statistics.bean.CalculateInvestInterest;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Description 网站收益  运营数据
@@ -15,5 +18,18 @@ public class CalculateInvestInterestDao extends BaseMongoDao<CalculateInvestInte
     @Override
     protected Class<CalculateInvestInterest> getEntityClass() {
         return CalculateInvestInterest.class;
+    }
+
+    /**
+     * 获取累计投资金额
+     *
+     * @return
+     */
+    public BigDecimal getTotalInvestmentAmount() {
+        List<CalculateInvestInterest> list = mongoTemplate.findAll(CalculateInvestInterest.class);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0).getInterestSum();
+        }
+        return null;
     }
 }

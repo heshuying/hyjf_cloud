@@ -20,16 +20,14 @@ import com.hyjf.common.exception.ReturnMessageException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    private static final String SYSTEM_ERROR = "99";
-    private static final String SYSTEM_ERROR_MSG = "系统异常";
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Response<BaseVO> defaultErrorHandler(HttpServletRequest req, Exception e) {
         logger.error("system error", e);
         Response<BaseVO> response = new Response<BaseVO>();
-        response.setRtn(SYSTEM_ERROR);
-        response.setMessage(SYSTEM_ERROR_MSG);
+        response.setRtn(Response.ERROR);
+        response.setMessage(e.getMessage() == null ? Response.ERROR_MSG : e.getMessage());
         return response;
     }
 

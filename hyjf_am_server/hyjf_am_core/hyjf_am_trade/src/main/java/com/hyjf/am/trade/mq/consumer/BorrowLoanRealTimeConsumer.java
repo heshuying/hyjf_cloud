@@ -38,6 +38,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
+ * 自投类标的放款消费处理
  * @author dxj
  * @version BorrowLoanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */

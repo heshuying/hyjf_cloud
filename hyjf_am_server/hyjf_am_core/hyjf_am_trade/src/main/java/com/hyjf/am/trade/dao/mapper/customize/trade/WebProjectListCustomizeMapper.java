@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
@@ -80,7 +81,7 @@ public interface WebProjectListCustomizeMapper {
      * @param params
      * @return
      */
-    List<WebProjectListCustomize> searchAppProjectList(Map<String, Object> params);
+    List<AppProjectListCustomize> searchAppProjectList(Map<String, Object> params);
 
     /**
      * 获取可投资项目列表count

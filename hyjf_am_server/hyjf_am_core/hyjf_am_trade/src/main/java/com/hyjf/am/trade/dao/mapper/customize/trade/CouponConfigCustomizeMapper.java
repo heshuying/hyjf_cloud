@@ -23,4 +23,11 @@ public interface CouponConfigCustomizeMapper {
 	 * @return
 	 */
 	List<CouponConfigCustomize> selectRecordList(Map<String, Object> mapParam);
+
+	/**
+	 * 根据优惠券编号查询已发行数量
+	 * @param couponCode
+	 * @return
+	 */
+    int checkCouponSendExcess(String couponCode);
 }

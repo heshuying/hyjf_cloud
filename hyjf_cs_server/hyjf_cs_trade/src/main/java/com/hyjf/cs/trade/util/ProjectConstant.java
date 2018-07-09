@@ -26,6 +26,13 @@ import java.util.Map;
  */
 public class ProjectConstant {
 
+
+     public static final  String REQUEST_HOME = "/hyjf-app";
+
+     public static final  String REQUEST_MAPPING = "/project";
+
+     public static final  String PROJECT_DETAIL_ACTION = "/getProjectDetail";
+
     /**
      * 加入条件
      */
@@ -58,6 +65,14 @@ public class ProjectConstant {
     public static final String RES_PROJECT_DETAIL = "projectDetail";
 
     public static final String RES_PROJECT_INFO = "projectInfo";
+
+    /*app首页requestUrl*/
+    public static final String APP_HOME_REQUEST_DOMAIN = "/homepage";
+
+    /*app首页请求方法*/
+    public static final String APP_HOME_DATA_URL = "/getProjectList";
+
+
     /*请求参数 end*/
 
     /**

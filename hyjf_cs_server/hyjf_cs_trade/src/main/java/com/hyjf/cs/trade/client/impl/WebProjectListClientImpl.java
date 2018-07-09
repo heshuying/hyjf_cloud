@@ -1,11 +1,14 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.AppProjectListResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectDetailResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.cs.trade.client.WebProjectListClient;
@@ -126,10 +129,13 @@ public class WebProjectListClientImpl implements WebProjectListClient {
      * @date 2018/6/20 17:23
      */
     @Override
-    public ProjectListResponse countAppProjectList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
+    public Integer countAppProjectList(AppProjectListRequest request) {
+        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,AppProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countAppProjectList --> response = {}",response);
-        return response;
+        if (Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return null;
     }
 
     /**
@@ -138,10 +144,13 @@ public class WebProjectListClientImpl implements WebProjectListClient {
      * @date 2018/6/20 17:24
      */
     @Override
-    public ProjectListResponse searchAppProjectList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,ProjectListResponse.class).getBody();
+    public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
+        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
-        return response;
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
     }
 
     /**
