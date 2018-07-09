@@ -43,5 +43,4 @@ public interface AmConfigClient {
      */
     SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);
 
-
 }

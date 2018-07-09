@@ -3,14 +3,12 @@
  */
 package com.hyjf.am.user.mq.transactionmq;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.service.batch.FddCertificateService;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.RSAHelper;
-import com.hyjf.common.util.RSAKeyUtil;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -29,11 +27,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.mq.base.Consumer;
+import com.hyjf.am.user.service.batch.FddCertificateService;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.RSAHelper;
+import com.hyjf.common.util.RSAKeyUtil;
 
 /**
  * @author zhangqingqing

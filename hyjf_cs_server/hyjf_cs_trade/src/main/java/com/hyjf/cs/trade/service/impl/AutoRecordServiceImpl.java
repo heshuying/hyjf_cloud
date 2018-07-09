@@ -3,6 +3,16 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
@@ -24,23 +34,14 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoRecordClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
-import com.hyjf.cs.trade.mq.AutoPreAuditProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.mq.SmsProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AutoPreAuditProducer;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.AutoRecordService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author fuqiang
@@ -103,7 +104,7 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
             replaceStrs.put("val_title", hjhPlanAssetVO.getBorrowNid());
             SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_NOTICE_BORROW_RECORD_FAIL, CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
-                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             } catch (MQException e) {
                 _log.error("短信发送失败...", e);
             }
@@ -121,7 +122,7 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
         params.put("assetId", hjhPlanAssetVO.getAssetId());
         params.put("instCode", hjhPlanAssetVO.getInstCode());
         try {
-            autoPreAuditProducer.messageSend(new Producer.MassageContent(MQConstant.BORROW_PREAUDIT_TOPIC,UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            autoPreAuditProducer.messageSend(new MessageContent(MQConstant.BORROW_PREAUDIT_TOPIC,UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             e.printStackTrace();
             _log.error("自动初审发送消息失败...", e);

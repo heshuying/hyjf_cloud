@@ -1,36 +1,28 @@
 package com.hyjf.am.user.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
-import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.mq.FddCertificateProducer;
-import com.hyjf.am.user.mq.Producer;
-import com.hyjf.am.user.service.CertificateAuthorityExceptionService;
-import com.hyjf.am.user.service.impl.batch.FddCertificateServiceImpl;
-import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
+import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.FddCertificateProducer;
+import com.hyjf.am.user.service.CertificateAuthorityExceptionService;
+import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 
 /**
  * CA认证异常Service实现类
@@ -157,7 +149,7 @@ public class CertificateAuthorityExceptionServiceImpl  implements CertificateAut
 
 		FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
 		fddCertificateAuthorityVO.setUserId(userId);
-		fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
+		fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
 				UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
 
 		// 处理结束时间

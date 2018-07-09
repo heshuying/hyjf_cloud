@@ -6,17 +6,12 @@ package com.hyjf.admin.client;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
-
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
 
@@ -127,6 +122,13 @@ public interface AmTradeClient {
     List<AccountTradeVO> selectTradeTypes();
 
     /**
+     * 根据筛选条件查询userTransfer列表
+     * @param form
+     * @return
+     */
+    UserTransferResponse getRecordList(TransferListRequest form);
+
+    /**
      * 查询汇计划-转让列表
      * @param request
      * @return
@@ -139,4 +141,27 @@ public interface AmTradeClient {
      * @return
      */
     BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
+
+    /**
+     * 查询CouponRepayMonitorVO
+     * @param form
+     * @return
+     */
+    List<CouponRepayMonitorVO> selectRecordList(CouponRepayRequest form);
+
+    /**
+     * 根据筛选条件查询平台转账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getPlatformTransferCount(PlatformTransferListRequest request);
+
+    /**
+     * 根据筛选条件查询平台转账list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request);
 }

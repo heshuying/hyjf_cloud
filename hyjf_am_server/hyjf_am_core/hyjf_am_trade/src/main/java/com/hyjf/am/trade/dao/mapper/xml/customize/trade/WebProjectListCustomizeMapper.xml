@@ -85,7 +85,7 @@
         <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
     </resultMap>
 
-    <resultMap id="HjhPlanMap" type="com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize">
+    <resultMap id="HjhPlanMap" type="com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize">
         <id column="plan_nid" property="planNid" jdbcType="VARCHAR" />
         <result column="plan_name" property="planName" jdbcType="VARCHAR" />
         <result column="expect_apr" property="planApr" jdbcType="VARCHAR" />
@@ -716,7 +716,7 @@
         <include refid="App_Where_Clause" />
     </select>
 
-    <select id="searchAppProjectList"  resultMap="ProjectListNewMap" parameterType="Map">
+    <select id="searchAppProjectList"  resultType="com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize" parameterType="Map">
         SELECT
         hydbpt.borrow_class AS borrow_type,
         hydbpt.borrow_name AS borrow_desc,

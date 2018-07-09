@@ -19,8 +19,8 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.client.HjhSmsNoticeServiceClient;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.mq.SmsProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.HjhSmsNoticeService;
 
@@ -73,7 +73,7 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 		param.put("val_title", borrowNid);
 		SmsMessage smsMessage = new SmsMessage(userId, param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
 				CustomConstants.PARAM_TPL_NOTICE_BORROW_REPAY_OVERDUE, CustomConstants.CHANNEL_TYPE_NORMAL);
-		smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+		smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 	}
 
 }

@@ -21,8 +21,8 @@ import com.hyjf.cs.message.bean.MessagePushTemplateStatics;
 import com.hyjf.cs.message.client.messagePushTemplateClient.MessagePushTemplateClient;
 import com.hyjf.cs.message.mongo.MessagePushMsgDao;
 import com.hyjf.cs.message.mongo.MessagePushTemplateStaticsDao;
-import com.hyjf.cs.message.mq.AppMessageProducer;
-import com.hyjf.cs.message.mq.Producer;
+import com.hyjf.cs.message.mq.base.MessageContent;
+import com.hyjf.cs.message.mq.producer.AppMessageProducer;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
 
 /**
@@ -53,7 +53,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 					// 添加到发送队列
 					AppMsMessage message = new AppMsMessage(MessageConstant.APP_MS_SEND_FOR_MSG, list.get(i).getId());
 					appMessageProducer.messageSend(
-							new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(message)));
+							new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(message)));
 				}
 			}
 		} catch (MQException e) {

@@ -1,40 +1,10 @@
 package com.hyjf.cs.trade.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BankAccountBeanRequest;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.message.AppMsMessage;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.*;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankInterfaceClient;
-import com.hyjf.cs.trade.client.BindCardClient;
-import com.hyjf.cs.trade.client.RechargeClient;
-import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.mq.AppMessageProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.mq.SmsProducer;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.RechargeService;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +13,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.BankCardUtil;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.BankInterfaceClient;
+import com.hyjf.cs.trade.client.BindCardClient;
+import com.hyjf.cs.trade.client.RechargeClient;
+import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.RechargeService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 
 /**
  * 用户充值Service实现类
@@ -200,9 +209,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 										CustomConstants.CHANNEL_TYPE_NORMAL);
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
 										MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+								smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-								appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}else{
 								// 替换参数
@@ -214,7 +223,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
 										MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}
 							return jsonMessage("充值成功!", "0");

@@ -3,13 +3,11 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.vo.trade.AppProjectListCsVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeCsVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -122,7 +120,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @author liuyang
      */
     @Override
-    public AppResult searchAppProjectList(ProjectListRequest request) {
+    public AppResult searchAppProjectList(AppProjectListRequest request) {
         // TODO: 2018/6/20   参数验证
         CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
@@ -131,26 +129,25 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         request.setLimitEnd(page.getLimit());
         request.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
         // ①查询count
-        ProjectListResponse response = webProjectListClient.countAppProjectList(request);
+        Integer count = webProjectListClient.countAppProjectList(request);
         // 对调用返回的结果进行转换和拼装
         AppResult appResult = new AppResult();
         // 先抛错方式，避免代码看起来头重脚轻。
-        if (!Response.isSuccess(response)) {
+        if (count == null) {
             logger.error("app端查询散标投资列表原子层count异常");
             throw new RuntimeException("app端查询散标投资列表原子层count异常");
         }
-        int count = response.getCount();
         page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
         appResult.setData(new ArrayList<>());
         if (count > 0) {
             List<AppProjectListCsVO> result = new ArrayList<>();
-            ProjectListResponse dataResponse = webProjectListClient.searchAppProjectList(request);
-            if (!Response.isSuccess(dataResponse)) {
+            List<AppProjectListCustomizeVO> list = webProjectListClient.searchAppProjectList(request);
+            if (CollectionUtils.isEmpty(list)) {
                 logger.error("app端查询散标投资列表原子层List异常");
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
             }
-            result = CommonUtils.convertBeanList(dataResponse.getResultList(), AppProjectListCsVO.class);
+            result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
             appResult.setData(result);
         }
         appResult.setPage(page);

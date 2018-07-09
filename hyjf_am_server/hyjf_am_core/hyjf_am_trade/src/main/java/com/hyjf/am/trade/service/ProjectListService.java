@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
@@ -94,7 +95,7 @@ public interface ProjectListService {
      * @author zhangyk
      * @date 2018/6/20 16:11
      */
-    List<WebProjectListCustomize> searchAppProjectList(@Valid ProjectListRequest request);
+    List<AppProjectListCustomize> searchAppProjectList(@Valid ProjectListRequest request);
 
     /**
      * app端获取散标投资count

@@ -3,6 +3,22 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -13,7 +29,11 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -26,22 +46,20 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
-import com.hyjf.cs.trade.client.*;
-import com.hyjf.cs.trade.mq.AppMessageProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.mq.SmsProducer;
+import com.hyjf.cs.trade.client.AccountClient;
+import com.hyjf.cs.trade.client.AccountListClient;
+import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.BatchHjhBorrowRepayClient;
+import com.hyjf.cs.trade.client.BorrowApicronClient;
+import com.hyjf.cs.trade.client.BorrowClient;
+import com.hyjf.cs.trade.client.HjhDebtCreditClient;
+import com.hyjf.cs.trade.client.HjhDebtDetailClient;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BatchHjhBorrowRepayService;
-import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @author PC-LIUSHOUYI
@@ -801,7 +819,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 }
                 AppMsMessage appMsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
                 try {
-                    appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+                    appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
                             UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
                 } catch (MQException e) {
                     logger.error("计划进入锁定期发送消息通知失败...", e);
@@ -855,7 +873,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 }
                 AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
                 try {
-                    appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,
+                    appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
                             UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("计划进入锁定期发送消息通知失败...", e);
@@ -912,7 +930,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                     JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
             logger.error("计划进入锁定期发送短信通知失败...", e);
@@ -1005,7 +1023,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
                 }
                 AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
                 try {
-                    appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),
+                    appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),
                             JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("计划退出推送消息通知失败...", e);
@@ -1051,7 +1069,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                     JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
             logger.error("计划还款成功发送短信通知失败...", e);

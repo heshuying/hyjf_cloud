@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
-import com.hyjf.am.vo.trade.repay.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BorrowRecoverPlanClient;
 import org.springframework.beans.factory.annotation.Autowired;

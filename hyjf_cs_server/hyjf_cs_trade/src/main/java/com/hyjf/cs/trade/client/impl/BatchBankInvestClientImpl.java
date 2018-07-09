@@ -23,7 +23,7 @@ public class BatchBankInvestClientImpl implements BatchBankInvestClient {
 
 	@Override
 	public List<BatchBorrowTenderCustomizeVO> queryAuthCodeBorrowTenderList() {
-		String url = "http://AM-TRADE/am-trade/bankexception/queryAuthCodeBorrowTenderList";
+		String url = "http://AM-TRADE/am-trade/bankException/queryAuthCodeBorrowTenderList";
 		BatchBorrowTenderCustomizeResponse response =
 				restTemplate.getForEntity(url,BatchBorrowTenderCustomizeResponse.class).getBody();
 		if (response!=null){
@@ -34,7 +34,7 @@ public class BatchBankInvestClientImpl implements BatchBankInvestClient {
 
 	@Override
 	public void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
-		String url = "http://AM-TRADE/am-trade/bankexception/insertAuthCode";
+		String url = "http://AM-TRADE/am-trade/bankException/insertAuthCode";
 		BatchBorrowTenderCustomizeRequest request = new BatchBorrowTenderCustomizeRequest();
 		request.setBatchBorrowTenderCustomizeList(list);
 		restTemplate.postForEntity(url,request,Boolean.class).getBody();

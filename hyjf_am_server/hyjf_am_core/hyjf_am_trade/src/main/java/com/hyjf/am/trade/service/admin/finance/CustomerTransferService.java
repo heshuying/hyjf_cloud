@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
+import com.hyjf.am.resquest.admin.TransferListRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.UserTransfer;
 
@@ -54,4 +55,20 @@ public interface CustomerTransferService {
      * @return
      */
     UserTransfer searchUserTransferById(Integer id);
+
+    /**
+     * 根据筛选条件查询UserTransfer数据总数
+     * @param request
+     * @return
+     */
+    Integer getRecordCount(TransferListRequest request);
+
+    /**
+     * 根据筛选条件查询UserTransfer列表
+     * @param request
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<UserTransfer> selectRecordList(TransferListRequest request, int offset, int limit);
 }
