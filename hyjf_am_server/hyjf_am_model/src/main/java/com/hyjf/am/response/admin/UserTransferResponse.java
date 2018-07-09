@@ -11,4 +11,13 @@ import com.hyjf.am.vo.admin.UserTransferVO;
  * @version: UserTransferResponse, v0.1 2018/7/6 13:51
  */
 public class UserTransferResponse extends Response<UserTransferVO> {
+    private int recordTotal;
+
+    public int getRecordTotal() {
+        return recordTotal;
+    }
+
+    public void setRecordTotal(int recordTotal) {
+        this.recordTotal = recordTotal;
+    }
 }

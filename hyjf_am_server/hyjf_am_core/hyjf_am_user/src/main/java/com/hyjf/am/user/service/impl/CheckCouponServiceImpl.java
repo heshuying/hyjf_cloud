@@ -3,24 +3,24 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BatchCouponsRequest;
-import com.hyjf.am.user.mq.Producer;
-import com.hyjf.am.user.mq.SmsProducer;
-import com.hyjf.am.user.service.CheckCouponService;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.security.util.MD5;
-import com.hyjf.common.util.GetDate;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.BatchCouponsRequest;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.SmsProducer;
+import com.hyjf.am.user.service.CheckCouponService;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.security.util.MD5;
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author yaoyong
@@ -57,7 +57,7 @@ public class CheckCouponServiceImpl implements CheckCouponService {
         String requestUrl = HYJF_API_WEB_URL + COUPON_BATCH_SEND_USER;
         batchCouponsRequest.setRequestUrl(requestUrl);
 
-        smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(batchCouponsRequest)));
+        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(batchCouponsRequest)));
         return jsonObject;
     }
 }

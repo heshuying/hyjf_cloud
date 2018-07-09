@@ -3,7 +3,11 @@
  */
 package com.hyjf.am.trade.service.impl.task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,9 +20,9 @@ import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowApicronMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.mq.BorrowLoanRepayProducer;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.BorrowLoanRepayToMQService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
@@ -60,7 +64,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
     	
         try {
 			borrowLoanRepayProducer.messageSend(
-			        new Producer.MassageContent(key, UUID.randomUUID().toString(),JSON.toJSONBytes(message)));
+			        new MessageContent(key, UUID.randomUUID().toString(),JSON.toJSONBytes(message)));
 			
 		} catch (MQException e) {
 			e.printStackTrace();
@@ -239,7 +243,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 
         try {
             smsProducer.messageSend(
-                    new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                    new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
         	_log.error("短信发送失败...", e);
         }

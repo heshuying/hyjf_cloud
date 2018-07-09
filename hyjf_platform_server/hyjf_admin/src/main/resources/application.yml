@@ -62,3 +62,6 @@ am:
   dataCollect:
     service:
       name: http://AM-STATISTICS/am-statistics
+
+rocketMQ:
+  namesrvAddr: 123.56.216.212:5555

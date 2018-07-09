@@ -3,6 +3,7 @@ package com.hyjf.admin.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class SystemConfig {
     @Value("${hyjf.web.host}")
@@ -23,6 +24,17 @@ public class SystemConfig {
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
 
+    /** 商户客户号 */
+    @Value("${hyjf.chinapnr.mercustid}")
+    private String merCustId;
+
+    public String getMerCustId() {
+        return merCustId;
+    }
+
+    public void setMerCustId(String merCustId) {
+        this.merCustId = merCustId;
+    }
 
     public String getWebHost() {
         return webHost;
