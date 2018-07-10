@@ -75,4 +75,13 @@ public class BorrowCreditTenderController extends BaseTradeController {
         return  borrowTenderService.getFaileResult(userVO,logOrdId);
     }
 
+    @ApiOperation(value = "web端债转投资获取投资结果  成功", notes = "web端债转投资获取投资结果  成功")
+    @PostMapping(value = "/getSuccessResult", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "token", required = true) String token,
+                                                               @RequestParam String logOrdId) {
+        logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
+        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        return  borrowTenderService.getSuccessResult(userVO.getUserId(),logOrdId);
+    }
+
 }

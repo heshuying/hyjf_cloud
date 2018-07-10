@@ -116,4 +116,12 @@ public interface CreditClient {
      * @return
      */
     String getFailResult(String logOrdId, Integer userId);
+
+    /**
+     * 根据logOrdId和userId 查询债转信息
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    CreditTenderVO getCreditTenderByUserIdOrdId(String logOrdId, Integer userId);
 }

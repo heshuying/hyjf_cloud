@@ -272,6 +272,26 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     }
 
     /**
+     * 获取债转成功的信息
+     *
+     * @param userId
+     * @param logOrdId
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
+        CreditTenderVO bean = creditClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
+        Map<String, Object> data = new HashedMap();
+        // 投资金额
+        data.put("assignCapital",bean.getAssignCapital());
+        // 历史回报
+        data.put("assignInterest",bean.getAssignInterest());
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setData(data);
+        return result;
+    }
+
+    /**
      * 债转成功后操作
      * @param logOrderId
      * @param userId

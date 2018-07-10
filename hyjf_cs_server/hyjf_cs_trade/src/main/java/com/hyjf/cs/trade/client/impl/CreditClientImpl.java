@@ -231,4 +231,21 @@ public class CreditClientImpl implements CreditClient {
         return restTemplate.getForEntity(url, String.class).getBody();
     }
 
+    /**
+     * 根据logOrdId和userId 查询债转信息
+     *
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    @Override
+    public CreditTenderVO getCreditTenderByUserIdOrdId(String logOrdId, Integer userId) {
+        String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderByUserIdOrdId/" + logOrdId + "/" + userId;
+        CreditTenderResponse response = restTemplate.getForEntity(url, CreditTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 }

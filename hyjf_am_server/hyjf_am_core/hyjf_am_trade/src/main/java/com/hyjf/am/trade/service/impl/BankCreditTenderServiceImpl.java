@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.vo.trade.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -69,12 +70,6 @@ import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.CreditPageVO;
-import com.hyjf.am.vo.trade.CreditTenderBgVO;
-import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
-import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
@@ -1561,6 +1556,25 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 			return list.get(0).getRetMsg();
 		}
 		return "";
+	}
+
+	/**
+	 * 查询债转信息
+	 *
+	 * @param logOrderId
+	 * @param logUserId
+	 * @return
+	 */
+	@Override
+	public CreditTenderVO getCreditTenderByUserIdOrdId(String logOrderId, String logUserId) {
+		CreditTenderExample example = new CreditTenderExample();
+		CreditTenderExample.Criteria cra = example.createCriteria();
+		cra.andCreditTenderNidEqualTo(logOrderId).andUserIdEqualTo(Integer.parseInt(logUserId));
+		List<CreditTender> list = this.creditTenderMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(list)) {
+			return CommonUtils.convertBean(list.get(0), CreditTenderVO.class);
+		}
+		return null;
 	}
 
 

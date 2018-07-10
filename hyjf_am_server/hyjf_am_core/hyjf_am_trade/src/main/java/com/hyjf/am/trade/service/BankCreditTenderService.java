@@ -148,4 +148,12 @@ public interface BankCreditTenderService {
      * @return
      */
     String getFailResult(String logOrderId, String logUserId);
+
+    /**
+     * 查询债转信息
+     * @param logOrderId
+     * @param logUserId
+     * @return
+     */
+    CreditTenderVO getCreditTenderByUserIdOrdId(String logOrderId, String logUserId);
 }
