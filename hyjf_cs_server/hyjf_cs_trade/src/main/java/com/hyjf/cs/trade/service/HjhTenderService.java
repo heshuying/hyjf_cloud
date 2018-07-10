@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.TenderInfoResult;
 
 import java.util.Map;
 
@@ -20,4 +21,11 @@ public interface HjhTenderService extends BaseTradeService{
      * @Date 2018/6/19 9:47
      */
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request);
+
+    /**
+     * 根据投资项目id历史回报
+     * @param tender
+     * @return
+     */
+    WebResult<TenderInfoResult> getInvestInfo(TenderRequest tender);
 }

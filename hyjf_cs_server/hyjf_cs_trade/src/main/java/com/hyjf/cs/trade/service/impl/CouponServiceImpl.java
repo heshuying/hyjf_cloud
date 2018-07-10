@@ -504,7 +504,8 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param borrowApr
      * @return
      */
-    private BigDecimal getInterestDj(BigDecimal couponQuota, Integer couponProfitTime, BigDecimal borrowApr) {
+    @Override
+    public BigDecimal getInterestDj(BigDecimal couponQuota, Integer couponProfitTime, BigDecimal borrowApr) {
         BigDecimal earnings = new BigDecimal("0");
 
         earnings = couponQuota.multiply(borrowApr.divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP))
@@ -523,7 +524,8 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param borrowPeriod
      * @return
      */
-    private BigDecimal calculateCouponInterest(String borrowStyle,BigDecimal couponAccount,BigDecimal couponRate,Integer borrowPeriod){
+    @Override
+    public BigDecimal calculateCouponInterest(String borrowStyle,BigDecimal couponAccount,BigDecimal couponRate,Integer borrowPeriod){
         BigDecimal earnings = BigDecimal.ZERO;
         switch (borrowStyle) {
             case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：预期收益=投资金额*年化收益÷12*月数；
@@ -555,6 +557,63 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
                 break;
             default:
                 break;
+        }
+        return earnings;
+    }
+
+    /**
+     * 获取预期收益
+     *
+     * @param borrowStyle
+     * @param couponType
+     * @param borrowApr
+     * @param couponQuota
+     * @param money
+     * @param borrowPeriod
+     * @return
+     */
+    @Override
+    public BigDecimal getInterest(String borrowStyle, Integer couponType, BigDecimal borrowApr, BigDecimal couponQuota, String money, Integer borrowPeriod) {
+        BigDecimal earnings = new BigDecimal("0");
+        // 投资金额
+        BigDecimal accountDecimal = null;
+        if (couponType == 1) {
+            // 体验金 投资资金=体验金面值
+            accountDecimal = couponQuota;
+        } else if (couponType == 2) {
+            // 加息券 投资资金=真实投资资金
+            accountDecimal = new BigDecimal(money);
+            borrowApr = couponQuota;
+        } else if (couponType == 3) {
+            // 代金券 投资资金=体验金面值
+            accountDecimal = couponQuota;
+        }
+        switch (borrowStyle) {
+            // 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_END:
+                // 计算历史回报
+                earnings = DuePrincipalAndInterestUtils.getMonthInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+            case CalculatesUtil.STYLE_ENDDAY:
+                // 计算历史回报
+                earnings = DuePrincipalAndInterestUtils.getDayInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            // 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_ENDMONTH:
+                // 计算历史回报
+                earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            // 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_MONTH:
+                // 计算历史回报
+                earnings = AverageCapitalPlusInterestUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            default:
+                break;
+        }
+        if (couponType == 3) {
+            earnings = earnings.add(couponQuota);
         }
         return earnings;
     }

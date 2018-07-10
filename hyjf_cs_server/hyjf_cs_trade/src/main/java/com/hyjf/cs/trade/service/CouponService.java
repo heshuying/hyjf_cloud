@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -47,4 +48,35 @@ public interface CouponService {
      * @param bean
      */
     void borrowTenderCouponUse(String couponGrantId, BorrowVO borrow, BankCallBean bean);
+
+    /**
+     * 计算预期收益
+     * @param couponQuota
+     * @param couponProfitTime
+     * @param borrowApr
+     * @return
+     */
+    BigDecimal getInterestDj(BigDecimal couponQuota, Integer couponProfitTime, BigDecimal borrowApr);
+
+    /**
+     * 计算得到优惠券预期收益
+     * @param borrowStyle
+     * @param couponAccount
+     * @param couponRate
+     * @param borrowPeriod
+     * @return
+     */
+    BigDecimal calculateCouponInterest(String borrowStyle, BigDecimal couponAccount, BigDecimal couponRate, Integer borrowPeriod);
+
+    /**
+     * 获取预期收益
+     * @param borrowStyle
+     * @param couponType
+     * @param borrowApr
+     * @param couponQuota
+     * @param money
+     * @param borrowPeriod
+     * @return
+     */
+    BigDecimal getInterest(String borrowStyle, Integer couponType, BigDecimal borrowApr, BigDecimal couponQuota, String money, Integer borrowPeriod);
 }
