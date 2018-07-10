@@ -122,7 +122,9 @@ public class BanksConfigController extends BaseConfigController{
         ParamNameResponse response = new ParamNameResponse();
         List<ParamName> paramNameList =bankConfigService.getParamNameList(nameClass);
         if (CollectionUtils.isNotEmpty(paramNameList)){
-            response.setResultList(CommonUtils.convertBeanList(paramNameList,ParamNameVO.class));
+            List<ParamNameVO> paramNameVOList = CommonUtils.convertBeanList(paramNameList,ParamNameVO.class);
+            response.setResultList(paramNameVOList);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }

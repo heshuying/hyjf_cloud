@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.subcommission;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.SubCommissionService;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.vo.admin.SubCommissionVO;
@@ -33,7 +34,7 @@ import java.util.List;
 @Api(value = "资金中心-平台账户分佣")
 @RestController
 @RequestMapping(value = "/hyjf-admin/subcommission")
-public class SubCommissionController {
+public class SubCommissionController extends BaseController {
 
     @Autowired
     private SubCommissionService subCommissionService;
@@ -44,7 +45,7 @@ public class SubCommissionController {
      * @param request 筛选参数
      * @return
      */
-    @ApiOperation(value = "平台账户分佣",notes = "平台账户分佣列表查询")
+    @ApiOperation(value = "平台账户分佣列表查询",notes = "平台账户分佣列表查询")
     @PostMapping(value = "/subcommissionlist")
     public JSONObject subCommissionList(@RequestBody SubCommissionRequest request){
         JSONObject result = new JSONObject();
@@ -111,6 +112,9 @@ public class SubCommissionController {
                     } else if (celLength == 7) {
                         // 转账状态
                         List<ParamNameVO> transferStatus = this.subCommissionService.searchParamNameList("FS_TRANSFER_STATUS");
+                        for(ParamNameVO paramNameVO:transferStatus){
+                            logger.info(paramNameVO.getNameCd());
+                        }
                         for (int j = 0; j < transferStatus.size(); j++) {
                             if (transferStatus.get(j).getNameCd().equals(String.valueOf(record.getTradeStatus()))) {
                                 cell.setCellValue(transferStatus.get(j).getName());
@@ -148,7 +152,7 @@ public class SubCommissionController {
      * @param userId
      * @return
      */
-    @ApiOperation(value = "发起账户分佣",notes = "发起账户分佣所需的detail信息")
+    @ApiOperation(value = "发起账户分佣所需的detail信息",notes = "发起账户分佣所需的detail信息")
     @PostMapping(value = "/searchdetails")
     public JSONObject searchDetails(@RequestHeader(value = "userId")Integer userId){
         return subCommissionService.searchDetails(userId);

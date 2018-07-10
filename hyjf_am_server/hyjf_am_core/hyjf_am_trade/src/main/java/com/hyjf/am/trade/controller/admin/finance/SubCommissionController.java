@@ -42,7 +42,7 @@ public class SubCommissionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "发起账户分佣",notes = "发起账户分佣所需的detail信息")
-    @PostMapping(value = "/searchsubcommissionlistconfig")
+    @GetMapping(value = "/searchsubcommissionlistconfig")
     public SubCommissionListConfigResponse searchSubCommissionListConfig(){
         SubCommissionListConfigResponse response = new SubCommissionListConfigResponse();
         List<SubCommissionListConfig> subCommissionListConfigList = subCommissionService.searchSubCommissionListConfig();
@@ -104,7 +104,7 @@ public class SubCommissionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据订单号查询是否存在重复的AccountWebList数据",notes = "根据订单号查询是否存在重复的AccountWebList数据")
-    @PostMapping(value = "/accountweblistbyorderid/{orderId}")
+    @GetMapping(value = "/accountweblistbyorderid/{orderId}")
     public Integer accountWebListByOrderId(@PathVariable String orderId){
         return subCommissionService.accountWebListByOrderId(orderId);
     }
@@ -128,8 +128,8 @@ public class SubCommissionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
-    @PostMapping(value = "/searchplatformtransferlist")
-    public SubCommissionResponse searchPlatformTransferList(@RequestBody SubCommissionRequest request){
+    @PostMapping(value = "/searchsubcommissionlist")
+    public SubCommissionResponse searchSubCommissionList(@RequestBody SubCommissionRequest request){
         SubCommissionResponse response = new SubCommissionResponse();
         Integer count = subCommissionService.getSubCommissionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
