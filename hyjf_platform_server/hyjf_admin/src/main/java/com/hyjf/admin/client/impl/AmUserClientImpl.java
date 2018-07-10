@@ -188,4 +188,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 根据用户id查询推荐人表信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public SpreadsUserVO searchSpreadsUserByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/querySpreadsUsersByUserId/" + userId;
+		SpreadsUserResponse response = restTemplate.getForEntity(url,SpreadsUserResponse.class).getBody();
+		if(response != null){
+			return response.getResult();
+		}
+		return null;
+	}
 }
