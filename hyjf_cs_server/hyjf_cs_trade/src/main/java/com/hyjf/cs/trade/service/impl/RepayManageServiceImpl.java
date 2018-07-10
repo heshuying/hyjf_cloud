@@ -156,6 +156,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         return null;
     }
 
+    /**
+     * 还款详情数据获取
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
     @Override
     public ProjectBean searchRepayProjectDetail(ProjectBean form) throws NumberFormatException, ParseException {
 

@@ -45,6 +45,14 @@ public interface UserInfoService {
      */
 	UserInfoCustomize queryUserInfoCustomizeByUserId(Integer userId);
 
+	/**
+	 * 根据用户名查询用户详情
+	 * @auth sunpeikai
+	 * @param userName 用户名
+	 * @return
+	 */
+	UserInfoCustomize queryUserInfoCustomizeByUserName(String userName);
+
     /**
      *
      * @param userId

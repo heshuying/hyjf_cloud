@@ -3,14 +3,15 @@
  */
 package com.hyjf.admin.client;
 
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
-import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.response.admin.UserTransferResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -124,6 +125,10 @@ public interface AmTradeClient {
      */
     List<AccountTradeVO> selectTradeTypes();
 
+    AdminCouponRepayMonitorCustomizeResponse couponRepayMonitorCreatePage(CouponRepayRequest form);
+
+    List<AdminCouponRepayMonitorCustomizeVO> selectInterestSum(CouponRepayRequest form);
+
     /**
      * 根据筛选条件查询userTransfer列表
      * @param form
@@ -150,7 +155,7 @@ public interface AmTradeClient {
      * @param form
      * @return
      */
-    List<CouponRepayMonitorVO> selectRecordList(CouponRepayRequest form);
+    List<AdminCouponRepayMonitorCustomizeVO> selectRecordList(CouponRepayRequest form);
 
     /**
      * 根据筛选条件查询平台转账count
@@ -232,4 +237,61 @@ public interface AmTradeClient {
      * @return
      */
     boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
+
+    /**
+     * 更新账户信息
+     * @auth sunpeikai
+     * @param accountVO 账户信息
+     * @return
+     */
+    Integer updateAccount(AccountVO accountVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountRechargeVO 充值表
+     * @return
+     */
+    Integer insertAccountRecharge(AccountRechargeVO accountRechargeVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountListVO 收支明细
+     * @return
+     */
+    Integer insertAccountList(AccountListVO accountListVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountWebListVO 网站收支表
+     * @return
+     */
+    Integer insertAccountWebList(AccountWebListVO accountWebListVO);
+
+    /**
+     * 根据账户id查询BankMerchantAccount
+     * @auth sunpeikai
+     * @param accountId 账户id
+     * @return
+     */
+    BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
+
+    /**
+     * 更新红包账户信息
+     * @auth sunpeikai
+     * @param bankMerchantAccountVO 红包账户信息
+     * @return
+     */
+    Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param bankMerchantAccountListVO 红包明细表
+     * @return
+     */
+    Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO);
+
 }

@@ -6,6 +6,7 @@ import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper
 import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.*;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.batch.TzjCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.BorrowAuthCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
@@ -60,6 +61,10 @@ public class CustomizeMapper extends AutoMapper {
     @Autowired
     protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
 
+    @Autowired
+    protected AdminBorrowRepaymentInfoCustomizeMapper borrowRepaymentInfoCustomizeMapper;
+
+
     @Resource
     protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
 
@@ -68,6 +73,9 @@ public class CustomizeMapper extends AutoMapper {
 
     @Resource
     protected BatchCenterCustomizeMapper batchCenterCustomizeMapper;
+
+    @Resource
+    protected TzjCustomizeMapper tzjCustomizeMapper;
 }
 
 

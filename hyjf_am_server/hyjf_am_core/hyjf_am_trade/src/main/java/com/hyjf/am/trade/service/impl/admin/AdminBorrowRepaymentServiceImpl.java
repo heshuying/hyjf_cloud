@@ -10,7 +10,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -141,17 +140,6 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             borrowRepay.setDelayDays(Integer.parseInt(delayDays));
             return this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepay);
         }
-    }
-
-    private BorrowRepay getBorrowRepay(String borrowNid){
-        BorrowRepayExample example = new BorrowRepayExample();
-        BorrowRepayExample.Criteria cra = example.createCriteria();
-        cra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-        return new BorrowRepay();
     }
 
     private BorrowRepayPlan getBorrowRepayPlan(String borrowNid){

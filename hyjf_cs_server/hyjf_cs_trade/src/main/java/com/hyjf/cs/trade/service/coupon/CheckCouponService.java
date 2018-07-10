@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service;
+package com.hyjf.cs.trade.service.coupon;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;

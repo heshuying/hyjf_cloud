@@ -3,12 +3,8 @@
  */
 package com.hyjf.am.trade.service;
 
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.RUser;
-
 import java.math.BigDecimal;
+import com.hyjf.am.trade.dao.model.auto.*;
 
 /**
  * 资金服务: BaseService
@@ -77,4 +73,9 @@ public interface BaseService {
      * @return
      */
     public Boolean updateHjhAccedeForHjh(String hjhProcessFlg, Integer id, BigDecimal amount, BigDecimal interest, BigDecimal serviceFee) ;
+
+    BorrowRepay getBorrowRepay(String borrowNid);
+
+    BorrowRepayPlan getRepayPlan(String borrowNid, int period);
+
 }

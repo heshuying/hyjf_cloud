@@ -1,11 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.controller;
+package com.hyjf.cs.trade.controller.web.coupon;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.service.CheckCouponService;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.coupon.CheckCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,8 @@ import java.util.Map;
  * @version CheckCouponController, v0.1 2018/7/6 16:15
  */
 @RestController
-@RequestMapping("/am-user/checkCoupon")
-public class CheckCouponController extends BaseController {
+@RequestMapping("/cs-trade/checkCoupon")
+public class CheckCouponController extends BaseTradeController {
 
     @Autowired
     CheckCouponService checkCouponService;

@@ -40,6 +40,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 
 /**
+ * 直投类标的还款消息处理
  * @author dxj
  * @version BorrowRepayZTConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */

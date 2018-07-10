@@ -244,4 +244,43 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 
         return accountFlag;
     }
+
+    /**
+     * 获取借款人总的还款表数据
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
+    @Override
+    public BorrowRepay getBorrowRepay(String borrowNid) {
+        BorrowRepayExample borrowRepayExample = new BorrowRepayExample();
+        BorrowRepayExample.Criteria borrowRepayCrt = borrowRepayExample.createCriteria();
+        borrowRepayCrt.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRepay> borrowRepays = borrowRepayMapper.selectByExample(borrowRepayExample);
+        if (borrowRepays != null && borrowRepays.size() == 1) {
+            return borrowRepays.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 获取某一期的还款计划
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
+    @Override
+    public BorrowRepayPlan getRepayPlan(String borrowNid, int period) {
+        BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
+        BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
+        borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
+        borrowRepayPlanCrt.andRepayPeriodEqualTo(period);
+        List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
+        if (borrowRepayPlans != null && borrowRepayPlans.size() == 1) {
+            return borrowRepayPlans.get(0);
+        } else {
+            return null;
+        }
+    }
+
+
 }
