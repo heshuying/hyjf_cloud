@@ -11,7 +11,6 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -289,7 +288,7 @@ public interface AmTradeClient {
      * @param accountId 账户id
      * @return
      */
-    BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
+    com.hyjf.am.vo.admin.BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
 
     /**
      * 更新红包账户信息
