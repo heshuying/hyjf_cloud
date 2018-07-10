@@ -469,8 +469,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateHjhAccedeByPrimaryKey(HjhAccedeVO hjhAccedeVO) {
         String url = urlBase + "hjhAccede/updateHjhAccedeByPrimaryKey";
-        Integer result = restTemplate.postForEntity(url, hjhAccedeVO, Integer.class).getBody();
-        return result.intValue();
+        Response<Integer> response = restTemplate.postForEntity(url, hjhAccedeVO, Response.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResult().intValue();
     }
 
     /**
@@ -480,8 +483,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int insertHjhPlanBorrowTmp(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
         String url = urlBase + "hjhPlanBorrowTmpController/insertHjhPlanBorrowTmp";
-        Integer result = restTemplate.postForEntity(url, hjhPlanBorrowTmpVO, Integer.class).getBody();
-        return result.intValue();
+        Response<Integer> response = restTemplate.postForEntity(url, hjhPlanBorrowTmpVO, Response.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResult().intValue();
     }
 
     /**
@@ -491,8 +497,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int deleteHjhPlanBorrowTmp(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
         String url = urlBase + "hjhPlanBorrowTmpController/deleteHjhPlanBorrowTmp";
-        Integer result = restTemplate.postForEntity(url, hjhPlanBorrowTmpVO, Integer.class).getBody();
-        return result.intValue();
+        Response<Integer> response = restTemplate.postForEntity(url, hjhPlanBorrowTmpVO, Response.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResult().intValue();
     }
 
     /**
@@ -502,7 +511,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
         String url = urlBase + "hjhPlanBorrowTmpController/updateHjhPlanBorrowTmpByPK";
-        Integer result = restTemplate.postForEntity(url, hjhPlanBorrowTmpVO, Integer.class).getBody();
-        return result.intValue();
+        Response<Integer> response = restTemplate.postForEntity(url, hjhPlanBorrowTmpVO, Response.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResult().intValue();
     }
 }
