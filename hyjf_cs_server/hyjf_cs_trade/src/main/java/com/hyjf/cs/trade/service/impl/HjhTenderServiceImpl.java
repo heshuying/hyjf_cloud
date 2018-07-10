@@ -422,7 +422,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         planAccede.setAlreadyInvest(BigDecimal.ZERO);//已投资金额(投资时维护)
         planAccede.setClient(Integer.parseInt(request.getPlatform()));
         planAccede.setOrderStatus(0);//0自动投标中 2自动投标成功 3锁定中 5退出中 7已退出 99 自动投资异常(投资时维护)
-        planAccede.setAddTime(nowTime);
         planAccede.setCountInterestTime(0);//计息时间(最后放款时维护)
         planAccede.setSendStatus(0);//协议发送状态0未发送 1已发送
         planAccede.setLockPeriod(planPeriod);
