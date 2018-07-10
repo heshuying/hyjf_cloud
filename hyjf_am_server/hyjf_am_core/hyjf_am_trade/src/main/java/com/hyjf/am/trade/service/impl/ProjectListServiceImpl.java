@@ -168,7 +168,10 @@ public class ProjectListServiceImpl implements ProjectListService {
      */
     @Override
     public int countWebPlanList(ProjectListRequest request) {
-        return 0;
+        Map<String,Object> params = new HashMap<>();
+        params.put("limitStart",request.getLimitStart());
+        params.put("limitEnd",request.getLimitEnd());
+        return webProjectListCustomizeMapper.countWebPlanList(params);
     }
 
 
@@ -179,7 +182,10 @@ public class ProjectListServiceImpl implements ProjectListService {
      */
     @Override
     public List<WebProjectListCustomizeVO> searchWebPlanList(ProjectListRequest request) {
-        return null;
+        Map<String,Object> params = new HashMap<>();
+        params.put("limitStart",request.getLimitStart());
+        params.put("limitEnd",request.getLimitEnd());
+        return webProjectListCustomizeMapper.searchWebPlanList(params);
     }
 
 

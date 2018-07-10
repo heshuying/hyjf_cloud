@@ -827,18 +827,27 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Integer count = webProjectListClient.countPlanList(request);
         WebResult webResult = new WebResult();
         webResult.setData(new ArrayList<>());
+        Map<String,Object> result = new HashMap<>();
         if (count == null) {
             logger.error("web查询原子层计划专区计划列表数据count异常");
             throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
         }
+        // 上部统计数据
+        Map<String, Object> map = webProjectListClient.searchPlanData(request);
+        if (map == null) {
+            logger.error("web查询原子层计划专区统计数据异常");
+            throw new RuntimeException("web查询原子层计划专区统计数据异常");
+        }
         if (count > 0) {
-            Map<String, Object> map = webProjectListClient.searchPlanData(request);
-            if (map == null) {
+            List<WebProjectListCustomizeVO> list = webProjectListClient.searchPlanList(request);
+            if (CollectionUtils.isEmpty(list)){
                 logger.error("web查询原子层计划专区计划列表数据异常");
                 throw new RuntimeException("web查询原子层计划专区计划列表数据异常");
             }
-            webResult.setData(map);
+            result.put(ProjectConstant.WEB_PLAN_LIST,list);
         }
+        result.put(ProjectConstant.WEB_PLAN_TOTAL_DATA,map);
+        webResult.setData(result);
         page.setTotal(count);
         webResult.setPage(page);
         return webResult;
