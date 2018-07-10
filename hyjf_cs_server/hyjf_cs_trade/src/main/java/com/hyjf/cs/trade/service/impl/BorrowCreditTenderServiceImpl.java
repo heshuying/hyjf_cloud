@@ -223,6 +223,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 retMsg = retMsgVo.getErrorMsg();
             }
             creditClient.updateCreditTenderResult(bean.getLogOrderId(),bean.getLogUserId(),retCode,retMsg);
+            resultBean.setStatus(true);
+            return resultBean;
         }
 
         // 调用相应的查询接口查询此笔承接的相应的承接状态
