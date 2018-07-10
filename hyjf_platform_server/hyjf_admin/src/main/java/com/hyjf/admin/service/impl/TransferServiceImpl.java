@@ -5,7 +5,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.controller.finance.transfer.TransferCustomizeBean;
-import com.hyjf.admin.service.BaseAdminServiceImpl;
 import com.hyjf.admin.service.TransferService;
 import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
