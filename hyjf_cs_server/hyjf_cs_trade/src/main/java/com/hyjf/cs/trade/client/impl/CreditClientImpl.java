@@ -204,4 +204,18 @@ public class CreditClientImpl implements CreditClient {
         return null;
     }
 
+    /**
+     * 债转修改日志表状态
+     *
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     */
+    @Override
+    public Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg) {
+        String url = "http://AM-TRADE/am-trade/creditTender/updateCreditTenderResult/" + logOrderId+"/"+logUserId+"/"+retCode+"/"+retMsg ;
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
+
 }

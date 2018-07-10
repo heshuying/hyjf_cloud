@@ -130,4 +130,14 @@ public interface BankCreditTenderService {
      * @param request
      */
     void saveCreditBgData(CreditTenderBgVO request);
+
+    /**
+     * 修改债转结果
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     * @return
+     */
+    Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg);
 }

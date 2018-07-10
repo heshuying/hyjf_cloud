@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.vo.trade.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +25,6 @@ import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.CreditRepayVO;
-import com.hyjf.am.vo.trade.CreditTenderBgVO;
-import com.hyjf.am.vo.trade.CreditTenderLogVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
@@ -221,10 +215,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String logOrderId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId();
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
         // 更新相应的债转承接log表 修改错误信息  等
-        // TODO: 2018/7/4 上面的
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 债转失败了  更新错误信息
-
+            String retMsg = bean.getRetMsg();
+            BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
+            if (retMsgVo != null) {
+                retMsg = retMsgVo.getErrorMsg();
+            }
+            creditClient.updateCreditTenderResult(bean.getLogOrderId(),bean.getLogUserId(),retCode,retMsg);
         }
 
         // 调用相应的查询接口查询此笔承接的相应的承接状态

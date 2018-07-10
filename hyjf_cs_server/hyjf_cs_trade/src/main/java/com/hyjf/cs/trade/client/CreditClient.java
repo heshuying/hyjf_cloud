@@ -99,4 +99,13 @@ public interface CreditClient {
      * @return
      */
     BorrowCreditVO getBorrowCreditByCreditNid(String creditNid);
+
+    /**
+     * 债转修改日志表状态
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     */
+    Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg);
 }
