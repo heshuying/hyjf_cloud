@@ -15,6 +15,11 @@ import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author liubin
@@ -22,6 +27,9 @@ import com.hyjf.common.util.StringUtil;
 
 public class CheckUtil {
 	private static Object data = null;
+
+
+	public static final Logger logger = LoggerFactory.getLogger(CheckUtil.class);
 
 	/**
 	 * data
@@ -86,6 +94,25 @@ public class CheckUtil {
 //    		throw new CheckException(errKey, getErrorMessage(errKey, params));
 //    	}
 //    }
+
+
+	public static void checkNull(Object o , String errMsg){
+		if (isEmpty(o)){
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+	}
+
+	public static boolean isEmpty(Object obj) {
+		if (obj == null) {
+			return true;
+		}else if (obj instanceof Collection) {
+			return ((Collection) obj).isEmpty();
+		}else if (obj instanceof Map){
+			return ((Map) obj).isEmpty();
+		}
+		return false;
+	}
 }
 
 	

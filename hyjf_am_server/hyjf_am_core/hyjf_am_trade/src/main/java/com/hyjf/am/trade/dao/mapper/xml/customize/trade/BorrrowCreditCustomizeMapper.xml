@@ -160,7 +160,7 @@
         '0'
         END
         END AS credit_status,
-        CASE WHEN bc.create_time != 0 AND bc.create_time IS NOT NULL THEN FROM_UNIXTIME( bc.create_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time,
+         bc.create_time  AS add_time,
         CASE WHEN b.repay_last_time != 0 AND b.repay_last_time IS NOT NULL THEN FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS repay_last_time
         FROM
           ht_borrow_credit bc
@@ -169,7 +169,7 @@
         <include refid="Where_Clause" />
         ORDER BY
         bc.create_time DESC
-        <if test="limitStart >= 0" >
+        <if test="limitStart != null and limitEnd != null" >
             LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>
@@ -272,6 +272,161 @@
             </if>
         </where>
     </sql>
+
+     <!--admin:债转详情count-->
+    <select id="countBorrowCreditInfo4Admin" resultType="java.lang.Integer" >
+        SELECT
+        COUNT(1)
+        FROM
+        ht_credit_tender ct
+        INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+        WHERE  ct.credit_nid = #{creditNid}
+    </select>
+
+
+
+    <resultMap id="selectBorrowCreditInfoListMap" type="com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize">
+        <!-- 订单号 -->
+        <result column="assign_nid" property="assignNid" jdbcType="VARCHAR" />
+        <!-- 债转编号 -->
+        <result column="credit_nid" property="creditNid" jdbcType="VARCHAR" />
+        <!-- 项目编号 -->
+        <result column="bid_nid" property="bidNid" jdbcType="VARCHAR" />
+        <!-- 出让人 -->
+        <result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
+        <!-- 认购人 -->
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <!-- 转让本金 -->
+        <result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
+        <!-- 折让率 -->
+        <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
+
+        <!-- 转让价格(assign_price) -->
+        <result column="assign_capital_price" property="assignCapitalPrice" jdbcType="VARCHAR" />
+        <!-- 认购金额 -->
+        <result column="assign_price" property="assignPrice" jdbcType="VARCHAR" />
+
+        <!-- 垫付利息 -->
+        <result column="assign_interest_advance" property="assignInterestAdvance" jdbcType="VARCHAR" />
+        <!-- 服务费 -->
+        <result column="credit_fee" property="creditFee" jdbcType="VARCHAR" />
+        <!-- 支付金额 -->
+        <result column="assign_pay" property="assignPay" jdbcType="VARCHAR" />
+        <!-- 认购时间 -->
+        <result column="add_time" property="addTime" jdbcType="VARCHAR" />
+        <!-- 客户端 -->
+        <result column="client" property="client" jdbcType="INTEGER" />
+        <!-- 承接用户推荐人用户名-->
+        <result column="recommend_name" property="recommendName"/>
+        <!-- 承接用户推荐人属性 -->
+        <result column="recommend_attr" property="recommendAttr"/>
+        <!-- 承接人部门信息-->
+        <result column="regionName" property="regionName"/>
+        <!-- 承接人部门信息-->
+        <result column="branchName" property="branchName"/>
+        <!-- 承接人部门信息 -->
+        <result column="departmentName" property="departmentName"/>
+        <!-- 出让用户推荐人用户名 -->
+        <result column="recommend_name_credit" property="recommendNameCredit"/>
+        <!-- 出让用户推荐人属性-->
+        <result column="recommend_attr_credit" property="recommendAttrCredit"/>
+        <!-- 出让人部门信息-->
+        <result column="regionNameCredit" property="regionNameCredit"/>
+        <!-- 出让人部门信息 -->
+        <result column="branchNameCredit" property="branchNameCredit"/>
+        <!-- 出让人部门信息-->
+        <result column="departmentNameCredit" property="departmentNameCredit"/>
+        <result column="invite_user_name" property="inviteUserName"/>
+        <result column="invite_user_attribute" property="inviteUserAttribute"/>
+        <result column="invite_user_regionname" property="inviteUseRegionname"/>
+        <result column="invite_user_branchname" property="inviteUserBranchname"/>
+        <result column="invite_user_departmentname" property="inviteUserDepartmentName"/>
+        <result column="invite_user_credit_name" property="inviteUserCreditName"/>
+        <result column="invite_user_credit_attribute" property="inviteUserCreditAttribute"/>
+        <result column="invite_user_credit_regionname" property="inviteUserCreditRegionName"/>
+        <result column="invite_user_credit_branchname" property="inviteUserCreditBranchName"/>
+        <result column="invite_user_credit_departmentname" property="inviteUserCreditDepartmentName"/>
+
+        <result column="recommend_attr_self" property="recommendAttrSelf"/>
+        <result column="regionNameSelf" property="regionNameSelf"/>
+        <result column="branchNameSelf" property="branchNameSelf"/>
+        <result column="departmentNameSelf" property="departmentNameSelf"/>
+
+        <result column="recommend_attr_credit_self" property="recommendAttrCreditSelf"/>
+        <result column="regionNameCreditSelf" property="regionNameCreditSelf"/>
+        <result column="branchNameCreditSelf" property="branchNameCreditSelf"/>
+        <result column="departmentNameCreditSelf" property="departmentNameCreditSelf"/>
+        <!--合同状态-->
+        <result column="contractStatus" property="contractStatus"/>
+        <!--合同编号-->
+        <result column="contract_number" property="contract_number"/>
+        <!-- 承接人用户ID -->
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <!-- 原始投资订单号 -->
+        <result column="credit_tender_nid" property="creditTenderNid" jdbcType="VARCHAR" />
+        <!--合同下载地址-->
+        <result column="download_url" property="downloadUrl"  />
+        <!--合同查看地址-->
+        <result column="viewpdf_url" property="viewpdfUrl"  />
+        <!--脱敏后合同查看地址-->
+        <result column="img_url" property="imgUrl"  />
+    </resultMap>
+
+
+
+    <!--admin:债转详情list-->
+    <select id="searchBorrowCreditInfo4Admin" resultMap="selectBorrowCreditInfoListMap" >
+        SELECT
+            ct.assign_nid ,
+            ct.client ,
+            ct.credit_nid  ,
+            ct.bid_nid  ,
+            ct.user_name ,
+            ct.credit_user_name,
+            FORMAT(ct.assign_capital, 2)          AS assign_capital,
+            FORMAT(bc.credit_discount, 2)         AS credit_discount,
+            FORMAT(ct.assign_capital, 2)          AS assign_capital_price,
+            FORMAT(ct.assign_price, 2)            AS assign_price,
+            FORMAT(ct.assign_interest_advance, 2) AS assign_interest_advance,
+            FORMAT(ct.credit_fee, 2)              AS credit_fee,
+            FORMAT(ct.assign_pay, 2)              AS assign_pay,
+            ct.create_time  AS add_time
+        FROM
+        ht_credit_tender ct
+        INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+        WHERE  ct.credit_nid = #{creditNid}
+        ORDER BY
+        bc.create_time DESC
+        <if test="limitStart > 0 and limitEnd > 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+
+    <resultMap id="sumBorrowCreditInfoMap" type="com.hyjf.am.vo.admin.BorrowCreditInfoSumVO">
+        <result column="assign_capital" property="sumAssignCapital" jdbcType="VARCHAR" />
+        <result column="assign_capital_price" property="sumAssignCapitalPrice" jdbcType="VARCHAR" />
+        <result column="assign_price" property="sumAssignPrice" jdbcType="VARCHAR" />
+        <result column="assign_interest_advance" property="sumAssignInterestAdvance" jdbcType="VARCHAR" />
+        <result column="credit_fee" property="sumCreditFee" jdbcType="VARCHAR" />
+        <result column="assign_pay" property="sumAssignPay" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--债转详情合计-->
+    <select id="sumBorrowCreditInfoData" resultMap="sumBorrowCreditInfoMap" >
+        SELECT
+        SUM(ct.assign_capital)          AS assign_capital,
+        SUM(ct.assign_capital)          AS assign_capital_price,
+        SUM(ct.assign_price)            AS assign_price,
+        SUM(ct.assign_interest_advance) AS assign_interest_advance,
+        SUM(ct.credit_fee)              AS credit_fee,
+        SUM(ct.assign_pay)              AS assign_pay
+        FROM
+        ht_credit_tender ct
+        INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+        WHERE  ct.credit_nid = #{creditNid}
+    </select>
+
 
 
 </mapper>
