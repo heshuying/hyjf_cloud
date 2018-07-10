@@ -380,4 +380,20 @@ public interface AmTradeClient {
      * @return
      */
     TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid);
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getSubCommissionCount(SubCommissionRequest request);
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request);
 }

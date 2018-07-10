@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: SubCommissionRequest, v0.1 2018/7/10 10:43
  */
-public class SubCommissionRequest extends BaseVO implements Serializable {
+public class SubCommissionRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID
      */
@@ -84,6 +85,12 @@ public class SubCommissionRequest extends BaseVO implements Serializable {
      * 备注说明
      */
     private String remark;
+
+    /**
+     * 分页变量
+     */
+    private int limitStart = -1;
+    private int limitEnd = -1;
 
     public String getReceiveUserNameSrch() {
         return receiveUserNameSrch;
@@ -195,5 +202,21 @@ public class SubCommissionRequest extends BaseVO implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

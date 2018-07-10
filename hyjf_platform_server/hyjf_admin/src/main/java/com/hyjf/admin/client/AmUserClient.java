@@ -98,4 +98,13 @@ public interface AmUserClient {
      */
     SpreadsUserVO searchSpreadsUserByUserId(Integer userId);
 
+
+    /**
+     * 根据用户id查询employee
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId);
+
 }

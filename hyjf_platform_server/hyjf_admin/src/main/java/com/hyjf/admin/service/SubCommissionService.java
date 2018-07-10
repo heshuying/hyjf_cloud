@@ -5,6 +5,10 @@ package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
+import com.hyjf.am.vo.admin.SubCommissionVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
@@ -27,4 +31,29 @@ public interface SubCommissionService {
      * @return
      */
     JSONObject subCommission(Integer loginUserId, SubCommissionRequest request);
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getSubCommissionCount(SubCommissionRequest request);
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request);
+
+    /**
+     * 根据nameClass获取数据字典表的下拉列表
+     *
+     * @param
+     * @return
+     * @auth sunpeikai
+     */
+    List<ParamNameVO> searchParamNameList(String nameClass);
 }

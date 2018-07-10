@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.finance;
 
+import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.trade.dao.model.auto.SubCommission;
 import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
 import com.hyjf.am.vo.admin.SubCommissionVO;
@@ -55,4 +56,20 @@ public interface SubCommissionService {
      * @return
      */
     Integer accountWebListByOrderId(String orderId);
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getSubCommissionCount(SubCommissionRequest request);
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<SubCommission> searchSubCommissionList(SubCommissionRequest request);
 }

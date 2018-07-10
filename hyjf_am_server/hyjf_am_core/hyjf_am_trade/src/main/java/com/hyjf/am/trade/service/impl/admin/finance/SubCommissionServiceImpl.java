@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl.admin.finance;
 
+import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountWebListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.SubCommissionListConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.SubCommissionMapper;
@@ -11,6 +12,8 @@ import com.hyjf.am.trade.service.admin.finance.SubCommissionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.SubCommissionVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,5 +101,63 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         cra.andOrdidEqualTo(orderId);
         cra.andTradeEqualTo("fee_share_out");
         return this.accountWebListMapper.countByExample(example);
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getSubCommissionCount(SubCommissionRequest request) {
+        SubCommissionExample example = convertExample(request);
+        Integer count = subCommissionMapper.countByExample(example);
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<SubCommission> searchSubCommissionList(SubCommissionRequest request) {
+        SubCommissionExample example = convertExample(request);
+        List<SubCommission> subCommissionList = subCommissionMapper.selectByExample(example);
+        return subCommissionList;
+    }
+
+    private SubCommissionExample convertExample(SubCommissionRequest request){
+        SubCommissionExample example = new SubCommissionExample();
+        SubCommissionExample.Criteria criteria = example.createCriteria();
+        // 订单号
+        if(StringUtils.isNotEmpty(request.getOrderIdSrch())){
+            criteria.andOrderIdLike("%"+request.getOrderIdSrch()+"%");
+        }
+        // 转账状态
+        if(StringUtils.isNotEmpty(request.getReceiveUserNameSrch())){
+            criteria.andReceiveUserNameLike("%"+request.getReceiveUserNameSrch()+"%");
+        }
+        // 转账状态
+        if(StringUtils.isNotEmpty(request.getTradeStatusSrch())){
+            criteria.andTradeStatusEqualTo(Integer.parseInt(request.getTradeStatusSrch()));
+        }
+        // 添加时间开始
+        if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
+            criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(GetDate.getDayStart(request.getTimeStartSrch())));
+        }
+        // 添加时间结束
+        if (StringUtils.isNotEmpty(request.getTimeEndSrch())) {
+            criteria.andCreateTimeLessThan(GetDate.stringToDate(GetDate.getDayStart(request.getTimeEndSrch())));
+        }
+        example.setOrderByClause("create_time desc");
+        if (request.getLimitStart() != -1) {
+            example.setLimitStart(request.getLimitStart());
+            example.setLimitEnd(request.getLimitEnd());
+        }
+
+        return example;
     }
 }

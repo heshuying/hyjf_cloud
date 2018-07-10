@@ -6,12 +6,14 @@ package com.hyjf.am.trade.controller.admin.finance;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SubCommissionListConfigResponse;
 import com.hyjf.am.response.admin.SubCommissionResponse;
+import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.SubCommission;
 import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
 import com.hyjf.am.trade.service.admin.finance.SubCommissionService;
 import com.hyjf.am.vo.admin.SubCommissionListConfigVO;
 import com.hyjf.am.vo.admin.SubCommissionVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +42,7 @@ public class SubCommissionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "发起账户分佣",notes = "发起账户分佣所需的detail信息")
-    @PostMapping(value = "/searchsubcommissionlistconfig")
+    @GetMapping(value = "/searchsubcommissionlistconfig")
     public SubCommissionListConfigResponse searchSubCommissionListConfig(){
         SubCommissionListConfigResponse response = new SubCommissionListConfigResponse();
         List<SubCommissionListConfig> subCommissionListConfigList = subCommissionService.searchSubCommissionListConfig();
@@ -102,9 +104,48 @@ public class SubCommissionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据订单号查询是否存在重复的AccountWebList数据",notes = "根据订单号查询是否存在重复的AccountWebList数据")
-    @PostMapping(value = "/accountweblistbyorderid/{orderId}")
+    @GetMapping(value = "/accountweblistbyorderid/{orderId}")
     public Integer accountWebListByOrderId(@PathVariable String orderId){
         return subCommissionService.accountWebListByOrderId(orderId);
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @ApiOperation(value = "平台账户分佣-查询count",notes = "平台账户分佣-查询count")
+    @PostMapping(value = "/getsubcommissioncount")
+    public Integer getSubCommissionCount(@RequestBody SubCommissionRequest request){
+        return subCommissionService.getSubCommissionCount(request);
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
+    @PostMapping(value = "/searchsubcommissionlist")
+    public SubCommissionResponse searchSubCommissionList(@RequestBody SubCommissionRequest request){
+        SubCommissionResponse response = new SubCommissionResponse();
+        Integer count = subCommissionService.getSubCommissionCount(request);
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+        logger.info("searchPlatformTransferList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
+        List<SubCommission> subCommissionList = subCommissionService.searchSubCommissionList(request);
+        if(!CollectionUtils.isEmpty(subCommissionList)){
+            List<SubCommissionVO> subCommissionVOList = CommonUtils.convertBeanList(subCommissionList,SubCommissionVO.class);
+            response.setResultList(subCommissionVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
     }
 
 }
