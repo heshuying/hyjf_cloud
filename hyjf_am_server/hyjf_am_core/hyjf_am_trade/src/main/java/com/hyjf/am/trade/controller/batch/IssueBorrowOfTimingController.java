@@ -24,7 +24,12 @@ public class IssueBorrowOfTimingController extends BaseController {
      */
     @RequestMapping("/none_split_borrow")
     public String issueBorrowOfTiming(){
-        issueBorrowOfTimingService.issueBorrowOfTiming();
+        try {
+            issueBorrowOfTimingService.issueBorrowOfTiming();
+        } catch (Exception e) {
+            logger.error("不拆分标的定时发标失败....", e);
+            return "fail";
+        }
 
         return "success";
     }
@@ -36,7 +41,12 @@ public class IssueBorrowOfTimingController extends BaseController {
      */
     @RequestMapping("/split_borrow")
     public String issueSplitBorrowOfTiming(){
-        issueBorrowOfTimingService.issueSplitBorrowOfTiming();
+        try {
+            issueBorrowOfTimingService.issueSplitBorrowOfTiming();
+        } catch (Exception e) {
+            logger.error("拆分标的定时发标失败....", e);
+            return "fail";
+        }
 
         return "success";
     }
