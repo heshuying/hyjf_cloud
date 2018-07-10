@@ -77,6 +77,10 @@ public class CreditTenderLog implements Serializable {
 
     private String addIp;
 
+    private String retCode;
+
+    private String retMsg;
+
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
@@ -367,6 +371,22 @@ public class CreditTenderLog implements Serializable {
 
     public void setAddIp(String addIp) {
         this.addIp = addIp == null ? null : addIp.trim();
+    }
+
+    public String getRetCode() {
+        return retCode;
+    }
+
+    public void setRetCode(String retCode) {
+        this.retCode = retCode == null ? null : retCode.trim();
+    }
+
+    public String getRetMsg() {
+        return retMsg;
+    }
+
+    public void setRetMsg(String retMsg) {
+        this.retMsg = retMsg == null ? null : retMsg.trim();
     }
 
     public Date getCreateTime() {

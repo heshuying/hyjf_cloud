@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
  * @version SmsLogController, v0.1 2018/6/23 15:09
  */
 @RestController
-@RequestMapping("/message/smsLog")
+@RequestMapping("/hyjf-admin/message/smsLog")
 public class SmsLogController extends BaseController {
 
     @Autowired

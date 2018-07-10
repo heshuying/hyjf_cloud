@@ -99,4 +99,29 @@ public interface CreditClient {
      * @return
      */
     BorrowCreditVO getBorrowCreditByCreditNid(String creditNid);
+
+    /**
+     * 债转修改日志表状态
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     */
+    Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg);
+
+    /**
+     * 查询债转失败原因
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    String getFailResult(String logOrdId, Integer userId);
+
+    /**
+     * 根据logOrdId和userId 查询债转信息
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    CreditTenderVO getCreditTenderByUserIdOrdId(String logOrdId, Integer userId);
 }

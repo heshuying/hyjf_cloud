@@ -1,7 +1,4 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.vo.trade.account;
+package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -9,10 +6,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * @author: sunpeikai
- * @version: BankMerchantAccountVO, v0.1 2018/7/9 18:07
- */
 public class BankMerchantAccountVO extends BaseVO implements Serializable {
     private Integer id;
 
@@ -49,7 +42,7 @@ public class BankMerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setAccountName(String accountName) {
-        this.accountName = accountName;
+        this.accountName = accountName == null ? null : accountName.trim();
     }
 
     public String getAccountType() {
@@ -57,7 +50,7 @@ public class BankMerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setAccountType(String accountType) {
-        this.accountType = accountType;
+        this.accountType = accountType == null ? null : accountType.trim();
     }
 
     public String getAccountCode() {
@@ -65,7 +58,7 @@ public class BankMerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setAccountCode(String accountCode) {
-        this.accountCode = accountCode;
+        this.accountCode = accountCode == null ? null : accountCode.trim();
     }
 
     public BigDecimal getAccountBalance() {

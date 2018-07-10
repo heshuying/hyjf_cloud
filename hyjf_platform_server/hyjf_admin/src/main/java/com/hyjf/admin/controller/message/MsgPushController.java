@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.controller.config;
+package com.hyjf.admin.controller.message;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.MsgPushTemplateService;
@@ -21,7 +21,7 @@ import java.util.List;
  * @version MsgPushController, v0.1 2018/6/26 9:31
  */
 @RestController
-@RequestMapping("/msgpush/template")
+@RequestMapping("/hyjf-admin/msgpush/template")
 public class MsgPushController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());

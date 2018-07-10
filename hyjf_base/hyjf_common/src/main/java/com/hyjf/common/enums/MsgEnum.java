@@ -129,6 +129,9 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
 	ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL("EAM000303","充值值金额不能大于两位小数"),
 
+	//资金-转账相关错误信息ERR_AMT_TRANSFER_
+	ERR_AMT_TRANSFER("EAM000401","转账发生异常"),
+
 	//授权相关错误信息ERR_AUTHORIZE_
 	ERR_AUTHORIZE_REPEAT("EAU000001","用户已授权,无需重复授权"),
 	ERR_AUTHORIZE_STATE("EAU000002","授权状态查询接口失败"),
@@ -139,6 +142,7 @@ public enum MsgEnum implements MsgCode {
 
 	// 银行相关错误信息ERR_BANK_
 	ERR_BANK_CALL("EBK000001", "调用银行接口失败"),
+	ERR_BANK_UPDATE_AFTER_CALL("EBK000002", "调用银行成功后,更新数据失败"),
 	// 开户相关ERR_BANK_ACCOUNT_
 	ERR_BANK_ACCOUNT_OPEN("EBK000002", "开户失败"),
 	ERR_BANK_ACCOUNT_NOT_OPEN("EBK000003", "用户未开户"),
