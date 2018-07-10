@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhAppCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
@@ -16,6 +17,7 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -96,6 +98,23 @@ public class HjhDebtCreditController extends BaseController{
         return response;
     }
 
+    /**
+     * 根据债转编号查询债转信息
+     * @author liubin
+     * @date 2018/6/30 11:19
+     */
+    @GetMapping("/selectHjhDebtCreditByCreditNid/{creditNid}")
+    public HjhDebtCreditResponse selectHjhDebtCreditByCreditNid(@PathVariable String creditNid){
+        HjhDebtCreditResponse response =  new HjhDebtCreditResponse();
+        HjhDebtCredit hjhDebtCredit = hjhDebtCreditService.selectHjhDebtCreditByCreditNid(creditNid);
+        response.setResult(CommonUtils.convertBean(hjhDebtCredit, HjhDebtCreditVO.class));
+        return response;
+    }
 
-
+    @GetMapping("/updateHjhDebtCreditByPK")
+    public Response<Integer> updateHjhDebtCreditByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO){
+        HjhDebtCredit hjhDebtCredit =  new HjhDebtCredit();
+        BeanUtils.copyProperties(hjhDebtCreditVO, hjhDebtCredit);
+        return new Response(this.hjhDebtCreditService.updateHjhDebtCreditByPK(hjhDebtCredit));
+    }
 }
