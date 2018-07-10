@@ -3,8 +3,12 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.RUser;
+
+import java.math.BigDecimal;
 
 /**
  * 资金服务: BaseService
@@ -25,4 +29,52 @@ public interface BaseService {
      * @return
      */
     BorrowInfo getBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 获取用户的账户信息
+     * @param userId
+     * @return
+     */
+    Account getAccount(Integer userId);
+
+    /**
+     * 取得本库冗余的用户信息
+     * @param userId
+     * @return
+     */
+    RUser getRUser(Integer userId);
+
+    /**
+     * 取得本库冗余的用户信息
+     * @param userName
+     * @return
+     */
+    RUser getRUser(String userName);
+
+    /**
+     * 取得本库冗余的推荐人信息
+     * @param userId
+     * @return
+     */
+    RUser getRefUser(Integer userId);
+
+    /**
+     * 汇计划全部流程用更新用户的账户表
+     * @param hjhProcessFlg
+     * @param userId
+     * @param amount
+     * @param interest
+     * @return
+     */
+    public Boolean updateAccountForHjh(String hjhProcessFlg, Integer userId, BigDecimal amount, BigDecimal interest) ;
+
+    /**
+     * 汇计划重算更新汇计划加入明细表
+     * @param hjhProcessFlg
+     * @param id
+     * @param amount
+     * @param interest
+     * @return
+     */
+    public Boolean updateHjhAccedeForHjh(String hjhProcessFlg, Integer id, BigDecimal amount, BigDecimal interest, BigDecimal serviceFee) ;
 }
