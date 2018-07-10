@@ -4,6 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.trade.bean.repay.RepayBean;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,6 +107,37 @@ public class RepayManageController extends BaseController {
         RepayListResponse responseBean = new RepayListResponse();
         Integer result = repayManageService.selectOrgRepayedCount(requestBean);
         return result;
+    }
+
+    /**
+     * 还款申请更新
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @RequestMapping(value = "/update")
+    public Boolean repayRequestUpdate(@RequestBody @Valid RepayRequestUpdateRequest requestBean){
+        logger.info("还款申请更新开始，repuestBean: " + JSON.toJSONString(requestBean));
+
+        if (requestBean == null || StringUtils.isBlank(requestBean.getRepayBeanData()) || StringUtils.isBlank(requestBean.getBankCallBeanData())){
+            return false;
+        }
+
+        // 更新相关数据库表
+        try {
+            RepayBean repayBean = JSON.parseObject(requestBean.getRepayBeanData(), RepayBean.class);
+            BankCallBean bankCallBean = JSON.parseObject(requestBean.getBankCallBeanData(), BankCallBean.class);
+
+            boolean result = repayManageService.updateRepayMoney(repayBean, bankCallBean);
+            if(!result){
+                return false;
+            }else {
+                repayManageService.updateBorrowCreditStautus(repayBean.getBorrowNid());
+            }
+            return true;
+        } catch (Exception e) {
+            logger.error("还款申请更新数据库失败", e);
+            return false;
+        }
     }
 
 }

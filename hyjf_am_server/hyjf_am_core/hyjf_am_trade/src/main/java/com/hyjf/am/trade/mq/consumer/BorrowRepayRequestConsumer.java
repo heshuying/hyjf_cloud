@@ -19,6 +19,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -46,6 +47,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @author dxj
  * @version BorrowRepayRequestConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
+@Component
 public class BorrowRepayRequestConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayRequestConsumer.class);
@@ -64,7 +66,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
 		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
 		defaultMQPushConsumer.start();
-		logger.info("====还款请求消费结束=====");
+		logger.info("====计划直投还款请求消费启动=====");
 	}
 
 	public class MessageListener implements MessageListenerConcurrently {

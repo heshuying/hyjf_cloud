@@ -64,7 +64,8 @@ public class CustomizeMapper extends AutoMapper {
     @Autowired
     protected AdminBorrowRepaymentInfoCustomizeMapper borrowRepaymentInfoCustomizeMapper;
 
-
+    @Autowired
+    protected AdminBorrowRepaymentInfoListCustomizeMapper borrowRepaymentInfoListCustomizeMapper;
     @Resource
     protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
 
@@ -76,6 +77,12 @@ public class CustomizeMapper extends AutoMapper {
 
     @Resource
     protected TzjCustomizeMapper tzjCustomizeMapper;
+
+    @Autowired
+    protected AdminTransferExceptionLogCustomizeMapper transferExceptionLogCustomizeMapper;
+
+
+
 }
 
 

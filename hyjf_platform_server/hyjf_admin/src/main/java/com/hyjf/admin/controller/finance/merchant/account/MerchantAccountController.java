@@ -11,7 +11,6 @@ import com.hyjf.admin.service.MerchantAccountService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -58,6 +57,6 @@ public class MerchantAccountController extends BaseController {
         if (!Response.isSuccess(merchantAccounts)) {
             return new AdminResult<>(FAIL, merchantAccounts.getMessage());
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(merchantAccounts.getResultList(), merchantAccounts.getRecordTotal())) ;
+        return new AdminResult<>(ListResult.build(merchantAccounts.getResultList(), merchantAccounts.getRecordTotal())) ;
     }
 }

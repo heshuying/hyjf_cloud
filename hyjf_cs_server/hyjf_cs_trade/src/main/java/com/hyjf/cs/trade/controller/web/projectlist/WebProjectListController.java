@@ -127,7 +127,7 @@ public class WebProjectListController extends BaseTradeController {
      * @author zhangyk
      * @date 2018/6/21 15:18
      */
-    @ApiOperation(value = "计划专区计划列表数据", notes = "计划专区计划列表数据")
+    @ApiOperation(value = "计划专区计划列表", notes = "计划专区计划列表")
     @PostMapping(value = "/searchPlanList", produces = "application/json; charset=utf-8")
     public Object getPlanList(@RequestBody @Valid ProjectListRequest request){
         WebResult result =  webProjectListService.searchPlanList(request);

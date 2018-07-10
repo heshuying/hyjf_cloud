@@ -2,20 +2,13 @@ package com.hyjf.am.trade.controller.admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowRepaymentInfoResponse;
-import com.hyjf.am.response.admin.AdminBorrowRepaymentResponse;
-import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
-import com.hyjf.am.trade.controller.AssetManageController;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentCustomize;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentInfoCustomize;
 import com.hyjf.am.trade.service.admin.AdminBorrowRepaymentInfoService;
-import com.hyjf.am.trade.service.admin.AdminBorrowRepaymentService;
-import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +25,7 @@ import java.util.List;
 @Api(value = "产品中心-汇直投-还款明细查询")
 @RestController
 @RequestMapping("/am-trade/adminBorrowRepaymentInfo")
-public class AdminBorrowRepaymentInfoController {
-    private static Logger logger = LoggerFactory.getLogger(AssetManageController.class);
+public class AdminBorrowRepaymentInfoController extends BaseController {
     @Autowired
     AdminBorrowRepaymentInfoService adminBorrowRepaymentInfoService;
 

@@ -117,6 +117,8 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+    private TenderRequest request;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -534,5 +536,13 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public TenderRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(TenderRequest request) {
+        this.request = request;
     }
 }

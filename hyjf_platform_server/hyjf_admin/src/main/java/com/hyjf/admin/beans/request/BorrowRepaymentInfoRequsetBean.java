@@ -64,6 +64,8 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
      */
     private String yesTimeEndSrch;
 
+    private String borrowNid;
+
     /**
      * 列表来源标识 0：还款明细 1：批次还款-查看按钮
      */
@@ -179,5 +181,13 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
 
     public void setSerchFlag(int serchFlag) {
         this.serchFlag = serchFlag;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }

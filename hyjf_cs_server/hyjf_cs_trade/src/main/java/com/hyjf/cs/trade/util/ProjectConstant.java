@@ -72,6 +72,14 @@ public class ProjectConstant {
     /*app首页请求方法*/
     public static final String APP_HOME_DATA_URL = "/getProjectList";
 
+    /*   --------------------------  web端 开始 --------------------------------*/
+    /*顶部统计数据*/
+    public static final String WEB_PLAN_TOTAL_DATA = "totalData";
+
+    public static final String WEB_PLAN_LIST = "resultList";
+
+
+    /*   --------------------------  web端 结束 --------------------------------*/
 
     /*请求参数 end*/
 

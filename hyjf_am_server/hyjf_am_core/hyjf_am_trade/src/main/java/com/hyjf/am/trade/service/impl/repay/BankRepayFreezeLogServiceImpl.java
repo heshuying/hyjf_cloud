@@ -49,4 +49,20 @@ public class BankRepayFreezeLogServiceImpl extends BaseServiceImpl implements co
         return  deleteCount;
     }
 
+    /**
+     * 获取当前有效的冻结记录
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public BankRepayFreezeLog getFreezeLog(Integer userId, String borrowNid){
+        BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
+        example.createCriteria().andUserIdEqualTo(userId).andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        List<BankRepayFreezeLog> list = bankRepayFreezeLogMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
 }

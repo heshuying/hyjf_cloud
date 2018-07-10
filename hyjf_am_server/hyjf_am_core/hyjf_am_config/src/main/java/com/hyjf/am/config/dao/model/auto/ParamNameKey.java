@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ParamNameKey implements Serializable {
     private String nameClass;
 
-    private Short nameCd;
+    private String nameCd;
 
     private static final long serialVersionUID = 1L;
 
@@ -17,11 +17,11 @@ public class ParamNameKey implements Serializable {
         this.nameClass = nameClass == null ? null : nameClass.trim();
     }
 
-    public Short getNameCd() {
+    public String getNameCd() {
         return nameCd;
     }
 
-    public void setNameCd(Short nameCd) {
+    public void setNameCd(String nameCd) {
         this.nameCd = nameCd;
     }
 }
