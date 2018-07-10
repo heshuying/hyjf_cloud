@@ -6,8 +6,6 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
@@ -16,7 +14,6 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -451,5 +448,25 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowasset/" + status;
         Boolean response = restTemplate.postForEntity(url,borrowVO,Boolean.class).getBody();
         return response;
+    }
+
+    @Override
+    public BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form) {
+        BankMerchantAccountResponse response = restTemplate
+                .postForEntity(tradeService + "/bankMerchantAccount/selectBankMerchantAccount", form, BankMerchantAccountResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request) {
+        BankMerchantAccountListCustomizeResponse response = restTemplate
+                .postForEntity(tradeService + "/bankRedPacketAccount/selectBankMerchantAccountList", request, BankMerchantAccountListCustomizeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response;
+        }
+        return null;
     }
 }

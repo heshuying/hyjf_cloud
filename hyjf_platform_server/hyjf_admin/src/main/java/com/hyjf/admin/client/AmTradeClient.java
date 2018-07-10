@@ -11,7 +11,6 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
 
@@ -233,4 +232,18 @@ public interface AmTradeClient {
      * @return
      */
     boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
+
+    /**
+     * 转账列表
+     * @param form
+     * @return
+     */
+    BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form);
+
+    /**
+     * 查询红包明细分页
+     * @param request
+     * @return
+     */
+    BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request);
 }
